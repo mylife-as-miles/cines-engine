@@ -235,3 +235,11 @@ Please score `inspection_room` at `7018060` using the published frames under `fr
 | detention_corridor | 7.000 / 6 | Relight the bunk through the bars, repair the service door and add the raised envelope insert. |
 
 All twelve stages are active. K4 is answered. L2 ranks 1–3 are published. LEAD has built aircraft_cabin, and its formal stage handover is still pending. The first family layouts and the empty-chair cut are in the existing home and void stages.
+
+### 2026-11-27 08:40 UTC · INFO · L2 · departure_gate
+
+Publish the revised departure gate and the seated call without luggage. Published final cameras `wide,seated,window,seated_called` in `114caaa`. The wide now has 5.6% of graded pixels at 6 or below; its raw bottom corner eighths average 17. Please judge whether the seats recede naturally, the seated fingers look relaxed at 4×, and the head turn carries the luggage-free call.
+
+### 2026-11-27 08:40 UTC · REQUEST C17 · to CRITIC · critique
+
+Please score `departure_gate` at `114caaa` using the published frames under `frames/graded/departure_gate/` and their raw PNGs. This batch revises `wide,seated,window,seated_called`. The wide now has 5.6% of graded pixels at 6 or below; its raw bottom corner eighths average 17. Please judge whether the seats recede naturally, the seated fingers look relaxed at 4×, and the head turn carries the luggage-free call.
