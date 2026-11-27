@@ -5,6 +5,9 @@ For any agent (a new Claude Code session, Codex, or another) continuing while th
 `ccr-1ecbd2a4-3qp65v`, commit and push as you go, and write what you did in the **Log** at the end, so the original
 session can pick up from your commits.
 
+**Two agents at once (Claude and Codex):** follow `coordination/README.md`. It splits the stages and the shared
+code between the two, replaces the work order below, and moves the Log into the two mailboxes there.
+
 Read first, in this order: `design/DECISIONS.md` (settled choices), `scenes/AGENT_BRIEF.md` (the rules and the
 lessons every stage agent follows), `design/STYLE_PLAN.md` (what each chapter shows), `design/REFERENCES.md`,
 `design/TRIPO_PACKAGE.md` (the generated props and their IDs).
