@@ -1,0 +1,91 @@
+{
+  "stage": "aircraft_cabin",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 5.5,
+    "lighting": 5.5,
+    "materials": 5.5,
+    "set_dressing": 6,
+    "grounding_scale": 6.5,
+    "cast": 4.5,
+    "story_read": 5.5,
+    "technical": 6.5
+  },
+  "pro_level": false,
+  "verdict": "Not at the fern bar yet (mean about 5.7, cast below 6). The cabin architecture is the strong part: curved lining, window reveals, bins, coves, path-light dashes and long depth read as a wide-body at night, with no text or livery. The three frames fail on the person, the light hierarchy and exposure.\n\nMeasured on the graded frames (0-255 luminance):\n| Frame | Mean | Median | p99 | Max |\n| --- | --- | --- | --- | --- |\n| aisle | 29 | 22 | 105 | 214 |\n| window | 26 | 19 | 88 | 163 |\n| over | 31 | 30 | 79 | 189 |\nAbout half of aisle and window sits under 20. \"over\" has no black and no white: it is mud, not noir.\n\nAISLE (best of the three, about 6):\n- Dawn is a featureless grey sphere about 50 px tall; she reads as another headrest, not a person.\n- Her lamp lights the wall and the empty seat covers more than her.\n- The brightest, highest-contrast things are the four white galley slits at the vanishing point and the blue ceiling cove, so the eye goes there and not to the \"one pool\".\n- The grade removes the lamp's warmth: the pool is neutral grey, so the warm-versus-blue idea is gone.\n- About 300 identical, perfectly aligned seats with identical covers and no human trace read as a CG array.\n- None of the six \"lit\" screens visibly glows, and the four passengers are two dim lumps.\n- Small black blocks hang from the bins unexplained.\n- The bottom 40% is near-black seat backs.\n\nWINDOW (about 5.5):\n- Her hands fail a named lesson in the brief: the far hand hovers in mid-air with splayed straight fingers, the near hand is flat and stiff with the wrist cocked. They are not \"close in her lap\".\n- She does not look out: she is in clean profile facing the seat ahead, with the window behind her skull.\n- She sits bolt upright, head off the headrest, with no belt.\n- The skirt hem juts past the knee as a flat board, and a flat dark wedge pokes out under the near hand.\n- The jacket is a black hole with no form.\n- Light on her is flat and frontal (dedicated fill plus 150 degree spill): no pool edge, no falloff down the wall, no warm/cool split on the face.\n- Dark out-of-focus seat slabs take about 70% of the frame width; the right one is a crushed blur over her knees.\n- The \"reflection\" in the pane reads as a smudge.\n\nOVER (weakest, about 4.5):\n- About 65% of the frame is two defocused dark blobs: her head (40% of the width) and an unidentifiable seat top.\n- The wing and winglet are crammed into the top fifth of the window, with the winglet tangent to the reveal; the lower two thirds of the pane is featureless murk.\n- The wing is a bare plate with a fin: no panel lines or fairings, a white ball for the strobe, and a red halo offset from its source.\n- Her head has no rim from her own lamp, and the hair grooves show as corduroy striping.\n\nTechnical: clean of fireflies and haze speckle, with good bevels. Open risks are banding in the dark gradients under YouTube compression, denoise smear on the cloud deck, aliased far path dots and the hair striping.\n\nMaterials: tidy but uniform. Lining, seat shells and upholstery have no visible weave, pebble, scuffs or roughness breakup at the 1-2 m distances of \"window\" and \"over\".\n\nStage module read for the fixes: /home/user/cines-engine/claude-youtube/prize-that-became-a-prison/scenes/stages/aircraft_cabin.py",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "window",
+      "problem": "Hands hover and splay (far hand in mid-air, fingers straight; near hand flat, wrist cocked); not 'close in her lap'. Named lesson in the brief.",
+      "fix": "In build(), re-pose Dawn's hands via lap_hands/place_seated: bring both wrists to the lap centreline (x = seat centre +/- 0.03, about 0.20-0.24 m ahead of the hip, heel of hand touching the thigh top), right hand resting over left. Raise finger curl from 'fingers': 17 to about 35-40 with the thumb tucked. Lower forearms so they lie on the thighs with elbows inside the armrests. Assert finger_gap() <= 5 mm for both hands and check from the window camera that no finger is silhouetted against the wall. Add a lap belt over her (webbing slab about 48 mm wide across the hips, buckle at centre) like the belts on the empty seats."
+    },
+    {
+      "priority": 1,
+      "camera": "window",
+      "problem": "She is not looking out: clean profile facing the seat ahead, window hidden behind her skull; bolt-upright, stiff posture.",
+      "fix": "Increase the turn to port: upper = {'head': (10, 34), 'neck': (5, 16), 'chest': (-8, 8)} (about 50 degrees total, chin slightly down), add about 6 degrees head roll toward the window, and let the head rest back near the headrest. Move the window ahead of her face so her nose points into the pane: DAWN_WINDOW_Y = row_y + 0.30 (from +0.14), and/or WINDOW_CAM to about (-0.80, 4.80, 1.22) re-aimed at the head, lens 35. Target: a lost profile (cheek, ear, brow line) with the open pane in front of the face. Update the HEAD/EYES constants from the printed values."
+    },
+    {
+      "priority": 1,
+      "camera": "over",
+      "problem": "65% of the frame is defocused blobs; wing crammed into the top fifth of the window, winglet tangent to the reveal; frame is flat mud (p99 79/255).",
+      "fix": "Reframe: pull OVER_CAM back and inboard to about (-1.95, 3.40, 1.34), lens 50, so her head is at most 25% of the width at the right edge and the seat top is a sliver under 10% of the height. Put the wing mid-pane: lower the wing tip to TIP_DIR = (28.5, -9.5), aim elevation about -10, horizon on the upper third of the window, at least 6% of the pane height clear above the winglet. fstop 16 and focus on the winglet. Light: add TRIMS['over'] 'key': 1.6 and KEY_AIM['over'] = ((0.0, 0.05, 1.05), 70) so her lamp puts a warm rim on hair, ear and shoulder against the cool pane. Raise the sky/horizon band about 1.5x so the horizon reaches about 120-140 graded, and keep the interior wall at 15-30."
+    },
+    {
+      "priority": 1,
+      "camera": "all",
+      "problem": "Light hierarchy and warmth: the pool is not the brightest or warmest thing. Galley slits (max 214) and the cove outrank it, and the grade turns the lamp neutral grey.",
+      "fix": "Reading light and reading_spill colour (1.0, 0.84, 0.64) -> about (1.0, 0.68, 0.38); lens_on glow likewise. Check on the graded frame that the pool on wall and lap has R/B >= 1.15. Aisle TRIMS: 'cove': 0.6, 'galley': 0.45, 'key': 2.4, and tint the galley slits cooler/dimmer so they peak near 110 graded. Target luminance: pool on her head, shoulders and seat top 170-190; cove ceiling 60 or less; deep shadows 8-20, not 0-5."
+    },
+    {
+      "priority": 2,
+      "camera": "window",
+      "problem": "Flat frontal light on Dawn: no pool edge, wall evenly grey from shoulder to floor, face one grey value, jacket a black hole.",
+      "fix": "TRIMS['window']: 'spill': 0.3, 'fill': 0.4. Tighten the key to about 48 degrees with blend 0.5 so an oval pool edge crosses her lap and the wall, and the wall falls to near-dark below the armrest. Make the pane her cool face key: window_fill 1.4 W -> about 5 W, colour (0.55, 0.70, 1.0), aimed at the face, so the face reads cool from the front and warm on crown and shoulder. Add a weak warm kicker (0.6 W, linked to her garments only) or raise jacket value via people.fabric so sleeve folds read at 12-25 graded. Peak on the face about 170."
+    },
+    {
+      "priority": 2,
+      "camera": "aisle",
+      "problem": "Dawn reads as a headrest sphere (about 50 px, featureless), not a person.",
+      "fix": "Bring the camera one row closer and tighten: AISLE_CAM about (-1.04, 2.45, 1.52), lens 30, Dawn's head on the left third at 90 px or more. With the larger head turn her lost profile, ear and bun catch the lamp. KEY_AIM['aisle'] on head and shoulders ((0.0, 0.08, 1.10), 60). Keep her window shade open and expose the sky so a cool oval shows beside her head (at present her reveal washes out grey). Keep the haze cone, but cut haze density about 30% so the cone does not outshine her."
+    },
+    {
+      "priority": 2,
+      "camera": "window",
+      "problem": "Wardrobe artefacts: skirt hem projects past the knee as a flat board; a flat dark wedge sticks out under the near hand.",
+      "fix": "After the seated pose, conform the skirt: shrinkwrap (or corrective smooth plus ease_seated at 0.02-0.03) the hem verts to the thigh tops with a 5-8 mm offset, or mask/delete faces more than 2 cm beyond the knee line. Do the same for the jacket hem at the hip. Verify in a brightened crop of the lap from the window camera."
+    },
+    {
+      "priority": 2,
+      "camera": "aisle",
+      "problem": "Cabin reads as a CG array: about 300 identical aligned seats, no human traces, lit screens not visible, passengers invisible, unexplained black blocks under the bins.",
+      "fix": "Raise the LIT screen emission so 2-3 mid-distance screens read as blank dim blue-grey rectangles (about 90-120 graded), each with a 0.3-0.5 W spill light onto the sleeper facing it. Move Pax1 and Pax4 to rows visible from the aisle camera (aisle seats, rows DAWN_ROW+1..+3 of the centre block), head lolled, one under a blanket. Dress: recline about 12% of seat backs by 5-8 degrees; 6-8 folded blankets or pillows on empty cushions; 3-4 headrest covers askew or missing; a card edge in a few seat pockets; one tray down with a cup. Give the hanging sign blocks a faint blank glowing face (strength about 0.3) or remove them."
+    },
+    {
+      "priority": 3,
+      "camera": "over",
+      "problem": "Wing is a bare plate with a fin; strobe is a white ball; red halo offset from its source; pane has no glass character.",
+      "fix": "Wing: add 4-5 chordwise panel lines and a spanwise flap/aileron gap (bump or 3 mm inset), 2-3 flap-track fairings under the trailing edge, a rounded leading edge and a blended winglet root (fillet about 0.4 m). Recess the nav light in a small clear housing at the tip leading edge, shrink the strobe to an emissive disc 3 cm or less, and centre the halo billboard on the red emitter. Pane: add a faint inner-pane reflection of the lamp-lit seat top (refl 0.05 -> 0.10) and a few fine scratches or a breather hole near the bottom."
+    },
+    {
+      "priority": 3,
+      "camera": "window",
+      "problem": "Foreground seat slabs take about 70% of the width; the right one is a crushed blur over her knees; the pane 'reflection' reads as a smudge.",
+      "fix": "Shift the camera so the row-ahead seat back covers at most 12% of the width and clears her knees and hands (or hide that one seat instance for this camera). Keep the left seats, but lift them with path-light and cove bounce to 12-25 graded with a cool rim on the top edges. Either make the reflection real (after the head turn the lit face is near the glass; pane refl about 0.12) or remove the blob."
+    },
+    {
+      "priority": 3,
+      "camera": "all",
+      "problem": "Materials uniform at 1-2 m: lining, seat shells and upholstery show no weave, pebble or wear; hair grooves stripe when out of focus.",
+      "fix": "Upholstery: visible twill weave bump (scale about 900-1200, strength 0.15), stitched seams with 3 mm piping, slight nap colour variation (about 8%). Lining: fine pebble bump (scale about 600, strength 0.05) and roughness noise 0.45-0.6, plus real 2 mm shadow gaps at panel joints. Seat-back plastic and armrest caps: roughness breakup and a few scuffs along edges. Headrest covers: hem line and 2-3 soft wrinkles. Hair in 'over': halve the groove depth or add a subdivision level so the ridges do not stripe."
+    },
+    {
+      "priority": 3,
+      "camera": "all",
+      "problem": "Banding and compression risk in dark gradients; aliased far path-light dots; denoise smear on the cloud deck.",
+      "fix": "Keep the grain and add dither in the grade. Lift the shadow floor so no more than 3% of pixels are under 8/255. Give the far path LEDs a minimum emissive size or a small glow card so they do not shimmer in motion. Render the sky/cloud deck at 128 spp or with less denoise strength so the cloud texture keeps detail."
+    }
+  ]
+}

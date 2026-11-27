@@ -94,7 +94,7 @@ CAMERAS = {
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
 # the wide is exposed most of a stop over the others (the room has to read round the island): there the room's
 # own dark, the screen's spill behind the desk and the street light's stripes are each brought up to show
-TRIMS = {"desk": {}, "letters": {"tim_bounce": 0.0}, "window": {"room_fill": 7.0, "laptop_screen_light": 2.5, "street": 1.6}}
+TRIMS = {"desk": {}, "letters": {"tim_bounce": 0.0}, "window": {"room_fill": 5.0, "laptop_screen_light": 2.5, "street": 1.6}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -972,7 +972,7 @@ def report_frame(holder):
              "laptop": Vector((st.LAPTOP[0], st.LAPTOP[1], TOP + 0.12)), "pad": Vector((st.PAD[0], st.PAD[1], TOP)),
              "window top": Vector((0, st.R["y0"], st.WIN["z1"] + 0.15)), "ceiling line": Vector((0, st.R["y0"], st.R["h"])),
              "chair foot L": Vector((0.24, CHAIR[1] + 0.26, 0.0)), "chair foot R": Vector((-0.24, CHAIR[1] + 0.26, 0.0)),
-             "phone": Vector((-0.235, -0.07, TOP + 0.02)), "radiator end": Vector((st.R["x0"] + 0.1, 1.15, 0.7)),
+             "phone": Vector((-0.245, -0.03, TOP + 0.02)), "radiator end": Vector((st.R["x0"] + 0.1, 1.15, 0.7)),
              "picture end": Vector((st.R["x0"], 0.86, 1.5)), "bookcase": Vector((1.31, st.R["y0"] + 0.3, 1.2)),
              "boxes": Vector((-1.22, -0.1, 0.55))}
     fr = bpy.data.objects.get("photo_frame")
@@ -998,7 +998,8 @@ def report_frame(holder):
             v = world_to_camera_view(sc, cam, Vector(p))
             d = Vector(p) - origin
             hit, loc, _, _, ob, _ = sc.ray_cast(dg, origin, d.normalized(), distance=d.length - 0.04)
-            row.append(f"{mk} ({v.x:.2f}, {v.y:.2f}, {v.z:.2f} m{', behind ' + ob.name if hit and ob is not None else ''})")
+            blocked = hit and ob is not None and ob.name not in ("room_haze", "room_ceiling")
+            row.append(f"{mk} ({v.x:.2f}, {v.y:.2f}, {v.z:.2f} m{', behind ' + ob.name if blocked else ''})")
         print(f"TIMDESK frame {name}: " + "; ".join(row), flush=True)
         for o in [o for o in bpy.data.objects if o.type == "CAMERA" or o.name.startswith("aim")]:
             bpy.data.objects.remove(o)

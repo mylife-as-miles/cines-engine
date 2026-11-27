@@ -1,0 +1,91 @@
+{
+  "stage": "prison_exterior",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 7,
+    "lighting": 7,
+    "materials": 7,
+    "set_dressing": 7,
+    "grounding_scale": 6,
+    "cast": 7,
+    "story_read": 7,
+    "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Close, but not yet fern level: mean 6.75, held back by the rain, the gate frame and the road surface. The tower frame would pass today; the gate frame would not; the wall frame is in between.\n\nWhat works: the lighting is practical-only with real lit islands, readable shadows and no clipping beyond the lamp lenses (graded p99 is 0.48-0.60, nothing under 0.03). The cast concrete (panel joints, tie holes, run-off under the coping) is the best material in the set. Scale is right: the wicket door reads about 2 m, the gate about 4.7 m, the wall about 5.7 m. The dressing is restrained and specific (CCTV on the pier, call post, gully, manhole, downpipe, antenna), with no text, flags or people.\n\nWhat fails:\n- **Rain reads as CG in all three frames.** In the gate frame the streaks form a pyramid of bright spikes above the wire, like a fountain or sparks, because near-lamp drops are far brighter and the streaks run to about 57 px. In the wall frame the rain stops at a ruled line along the cone's top edge, so the lamp reads as a shower head. In the wall and tower frames the streaks draw dark hairlines across the lit concrete; the gate already avoids this with clear=0.6, the other two do not.\n- **The gate floodlight floats in the sky.** Its column and outreach arm lie exactly on the camera axis (both at y=0), so nothing visibly holds it, and a bright U-shaped piece of the column shows through the cone.\n- **The road reads as polished ice or plastic.** There is no visible aggregate, and the bottom quarter of the wall frame is a featureless grey slab, which the brief warns against. In the gate frame the mirror puddle starts on a dead-straight horizontal line at about y=645.\n- **Block A's lit windows are flat white cut-outs.** They have no gradient, no reveal and no spill, and the third is a sliver on the side face.\n- **Razor wire is weak outside the tower's near section.** Seen frontally in the gate frame it is an evenly bright \"XXX\" scribble across the full width, with no falloff from the lamp. At the tower frame's upper left it breaks into sub-pixel dots that will crawl in motion.\n- **The gate leaves read half as boarded timber** (vertical streaks plus battens), and the gate face is lit evenly top to bottom.\n- **Smaller points.** The stainless bollards are the brightest foreground objects. The far \"sodium\" lamps are eight even white dots sitting at the fence's lower-wire height, so they read as fence studs. The tower glazing is indistinguishable from the cabin wall, so the watcher idea does not read. The call post is too dark to carry \"the gate a visitor comes to\".\n\nNoise is clean (raw sky high-pass std 0.5, graded 1.4 from grain); the technical score is for the rain artefacts, the wire aliasing and the puddle edge. I reviewed stills only, so motion risks are inferred.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "gate",
+      "problem": "Rain above the wire reads as a fountain of bright spikes: a triangle of long (about 57 px), very bright streaks under the lamp against dark sky, almost nothing elsewhere.",
+      "fix": "In prison_exterior.py: clamp near-lamp brightness in irradiance() with d2 = np.maximum(d2, 9.0) (or drop streaks within 3 m of gate_spot) and apply the same clamp in the mats.rain shader. Change RAIN['gate'] to length=(0.18, 0.4), gain about 0.09, cover about 0.05, clear=0.7, so the rain is many short faint streaks. Replace the hard cut `lit = E > e_min` with a probabilistic keep, p = clip(E / 12, 0, 1) ** 0.7 with e_min about 0.8, and count gate_spill, so faint rain continues beside the cone and down over the piers."
+    },
+    {
+      "priority": 1,
+      "camera": "wall",
+      "problem": "Rain ends on a ruled line along the cone's top and left edge, so the lamp reads as a shower head. Rain in front of the lit wall draws dark hairlines, because a streak at gain 0.14 is darker than the concrete behind it.",
+      "fix": "Use the same probabilistic keep instead of the e_min threshold, and include the mast_spill points in irradiance() at 0.3 weight so streaks thin out past the cone edge. Set RAIN['wall'] clear=0.7, or better make mats.rain additive (Transparent BSDF plus a weak emission or forward-scatter term, no diffuse occlusion) so a streak can never be darker than its background. Shorten length to (0.25, 0.55), raise cover to about 0.045, and vary per-streak gain by 0.5-1.5."
+    },
+    {
+      "priority": 1,
+      "camera": "gate",
+      "problem": "The floodlight floats in the sky: gate_mast_pole and gate_mast_arm are at y=0 on the camera axis, hidden behind the lamp and its cone, and a bright U-shaped part of the column shows through the cone.",
+      "fix": "In gate_lamp(), move the column off axis to about (1.2, 3.2), keeping top 9.6. Run gate_mast_arm from (2.5, 3.2, 8.5) to (-3.78, 0, 8.6) and re-aim both stays, so the arm reads as a diagonal from the column top, visible above the wire at frame right, to the lamp. Move gate_mast_collar, gate_mast_cap and gate_lamp_in with it and add the column to SOLIDS. Keep the lamp at (-3.6, 0, 8.4) so the arch of light stays symmetric."
+    },
+    {
+      "priority": 2,
+      "camera": "wall",
+      "problem": "The road reads as polished ice or plastic with no aggregate, and the bottom quarter of the frame is a featureless grey slab with one blobby puddle.",
+      "fix": "In mats.asphalt: set damp roughness to 0.30-0.45 (currently 0.1-0.26, with the damp mix at 0.07) and keep 0.012 only where wet=1. Raise the aggregate bump from 0.0022 to about 0.006 and add a 400-scale noise layer. Widen base values to 0.02-0.08. Add two darker tyre lanes along Y at x about -5.2 and -7.0 (width 0.5, roughness -0.08), one longitudinal construction joint and one rectangular repair patch. In PUDDLES and height_image, add 4-6 small irregular puddles at y -61 to -52 across x -9 to -3, so lamp reflections break the foreground and one crosses the bottom frame edge. Raise the ripple height from 0.0017 to about 0.004."
+    },
+    {
+      "priority": 2,
+      "camera": "gate",
+      "problem": "The mirror puddle begins on a dead-straight horizontal line (about y=645, in line with the stop line) and reads as a rectangular mirror. The gate reflection is cut off instead of breaking up toward the apron.",
+      "fix": "Reshape the approach puddle in height_image as an irregular lobe from x about -19 to -9 with a ragged far edge (noise amplitude 0.6-1.0 m), plus two or three satellite patches between x -9 and -3, so fragments of the lower gate also reflect. Keep the stop line but wear it more (wear up to 0.6) so it does not rule the puddle edge."
+    },
+    {
+      "priority": 2,
+      "camera": "gate",
+      "problem": "Block A's lit windows are flat white cut-outs with no interior, gradient, reveal or spill; the third is a sliver on the side face.",
+      "fix": "In mats.window_lit, add a vertical gradient (top 1.0 to bottom 0.35), a brighter horizontal bar near the top for a ceiling tube, and blind=0.5 on one variant. Cut strength by about 40 % so the panes sit near 0.55 graded. Use two colour temperatures (one cool fluorescent, one warmer). Add a 0.9 x 1.2 m area light of 2-4 W just outside each lit pane, facing out, to light the sill, reveal and bars and glow the mist. Drop or move ('s', 1, 4) so no window is a sliver. Raise yardglow near block A by about 50 % so the parapet and floor lines just separate from the sky."
+    },
+    {
+      "priority": 2,
+      "camera": "gate",
+      "problem": "Razor wire seen frontally is a row of 'XXX' scribbles, evenly bright across all 1280 px with no falloff from the gate lamp. The thin wire stair-steps and will shimmer in motion.",
+      "fix": "In coil_section, build a true concertina: two counter-wound helices of 0.8 m diameter and 0.28 m pitch, clipped at three points per turn, with barbs as flat 15 mm tape tabs. Set a per-camera minimum wire radius of max(0.008, 0.6 * d * 36 / (lens * RES_X)). Darken and roughen M['wire'] (value about 0.3, roughness 0.5) and add TRIMS['gate'] = {'yardglow': 0.45}, so the wire is bright only inside the lamp's arch and fades to a dark silhouette toward the frame edges."
+    },
+    {
+      "priority": 3,
+      "camera": "tower",
+      "problem": "Dark rain hairlines cross the lit wall panel and tower shaft. The coil at upper left breaks into sub-pixel dots and zigzags. The rain is sparse hard needles, and the lower-right patch hangs with no visible source.",
+      "fix": "Set RAIN['tower'] clear=0.6 (or use the additive rain shader), cover about 0.02, wpx=(0.3, 0.6), and vary gain per streak. Add 30-40 near drops at 1.5-3 m from the lens as wider, softer, 30 % opaque streaks for depth. Apply the minimum wire radius above. Raise the mist density for this camera from 0.0045 to about 0.006, or let the off-frame mast scatter, so its cone shows as a beam behind the lower-right rain."
+    },
+    {
+      "priority": 3,
+      "camera": "gate",
+      "problem": "The gate leaves read half as boarded timber (vertical streaks plus battens), the gate face is evenly lit top to bottom, and the bollards are the brightest foreground objects.",
+      "fix": "In mats.gate_steel, halve the vertical streak contrast and add rivet or weld rows along the rails (use studs() at 0.15 m pitch). Add rust bleed and dirt on the bottom 0.4 m and below the hinges, a scuffed lighter patch around the lock box, and a slightly lower roughness (about 0.35) so rib edges catch a specular line. Cut gate_spill from 2200 to about 900 and raise gate_spot blend from 0.4 to 0.55, so the lower corners fall off by about a stop. Give the bollards a darker material (value about 0.2, roughness 0.6)."
+    },
+    {
+      "priority": 3,
+      "camera": "wall",
+      "problem": "The far lamps are eight evenly spaced white dots at the height of the fence's lower wire and read as fence studs. The left third of the frame is dead apart from the fence.",
+      "fix": "In far_lights(), keep 4-5 lamps in two irregular clusters (for example az -24, -22.5, -21.8 and -12, -9.5), with z 11-16 m so they clear the fence wires. Vary radius by 0.5-1.3 and emission by 0.3-1.0, and make them visible to volume scatter so each gets a small halo. Push the sodium saturation so some warmth survives the grade. Add a low dark far treeline or embankment (value 0.02, height 6-9 m at 400 m) to give the left horizon a shape under the year line."
+    },
+    {
+      "priority": 4,
+      "camera": "tower",
+      "problem": "The cabin glazing is indistinguishable from the cabin wall, so the watcher idea does not read (also true in the wall frame). The near downlight lens is a blown flat quad.",
+      "fix": "In mats.tower_glass, lower roughness to about 0.05 so the panes mirror the mist glow and the mast as a broken highlight. Add a 0.3-0.6 W cool point light below sill height inside the cabin (a console glow) so mullions and, with the cast, the officer's shoulders show as a silhouette. Add 30 mm mullion bars if missing. Reduce the tower lens emission so it peaks near 0.9 graded, and add a short visor box over each head."
+    },
+    {
+      "priority": 4,
+      "camera": "gate",
+      "problem": "The call post, the one object that says a visitor comes here, sits near black at frame left and does not read.",
+      "fix": "Raise call_glow from 0.5 W to about 3 W and add a 1 W downlight under call_hood (spot, 70 degrees) to make a small pool on the post and kerb. Move the post about 1.5 m toward the road centre line (iy toward 0), so it sits at roughly x=260 px, clear of the kerb fillet."
+    }
+  ]
+}

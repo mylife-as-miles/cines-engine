@@ -715,7 +715,7 @@ def rug(name, field=(0.07, 0.045, 0.04), tones=((0.03, 0.028, 0.035), (0.11, 0.0
     col = _mix(nt, _maprange(nt, pile, 0.3, 0.7, 0.0, 0.35), col, tuple(c * 1.3 for c in field))
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = 0.92
-    b.inputs["Sheen Weight"].default_value = 0.45
+    b.inputs["Sheen Weight"].default_value = 0.16        # (0.45 turned the whole rug into a pale slab at a grazing view)
     b.inputs["Sheen Roughness"].default_value = 0.5
     b.inputs["Specular IOR Level"].default_value = 0.0
     _bump(nt, b, pile, 0.3, 0.001)

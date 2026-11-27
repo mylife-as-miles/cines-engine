@@ -271,7 +271,7 @@ def materials():
         phone_edge=mt.satin_metal("phone band", (0.12, 0.12, 0.125), 0.35),
         lens=mt.plastic("phone lens", (0.004, 0.004, 0.005), 0.08, 0.6, 0.0),
         frame=mt.worn_wood("picture frame wood", 0.02, -0.01, light=(0.05, 0.03, 0.017), dark=(0.018, 0.011, 0.006), rough=0.4),
-        hardboard=mt.manila("frame back", (0.22, 0.17, 0.12), 0.8),
+        hardboard=mt.manila("frame back", (0.17, 0.125, 0.085), 0.8),
         photo=mt.photo("framed photograph", 0.127, 0.178, 0.0, image_rgb=(0.085, 0.08, 0.075), gradient=0.3),
         iron=mt.cast_iron("radiator paint"),
         brass=mt.satin_metal("valve brass", (0.3, 0.21, 0.09), 0.35),
@@ -975,11 +975,11 @@ def desk_things(pad=PAD):
     px, py, pt = pad
     group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.2, 0.03, 60.0))
     group("glasses", reading_glasses(px + 0.035, py - 0.105, pt - 180.0))
-    group("phone", phone(-0.235, -0.07, 12.0))
-    group("frame", photo_frame(-0.12, -0.255, 143.1))
+    group("phone", phone(-0.245, -0.03, 12.0))
+    group("frame", photo_frame(-0.12, -0.19, 143.1))
     # the photograph stands with its back to the window, under the stool's shadow: the night's light on that back
     # (only the frame sees it), so the hardboard, the strut and the turn buttons read from the desk camera
-    kick = area("frame_kicker", (-0.5, -0.33, TOP + 0.42), (0.2, 0.14), 3.0, NIGHT, spread=120, aim=(-0.12, -0.255, TOP + 0.1))
+    kick = area("frame_kicker", (-0.5, -0.33, TOP + 0.42), (0.2, 0.14), 1.3, NIGHT, spread=120, aim=(-0.12, -0.19, TOP + 0.1))
     kick.visible_camera = False
     recv = bpy.data.collections.new("frame_kicker_receivers")
     for o in G["frame"]:

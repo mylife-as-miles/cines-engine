@@ -1,0 +1,85 @@
+{
+  "stage": "baggage_belt",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 6,
+    "lighting": 5,
+    "materials": 5,
+    "set_dressing": 6,
+    "grounding_scale": 6,
+    "cast": 6,
+    "story_read": 5.5,
+    "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Not at fern level yet (mean about 5.7): one frame is close, two are not.\n\nReviewed the three graded frames and their raw PNGs in /home/user/cines-engine/claude-youtube/prize-that-became-a-prison/out/stages/baggage_belt/ (final_curtain, final_belt, final_overhead), with crops and luminance statistics. Stage code read for object names: /home/user/cines-engine/claude-youtube/prize-that-became-a-prison/scenes/stages/baggage_belt.py and baggage_belt_set.py. Nothing was edited or rendered.\n\n- **belt (about 7):** the only frame that would survive in the film. The one-point tunnel, battens dying toward the exit glow, haze and receding bags carry \"into the dark\". It is held back by a murky left third, a streaky right guard filling the lower-right corner, a stiff white plank of a tag, and pale bags at the vanishing point that out-shine her case.\n- **curtain (about 5):** the beat \"the bags leave her\" does not land.\n  - The wall is evenly front-lit to one mid grey (graded median 0.146, no falloff), so there is no lit island and no sense of a bright world behind the strips.\n  - Her case shows only its underside with four casters, so it is an anonymous dark box.\n  - Where the strips cross the case they dissolve into a milky ghost smear.\n  - The strips read as corrugated fabric panels, and the slivers are four ruler-straight white lines.\n  - Both lower corners and the foreground belt are flat grey slabs, roughly 45% of the frame.\n- **overhead (about 5):** an evenly lit catalogue lineup.\n  - Four bags get equal weight; the brightest thing is the steel chute slide, which has a visible radial pinch artefact at its centre.\n  - The navy bag at the edge is the most saturated object.\n  - The four bags are plainly two models used twice.\n  - Nothing says which two are hers.\n\n**Across the stage**\n- **Materials:** the guard steel has directional streaks that read as wood grain or motion smear (the brief's own lesson). The block walls are flat tints with drawn mortar lines and no relief. The sign shapes look like placeholders.\n- **Bags:** tags lie on the bags as rigid strips instead of looping a handle, and checked cases ride with their telescopic handles pulled out.\n- **Technical:** no clipping (graded max 0.84 to 0.86), no fireflies, no haze speckle, no legible text. Detail is soft and painterly from denoising at 64 spp at 720p.\n- **Hard-rule watch:** the blank rating plate on the diverter actuator renders as a streaky rectangle that looks like blurred-out text.\n\nMemory: nothing from it was needed for this review, and there is nothing new worth saving.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "curtain",
+      "problem": "Flat front light: the whole end wall sits at one mid grey, so the lit check-in side behind the strips does not read and there is no lit island. batten0 (x=1.3, 230 W) and bulk_panel light the wall frontally while behind_curtain is only 90 W.",
+      "fix": "Make the back room the key for this camera. Raise light 'behind_curtain' from 90 W to about 450-600 W, lower it to BZ+0.7 and aim it more horizontally (rot y about -78 deg) so it rakes along the belt toward camera and throws long bag shadows onto the transfer rollers. Raise 'behind_curtain_low' from 12 W to about 60 W. For this camera only (in set_layout), cut batten0 to k about 0.2 (about 45 W), halve bulk_panel, and hide 'sbatten0'. Target: wall above the opening at graded luminance 0.05-0.08, slivers and the belt spill 0.6-0.75, a rim on the top edges of both bags. Keep the camera exposure near -1.35; do not lift with fill."
+    },
+    {
+      "priority": 1,
+      "camera": "curtain",
+      "problem": "Her case is unreadable as hers: the camera sees only its underside and four casters, and where the strips cross it they turn into a milky ghost smear. The strips read as stiff fabric panels, not rubber or PVC parted by a bag.",
+      "fix": "In LAYOUT['curtain'] turn dawn_case about 180 deg so the lid, front pocket and tag end lead toward camera, and move it to x about 0.30 so 60% of it is through. In drape_strips, make the 3 strips over it visibly ride up and lie on the lid: lift their lower 0.35 m onto the case top with a 4-6 cm sag between contact points, and let the two neighbours swing 8-12 deg aside to open a 6-10 cm wedge of light at each side of the case. Rebuild strip_mat as smoky translucent PVC: Transmission 0.6, base colour about (0.10, 0.11, 0.12), roughness 0.25-0.35, scuffed band only in the lower 0.5 m; remove the 30:1 stretched noise that reads as cloth pleats. Overlap alternate strips by 2-3 cm and vary the gaps (0-15 mm, tapering) so the slivers are not four identical straight lines. Render this camera at 128+ spp so the translucency does not smear."
+    },
+    {
+      "priority": 1,
+      "camera": "overhead",
+      "problem": "Evenly lit lineup with no subject: four bags of equal weight, the chute slide is the brightest surface, the navy case at the right edge is the most saturated object, and nothing separates her two bags from the others.",
+      "fix": "Light one pool. For this camera keep only the batten at x=9.9 and narrow its light (spread about 70 deg, about 300 W) so the pool is roughly 2.2 m across, centred on her case and duffel; hide or dim to 10% every other source. Target at graded: her bags and the belt under them 0.25-0.35, the bags at the frame edges under 0.08, floor corners 0.03-0.05. Move the two anonymous bags half out of the pool (olive_duffel x about 8.0, navy_case x about 12.2) or drop to one anonymous bag. Pull the navy tint down to about (0.008, 0.011, 0.022). Drop the chute slide to roughness 0.55 and tilt the camera aim about 0.25 m toward -Y so the slide takes under 15% of the frame and the walkway line gives a clean bottom edge. Consider rotating the camera 90 deg so the belt runs vertically, as fern's top-downs often do, with her bags on the centre line."
+    },
+    {
+      "priority": 2,
+      "camera": "curtain, belt",
+      "problem": "Guard steel shows long directional streaks that read as wood grain or motion blur, and the guards fill both lower corners as flat grey slabs (curtain about 30% of frame, belt lower right about 20%).",
+      "fix": "In galvanised(scuff=True) drop the stretch on 'scr' from (3, 1, 260) to about (6, 1, 40), narrow its range to 0.66-0.74 and cut its colour mix from 0.5 to 0.15. Keep the rub band only between BZ+0.03 and BZ+0.18. Replace the large 1.3-scale colour noise with spangle only (Voronoi scale 60-90, +/-4% value). Add real construction: a 30 mm rolled top lip, panel joints every 1.2 m with a 3 mm shadow gap, and bolts on a visible support post, not floating rivets. For framing, raise the curtain camera to z about 1.45 and move it to x about 3.2 so the guards drop to thin leading lines. For belt, shift the camera to y about +0.12 and darken the outer face of the right guard by keeping the batten light off it (batten spread 110 to 90)."
+    },
+    {
+      "priority": 2,
+      "camera": "belt, overhead, curtain",
+      "problem": "Bag tags are rigid white strips laid across the bags (a plank over her lid, a bent tongue on the navy case), and the checked cases ride with telescopic handles pulled out. Neither happens on a real belt, and the tag on her case is the brightest thing on the hero.",
+      "fix": "In tag(): build a loop tag. A 45 mm wide, 0.2 mm thick strip that wraps the carry handle (loop radius about 15 mm), is stuck to itself, then hangs or lies as a 180-220 mm tail with 2-3 gentle bends and a 10-15 deg twist. Paper albedo about 0.55 (not 0.8), roughness 0.7, slightly warm. Retract the handles: on load, delete or hide dawn-suitcase vertices beyond the body end (the last about 0.19 m on -X noted in the code) or scale that region onto the body. Dull the oversized chrome zip pulls: clamp metallic to about 0.4 and value to about 0.35 for those texture regions, or raise rough_add to 0.3 on the case."
+    },
+    {
+      "priority": 2,
+      "camera": "belt",
+      "problem": "The left third is near-black murk (10% of the frame under 0.05) where the sorter landing should read, the pale shell and stone bags stacked at the vanishing point out-shine her case, and her duffel is a detail-free black mass.",
+      "fix": "Give the sorter landing its own practical: light bulk_n1 (x=10.8) at about 25 W with a small downward pool on the landing rollers and bollards, so the left has one readable island at 0.10-0.15 and falls off around it. In LAYOUT['belt'] swap the order so the dark bags (navy, oxblood, olive) are nearest the vanishing point and the pale shell and stone bags sit past the last live batten, in near-silhouette; space them so no two overlap from this camera (at least 3.2 m apart, alternating y by +/-0.15). Add a low rim on her two bags from the batten behind them: move batten1 from x=5.6 to about 5.0, or add a 15 W strip at (4.8, -0.85, 2.6) aimed back at -X, so the duffel's top straps and the case lid edge catch a cold edge."
+    },
+    {
+      "priority": 3,
+      "camera": "overhead",
+      "problem": "Clones: from straight above, the olive duffel is plainly her duffel and the navy case is plainly her case with a tint. Next to hers they read as copies, which undercuts 'hers among strangers'.",
+      "fix": "Use the Python-built shell_case (ribbed hard shell) as one neighbour and keep one textile clone. Break the clone's silhouette: a luggage strap (25 mm band around the middle, contrasting dull colour), a different orientation (on its side, wheels toward camera), and scale differences of at least +/-15% in length. Never show a same-model pair in the same light pool."
+    },
+    {
+      "priority": 3,
+      "camera": "curtain, belt",
+      "problem": "Block walls are flat-tinted rectangles with drawn mortar lines: no relief, no paint variation, no grime. The dado shows as a narrow blue stripe cutting through one course and reads as a texture glitch.",
+      "fix": "In block_mat add bump from the mortar mask (joint depth 3-4 mm, 10 mm wide, slightly rounded) plus fine block pore noise (scale about 300, strength 0.05). Add per-block value variation of +/-6%, a dirty kick zone in the bottom 0.3 m, and drip or scuff marks under the conduits and signs. Make the dado a full painted lower zone, floor to 1.25 m, darker and glossier (roughness 0.45 against 0.7 above) with a soft 5 mm edge, not a 10 cm band."
+    },
+    {
+      "priority": 3,
+      "camera": "overhead",
+      "problem": "Material artefacts and a rule risk: the chute slide has a radial pinch at its centre, the floor shows large cloud-like blotches, and 'diverter_act_plate' renders as a streaky rectangle that looks like blurred-out text.",
+      "fix": "Chute slide: drive the brushed pattern from object-space coordinates along the slope (noise scaled about (1, 200, 1) in the slide's local frame), not a radial or anisotropic tangent; roughness 0.5-0.6. Floor: in floor_mat cut the low-frequency mottle amplitude by about 70% and replace it with trolley tyre tracks along X, sealed-joint lines every 3 m and small stains under 15 cm. Plate: flat satin steel (roughness 0.5, no noise) with two rivets, or remove it."
+    },
+    {
+      "priority": 3,
+      "camera": "curtain",
+      "problem": "End-wall dressing looks like placeholders: the triangle and ring signs are flat primitives with no thickness or fixings, and the control panel screen is a grey card that does not glow or spill (the brief asks for practicals that glow and spill).",
+      "fix": "Signs: 2 mm aluminium plates with 6 mm radius corners, 4 corner screws, a 3 mm white border and a simple dark pictogram blob (no letters), slightly aged; mount one on the frame post, not centred on bare wall. Screen: raise the 'hmi' emission to about 3x and 'panel_screen_spill' from 1.6 W to about 6 W, so that with the wall now dark (fix 1) the panel is a small cold island with a visible glow on the door and wall; keep the bezel dark."
+    },
+    {
+      "priority": 3,
+      "camera": "all",
+      "problem": "Soft, painterly detail from denoising at 64 spp at 720p: fabric weave and steel texture are smeared, and the belt's white scuff flecks in the belt frame's foreground read as noise.",
+      "fix": "Finals at 1600x900 or 1920x1080 with 160-256 spp; keep sample_clamp_indirect at 3 and albedo+normal denoising. In belt_mat cut the scuff colour from 0.075 to about 0.045 and its mix from 0.55 to 0.3 so the flecks sit inside the rubber. Check the curtain case region again at full resolution for ghosting after the strip material change."
+    }
+  ]
+}
