@@ -1,0 +1,73 @@
+{
+  "stage": "evidence_table",
+  "round": 3,
+  "commit": "309cbc3",
+  "scores": {
+    "composition": 6,
+    "lighting": 6,
+    "materials": 5,
+    "set_dressing": 6,
+    "grounding_scale": 7,
+    "cast": 6,
+    "story_read": 6,
+    "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Round 3 is a modest step up from round 2 (mean 5.9 to 6.0). The overhead finally has a real practical: the pool spreads from the shade mouth with a clean cone edge, every shadow falls away from the lamp and the paper drops from 162 to 75 to 29/255 across the spread. The new receipt and the passport's page block are real gains. But the lamp convincingly motivates the light only in the overhead and the purses. In the push it is a self-lit white bowl with no readable arm or cone, and in the laptop shot it is out of frame and the screen is a flat grey card. The passport reads as a booklet only in the laptop shot. In its own close-up it is a flat slate-grey slab with an even cream line along one edge (no spring wedge, no hinge crease, no cover grain), and from overhead it is a periwinkle tile. These and the round-2 leftovers keep the stage below fern level: black-slate prints, the smooth push foreground, the mustard tote, the ring mark, the sheet smudge and the crushed far wood.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "passport",
+      "problem": "The hero passport does not read as a passport. The cover is dead-flat matte slate (graded 45,51,60, std about 5, no grain, no edge highlight). The 2.5 degree spring is invisible: the cream band along the near (tail) edge is the same width end to end. The spine and fore-edge face away from the lens, there is no hinge crease, and the colour is grey-slate rather than the dark navy the beat asks for. It reads as a small hardback notebook or a tablet folio as much as a passport, and from overhead as a periwinkle tile.",
+      "fix": "In evidence_table_paper.passport(), raise open_deg from 2.5 to about 5 (about 11 mm gap at the fore-edge). Turn the passport (spread turn 17) by about 35-40 degrees so the fore-edge corner faces the passport camera and the cream wedge visibly widens toward it. Add the flex crease every passport has: on the front cover, 7 mm in from the spine, an edge loop 1 mm wide pushed down 0.3 mm over the full 88 mm height. Bow the front cover 0.6-0.8 mm convex at its centre so the sheen grades across it. Let both boards overhang the page block by 1 mm at head, tail and fore-edge. Give the page-block edge faces striations (a Wave texture banded along Z, about 25 bands across the 3.5 mm, value 0.68-0.80 cream) instead of one flat cream. Cover material: base linear (0.010, 0.016, 0.045), roughness 0.55, coated-cloth bump (Noise scale about 900, strength 0.08-0.10, plus a Voronoi pebble at scale about 1500, strength 0.04) and a 0.35 mm bevel so the board edges carry a thin warm line. Finally, tuck one blank boarding pass between the pages so 30-40 mm of it sticks out of the fore-edge: the strongest 'this is a passport' cue that needs no crest or text."
+    },
+    {
+      "priority": 2,
+      "camera": "passport",
+      "problem": "The frame is still mid-grey and murky (graded mean 62, p10 21). The brightest thing in it is the white boarding pass at top right (about 85-90/255), not the passport. The cover is lit evenly, with no falloff, so the hero is the flattest object in the frame.",
+      "fix": "Strengthen net_passport so the passes and the far half of the folder drop by about 1 stop (passes to about 55-65 graded) while the passport keeps the full pool. Move the cheated lamp mark (-0.61, -0.32, -55) so the light rakes the cover from about 25-30 degrees elevation, front-left. The cover should then fall from about 70/255 at the near corner to about 35 at the spine, and the bevel and crease catch a line. Put fx_passport on the fore-edge corner at f/2.8 so the wedge and the protruding pass are the sharpest things in frame. Keep p1 at 3-6/255."
+    },
+    {
+      "priority": 2,
+      "camera": "push",
+      "problem": "The only shot that shows the lamp still reads it as a floating, self-lit white bowl. The whole head, including its exterior and top knob, sits at p95 199. There is no bulb hot spot. The arm is all but invisible (about 25/255 against 10 beside it), the base is a faint smudge, and the cone is a soft vertical glow, not a wedge. The knob is about 15 px from the top edge.",
+      "fix": "Cut lamp_rim from 2.2 W at 0.3x0.3 m to about 0.5 W at 0.08x0.08 m, placed directly behind the head relative to the push camera so it only edges the shade. Drop the lamp prop's exterior val from 0.22 to about 0.07, roughness 0.35, so the outside shows a specular rim only (under 40/255) and only the reflector glows (150-190). Turn the push lamp mark from -135 to about -148 degrees, so a sliver of the 40-strength bulb shows as the frame's hot core. Add a 2 W spot (cone 12 degrees) from behind-right, light-linked to the lamp only, aimed along the arm and base, so the arm reads as a 40-60/255 line. For the push, lower SPOT spot_blend from 0.55 to about 0.3 and raise cone_haze density from 0.035 to about 0.06, so the beam has edges. Lower the camera aim about 2 cm to give the head at least 5% top margin."
+    },
+    {
+      "priority": 2,
+      "camera": "overhead",
+      "problem": "The pool is now motivated, but the grade crushes everything beyond it: the far wood is raw 8 but graded 1/255, and 54% of the frame is below 8, so the right third is a void rather than falloff. The hottest, hardest patch is still the top of the case stack, cut by the shade's edge. There are three more defects. A denoiser smear runs across the bottom of the right-hand sheet (around x 550-650, y 488-498). A straight vertical step in value runs down the wood at x about 712 from y 520 to the bottom edge (visible in raw and graded). The receipt at far right reads as a grey brick.",
+      "fix": "Raise room_bounce for the spread (BOUNCE 2.0) to about 5.0, so the far wood grades 8-14/255 with its grain readable, and leave the pool as it is. Either move the 'stack' group about 0.07 m further from the lamp or drop its top folder, so its top sits in the spot's blend and the folder sheets become the brightest surface. Render the overhead at 128 spp, or denoise with albedo and normal passes (prefilter Accurate), to remove the smear. Find what causes the x 712 step (a plank's UV seam or end joint, or an occluder's shadow edge) and remove it. For the receipt, raise the rolled end 2-3 mm and turn it 15 degrees toward the lamp, so the roll catches a highlight from above. Move the lamp mark about 4-6 cm right so the arm's elbow sits inside frame."
+    },
+    {
+      "priority": 2,
+      "camera": "overhead",
+      "problem": "The three prints still read as empty picture frames: graded 24, 32 and 8/255 (two near-identical slates and one black), with no gloss streak. In the push only their white borders catch light, so they show as thin white outlines on black (the wireframe look of round 2).",
+      "fix": "Give the photo_1, photo_2 and photo_3 materials three distinct blank tones: linear 0.10 cool slate, 0.22 warm grey and 0.32 faded sepia. Add clearcoat 0.6 with clearcoat roughness 0.08, and a 1-2 degree twist each, so every print takes a different lamp streak. Drop the white border from near-white to about 0.55, so in the push each print reads as a plane rather than an outline."
+    },
+    {
+      "priority": 3,
+      "camera": "laptop",
+      "problem": "This is almost unchanged from round 2. The screen is a flat grey card (graded 152-170, std 5, no gradient), no brighter than lit paper elsewhere, so it does not read as the practical. The spill barely reaches the keys (about 55/255) and the bezel is thin. The turned-down lamp the beat names is out of frame, so the warm light on the passes has no source. The case stack is still cut by the left edge. The mug is a black can, and dead dark wood fills the bottom 40% of the frame.",
+      "fix": "Raise the screen emission so it reads about 225-235 raw at the top, falling to about 205 at the bottom (a 10% vertical gradient), tinted (0.78, 0.85, 1.0). Raise laptop_screen_light from 2.6 to about 8 W. Widen the bezel to 7 mm in near-black gloss (base 0.01, roughness 0.15). Bring the lamp into frame left by moving the ch02 lamp mark to about (-0.25, 0.40), glowing at LAMP_LEVEL 0.5, so the warm light on the passes is motivated. Then either pan the laptop camera about 4 degrees right or move the stack about +0.06 m in x, so the stack's end has a margin. Turn the mug so its handle faces the lens and give the rim a highlight. Raise the camera aim (TOP+0.075 to about TOP+0.10) so the foreground wood is 25% of the frame or less."
+    },
+    {
+      "priority": 3,
+      "camera": "push",
+      "problem": "The lifted corner of sheet_a still reads as a black ribbon, its shaded underside. The foreground planks are smooth grey slabs: the grazing Fresnel sheen wipes out grain and wear.",
+      "fix": "Give the paper materials a little translucency (Principled subsurface weight 0.08-0.12, or a Translucent BSDF mixed in at 0.15 with a warm tint), so the curl's underside glows warm under the lamp as real paper does. Push the foreground wood's roughness to 0.6-0.7, with Noise-driven variation between 0.5 and 0.75, and grain bump strength about 0.2, so the planks keep texture at a grazing angle."
+    },
+    {
+      "priority": 3,
+      "camera": "purses",
+      "problem": "The tote is oversaturated in raw (132, 70, 1: sat 0.99, hue 32) and grades to mustard/olive (76, 57, 29), not cognac. The ring stain on the front plank in front of the satchel still reads as a stray arc, unchanged from round 2.",
+      "fix": "In props.load for handbag-tote, shift hue by about -0.03 toward red and lower sat until the raw tote reads about (125, 58, 22), so it grades reddish-brown. Hide the mug-ring decal for the ch04 beat, or move it off the hero plank."
+    },
+    {
+      "priority": 4,
+      "camera": "all",
+      "problem": "The absence is acceptable but not authored. A pen laid on the letter, ring stains and a mug say 'a desk', but nothing says someone just stood up, and the room behind the table is pure black in every frame.",
+      "fix": "Add reading glasses, folded, by the letter in the overhead. In the laptop frame, add the edge of a chair back at the near left with lamp spill on its top rail (about 20-30/255), pushed back from the table. Lift the far plaster wall to 4-8/255 in the push, so the void has depth."
+    }
+  ]
+}

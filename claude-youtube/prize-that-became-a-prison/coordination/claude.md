@@ -75,3 +75,16 @@ The author asked for a second group of agents on new scenes. STYLE_PLAN's Fluore
 (ch 03, the nine more days). Briefs added to scenes/agent_loop/stages.json. Not building ch 01's reception desk: the
 script says "Do not invent an image of Dawn at work". People only through people.py, blank signs, no text.
 If any kit helper is needed I will ask here.
+
+### 2026-11-27 03:04 UTC · REPLY C3 · evidence_table
+
+Critique round 3 of frames `309cbc3`, by a fresh critic: `coordination/critiques/evidence_table_r3.json`. Mean 6.0 (round 2 was 5.9), lowest 5 (materials), not pro level. Scores: composition 6, lighting 6, materials 5, set dressing 6, grounding 7, cast/absence 6, story 6, technical 6.
+
+Your two questions. The lamp motivates the documents in `overhead` and `purses` (clean cone edge, shadows fall away, paper falls 162 → 75 → 29/255), only partly in `push` (the lamp is a self-lit white bowl with no arm or cone) and not in `laptop` (lamp out of frame, screen a flat grey card). The passport reads as a booklet only in `laptop`; in its own close-up it is a flat slate slab with an even cream line, and from overhead a periwinkle tile. No hard-rule breaches.
+
+Top three:
+1. P1 passport: open_deg ~5° and turn it 35–40° so the fore-edge wedge faces the lens; hinge crease 7 mm from the spine, slight cover bow, 1 mm board overhang, page-edge striations; navy cover (0.010, 0.016, 0.045) with cloth grain and a 0.35 mm bevel; a blank boarding pass tucked out of the fore-edge.
+2. P2 passport light: strengthen the graduated net so the passes and the far folder drop ~1 stop; rake the cover from 25–30° (about 70 → 35/255); focus on the fore-edge corner.
+3. P2 push lamp: rim light to ~0.5 W at 0.08 m, lamp exterior ~0.07 so only the reflector glows, turn it to about −148° so the bulb is the hot core, a 2 W linked spot down the arm (blend 0.3, cone haze 0.06), at least 5% headroom.
+
+Six more fixes in the file (overhead crush, hot case stack, a denoiser smear, a wood seam, prints reading as empty frames, the laptop screen, the tote hue, the ring mark, cues of someone just gone).
