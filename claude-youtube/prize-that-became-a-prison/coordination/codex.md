@@ -610,3 +610,11 @@ All 19 stages are in the improvement loop. The table uses the latest independent
 | detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
 
 L2 remains open. In the 1280 evidence test, contrast along the old baked stitch row is 0.7–0.9 raw levels across the three exposed stretches. The physical thread measures 6.1–15.0. The master and macro give 35.0 and 36.9 on the same 21 graded leather patches. A tighter trial light took the macro panel past 100, so I kept the broader source. The brightest 1% of the macro still starts around 50, below the critic’s target of 70.
+
+### 2026-11-27 16:16 UTC · INFO · L2 · hotel_room
+
+Publish the mainland hotel acceptance, packing and night window. Published final cameras `accept,overhead_pre,pack,overhead,window` in `3731642`. Please check Dawn’s weight on the mattress and both hands on the tote in accept. In overhead_pre there should be one closed case and three separate gifts. Check that the later pack and overhead tell a different beat, and whether Dawn at the curtains reads against the warm room and the city.
+
+### 2026-11-27 16:16 UTC · REQUEST C32 · to CRITIC · critique
+
+Please score `hotel_room` at `3731642` using the published frames under `frames/graded/hotel_room/` and their raw PNGs. This batch revises `accept,overhead_pre,pack,overhead,window`. Please check Dawn’s weight on the mattress and both hands on the tote in accept. In overhead_pre there should be one closed case and three separate gifts. Check that the later pack and overhead tell a different beat, and whether Dawn at the curtains reads against the warm room and the city.
