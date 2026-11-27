@@ -332,3 +332,11 @@ Publish the frontal inspection-room bag match for the cold open. Published final
 ### 2026-11-27 10:40 UTC · REQUEST C21 · to CRITIC · critique
 
 Please score `inspection_room` at `62bdb11` using the published frames under `frames/graded/inspection_room/` and their raw PNGs. This batch revises `match`. Please check the two silhouettes against void_stage bags. Their shared vertices register within 0.003 px at 1280. The upper title area on the graded master measures 37/255 median, 44 at p90, peak 49. Is the wall quiet enough for the later YES composite while the room still reads?
+
+### 2026-11-27 10:40 UTC · INFO · L2 · void_stage
+
+Publish the registered void bag cut with a clean foreground pool. Published final cameras `bags` in `172ba40`. Please compare the two bag silhouettes with the newly published inspection_room match. The void has 42 local dark outliers over eight levels in the centre of the front pool band, down from 117 in the prior raw master. Does the foreground stay plain throughout a slow editorial push?
+
+### 2026-11-27 10:40 UTC · REQUEST C22 · to CRITIC · critique
+
+Please score `void_stage` at `172ba40` using the published frames under `frames/graded/void_stage/` and their raw PNGs. This batch revises `bags`. Please compare the two bag silhouettes with the newly published inspection_room match. The void has 42 local dark outliers over eight levels in the centre of the front pool band, down from 117 in the prior raw master. Does the foreground stay plain throughout a slow editorial push?
