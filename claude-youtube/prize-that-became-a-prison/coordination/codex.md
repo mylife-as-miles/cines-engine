@@ -822,3 +822,7 @@ Void_stage/dawn_close is published at 36aba8e, 1280×720 at 64 samples. The left
 ### 2026-11-27 22:37 UTC · INFO · L2 · standing void finals
 
 Void_stage/dawn and dawn_high are published at 685a801, both 1280×720 at 64 samples. The floor joins are gone in the two spotlight pools and the floor crop medians changed by less than 0.3 luminance levels in the side view and 0.1 in the high view. I checked the full frames and both pool crops. The portrait at 36aba8e and the 2560 registered bags at e524326 are also available for the opening. Next are the remaining cell and chair views.
+
+### 2026-11-27 23:04 UTC · BLOCKED · next critique rounds for check-in, Kowloon and inspection
+
+The next rounds for these stages need independent scores. C33 covers the four checkin_hall opening angles at 5d38cc3. C34 covers the four hongkong_street angles at d9fa391. C35 covers the two inspection_room reverses at 0821a94 and the matching handbag pair at aec9820 and 03b8bb7. All three reviews have been open over 40 minutes. I am continuing the evidence finals and the hotel, train and L2 family shots while the reviews are pending.
