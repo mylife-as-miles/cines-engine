@@ -1,0 +1,103 @@
+{
+ "stage": "checkin_hall",
+ "round": 5,
+ "commit": "0b326bf",
+ "scores": {
+  "composition": 6,
+  "lighting": 6,
+  "materials": 6,
+  "set_dressing": 5,
+  "grounding_scale": 6,
+  "cast": 5,
+  "story_read": 6,
+  "technical": 6
+ },
+ "pro_level": false,
+ "verdict": "A real step up from round 4 (mean 5.1 to 5.8): four of the five P1s landed. The profile case badge is gone. The display's teal underlight no longer reaches Dawn, because it is light-linked to the scale and bags. The reverse is a stop darker, with readable sockets, a forehead near 200 raw and a dark blouse, and the profile tear streak is gone. It is still not at fern's level. The hand fix went too far: it is now a high-arched claw at the centre of the close-up, and in the profile and the reverse the hand is the hottest skin while the monitor is the hottest surface. The wide still crushes about 30% of its pixels, with its brightest marks on the ceiling. None of the round-4 P3-P5 set and camera fixes were made (scale framing, trolley, agent suit).",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "shoulder",
+   "problem": "Dawn's left hand now reads as a tense claw, like a spider on tiptoe. The knuckles sit about 4-5 cm above the passport and the fingers drop almost vertically to it, with the nails facing the lens. Contact is partial. The middle and ring pads land just inside the passport's far edge and leave small contact shadows, though at 6x zoom a 2-4 px gap remains between the tips and their shadows. The index tip sits on the passport's far-left corner. The thumb and the pinky float with no shadow under them. The cause is in rest_hand(): curl=23 on the f_*.01_master bones bends all three joints (about 70 deg of total flex, 105 deg on the pinky at curl+12), and the pitch loop then lifts the heel of the palm 12 mm above the pads. The height correction also stops after attempt 5, so the last pitch step goes uncorrected.",
+   "fix": "In pose_cast, call rest_hand with curl about 12 (keep the per-finger offsets but cap the pinky at curl+8). In rest_hand, change the pitch criterion from palm_low - finger_low = +0.012 to about -0.004, so the heel rests 0-2 mm above the ledge (the ledge is 6.4 mm below the passport top) while the pads sit on the passport. After the loop, run one more pass: correct target.z from the measured finger_low, re-pose without changing pitch, and repeat until |finger_low - top_z| < 1 mm. Measure each finger separately: the index, middle and ring lowest vertices should be within 1.5 mm of the passport top, and the MCP knuckles (head of each f_*.01 bone) 18-25 mm above it. Thumb: thumb.01_master X about 25 deg, Z about -18 deg, so its tip rests on the ledge beside the passport's near-left corner (within 2 mm, with a contact shadow). Shift the passport so the index pad lands at least 8 mm inside its edge, not on the corner. Re-check from shoulder, profile and wide."
+  },
+  {
+   "priority": 2,
+   "camera": "shoulder, profile",
+   "problem": "The hand is now the hottest skin in both close frames, because the island key (rot X +8 deg) is aimed at the ledge where the hand rests. Profile: hand p95 223 graded, max 229 (nearly clipped), against Dawn's head at median 45 and p95 160. Shoulder: hand back raw 190-196 (max 227), 157-168 graded, the same as the forehead. A white hand pulls the eye off her face in both frames.",
+   "fix": "Add a shadow-only dot, made like agent_flag: a 0.25 x 0.20 m plane at about (0.30, 0.12, 1.95), with visible_camera, visible_diffuse, visible_glossy, visible_transmission and visible_volume_scatter all False, so it only casts a soft partial shadow on the hand and the passport. Move it in Y until the hand drops 0.5-0.7 stop and her face does not change. Targets: profile hand p95 190 graded or less; shoulder hand mean 135-145 graded, clearly below the forehead."
+  },
+  {
+   "priority": 2,
+   "camera": "profile",
+   "problem": "The agent's monitor face is the brightest surface in the profile (median 154, p95 192 graded) and it sits dead centre between the two people. Dawn's head is median 45, so the eye goes to a blank screen, not to her.",
+   "fix": "In materials(), set monitor=screen_mat('monitor glow', ...) strength from 5.0 to about 3.0. Keep desk0_mon_light at 6 W so the agent stays modelled by his screen. Target: screen median 115-125 graded in the profile, below Dawn's lit profile edge and the agent's lit face (p95 about 146)."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "29.6% of the wide is at 8/255 or below after the grade (it was 28.9%). The right-hand back wall is graded (1,3,3), the ceiling 6-11 and the left glazing (4,7,8), although the raw frame holds detail there (panels, the trim strip, the apron). The brightest marks are still the bulkhead diffusers at top right and the hall fitting at top left (raw max 230-231). Grade A is locked, so the lift has to come from the scene.",
+   "fix": "Add an unseen cool wash on the back wall right of the open position: an area light 2.5 x 1.5 m at (3.2, 1.0, 3.0) aimed at (3.6, 2.55, 1.2), 12-18 W, colour (0.72, 0.82, 1.0), visible_camera False, so the service door and the extinguisher cabinet read at raw 30-40. Raise sky_mat('night') strength from 1.5 to about 2.5 so the glazed end reads at raw 35-40. Drop the visible 'fluorescent' emission (tube, strength 9) to about 5. The area lights carry the actual light, so only the fittings' look changes. Targets: 20% or less of the wide at 8/255 or below; no fitting above 200 raw."
+  },
+  {
+   "priority": 3,
+   "camera": "scale",
+   "problem": "The display's cool light stays on the scale and bags as intended (it is light-linked), but on the luggage it hardly reads. The case side and the duffel end that face the display are raw 20-28, no brighter than their shadow sides, so the bags look lit only from above by down_scale. The display's light shows instead as a hot specular stripe on the post (raw max 234) and on the plate's right rim (raw 107-122), the brightest edge in the frame.",
+   "fix": "Re-aim scale0_disp_light: rotate it about 35 deg down from the horizontal, toward the duffel's right end and the case's right side at about (xs + 0.15, 0.45, 0.45), and raise it to about 18 W inside the link. Set visible_glossy False on disp_spill and disp_under so they stop striping the rim and the post. Targets: case right side and duffel right end raw 40-50, the rim 80 or less, the display panel still the brightest thing."
+  },
+  {
+   "priority": 3,
+   "camera": "scale",
+   "problem": "The scale's side rims run along Y but use 'brushed steel' with stretch (1, 30, 30), which streaks along X. On rim_r (scale frame, x 720-750, y 450-700) the brushing therefore crosses the rim as horizontal bands, which reads as a film strip or ladder rather than steel (the lesson on streaky noise on steel).",
+   "fix": "Add a steel_y material, a copy of 'steel' with stretch (30, 1, 30), and use it for rim_l, rim_r, the belt rails and the side reveals (every steel part long in Y). Re-check rim_r at 3x zoom: the streaks should run along the rim."
+  },
+  {
+   "priority": 3,
+   "camera": "scale",
+   "problem": "Unchanged camera (lens 35, aim x 1.5). The right 35% of the frame is empty dark floor and the left 16% is a crushed black slab of counter end (graded 6-10), so the bags and display fill only the middle half of a controlled close-up.",
+   "fix": "Lens 35 to 42 mm and aim x 1.5 to about 1.62, so the duffel, the case and the display fill the frame with the display in the upper-right third. Check that the front rim of the plate stays inside the bottom edge."
+  },
+  {
+   "priority": 3,
+   "camera": "profile",
+   "problem": "The agent's right hand (the far side, by the monitor foot) is off the keyboard. It lies on the work surface with straight, splayed white fingers, a small starfish next to the bright screen. Only his near hand is on the keys.",
+   "fix": "Pose both agent hands with rest_hand onto the keyboard top (z = WORK + 0.02), curl about 22 (typing hands are curved), wrists at about (x0 + 0.04, 0.64) and (x0 + 0.28, 0.64), fingers along -Y, and refit the l_arm and r_arm tuples from the solve instead of (22, 10, 55) and (24, 4, 50). Check from the profile at 4x zoom."
+  },
+  {
+   "priority": 3,
+   "camera": "shoulder",
+   "problem": "The steel nosing of the ledge sits on the frame's bottom edge as a bright line across the full width in the last 6 rows (raw max 222, graded 100-113). It reads as a border cut by the frame.",
+   "fix": "Raise the shoulder aim z from 1.32 to about 1.355 so the nosing leaves the frame, or lower it until the nosing sits at least 25 px inside. Also raise steel_dark roughness to (0.55, 0.75) so the nosing reads as a dull edge."
+  },
+  {
+   "priority": 4,
+   "camera": "shoulder",
+   "problem": "The face is now clean but flat. The left and right cheeks are within 5% of each other (raw 158-167 against 165-174), with only a top-to-bottom gradient (forehead 200, neck 104). It reads as a showroom mannequin rather than the noir film's lit island.",
+   "fix": "Cut 'counter eye bounce' from 4 W to about 2.5 W and move it from x 0.48 to about 0.30 (frame right, the side the island key already favours), aimed at her eyes. Target: frame-left cheek about 0.65-0.7 of the frame-right cheek in raw, sockets still at 45% or more of the forehead."
+  },
+  {
+   "priority": 4,
+   "camera": "shoulder, profile",
+   "problem": "Shared cast (kit). The sculpted hair still reads as a helmet: a thin dark seam at the hairline and hard low-poly facets on the side above the ear (shoulder). The bun is a perfect sphere stuck to the back of the head (profile).",
+   "fix": "Kit request to Codex in people.py / cast.py: subdivide the hair mesh once (level 1, smooth shading) and shrinkwrap its border loop onto the scalp at 0.5 mm. Make the bun an ellipsoid (scale about 1.0, 0.8, 0.85) sunk about 30% into the head, with the hair's combed bump."
+  },
+  {
+   "priority": 4,
+   "camera": "wide",
+   "problem": "Unchanged since round 3. In the wide the trolley reads as a supermarket cart (a wire-mesh push frame and a wire deck), and the queue belts are thin, straight, taut bars.",
+   "fix": "In checkin_hall_trolley.py, replace the mesh panel with a single bent-tube push frame and a brake bar, and make the deck a solid steel_dark plate with a 3 mm bevel. Or turn the trolley about 70 deg so its flat side profile faces the wide. Belts: 50 x 2 mm webbing with about 1.5 cm of sag at mid-span (three segments)."
+  },
+  {
+   "priority": 5,
+   "camera": "wide",
+   "problem": "The agent's 'plain dark suit' still reads mid grey in the wide (62-82 graded; round-4 target 60 or less), close to the lit counter. pos0_down_agent is still 42 W.",
+   "fix": "Drop pos0_down_agent from 42 W to about 25 W. His monitor and the island already light his face. Target: suit 60 graded or less in the wide."
+  },
+  {
+   "priority": 5,
+   "camera": "profile",
+   "problem": "Where the badge was, the case sidewall now carries a flat, untextured black rectangle (raw 44-61). It is clean for the hard rule, but at 3x zoom it reads as a pasted-on patch. Separately, the display head at the right edge is seen from behind as a black box on a pole cutting the frame top to bottom.",
+   "fix": "Give the patch the case fabric's bump and a 1.5 mm darker border, so it reads as a stitched ID pocket. For the post, either pan the profile aim about 0.1 m toward -X so the post leaves the frame, or let a sliver of the display_edge bleed show past the hood so it reads as a lit display seen from behind."
+  }
+ ]
+}

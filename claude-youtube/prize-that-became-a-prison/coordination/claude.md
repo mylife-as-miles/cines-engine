@@ -170,3 +170,20 @@ My two entries above headed 04:55 (hearing_room) and 05:05 (K3) were written at 
 ### 2026-11-27 04:53 UTC · INFO · courtroom
 
 Round-3 finals published in `1866f9d`; fresh critique `scenes/agent_loop/courtroom_r3.json`: mean 6.1 (round 2 was 5.9), lowest 5 (lighting, cast), not pro level. The black squares, the Python pews and the dock's shallow focus landed; Dawn's hand floats above the ledge, the wide's pool comes from the vignette rather than the lights, and the bench's brightest thing is a lit post. These fixes go to the next shift.
+
+### 2026-11-27 04:56 UTC · REPLY C7 · checkin_hall
+
+Critique round 5 of frames `0b326bf`, by a fresh critic: `coordination/critiques/checkin_hall_r5.json`. Mean 5.8 (round 4 was 5.1), lowest 5 (cast, set dressing), not pro level. Scores: composition 6, lighting 6, materials 6, set dressing 5, grounding 6, cast 5, story 6, technical 6. This was checkin_hall's second critique this shift, the last before handback. Four of round 4's five P1 fixes landed (badge gone, display teal no longer on Dawn, reverse a stop darker with readable sockets, tear gone).
+
+Your questions:
+1. Case sidewall in profile: clean. The four-bar plate is gone; above the side handle there is only a blank matte dark rectangle, no bars, badge or logo. At 3× it reads as a flat patch stuck on; giving it the case fabric's bump is a P5.
+2. Fingertip contact in the reverse: partial, and the pose is now the main problem. Middle and ring tips land just inside the passport's far edge with small contact shadows (a 2–4 px gap at 6×, a few mm or depth-of-field blur); the index sits on the corner; thumb and pinky float with no shadow. Knuckles are 4–5 cm above the passport and the fingers drop almost vertically, a high-arched claw, from  plus the 12 mm palm lift.
+3. Forehead in the reverse: fixed. About 200 raw (peak 213), about 165 graded; sockets at 57–68% of the forehead; no teal on the neck. The face is flat (cheeks within 5%), and the hand is as bright as the forehead.
+4. Scale light: it stays on the scale and bags (the three display lights are linked; Dawn's jaw is neutral at (69,67,67) raw, the floor by the post stays dark), but it barely shows on the bags: the faces toward the display are 20–28 raw, no brighter than their shadow sides. It shows instead as hot streaks on the display post and the plate's right rim.
+
+Top three:
+1. P1 shoulder: in `rest_hand`, curl about 12, heel of the palm on the ledge with knuckles 18–25 mm up, a final height pass, thumb on the ledge; index, middle and ring tips each within 1.5 mm of the passport top.
+2. P2 shoulder and profile: the hand is the hottest skin in both frames (profile p95 223 graded); a shadow-only flag about 0.25 × 0.20 m at roughly (0.30, 0.12, 1.95) to take 0.5–0.7 stop off it.
+3. P2 profile: monitor glow from 5.0 to about 3.0, so the screen reads 115–125 graded rather than outshining Dawn; keep the 6 W monitor light on the agent.
+
+Not done from round 4: the scale camera, the trolley and queue belts, the wide's crushed blacks (about 30% of pixels). No hard-rule breaches.
