@@ -1,0 +1,186 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>story type</title>
+<style>
+@font-face{font-family:"InterD";src:url(fonts/InterDisplay-Thin.otf);font-weight:100}
+@font-face{font-family:"InterD";src:url(fonts/InterDisplay-Light.otf);font-weight:300}
+@font-face{font-family:"InterD";src:url(fonts/InterDisplay-Regular.otf);font-weight:400}
+@font-face{font-family:"InterD";src:url(fonts/InterDisplay-SemiBold.otf);font-weight:600}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-300-normal.woff2) format("woff2");font-weight:300}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2");font-weight:500}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2");font-weight:600}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic}
+@font-face{font-family:"Bebas";src:url(fonts/bebas-neue-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Oswald";src:url(fonts/oswald-latin-300-normal.woff2) format("woff2");font-weight:300}
+@font-face{font-family:"Oswald";src:url(fonts/oswald-latin-500-normal.woff2) format("woff2");font-weight:500}
+html,body{margin:0;background:transparent}canvas{display:block}
+</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// Story typography for The Prize That Became a Prison. Every frame is a pure function of t (seconds).
+// Contract (scripts/canvas_render.js): window.draw(mode, t), window.READY. Optional: window.LOOK ('A'|'B'|'C'),
+// window.BG (an image URL drawn under the type, for previews; omitted for the alpha layers that go over the plates).
+// Motion numbers from cinetic (references/copy-and-type.md §8, fx/TypePresets.tsx, fx/TypeFx.tsx, fx/Roll.tsx),
+// converted from its 60 fps frames to seconds. No glow, no overshoot, no fade-out of a statement: lines leave with
+// the cut. Red is never used here: in this film red marks only the seam.
+const W = 1920, H = 1080, f60 = n => n / 60;
+const cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
+function bez(x1, y1, x2, y2) {            // cubic-bezier(x1,y1,x2,y2) as y(x), solved by Newton then bisection
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = u => ((ax * u + bx) * u + cx) * u, sy = u => ((ay * u + by) * u + cy) * u, dx = u => (3 * ax * u + 2 * bx) * u + cx;
+  return x => {
+    x = cl(x); let u = x;
+    for (let i = 0; i < 8; i++) { const e = sx(u) - x, d = dx(u); if (Math.abs(e) < 1e-6 || Math.abs(d) < 1e-6) break; u -= e / d; }
+    if (Math.abs(sx(u) - x) > 1e-5) { let lo = 0, hi = 1; u = x; for (let i = 0; i < 30; i++) { if (sx(u) < x) lo = u; else hi = u; u = (lo + hi) / 2; } }
+    return sy(u);
+  };
+}
+const E = {
+  snapOut: bez(.137, .758, .128, .926), glide: bez(.172, .687, .393, .943), rise: bez(.17, .75, .29, .83),
+  over: bez(.232, .902, .794, .997), out: bez(.16, 1, .3, 1), inOut: bez(.673, .077, .288, .943),
+};
+
+// ---- the three looks on the board; the author picks one ----
+const LOOKS = {
+  A: { name: 'Report',       // Inter Display: a clean investigative grotesk
+    ink: '#e7e9ec', dim: 'rgba(231,233,236,0.62)',
+    sup: { fam: 'InterD', w: 400, size: 40, track: 0.2, caps: true },
+    sup2: { fam: 'InterD', w: 300, size: 92, track: 0.02, caps: true },
+    hero: { fam: 'InterD', w: 300, size: 300, track: -0.01, caps: true },
+    big: { fam: 'InterD', w: 300, size: 74, track: 0.04, caps: true },
+    num: { fam: 'InterD', w: 100, size: 230, track: -0.02, caps: true } },
+  B: { name: 'Cinema serif', // Cormorant Garamond: an engraved, film-title serif
+    ink: '#ece8e1', dim: 'rgba(236,232,225,0.62)',
+    sup: { fam: 'Cormorant', w: 500, size: 44, track: 0.22, caps: true },
+    sup2: { fam: 'Cormorant', w: 400, size: 104, track: 0.04, caps: true },
+    hero: { fam: 'Cormorant', w: 300, size: 340, track: 0.02, caps: true },
+    big: { fam: 'Cormorant', w: 500, size: 84, track: 0.08, caps: true },
+    num: { fam: 'Cormorant', w: 400, size: 250, track: 0.0, caps: true, italic: true } },
+  C: { name: 'Condensed',    // Bebas Neue with Oswald: tall, heavy, the hardest hit
+    ink: '#e9eaec', dim: 'rgba(233,234,236,0.62)',
+    sup: { fam: 'Oswald', w: 500, size: 40, track: 0.18, caps: true },
+    sup2: { fam: 'Bebas', w: 400, size: 132, track: 0.03, caps: true },
+    hero: { fam: 'Bebas', w: 400, size: 320, track: 0.03, caps: true },
+    big: { fam: 'Bebas', w: 400, size: 120, track: 0.04, caps: true },
+    num: { fam: 'Oswald', w: 300, size: 250, track: -0.01, caps: true } },
+};
+const look = () => LOOKS[window.LOOK || 'A'];
+function font(ctx, st, scale = 1) {
+  ctx.font = `${st.italic ? 'italic ' : ''}${st.w} ${(st.size * scale).toFixed(2)}px "${st.fam}"`;
+  ctx.letterSpacing = `${(st.size * scale * st.track).toFixed(2)}px`;
+}
+// letterSpacing adds space after the last glyph too; measure without it for alignment
+function width(ctx, text, st, scale = 1) { font(ctx, st, scale); return ctx.measureText(text).width - st.size * scale * st.track; }
+
+// ---- motion ----
+// Calm reveal, word by word: opacity over 28 f on snapOut, a rise of 0.33 line over 22 f on M.rise, words 11.5 f apart
+// (x0.7-1.4 by the previous word's length). Returns nothing; draws at baseline y.
+function reveal(ctx, text, x, y, st, t, t0, align = 'left', ink) {
+  const L = look(), words = text.split(' '), sp = width(ctx, ' ', st) + st.size * st.track;
+  const ws = words.map(w => width(ctx, w, st)), total = ws.reduce((a, b) => a + b, 0) + sp * (words.length - 1);
+  let cx = align === 'center' ? x - total / 2 : align === 'right' ? x - total : x, start = t0;
+  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink || L.ink;
+  words.forEach((w, i) => {
+    if (i) start += f60(11.5) * Math.min(1.4, Math.max(0.7, words[i - 1].length / 5));
+    const p = (t - start), a = E.snapOut(cl(p / f60(28))), r = 1 - E.rise(cl(p / f60(22)));
+    if (p > 0) { font(ctx, st); ctx.globalAlpha = a; ctx.fillText(w, cx, y + r * 0.33 * st.size * 1.15); }
+    cx += ws[i] + sp;
+  });
+  ctx.restore();
+}
+// A hero that lands solid: cuts in at x1.7 and settles over 35 f on M.oversize (log-space scale), opacity 45->100 % in 6 f.
+// `punch` adds the lock punch (1 + 0.018 * hitPulse) for the second, harder landing.
+function hitPulse(tf, attack, tau) { return tf < 0 ? 0 : tf < attack ? Math.sin(Math.PI / 2 * tf / attack) : Math.exp(-(tf - attack) / tau); }
+function land(ctx, text, x, y, st, t, t0, opts = {}) {
+  if (t < t0) return;
+  const L = look(), p = cl((t - t0) / f60(35)), from = opts.from || 1.7;
+  let s = from * Math.pow(1 / from, E.over(p));
+  if (opts.punch) s *= 1 + 0.018 * hitPulse((t - t0) * 60 - 35, 1, 4);
+  const a = 0.45 + 0.55 * cl((t - t0) / f60(6));
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.globalAlpha = a; ctx.fillStyle = L.ink; ctx.textBaseline = 'alphabetic';
+  font(ctx, st); ctx.fillText(text, -width(ctx, text, st) / 2, 0); ctx.restore();
+}
+// YES -> WHEN?: hold, then YES erodes from its last letter (one every 3 f, each over 6 f, through a horizontal
+// blur copy); the new letters start 6 f in, 4 f apart, rise 0.45 em over 20 f on snapOut; the slot reflows over 24 f.
+function erode(ctx, a, b, x, y, st, t, t0) {
+  const L = look(), tf = (t - t0) * 60;
+  font(ctx, st); const wa = width(ctx, a, st), wb = width(ctx, b, st);
+  const k = E.snapOut(cl((tf - 6) / 24)), slot = wa + (wb - wa) * k;
+  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
+  // old word, letters leaving last-first
+  let cx = x - slot / 2 + (slot - wa) / 2 * (1 - k);
+  for (let i = 0; i < a.length; i++) {
+    const order = a.length - 1 - i, q = cl((tf - order * 3) / 6), op = 1 - Math.min(1, 1.6 * q);
+    font(ctx, st); const lw = ctx.measureText(a[i]).width;
+    if (op > 0) { ctx.globalAlpha = op; ctx.fillText(a[i], cx, y); }
+    if (q > 0 && q < 1) { ctx.save(); ctx.globalAlpha = 0.9 * Math.sin(Math.PI * q) * 0.5; ctx.filter = 'blur(6px)'; ctx.fillText(a[i], cx + 8, y); ctx.restore(); }
+    cx += lw;
+  }
+  // new word, letters rising in order
+  cx = x - slot / 2 + (slot - wb) / 2 * (1 - k);
+  for (let i = 0; i < b.length; i++) {
+    const r = cl((tf - 6 - i * 4) / 20), op = Math.min(1, 2.5 * r);
+    font(ctx, st); const lw = ctx.measureText(b[i]).width;
+    if (r > 0) { ctx.globalAlpha = op; ctx.fillText(b[i], cx, y + (1 - E.snapOut(r)) * 0.45 * st.size); }
+    cx += lw;
+  }
+  ctx.restore();
+}
+// Rolling year digits: tabular strips at 1.2 em pitch; the value steps a -> b with a stepped tail into the landing.
+function roll(ctx, a, b, x, y, st, t, t0, dur) {
+  const L = look(), n = b - a, p = cl((t - t0) / dur), v = a + n * E.out(p), lo = Math.floor(v), frac = v - lo;
+  const sa = String(lo), sb = String(Math.min(b, lo + 1));
+  font(ctx, st); ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink; ctx.fontVariantNumeric = 'tabular-nums';
+  const total = width(ctx, String(b), st); let cx = x - total / 2;
+  const pitch = st.size * 1.2, roll = E.out(cl(frac * 1.6));
+  for (let i = 0; i < sa.length; i++) {
+    const dw = ctx.measureText(sb[i]).width;
+    ctx.save(); ctx.beginPath(); ctx.rect(cx - 4, y - st.size * 0.95, dw + 8, st.size * 1.12); ctx.clip();
+    if (sa[i] === sb[i] || p >= 1) ctx.fillText(p >= 1 ? String(b)[i] : sa[i], cx, y);
+    else { ctx.fillText(sa[i], cx, y - roll * pitch); ctx.fillText(sb[i], cx, y + (1 - roll) * pitch); }
+    ctx.restore(); cx += dw + st.size * st.track;
+  }
+  ctx.restore();
+}
+
+// ---- the film's type moments ----
+// Each mode draws one moment; t is seconds from the moment's cue. Positions are fractions of the frame and sit on the
+// plate's darkest plain area (checked on the stills).
+const YES_Y = 0.262 * H;   // baseline: clear of the suitcase handle in void bags and inspection match
+const MOMENTS = {
+  place_2014: (ctx, t) => { const L = look();      // checkin_hall wide, low left
+    reveal(ctx, '2014', 0.072 * W, 0.80 * H, L.sup2, t, 0.0);
+    reveal(ctx, 'CHINA', 0.074 * W, 0.80 * H + L.sup.size * 1.25 + 34, L.sup, t, 0.35); },
+  yes: (ctx, t) => { const L = look();             // above the two bags (void bags / inspection match), twice
+    if (t < 3.0) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 0.0);
+    else land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 3.0, { from: 1.9, punch: true }); },
+  yes_when: (ctx, t) => { const L = look();
+    if (t < 0.9) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', 0.5 * W, YES_Y, L.hero, t, 0.9); },
+  death_2017: (ctx, t) => { const L = look();      // void dawn_high, left third
+    reveal(ctx, 'DEATH SENTENCE', 0.08 * W, 0.47 * H, L.big, t, 0.0);
+    land(ctx, '2017', 0.08 * W + width(ctx, '2017', L.num) / 2, 0.47 * H + L.num.size * 0.78 + 30, L.num, t, 0.55, { from: 1.4 }); },
+  sentence_life: (ctx, t) => { const L = look();   // void dawn_close: the full phrase, then it changes in place
+    reveal(ctx, '2017', 0.08 * W, 0.30 * H, L.sup, t, 0.0);
+    if (t < 3.2) { reveal(ctx, 'DEATH SENTENCE', 0.08 * W, 0.42 * H, L.big, t, 0.2); reveal(ctx, 'WITH TWO-YEAR REPRIEVE', 0.08 * W, 0.42 * H + L.big.size * 1.15, L.big, t, 0.7); }
+    else { reveal(ctx, 'LIFE IN PRISON', 0.08 * W, 0.42 * H, L.big, t, 3.2); } },
+  counter: (ctx, t) => { const L = look();         // void cell pull back: 2014 rolling to 2026
+    roll(ctx, 2014, 2026, 0.5 * W, 0.22 * H, L.num, t, 0.3, 4.0); },
+  title: (ctx, t) => { const L = look();           // over void bags in the beam
+    reveal(ctx, 'THE PRIZE THAT BECAME A PRISON', 0.5 * W, 0.2 * H, L.big, t, 0.0, 'center'); },
+  date_gene: (ctx, t) => { const L = look();
+    reveal(ctx, 'JANUARY 25, 2026', 0.07 * W, 0.86 * H, L.sup, t, 0.0); },
+};
+
+let bgImg = null;
+window.draw = (mode, t) => {
+  const ctx = document.getElementById('c').getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  if (bgImg) { const s = Math.max(W / bgImg.width, H / bgImg.height); ctx.drawImage(bgImg, (W - bgImg.width * s) / 2, (H - bgImg.height * s) / 2, bgImg.width * s, bgImg.height * s); }
+  MOMENTS[mode](ctx, t);
+};
+window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
+document.fonts.load('300 40px "InterD"').then(() => Promise.all([
+  '100 40px "InterD"', '400 40px "InterD"', '600 40px "InterD"', '300 40px "Cormorant"', '400 40px "Cormorant"', '500 40px "Cormorant"',
+  'italic 400 40px "Cormorant"', '400 40px "Bebas"', '300 40px "Oswald"', '500 40px "Oswald"'].map(f => document.fonts.load(f))))
+  .then(() => { window.READY = true; });
+</script></body></html>
