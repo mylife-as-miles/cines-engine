@@ -90,7 +90,7 @@ CAMERAS = {
     # Ch 03: Dawn from behind, three-quarter from her right, stopped at the boutique's lit window, the bags at her
     # sides; the street soft beyond on the left, its signs and shops melting into the haze
     "dawn": dict(loc=(5.33, 13.47, 1.36), aim=(7.24, 23.29, 1.0), lens=35, focus="fx_dawn", fstop=2.8, beat="window",
-                 shift_y=0.0, haze=0.0025, exposure=-1.5),
+                 shift_y=0.0, haze=0.0025, exposure=-1.5, glass_refl=0.02),
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
     "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.9, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
@@ -295,6 +295,7 @@ def build_cast():
                 if md.type == "SUBSURF":
                     md.show_viewport = False
                     _STATE["subdivisions"][n].append((md, md.render_levels))
+    _STATE["dawn_glossy"] = [o for o in holders["Dawn"].children_recursive if o.type == "MESH" and o.visible_glossy]
     _STATE["holders"] = holders
     return holders
 
@@ -748,6 +749,10 @@ def apply_camera(name, width=1280):
                 modifier.render_levels = min(original, 1) if distant else original
             for o in [h] + list(h.children_recursive):
                 o.hide_render = not vis
+        # In the three-quarter view her reflected head looks like a second
+        # person behind the satchel. Keep her reflection for the window insert.
+        for obj in _STATE["dawn_glossy"]:
+            obj.visible_glossy = name != "dawn"
         for bag in _STATE["bags"].values():
             for ob in [bag] + list(bag.children_recursive):
                 ob.hide_render = beat == "company"
