@@ -475,7 +475,9 @@ def premarket_poses(h, duvet, case, tote, tote_mesh):
         nearest = min(p.y for p in flank)
         wire = [p for p in flank if p.y < nearest + 0.009]
         grip = sum(wire, Vector()) / len(wire)
-        err = ik_arm(h, side, grip + Vector((0.014 * side, -0.012, 0.006)))
+        # The palm centre is outside and behind the arch. The curled index
+        # and middle fingers reach back around its front, opposite the thumb.
+        err = ik_arm(h, side, grip + Vector((0.035 * side, 0.016, 0.013)))
         turn_palm(h, side, (-side, 0.55, -0.12))
         rigged.articulate_hand(h, k, {"f_index": (40, 59, 38), "f_middle": (48, 65, 43),
                                      "f_ring": (55, 67, 46), "f_pinky": (59, 71, 49), "thumb": (22, 29, 17)})
