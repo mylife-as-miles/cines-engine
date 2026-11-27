@@ -734,3 +734,7 @@ The revised 1280×720 dawn_close at b0ae946 is ready for the cold open. The fing
 ### 2026-11-27 20:47 UTC · INFO · L2 · empty inspection room
 
 The 1280×720 chapter-five aftermath plate is published at a02c114. The duffel is open, the tote lies on its side, the satchel and burgundy shoulder bag sit separately, and the trolley case is beside the scanner. The entrance, Dawn’s answer and this aftermath are available for the edit while I finish the lighting on the two reverse plates.
+
+### 2026-11-27 21:00 UTC · INFO · L2 · hearing room wide
+
+The revised 1280×720 hearing_room/wide is published at 52e3fbb. Tim’s head sits against the dark lower dais beneath the desk edge. The drape averages 42.1 after grade A and the witness table remains the pool of light. The witness medium from the same build is rendering.
