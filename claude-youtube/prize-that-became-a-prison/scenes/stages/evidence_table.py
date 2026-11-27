@@ -64,7 +64,7 @@ HIDE = {
 DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
                   "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
 HIDE["document"] = DOCUMENT_PROPS
-CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery", "art materials")
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery", "art materials", "open booklet")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -127,6 +127,12 @@ CAMERAS["entries"] = dict(loc=(-0.085, -0.65, TOP + 0.48), aim=(-0.025, 0.032, T
 CAMERAS["motifs"] = dict(loc=(0.11, -0.62, TOP + 0.44), aim=(-0.015, -0.002, TOP + 0.006), lens=54,
                         focus="fx_entries", fstop=4, beat="document", show=("art materials",),
                         lamp=(-0.42, 0.16, -120), exposure=-1.5)
+CAMERAS["seam"] = dict(loc=(0.012, -0.47, TOP + 0.34), aim=(0.22, -0.19, TOP + 0.248), lens=63,
+                      focus="fx_tote_edge", fstop=4.5, beat="ch04", exposure=-1.50, hide=("receipt_c4", "mug"),
+                      lamp=(-0.32, -0.43, -73))
+CAMERAS["visa"] = dict(loc=(0.105, -0.29, TOP + 0.30), aim=(-0.028, 0.002, TOP + 0.018), lens=69,
+                      focus="fx_open_booklet", fstop=6.3, beat="document", show=("open booklet",),
+                      lamp=(-0.44, -0.17, -74), exposure=-1.45)
 HIDE["tickets"] = HIDE["ch02"]
 HIDE["entries"] = tuple(g for g in DOCUMENT_PROPS if g != "mug")
 
@@ -716,6 +722,11 @@ def entry_stationery():
     supplies.extend(pp.passport("travel booklet corner", m["cover"], m["pages"], 0.217, 0.124, 13,
                                 m_end=m["endpaper"]))
     group("art materials", supplies)
+    pp.SUPPORT[:] = wood
+    group("open booklet", pp.passport("travel booklet open", m["cover"], m["pages"], 0, 0, -13,
+                                     open_deg=151, m_end=m["endpaper"]))
+    empty("fx_tote_edge", (0.22, -0.19, TOP + 0.248))
+    empty("fx_open_booklet", (-0.022, 0.002, TOP + 0.008))
     pp.SUPPORT[:] = saved
     group("entry stationery", forms)
     empty("fx_entries", (0.018, -0.020, TOP + 0.001))

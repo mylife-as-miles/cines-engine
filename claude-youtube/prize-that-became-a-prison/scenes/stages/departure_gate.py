@@ -69,6 +69,8 @@ CAMERAS = {
     "window": dict(loc=(-2.9, -1.35, 1.54), aim=(-0.75, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
                    exposure=-1.15),
 }
+CAMERAS["seated_called"] = dict(CAMERAS["seated"], beat="ch05")
+
 # per-camera light trims (multipliers on named lights)
 KEY = "fx_{:+.1f}_{:+.1f}_light".format(*st.KEY_FX)
 POOL = "fx_{:+.1f}_{:+.1f}_pool".format(*st.KEY_FX)
@@ -469,6 +471,8 @@ def which_camera():
     cam = bpy.context.scene.camera
     if cam is None:
         return None
+    if cam.get("stage_camera") in CAMERAS:
+        return cam["stage_camera"]
     for n, c in CAMERAS.items():
         if (cam.location - Vector(c["loc"])).length < 1e-3:
             return n
@@ -482,7 +486,17 @@ def apply_camera(name):
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 4.0      # the haze and the dark pan ceiling threw white speckle
     sc.cycles.denoiser = "OPENIMAGEDENOISE"
-    trims = TRIMS.get(name, {})
+    called = name == "seated_called"
+    for ob in _STATE["case parts"]:
+        ob.hide_render = called
+    if _STATE["cast"]:
+        rig = rigged.rig_of(_STATE["cast"][0])
+        rig.pose.bones["head"].matrix_basis = _STATE["head rest"].copy()
+        bpy.context.view_layer.update()
+        if called:
+            rigged._turn(rig, "head", -22, 9)
+    light_setup = "seated" if called else name
+    trims = TRIMS.get(light_setup, {})
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
@@ -490,7 +504,7 @@ def apply_camera(name):
         for n in names:
             ob = bpy.data.objects.get(n)
             if ob is not None:
-                ob.hide_render = cam != name
+                ob.hide_render = cam != light_setup
     print(f"GATE camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}", flush=True)
 
 
@@ -544,7 +558,8 @@ def build(cast=True):
         li.rotation_euler = (Vector(target) - li.location).to_track_quat("-Z", "Y").to_euler()
         li.visible_glossy = False
         li.data.specular_factor = 0.0
-    suitcase()
+    case = suitcase()
+    _STATE["case parts"] = [ob for ob in case.children_recursive if not ob.hide_render]
     # a black flag beside the fitting over her row (seen by no camera, used by the seated one): the empty seats
     # nearest the lens fall off into shadow instead of reading as a bright cut slab at the frame edge
     flag = st.box("flag_near_seats", (0.012, 2.4, 1.1), (SEAT[0] + 1.15, ROW_Y + 0.15, st.H - 0.6),
@@ -562,6 +577,7 @@ def build(cast=True):
     if cast:
         d = dawn()
         place_seated(d, SEAT, seat_z)
+        _STATE["head rest"] = rigged.rig_of(d).pose.bones["head"].matrix_basis.copy()
         _STATE["cast"] = [d] + list(d.children_recursive)
     sk.haze((st.XR - st.XL - 0.1, st.WIN - st.BACK - 0.1, st.H - 0.05), ((st.XL + st.XR) / 2, (st.WIN + st.BACK) / 2, st.H / 2),
             0.003)

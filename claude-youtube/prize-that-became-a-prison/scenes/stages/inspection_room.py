@@ -158,14 +158,20 @@ CAMERAS.update({
     "wide_pre": dict(CAMERAS["wide"], layout="ch11"),
     "dawn_close": dict(loc=(-0.77, 0.66, 1.57), aim=(0.24, -0.42, 1.44), lens=43,
                        focus="fx_dawn_close", fstop=2.8, beat="ch00", layout="ch11", pose="case handle",
-                       cheat={"Dawn": (0.53, -0.59), "OfficerA": (-0.49, 0.58)}, facing={"Dawn": (0.391, 0.400)}),
+                       cheat={"Dawn": (0.53, -0.59), "OfficerA": (-0.41, 0.67)}, facing={"Dawn": (0.391, 0.400)}),
     "match": dict(loc=(-0.12, 4.0, TOP + 0.55), aim=(0, 0.02, TOP + 0.33), lens=50,
                   focus="fx_match", fstop=4, beat="ch11", layout="match", cast=False,
                   wild=("wall_back", "cove_b", "rail_b")),
     "empty_ch05": dict(CAMERAS["empty"], beat="ch05"),
+    "enter": dict(loc=(-2.56, -0.24, 1.58), aim=(0.0, 0.11, 1.14), lens=31,
+                  focus="fx_match", fstop=4, beat="ch00", layout="ch11", pose="enter",
+                  cheat={"Dawn": (-1.98, 0.22)}, facing={"Dawn": CASE[:2]}),
+    "across": dict(loc=(-1.64, -1.05, TOP + 0.30), aim=(0.42, 0.05, TOP + 0.18), lens=43,
+                   focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
-FOCUS.update({"fx_handbags": (0.06, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
+FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.06, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
               "fx_dawn_close": (0.53, -0.55, 1.54)})
+POSES["enter"] = dict(POSES["ch00"], Dawn=dict(POSES["ch00"]["Dawn"], look="dawn-suitcase"))
 POSES["case handle"] = dict(POSES["ch00"],
                             Dawn=dict(POSES["ch00"]["Dawn"], reach_r="case_handle", palm="down", fingers=36),
                             OfficerA={"chest": (3, 0), "fingers": 32, "look": "Dawn", "behind": True})

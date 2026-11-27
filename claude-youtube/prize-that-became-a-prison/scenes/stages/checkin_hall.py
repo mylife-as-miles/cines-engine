@@ -53,6 +53,8 @@ CAMERAS = {
     "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6,
                  exposure=-1.4),   # a touch up: the far hall and the glazed end must not crush to black
     # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
+    "signs": dict(loc=(4.7, -3.65, 2.65), aim=(-2.1, -0.30, 3.39), lens=34, focus="focus_sign", fstop=4,
+                  exposure=-1.6),
     "scale": dict(loc=(1.6, -1.90, 1.24), aim=(1.43, 0.46, 0.65), lens=42, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
     "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
@@ -1298,6 +1300,7 @@ def build(cast=True):
     fill = light("counter eye bounce", (0.30, 0.55, 1.44), (0.52, 0.30), 2.5, spread=80, colour=(0.84, 0.90, 1.0))
     fill.rotation_euler = (Vector((DAWN[0], DAWN[1], 1.54)) - fill.location).to_track_quat("-Z", "Y").to_euler()
     fill.visible_glossy = False
+    focus("focus_sign", (0.6, BULK[0] - 0.062, (BULK[1] + BULK[2]) / 2))
     focus("focus_dawn", (DAWN[0] - 0.03, DAWN[1] + 0.12, 1.5))   # her eyes
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
