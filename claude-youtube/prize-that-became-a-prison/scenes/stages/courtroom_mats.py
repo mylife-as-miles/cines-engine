@@ -175,7 +175,7 @@ def _brick(nt, vec, w, h, mortar, c1, c2, cm, offset=0.0, smooth=0.2):
 
 # ---------------------------------------------------------------- surfaces
 def veneer(name, base=(0.46, 0.37, 0.26), axis="Z", contrast=0.2, rough=(0.45, 0.6), coat=0.12, tone_var=0.06,
-           hue_var=0.01, grime=0.25, ring=0.005):
+           hue_var=0.01, grime=0.25, ring=0.005, kick=0.45):
     """Lacquered wood veneer, grown rather than printed: growth rings are cylinders round the local `axis` (the trunk),
     `ring` metres apart, their phase pushed about by a noise that is stretched 40x along the grain, so a flat board shows
     irregular, wandering latewood streaks that merge and split (no regular stripe to alias into pinstripes); a slow
@@ -220,9 +220,20 @@ def veneer(name, base=(0.46, 0.37, 0.26), axis="Z", contrast=0.2, rough=(0.45, 0
     col = hs.outputs["Color"]
     if grime:
         col = _mix(nt, _maprange(nt, _ao(nt, 0.25), 0.25, 1.0, grime, 0.0), col, tuple(c * 0.35 for c in base))
+    band = None
+    if kick:
+        # wear: a scuffed, darker kick band in the lowest ~0.2 m (world height), where shoes and mops reach, patchy
+        # rather than a painted stripe, and a little duller there
+        wz = _xyz(nt, _world(nt))[2]
+        band = _maprange(nt, wz, 0.04, 0.22, 1.0, 0.0)
+        scuff = _maprange(nt, _noise(nt, _world(nt), 7.0, 5.0, 0.65), 0.3, 0.72, 0.35, 1.0)
+        col = _mix(nt, _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", band, scuff), kick), col,
+                   tuple(c * 0.45 for c in base))
     _link(nt, col, b.inputs["Base Color"])
     rr = _maprange(nt, _noise(nt, v, 2.5, 4.0, 0.6), 0.3, 0.7, rough[0], rough[1])
     rr = _math(nt, "ADD", rr, _maprange(nt, lines, 0.0, 1.0, -0.1, 0.1), clamp=True)
+    if band is not None:
+        rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", band, 0.12), clamp=True)
     _link(nt, rr, b.inputs["Roughness"])
     b.inputs["Coat Weight"].default_value = coat
     b.inputs["Coat Roughness"].default_value = 0.3

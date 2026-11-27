@@ -4,9 +4,10 @@ A modern hall of justice: a raised judges' bench in pale ash across the far end,
 empty, with a microphone before each; dark smoked-oak boarding behind them and, high in the centre, the blank panel
 where a court's emblem would hang (nothing on it). Counsel desks face each other across the well, empty. In the middle
 of the well, the dock: waist-high pale-wood panels, a rail and a small gate. Dawn stands in it alone in grey prison
-clothes, her hands on the front ledge, head bowed. Behind the bar the public benches stand empty in rows. Light: the
-lay-in panels over the well and the bench burn (the lit island), the gallery's are off; overcast daylight comes
-through high frosted windows, brighter from the left; a slot washer grazes the boarding behind the bench.
+clothes, her hands on the front ledge, head bowed. Behind the bar the public benches stand empty in rows. Light: one
+narrow downlight makes the pool on the dock (the lit island); the lay-in panels over the well and the bench burn low,
+the gallery's are off; overcast daylight comes through high frosted windows onto the far side walls, brighter from
+the left; an uplight behind the chairs grazes the boarding behind the bench, falling off toward the ceiling.
 
     <bpy python> -I scenes/shoot.py -- courtroom <cam> out.png [--nocast]
 
@@ -32,21 +33,25 @@ import courtroom_set as st  # noqa: E402
 
 EXPOSURE = -1.6
 
-DAWN = (0.40, st.LEDGE[0] - 0.21)     # her feet: in the dock close up to the front ledge (her front 6-8 cm from its
+DAWN = (0.25, st.LEDGE[0] - 0.21)     # her feet: in the dock close up to the front ledge (her front 6-8 cm from its
                                       # inner face), a little right of its middle (on the centre line her head hid the
-                                      # presiding chair in the wide), facing the bench (+Y)
-HAND_X = 0.22                          # wrists about 22 cm either side of her centre: elbows bent, clear of the waist
+                                      # presiding chair in the wide; at 0.40 her right hand ended on the corner post's
+                                      # finial), facing the bench (+Y)
+HAND_X = 0.24                          # wrists about 24 cm either side of her centre: elbows bent, clear of the waist
 HAND_Y = 0.05                          # how far onto the ledge (from its inner edge) the wrists sit
 HAND_PITCH = 0.3                       # the hand a little extended at the wrist, so the palm heel and the fingers both rest
 POSE = {"head": (32, -4), "neck": (16, 0), "chest": (10, 0), "fingers": 15}
 SHOULDER_ROLL = 5.0                    # shoulders rolled forward (degrees): the weight of the bowed head
-GARMENT = (0.05, 0.052, 0.056)         # the prison clothes re-surfaced as matt cotton (see dress_prison)
-HAZE = 0.004                           # enough for the windows' beams and the dock's downlight to draw faint shafts
+GARMENT = (0.022, 0.023, 0.026)        # the prison clothes re-surfaced as matt cotton (see dress_prison): 0.055 before
+                                       # the kit's FABRIC_VALUE (0.4), two stops and more under the stone skin (at 0.05
+                                       # the top read as a pale casual T-shirt)
+HAZE = 0.0035                          # enough for the windows' beams and the dock's downlight to draw faint shafts (at
+                                       # 0.007 the 9 kW cone over the dock veiled every frame: raw p1 above 50)
 
 FOCUS = {
     "fx_dock": (0.0, st.DOCK[1], 1.25),
     "fx_dawn": (DAWN[0], DAWN[1] + 0.05, 1.5),
-    "fx_bench": (0.0, st.BENCH_Y, 1.3),
+    "fx_bench": (0.0, st.BENCH_Y + 0.8, 1.4),
 }
 
 CAMERAS = {
@@ -56,10 +61,15 @@ CAMERAS = {
     # (tilted ~1.5 deg down so the bright ceiling panels keep off the top edge)
     "wide": dict(loc=(-0.3, -7.85, 1.62), aim=(-0.05, 3.0, 0.8), lens=28, focus="fx_dock", fstop=8.0, beat="ch07"),
     # Ch 07: Dawn in the dock from behind three-quarter, her hands on the ledge, the bench and its empty chairs beyond
-    "dock": dict(loc=(1.6, -1.05, 1.3), aim=(-0.15, 5.0, 1.92), lens=32, focus="fx_dawn", fstop=2.8, beat="ch07"),
-    # Ch 07: from the well's left side at a standing eye height, the bench running away to the right: the cap's line on
-    # the lower third, the three empty chairs whole above it, the recessed panel above the presiding one
-    "bench": dict(loc=(-2.3, 0.6, 1.7), aim=(-0.45, 6.0, 2.05), lens=26, focus="fx_bench", fstop=5.6, beat="ch07",
+    # (a 50 mm from 3.3 m at f/1.8, from a little lower than her head: the chairs 8 m off blur by ~8 px at 1280; her
+    # bowed head sits in the gap between the left and the presiding chair, so all three read, empty)
+    # (the dock's back rail on the bottom edge's inside: she stands in it, not cut off at the hips)
+    "dock": dict(loc=(1.1, -2.55, 1.5), aim=(-0.3, 5.0, 1.6), lens=50, focus="fx_dawn", fstop=1.8, beat="ch07"),
+    # Ch 07: from low in the well's left side (1.0 m, below the cap), ~38 deg off the bench's axis on a 40 mm, looking
+    # up: the fascia and its cap run away to the right, the lit return of the centre section in the middle, the three
+    # empty chairs across the middle third, the lower edge of the recessed panel just inside the top quarter
+    # (at eye height the cap lay on the horizon as one flat band: the camera must be well below it)
+    "bench": dict(loc=(-2.9, 1.9, 1.0), aim=(-0.45, 5.67, 1.9), lens=40, focus="fx_bench", fstop=5.6, beat="ch07",
                   exposure=-1.45),
 }
 
@@ -71,21 +81,24 @@ def _panels(rows, level, keep=None):
 
 # per-camera light trims (multipliers on named lights; a panel's diffuser dims with its light)
 TRIMS = {
-    # the lit island: the well's panels low but for the centre pair over the dock, the bench rows down; the dock's own
-    # downlight makes the pool
-    # (the row behind her low too, so her dark back stands against the lit fascia, rimmed by the pool from above)
-    "wide": {**_panels((-0.6,), 0.15), **_panels((1.4,), 0.2, {(0.0, 1.4): 0.9}), **_panels((3.4, 5.4), 0.6)},
-    # the panels behind her turned down: her back goes toward silhouette against the lit bench
-    "dock": {**_panels((-0.6,), 0.3), **_panels((1.4,), 0.5, {(0.0, 1.4): 1.0}), **_panels((3.4, 5.4), 0.8),
-             "dock_pool": 0.6},
-    # the well's panels behind the camera turned down: the fascia lit from the row above its face, bright under the
-    # cap and falling away toward the floor; the chairs top-lit
+    # the lit island (round 2: the panels' base power is halved and the dock's downlight is a narrow 6.5 kW spot): the
+    # well's panels low, the one over the dock a little higher, the bench rows moderate; the dock's pool carries the
+    # frame, the gallery falls off into shadow
+    # (the light off the bench's left return is for the bench camera only: from here it made a hot spot)
+    "wide": {**_panels((-0.6,), 0.3), **_panels((1.4,), 0.3, {(0.0, 1.4): 0.6}), **_panels((3.4, 5.4), 0.55),
+             "return-1": 0.0},
+    # the panels behind her low: her dark back stands against the lit bench, rimmed by the pool from above
+    "dock": {**_panels((-0.6,), 0.3), **_panels((1.4,), 0.4, {(0.0, 1.4): 0.6}), **_panels((3.4, 5.4), 0.42),
+             "return-1": 0.0, "uplight": 0.75},
     # the well's rows (3 and 5 m before it) light the fascia at a moderate angle (bright under the cap, falling away
-    # toward the floor); the row straight over it down (its steep light put a shadow band under the cap and lit the
-    # floor that bounced up onto the fascia's foot), the left well windows' beams halved for the same reason
-    "bench": {**_panels((-0.6,), 0.6), **_panels((1.4,), 0.8), **_panels((3.4,), 0.2), "dock_pool": 0.15,
-              "win_l3_day": 0.5, "win_l4_day": 0.5},
+    # toward the floor); the row straight over it down (its steep light put a shadow band under the cap); the boarding
+    # lit from its foot by the uplight only, so it falls off toward the ceiling (the washer and the panel's wash low)
+    "bench": {**_panels((-0.6,), 0.6), **_panels((1.4,), 0.9), **_panels((3.4,), 0.35), **_panels((5.4,), 0.35),
+              "dock_pool": 0.3, "washer": 0.4, "blank_wash": 0.6, "uplight": 2.0, "return-1": 2.5},
 }
+# per-camera haze (a multiplier on HAZE): from the dock camera the lens looks down the lit cone over the dock, which
+# veiled the frame
+HAZE_TRIM = {"dock": 0.45, "bench": 0.5}
 
 _STATE = {"cast": [], "base": {}}
 
@@ -321,6 +334,11 @@ def apply_camera(name):
         except (AttributeError, TypeError):
             pass
     trims = TRIMS.get(name, {})
+    hz = bpy.data.objects.get("haze")
+    if hz is not None and hz.active_material is not None:
+        for node in hz.active_material.node_tree.nodes:
+            if node.type == "PRINCIPLED_VOLUME":
+                node.inputs["Density"].default_value = HAZE * HAZE_TRIM.get(name, 1.0)
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
