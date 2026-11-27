@@ -9,6 +9,7 @@ through Rigify's FK controls by aiming bones at directions, so a pose is a few r
     off = rigged.figure("OfficerA", height=1.80, outfit=rigged.Outfit(top=(0.03,0.04,0.06), cap=True),
                         pose={"r_arm": (60, 15, 10), "head": (12, 0)}, location=(0, 1, 0), facing_deg=180)
 
+Optional `hands` maps L/R to per-finger joint angles (see articulate_hand). `torso` tips and turns the body at the pelvis.
 Pose keys (degrees): "l_arm"/"r_arm": (forward, out, elbow); "head", "neck", "chest": (down, turn), relative;
 "fingers": curl. Characters face -Y unturned.
 """
@@ -199,6 +200,34 @@ def shoulder_world(holder, side):
     return rig.matrix_world @ pb.head
 
 
+def articulate_hand(holder, side, joints):
+    """Pose named digits on one side. Values are knuckle, middle and tip flexion in degrees,
+    plus optional spread in the palm plane (positive toward the thumb)."""
+    rig = rig_of(holder)
+    bones = rig.pose.bones
+    masters = []
+    for finger, angles in joints.items():
+        knuckle, middle, tip = angles[:3]
+        master = bones[f"{finger}.01_master.{side}"]
+        for b, angle in ((master, knuckle), (bones[f"{finger}.02.{side}"], middle), (bones[f"{finger}.03.{side}"], tip)):
+            b.rotation_mode = "XYZ"
+            b.rotation_euler = (math.radians(angle), 0, 0)
+        if len(angles) == 4 and angles[3]:
+            masters.append((master, angles[3]))
+    bpy.context.view_layer.update()
+    if masters:
+        hand = bones[f"DEF-hand.{side}"]
+        across = bones[f"DEF-f_index.01.{side}"].head - bones[f"DEF-f_pinky.01.{side}"].head
+        normal = (hand.tail - hand.head).cross(across).normalized()
+        for master, angle in masters:
+            pointing = master.tail - master.head
+            sign = 1 if normal.cross(pointing).dot(across) >= 0 else -1
+            base = master.matrix.copy()
+            pivot = Matrix.Translation(base.translation)
+            master.matrix = pivot @ Matrix.Rotation(math.radians(angle * sign), 4, normal) @ pivot.inverted() @ base
+        bpy.context.view_layer.update()
+
+
 def pose_figure(holder, pose=None):
     """Put a figure in a pose. Always starts from rest, so calling it again replaces the pose rather than adding."""
     pose = pose or {}
@@ -211,7 +240,7 @@ def pose_figure(holder, pose=None):
         if f"upper_arm_parent.{k}" in pb:
             pb[f"upper_arm_parent.{k}"]["IK_FK"] = 1.0
     bpy.context.view_layer.update()
-    for bone, key in (("chest", "chest"), ("neck", "neck"), ("head", "head")):
+    for bone, key in (("torso", "torso"), ("chest", "chest"), ("neck", "neck"), ("head", "head")):
         dn, tn = pose.get(key, (0, 0))
         if (dn, tn) != (0, 0) and bone in pb:
             _turn(rig, bone, dn, tn)
@@ -235,3 +264,5 @@ def pose_figure(holder, pose=None):
                 pb[n].rotation_mode = "XYZ"
                 pb[n].rotation_euler.x = curl
     bpy.context.view_layer.update()
+    for side, fingers in pose.get("hands", {}).items():
+        articulate_hand(holder, side, fingers)
