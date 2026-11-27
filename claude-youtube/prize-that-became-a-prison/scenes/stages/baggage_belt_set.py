@@ -453,7 +453,8 @@ def paper_mat():
     """Bag-tag paper: matt, slightly warm, a fibre tooth, a little grubby."""
     m, nt, b = _new("tag paper")
     p = nt.nodes.new("ShaderNodeTexCoord").outputs["Object"]
-    col = _mix(nt, _range(nt, _noise(nt, p, 18.0, 5.0), 0.35, 0.7, 0.0, 1.0), (0.43, 0.415, 0.38), (0.36, 0.345, 0.31))
+    col = _mix(nt, _range(nt, _noise(nt, p, 18.0, 5.0), 0.35, 0.7, 0.0, 1.0),
+               (0.245, 0.237, 0.217), (0.205, 0.197, 0.177))
     nt.links.new(col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = 0.86
     b.inputs["Specular IOR Level"].default_value = 0.25

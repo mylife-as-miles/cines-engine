@@ -445,6 +445,7 @@ def build_bags():
 
 
 def set_layout(cam):
+    bpy.data.objects["right end return"].hide_render = cam != "curtain"
     for light, power, spread in _STATE["lights"].values():
         name = light.name
         if cam == "curtain":
@@ -539,6 +540,17 @@ def build(cast=True):
     st.build()
     edge = st.light("bag_edge", (4.8, -0.83, 2.43), (0.70, 0.13), 17.0)
     edge.rotation_euler = (Vector((3.5, 0, BZ + 0.19)) - edge.location).to_track_quat("-Z", "Y").to_euler()
+    # Keep the service wall in the falloff of the transfer-opening light.
+    source = Vector((st.HX0 + 1.82, 1.65, 1.99))
+    target = Vector((st.HX0, 1.26, 1.18))
+    fill = st.light("right end return", source, (0.66, 1.02), 15.0, (0.79, 0.86, 1.0), spread=85,
+                    rot=(target - source).to_track_quat("-Z", "Y").to_euler())
+    fill.visible_glossy = False
+    receivers = bpy.data.collections.new("Service wall and fittings")
+    for name in ("cwall_right", "access_louvres", "isolator_body", "isolator_plate",
+                 "isolator_hub", "isolator_lever", "isolator_conduit"):
+        receivers.objects.link(bpy.data.objects[name])
+    fill.light_linking.receiver_collection = receivers
     _STATE["lights"] = {o.name: (o, o.data.energy, getattr(o.data, "spread", None))
                         for o in bpy.context.scene.objects if o.type == "LIGHT"}
     build_bags()
