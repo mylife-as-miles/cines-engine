@@ -766,8 +766,8 @@ def set_beat(beat):
             h.rotation_euler = (0, 0, math.radians(t))
         for o in [h] + list(h.children_recursive):
             o.hide_render = not on
-    for o in _STATE["dressing"]:     # the return: the bench cleared to the two bags
-        o.hide_render = beat == "ch11"
+    for o in _STATE["dressing"]:     # both frontal returns leave only the original two bags on the bench
+        o.hide_render = beat in ("ch11", "match")
     bpy.context.view_layer.update()
 
 
@@ -821,6 +821,9 @@ def apply_camera(name):
         o = bpy.data.objects.get(n)
         if o:
             o.visible_camera = n not in cfg.get("wild", ())
+    # On the frontal cut, flag the fluorescent spill off the wall above the two bags.
+    bpy.data.objects["match wall cutter"].hide_render = name != "match"
+    bpy.data.objects["wash_front"].hide_render = name == "match"
     top = bpy.data.materials.get("bench top steel")
     if top and "ghost" in top.node_tree.nodes:  # the cleaner patch where the tote stood: only once it has gone
         top.node_tree.nodes["ghost"].outputs[0].default_value = 1.0 if beat == "ch11" else 0.0
@@ -915,6 +918,10 @@ def build(cast=True):
     st.luggage_tag(case, _case_frame(), hole=(-0.008, -0.005), grip=(-0.045, 0.542), grip_r=(0.0125, 0.0115))
     st.bounce()
     st.wall_wash()
+    cutter = sk.box("match wall cutter", (5.4, 1.72, 0.015), (0, -1.40, 2.30),
+                    castkit.stone("black solid", (0.003, 0.003, 0.003), 0.98))
+    cutter.visible_camera = cutter.visible_glossy = cutter.visible_transmission = False
+    cutter.hide_render = True
     st.linked_light("floor_return", (0, -0.2, 2.30), (2.4, 2.2), 35, (0.80, 0.87, 1.0), [bpy.data.objects["floor"]])
     st.room_fill([_STATE["scanner"]["holder"]] + [o for o in _STATE["scanner"]["parts"] if o.type == "MESH"])
     rake_light()
