@@ -864,11 +864,9 @@ def apply_camera(name):
     bpy.data.objects["match case rim"].hide_render = not match
     for obj in _STATE["match_omit"]:
         obj.hide_render = match
-    # set_beat already hides the entire suitcase in the three-handbag layout.
-    if match:
-        for ob in _STATE["props"]["dawn-suitcase"].children_recursive:
-            if ob.name.startswith("luggage_tag"):
-                ob.hide_render = True
+    # The tag and its fittings appear only in their dedicated insert.
+    for ob in _STATE["case_tag"]:
+        ob.hide_render = name != "tag"
     key = bpy.data.objects["troffer_bench_light"]
     key.light_linking.receiver_collection = _STATE["outside_case"] if match else None
     top = bpy.data.materials.get("bench top steel")
@@ -966,6 +964,7 @@ def build(cast=True):
     # Flag the ceiling fitting off the suitcase for this cut. The room bounce
     # still lights its front, while the duffel and steel keep the full practical.
     shell = props.meshes(case)
+    _STATE["case_tag"] = [ob for ob in case.children_recursive if ob.name.startswith("luggage_tag")]
     outside = bpy.data.collections.new("bench light excluding the case")
     for ob in shell:
         if not ob.name.startswith("luggage_tag"):
@@ -985,7 +984,7 @@ def build(cast=True):
                             ("wash_front", "mon_body", "mon_screen", "mon_vesa", "mon_arm",
                              "mon_pivot", "mon_wallplate", "mon_spill", "shelf_tray")]
     _STATE["match_omit"].extend(o for o in bpy.context.scene.objects if o.name.startswith("conv_"))
-    cutter = sk.box("match wall cutter", (5.4, 1.72, 0.015), (0, -1.40, 2.30),
+    cutter = sk.box("match wall cutter", (5.4, 1.65, 0.015), (0, -1.365, 2.50),
                     castkit.stone("black solid", (0.003, 0.003, 0.003), 0.98))
     cutter.visible_camera = cutter.visible_glossy = cutter.visible_transmission = False
     cutter.hide_render = True
