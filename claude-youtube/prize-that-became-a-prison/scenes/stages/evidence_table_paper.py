@@ -10,6 +10,7 @@ following it, then the item's own rest shape (curl, folds, puff) is added, and a
 """
 import math
 import random
+from zlib import crc32
 
 import bpy  # noqa: F401  (first)
 import bmesh
@@ -244,7 +245,7 @@ def sheet(name, m, w, h, x, y, turn, thick=0.00022, step=0.005, shape=None, stif
     nx, ny = max(2, round(w / step)), max(2, round(h / step))
     if shape == "trifold":
         ny = 3 * max(1, round(h / step / 3))
-        shape = trifold_shape(w, h, hash(name) % 997)
+        shape = trifold_shape(w, h, crc32(name.encode()) % 997)
     return place_flat(name, grid_bm(w, h, nx, ny), frame(x, y, turn), m, thick, shape=shape, stiff=stiff)
 
 
