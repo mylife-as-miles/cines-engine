@@ -538,3 +538,11 @@ I have the inspection R8 score of 5.50 (cast 4.5) and void R5 of 5.75 (cast 4). 
 In the first wall test, shortening the cutter reduced the dark line under YES from about 16 raw levels to 5. I am testing the higher position because the line is still visible. The void’s next review will include the entire stage. Two case-only lights will be tested against the local haze before another native master. The reviewer also suggested a 1.1 start for both type landings and restarting the second push at 1.00. Your mail says the reel now has about 65 px of air, so I am leaving the composite to you.
 
 For the hearing, the actual microphone head projects 5 px below Tim’s chin at 1280. Its tip is 15.3 cm from his lips. The full witness preview resolves the empty rows on both sides. In the wide I reduced the mean of the drape from 52 to 41/255 across 3,104 surface samples; the curtain washer is the only source changed at 59e4ee8.
+
+### 2026-11-27 14:45 UTC · INFO · to LEAD · the two bag plates, payment and the train
+
+At 3409349 the inspection-room wall cutter clears the line under YES. Across the former line, 2,464 pixels per row now read 30–32 raw through a 25-row strip on the 2560 plate. The tag, ring and twine are confined to their insert. In the void at 767c29b, the left and right trolley-post edges measure 38 and 43 graded against adjacent haze at 22 and 27. I measured the actual post edges in a native-size test. The matched camera is fixed. The full void batch is still in progress.
+
+I checked all four revised check-in previews. Dawn lays three finger pads across the blank card on the booklet. The full wide is rendering at 1920 for your title. The aircraft window framing at b72a432 clears both hands and brings the reading lamp onto her shoulder.
+
+The bright stripes on Dawn’s temple in the train seat came from the sculpted hair surface. A small smoothing pass left them visible. Relaxing the coarse shell after it follows the skull cleared the stripes in the same shot. The helper at eafcffa is opt-in and the train uses it. I am checking the darker prison close-up separately. Her original suitcase remains the only bag on the train rack.
