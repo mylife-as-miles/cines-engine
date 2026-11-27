@@ -1,0 +1,97 @@
+{
+ "stage": "checkin_hall",
+ "round": 4,
+ "commit": "0132ca6",
+ "scores": {
+  "composition": 6,
+  "lighting": 5,
+  "materials": 5,
+  "set_dressing": 5,
+  "grounding_scale": 6,
+  "cast": 4,
+  "story_read": 5,
+  "technical": 5
+ },
+ "pro_level": false,
+ "verdict": "Not at the fern bar, and no real gain on round 3 (mean 5.1 both times). Only the shared-cast fabric darkening reached these frames: it takes the profile jacket from 39 to 24 raw so the collar now separates from the neck, but none of round 3's stage fixes were made (the scale frame is pixel-identical and the stage module is unchanged). The wide still carries the night-hall mood, but the reverse still looks amateur: Dawn is top-lit into black eye sockets with a hot forehead and a teal underlight on her jaw (from the scale display's green lights), her hand lies flat and fanned like a starfish with a black cuff band, and the glossy 'dark' counter top and passport read as pale grey slabs. The profile has the same teal jaw, plus a white streak under the eye that reads as a tear.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "profile",
+   "problem": "Hard rule: a small plate with four bright metal bars sits on the side of the dawn-suitcase prop, above its side handle (profile x 905-945, y 465-495; it also glints on the case side in scale). It reads as a maker's badge or emblem.",
+   "fix": "After props.load('dawn-suitcase', ...), find the badge polygons (the bright metallic slot, or faces whose base colour value is above 0.3 within about 6 cm of the side handle) and give them the case fabric material, or set that slot to the case colour with metallic 0 and roughness 0.8. Another way is to rotate the case 180 deg about Z so the badge faces the counter. Re-check profile and scale at 4x zoom."
+  },
+  {
+   "priority": 1,
+   "camera": "shoulder",
+   "problem": "The reverse is still about a stop hotter than the rest of the stage: raw mean 70.8 against 35-49 for the other cameras. Dawn's dark umber blouse (albedo about 0.03) reads 93-132 raw here and 24 raw in the profile, more than two stops apart. It shows as a light taupe pinstriped shirt, a continuity break, while the forehead sits at 230 raw. The suit itself is fine (its value against the forehead matches the albedo ratio). The light on her front is simply too strong for this angle.",
+   "fix": "Cut pos0_island (the 1.2x0.6 m soft key, 230 W, rot X -14 deg, which leans it toward her) to about 110 W and turn it to rot X +8 deg, so it falls on the ledge and counter rather than raking her chest and face. If the other cameras then need it, set this camera's own exposure from -1.9 to about -2.7 instead. Targets in the raw: blouse 40-60, forehead 200 or less, frame mean 45-55. Do not change the garment tint."
+  },
+  {
+   "priority": 1,
+   "camera": "shoulder, profile",
+   "problem": "Face shading, both angles. Reverse: black eye sockets (raw 68 against 230 on the forehead, a ratio of 0.3), one eye a solid black oval, and a dark diagonal hair shadow across her right cheek. Both angles: a teal cast on the lower face and neck (raw neck (78,96,97) in shoulder and (84,103,102) in profile, red about 20 below green and blue), lit from below. In the profile this splits the face at mouth level into a neutral top half and a teal lower half. The source is the scale display: scale0_disp_light (12 W), scale0_disp_spill (6 W) and scale0_disp_under (3 W), coloured (0.5,1.0,0.86) and (0.55,0.95,0.9), plus the display's emission at strength 21. They sit at about 1 m height facing the passenger, which makes a green horror underlight on her.",
+   "fix": "Light-link the three disp_* lights to a receiver collection that holds only the scale, the bags and the post (light.light_linking.receiver_collection), or change their colour to (0.62,0.78,1.0), cut disp_light to 4 W and aim it 45 deg down onto the plate. For the sockets, add an unseen soft eye fill motivated as bounce off the agent's lit work surface: an area light 0.5x0.3 m at about (0.45, 0.6, 1.40), aimed at her eyes (0.47, -0.10, 1.50), 3-5 W, colour (0.8,0.86,1.0), with visible_camera and visible_glossy off. Move pos0_down_front from y 0.20 to about 0.45 so its angle to her face drops from about 80 to about 72 deg. Target in the raw: sockets at least 45% of the forehead value, and no hue difference between forehead and neck."
+  },
+  {
+   "priority": 1,
+   "camera": "shoulder",
+   "problem": "The broad hand. rest_hand() curls only the f_*.01_master bones (X, 16 deg). Its pitch loop then tips the whole hand until palm and fingertips sit level, which cancels the curl. Finger spread and the thumb are never set, so the rig's splayed rest pose shows: five straight fingers fanned about 12 cm wide, the thumb sticking out, a black cuff band at the wrist. It is also the brightest skin in the frame (169 graded). In the profile the same hand reads as a flat pale mitten.",
+   "fix": "After the loop, set f_index/f_middle/f_ring/f_pinky .01_master rotation X to 25-30 deg. Change the pitch criterion so both the heel of the palm and the fingertips touch the ledge, with the knuckles 1.5-2.5 cm above it, rather than palm and fingers coplanar. Close the spread by rotating each master about its local Z toward the middle finger (index about 4 deg, ring about -3, pinky about -7; check the signs per side) until the fingertips span 8.5 cm or less. thumb.01_master: curl 15 deg and adduct about 20 deg so it lies along the index edge. Better still, give the hand a job: fingertips on the near edge of the passport, sliding it to the agent (move desk0_passport under her fingers). Pull the sleeve end back 1-2 cm, or give the cuff's inner face the jacket material, so the black band goes. Check the hand from shoulder, profile and wide."
+  },
+  {
+   "priority": 1,
+   "camera": "profile",
+   "problem": "Dawn's eye in profile reads as a bright white almond in a black socket, with a thin white streak hanging from the lower lid toward the cheekbone (raw, about x 530-540, y 155-175). It reads as a tear, which is exactly the sensational note this restrained film must avoid. It was there in round 3 too.",
+   "fix": "Ask Codex for a kit fix to the statue eyes in cast.py: push the eye shell 1.5-2 mm back into the socket or scale it to 95%, give it the skin's matte stone shader (roughness 0.6 or more, no coat), and check the lower lid for a flipped normal or an exposed shell edge. Until then, cut the glint locally by setting the eye material's roughness to 0.7 and its specular IOR level to 0.2. Re-check at 4x zoom from the profile."
+  },
+  {
+   "priority": 2,
+   "camera": "shoulder",
+   "problem": "The pale counter. The 'dark solid surface' top has base 0.022 but roughness 0.16-0.30 and coat 0.3. Seen at the reverse's grazing angle (the camera at z 1.58 looks down about 17 deg) it mirrors the lit hall: the ledge reads 147 raw and 95 graded (127 graded in the wide), it fills the bottom 20% of the frame, and the 12 mm brushed-steel nosing draws a white line along it. The passport (base 0.05, roughness 0.5-0.65) reads 158 graded for the same reason, a pale tile almost the counter's value.",
+   "fix": "materials()['top']: roughness (0.5, 0.65), coat 0, Specular IOR Level 0.3, keeping the smudge variation. desk0_nosing: steel_dark at 6 mm high instead of 13 mm. Passport: roughness 0.85, Specular IOR Level 0.2, and a page-block strip 1.5 mm inset on three edges at about 0.35. Lower the shoulder camera to z about 1.48 and aim it at z about 1.31, so the counter takes 12% of the frame or less. Targets in the graded frame: ledge about 60 or less, passport about 50 or less, both clearly darker than her hand and face."
+  },
+  {
+   "priority": 2,
+   "camera": "shoulder",
+   "problem": "A black seam line still runs along the hairline, between the sculpted hair cap and the forehead, so the hair reads as a swim cap pulled on.",
+   "fix": "Kit fix (Codex, people/cast): shrinkwrap the hair mesh's lower-edge loop onto the scalp with a 0.5-1 mm offset, or add a solidify 1-2 mm inward on the cap's border, so no gap or backface shows. Check from the shoulder camera at 4x zoom."
+  },
+  {
+   "priority": 3,
+   "camera": "profile",
+   "problem": "The monitor's face points past the agent toward the camera, so he seems to look down at the counter rather than read his screen. With MON yaw 48 deg the face points 48 deg from +Y toward +X, but the agent stands 25 deg from +Y as seen from the monitor at (-0.2, 0.5). Round 3's advice to raise yaw to 68-72 deg was the wrong way round.",
+   "fix": "Set MON yaw to about 30 deg, about 5 deg off his line. The profile camera then sees the screen about 70 deg off-axis, as a narrow glowing face, which is fine. Keep desk0_mon_light aimed at his face, and recompute the agent's gaze target from the moved screen."
+  },
+  {
+   "priority": 3,
+   "camera": "profile",
+   "problem": "Dawn's lower legs read as bare pale stone with dark ankle-sock bands and chunky shoes04, which looks like schoolgirl socks with a skirt suit (profile and wide). Round 3 flagged this and it is unchanged.",
+   "fix": "Kit request to Codex in people.dawn(): dark sheer tights (lower-leg skin below the skirt hem tinted to about 0.18-0.22 with the same roughness), or the lowest plain pump among shoes01-06 tinted BLACK_SHOE, so no sock band shows at the ankle."
+  },
+  {
+   "priority": 3,
+   "camera": "scale",
+   "problem": "Unchanged since round 3 (pixel-identical). The right 40% is empty dark floor, the front rim of the plate is cut by the bottom edge, the 'conveyor' behind the case reads as an empty railed channel, and the big dark slab of the counter end fills the left edge.",
+   "fix": "Lens 35 to 42 mm and aim x 1.5 to about 1.62, so the duffel, the case and the display fill the frame with the display on the upper-right third, then tilt down about 2 deg so the front rim sits inside the frame. Give the belt a visible ribbed top (bump 0.6 on the ribs, a faint 0.5 W cool strip light along the inner rail so its ribs catch an edge) and a black rubber flap curtain at the wall opening."
+  },
+  {
+   "priority": 4,
+   "camera": "wide",
+   "problem": "From the wide the trolley still reads as a supermarket cart (a wire-mesh push frame and a wire deck), though in the profile it reads as a flat-deck baggage trolley. The queue belts are thin, straight, taut bars with no sag.",
+   "fix": "In checkin_hall_trolley.py replace the mesh panel with a single bent-tube push frame and a brake bar, and make the deck a solid dark plate (steel_dark, 3 mm bevel). Or turn the trolley about 70 deg so its flat side profile faces the wide. Belts: 50x2 mm webbing with 1.5 cm of sag at mid-span (three segments), fabric material roughness 0.7."
+  },
+  {
+   "priority": 4,
+   "camera": "wide",
+   "problem": "The grade crushes 21-29% of pixels to 8/255 or below (wide 28.9%, scale 25.2%, profile 21.2%). The ceiling and right wall go to pure black, while an isolated bright ceiling fitting at top left and the two tubes under the sign panel at top right are the brightest marks in the wide and pull the eye off Dawn's island.",
+   "fix": "Lift the grade's toe by about +4 to +6 on the 0-255 scale. Cut the emission of the visible queue fixtures (fluorescent, strength 9) by about 40%, or tilt the wide down about 2 deg so the top-right tubes sit lower in frame and the top-left fitting leaves it. Dim the top-right sign_lit panel another 30%."
+  },
+  {
+   "priority": 5,
+   "camera": "wide",
+   "problem": "The agent's 'plain dark suit' reads mid to light grey (83 graded in the profile, 112 in the wide) beside his 145-164 face, so in the wide he is a pale figure almost the value of the lit counter.",
+   "fix": "Drop pos0_down_agent from 42 W to about 25 W (his monitor light should model him), or ask Codex to darken the staff variant 0 tint by about 30%. Target: suit about 60 graded or less in the wide."
+  }
+ ]
+}
