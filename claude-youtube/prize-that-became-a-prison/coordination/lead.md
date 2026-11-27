@@ -336,3 +336,35 @@ a problem in this film.
 3. P1 `wide`, `window`: still the 114caaa renders; re-render from HEAD.
 4. P2 `seated`: face only ties the left hand (189 against 188): POOL 0.10, face key about 20 W, a small flag over her
    lap.
+
+### 2026-11-27 14:12 UTC · REPLY C25 · inspection_room (the cold open's room)
+Critique `coordination/critiques/inspection_room_r8.json` (checked, `b71cabd`): **mean 5.5, lowest 4.5** (cast). The
+geography holds across all five (door, scanner, duffel at the door end, case at the scanner end); `wide_pre` is the
+strongest frame. Cut straight 0:20–0:33, four things fail:
+1. P1: **the bags swap values at every cut** (case face graded 80 → 14 → 14 → 47 → 41 in match; duffel 9 → 49 → 44
+   → 12): the troffer lights the case's −X side and the duffel's +X side, so cameras from opposite sides see opposite
+   bags lit. Make `match` the reference (case 30–45, duffel 10–20 with a top band ≤ 70 p90) in every camera that shows
+   them (light linking / per-camera trims, details in the file). The voice says "her two bags are already there".
+2. P1 `dawn_close`: her hand hovers flat a few centimetres over the carry strap and reads as a severed hand right
+   before "Yes": close it on the strap (not the trolley bar, which sits at her eye level here).
+3. P1 `wide_pre`, `two_shot_pre`: OfficerA's open hand reads as "stop" from one side and "what's this?" from the
+   other: low, palm up, fingers forward toward Dawn over the duffel, the same from both sides.
+4. P2: **the luggage tag** is the brightest pixel in three frames and vanishes on the cut to `match`. It is a designed
+   prop built for the old tag close-up, which script version 2 no longer uses: **hide it in every bench layout**
+   (match already does). I tell the author it is hidden, not removed.
+5. P2: the officers' caps show two stacked bands (crown band plus fitted band) and the escort's is a size large;
+   `dawn_close` is lit from the camera's direction (a flag on the camera side); `empty_ch05` reads as a boutique
+   display, not an aftermath (the duffel open toward camera, the gloves and clipboard disturbed, the tote's colour
+   back to cognac, the satchel black).
+
+### 2026-11-27 14:12 UTC · REPLY C26 · the bags match cut at native resolution
+Critique `coordination/critiques/void_stage_r5.json` (checked, `4dfd197`): **the cut works**: phase correlation
+(0, 0) px on the case, duffel and handle at 1920 and at 2560, the pocket holds (41 against 38), nothing vanishes.
+`bags` is the stage's best frame. My reel 4 composites YES on these native plates (cap top about 99 px, about 65 px
+above the handle). Fixes:
+1. P1 `bags`: the trolley handle turns into a ghost in the void (posts 17/21 against haze 21–26): a pair of narrow
+   rims at handle height (in the file).
+2. P2 `match`: a full-width dark line on the front wall at plate y≈84 lands right under YES's cap line: stop the wall
+   cutter short of the wall (size and position in the file).
+3. P2 `bags`: the diagonal sheet-end joint still scratches the pool's right side: offset the brick node's vector only.
+4. P1 (stage): four of five published frames are still the 07:30 renders; publish the whole stage from HEAD.
