@@ -173,7 +173,7 @@ def dawn():
             nt = hair.node_tree
             shader = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
             wave = nt.nodes.new("ShaderNodeTexWave")
-            wave.wave_type, wave.bands_direction = "RINGS", "X"
+            wave.wave_type = "RINGS"
             wave.rings_direction = "X"
             wave.inputs["Scale"].default_value = 16.0
             wave.inputs["Distortion"].default_value = 1.2
@@ -434,7 +434,7 @@ def place_seated(holder, seat_xy, seat_z):
 
 def suitcase():
     x, y, t = SUITCASE
-    holder = props.load("dawn-suitcase", size=0.66, axis="z", loc=(x, y, 0.0), turn_deg=t, sat=0.5)
+    holder = props.load("dawn-suitcase", size=0.66, axis="z", loc=(x, y, 0.0), turn_deg=t, sat=0.5, case_topstitch=True)
     treated = set()
     for ob in holder.children_recursive:
         if ob.type != "MESH":

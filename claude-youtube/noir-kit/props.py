@@ -55,11 +55,11 @@ def _grade(mat, sat, val, rough_add, hue=0.5):
             rough.default_value = min(1.0, rough.default_value + rough_add)
 
 
-def _plain_suitcase_side(ob):
+def _plain_suitcase_side(ob, topstitch=False):
     """Sew an unmarked nylon reinforcement from each side handle to the upper seam.
 
     The generated case has four bright metal bars above each handle. Both reinforcements follow
-    the sidewall in the source GLB's Z-up coordinates and covers the bars from every camera.
+    the sidewall in the source GLB's Z-up coordinates and cover the bars from every camera.
     """
     mesh = ob.data
     world = ob.matrix_world
@@ -73,9 +73,11 @@ def _plain_suitcase_side(ob):
             vertex.co = local @ Vector((x, math.copysign(0.271, y), z))
     mesh.update()
     verts, quads = [], []
+    stitch_paths = []
     # Each side has its own curvature. Sample the shell just outside the bars and span the
     # hardware, tapering the strip into the upper seam and overlapping its lower handle anchor.
     for side in (-1, 1):
+        rails = [[], []]
         for j in range(26):
             t = j / 25
             z = 0.032 + 0.326 * t
@@ -94,6 +96,14 @@ def _plain_suitcase_side(ob):
                     k = len(verts) - 1
                     face = (k - 8, k - 1, k, k - 7)
                     quads.append(face if side == 1 else face[::-1])
+            if topstitch:
+                # Interpolate on the actual face, 4 mm inside each longitudinal edge.
+                for rail, a, b in ((rails[0], -7, -6), (rails[1], -1, -2)):
+                    edge, neighbour = world @ verts[a], world @ verts[b]
+                    point = edge.lerp(neighbour, 0.004 / abs(edge.x - neighbour.x))
+                    rail.append(point + Vector((0, side * 0.00055, 0)))
+        if topstitch:
+            stitch_paths.extend((side, rail) for rail in rails if len(rail) > 1)
     panel = bpy.data.meshes.new("suitcase side webbing")
     panel.from_pydata(verts, [], quads)
     band = bpy.data.objects.new("suitcase handle reinforcement", panel)
@@ -121,8 +131,35 @@ def _plain_suitcase_side(ob):
     edge = band.modifiers.new("webbing edge", "SOLIDIFY")
     edge.thickness = 0.0016
 
+    if stitch_paths:
+        thread = bpy.data.curves.new("side seam thread", "CURVE")
+        thread.dimensions, thread.bevel_depth, thread.bevel_resolution = "3D", 0.00062, 2
+        thread.use_fill_caps = True
+        for side, path in stitch_paths:
+            for start, end in zip(path, path[1:]):
+                count = max(1, round((end - start).length / 0.0036))
+                step = (end - start) / count
+                for i in range(count):
+                    first = start + step * (i + 0.10)
+                    last = start + step * (i + 0.83)
+                    high = first.lerp(last, 0.5) + Vector((0, side * 0.0004, 0))
+                    stitch = thread.splines.new("POLY")
+                    stitch.points.add(2)
+                    for pt, co in zip(stitch.points, (first, high, last)):
+                        pt.co = (*(local @ co), 1)
+        seam = bpy.data.objects.new("suitcase side topstitch", thread)
+        bpy.context.scene.collection.objects.link(seam)
+        seam.parent = band
+        yarn = bpy.data.materials.new("charcoal lockstitch")
+        yarn.use_nodes = True
+        yarn_bsdf = yarn.node_tree.nodes["Principled BSDF"]
+        yarn_bsdf.inputs["Base Color"].default_value = (0.028, 0.028, 0.030, 1)
+        yarn_bsdf.inputs["Roughness"].default_value = 0.86
+        thread.materials.append(yarn)
 
-def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, rough_add=0.0, hue=0.5, path=None):
+
+
+def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, rough_add=0.0, hue=0.5, path=None, *, case_topstitch=False):
     """Import a prop GLB, size it and put it down. Returns the holder empty (meshes are its children).
 
     axis: "x", "y" or "z" for the dimension `size` sets, or "long" for the longest horizontal one, which is then
@@ -136,7 +173,7 @@ def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, r
     bpy.context.view_layer.update()
     if name == "dawn-suitcase" and os.path.abspath(path) == os.path.join(PROPS, "dawn-suitcase.glb"):
         for ob in meshes:
-            _plain_suitcase_side(ob)
+            _plain_suitcase_side(ob, topstitch=case_topstitch)
     pts = [o.matrix_world @ Vector(c) for o in meshes for c in o.bound_box]
     lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
     hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
