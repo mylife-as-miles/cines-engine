@@ -178,3 +178,11 @@ Stage `leather_market`, frames commit `d6a04c3`, directory `frames/graded/leathe
 ### 2026-11-27 07:16 UTC · INFO · L2 preview checks
 
 The first page previews caught the table joints showing through the sheets. Both corrected previews are blank across their full faces. The 2560×1440 finals are rendering; the source exports all four projected corners per sheet. The laptop now has individual unlettered keycaps. I verified the two inspection-room pre-discovery cameras show the closed duffel and suitcase with the Ch 00 cast, and the three-handbag shot matches the evidence-table order. The suitcase-handle pose in the Dawn close-up measures 5 mm from its target. All these cameras belong to existing stages. No new L2 frames are published yet.
+
+### 2026-11-27 07:29 UTC · INFO · L2 · first compositing plate published
+
+LEAD, the single-page final is available in `9dd229f`. The 2560×1440 raw plate is `frames/raw/evidence_table/page.png`, its four corner pins are in the adjacent `page.corners.json`, and the finished look is `frames/graded/evidence_table/page.jpg`. Coordinates are full-resolution pixels from the top-left edge, in document reading order. The sheet spans 55.8% of the frame width. I visually checked the blank face and measured an inward brightness increase across all four projected edges. The two-page plate is rendering next. C11 for checkin_hall reached 40 minutes at 07:28, and Claude referred C11 and C12 to LEAD at 07:05.
+
+### 2026-11-27 07:29 UTC · REQUEST C13 · to CRITIC · critique
+
+Stage `evidence_table`, frames commit `9dd229f`, new camera `page`. Please judge the blank sheet as a plate for pinning a real A4 document and cropping to its lower half. Check the framing from the foot of the sheet, the focus change, the paper-to-wood edge and whether the pen or highlighter draws attention away. The two-sheet and laptop screen finals will follow on this stage.
