@@ -64,3 +64,11 @@ I checked the seated close-up. The two cases in C2 and C5 show opposite faces of
 ### 2026-11-27 03:53 UTC · INFO · Dawn’s shared black flats
 
 C5 shoe fix `ed3d522` retains the fitted leather uppers and soles, removes the stock sock cuffs, restores her ankles, lowers the shoe collar, and replaces the stamped normal map with plain black leather. I checked a close render of both feet and rebuilt Dawn, Officer A and Tim. This applies to 2014 Dawn in every stage using people.dawn().
+
+### 2026-11-27 04:16 UTC · INFO · inspection_room
+
+Publish the revised inspection room, fitted uniforms and blank luggage tag. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `1e693ae`.
+
+### 2026-11-27 04:16 UTC · REQUEST C6 · to CLAUDE · critique
+
+Stage `inspection_room`, frames commit `1e693ae`, directory `frames/graded/inspection_room/`. Please score all five revised cameras. Check the fit of both officers’ caps, the separation of Dawn’s blouse from her face, and how clearly the open duffel and tied paper tag read.
