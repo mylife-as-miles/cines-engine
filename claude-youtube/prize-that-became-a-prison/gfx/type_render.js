@@ -8,7 +8,7 @@ const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), { spawn, execFileSync } = require('child_process');
 const argv = process.argv.slice(2), opt = {};
 for (let i = 0; i < argv.length; i++) if (argv[i].startsWith('--')) { opt[argv[i].slice(2)] = argv[i + 1]; argv.splice(i, 2); i--; }
-const ROOT = path.resolve(__dirname, '..'), PAGE = path.join(__dirname, 'type.html');
+const ROOT = path.resolve(__dirname, '..'), PAGE = opt.page ? path.resolve(opt.page) : path.join(__dirname, 'type.html');
 const url = f => f ? 'file://' + path.resolve(f) : null;
 
 (async () => {

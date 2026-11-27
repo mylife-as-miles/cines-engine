@@ -1,0 +1,85 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>the seam</title>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// The film's only red: the seam (DECISIONS: red appears twice, both on the seam). Modes:
+//   flash    cold open: the trace runs along the tote's front-lip seam in 0.55 s and is gone with the cut at 1.0 s
+//   trace    chapter 3: the trace draws in full over 1.8 s and holds
+//   cutaway  chapter 3 (and the chapter 4 split): a schematic section of the bag wall; the leather and the lining part
+//            to show a hidden space, outlined in red, and close again (the sound is a small metallic click). Schematic
+//            only: no packets, no substance, nothing drawn as an object; no words.
+// The seam path is read from a JSON in plate pixels (window.SEAM: {space:[w,h], seam:[[x,y],...]}): the prototype is
+// gfx/shots/purses_seam_proto.json, replaced by Codex's projected purses.seam.json (REQUEST L3).
+// Contract: window.draw(mode, t), window.READY; window.setBG(url) for previews over the plate.
+const W = 1920, H = 1080, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
+const sm = x => { x = cl(x); return x * x * (3 - 2 * x); }, eo = x => 1 - Math.pow(1 - cl(x), 3);
+const RED = '200,52,44';                       // a deep red (OKLCH C about 0.18), not neon
+let bgImg = null;
+function pts() { const s = window.SEAM, k = W / s.space[0]; return s.seam.map(([x, y]) => [x * k, y * k]); }
+function trace(ctx, p, f, a = 1) {
+  if (f <= 0) return; const n = Math.max(1, Math.floor((p.length - 1) * f));
+  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const [w, al] of [[9, 0.10], [5, 0.22], [2.4, 0.95]]) {          // a soft bloom under a fine line
+    ctx.strokeStyle = `rgba(${RED},${al * a})`; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(...p[0]);
+    for (let i = 1; i <= n; i++) ctx.lineTo(...p[i]); ctx.stroke();
+  }
+  if (f < 1) { const h = p[n], g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 18);
+    g.addColorStop(0, `rgba(255,120,100,${0.7 * a})`); g.addColorStop(1, `rgba(${RED},0)`);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 18, 0, 7); ctx.fill(); }
+  ctx.restore();
+}
+function cutaway(ctx, t) {
+  // A section through the bag wall at the top seam, drawn as an extruded slab in an oblique view: the cut face shows
+  // the leather over the lining; the top face recedes. The lining is sewn to the leather at the seam (left); it swings
+  // down about its stitches to open a wedge of hidden space, outlined in red and left empty, then snaps shut.
+  ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H);
+  const vg = ctx.createRadialGradient(W * 0.5, H * 0.5, 120, W * 0.5, H * 0.5, W * 0.62);
+  vg.addColorStop(0, 'rgba(26,32,42,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+  const open = sm((t - 0.9) / 0.9) * (1 - Math.pow(cl((t - 3.1) / 0.22), 2));   // parts, holds, snaps shut
+  const reveal = eo(t / 0.7), drift = 1 + 0.02 * eo(t / 5);                        // a slow push across the shot
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(drift, drift); ctx.translate(-W / 2, -H / 2); ctx.globalAlpha = reveal;
+  const X0 = 420, X1 = 1500, Y = 470, D = [150, -120];                              // D: the receding depth vector
+  const LEA = 64, LIN = 26, hinge = [X0 + 120, Y + LEA];                            // leather and lining thickness
+  const ang = 0.085 * open;                                                         // the lining's swing, radians
+  const rot = (x, y) => { const dx = x - hinge[0], dy = y - hinge[1], c = Math.cos(ang), s2 = Math.sin(ang);
+    return [hinge[0] + dx * c - dy * s2, hinge[1] + dx * s2 + dy * c]; };
+  const slab = (pts, faceFill, topFill, edge) => {                                  // cut face + receding top + side
+    const top = [pts[0], pts[1], [pts[1][0] + D[0], pts[1][1] + D[1]], [pts[0][0] + D[0], pts[0][1] + D[1]]];
+    const side = [pts[1], pts[2], [pts[2][0] + D[0], pts[2][1] + D[1]], [pts[1][0] + D[0], pts[1][1] + D[1]]];
+    for (const [poly, fill] of [[top, topFill], [side, faceFill], [pts, faceFill]]) {
+      ctx.beginPath(); poly.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath();
+      ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = edge; ctx.lineWidth = 1.4; ctx.stroke();
+    }
+  };
+  const hatch = (pts, col) => { ctx.save(); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); ctx.clip();
+    ctx.strokeStyle = col; ctx.lineWidth = 1; for (let k = X0 - 400; k < X1 + 200; k += 12) { ctx.beginPath(); ctx.moveTo(k, Y + 400); ctx.lineTo(k + 300, Y - 200); ctx.stroke(); } ctx.restore(); };
+  // the lining (drawn first, it sits behind the leather's cut face when closed)
+  const lin = [[X0, Y + LEA], [X1, Y + LEA], [X1, Y + LEA + LIN], [X0, Y + LEA + LIN]].map(([x, y]) => x < hinge[0] ? [x, y] : rot(x, y));
+  slab(lin, '#22272e', '#2b3038', 'rgba(214,208,198,0.45)'); hatch(lin, 'rgba(214,208,198,0.06)');
+  // the hidden space: between the leather's underside and the swung lining, outlined in red, never filled
+  if (open > 0.01) {
+    const a2 = cl(open * 1.6); ctx.save(); ctx.strokeStyle = `rgba(${RED},${0.95 * a2})`; ctx.lineWidth = 2.6;
+    ctx.shadowColor = `rgba(${RED},${0.6 * a2})`; ctx.shadowBlur = 10;
+    const p0 = [hinge[0], Y + LEA], p1 = [X1 - 30, Y + LEA], p2 = rot(X1 - 30, Y + LEA);
+    ctx.beginPath(); ctx.moveTo(...p0); ctx.lineTo(...p1); ctx.lineTo(...p2); ctx.closePath(); ctx.stroke(); ctx.restore();
+  }
+  // the leather
+  const lea = [[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]];
+  slab(lea, '#3b342d', '#4a4239', 'rgba(214,208,198,0.55)'); hatch(lea, 'rgba(214,208,198,0.08)');
+  // the seam: thread through both layers at the hinge, in the film's red (this is the seam the red always marks)
+  ctx.save(); ctx.strokeStyle = `rgba(${RED},0.9)`; ctx.lineWidth = 2.2;
+  for (let i = 0; i < 4; i++) { const x = X0 + 30 + i * 26; ctx.beginPath(); ctx.moveTo(x, Y - 6); ctx.lineTo(x, Y + LEA + LIN + 6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + D[0] * 0.6, Y + D[1] * 0.6 - 4); ctx.lineTo(x + D[0] * 0.6 + 12, Y + D[1] * 0.6 - 4); ctx.stroke(); }
+  ctx.restore(); ctx.restore();
+}
+window.draw = (mode, t) => {
+  const ctx = document.getElementById('c').getContext('2d'); ctx.clearRect(0, 0, W, H);
+  if (bgImg && mode !== 'cutaway') ctx.drawImage(bgImg, 0, 0, W, H);
+  if (mode === 'flash') { if (t < 1.0) trace(ctx, pts(), eo(t / 0.55), 1 - sm((t - 0.8) / 0.2) * 0); }
+  else if (mode === 'trace') trace(ctx, pts(), eo(t / 1.8));
+  else if (mode === 'cutaway') cutaway(ctx, t);
+};
+window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
+fetch(window.SEAM_URL || 'shots/purses_seam_proto.json').then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
+</script></body></html>
