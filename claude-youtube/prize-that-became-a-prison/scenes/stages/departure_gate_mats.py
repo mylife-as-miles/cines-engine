@@ -216,13 +216,13 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
     rib = _math(nt, "ADD", _math(nt, "MULTIPLY", rib_x, _math(nt, "SUBTRACT", 1.0, parity)), _math(nt, "MULTIPLY", rib_y, parity))
     rib = _maprange(nt, rib, -1.0, 1.0, 0.0, 1.0)
     fleck = _noise(nt, o, 260.0, 2.0, 0.6)
-    col = _mix(nt, _maprange(nt, tone, 0.0, 1.0, 0.0, 1.0), tuple(c * 0.93 for c in base), tuple(c * 1.07 for c in base))
-    col = _mix(nt, parity, _mix(nt, 1.0, col, (0.92, 0.92, 0.92), blend="MULTIPLY"), _mix(nt, 1.0, col, (1.08, 1.08, 1.08), blend="MULTIPLY"))
+    col = _mix(nt, _maprange(nt, tone, 0.0, 1.0, 0.0, 1.0), tuple(c * 0.97 for c in base), tuple(c * 1.03 for c in base))
+    col = _mix(nt, parity, _mix(nt, 1.0, col, (0.97, 0.97, 0.97), blend="MULTIPLY"), _mix(nt, 1.0, col, (1.03, 1.03, 1.03), blend="MULTIPLY"))
     col = _mix(nt, _maprange(nt, rib, 0.0, 1.0, 0.18, 0.0), col, (0.0, 0.0, 0.0))
     col = _mix(nt, _maprange(nt, fleck, 0.6, 0.72, 0.0, 0.45), col, (0.085, 0.09, 0.1))
     col = _mix(nt, _maprange(nt, fleck, 0.28, 0.36, 0.35, 0.0), col, (0.008, 0.009, 0.012))
     # seams between tiles
-    _, seam = _brick(nt, o, tile, tile, 0.003, (1, 1, 1), (1, 1, 1), (0, 0, 0))
+    _, seam = _brick(nt, o, tile, tile, 0.002, (1, 1, 1), (1, 1, 1), (0, 0, 0))
     col = _mix(nt, _math(nt, "MULTIPLY", seam, 0.14), col, (0.0, 0.0, 0.0))   # tight seams: barely there
     # traffic: lanes along X in front of the rows and down the aisle, pile flattened (paler, glossier sheen)
     lanes = _maprange(nt, _noise(nt, o, 0.5, 3.0, 0.55, mapping=(0.25, 1.0, 1.0)), 0.45, 0.7, 0.0, 1.0)
@@ -245,10 +245,10 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
     b.inputs["Sheen Roughness"].default_value = 0.45
     b.inputs["Sheen Tint"].default_value = (0.55, 0.6, 0.7, 1)
     # pile: loops plus a fibre noise (scale ~400), the seams only a slight dip
-    pile = _math(nt, "ADD", _noise(nt, o, 420.0, 3.0, 0.7), _math(nt, "MULTIPLY", _noise(nt, o, 1300.0, 2.0, 0.6), 0.5))
+    pile = _math(nt, "ADD", _noise(nt, o, 740.0, 3.0, 0.7), _math(nt, "MULTIPLY", _noise(nt, o, 1300.0, 2.0, 0.6), 0.5))
     h = _math(nt, "ADD", _math(nt, "MULTIPLY", rib, 0.4), _math(nt, "MULTIPLY", pile, 0.6))
     h = _math(nt, "SUBTRACT", h, _math(nt, "MULTIPLY", seam, 0.3))
-    _bump(nt, b, h, 0.3, 0.0015)
+    _bump(nt, b, h, 0.15, 0.0012)
     return m
 
 
@@ -459,8 +459,8 @@ DOORS = [(_RF * 1.362, 6.9, 1.0, 0.5), (_U - _RF * 1.362, 6.9, 1.0, 0.5),
          (_U - _RF * 1.45, 15.1, 0.5, 0.26), (_U - _RF * 1.45, 16.1, 0.5, 0.26)]
 
 
-def fuselage(name, top=(0.55, 0.555, 0.56), belly=(0.37, 0.374, 0.38)):
-    """Aircraft paint, no livery: satin white-grey (base 0.55, roughness 0.35, a clear coat 0.3), a darker belly by
+def fuselage(name, top=(0.37, 0.38, 0.39), belly=(0.24, 0.25, 0.26)):
+    """Aircraft paint, no livery: satin white-grey with a subdued clear coat, a darker belly by
     the surface normal; on the skin's UVs in metres: faint panel lines (1.6 m along, 0.9 m around, staggered, bump
     0.05), the radome seam ring 1.6 m back from the tip (the radome a shade apart), and the door outlines as 8 mm
     grooves."""
@@ -488,9 +488,9 @@ def fuselage(name, top=(0.55, 0.555, 0.56), belly=(0.37, 0.374, 0.38)):
     col = _mix(nt, _math(nt, "MULTIPLY", lines, 0.55), col, (0.04, 0.04, 0.042))
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Specular IOR Level"].default_value = 0.4
-    b.inputs["Coat Weight"].default_value = 0.3
+    b.inputs["Coat Weight"].default_value = 0.035
     b.inputs["Coat Roughness"].default_value = 0.12
-    r = _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.31, 0.4)
+    r = _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.42, 0.53)
     _link(nt, _math(nt, "ADD", r, _math(nt, "MULTIPLY", rad, 0.12)), b.inputs["Roughness"])
     _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", joint, -0.4), _math(nt, "MULTIPLY", grooves, -1.0)), 0.05, 0.003)
     return m
@@ -712,12 +712,12 @@ def materials():
         bellows_rib=ribbed("bellows ribs", (0.022, 0.023, 0.025), 0.09, "X", metal=0.0),
         mast=pbr("galvanised mast", (0.18, 0.18, 0.185), (0.55, 0.68), metal=0.0, nscale=0.4, cvar=0.15),
         vehicle=pbr("ground vehicle", (0.06, 0.062, 0.066), (0.35, 0.55), nscale=1.0, cvar=0.12, coat=0.2),
-        cabin_lit=glow("cabin window", (1.0, 0.88, 0.72), 7.0),
-        cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 1.2),
+        cabin_lit=glow("cabin window", (1.0, 0.88, 0.72), 1.25),
+        cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 0.42),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
 
         bridge_win=glow("bridge glazing", (1.0, 0.8, 0.58), 0.32, 0.3, ("Y", "Z")),
-        screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 2.6, 0.35),
+        screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 1.1, 0.35),
         flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),
         nav_green=glow("nav green", (0.1, 1.0, 0.35), 50.0),

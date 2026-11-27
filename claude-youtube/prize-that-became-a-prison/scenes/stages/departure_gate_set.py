@@ -182,12 +182,13 @@ def fixture(x, y, level):
         key = f"lens_{level:.2f}"
         if key not in M:
             # the night-setting fittings glow faintly (their reflections in the glass stay a ghost)
-            M[key] = mt.lens(f"fixture lens {level:.2f}", COOL, 1.3 if level == DIM else 2.0 + 13.0 * level)
-        box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), M[key])
+            M[key] = mt.lens(f"fixture lens {level:.2f}", COOL, 0.38 if level == DIM else 2.0 + 13.0 * level)
+        lens = box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), M[key])
+        lens.visible_glossy = (round(x, 1), round(y, 1)) == KEY_FX
         area(n + "_light", (x, y, H - 0.02), (1.15, 0.11), FX_ENERGY * level, COOL, spread=100)
         if (round(x, 1), round(y, 1)) == KEY_FX:
             # the downlight that throws the pool: a 1.5-2 m disc on the carpet round her seat, soft-edged
-            spot(n + "_pool", (x - 0.1, y - 0.15, H - 0.03), 2100.0, COOL, 36, 0.45, (0, 0, 0), radius=0.15)
+            spot(n + "_pool", (x - 0.1, y + 0.05, H - 0.03), 1450.0, (1.0, 0.88, 0.72), 29, 0.44, (math.radians(-4), 0, 0), radius=0.080)
     else:
         box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), m["lens_off"])
 
@@ -420,23 +421,18 @@ def dressing():
     for i, (x, y) in enumerate(((4.15, 1.05), (-7.62, 2.6), (4.0, -2.3), (-7.6, -2.3), (5.2, 4.75))):
         bin_(f"bin_{i}", x, y)
     charge_post("charge_post", -7.62, 1.1, face=1)
-    charge_post("charge_post_b", 3.95, 0.45, face=1)
-    charge_post("charge_post_c", -2.45, 0.45, face=1)      # between the back-to-back rows, at the centre aisle
+    charge_post("charge_post_b", 4.43, 4.90, face=1)
     # a retractable-belt stanchion pair closing the boarding lane at the podium (no text on the belt)
     for k, (x, y) in enumerate(((5.25, 2.35), (5.25, 3.45))):
         stanchion(f"stanchion_{k}", x, y)
     belt = M.setdefault("belt", mt.pbr("stanchion belt", (0.018, 0.02, 0.026), (0.45, 0.6), nscale=40, cvar=0.08))
     box("stanchion_belt", (0.012, 1.1 - 0.07, 0.05), (5.25, 2.9, 0.93), belt)
-    # a floor-standing wayfinding sign by the queue: a blank backlit panel with a plain arrow (a pictogram, no text)
+    # a floor-standing wayfinding sign by the queue: a blank backlit panel
     sx, sy = 4.75, 2.35
     box("fsign_base", (0.5, 0.36, 0.025), (sx, sy, 0.0125), m["steel"], bevel=0.006)
     box("fsign_post", (0.06, 0.06, 1.2), (sx, sy, 0.62), m["steel"], bevel=0.006)
     box("fsign_case", (0.56, 0.06, 0.62), (sx, sy, 1.5), m["sign_case"], bevel=0.01)
     box("fsign_face", (0.5, 0.004, 0.56), (sx, sy - 0.031, 1.5), m["sign_mid"])
-    for k, (dx, dz, rot) in enumerate(((0.0, 0.0, 0.0), (0.07, 0.06, -0.7854), (0.07, -0.06, 0.7854))):
-        L = 0.24 if k == 0 else 0.13
-        box(f"fsign_arrow_{k}", (L, 0.003, 0.03), (sx + dx - (0.04 if k == 0 else 0), sy - 0.0345, 1.5 + dz), m["plastic"],
-            rot=(0, rot, 0))
     point("fsign_glow", (sx, sy - 0.25, 1.5), 1.5, (0.75, 0.85, 1.0), radius=0.2)
     # floor tape: a rope-less boarding lane from in front of the podium round to the door
     t = m["tape"]
@@ -668,7 +664,7 @@ def exterior():
             (-58.0, 56.0, (-38.0, 32.0), 20.0, 100000.0, True), (90.0, 44.0, (70.0, 30.0), 20.0, 90000.0, True))):
         # the key mast's cone is 72 deg, aimed past the nose, so only its soft edge spills through the glass onto the
         # floor and the front row (a rim, not a second pool)
-        ac.mast(i, x, y, t, h=h, energy=e, show=show, size=72.0 if i == 0 else 82.0)
+        ac.mast(i, x, y, t, h=h, energy=e * (0.55 if i < 2 else 0.85), show=show, size=72.0 if i == 0 else 82.0)
     ac.jet_bridge(AIR)
     ac.aircraft("aircraft", AIR, 0.0, lit=0.55, seed=3)
     ac.aircraft("aircraft_far", (-60.0, 160.0), 90.0, lit=0.75, seed=11, taxi=True)

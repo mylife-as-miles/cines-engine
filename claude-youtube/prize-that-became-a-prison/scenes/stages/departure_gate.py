@@ -29,6 +29,7 @@ sys.path.insert(0, HERE)
 import bpy  # noqa: E402
 import bmesh  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
+from mathutils.bvhtree import BVHTree  # noqa: E402
 
 import cast as castkit  # noqa: E402,F401
 import people  # noqa: E402
@@ -55,22 +56,17 @@ FOCUS = {
 }
 
 
-def _back_off(loc, aim, d):
-    v = Vector(loc) - Vector(aim)
-    return tuple(Vector(loc) + v.normalized() * d)
-
-
 CAMERAS = {
     # Ch 02 end: the gate from the back corner, high: rows of empty seats in the dark, Dawn in the one pool of light
     # at the front, the glass wall with the waiting aircraft and the jet bridge, the podium glowing by the door
-    "wide": dict(loc=(-4.95, -4.65, 2.6), aim=(1.2, 4.6, -0.05), lens=30, focus="fx_wide", fstop=8.0, beat="ch02",
+    "wide": dict(loc=(-4.95, -4.65, 2.83), aim=(1.2, 4.6, -0.05), lens=30, focus="fx_wide", fstop=8.0, beat="ch02",
                  exposure=-1.1),
-    # Ch 03: controlled medium from the window side: Dawn under the one fitting, the suitcase, the empty rows soft
+    # Ch 03: stay inside the curtain wall to keep apron reflections off Dawn: Dawn under the one fitting, the suitcase, the empty rows soft
     # behind her (f/1.8)
-    "seated": dict(loc=_back_off((1.35, 5.55, 0.95), (-0.95, 2.95, 0.58), 0.35), aim=(-1.13, 3.12, 0.56), lens=45,
-                   focus="fx_dawn", fstop=1.8, beat="ch03", exposure=-1.25),
+    "seated": dict(loc=(2.16, 5.80, 1.10), aim=(-1.09, 3.09, 0.62), lens=52,
+                   focus="fx_face", fstop=1.8, beat="ch03", exposure=-1.25),
     # Ch 03: from the aisle behind her, low: Dawn and the seat backs against the glass and the floodlit aircraft
-    "window": dict(loc=(-2.05, -1.35, 1.5), aim=(-0.35, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
+    "window": dict(loc=(-2.41, -1.35, 1.54), aim=(-0.35, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
                    exposure=-1.15),
 }
 # per-camera light trims (multipliers on named lights)
@@ -80,13 +76,14 @@ RIM = "dawn_rim"
 DIMS = ["fx_{:+.1f}_{:+.1f}_light".format(*xy) for xy, lv in st.FX_LEVEL.items() if lv == st.DIM]
 TRIMS = {
     # the one downlight over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.3, RIM: 0.0, POOL: 1.5, **{n: 0.6 for n in DIMS},
-             **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 1.3 for xy in st.BACK_FX}},
+    "wide": {"window_spill": 0.14, RIM: 1.1, "face return": 0.0, KEY: 0.20, POOL: 1.25,
+             "mast_light_0": 0.66, "mast_light_1": 0.66, **{n: 0.14 for n in DIMS},
+             **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 0.18 for xy in st.BACK_FX}},
     # top light from the downlight over her seat is the key; the glass's spill would flatten her face; the night
     # fittings over the far rows a touch lower so the rows stay soft and dark behind her
     "seated": {"window_spill": 0.2, POOL: 0.3, KEY: 0.3, **{n: 0.6 for n in DIMS}},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
-    "window": {"window_spill": 0.15, KEY: 0.15, POOL: 0.06, RIM: 0.0},
+    "window": {"window_spill": 0.13, KEY: 0.14, POOL: 0.06, RIM: 0.22, "face return": 0.90},
 }
 FLAGS = {"seated": ["flag_near_seats", "flag_pool"]}   # black flags (camera-invisible) used by one camera only
 
@@ -147,25 +144,78 @@ def dawn():
         ls.vertex_group, ls.iterations, ls.lambda_factor, ls.lambda_border = "drape", 8, 0.7, 0.0
         ls.use_volume_preserve, ls.use_normalized = True, True
         suit.modifiers.move(suit.modifiers.find("drape"), 0)     # on the rest shape, before the armature
+        # Seated thighs spread the skirt and turning the wrists twists the cuffs. Give
+        # these areas their own clearance after the armature has deformed the fabric.
+        ease = suit.vertex_groups.new(name="seated skirt and cuffs")
+        deform = {g.index: g.name for g in suit.vertex_groups if g.name.startswith("DEF-")}
+        for v in me.vertices:
+            cuff = sum(w.weight for w in v.groups if deform.get(w.group, "").startswith("DEF-forearm.")
+                       and deform[w.group].endswith(".001"))
+            thigh = sum(w.weight for w in v.groups if deform.get(w.group, "").startswith("DEF-thigh"))
+            weight = min(1.0, 0.58 * cuff + thigh)
+            if weight > 0.0:
+                ease.add([v.index], weight, "REPLACE")
+        loosen = suit.modifiers.new("ease for the seated pose", "DISPLACE")
+        loosen.vertex_group, loosen.strength, loosen.mid_level = ease.name, 0.013, 0.0
     bun = bpy.data.objects.get(f"{h['body']}_bun")
     if bun is not None:
         me = bun.data
         c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
         for v in me.vertices:
             d = v.co - c
-            v.co = c + Vector((d.x * 0.95, d.y * 0.78, d.z * 0.9)) + Vector((0.0, -0.008, -0.022))
+            v.co = c + Vector((d.x * 0.72, d.y * 0.63, d.z * 0.68)) + Vector((0.0, -0.015, -0.041))
         me.update()
     print(f"GATE wardrobe: people.dawn(), jacket front relaxed over {n_drape} vertices, bun "
           f"{'lowered' if bun is not None else 'not found'}", flush=True)
     return h
 
 
-def lap_hands(holder, upper=(12, -6), fore=(64, 30), hand=(72, 40)):
-    """Hands resting together in the lap: aim each arm segment (forward, inward degrees)."""
+def lap_hands(holder, forearms=(67.0, 64.0)):
+    """Rest her right palm on her thigh, with the left hand turned toward the right wrist."""
     rig = rigged.rig_of(holder)
-    for side, k in ((1, "L"), (-1, "R")):
-        for bone, (f, i) in (("upper_arm_fk", upper), ("forearm_fk", fore), ("hand_fk", hand)):
-            rigged._aim(rig, f"{bone}.{k}", rigged._dir(0, f, side, -i))
+    for side, k, angle in ((1, "L", forearms[0]), (-1, "R", forearms[1])):
+        left = k == "L"
+        rigged._aim(rig, f"upper_arm_fk.{k}", rigged._dir(0, 12, side, 6))
+        rigged._aim(rig, f"forearm_fk.{k}", rigged._dir(0, angle, side, -31 if left else -21))
+        wrist = rig.pose.bones[f"hand_fk.{k}"]
+        forward = rigged._dir(0, 81 if left else 87, side, -40 if left else -17).normalized()
+        # The two hand bones have mirrored local X axes. Roll the palm toward the skirt
+        # after aiming the fingers so their edges never meet in a vertical pinch.
+        down = Vector((0.32 if left else -0.12, 0.0, -1.0))
+        normal = (down - forward * down.dot(forward)).normalized()
+        x = normal * side
+        basis = Matrix((x, forward, x.cross(forward))).transposed().to_4x4()
+        basis.translation = wrist.matrix.translation.copy()
+        wrist.matrix = basis
+        bpy.context.view_layer.update()
+
+
+def lap_surface(holder):
+    suit = bpy.data.objects[f"{holder.name}_female_elegantsuit01"]
+    evaluated = suit.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    mesh = evaluated.data
+    leg_groups = {g.index for g in suit.vertex_groups if g.name.startswith(("DEF-thigh", "DEF-pelvis"))}
+    skirt = {v.index for v in mesh.vertices if sum(w.weight for w in v.groups if w.group in leg_groups) > 0.45}
+    faces = [tuple(p.vertices) for p in mesh.polygons if all(i in skirt for i in p.vertices)]
+    return BVHTree.FromPolygons([evaluated.matrix_world @ v.co for v in mesh.vertices], faces)
+
+
+def finger_gap(body, surface, side):
+    evaluated = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    fingers = {g.index for g in body.vertex_groups if g.name.startswith(("DEF-f_", "DEF-thumb", "DEF-palm"))
+               and g.name.endswith("." + side)}
+    gaps = []
+    for v in evaluated.data.vertices:
+        if sum(w.weight for w in v.groups if w.group in fingers) < 0.55:
+            continue
+        p = evaluated.matrix_world @ v.co
+        hit, _, _, _ = surface.ray_cast(p + Vector((0, 0, 0.25)), Vector((0, 0, -1)), 0.6)
+        if hit is not None:
+            gaps.append(p.z - hit.z)
+    if not gaps:
+        raise RuntimeError(f"No skirt beneath Dawn's {side} hand")
+    gaps.sort()
+    return gaps[len(gaps) // 40]  # lowest 2.5%, stable across subdivision levels
 
 
 KNEE_HALF, ANKLE_HALF = 0.088, 0.062      # knees about 0.18 m apart (centres), feet about 0.12 m apart
@@ -241,7 +291,7 @@ def seat_height(x, y0):
     return zs[len(zs) // 2] if zs else prof
 
 
-UPPER = {"head": (11, -10), "neck": (3, 0), "chest": (-12, 0), "fingers": 52}
+UPPER = {"head": (11, -10), "neck": (3, 0), "chest": (-12, 0), "fingers": 17}
 
 
 def seat_figure(holder, seat_z):
@@ -280,25 +330,20 @@ def seat_figure(holder, seat_z):
                 shin = math.degrees(math.acos(c))
             else:
                 thigh += math.degrees(-gap / 0.43)
-    # hands: swing the forearms (and hands with them) until the clasped hands rest on the thighs
-    fore = 64.0
-    pb = rig.pose.bones
+    # Solve each wrist against the posed cloth. The two thighs sit at different
+    # heights under the asymmetric palms, particularly after adding ease to the skirt.
+    surface = lap_surface(holder)
+    forearms = [48.0, 43.0]
     for it in range(5):
         rigged.pose_figure(holder, UPPER)
-        lap_hands(holder, fore=(fore, 30), hand=(fore + 8, 40))
+        lap_hands(holder, forearms)
         sit_legs(holder, thigh, shin)
-        mw = rig.matrix_world
-        hc = sum((mw @ ((pb[f"hand_fk.{k}"].head + pb[f"hand_fk.{k}"].tail) / 2) for k in "LR"), Vector()) / 2
-        tops = []
-        for k in "LR":
-            a_, b_ = mw @ pb[f"thigh_fk.{k}"].head, mw @ pb[f"thigh_fk.{k}"].tail
-            t = max(0.0, min(1.0, (hc.y - a_.y) / (b_.y - a_.y))) if abs(b_.y - a_.y) > 1e-6 else 0.5
-            tops.append(a_.z + (b_.z - a_.z) * t + 0.085)
-        gap = (hc.z - 0.022) - max(tops)
-        print(f"GATE hands it {it}: forearm {fore:.1f} gap {gap * 1000:+.1f} mm", flush=True)
-        if abs(gap) < 0.006:
+        gaps = [finger_gap(body, surface, side) for side in ("L", "R")]
+        print(f"GATE hand clearance {it}: L {gaps[0] * 1000:.1f}, R {gaps[1] * 1000:.1f} mm", flush=True)
+        if max(abs(gap - 0.002) for gap in gaps) < 0.0025:
             break
-        fore = max(35.0, min(95.0, fore + math.degrees(-gap / 0.26)))
+        forearms = [max(30.0, min(95.0, angle + math.degrees((0.002 - gap) / 0.23)))
+                    for angle, gap in zip(forearms, gaps)]
     return dz, hip
 
 
@@ -349,7 +394,32 @@ def place_seated(holder, seat_xy, seat_z):
 
 def suitcase():
     x, y, t = SUITCASE
-    return props.load("dawn-suitcase", size=0.66, axis="z", loc=(x, y, 0.0), turn_deg=t, sat=0.6)
+    holder = props.load("dawn-suitcase", size=0.66, axis="z", loc=(x, y, 0.0), turn_deg=t, sat=0.5)
+    treated = set()
+    for ob in holder.children_recursive:
+        if ob.type != "MESH" or "reinforcement" in ob.name:
+            continue
+        for mat in ob.data.materials:
+            if mat in treated:
+                continue
+            treated.add(mat)
+            tree = mat.node_tree
+            bsdf = next(n for n in tree.nodes if n.type == "BSDF_PRINCIPLED")
+            for socket in ("Metallic", "Roughness"):
+                for link in list(bsdf.inputs[socket].links):
+                    tree.links.remove(link)
+            bsdf.inputs["Metallic"].default_value = 0.0
+            bsdf.inputs["Roughness"].default_value = 0.75
+            bsdf.inputs["Specular IOR Level"].default_value = 0.14
+            colour = bsdf.inputs["Base Color"]
+            if colour.is_linked:
+                source = colour.links[0].from_socket
+                limit = tree.nodes.new("ShaderNodeVectorMath")
+                limit.operation = "MINIMUM"
+                limit.inputs[1].default_value = (0.095, 0.095, 0.095)
+                tree.links.new(source, limit.inputs[0])
+                tree.links.new(limit.outputs[0], colour)
+    return holder
 
 
 # ---------------------------------------------------------------- per-camera hook
@@ -412,13 +482,22 @@ def build(cast=True):
     # the apron's glow and the night sky through the glass: a soft cool spill onto the front rows
     st.area("window_spill", ((st.XL + st.XR) / 2, st.WIN - 0.25, 1.9), (st.XR - st.XL - 1.0, 3.4), 60.0,
             (0.55, 0.68, 1.0), spread=110, rot=(-math.pi / 2, 0, 0))
-    # a faint cool rim from behind her left shoulder (seated camera only): her back edge against the dark rows
+    # A cool edge separates her left shoulder from the rows and the jet bridge.
     rim = st.area(RIM, (SEAT[0] - 1.5, ROW_Y - 1.3, 2.2), (0.6, 0.6), 36.0, (0.62, 0.74, 1.0), spread=120)
     rim.rotation_euler = (Vector((SEAT[0], ROW_Y + 0.05, 1.05)) - rim.location).to_track_quat("-Z", "Y").to_euler()
+    # The shaping lights sit inside the terminal, outside any visible fixture. Their
+    # rectangular reflections in the glazing would appear to hang above the runway.
+    rim.visible_glossy = False
+    rim.data.specular_factor = 0.0
+    bounce = st.area("face return", (SEAT[0] + 0.40, ROW_Y + 1.0, 1.90), (0.48, 0.42), 21,
+                     (0.81, 0.88, 1.0), spread=75)
+    bounce.rotation_euler = (Vector((SEAT[0], ROW_Y, 1.22)) - bounce.location).to_track_quat("-Z", "Y").to_euler()
+    bounce.visible_glossy = False
+    bounce.data.specular_factor = 0.0
     suitcase()
     # a black flag beside the fitting over her row (seen by no camera, used by the seated one): the empty seats
     # nearest the lens fall off into shadow instead of reading as a bright cut slab at the frame edge
-    flag = st.box("flag_near_seats", (0.012, 1.3, 1.1), (SEAT[0] + 0.85, ROW_Y + 0.15, st.H - 0.6),
+    flag = st.box("flag_near_seats", (0.012, 1.7, 1.1), (SEAT[0] + 0.85, ROW_Y + 0.15, st.H - 0.6),
                   st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
     # and a second right beside the downlight, so its cone stops at the seat beside hers
     flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.12, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])

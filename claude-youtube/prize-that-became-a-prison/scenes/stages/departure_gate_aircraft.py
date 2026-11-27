@@ -254,16 +254,16 @@ def flight_deck(name, bvh, glass, seal, parent):
     sill = ZC + SILL
     out = []
     for s in (-1, 1):
-        ws = [(s * 0.06, sill), (s * 0.80, sill), (s * 0.70, sill + 0.52), (s * 0.06, sill + 0.55)]
+        ws = [(s * 0.06, sill), (s * 0.68, sill), (s * 0.60, sill + 0.43), (s * 0.06, sill + 0.46)]
         out.append(pane(f"{name}_ws_{s}", ws, "front", s, bvh, 0.006, glass, parent))
         out.append(gasket(f"{name}_ws_seal_{s}", ws, "front", s, bvh, 0.004, 0.035, seal, parent))
-        ob = _cast(bvh, "front", s, s * 0.80, sill, 0.0)
-        ot = _cast(bvh, "front", s, s * 0.70, sill + 0.52, 0.0)
+        ob = _cast(bvh, "front", s, s * 0.68, sill, 0.0)
+        ot = _cast(bvh, "front", s, s * 0.60, sill + 0.43, 0.0)
         y_ob = ob.y if ob is not None else 2.2
         y_ot = ot.y if ot is not None else 2.75
-        dv = [(y_ob + 0.15, sill), (y_ob + 0.81, sill), (y_ob + 0.97, sill + 0.44), (y_ot + 0.15, sill + 0.50)]
-        rear = [(dv[1][0] + 0.14, sill), (dv[1][0] + 0.64, sill), (dv[1][0] + 0.76, sill + 0.30),
-                (dv[2][0] + 0.14, sill + 0.40)]
+        dv = [(y_ob + 0.15, sill), (y_ob + 0.73, sill), (y_ob + 0.82, sill + 0.36), (y_ot + 0.15, sill + 0.43)]
+        rear = [(dv[1][0] + 0.14, sill), (dv[1][0] + 0.64, sill), (dv[1][0] + 0.76, sill + 0.27),
+                (dv[2][0] + 0.14, sill + 0.34)]
         for k, q in enumerate((dv, rear)):
             out.append(pane(f"{name}_side_{s}_{k}", q, "side", s, bvh, 0.006, glass, parent))
             out.append(gasket(f"{name}_side_seal_{s}_{k}", q, "side", s, bvh, 0.004, 0.035, seal, parent))
@@ -322,12 +322,12 @@ def aircraft(name, nose, heading=0.0, lit=0.6, seed=1, taxi=False, side=-1, nose
     xw = math.sqrt(R * R - zw * zw) + 0.006
     ang = math.atan2(zw, xw)
     y, i = 8.4, 0
-    while y < 28.0:
+    while y < 29.0:
         if not (14.6 < y < 15.6):  # over-wing exits: a plain panel
             r = rng.random()
             mat = m["cabin_lit"] if r < lit else (m["cabin_dim"] if r < lit + 0.12 else m["cabin_off"])
             st.box(f"{name}_win_{i}", (0.03, 0.23, 0.32), (side * xw, y, ZC + zw), mat, bevel=0.008, rot=(0, -side * ang, 0), **P)
-        y += 0.76
+        y += 0.56
         i += 1
     # navigation lights: beacons red, starboard tip green, port tip red, tail white
     st.sphere(f"{name}_beacon_top", 0.1, (0, 16.0, ZC + R + 0.08), m["nav_red"], segs=12, **P)
