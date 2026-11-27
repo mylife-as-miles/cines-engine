@@ -72,13 +72,15 @@ LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos 
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
 # (x, y, turn: the roll at its left end, seen nearly end on)
 RECEIPT_C4 = (0.14, -0.33, 73.0)
+TABLE_EDGE_RETURN = 7.5
 # the purses for Ch 04: a staggered row lit from the lamp on the left; the darkest (burgundy) nearest the lamp, the
 # cognac tote farthest. Turns put each bag's clean front toward the camera at the front left.
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
     "handbag-tote": (0.35, "long", dict(sat=1.7, val=0.65, hue=0.525, rough_add=0.32), dict(spec=0.08)),
-    "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28), dict(spec=0.06)),
+    "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28),
+                       dict(spec=0.06, ceiling=(0.084, 0.072, 0.049))),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25), dict(spec=0.35)),
 }
 
@@ -546,7 +548,7 @@ def bags():
             for slot in o.material_slots:
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
-                    mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m)
+                    mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m, ceiling=fin.get("ceiling"))
         if name == "handbag-tote":
             props.tote_topstitch(h)
         out += [h] + list(h.children_recursive)
@@ -561,6 +563,17 @@ def shadow_card(name, size, location, material):
 
 
 def bag_lighting():
+    # A low return from the far wall traces the two dark handles above the table.
+    source = Vector((-0.61, 0.37, TOP + 0.53))
+    target = Vector((-0.16, 0.095, TOP + 0.255))
+    return_light = sk.area_light("bag edge return", source, (0.29, 0.13), 2.2, WARM, spread_deg=72,
+                                 rot=(target - source).to_track_quat("-Z", "Y").to_euler())
+    return_light.visible_glossy = return_light.visible_volume_scatter = False
+    dark_bags = bpy.data.collections.new("Dark bag rim receivers")
+    for name in ("handbag-shoulder", "handbag-satchel"):
+        for part in props.meshes(bpy.data.objects[name]):
+            dark_bags.objects.link(part)
+    return_light.light_linking.receiver_collection = dark_bags
     # The tight insert catches the lamp lengthwise along the rolled edge.
     # Only the leather and its thread receive this reflection.
     lip = Vector((0.233, -0.186, TOP + 0.247))
@@ -886,6 +899,8 @@ def apply_camera(name):
         spot.spot_size, spot.spot_blend = math.radians(degrees), blend
     reveal = name in ("purses", "seam")
     bpy.data.objects["cone_haze"].hide_render = plate or reveal
+    bpy.data.objects["bag edge return"].hide_render = name != "purses"
+    bpy.data.objects["table edge bounce"].data.energy = 4.5 if name == "purses" else TABLE_EDGE_RETURN
     bpy.data.objects["tote lip graze"].hide_render = name != "seam"
     for shutter in _STATE["lip shutters"]:
         shutter.hide_render = name != "seam"
@@ -1073,7 +1088,8 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.37, 0.375, 0.38)), *RECEIPT_C4, seed=12))
+    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.23, 0.235, 0.24)),
+                                   *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.
     group("booklet on wood", pp.passport("passport before", M["cover"], M["pages"], 0.21, 0.06, -28.0,
@@ -1090,7 +1106,7 @@ def build(cast=True):
     hz.visible_shadow = False
     room_bounce()
     # Low spill on the boards opens the wood grain outside the cone without flattening the documents.
-    edge = sk.area_light("table edge bounce", (0.54, 0.0, TOP + 0.85), (1.4, 0.85), 7.5, WARM)
+    edge = sk.area_light("table edge bounce", (0.54, 0.0, TOP + 0.85), (1.4, 0.85), TABLE_EDGE_RETURN, WARM)
     recv = bpy.data.collections.new("table surface receivers")
     for ob in bpy.context.scene.objects:
         if ob.type == "MESH" and M["wood"].name in ob.data.materials:
