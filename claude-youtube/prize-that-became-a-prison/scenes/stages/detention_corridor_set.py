@@ -29,14 +29,14 @@ CELL_DOORS = (("L", 1.6), ("R", 3.6), ("L", 5.6), ("R", 7.6), ("L", 9.6), ("R", 
 CLOSE = ("R", 7.6)                        # the door of the close-up
 # the near doors whose cells keep a night light on: each window spills a soft cool patch across the corridor onto
 # the opposite wall at dado height, so the foreground walls read (coursing, dado) without any fill
-WIN_LIT = {0: 30.0, 1: 26.0, 6: 34.0}     # door index -> W of the light inside its window
+WIN_LIT = {0: 42.0, 1: 36.0, 6: 48.0}     # door index -> W of the light inside its window
 # (y, level): the two nearest are dead, so the corridor opens out of the dark; then a pool at 4.6, a dead fitting
 # at 7.0 (a dark gap between the pools), a pool at 9.4, and by the end wall a dying tube, low enough not to wash
 # the visitation door under it
 FITTINGS = ((-0.4, 0.0), (2.2, 0.0), (4.6, 1.0), (7.0, 0.0), (9.4, 1.0), (11.8, 0.07))
-FIT_W = 300.0                             # a fitting's lamp (W) at level 1
-FIT_SPREAD = 90.0                         # its down light's spread: each pool a separate ellipse with edges
-FIT_UP = 8.0                              # its up light (W at level 1): the soffit between pools stays dark
+FIT_W = 280.0                             # a fitting's lamp (W) at level 1
+FIT_SPREAD = 80.0                         # its down light's spread: each pool a separate ellipse with edges
+FIT_UP = 5.0                              # its up light (W at level 1): the soffit between pools stays dark
 DRAIN = (0.3, 2.35)
 HOSE_Y, HOSE_Z = 5.0, 1.2                 # the recessed fire-hose cabinet in the right wall (centre)
 HOSE_W, HOSE_H, HOSE_D = 0.7, 0.8, 0.18
@@ -60,7 +60,7 @@ WARM = (1.0, 0.87, 0.7)
 LEAK = (1.0, 0.70, 0.42)                  # the room's light leaking out (pushed warm: the grade halves saturation)
 AMBER = (1.0, 0.40, 0.08)                 # the leak and the room seen through the gap: AgX and the grade both
                                           # wash warm light toward neutral, so the source is pushed hard
-AMBER_DEEP = (1.0, 0.30, 0.05)            # the room washed warm and the wedge on the floor out of the door: the
+AMBER_DEEP = (1.0, 0.24, 0.03)            # the room washed warm and the wedge on the floor out of the door: the
                                           # grade halves saturation and lifts blue, so it is pushed harder still
 UPPER, LOWER = (0.19, 0.187, 0.172), (0.055, 0.069, 0.081)
 
@@ -110,14 +110,14 @@ def materials():
         opal=mt.opal("diffuser off"),
         # dark, matt, worn: under the pendant it must stay a table top, not a grey lightbox, and the envelope reads
         # against it
-        laminate=mt.laminate("table laminate", rgb=(0.036, 0.038, 0.037), rough=0.58,
+        laminate=mt.laminate("table laminate", rgb=(0.062, 0.065, 0.063), rough=0.58,
                              rings=((0.34, -0.13, 0.037), (0.385, -0.06, 0.036), (-0.36, 0.21, 0.04),
                                     (0.17, -0.06, 0.038)),
                              half=(0.55, 0.35)),
         table_steel=mt.paint("table frame", (0.045, 0.05, 0.055), 0.45, 0.03, 0.2, edge_rgb=(0.2, 0.2, 0.2)),
         # matt, warm, fibrous: under the pendant it reads as paper, not a cold white card
-        paper=mt.paper("envelope paper", (0.68, 0.64, 0.56), rough=0.85, fibre=0.02, grime=0.35),
-        flap=mt.paper("envelope flap", (0.665, 0.625, 0.548), rough=0.85, fibre=0.02),
+        paper=mt.paper("envelope paper", (0.6, 0.565, 0.49), rough=0.85, fibre=0.02, grime=0.35),
+        flap=mt.paper("envelope flap", (0.587, 0.552, 0.479), rough=0.85, fibre=0.02),
         shade_out=mt.enamel("shade enamel", (0.045, 0.06, 0.056)),
         shade_in=mt.enamel("shade inside", (0.62, 0.62, 0.58), 0.4),
         bakelite=mt.plastic("bakelite", (0.015, 0.014, 0.013), 0.35),
@@ -865,10 +865,12 @@ def vis_door():
     # for the corridor camera only (TRIMS): the room behind the gap washed warm from above, so through the gap it
     # is the brightest, warmest thing at the vanishing point
     area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_DEEP, spread=150, glossy=False)
-    # for the corridor camera only (TRIMS): a low lamp-like source just inside the gap, aimed out along the floor
-    # 8 deg down, so a warm wedge lies on the corridor floor out of the door for 1.5-2 m
-    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.3, 0.3), 0.0, AMBER_DEEP, 40.0, 0.6, radius=0.05,
-         rot=(-math.radians(82), 0, 0))
+    # for the corridor camera only (TRIMS): the room's lamp light falling out through the gap at a downward angle:
+    # a spot 0.5 m inside the room, tipped 30 deg down with a wide, fully blended 60 deg cone, so the door gap (the
+    # jamb on one side, the leaf's shadow on the other) cuts it into a warm wedge on the corridor floor, narrow at
+    # the threshold, widening and fading over 2-3 m, with no spotlight edge
+    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.5, 1.15), 0.0, AMBER_DEEP, 60.0, 1.0, radius=0.08,
+         rot=(-math.radians(60), 0, 0))
     # and the corridor's cool light falling in through the open door: a faint wash across the room
     area("vd_spill", (VD_X + 0.25, Y1 + T + 0.05, 1.15), (0.4, 2.0), 16.0, COOL, spread=100, rot=(math.pi / 2, 0, 0),
          glossy=False)
@@ -891,7 +893,7 @@ def near_door():
     li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
 
 
-NEAR_LEAK_W = 30.0
+NEAR_LEAK_W = 45.0
 
 
 def back_door():
@@ -902,7 +904,12 @@ def back_door():
         box("bd_jamb", (0.05, T + 0.03, VD_H + 0.05), (BD_X + s * (VD_W / 2 + 0.025), yc, (VD_H + 0.05) / 2), m["frame"], 0.005)
     box("bd_head", (VD_W + 0.1, T + 0.03, 0.05), (BD_X, yc, VD_H + 0.025), m["frame"], 0.005)
     lw, lt, lh = VD_W - 0.006, 0.05, VD_H - 0.012
-    box("bd_leaf", (lw, lt, lh), (BD_X, RY1 + 0.03, 0.008 + lh / 2), m["door"], 0.004)
+    box("bd_leaf", (lw, lt, lh - 0.01), (BD_X, RY1 + 0.03, 0.018 + (lh - 0.01) / 2), m["door"], 0.004)
+    # the corridor beyond lit: a cool sliver of light under the door (an 18 mm gap), fanning out across the floor
+    box("bd_under", (lw - 0.02, 0.01, 0.016), (BD_X, RY1 + 0.07, 0.008), mt.glow("bd under", COOL, 2.2))
+    d = Vector((0.0, -math.cos(math.radians(12)), -math.sin(math.radians(12))))
+    li = area("bd_under_light", (BD_X, RY1 + 0.01, 0.011), (lw - 0.04, 0.012), 3.5, COOL, spread=150)
+    li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     # its vision panel: the cold corridor on the far side, faint through wired glass
     box("bd_glass", (0.12, 0.054, 0.2), (BD_X - 0.2, RY1 + 0.03, 1.55), mt.wired_glow("bd glass", COOL, 0.012))
     bm = bmesh.new()
@@ -1103,7 +1110,7 @@ def clock(xyz):
     x, y, z = xyz
     r = sk.cyl("clock_rim", 0.16, 0.045, (x, y - 0.0225, z), m["clock_rim"], rot=(math.pi / 2, 0, 0), verts=64)
     bevelled(r, 0.006, 3, 30)
-    sk.cyl("clock_face", 0.145, 0.002, (x, y - 0.042, z), m["clock_face"], rot=(math.pi / 2, 0, 0), verts=64)
+    sk.cyl("clock_face", 0.145, 0.002, (x, y - 0.0462, z), m["clock_face"], rot=(math.pi / 2, 0, 0), verts=64)
     bm = bmesh.new()
     for k in range(12):                       # clockwise from twelve, seen from the room (-Y): +X is to the right
         a = 2 * math.pi * k / 12
@@ -1116,8 +1123,8 @@ def clock(xyz):
         c = ln / 2 - 0.012
         add_box(bm, (wd, 0.001, ln), (c * math.sin(a), -0.002, c * math.cos(a)), Matrix.Rotation(a, 3, "Y"))
     ob = mesh_obj("clock_marks", bm, m["ink"])
-    ob.location = (x, y - 0.0445, z)
-    sk.cyl("clock_pin", 0.006, 0.006, (x, y - 0.047, z), m["ink"], rot=(math.pi / 2, 0, 0), verts=16)
+    ob.location = (x, y - 0.0478, z)
+    sk.cyl("clock_pin", 0.006, 0.006, (x, y - 0.0505, z), m["ink"], rot=(math.pi / 2, 0, 0), verts=16)
 
 
 def wall_vent(name, loc, w=0.42, h=0.26, axis="x"):
@@ -1151,5 +1158,4 @@ def room():
     pendant()
     back_door()
     clock(CLOCK)
-    clock_light(CLOCK)
     wall_vent("room_vent", (1.5, RY1, 0.34))
