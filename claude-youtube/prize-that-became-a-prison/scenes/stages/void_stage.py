@@ -33,6 +33,7 @@ sys.path.insert(0, HERE)
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
+import cast as castkit  # noqa: E402
 import home_set as dining  # noqa: E402
 import home_mats as dining_mats  # noqa: E402
 import people  # noqa: E402
@@ -500,7 +501,12 @@ def light_suit(h, net=0.30, hair_net=0.20, body_net=0.26, bounce_w=45.0):
     rim = copies(0.25, "_bun_edge") if bun else []
     if rim:
         st.link_lights(rim, receivers=bun, tag="bun_edge")
-    return dup + hair_dup + body_dup + rim + [fill, hands, side]
+    # The pool puts a little light back into the underside of the low bun.
+    # Leave the profile's face and the dark field at their existing values.
+    scalp = st.area("hair floor return", _p(D, -0.394, -0.613, 1.242), _p(D, 0.086, -0.038, 1.572),
+                    (0.60, 0.55), 1.0, (0.80, 0.87, 1.0), spread_deg=64)
+    st.link_lights([scalp], receivers=hair, tag="hair_floor_return")
+    return dup + hair_dup + body_dup + rim + [fill, hands, side, scalp]
 
 
 def stone_finish(holder, spec=0.3, rough=0.66):
@@ -566,6 +572,7 @@ def ground(holder, floor_z=0.0):
 
 def dawn():
     h = people.dawn_prison(uniform=True) if UNIFORM else people.dawn_prison()
+    castkit.relax_sculpted_hair(h)
     prison_suit(h)
     stone_finish(h)
     hands_stone(h)
