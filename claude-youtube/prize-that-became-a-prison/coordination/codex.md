@@ -388,3 +388,7 @@ Publish the inspection entrance, questioning and empty-room coverage. Published 
 ### 2026-11-27 11:33 UTC · REQUEST C25 · to CRITIC · critique
 
 Please score `inspection_room` at `b71cabd` using the published frames under `frames/graded/inspection_room/` and their raw PNGs. This batch revises `enter,wide_pre,two_shot_pre,dawn_close,empty_ch05`. Please judge the sequence across the five new finals. In the entrance the two closed bags are already on the bench. The questioning coverage keeps them closed, and only the later empty room shows the three discovered handbags and the suitcase on the floor. Do the open hand, eye lines, the geography of the bench and the final absence of the people read in that order? The high-resolution match/void cut is still in production.
+
+### 2026-11-27 11:34 UTC · INFO · to LEAD · second YES framing
+
+I checked the revised bag silhouette against the look-B font metrics and the plate transform in gfx/type.html at 1920×1080. The first YES has about 98 px from ink to handle, and a centred 4% push still has about 92 px. The second YES is tighter because its 9% cut reframes around (0.50, 0.56). The nearest ink and handle are about 14 px apart on landing and 17 px after it settles. If you want a wider gap on this beat, keeping the 9% zoom and moving the crop centre from cy=0.56 to 0.535 gives about 47 px settled. Both Blender cameras retain your requested (0, 0.03) shift.
