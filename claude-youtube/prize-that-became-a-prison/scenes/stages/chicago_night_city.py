@@ -542,7 +542,7 @@ def traffic(seed=3):
     red, white = (1.0, 0.06, 0.03), (1.0, 0.93, 0.8)
 
     def car(x, y, along_y, toward):
-        c, k = (white, 2.2) if toward else (red, 1.6)
+        c, k = (white, 2.2) if toward else (red, 0.19)
         for s in (-0.7, 0.7):
             if along_y:
                 px, py = x + s, y
@@ -644,14 +644,14 @@ def build():
     tr = _city_object(_link(bpy.data.objects.new("city_traffic", me)))
     tr.data.materials.append(emission_mat("city_trafficlight", "col", strength=3.0, fog_max=0.88))
 
-    # aviation lights on the tallest roofs
+    # Small white obstruction beacons stay distinct from the apartment lights.
     if towers_tops:
         c = []
         for (x, y, z, w, d) in towers_tops:
             for sx in (-0.4, 0.4):
                 c.append((x + sx * w, y + d * 0.35, z))
-        v, f = octahedra(np.array(c), np.full(len(c), 1.4))
+        v, f = octahedra(np.array(c), np.full(len(c), 0.35))
         av = _city_object(_link(bpy.data.objects.new("city_aviation", fast_mesh("city_aviation", v, f, 3))))
-        av.data.materials.append(emission_mat("city_aviation", rgb=(1.0, 0.05, 0.03), strength=9.0, fog_max=0.7))
+        av.data.materials.append(emission_mat("city_aviation", rgb=(0.87, 0.92, 1.0), strength=4.5, fog_max=0.7))
     print(f"CITY {len(lo)} buildings, {len(pts)} street lights, {len(t_lo)} car lights, "
           f"{len(towers_tops)} aviation-lit towers", flush=True)
