@@ -217,14 +217,14 @@ def pbr(name, rgb, rough=(0.4, 0.55), metal=0.0, nscale=4.0, stretch=(1, 1, 1), 
 
 # ---------------------------------------------------------------- materials
 def floor_mat():
-    """Sealed concrete with a worn grey epoxy coat: saw-cut joints every 4.5 m, worn lanes where tugs and trolleys
+    """Sealed concrete with a worn grey epoxy coat: saw-cut joints every 3 m, worn lanes where tugs and trolleys
     run, tyre streaks along the hall, the bare concrete showing through in patches. Semi-gloss where intact."""
     m, nt, b = _new("hall floor epoxy")
     p = _pos(nt)
     br = nt.nodes.new("ShaderNodeTexBrick")
     br.offset, br.squash = 0.0, 1.0
     br.inputs["Scale"].default_value = 1.0
-    br.inputs["Brick Width"].default_value = 4.5
+    br.inputs["Brick Width"].default_value = 3.0
     br.inputs["Row Height"].default_value = 3.5
     br.inputs["Mortar Size"].default_value = 0.004
     br.inputs["Mortar Smooth"].default_value = 0.3
@@ -234,7 +234,7 @@ def floor_mat():
     nt.links.new(_comb(nt, _xyz(nt, p)[0], _math(nt, "ADD", _xyz(nt, p)[1], 1.75), 0.0), br.inputs["Vector"])
     joint = _math(nt, "SUBTRACT", 1.0, _out(br, "Fac"))   # 1 in the joint
     epoxy = (0.062, 0.068, 0.072)
-    conc = (0.13, 0.125, 0.118)
+    conc = (0.082, 0.085, 0.086)
     base = _mix(nt, _range(nt, _noise(nt, p, 1.2, 5.0), 0.3, 0.7, 0.0, 1.0), tuple(c * 0.88 for c in epoxy),
                 tuple(c * 1.1 for c in epoxy))
     worn = _range(nt, _noise(nt, _scale(nt, p, (0.4, 1.6, 1.0)), 1.1, 6.0, 0.62), 0.58, 0.66, 0.0, 1.0)
@@ -247,7 +247,7 @@ def floor_mat():
     tyre = _math(nt, "MULTIPLY", tyre, lane)
     col = _mix(nt, tyre, col, (0.025, 0.025, 0.026))
     col = _mix(nt, _math(nt, "MULTIPLY", joint, 0.85), col, (0.02, 0.02, 0.02))
-    stains = _range(nt, _noise(nt, p, 0.55, 4.0), 0.62, 0.72, 0.0, 0.5)
+    stains = _range(nt, _noise(nt, p, 7.0, 4.0), 0.65, 0.72, 0.0, 0.44)
     col = _mix(nt, stains, col, (0.035, 0.036, 0.036))
     nt.links.new(col, b.inputs["Base Color"])
     r = _range(nt, _noise(nt, p, 6.0, 6.0), 0.3, 0.7, 0.2, 0.34)
@@ -334,24 +334,23 @@ def galvanised(name, scuff=False):
     b.inputs["Metallic"].default_value = 1.0
     p = _pos(nt)
     vo = nt.nodes.new("ShaderNodeTexVoronoi")
-    vo.inputs["Scale"].default_value = 28.0
+    vo.inputs["Scale"].default_value = 76.0
     nt.links.new(p, vo.inputs["Vector"])
     cell = nt.nodes.new("ShaderNodeRGBToBW")
     nt.links.new(_out(vo, "Color"), cell.inputs[0])
     base = (0.36, 0.37, 0.38)
-    col = _mix(nt, _range(nt, cell.outputs[0], 0.0, 1.0, 0.0, 1.0), tuple(c * 0.9 for c in base), tuple(c * 1.06 for c in base))
-    col = _mix(nt, _range(nt, _noise(nt, p, 1.3, 5.0), 0.35, 0.7, 0.0, 0.5), col, (0.24, 0.245, 0.25))
+    col = _mix(nt, _range(nt, cell.outputs[0], 0.0, 1.0, 0.0, 1.0), tuple(c * 0.96 for c in base), tuple(c * 1.04 for c in base))
     r = _range(nt, cell.outputs[0], 0.0, 1.0, 0.44, 0.56)
     r = _fmix(nt, _range(nt, _noise(nt, p, 2.0, 5.0), 0.4, 0.7, 0.0, 1.0), r, 0.64)
     x, y, z = _xyz(nt, p)
     if scuff:
         # (the first version stretched one noise 240:1 along the run: it read as motion blur on a still rail)
-        band = _math(nt, "MULTIPLY", _range(nt, z, BZ + 0.02, BZ + 0.06, 0.0, 1.0, smooth=True),
-                     _range(nt, z, BZ + 0.17, BZ + 0.25, 1.0, 0.0, smooth=True))
+        band = _math(nt, "MULTIPLY", _range(nt, z, BZ + 0.03, BZ + 0.06, 0.0, 1.0, smooth=True),
+                     _range(nt, z, BZ + 0.15, BZ + 0.18, 1.0, 0.0, smooth=True))
         # fine scratches where zips and wheels drag: 5 to 30 cm long, a few mm high
-        scr = _range(nt, _noise(nt, _scale(nt, p, (3.0, 1.0, 260.0)), 1.0, 3.0, 0.6), 0.56, 0.72, 0.0, 1.0)
+        scr = _range(nt, _noise(nt, _scale(nt, p, (6.0, 1.0, 40.0)), 1.0, 3.0, 0.6), 0.66, 0.74, 0.0, 1.0)
         pol = _math(nt, "MULTIPLY", band, scr)
-        col = _mix(nt, _math(nt, "MULTIPLY", pol, 0.5), col, (0.5, 0.51, 0.52))
+        col = _mix(nt, _math(nt, "MULTIPLY", pol, 0.15), col, (0.5, 0.51, 0.52))
         r = _fmix(nt, pol, r, 0.36)
         # black rubber rub marks: longer, softer, sparse
         rub = _math(nt, "MULTIPLY", band,
@@ -381,7 +380,7 @@ def belt_mat():
     mott = _range(nt, _noise(nt, p, 5.0, 6.0, 0.65), 0.3, 0.7, 0.0, 1.0)
     col = _mix(nt, lanes, (0.017, 0.017, 0.018), (0.027, 0.027, 0.029))
     col = _mix(nt, _math(nt, "MULTIPLY", mott, 0.7), col, (0.042, 0.043, 0.045))
-    col = _mix(nt, _math(nt, "MULTIPLY", scuff, 0.55), col, (0.075, 0.075, 0.077))
+    col = _mix(nt, _math(nt, "MULTIPLY", scuff, 0.30), col, (0.045, 0.045, 0.046))
     dust = _math(nt, "MULTIPLY", edge, _range(nt, _noise(nt, p, 3.0, 6.0), 0.3, 0.7, 0.5, 1.0))
     col = _mix(nt, dust, col, (0.06, 0.06, 0.058))
     nt.links.new(col, b.inputs["Base Color"])
@@ -397,17 +396,17 @@ def belt_mat():
 
 
 def strip_mat():
-    """Black rubber curtain strips: scuffed grey where the bags drag over the lower half, vertical wear lines."""
-    m, nt, b = _new("curtain strip rubber")
+    """Smoky PVC with a shallow abrasion band around luggage height."""
+    m, nt, b = _new("smoke PVC")
     p = _pos(nt)
-    x, y, z = _xyz(nt, p)
-    lines = _range(nt, _noise(nt, _scale(nt, p, (1.0, 30.0, 0.4)), 2.0, 4.0), 0.45, 0.7, 0.0, 1.0)
-    low = _range(nt, z, BZ + 0.15, BZ + 0.6, 1.0, 0.15)
-    sc = _math(nt, "MULTIPLY", lines, low)
-    col = _mix(nt, sc, (0.018, 0.018, 0.019), (0.07, 0.07, 0.07))
+    z = _xyz(nt, p)[2]
+    wear = _range(nt, _noise(nt, p, 16, 3), 0.4, 0.7, 0.0, 1.0)
+    wear = _math(nt, "MULTIPLY", wear, _range(nt, z, BZ + 0.08, BZ + 0.5, 1, 0))
+    col = _mix(nt, wear, (0.085, 0.099, 0.107), (0.12, 0.13, 0.135))
     nt.links.new(col, b.inputs["Base Color"])
-    nt.links.new(_fmix(nt, sc, 0.42, 0.7), b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.5
+    nt.links.new(_fmix(nt, wear, 0.245, 0.36), b.inputs["Roughness"])
+    b.inputs["Transmission Weight"].default_value = 0.60
+    b.inputs["IOR"].default_value = 1.51
     return m
 
 
@@ -507,8 +506,8 @@ def materials():
         steel=pbr("brushed steel", (0.58, 0.59, 0.6), (0.24, 0.38), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08,
                   aniso=0.4, world=True),
         # the slide is brushed down its slope (along Y), worn duller where the bags run
-        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.42, 0.56), metal=1.0, nscale=1.5, stretch=(36, 1, 1),
-                      cvar=0.08, aniso=0.3, world=True),
+        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.52, 0.62), metal=1.0, nscale=3, stretch=(24, 1, 1),
+                      cvar=0.035, aniso=0.0),
         dark_steel=pbr("dark steel", (0.2, 0.205, 0.21), (0.35, 0.55), metal=1.0, nscale=7, cvar=0.2, world=True),
         motor=pbr("motor paint", (0.045, 0.06, 0.075), (0.3, 0.45), nscale=8, cvar=0.15, coat=0.3, world=True,
                   chips=((0.3, 0.3, 0.31), 0.3)),
@@ -533,7 +532,7 @@ def materials():
         sign_blue=pbr("sign blue", (0.02, 0.07, 0.2), (0.4, 0.55), nscale=9, cvar=0.08, world=True),
         sign_white=pbr("sign white", (0.5, 0.5, 0.48), (0.45, 0.6), nscale=9, cvar=0.06, world=True),
         exit=screen_mat("exit glow", (0.3, 1.0, 0.55), 2.2, 0.4),
-        hmi=screen_mat("hmi blank", (0.55, 0.72, 1.0), 4.2, 0.45),
+        hmi=screen_mat("hmi blank", (0.55, 0.72, 1.0), 10.0, 0.45),
         led_green=sk.emission("led green", (0.25, 1.0, 0.4), 18.0),
         led_amber=sk.emission("led amber", (1.0, 0.55, 0.12), 14.0),
         led_off=pbr("led off", (0.05, 0.03, 0.02), (0.15, 0.25), nscale=10, cvar=0.05),
@@ -700,14 +699,14 @@ def curtain_wall():
         y = o["y0"] + 0.06 + i * (o["y1"] - o["y0"] - 0.12) / 8
         bolts.rod((XC + 0.006, y, ztop + 0.01), (XC + 0.02, y, ztop + 0.01), 0.008, 6)
     bolts.done("curtain_bolts", m["steel"], bevel=0.002)
-    # seven strips a hair narrower than their pitch, each a few mm off its place: slivers of the lit room behind
-    strip_curtain("strip", XC + 0.012, o["y0"] + 0.02, o["y1"] - 0.02, ztop - 0.005, BZ + 0.012, 7, 0.19, gaps=0.007)
+    # Staggered overlapping PVC strips part around the first case and expose the back room.
+    strip_curtain("strip", XC + 0.012, o["y0"] + 0.02, o["y1"] - 0.02, ztop - 0.005, BZ + 0.012, 7, 0.211, gaps=0.011)
     # back room (the check-in side): the belt runs on into it; it is lit, so the strips are backlit, light spills
     # out under whatever parts them, and the gaps between strips show as cold slivers
     box("back_wall", (0.3, YW1 - YW0, H), (X0 - 0.4, (YW0 + YW1) / 2, H / 2), m["wall_back"])
     box("back_glow", (0.02, 3.2, 2.3), (X0 - 0.1, 0.0, 1.35), m["backroom"])
-    bl = light("behind_curtain", (-1.6, 0.0, BZ + 1.05), (1.2, 0.5), 90.0, (0.78, 0.86, 1.0), spread=110,
-               rot=(0, math.radians(-62), 0))
+    bl = light("behind_curtain", (-1.6, 0.0, BZ + 0.7), (1.2, 0.5), 90.0, (0.78, 0.86, 1.0), spread=110,
+               rot=(0, math.radians(-78), 0))
     bl.visible_glossy = True
     light("behind_curtain_low", (-0.9, 0.0, BZ + 0.5), (0.6, 0.3), 12.0, (0.78, 0.86, 1.0), spread=140,
           rot=(0, math.radians(-90), 0))
@@ -734,7 +733,7 @@ def control_panel():
     for i in range(2):
         box(f"panel_hinge{i}", (0.02, 0.02, 0.06), (HX0 + 0.205, y - 0.24, z + 0.2 - 0.4 * i), m["dark_steel"], bevel=0.003)
     box("panel_handle", (0.025, 0.02, 0.1), (HX0 + 0.215, y + 0.215, z), m["plastic"], bevel=0.005)
-    pt = point("panel_screen_spill", (HX0 + 0.35, y + 0.06, z + 0.13), 1.6, (0.6, 0.75, 1.0), 0.06)
+    pt = point("panel_screen_spill", (HX0 + 0.35, y + 0.06, z + 0.13), 5.5, (0.6, 0.75, 1.0), 0.06)
     pt.visible_glossy = False
     point("panel_led_spill", (HX0 + 0.26, y - 0.15, z + 0.17), 0.12, (0.3, 1.0, 0.45), 0.01)
     c = Batch()
@@ -778,22 +777,19 @@ def disc(name, y, z, x, r, t, m):
 
 
 def wall_dressing():
-    """The end wall on the far side of the opening (the side the walkway is not on): blank safety signs as bare
-    shapes (a yellow warning triangle, a blue mandatory disc, both without symbols or words), an isolator switch
-    with its conduit, and a dead bulkhead lamp. They tell you this is machinery without a word."""
+    """A louvred service hatch and isolator switch flank the belt opening."""
     m = materials()
     x = HX0
-    # warning triangle: black border, blank yellow field (no symbol: even "!" would be a character)
-    cy, cz, s = SIGN_Y[0], 1.5, 0.32
-    h = s * math.sqrt(3) / 2
-    tri = lambda k: [(cy - k * s / 2, cz - k * h / 3), (cy + k * s / 2, cz - k * h / 3), (cy, cz + k * 2 * h / 3)]
-    plate("sign_tri_back", tri(1.0), x + 0.002, 0.003, m["sign_black"], bevel=0.001)
-    plate("sign_tri_field", tri(0.78), x + 0.0052, 0.0006, m["sign_yellow"])
-    # mandatory disc: blue, a plain white ring
-    cy2, cz2 = SIGN_Y[1], 1.1
-    disc("sign_disc", cy2, cz2, x + 0.002, 0.14, 0.003, m["sign_blue"])
-    disc("sign_disc_ring", cy2, cz2, x + 0.005, 0.08, 0.0006, m["sign_white"])
-    disc("sign_disc_hole", cy2, cz2, x + 0.0056, 0.055, 0.0006, m["sign_blue"])
+    # The operator can see straight through this unmarked perforated access cover.
+    y, z = 1.03, 1.32
+    box("access_recess", (0.014, 0.26, 0.36), (x + 0.009, y, z), m["void"], bevel=0.006)
+    grille = Batch()
+    for side in (-1, 1):
+        grille.box((0.026, 0.015, 0.36), (x + 0.025, y + side * 0.125, z))
+        grille.box((0.026, 0.245, 0.014), (x + 0.025, y, z + side * 0.174))
+    for row in range(7):
+        grille.box((0.030, 0.23, 0.014), (x + 0.027, y, z - 0.135 + row * 0.045))
+    grille.done("access_louvres", m["enclosure"], bevel=0.002)
     # isolator switch: a grey box with a red rotary handle on a yellow plate, conduit up to the tray
     iy, iz = SIGN_Y[2], 1.3
     box("isolator_body", (0.11, 0.2, 0.28), (x + 0.055, iy, iz), m["enclosure"], bevel=0.008)
@@ -886,7 +882,7 @@ def strip_curtain(name, xc, y0, y1, ztop, zbot, n, w, drape=True, gaps=0.0):
     rnd = random.Random(sum(map(ord, name)))
     for i in range(n):
         yc = y0 + w / 2 + i * pitch + (rnd.uniform(-gaps, gaps) if 0 < i < n - 1 else 0.0)
-        xp = xc + (0.005 if i % 2 else 0.0)
+        xp = xc + (0.009 if i % 2 else 0.0)
         rows, cols = 40, 5
         verts = [(xp, yc - w / 2 + w * j / (cols - 1), ztop - (ztop - zbot) * r / (rows - 1))
                  for r in range(rows) for j in range(cols)]
@@ -957,7 +953,7 @@ def _column(s, y, bvh):
     zt = _height(bvh, xt, y)
     if zt is None or zt < h0 - 0.05:
         xt, zt = xp + 0.03, h0
-    zt += 0.005
+    zt += 0.008
     p0, c, p1 = Vector((xp, y, top)), Vector((xp + 0.01, y, zt + 0.12)), Vector((xt, y, zt))
     path = [(1 - t) ** 2 * p0 + 2 * (1 - t) * t * c + t ** 2 * p1 for t in [i / 24 for i in range(25)]]
     x = xt
@@ -980,10 +976,16 @@ def hang(s, bvh):
     me = s["ob"].data
     for j in range(cols):
         y = s["y"] - s["w"] / 2 + s["w"] * j / (cols - 1)
+        swing = 0.0
+        if bvh and _height(bvh, s["x"] + 0.08, s["y"]) is None:
+            for sign in (-1, 1):
+                if _height(bvh, s["x"] + 0.08, s["y"] - sign * s["w"]) is not None:
+                    swing = sign * 0.12
+                    break
         pts = _column(s, y, bvh)
         for r, p in enumerate(pts):
             ripple = 0.0015 * math.sin(r * 0.9 + j * 0.7) + s["twist"] * (j / (cols - 1) - 0.5) * (r / rows)
-            me.vertices[r * cols + j].co = (p.x + ripple, p.y, p.z)
+            me.vertices[r * cols + j].co = (p.x + ripple, p.y + swing * (r / (rows - 1)) ** 1.6, p.z)
     me.update()
 
 
@@ -1055,7 +1057,7 @@ def conveyor():
         box(f"frame_lip_{s}", (L, 0.09, 0.008), (cx, s * (GY + 0.01), BZ - 0.236), m["frame"], bevel=0.002)
         g = box(f"guard_{s}", (L, 0.004, GH + 0.05), (cx, s * (GY + 0.002), BZ + GH / 2 - 0.025), m["guard"])
         del g
-        cyl(f"guard_roll_{s}", 0.011, L, (cx, s * (GY + 0.006), BZ + GH), m["galv"], rot=(0, math.pi / 2, 0), verts=16)
+        cyl(f"guard_roll_{s}", 0.015, L, (cx, s * (GY + 0.006), BZ + GH), m["galv"], rot=(0, math.pi / 2, 0), verts=16)
     # joints every 3 m: flanges with bolts on the outside of each guard; legs and cross braces under each
     j_flange, j_bolt, legs, plates = Batch(), Batch(), Batch(), Batch()
     xs = [x for x in [1.5 + 3.0 * k for k in range(9)] if x < X1 - 0.3] + [-1.5]
@@ -1074,8 +1076,8 @@ def conveyor():
         legs.box((0.04, 2 * GY + 0.04, 0.04), (x, 0, 0.18))          # cross brace low
         legs.box((0.04, 2 * GY + 0.04, 0.05), (x, 0, BZ - 0.26))     # cross member under the frame
     seam, screws = Batch(), Batch()
-    for k in range(int((X1 - 0.75) / 1.5) + 1):
-        x = 0.75 + 1.5 * k
+    for k in range(int((X1 - 0.75) / 1.2) + 1):
+        x = 0.75 + 1.2 * k
         for s in (-1, 1):
             if s > 0 and CHUTE[0] - 0.1 < x < CHUTE[1] + 0.1:
                 continue
@@ -1193,7 +1195,6 @@ def chute():
     sc.done("diverter_act_screws", m["steel"], bevel=0.0012)
     tube("diverter_act_cable", [(ax + 0.22, ay - 0.02, az + 0.028), (ax + 0.25, ay - 0.05, az + 0.07),
                                 (ax + 0.33, ay - 0.1, az + 0.03), (ax + 0.36, ay - 0.105, BZ - 0.2)], 0.008, m["plastic"])
-    box("diverter_act_plate", (0.12, 0.07, 0.0015), (ax - 0.2, ay, az + 0.0068), m["steel"], bevel=0.0006)   # blank rating plate
     cyl("diverter_pivot_cap", 0.05, 0.02, (xa - 0.22, -(GY + 0.02), BZ + 0.44), m["yellow"], bevel=0.004)
     # the +Y guard has a gap over the mouth: hide the continuous guard there with the chute's own side walls
     # (the guard is cut by a void-coloured box would look wrong; instead the chute walls rise above the guard)
@@ -1250,11 +1251,11 @@ def guard_gaps():
     for i, (a, b) in enumerate(((X0, xa), (xb, X1))):
         L, cx = b - a, (a + b) / 2
         box(f"guard_1_{i}", (L, 0.004, GH + 0.05), (cx, GY + 0.002, BZ + GH / 2 - 0.025), m["guard"])
-        cyl(f"guard_roll_1_{i}", 0.011, L, (cx, GY + 0.006, BZ + GH), m["galv"], rot=(0, math.pi / 2, 0), verts=16)
+        cyl(f"guard_roll_1_{i}", 0.015, L, (cx, GY + 0.006, BZ + GH), m["galv"], rot=(0, math.pi / 2, 0), verts=16)
 
 
 # ---------------------------------------------------------------- lights and services
-def batten(n, x, y, k, spread=110, watts=230.0):
+def batten(n, x, y, k, spread=90, watts=230.0):
     """One twin-tube fluorescent batten on drop rods; k = how much of its light is left (0 = dead)."""
     m = materials()
     box(n + "_body", (1.52, 0.11, 0.07), (x, y, BAT_Z + 0.035), m["enclosure"], bevel=0.008)
@@ -1287,7 +1288,7 @@ def battens():
 def wall_lamps():
     """Caged bulkheads on the +Y wall pilasters (between them), a sodium flood further down the hall."""
     for i, x in enumerate((3.6, 10.8, 18.0, 25.2)):
-        li = bulkhead(f"bulk_n{i}", (x, YW1, 2.25), "-y", lit=i < 3, energy=(12.0, 14.0, 6.0, 0)[i])
+        li = bulkhead(f"bulk_n{i}", (x, YW1, 2.25), "-y", lit=i < 3, energy=(12.0, 25.0, 6.0, 0)[i])
         del li
     m = materials()
     x, z = 15.3, 2.75

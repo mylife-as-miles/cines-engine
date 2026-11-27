@@ -267,3 +267,15 @@ Please score `evidence_table` at `75c2212` using the published frames under `fra
 The hotel now has `accept` and `overhead_pre`. The cast solve places both palms within 1 mm of the intended handle stations. The early shots contain zero packing prop meshes. The case is closed under her hand in the overhead and the duffel first appears in the later beat. The company street shot has all three cast marks and no shopping bags. These are source and geometry checks. Final cameras will follow visual review.
 
 The street-window preview exposed the same small relief between the tote handles that C16 identified in inspection. I traced four camera rays into the original 4096 px texture and fitted the panel to the leather around it. The shared loader now applies that repair to the canonical tote in every stage, including the hotel. The asset on disk is untouched. The first street wide reads as night; I added a warm doorway light after finding Dawn and her carry bags still merged into the shopfront.
+
+### 2026-11-27 09:54 UTC · INFO · to LEAD · HANDOVER, C17 and C18
+
+I have the aircraft cabin, baggage belt and prison exterior handovers and their first critiques, bringing my queue to 18 existing stages. The aircraft cabin's posed fingers now clear the lap cloth by 2.6 and 3.0 mm. I have C17 for the departure gate's resting hand and the turn toward the call. C18 cleared the single page for compositing with a one-pixel expansion of the pinned page. The two-page final is rendering; the screen follows. The revised train window now shows 20 px of bun beyond the reflected scalp in the 960 px projection.
+
+### 2026-11-27 09:56 UTC · INFO · L2 · evidence_table
+
+Publish the 2560px two-document evidence insert and its eight tracking pins. Published final cameras `pair` in `f720f32`. Please check both page tracks, surface lighting and readiness for compositing. Measured visible-corner errors are 0.30–1.07 px across the eight corners. The 3 mm and 20 mm edge samples agree to within 1.9 percent. The left and right graded paper centres are RGB 178/174/171 and 154/148/143. The screen is rendering.
+
+### 2026-11-27 09:56 UTC · REQUEST C19 · to CRITIC · critique
+
+Please score `evidence_table` at `f720f32` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `pair`. Please check both page tracks, surface lighting and readiness for compositing. Measured visible-corner errors are 0.30–1.07 px across the eight corners. The 3 mm and 20 mm edge samples agree to within 1.9 percent. The left and right graded paper centres are RGB 178/174/171 and 154/148/143. The screen is rendering.

@@ -44,14 +44,14 @@ WORLD = 0.0
 # sizes, so none can be taken for hers.
 DAWN = {
     "dawn_case": dict(src="dawn-suitcase", size=0.66, axis="z", lying=True,
-                      grade=dict(sat=0.6, val=0.9, rough_add=0.15), spec=0.2),
+                      grade=dict(sat=0.6, val=0.9, rough_add=0.3), spec=0.2),
     # (val 0.25, the inspection room's value under its troffer, was a pure black blob in this hall: the brief's
     # table value 0.35 keeps it black with its seams and straps still readable under the battens)
     "dawn_duffel": dict(src="extra-bag-closed", size=0.75, axis="long", lying=False,
                         grade=dict(sat=0.5, val=0.35, rough_add=0.3), spec=0.1),
 }
 OTHERS = {   # copy of, scale (x, y, z) relative to the source, body tint (linear albedo)
-    "navy_case": ("dawn_case", (1.12, 1.08, 1.1), (0.010, 0.016, 0.042)),
+    "navy_case": ("dawn_case", (1.12, 1.08, 1.1), (0.008, 0.011, 0.022)),
     "oxblood_case": ("dawn_case", (0.86, 0.9, 0.86), (0.055, 0.013, 0.012)),
     "tan_case": ("dawn_case", (1.04, 1.12, 1.04), (0.12, 0.08, 0.045)),
     "olive_duffel": ("dawn_duffel", (0.84, 0.88, 0.86), (0.032, 0.034, 0.016)),
@@ -61,7 +61,7 @@ SHELL = "shell_case"
 FABRIC_MEDIAN = 0.03     # linear luminance of both bag textures' fabric (measured: sRGB median 0.19-0.20)
 
 # tags: start (local x, y as fractions of the bag's half length / half width), heading (deg from +X), length (m)
-# (the soft case's box includes its pulled-out handle: its body ends about 0.19 m short of the -X end)
+# Cases use their measured fixed carry grips; the shell and duffels follow a ray-cast surface profile.
 TAGS = {
     "dawn_case": ((-0.05, 0.3), 184, 0.3),
     "dawn_duffel": ((0.02, 0.0), 58, 0.18),
@@ -78,14 +78,14 @@ TAGS = {
 # 1.3 m ahead of the case, the duffel toward the walkway side (-Y), the case toward the chute side (+Y).
 LAYOUT = {
     # her soft case half through the curtain (the strips draped over it), the extra bag ahead of it on the rollers
-    "curtain": {"dawn_case": (0.10, 0.20, 3.0), "dawn_duffel": (1.35, -0.24, -6.0)},
+    "curtain": {"dawn_case": (0.245, 0.16, 174.0), "dawn_duffel": (1.35, -0.24, -6.0)},
     # her two bags nearest, then a gap, then other people's bags ahead of them, away down the belt into the dark
     "belt": {"dawn_case": (3.0, 0.18, -3.0), "dawn_duffel": (4.35, -0.22, 5.0), "navy_case": (7.9, 0.1, 5.0),
-             "shell_case": (10.4, -0.12, -7.0), "tan_case": (12.9, 0.06, 3.0), "stone_duffel": (15.6, -0.05, 84.0),
-             "olive_duffel": (18.2, 0.07, -4.0), "oxblood_case": (20.8, -0.06, 8.0)},
-    # straight down at the sorter: an olive duffel, her case, her extra bag, a navy case
-    "overhead": {"olive_duffel": (8.47, -0.08, 4.0), "dawn_case": (9.45, 0.18, -4.0),
-                 "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (11.74, 0.05, 86.0)},
+             "oxblood_case": (11.1, -0.15, 9.0), "olive_duffel": (14.4, 0.15, -4.0),
+             "tan_case": (17.7, -0.15, -6.0), "shell_case": (21.0, 0.14, -7.0), "stone_duffel": (24.4, -0.14, 84.0)},
+    # Straight down at the sorter: the ribbed spinner, her pair, then a navy case.
+    "overhead": {"shell_case": (8.28, -0.08, 13.0), "dawn_case": (9.45, 0.18, -4.0),
+                 "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (12.06, 0.12, 76.0)},
 }
 CAM_FOCUS = {"curtain": "focus_curtain", "belt": "focus_belt", "overhead": "focus_over"}
 CAMERAS = {
@@ -93,20 +93,23 @@ CAMERAS = {
     # from the room behind), her extra bag ahead of it on the transfer rollers; the control panel's glow on the left.
     # (First version: from the walkway, three-quarter. The guards are as high as the bags, so they hid them, and a
     # photo-eye post stood in front of her case.)
-    "curtain": dict(loc=(3.7, 0.22, 1.15), aim=(0.7, 0.0, 0.95), lens=35, focus="focus_curtain", fstop=4.0,
+    "curtain": dict(loc=(3.3, 0.16, 1.46), aim=(0.65, -0.02, 0.98), lens=35, focus="focus_curtain", fstop=4.0,
                     exposure=-1.35),
     # Ch 05 open: low over the belt on its centre line, one-point down the tunnel: her two bags nearest, the others
     # ahead of them, the battens thinning out and dying toward the far wall
     # (at 1.02 m, 11 cm over the guards, their inner faces filled both lower corners: 1.15 m keeps it low and
     # turns them into two leading lines)
-    "belt": dict(loc=(0.9, 0.0, 1.15), aim=(14.0, -0.02, 0.23), lens=32, focus="focus_belt", fstop=4.0,
+    "belt": dict(loc=(0.9, 0.12, 1.18), aim=(14.0, -0.02, 0.23), lens=32, focus="focus_belt", fstop=4.0,
                  exposure=-1.2),
     # Ch 04/05: straight down on the belt at the sorter chute; her two bags among the others
-    "overhead": dict(loc=(10.05, 0.06, 3.22), aim=(10.05, 0.0601, BZ), lens=20, focus="focus_over", fstop=8.0,
+    "overhead": dict(loc=(10.05, -0.19, 3.22), aim=(10.05, -0.1899, BZ), lens=20, focus="focus_over", fstop=8.0,
                      exposure=-1.5),
 }
 
-_STATE = {"roots": {}, "parts": {}}
+for camera in CAMERAS.values():
+    camera["final_res"] = (1600, 900)
+
+_STATE = {"roots": {}, "lights": {}}
 
 
 # ---------------------------------------------------------------- bag building
@@ -308,11 +311,11 @@ def tag(root, spec, rnd):
     a = math.radians(head)
     d = Vector((math.cos(a), math.sin(a), 0))
     side = Vector((-d.y, d.x, 0))
-    w = 0.04
+    w = 0.043
     p0 = Vector((fx * hx, fy * hy, 0))
     step = 0.006
     prof = []                       # (s, z): the highest of three casts across the strip's width
-    for i in range(int(length / step) + 1):
+    for i in range(int(min(length, 0.21) / step) + 1):
         q = p0 + d * (i * step)
         zs = [h[0].z for h in (bvh.ray_cast(Vector((q.x + k * side.x, q.y + k * side.y, 1.5)), Vector((0, 0, -1)), 2.0)
                                for k in (-w * 0.4, 0.0, w * 0.4)) if h[0] is not None]
@@ -348,11 +351,36 @@ def tag(root, spec, rnd):
         for j in range(1, n + 1):
             dz = (hang - r) * j / n
             pts.append(base + Vector((0, 0, -dz)) + d * (sway * dz))
-    curl = rnd.uniform(-0.004, 0.004)
+    if "carry_grip" in root:
+        # The Y-axis fixed grip is on the -X end of a case lying face-up.
+        # A folded adhesive tag makes a loop there; its tail falls to the belt and bends away.
+        grip = Vector(root["carry_grip"])
+        side = Vector((0, 1, 0))
+        pts = []
+        for j in range(29):
+            angle = math.pi + math.tau * j / 28
+            pts.append(grip + Vector((0.016 * math.cos(angle), 0, 0.014 * math.sin(angle))))
+        throat = pts[-1]
+        for j in range(1, 31):
+            t = j / 30
+            dz = min(throat.z - 0.002, 0.18 * t)
+            outward = 0.009 * math.sin(math.pi * t) + max(0.0, 0.18 * t - dz)
+            pts.append(throat + Vector((-outward, 0.010 * math.sin(t * math.pi), -dz)))
+    else:
+        # A small return fold closes the strip around its anchor before the loose tail.
+        anchor = pts[0]
+        loop = []
+        for j in range(23):
+            angle = math.tau * j / 22
+            loop.append(anchor + d * (0.016 * math.sin(angle))
+                        + Vector((0, 0, 0.013 * (1 - math.cos(angle)))))
+        pts = loop + pts[1:]
+    curl = rnd.choice((-1, 1)) * 0.0045
     vs, fs = [], []
     for i, q in enumerate(pts):
         t = i / (len(pts) - 1)
-        lift = Vector((0, 0, curl * math.sin(t * math.pi * 2)))      # the paper is never perfectly flat
+        amplitude = min(abs(curl), max(0.0, q.z - 0.0007))
+        lift = Vector((0, 0, math.copysign(amplitude, curl) * math.sin(t * math.pi * 2)))      # the paper is never perfectly flat
         vs += [q - side * (w / 2) + lift, q + side * (w / 2) - lift]
         if i:
             k = 2 * i
@@ -365,10 +393,24 @@ def tag(root, spec, rnd):
     bpy.context.scene.collection.objects.link(ob)
     me.materials.append(st.materials()["paper"])
     so = ob.modifiers.new("paper", "SOLIDIFY")
-    so.thickness, so.offset = 0.0006, 1.0
+    so.thickness, so.offset = 0.0002, 1.0
     ob.parent = root
     ob.matrix_parent_inverse = Matrix.Identity(4)
     return ob
+
+
+def retract_case(holder):
+    """Compress the extended rails into the housing, keeping the fixed carry handle intact."""
+    bpy.context.view_layer.update()
+    for ob in _meshes(holder):
+        mw = ob.matrix_world
+        inverse = mw.inverted()
+        for vert in ob.data.vertices:
+            point = mw @ vert.co
+            if point.x < -0.067 and point.z > 0.52:
+                point.z = 0.52 + 0.12 * (point.z - 0.52)
+                vert.co = inverse @ point
+        ob.data.update()
 
 
 def build_bags():
@@ -376,6 +418,11 @@ def build_bags():
     loaded = {}
     for name, d in DAWN.items():
         h = props.load(d["src"], size=d["size"], axis=d["axis"], loc=(0, 0, 0), **d["grade"])
+        if d["lying"]:
+            # Save the actual fixed grip in the holder's local coordinates before laying it down.
+            grip = h.matrix_world.inverted() @ Vector((-0.045, -0.017, 0.540))
+            h["carry_grip"] = list(grip)
+            retract_case(h)
         finish(h, d["spec"])
         loaded[name] = h
     # copies first (they must copy the upright, unseated holders)
@@ -389,6 +436,8 @@ def build_bags():
         if lying:   # on its back: the front pocket up, the handle end toward -X
             h.rotation_euler = (0, math.radians(-90), 0)
         roots[name] = seat(h, name)
+        if "carry_grip" in h:
+            roots[name]["carry_grip"] = list(h.matrix_world @ Vector(h["carry_grip"]))
     for name, r in roots.items():
         tag(r, TAGS[name], rnd)
     _STATE["roots"] = roots
@@ -396,6 +445,19 @@ def build_bags():
 
 
 def set_layout(cam):
+    for light, power, spread in _STATE["lights"].values():
+        name = light.name
+        if cam == "curtain":
+            scale = {"behind_curtain": 5.8, "behind_curtain_low": 5.0, "batten0_light": 0.19,
+                     "batten0_up": 0.16, "sbatten0_light": 0.0, "sbatten0_up": 0.0,
+                     "bulk_panel_light": 0.48, "bag_edge": 0.0}.get(name, 1.0)
+        elif cam == "overhead":
+            scale = 1.4 if name == "batten2_light" else 0.075
+        else:
+            scale = 1.0
+        light.data.energy = power * scale
+        if spread is not None:
+            light.data.spread = math.radians(66) if cam == "overhead" and name == "batten2_light" else spread
     lay = LAYOUT.get(cam, LAYOUT["belt"])
     for name, r in _STATE["roots"].items():
         on = name in lay
@@ -465,6 +527,8 @@ def install_hook():
         render_settings()
         kw.setdefault("world", WORLD)
         print(f"BAGGAGE camera {cam}: layout {sorted(LAYOUT.get(cam, {}))}", flush=True)
+        if args and os.path.basename(args[0]).startswith("final") and len(args) >= 2:
+            args = (args[0], max(args[1], 160), *args[2:])
         return orig(*args, **kw)
     render._orig = orig
     sk.render = render
@@ -473,6 +537,10 @@ def install_hook():
 def build(cast=True):
     """No people in this stage: `cast` is ignored."""
     st.build()
+    edge = st.light("bag_edge", (4.8, -0.83, 2.43), (0.70, 0.13), 17.0)
+    edge.rotation_euler = (Vector((3.5, 0, BZ + 0.19)) - edge.location).to_track_quat("-Z", "Y").to_euler()
+    _STATE["lights"] = {o.name: (o, o.data.energy, getattr(o.data, "spread", None))
+                        for o in bpy.context.scene.objects if o.type == "LIGHT"}
     build_bags()
     for n in ("focus_curtain", "focus_belt", "focus_over"):
         st.focus(n, (0, 0, BZ))

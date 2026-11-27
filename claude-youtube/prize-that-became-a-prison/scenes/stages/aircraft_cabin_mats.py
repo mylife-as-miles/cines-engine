@@ -404,7 +404,7 @@ def sky(name, dip=-0.059):
     col = _mix(nt, t, (0.030, 0.040, 0.062), (0.0035, 0.005, 0.011))
     # airglow: a thin pale band right on the horizon
     band = _math(nt, "POWER", _maprange(nt, _math(nt, "ABSOLUTE", rel), 0.0, 0.022, 1.0, 0.0), 2.2)
-    col = _mix(nt, _math(nt, "MULTIPLY", band, 0.85), col, (0.085, 0.095, 0.12))
+    col = _mix(nt, _math(nt, "MULTIPLY", band, 0.85), col, (0.128, 0.143, 0.18))
     # stars: sparse points from a fine Voronoi, only above the horizon
     vo = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
     vo.inputs["Scale"].default_value = 420.0
@@ -523,8 +523,8 @@ def materials(lanes=()):
     M["screen_off"] = screen_off("screen off")
     M["screen_on"] = glow("screen blank glow", (0.55, 0.66, 0.85), 0.9, falloff=0.45, axes=("X", "Z"))
     M["lens_off"] = pbr("reading lens off", (0.2, 0.2, 0.2), (0.25, 0.3), spec=0.5)
-    M["lens_on"] = glow("reading lens on", (1.0, 0.86, 0.68), 60.0, falloff=0.5, axes=("X", "Y"))
-    M["cove"] = glow("night cove light", (0.32, 0.45, 0.9), 3.0, sample=True)
+    M["lens_on"] = glow("reading lens on", (1.0, 0.68, 0.38), 48.0, falloff=0.5, axes=("X", "Y"))
+    M["cove"] = glow("night cove light", (0.32, 0.45, 0.9), 1.9, sample=True)
     M["path"] = glow("aisle path light", (0.74, 0.84, 1.0), 2.6, sample=True)
     M["path_dim"] = glow("aisle path strip", (0.5, 0.75, 0.82), 0.10)
     M["wash"] = glow("sidewall wash slot", (0.36, 0.5, 0.95), 0.7)
@@ -534,7 +534,7 @@ def materials(lanes=()):
     M["magazine"] = paper("magazine cover", (0.07, 0.085, 0.11), rough=0.45, coat=0.4)
     M["sign"] = glow("blank sign glow", (0.7, 0.76, 0.86), 1.2, falloff=0.3)
     M["curtain"] = curtain("galley curtain")
-    M["galley"] = glow("galley glow", (0.85, 0.88, 0.95), 1.6, falloff=0.6, axes=("X", "Z"))
+    M["galley"] = glow("galley glow", (0.64, 0.74, 0.95), 0.58, falloff=0.6, axes=("X", "Z"))
     M["sky"] = sky("night sky")
     M["wing"] = wing_paint("wing paint")
     M["wing_dark"] = pbr("wing edges", (0.16, 0.165, 0.17), (0.35, 0.5), spec=0.5)
