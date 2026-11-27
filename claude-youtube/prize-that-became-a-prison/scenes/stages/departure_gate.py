@@ -559,9 +559,9 @@ def brace_for_call(holder):
     elbow_target = shoulder + line * along + bend.normalized() * offset
     rigged._aim(rig, upper.name, inv @ (elbow_target - shoulder))
     rigged._aim(rig, lower.name, inv @ (target - (world @ lower.head)))
-    rigged.articulate_hand(holder, "L", {"f_index": (32, 13, 8), "f_middle": (35, 16, 9),
+    rigged.articulate_hand(holder, "L", {"f_index": (26, 11, 6), "f_middle": (35, 16, 9),
                                         "f_ring": (36, 18, 10, 2), "f_pinky": (38, 20, 11, 3),
-                                        "thumb": (10, 13, 7, -6)})
+                                        "thumb": (-8, 0, 2, -22)})
     forward = Vector((0.04, 1, -0.02)).normalized()
     rigged._aim(rig, hand.name, inv @ forward)
     # Roll the hand until its knuckles run across the pad and the thumb is inside.
@@ -594,7 +594,8 @@ def apply_camera(name):
             brace_for_call(_STATE["cast"][0])
     for camera, unit in (("wide", "seats_r3_u1"), ("window", "seats_r1_u2")):
         bpy.data.objects[unit].hide_render = name == camera
-    bpy.data.objects["called face return"].hide_render = not called
+    for name_called in ("called face return", "called hand flag"):
+        bpy.data.objects[name_called].hide_render = not called
     _STATE["mast emission"].default_value = _STATE["mast power"] * (0.6 if name == "window" else 1)
     light_setup = "seated" if called else name
     trims = TRIMS.get(light_setup, {})
@@ -674,8 +675,13 @@ def build(cast=True):
     # and a second right beside the downlight, so its cone stops at the seat beside hers
     flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.12, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
     lap_flag = st.box("lap flag", (0.28, 0.20, 0.004), (SEAT[0] + 0.16, ROW_Y + 0.32, 1.18), st.M["flag"])
-    lap_flag.visible_diffuse = lap_flag.visible_volume_scatter = False
-    for f in (flag, flag2, lap_flag):
+    # When she braces, the hand has moved from her lap into the overhead key.
+    pad_x = st.UNITS[2] + st.seatkit.ARM_X[0]
+    brace_flag = st.box("called hand flag", (0.26, 0.24, 0.004),
+                        (pad_x + 0.053, ROW_Y + 0.159, 0.824), st.M["flag"])
+    for f in (lap_flag, brace_flag):
+        f.visible_diffuse = f.visible_volume_scatter = False
+    for f in (flag, flag2, lap_flag, brace_flag):
         f.visible_camera = f.visible_glossy = f.visible_transmission = False
     seat_z = seat_height(SEAT[0], ROW_Y)
     for n, p in FOCUS.items():
