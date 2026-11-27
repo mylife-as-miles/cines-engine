@@ -245,7 +245,7 @@ def staff(name, variant=0):
     return h
 
 
-def _elegant_suit_tones(holder, jacket, shirt, tie):
+def _elegant_suit_tones(holder, jacket, shirt, tie, tie_padding=0):
     """Use the CC0 suit atlas to separate the collar and cuffs from the striped tie and jacket."""
     import numpy as np
 
@@ -272,6 +272,9 @@ def _elegant_suit_tones(holder, jacket, shirt, tie):
     trim = max(1, round(4 * width / 2048))
     grown = window(np.pad(navy, grow), (2 * grow + 1,) * 2).any(axis=(-2, -1))
     tie_mask = window(np.pad(grown, trim), (2 * trim + 1,) * 2).all(axis=(-2, -1))
+    padding = round(tie_padding * width / 2048)
+    if padding > 0:
+        tie_mask = window(np.pad(tie_mask, padding), (2 * padding + 1,) * 2).any(axis=(-2, -1))
 
     # Replace the source pattern with three constant film colours while preserving its UVs
     # and the fitted garment's existing shading. Pack the image for callers that save a scene.
@@ -294,9 +297,10 @@ def _elegant_suit_tones(holder, jacket, shirt, tie):
 
 
 def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", tone=(0.12, 0.115, 0.11), shoes="shoes01",
-        *, shirt_tone=None, tie_tone=None):
+        *, shirt_tone=None, tie_tone=None, tie_padding=0):
     """Build a man in a casual or elegant suit. On male_elegantsuit01, shirt_tone and tie_tone
-    can override the jacket tone independently, in the same colour space as tone."""
+    can override the jacket tone independently. tie_padding extends the tie colour at the edge,
+    measured in pixels on the 2048-wide atlas."""
     split = shirt_tone is not None or tie_tone is not None
     if split and suit != "male_elegantsuit01":
         raise ValueError("shirt_tone and tie_tone require male_elegantsuit01")
@@ -304,7 +308,7 @@ def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", ton
     _dress(h, [suit, shoes], tint={suit: tone, shoes: (0.09, 0.07, 0.055)}, flat=(suit,))
     if split:
         _elegant_suit_tones(h, tone, tone if shirt_tone is None else shirt_tone,
-                           tone if tie_tone is None else tie_tone)
+                           tone if tie_tone is None else tie_tone, tie_padding)
     return h
 
 
@@ -413,10 +417,10 @@ def _tim_hairline(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02),
           f"(was {base[0]:.3f}), temples {line(32):.3f} (was {base[32]:.3f})", flush=True)
 
 
-def tim(*, shirt_tone=None, tie_tone=None):
+def tim(*, shirt_tone=None, tie_tone=None, tie_padding=0):
     """Tim in the 2024–26 testimony and visit. Both sets use the same build, jaw and receding hairline."""
     holder = man("Tim", age=0.78, weight=0.7, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1),
-                 shirt_tone=shirt_tone, tie_tone=tie_tone)
+                 shirt_tone=shirt_tone, tie_tone=tie_tone, tie_padding=tie_padding)
     tim_jaw(holder)
     _tim_hairline(holder)
     return holder
