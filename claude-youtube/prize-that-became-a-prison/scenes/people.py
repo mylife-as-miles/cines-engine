@@ -18,6 +18,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "noir-kit"))
 import bpy  # noqa: E402,F401
+import bmesh  # noqa: E402
 
 import cast  # noqa: E402
 import props  # noqa: E402
@@ -61,6 +62,38 @@ OFFICERS = [(179, 0.40, 0.55, 0.60, (0.055, 0.07, 0.115)),
 STAFF = [(1.0, 176, 0.35, (0.09, 0.095, 0.11)), (0.0, 165, 0.42, (0.1, 0.1, 0.12))]
 
 
+def _plain_flats(holder):
+    """Fit the stock leather uppers to Dawn's bare ankles and remove the embossed toe texture."""
+    shoes = bpy.data.objects[f"{holder.name}_shoes04"]
+    mesh = bmesh.new()
+    mesh.from_mesh(shoes.data)
+    # The two sock cuffs belong to separate mesh islands. Trace them below the collar so
+    # there is no second surface between the leather and the ankle.
+    cuff = {v for v in mesh.verts if v.co.z > 0.14}
+    pending = list(cuff)
+    while pending:
+        vertex = pending.pop()
+        for edge in vertex.link_edges:
+            neighbour = edge.other_vert(vertex)
+            if neighbour not in cuff:
+                cuff.add(neighbour)
+                pending.append(neighbour)
+    bmesh.ops.delete(mesh, geom=list(cuff), context="VERTS")
+    for v in mesh.verts:
+        if v.co.z > 0.047:
+            v.co.z = 0.047 + (v.co.z - 0.047) * 0.70
+    mesh.to_mesh(shoes.data)
+    mesh.free()
+    body = bpy.data.objects[holder["body"]]
+    hidden = body.vertex_groups["Delete.shoes04"]
+    hidden.remove([v.index for v in body.data.vertices if v.co.z > 0.050 and v.co.y > -0.14
+                   and any(g.group == hidden.index for g in v.groups)])
+    leather = cast.stone("plain black flats", (0.014, 0.013, 0.013), 0.57)
+    leather.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.19
+    for slot in shoes.material_slots:
+        slot.material = leather
+
+
 def dawn():
     """Dawn in 2014 (Ch 01-05, 11 memories): the blouse and skirt in a plain dark umber, black flats. Garments must sit
     well below the stone skin (0.5) in value, or the critic reads them as bare skin (taupe 0.33 failed)."""
@@ -68,6 +101,7 @@ def dawn():
     _dress(h, ["female_elegantsuit01", "shoes04"],
            tint={"female_elegantsuit01": (0.075, 0.058, 0.048), "shoes04": BLACK_SHOE},
            flat=("female_elegantsuit01", "shoes04"))
+    _plain_flats(h)
     return h
 
 
