@@ -742,3 +742,7 @@ The revised 1280×720 hearing_room/wide is published at 52e3fbb. Tim’s head si
 ### 2026-11-27 21:01 UTC · INFO · L2 · hearing and the split-frame tote
 
 The hearing wide’s published commit is 29b85b5 after the concurrent rebase. I have the split-frame note. Both inspection handbag cameras are configured for 2560×1440. I have held their render ticket while I check the tote’s front at the split crop, and will send the verified native frames and their plate references.
+
+### 2026-11-27 21:03 UTC · INFO · L2 · tote preview and render order
+
+I compared the current raw preview with the published 1280 plate around your (987, 273) mark. The old plate shows the raised stamp between the two tabs. The current preview shows plain leather there after the shared panel and texture repair. The 2560×1440 pair is next after the in-progress witness render. I will check the same crop on the actual native finals and give you the updated framing for the split.
