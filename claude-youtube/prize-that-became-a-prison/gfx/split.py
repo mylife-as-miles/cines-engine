@@ -28,20 +28,20 @@ W, H, HW, GUT = 1920, 1080, 958, 4
 
 # Each half: the plate, the window's centre in plate pixels and its scale (output px per plate px).
 # Left: evidence_table `purses` (2560 x 1440): the cognac tote, the paper note at its foot.
-# Right: inspection_room `handbags` (1280 x 720): the same tote under the officer's hand (upscaled until the plate is
-# rendered at 2560). Its top seam at the cut, on the output: x 1147-1673, y 424 (gfx/seam.html cutaway_half's tA, tB).
+# Right: inspection_room `handbags` (2560 x 1440): the same tote on the inspection table. Its rim at the cut, on the
+# output, is gfx/seam.html cutaway_half's tA, tB (re-measure both when the plate or its framing changes).
 HALVES = [
     dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0),
-    dict(plate="frames/raw/inspection_room/handbags.png", cx=987, cy=300, s=1.84, x0=HW + GUT, match=True),
+    dict(plate="frames/raw/inspection_room/handbags.png", cx=1974, cy=600, s=0.92, x0=HW + GUT, match=True),   # the native 2560 render (aec9820)
 ]
 
 # The right-hand tote, graded to read as the same bag as the left's before the film's grade: the tote alone (a soft key on
-# the leather's warm hues, so the cold room keeps its light) is turned 8 degrees toward orange (HSV hue: salmon toward
-# cognac; the other way reads pinker), its saturation cut 15 %, and its mid-tones brought down by a master gamma, fitted so
-# that its front panel's median lightness in the graded frame meets the left tote's (L* 19.6). Measured on the graded
-# frame at 2.19 s, front panels' median: left #402b1f; right #58403b before (dE 10.9), #3f2c25 after (dE 3.7). Refit
-# GAMMA if the plate is re-rendered.
-MATCH = dict(hue=8.0, sat=0.85, gamma=2.45)
+# the leather's warm hues, so the cold room keeps its light) gets a hue shift, a saturation scale and a mid-tone gamma,
+# fitted by a small grid search so that its front panel's median colour on the raw plate meets the left tote's (the two
+# halves then share the film grade). For the 2560 render (aec9820): hue -8, saturation 0.80, gamma 1.70; raw dE 1.9, and
+# in the graded frame at 2.16 s the front panels' medians are left (68, 46, 33), right (69, 48, 35): dE 0.8. Refit when
+# the plate is re-rendered (the earlier 1280 render needed +8 / 0.85 / 2.45).
+MATCH = dict(hue=-8.0, sat=0.80, gamma=1.70)   # fitted on the raw plates' tote panels for the 2560 render (aec9820): dE 1.9
 
 
 def match_tote(img, s, hue, sat, gamma):

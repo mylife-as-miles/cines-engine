@@ -99,7 +99,7 @@ window.SECTION = { SEC, HALF };
 function cutaway(ctx, t, half) {
   // A section through the bag wall at the top seam, an extruded sheet in an oblique view: the cut face shows the leather
   // over the lining; the top face recedes. It opens on a straight match cut from the tote: on frame 1 its red stitch row
-  // sits where the tote's seam was (y 380, x 1262-1735 on the 1920 purses frame), then the view eases back to the whole
+  // lies on the tote's seam as the trace shot leaves it (slope and push included), then the view eases back to the whole
   // section (1.2 s). The lining swings down about its fold to open an empty space between it and the leather (drawn in the
   // ground's dark, a faint dashed edge, nothing inside it), holds, then closes over 0.45 s (the split holds it open).
   const CX = half ? 1441 : W * 0.5;                                     // the centre of the view: the frame, or the right half
@@ -109,16 +109,23 @@ function cutaway(ctx, t, half) {
   ground();                                                             // the dark ground (about #0b0f16 around the section)
   const { X0, X1, Y, D, LEA, LIN, HX } = SEC, SY = 11;
   const sA = [X0 + 18, Y + SY], sB = [X1 - 14, Y + SY];               // the cut face's stitch row, end to end
-  // where the tote's seam was on the cut: the full purses frame, or the right half of the split (gfx/split.py)
-  const tA = half ? [1147, 424] : [1262, 380], tB = half ? [1673, 424] : [1735, 380];
+  // Where the tote's seam is on the frame cut from. Full frame: the seam path itself (purses.seam.json) as the trace shot
+  // leaves it, pushed in by the trace's own move at its end (z = 1 + 0.02 TEND about (1500, 380); TEND from the hash,
+  // default 3.5 s), slope included. The split's right half: its tote's rim, left corner to right end (gfx/split.py).
+  let tA, tB;
+  if (half) { tA = [1160, 462]; tB = [1770, 467]; }   // the right tote's front-lip stitch line (the 2560 render, gfx/split.py framing)
+  else { const P = pts().filter(Boolean), z = 1 + 0.02 * TEND, f = [1500, 380], m = q => [f[0] + (q[0] - f[0]) * z, f[1] + (q[1] - f[1]) * z];
+         tA = m(P[0]); tB = m(P[P.length - 1]); }
   // the resting view: the whole section (full frame), or the section fitted into the right half (HALF)
   const kf = half ? HALF.kf : 1, of = half ? HALF.of : [0, 0];
-  const k0 = (tB[0] - tA[0]) / (sB[0] - sA[0]), e = sm(t / 1.2);       // start scale, eased to the resting view
-  const k = k0 + (kf - k0) * e, ox = (tA[0] - k0 * sA[0]) * (1 - e) + of[0] * e, oy = (tA[1] - k0 * sA[1]) * (1 - e) + of[1] * e;
+  // frame 1: a similarity that lays the stitch row (sA-sB, level) exactly on the seam (tA-tB, sloped); it eases to the
+  // resting view (scale kf, level, offset of) over 1.2 s
+  const e = sm(t / 1.2), k0 = Math.hypot(tB[0] - tA[0], tB[1] - tA[1]) / (sB[0] - sA[0]), r0 = Math.atan2(tB[1] - tA[1], tB[0] - tA[0]);
+  const k = k0 + (kf - k0) * e, rot0 = r0 * (1 - e), T = [tA[0] + (kf * sA[0] + of[0] - tA[0]) * e, tA[1] + (kf * sA[1] + of[1] - tA[1]) * e];
   const drift = 1 + 0.02 * sm(t / 5);
   const open = sm((t - 1.3) / 0.8) * (half ? 1 : 1 - sm((t - 3.6) / 0.45));   // opens, holds 1.5 s, closes (the split holds it open)
   ctx.save(); ctx.translate(CX, H / 2); ctx.scale(drift, drift); ctx.translate(-CX, -H / 2);
-  ctx.translate(ox, oy); ctx.scale(k, k);
+  ctx.translate(T[0], T[1]); ctx.rotate(rot0); ctx.scale(k, k); ctx.translate(-sA[0], -sA[1]);
   const ang = SEC.ANG * open, rot = rotAbout(ang);
   const add = (p, s = 1) => [p[0] + D[0] * s, p[1] + D[1] * s];
   const poly = (pts) => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
@@ -212,5 +219,8 @@ window.draw = (mode, t) => {
   if (!mode.startsWith('cutaway') && bgImg) { ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t); }
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
-fetch(window.SEAM_URL || (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json')).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
+// the hash: a seam JSON path (older use), or parameters: seam=<path>&tend=<the trace shot's length in s, for the match>
+const HP = location.hash.includes('=') ? new URLSearchParams(location.hash.slice(1)) : null;
+const TEND = HP && HP.get('tend') ? +HP.get('tend') : 3.5;
+fetch(window.SEAM_URL || (HP ? (HP.get('seam') || '../frames/raw/evidence_table/purses.seam.json') : (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json'))).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
 </script></body></html>
