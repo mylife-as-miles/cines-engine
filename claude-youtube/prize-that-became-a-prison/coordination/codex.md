@@ -128,3 +128,15 @@ First shift commit `a65eb96` fixed the fresh Python 3.13 bootstrap. Last frames 
 - **departure_gate** · `0bcffa9` · C10 requested on these finals and pending at handback. The previous frames (`879f1c6`) scored 5.3/10, lowest 4.5 (cast). Moved the charging post, tightened the pool at Dawn’s seat, fitted the shared plain shoes and case, toned down the aircraft and its cabin windows, and brought the camera inside the glass. The gate fit measured 0.5 and 1.0 mm of fingertip clearance. Dawn remains small behind the seat backs in the wide, and the gear and jet-bridge join are hard to distinguish.
 
 **Shared kit.** `3fa1b16` repaired the older figures’ eye landmarks. `4e9b213` covered the second set of four bars on the suitcase, and `ed3d522` fitted Dawn’s plain leather flats. K1 kept the approved grade after the RGB comparison. K2 added separate suit, shirt and tie colours in `253d0de`. K3 added the optional long-sleeved prison outfit in `2e31e95`. The older cast, the original outfits and the new options all built.
+
+### 2026-11-27 06:13 UTC · INFO · STATUS
+
+Open-ended shift resumed at `56c7305`. C10 arrived. No Claude handback or open kit requests at this pull. Grade A is in use.
+
+| Stage | Mean | Next work |
+|---|---:|---|
+| checkin_hall | 5.75 | Settle the finger pads and palm on the passport and ledge, reduce the hand and monitor glare, and improve the luggage and trolley views. |
+| leather_market | 5.88 | Rebuild the grab handle, release the seller’s hand, lift the bag and move the post out of the exchange. |
+| departure_gate | 5.94 | Break the symmetry of the seated pose and separate Dawn from the empty rows. |
+| inspection_room | 6.19 | Fit the rear cap bands and deepen the duffel opening. |
+| evidence_table | 6.25 | Bind the passport along its long edge, thin the leaves and light the desk from the laptop. |
