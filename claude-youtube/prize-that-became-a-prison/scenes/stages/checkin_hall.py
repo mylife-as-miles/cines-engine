@@ -58,7 +58,7 @@ CAMERAS = {
     "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
     "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.295), lens=50, focus="focus_dawn", fstop=2.4,
+    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.261), lens=50, focus="focus_dawn", fstop=2.4,
                      exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 30.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
@@ -1205,6 +1205,26 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         for name in support:
             bends[name] = max(3.0, min(27.0, bends[name] + math.degrees((pads[name].z - finger_z) / 0.14)))
         target.z += height_delta * 0.75
+    if passing:
+        # Rotate the thumb as a unit at its basal joint so it rests alongside the booklet.
+        # Its local flex axis runs diagonally across the palm in this pronated pose.
+        thumb = pb[f"thumb.01_master.{k}"]
+        for _ in range(4):
+            lowest = min(hv["thumb"], key=lambda pt: pt.z)
+            lift = top_z + 0.001 - lowest.z
+            if lift < 0.0005:
+                break
+            bone_world = rig.matrix_world @ thumb.matrix
+            arm = lowest - bone_world.translation
+            axis = arm.cross(Vector((0, 0, 1)))
+            if axis.length < 0.001:
+                break
+            angle = min(math.radians(25), lift / axis.length)
+            pivot = Matrix.Translation(bone_world.translation)
+            change = pivot @ Matrix.Rotation(angle, 4, axis.normalized()) @ pivot.inverted()
+            thumb.matrix = arm_inv @ change @ bone_world
+            bpy.context.view_layer.update()
+            hv = _hand_verts(holder, k)
     pad = sum((pads[name] for name in support), Vector()) / len(support)
     print("PAD", holder.name, side, {n: round(1000 * (pt.z - top_z), 1) for n, pt in pads.items()},
           "heel", round(1000 * (palm_low - top_z), 1), "thumb", round(1000 * (min(p.z for p in hv["thumb"]) - top_z), 1), flush=True)
@@ -1291,6 +1311,24 @@ def build(cast=True):
         eye.data.transform(Matrix.Translation(centre + Vector((0, 0.0012, 0))) @ Matrix.Scale(0.955, 4) @ Matrix.Translation(-centre))
         eye.data.materials[0] = eye_mat
     pose_cast(d, a)
+    # The scale and overhead signs are inserts. Keep the cast's shadows and remove the slivers at frame edge.
+    orig = getattr(sk.render, "_orig", sk.render)
+    dawn_meshes = [ob for ob in d.children_recursive if ob.type == "MESH" and ob.visible_camera]
+    agent_meshes = [ob for ob in a.children_recursive if ob.type == "MESH" and ob.visible_camera]
+
+    def render(*args, **kwargs):
+        cam = bpy.context.scene.camera
+        name = cam.get("stage_camera") if cam else None
+        hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes if name == "scale" else ()
+        try:
+            for ob in hidden:
+                ob.visible_camera = False
+            return orig(*args, **kwargs)
+        finally:
+            for ob in hidden:
+                ob.visible_camera = True
+    render._orig = orig
+    sk.render = render
 
 
 def pose_cast(d, a):
