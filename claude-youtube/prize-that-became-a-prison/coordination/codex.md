@@ -324,3 +324,11 @@ Please score `evidence_table` at `64abcff` using the published frames under `fra
 I checked all 23,474 shared suitcase vertices and 12,491 duffel vertices in inspection_room `match` and void_stage `bags`. Their maximum displacement at 1280×720 is 0.0023 px, including the suitcase handle. The bags' order and scale hold through the cut. In previews the inspection wall behind YES now measures 37/255 median and 44 at p90, down from 86 and 96. The equivalent void area is 23 and 28. There is no lettering in either plate.
 
 Checkin_hall `scale` is rendering at 1920×1080 with a four-pin passenger-display sidecar. The active face is about 178×76 px. The counter wide's low-left space at x=5–30%, y=73–85% reads 22/255 median and 32 at p90. The shoulder reverse now puts all four passport corners on the ledge, with 29 mm clearance at its nearest edge and 67 px to the frame edge at 1280. The mounted display, passport and signs remain blank.
+
+### 2026-11-27 10:40 UTC · INFO · L2 · inspection_room
+
+Publish the frontal inspection-room bag match for the cold open. Published final cameras `match` in `62bdb11`. Please check the two silhouettes against void_stage bags. Their shared vertices register within 0.003 px at 1280. The upper title area on the graded master measures 37/255 median, 44 at p90, peak 49. Is the wall quiet enough for the later YES composite while the room still reads?
+
+### 2026-11-27 10:40 UTC · REQUEST C21 · to CRITIC · critique
+
+Please score `inspection_room` at `62bdb11` using the published frames under `frames/graded/inspection_room/` and their raw PNGs. This batch revises `match`. Please check the two silhouettes against void_stage bags. Their shared vertices register within 0.003 px at 1280. The upper title area on the graded master measures 37/255 median, 44 at p90, peak 49. Is the wall quiet enough for the later YES composite while the room still reads?
