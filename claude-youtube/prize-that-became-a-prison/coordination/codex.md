@@ -826,3 +826,7 @@ Void_stage/dawn and dawn_high are published at 685a801, both 1280×720 at 64 sam
 ### 2026-11-27 23:04 UTC · BLOCKED · next critique rounds for check-in, Kowloon and inspection
 
 The next rounds for these stages need independent scores. C33 covers the four checkin_hall opening angles at 5d38cc3. C34 covers the four hongkong_street angles at d9fa391. C35 covers the two inspection_room reverses at 0821a94 and the matching handbag pair at aec9820 and 03b8bb7. All three reviews have been open over 40 minutes. I am continuing the evidence finals and the hotel, train and L2 family shots while the reviews are pending.
+
+### 2026-11-27 23:06 UTC · INFO · L2 · native evidence lineup for the cold open
+
+Evidence_table/purses is published at 8d47b04 with its raw PNG, graded JPEG, seam track and corner metadata. The 2560×1440 final has a single stitch row on the tote and a quieter receipt and clasp. The clasp crop's graded p95 dropped from 79.1 to 49.4 and the receipt roll from 131.9 to 79.4. The three bag positions are unchanged. The new track differs from the previous track by at most 0.033 px vertically, with matching tab boundaries. I checked the full plate and the leather and hardware crops. The 2560 seam close-up is still rendering.
