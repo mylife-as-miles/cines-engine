@@ -56,7 +56,7 @@ FOCUS = {"fx_wide": (0.9, 5.2, 1.35), "fx_bag": (BX, BY - 0.08, TOP + 0.28), "fx
 CAMERAS = {
     # Ch 04: down the lane from the dark end, from the left-hand row: shut stalls both sides, wet concrete, the one
     # burning stall front at mid distance on the right, the organiser at its counter and Dawn a step back, small
-    "wide": dict(loc=(-0.55, -2.80, 1.54), aim=(0.80, 5.35, 1.30), lens=30, focus="fx_wide", fstop=8.0, beat="buy",
+    "wide": dict(loc=(-0.70, -1.75, 1.54), aim=(0.80, 5.35, 1.30), lens=27, focus="fx_wide", fstop=8.0, beat="buy",
                  exposure=-0.55, haze=0.006),
     # Ch 04: from the lane into the stall: Dawn looking up at the wall of handbags under the battens
     "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.15), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
