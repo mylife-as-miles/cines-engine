@@ -7,7 +7,21 @@ cards were rejected as boring). Pacing alternates fast and slow for retention, l
 
 This replaces the "3D still + 2D push" method of animatics v1 and v2. The script stays SCRIPT_V3.
 
-## The current plan: hero shots only (the author, 28 Nov)
+## The current plan: 300-500 credits (the author, 28 Nov)
+
+The author's budget is 300-500 credits for the whole film. That supersedes the hero-shot estimate below.
+
+| Part | Credits |
+| --- | --- |
+| Lean test: 2 s of each of the four test shots (typing hand, walk to the scale, corridor dust, Hong Kong rain), in Eevee and in Cycles on one RTX PRO 6000 | 50-80 |
+| 10-15 hero shots in Eevee (about 1,500 frames at about 3 s) | 120-150 |
+| 3-4 close-ups in Cycles (about 400 frames at about 18 s): the typing hand, the tote and its seam, Tim's writing hand | about 100 |
+| Re-renders and buffer | 50-100 |
+| **Total** | **about 350-450** (8.39 already spent on setup) |
+
+Everything else is still frames with tilt, pan, push or rack-focus moves, plus free 2D atmosphere (dust, steam, flicker), all made here at no cost. The test measures the real Eevee and Cycles seconds per frame. Before the hero render, the shot list is cut to fit the cap.
+
+## Earlier plan: hero shots only (the author, 28 Nov)
 
 > "You not need to animate all part some part will be still just camera tilting... Only animate the important part
 > like rain etc... Hand typing etc... So we only use let's credit"
