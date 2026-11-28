@@ -78,10 +78,11 @@ TABLE_EDGE_RETURN = 7.5
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
-    "handbag-tote": (0.35, "long", dict(sat=0.98, val=0.84, hue=0.50, rough_add=0.32), dict(spec=0.08)),
-    "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28),
-                       dict(spec=0.035, ceiling=(0.038, 0.033, 0.024), metal_limit=0.10)),
-    "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25), dict(spec=0.35)),
+    "handbag-tote": (0.35, "long", dict(sat=0.98, val=0.84, hue=0.50, rough_add=0.32),
+                     dict(spec=0.08, leather_grain=True)),
+    "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.33, rough_add=0.28),
+                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10)),
+    "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.50, rough_add=0.42), dict(spec=0.12)),
 }
 
 CAMERAS = {
@@ -550,7 +551,8 @@ def bags():
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, to_metres=to_m, **fin)
         if name == "handbag-tote":
-            props.tote_topstitch(h, soften_lip_normals=True)
+            props.tote_topstitch(h, soften_lip_normals=True, lip_normal_band=28, behind_tabs=True, slant=0.22,
+                                 thread_colour=(0.30, 0.20, 0.11))
         out += [h] + list(h.children_recursive)
     return out
 
@@ -563,17 +565,16 @@ def shadow_card(name, size, location, material):
 
 
 def bag_lighting():
-    # A low return from the far wall traces the two dark handles above the table.
+    # A low return from the far wall traces the satchel's flap and handle.
     source = Vector((-0.61, 0.37, TOP + 0.53))
     target = Vector((-0.16, 0.095, TOP + 0.255))
-    return_light = sk.area_light("bag edge return", source, (0.29, 0.13), 2.2, WARM, spread_deg=72,
+    return_light = sk.area_light("bag edge return", source, (0.29, 0.13), 3.5, WARM, spread_deg=72,
                                  rot=(target - source).to_track_quat("-Z", "Y").to_euler())
     return_light.visible_glossy = return_light.visible_volume_scatter = False
-    dark_bags = bpy.data.collections.new("Dark bag rim receivers")
-    for name in ("handbag-shoulder", "handbag-satchel"):
-        for part in props.meshes(bpy.data.objects[name]):
-            dark_bags.objects.link(part)
-    return_light.light_linking.receiver_collection = dark_bags
+    satchel = bpy.data.collections.new("Satchel rim receivers")
+    for part in props.meshes(bpy.data.objects["handbag-satchel"]):
+        satchel.objects.link(part)
+    return_light.light_linking.receiver_collection = satchel
     # The tight insert catches the lamp lengthwise along the rolled edge.
     # Only the leather and its thread receive this reflection.
     lip = Vector((0.233, -0.186, TOP + 0.247))
@@ -1088,7 +1089,7 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.16, 0.165, 0.17)),
+    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.10, 0.10, 0.105)),
                                    *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.

@@ -59,11 +59,11 @@ SINK = 0.045                                                         # how far a
 
 # passengers: (name, kind, row, block, seat, upper-body pose, lean back, build kwargs)
 PAX = [
-    ("Pax1", "man", DAWN_ROW + 2, 1, 0, {"head": (20, -14), "neck": (9, -6), "chest": (-2, 0), "fingers": 22}, 12.0,
+    ("Pax1", "man", DAWN_ROW + 2, 1, 0, {"head": (20, -14), "neck": (9, -6), "chest": (-2, 0), "fingers": 22}, 8.0,
      dict(height_cm=176, age=0.62, weight=0.66, suit="male_casualsuit05", tone=(0.10, 0.104, 0.11))),
     ("Pax2", "staff", DAWN_ROW + 5, 1, 1, {"head": (15, 16), "neck": (8, 8), "chest": (-2, 0), "fingers": 20}, 12.0,
      dict(variant=1)),
-    ("Pax3", "man", DAWN_ROW + 4, 0, 2, {"head": (17, 12), "neck": (8, 6), "chest": (-3, 0), "fingers": 20}, 13.0,
+    ("Pax3", "man", DAWN_ROW + 4, 0, 2, {"head": (17, 12), "neck": (8, 6), "chest": (-3, 0), "fingers": 20}, 8.0,
      dict(height_cm=183, age=0.34, weight=0.5, suit="male_casualsuit01", tone=(0.07, 0.074, 0.084))),
     ("Pax4", "staff", DAWN_ROW + 3, 1, 2, {"head": (12, 5), "neck": (5, 0), "chest": (-2, 0), "fingers": 18}, 11.0,
      dict(variant=0)),
@@ -77,7 +77,8 @@ AISLE_CAM = (-1.20, 2.24, 1.80)
 WINDOW_CAM = (-1.05, 4.42, 1.24)
 OVER_CAM = (-2.34, 3.75, 1.33)
 # The tip is fixed in aircraft coordinates; the camera sees it through the inner window reveal.
-WING_TIP = Vector((-30.0, 27.12, -1.03))
+WING_TIP = Vector((-30.0, 27.12, -2.8))
+MOON_DIR = (0.30, 0.60, 0.60)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
@@ -95,14 +96,14 @@ CAMERAS = {
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its white tip
     # strobe under the horizon, and the dark below; her head soft in the foreground
-    "over": dict(loc=OVER_CAM, aim=(-3.0, DAWN_WINDOW_Y + 0.015, 1.27), lens=100, focus="fx_over", fstop=16.0,
+    "over": dict(loc=OVER_CAM, aim=(-3.0, DAWN_WINDOW_Y + 0.10, 1.20), lens=66, focus="fx_over", fstop=16.0,
                  beat="ch03"),
 }
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
-    "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 1.45, "wash": 1.05, "cove": 0.6, "galley": 0.45,
+    "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 0.5, "wash": 1.05, "cove": 0.6, "galley": 1.6,
               "aisle portrait return": 1.0},
-    "window": {"haze": 0.0, "fill": 0.4, "spill": 0.55, "key": 1.75},
+    "window": {"haze": 0.0, "fill": 0.75, "spill": 0.25, "key": 1.75},
     "over": {"haze": 0.0, "fill": 0.0, "spill": 0.7, "wash": 0.8, "key": 1.6},
 }
 # where her lamp points: at her lap and hands, its soft edge across her face; for the wide aisle shot it is turned a
@@ -421,14 +422,14 @@ def settle_dawn_lap(holder):
     # supports the right, including the thumb on its way across the lap.
     inv = rig.matrix_world.to_3x3().normalized().inverted()
     marks = (
-        (1, "L", (-0.090, 0.168), (0.726, 0.679, 0.012), (0.169, -0.118, -0.993)),
-        (-1, "R", (0.059, 0.167), (-0.533, 0.835, -0.005), (-0.410, -0.080, -0.924)),
+        (1, "L", (-0.090, 0.105), (0.726, 0.679, 0.012), (0.169, -0.118, -0.993)),
+        (-1, "R", (0.059, 0.104), (-0.533, 0.835, -0.005), (-0.410, -0.080, -0.924)),
     )
     for side, k, offset, direction, normal in marks:
         x, y = hip.x + offset[0], hip.y + offset[1]
         target = Vector((x, y + 0.045, surface(x, y) + 0.036))
         support = cloth if k == "L" else weighted_surface(body, hand_groups(body, "L", True), 0.55)
-        desired = 0.001
+        desired = 0.005 if k == "L" else 0.001  # the lower hand rests on the belt webbing
         forward = (inv @ Vector(direction)).normalized()
         down = inv @ Vector(normal)
         axis = (down - forward * down.dot(forward)).normalized() * side
@@ -481,6 +482,15 @@ def apply_camera(name):
     sc.cycles.denoiser = "OPENIMAGEDENOISE"
     sc.cycles.max_bounces = 6
     sc.cycles.transparent_max_bounces = 12
+    portrait = _STATE.get("portrait_head")
+    if portrait is not None:
+        dawn, neutral = portrait
+        rig = rigged.rig_of(dawn)
+        rig.pose.bones["head"].matrix_basis = neutral
+        bpy.context.view_layer.update()
+        if name == "aisle":
+            rigged._turn(rig, "head", 0, 12)
+        bpy.data.objects["fx_aisle"].location = head_points(dawn)[0]
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
@@ -558,11 +568,11 @@ def lights():
     group(sp, "key")
     # the lens scatters a little outside its beam: the wall, the headrests and the seat back in front
     sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.24, 0.62), 18.0, (1.0, 0.68, 0.38),
-                 150.0, 0.8, radius=0.03)
+                 90.0, 0.8, radius=0.03)
     group(sl, "spill")
     # the window's cool glow on her face (sky and moon through the pane)
     wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 5.0, (0.55, 0.70, 1.0),
-                 spread=100, aim=(HEAD.x + 0.02, HEAD.y + 0.04, HEAD.z - 0.08))
+                 spread=60, aim=(HEAD.x + 0.02, HEAD.y + 0.04, HEAD.z - 0.08))
     wf.visible_glossy = False
     wf.visible_camera = False
     group(wf, "win")
@@ -604,7 +614,8 @@ def assign_groups():
 
 
 def build(cast=True):
-    mt.materials(lanes=st.AISLES)
+    mt.materials(lanes=st.AISLES, moon_dir=MOON_DIR)
+    _STATE["portrait_head"] = None
     st.LIGHTS.clear()
     _STATE["base"].clear()
     ys = st.windows_y(DAWN_WINDOW_Y)
@@ -625,15 +636,14 @@ def build(cast=True):
     st.front_bulkhead()
     recv = bpy.data.collections.new("exterior receivers")
     tip = WING_TIP
-    tip_dir = (tip - Vector(OVER_CAM)).normalized()
-    st.exterior(tuple(tip), recv, moon_dir=(tip_dir.x, tip_dir.y, 0.42))
+    st.exterior(tuple(tip), recv, moon_dir=MOON_DIR)
     lights()
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
         e.location = p
     # a little haze round her lamp so its cone has a shape (lit by her lamp only; the aisle camera only)
-    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.135,
+    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.30,
                  colour=(0.85, 0.88, 0.95))
     hz.name = "lamp haze"
     hc = bpy.data.collections.new("haze only")
@@ -648,9 +658,10 @@ def build(cast=True):
           f"({tip.x:.1f}, {tip.y:.1f}, {tip.z:.1f}); lights {len(st.LIGHTS)}", flush=True)
     if cast:
         d = dawn()
-        upper = {"head": (10, 34), "neck": (5, 16), "chest": (-8, 8), "fingers": 38}
+        upper = {"head": (6, 38), "neck": (5, 16), "chest": (-8, 8), "fingers": 38}
         place_seated(d, DAWN_SEAT, upper, lean=11.0, fit_hands=False, reach=1.0)
         settle_dawn_lap(d)
+        _STATE["portrait_head"] = (d, rigged.rig_of(d).pose.bones["head"].matrix_basis.copy())
         hp, fwd = head_points(d)
         bpy.data.objects["fx_aisle"].location = hp
         bpy.data.objects["fx_face"].location = hp + Vector((-0.035, 0.050, -0.026))
@@ -667,6 +678,7 @@ def build(cast=True):
         ff.visible_camera = False
         ff.visible_glossy = False
         ff.light_linking.receiver_collection = dc
+        st.LIGHTS["window_fill"].light_linking.receiver_collection = dc
         group(ff, "fill")
         bounced = st.area("aisle portrait return", hp + Vector((0.40, -0.28, 0.31)), (0.17, 0.24),
                           4.0, (1.0, 0.52, 0.24), spread=110, aim=hp)
@@ -681,4 +693,10 @@ def build(cast=True):
                     ease_seated(g, 0.010)
                 place_seated(h, (st.BLOCK_X[b] + st.SEAT_DX[s], st.row_y(row)), up, lean=lean, hands=True,
                              fit_hands=False)
+                roll = {"Pax1": -16.0, "Pax3": 16.0}.get(name)
+                if roll is not None:
+                    head = rigged.rig_of(h).pose.bones["head"]
+                    pivot = Matrix.Translation(head.head)
+                    head.matrix = pivot @ Matrix.Rotation(math.radians(roll), 4, "Y") @ pivot.inverted() @ head.matrix
+                    bpy.context.view_layer.update()
     install_hook()

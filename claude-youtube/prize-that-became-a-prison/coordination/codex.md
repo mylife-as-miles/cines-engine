@@ -1052,3 +1052,37 @@ Please review the detention_corridor stage at 63de128, including the new envelop
 ### 2026-11-28 03:54 UTC · INFO · to LEAD · C38 date behind the chair cut
 
 C38 found the bright patch below the wainscot competes with the date in chair and chair_gene. The reviewer measured the upper-left wall at x 88–445, y 60–130 in 1280 px as mean 33, max 41. That gives the date a plain dark area. If the date stays at its current position, the suggested shade is centered around (350, 612) at 1280 with alpha about 0.55. I am preserving the matched chair and the street light's aim while checking the new Home poses and the shared Home/Void cushion finish.
+
+### 2026-11-28 04:00 UTC · INFO · STATUS
+
+Independent scores through C43, plus the earlier reviews for stages outside that batch. The number in parentheses is the lowest category. C44 is open on the corridor.
+
+| Stage | Latest mean (low) | Next work |
+| --- | ---: | --- |
+| hongkong_street | 5.44 (4.5) | The companion formation, boutique materials and sign spacing are revised. The full proof is queued after the memory retry. |
+| evidence_table | 5.50 (4.5) | The single sheet and foot insert are published. The revised seam now has 69 physical stitches in the geometry check. Check the actual thread and track together, then the cognac. |
+| home | 5.50 (4) | Kitchen shoulder and blinds are published. Check the three distinct dinner poses, tabletop service, date area and the matched cushion in the revised dining frames. |
+| inspection_room | 5.56 (4.5) | The broader pass is at its plateau. The L2 split-frame tint and cleared backdrop are in preview. Test a low duffel gesture for the next structural pass. |
+| aircraft_cabin | 5.69 (5) | C43 calls for dimmer screens, a tighter reading pool and a clearer over-shoulder window angle. |
+| tim_desk | 5.69 (5) | The desk, letters and window previews are checked. Their finals follow the remaining L2 plates. |
+| hotel_room | 5.75 (5) | The acceptance plate preserves the title margin at 41. A separate tint test is queued for the bag lying under the lamp. |
+| train | 5.75 (5) | Refine the case insert, cover the curled wheel hubs and run the same glass-facing gaze across the cuts. |
+| baggage_belt | 5.88 (5) | Give the sorter a more even physical key and lift the chute under C42. |
+| leather_market | 5.88 (5) | Stall, wide and purchase are checked in preview. The stall's cognac panel is about 65 degrees and 13.3 chroma. Finals are queued. |
+| chicago_night | 6.00 (5) | The mug profile is published for 01-02. Check the other apartment angles before the next stage review. |
+| courtroom | 6.13 (5) | Check the dock contact and the judge's light in the remaining angles. |
+| hearing_room | 6.13 (5) | Wide and witness are published. The hands and dais finals are queued. |
+| visiting_room | 6.25 (5) | Verify the reverse's native handset contact and the glass, then deliver it for 09-03. |
+| departure_gate | 6.25 (5.5) | The plateau is recorded. The next blocking test shifts Dawn's weight forward as she looks to the gate door. |
+| checkin_hall | 6.38 (6) | The fitted terminal clears the card and hand. Check its blank display, the brighter agent and the registered scale in the next four previews. |
+| void_stage | 6.38 (5) | All eleven plates are published. Under C41, check the seated uniform, floor wear and the cushion shared with Home. |
+| prison_exterior | 6.75 (6) | Tower is published. Check the rain and wall in the other two views. |
+| detention_corridor | 7.00 (6) | The higher sealed envelope is published for 05-05. C44 is open on its cut and the corridor. |
+
+### 2026-11-28 04:08 UTC · INFO · L2 · Tim's visiting-room reverse for 09-03
+
+Use visiting_room/reverse at ca05f8d. Through the glass, Tim holds the handset to his ear with his eyes lowered and Dawn's shoulder in the foreground. The 1280×720 final used 128 samples. The full graded frame peaks at 241.3, with zero luminance above 250. The earpiece fit and temple edge were checked in the revised pose.
+
+### 2026-11-28 04:08 UTC · REQUEST C45 · to CRITIC · visiting-room reverse and booth continuity
+
+Please review visiting_room at ca05f8d, with the new reverse against the published wide, glass and empty angles. Check that Tim listens through the handset, both figures read through the glass, and the booth feels like the same restricted space across the cuts. Please score the stage and flag the highest-priority structural issue.
