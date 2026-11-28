@@ -970,6 +970,9 @@ def apply_camera(name):
         name, st.LAPTOP_EMISSION)
     screen_colour = (0.29, 0.51, 1.0) if name == "window" else st.COOL
     panel["Principled BSDF"].inputs["Emission Color"].default_value = (*screen_colour, 1)
+    monitor_nodes = bpy.data.objects["monitor_screen"].active_material.node_tree.nodes
+    monitor_light = monitor_nodes["Emission"].inputs["Strength"]
+    monitor_light.default_value = st.MONITOR_EMISSION if name == "monitor" else 0.035
     hz = bpy.data.objects.get("room_haze")
     dens = HAZE.get(name, 0.004)
     if hz is not None:

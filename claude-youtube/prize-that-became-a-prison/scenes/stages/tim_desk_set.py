@@ -66,6 +66,7 @@ SPOT_OUT = 0.012 * _K              # the bulb's glowing end, this far down the a
                                    # there (ray casts) the pad and his hands see all of it, his brow two thirds
 LAPTOP = (0.50, 0.10, -75.0)       # prop origin and turn: the screen faces (-cos t, -sin t): pushed aside, toward the room
 MONITOR = (0.58, -0.187, TOP + 0.417)
+MONITOR_EMISSION = 0.61
 PAD = (-0.02, 0.165, 194.0)        # the writing pad: centre and turn (its head away from Tim, turned for a right hand,
                                    # pulled up to the desk's edge: he is half way down the page)
 PAD_H = 0.0069                     # the pad's top surface above the desk (board, block and a sheet)
@@ -825,7 +826,7 @@ def monitor():
     """A desktop monitor on a weighted foot, with a separate blank 16:9 panel."""
     width, height = 0.43, 0.43 * 9 / 16
     case = sk.mat("monitor charcoal housing", (0.019, 0.020, 0.023), 0.46)
-    panel_material = mt.glow("monitor blank panel", (0.68, 0.75, 0.86), 0.61)
+    panel_material = mt.glow("monitor blank panel", (0.68, 0.75, 0.86), MONITOR_EMISSION)
     x, y, z = MONITOR
     bottom = z - height / 2
     turn = Matrix.Rotation(math.radians(202), 4, "Z")
