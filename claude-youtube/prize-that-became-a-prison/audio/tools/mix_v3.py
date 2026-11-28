@@ -153,7 +153,8 @@ def room_of(shot):
     if k == "ground":
         return "amb_void_air", "ground"
     if k == "screen":
-        return "amb_evidence_room", "evidence_table"
+        stage = src["plate"].split("/")[2]
+        return ROOM.get(stage, "amb_evidence_room"), stage
     gen = src.get("gen", {})
     if src["name"].startswith("doc") or gen.get("tool") == "doc":
         return PIECE_ROOM.get(src["name"], "amb_evidence_room"), "evidence_table"

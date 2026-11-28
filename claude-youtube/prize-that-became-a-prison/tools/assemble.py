@@ -680,11 +680,15 @@ def media_source(s, segs, t0, dur, n, byid, warnings):
     stage, cam = s["screen"].split("/")
     sc = s["tex"]
     sg = segs[sc["sync"]] if "sync" in sc else None
-    src_in = sg["in"] + (t0 - sg["start"]) if sg else float(sc["src"])
+    src_in = sg["in"] + (t0 - sg["start"]) if sg else float(sc.get("src", 0.0))
+    if "file" in sc:                         # a texture of our own: a graphics clip (the email) or a page (S1)
+        file, clip, matrix = sc["file"], None, sc.get("matrix", "auto")
+    else:                                    # a real clip: the HD sources are BT.709 without a tag
+        file, clip, matrix = CLIPS[sc["clip"]][0], sc["clip"], "bt709"
     return {"kind": "screen", "plate": f"frames/raw/{stage}/{cam}.png", "corners": f"frames/raw/{stage}/{cam}.corners.json",
-            "clip": sc["clip"], "file": CLIPS[sc["clip"]][0], "src_in": round(max(0.0, src_in), 3), "crop": sc["crop"],
-            "still": bool(sc.get("still")), "zoom": s.get("zoom", [1.2, 1.5]), "focus_uv": s.get("focus_uv", [0.5, 0.5]),
-            "tex_gain": s.get("tex_gain", 1.0), "frames": n}
+            "clip": clip, "file": file, "matrix": matrix, "src_in": round(max(0.0, src_in), 3), "crop": sc["crop"],
+            "still": bool(sc.get("still")) or file.endswith((".png", ".jpg")), "zoom": s.get("zoom", [1.2, 1.5]),
+            "focus_uv": s.get("focus_uv", [0.5, 0.5]), "tex_gain": s.get("tex_gain", 1.0), "frames": n}
 
 
 PIECE_CAT = {"scale": "doc", "email": "doc", "search": "doc", "father": "doc", "doc_yes": "doc", "doc_fee": "doc", "doc_emails": "doc",
@@ -873,7 +877,8 @@ def write_md_v3(edl, cut):
         if k == "ground":
             return "the dark ground (text system)"
         if k == "screen":
-            return f"REAL {src['clip']} from {src['src_in']:.2f} s on the screen of `{src['plate'].split('/')[2]}/{Path(src['plate']).stem}`"
+            what = f"REAL {src['clip']} from {src['src_in']:.2f} s" if src.get("clip") else f"`{Path(src['file']).name}`"
+            return f"{what} on the screen of `{src['plate'].split('/')[2]}/{Path(src['plate']).stem}`"
         return f"graphics `{src['name']}` from {src['in']:.2f} s" + (f" ({src['note_piece']})" if src.get("note_piece") else "")
 
     for ch in edl["chapters"]:
@@ -1319,11 +1324,14 @@ def render_screen(src, n, work, tmp):
     secs = n / FPS + 0.3
     x, y, w, h = src["crop"]
     tex = work / "tex.mp4"
-    vf = (f"fps={FPS},crop={w}:{h}:{x}:{y},scale=1280:{int(round(1280 * h / w / 2)) * 2}:in_color_matrix=bt709:in_range=tv:"
+    m = src.get("matrix", "bt709")
+    vf = (f"fps={FPS},crop={w}:{h}:{x}:{y},scale=1280:{int(round(1280 * h / w / 2)) * 2}:in_color_matrix={m}:in_range={'auto' if m == 'auto' else 'tv'}:"
           f"flags=bicubic+accurate_rnd+full_chroma_int,format=rgb24,scale=out_color_matrix=bt709:out_range=tv,format=yuv444p")
+    image = src["file"].endswith((".png", ".jpg"))
     if src.get("still"):
         vf = "trim=end_frame=1,loop=loop=-1:size=1," + vf
-    run(["ffmpeg", "-v", "error", "-y", "-ss", f"{src['src_in']:.3f}", "-i", ROOT / src["file"], "-t", f"{secs:.3f}", "-an", "-vf", vf,
+    ins = ["-loop", "1", "-framerate", str(FPS), "-i", ROOT / src["file"]] if image else ["-ss", f"{src['src_in']:.3f}", "-i", ROOT / src["file"]]
+    run(["ffmpeg", "-v", "error", "-y", *ins, "-t", f"{secs:.3f}", "-an", "-vf", vf,
          "-frames:v", str(int(round(secs * FPS))), "-c:v", "libx264", "-crf", "8", "-pix_fmt", "yuv444p", *TAGS, tex])
     shot = work / "screen.json"
     shot.write_text(json.dumps({"plate": src["plate"], "corners": src["corners"], "texture": {"video": str(tex), "fps": FPS},
