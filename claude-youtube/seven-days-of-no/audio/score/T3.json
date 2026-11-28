@@ -1,0 +1,8 @@
+{
+ "id": "T3",
+ "role": "hush",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for a quiet, reflective moment in a light animated explainer video, about 70 seconds. The same cozy world, hushed: a softly fingerpicked nylon-string guitar playing slow, gentle arpeggios, a music box playing a few sparse, slightly wistful notes, warm soft sustained low strings underneath. A little melancholic but still warm and kind, never dramatic. A minor, slow and calm, around 70 BPM. Soft and sparse throughout, no percussion at all. No vocals, no singing, no humming, no choir. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

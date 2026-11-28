@@ -1,0 +1,8 @@
+{
+ "id": "T5",
+ "role": "end",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental closing music for the end of a light, friendly animated explainer video, about 50 seconds. Warm and cozy: a plucked ukulele and a fingerpicked nylon-string guitar, a music box and a glockenspiel playing a simple, happy melody, light pizzicato strings, a soft kick drum. C major, around 100 BPM. It winds down gently at the end and finishes cleanly on a final held C major chord, with one music-box note ringing out to silence. No vocals, no singing, no humming, no choir. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

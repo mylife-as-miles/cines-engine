@@ -1,0 +1,8 @@
+{
+ "id": "T4",
+ "role": "lift",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for a happy, uplifting moment in a light animated explainer video, about 70 seconds. Bright and cheerful: a strummed ukulele, bouncy pizzicato strings, a glockenspiel and a music box playing a sunny, playful melody, light hand claps and a soft kick drum. C major, around 104 BPM, joyful and buoyant from the first bar, lifting a little but staying light and uncluttered under a voice-over. No vocals, no singing, no humming, no choir, no electric guitar. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]"
+}

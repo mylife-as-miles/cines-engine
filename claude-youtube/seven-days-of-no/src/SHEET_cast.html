@@ -1,0 +1,48 @@
+<!doctype html><meta charset="utf-8"><title>Cast sheet · Seven Days of No</title>
+<script src="../kit/pov.js"></script>
+<script>
+/* SEVEN DAYS OF NO · CAST SHEET (reference, not part of the video; labels allowed)
+   Band 1: the hero's eight expressions (design/refs/01_expressions.jpg) plus 'guilty' (ref 05).
+   Band 2: the cast line-up (ref 12). Band 3: the hero's poses (ref 02 and the stills). 1920 x 2160. */
+window.addEventListener('load', () => {
+  const W = 1920, H = 2160;
+  document.documentElement.style.cssText = 'margin:0;background:#222'; document.body.style.cssText = 'margin:0;background:#222';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.style.cssText = 'display:block;width:100vw'; document.body.appendChild(cv);
+  const g = cv.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
+  const label = (txt, x, y, size) => { g.fillStyle = '#1c1c1c'; g.font = `800 ${size || 34}px "Inter", "Helvetica Neue", Arial, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillText(txt, x, y); };
+
+  // ---- band 1: expressions (busts: the figure drawn at scale 1.05, clipped below the shoulders)
+  g.fillStyle = '#D6D6D6'; g.fillRect(0, 0, W, 800);
+  const ex = ['neutral', 'happy', 'surprised', 'confused', 'tired', 'angry', 'sad', 'scared'];
+  ex.forEach((e, i) => {
+    const col = i % 4, row = (i / 4) | 0, cx = 300 + col * 440, top = 30 + row * 385, s = 1.04;
+    const feetY = top + 830 * s;
+    g.save(); g.beginPath(); g.rect(cx - 220, top - 40, 440, (830 - 510) * s + 40); g.clip();
+    POV.figure(g, 'hero', { x: cx, y: feetY, scale: s, expr: e, marks: e === 'confused' });
+    g.restore();
+    label(e.toUpperCase(), cx, top + 375, 36);
+  });
+
+  // ---- band 2: the cast
+  g.fillStyle = '#FFFFFF'; g.fillRect(0, 800, W, 700);
+  const cast = [['hero', 'HERO', {}], ['boss', 'BOSS', { holding: 'clipboard' }], ['friend', 'FRIEND', {}], ['mum', 'MUM', {}], ['coworker', 'COWORKER', {}], ['stranger', 'STRANGER', { pose: 'hold_phone', mode: 'show' }]];
+  cast.forEach(([who, name, o], i) => {
+    const cx = 190 + i * 308;
+    POV.figure(g, who, Object.assign({ x: cx, y: 1430, scale: 0.72, shadow: '#E6E6E6' }, o));
+    label(name, cx, 1478, 32);
+  });
+
+  // ---- band 3: hero poses
+  g.fillStyle = '#F4EFE6'; g.fillRect(0, 1500, W, 660);
+  const poses = [['STAND', { pose: 'stand' }], ['WALK', { pose: 'walk', phase: 0.22 }], ['THINK', { pose: 'think', expr: 'confused' }], ['POINT', { pose: 'point' }],
+    ['SIT', { pose: 'sit', seat: 200, expr: 'neutral' }], ['PHONE EAR', { pose: 'hold_phone', mode: 'ear', mouth: 0.4 }], ['PHONE', { pose: 'hold_phone', mode: 'front' }],
+    ['LAPTOP', { pose: 'hold_laptop' }], ['WAVE', { pose: 'wave', expr: 'happy' }], ['SHRUG', { pose: 'shrug', expr: 'confused' }], ['CLASPED', { pose: 'hands_clasped', expr: 'guilty' }]];
+  poses.forEach(([name, o], i) => {
+    const cx = 100 + i * 172, s = 0.62, fy = 2090;
+    if (o.pose === 'sit') { g.fillStyle = '#C9A27E'; g.strokeStyle = '#1c1c1c'; g.lineWidth = 3; g.beginPath(); g.roundRect(cx - 50, fy - 200 * s, 120, 200 * s, 6); g.fill(); g.stroke(); }
+    POV.figure(g, 'hero', Object.assign({ x: cx, y: fy, scale: s, shadow: '#E3D9C8' }, o));
+    label(name, cx + (o.pose === 'sit' ? 20 : 0), 2140, 22);
+  });
+  window.FRAME_READY = true;
+});
+</script>

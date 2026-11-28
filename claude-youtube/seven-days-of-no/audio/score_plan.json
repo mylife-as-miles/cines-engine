@@ -1,0 +1,42 @@
+{
+ "note": "Seven Days of No: one light, cozy bed under the whole video, with variations by chapter. Every take shares one palette (plucked ukulele and nylon guitar, music box and glockenspiel, light pizzicato, a soft kick at most) and one key centre (C major, its relative A minor for the hush), so the beds crossfade into each other at chapter turns without a clash. Lyria returns 60-90 s whatever is asked; each bed span is a window of one take (from_s), looped with equal-power crossfades only if a span outgrows its take. tools/build_mix.py places the beds named in the cue sheet (music_main, music_hush, music_lift, music_end) using `beds` below; the cue sheet decides where each one plays. At most 8 Lyria requests in all (about USD 0.08 each).",
+ "budget_requests": 8,
+ "takes": [
+  {
+   "id": "T1",
+   "role": "main",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a light, friendly animated explainer video, about 90 seconds. Warm, cozy and playful. A softly plucked ukulele and a fingerpicked nylon-string guitar keep a gentle, bouncy rhythm; a music box and a glockenspiel play a simple, catchy, sing-song melody; light pizzicato strings answer it; a very soft kick drum and a quiet shaker mark the beat. C major, moderate tempo around 100 BPM, steady from start to end with no big build. Unobtrusive and uncluttered, leaving room for a voice-over, nothing too loud in the middle range. No vocals, no singing, no humming, no choir, no electric guitar, no heavy drums. In tune at A = 440.",
+   "why": "the main bed: the reference animatic's cozy, playful register (music box, light pluck), under most of the video"
+  },
+  {
+   "id": "T2",
+   "role": "main",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a light, friendly animated explainer video, about 90 seconds. Warm, cozy and playful. A softly plucked ukulele and a fingerpicked nylon-string guitar keep a gentle, bouncy rhythm; a music box and a glockenspiel play a simple, catchy, sing-song melody; light pizzicato strings answer it; a very soft kick drum and a quiet shaker mark the beat. C major, moderate tempo around 100 BPM, steady from start to end with no big build. Unobtrusive and uncluttered, leaving room for a voice-over, nothing too loud in the middle range. No vocals, no singing, no humming, no choir, no electric guitar, no heavy drums. In tune at A = 440.",
+   "why": "a second take of the main prompt, to choose between"
+  },
+  {
+   "id": "T3",
+   "role": "hush",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a quiet, reflective moment in a light animated explainer video, about 70 seconds. The same cozy world, hushed: a softly fingerpicked nylon-string guitar playing slow, gentle arpeggios, a music box playing a few sparse, slightly wistful notes, warm soft sustained low strings underneath. A little melancholic but still warm and kind, never dramatic. A minor, slow and calm, around 70 BPM. Soft and sparse throughout, no percussion at all. No vocals, no singing, no humming, no choir. In tune at A = 440.",
+   "why": "the hush: Tuesday's guilt (Q03) and the insight (Q09)"
+  },
+  {
+   "id": "T4",
+   "role": "lift",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a happy, uplifting moment in a light animated explainer video, about 70 seconds. Bright and cheerful: a strummed ukulele, bouncy pizzicato strings, a glockenspiel and a music box playing a sunny, playful melody, light hand claps and a soft kick drum. C major, around 104 BPM, joyful and buoyant from the first bar, lifting a little but staying light and uncluttered under a voice-over. No vocals, no singing, no humming, no choir, no electric guitar. In tune at A = 440.",
+   "why": "the lift: Friday's photo (Q06) and the advice (Q10)"
+  },
+  {
+   "id": "T5",
+   "role": "end",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental closing music for the end of a light, friendly animated explainer video, about 50 seconds. Warm and cozy: a plucked ukulele and a fingerpicked nylon-string guitar, a music box and a glockenspiel playing a simple, happy melody, light pizzicato strings, a soft kick drum. C major, around 100 BPM. It winds down gently at the end and finishes cleanly on a final held C major chord, with one music-box note ringing out to silence. No vocals, no singing, no humming, no choir. In tune at A = 440.",
+   "why": "the closing bed: the wrap (Q11) into the 8 s end screen, ending on its own final chord at 225.5 s"
+  }
+ ],
+ "beds": {}
+}

@@ -1,0 +1,110 @@
+{
+ "phone_buzz": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two 0.34 s vibration-motor pulses, 0.5 s apart, with a clean table rattle",
+  "dur_s": 0.95
+ },
+ "notify": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two soft glass notes rising a fourth, G5 then C6, 75 ms apart",
+  "dur_s": 0.6
+ },
+ "pop": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding 330->880 Hz in 35 ms, decaying in 90 ms",
+  "dur_s": 0.09
+ },
+ "pop_2": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding 392->1047 Hz in 35 ms, decaying in 90 ms",
+  "dur_s": 0.09
+ },
+ "pop_3": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding 294->784 Hz in 35 ms, decaying in 90 ms",
+  "dur_s": 0.09
+ },
+ "stamp": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a low thump (130->55 Hz), a woody 410 Hz tok and a 12 ms paper slap",
+  "dur_s": 0.35
+ },
+ "camera_shutter": {
+  "source": "otm/shutter: \"Pentax K1000 Camera Shutter.wav\" by yfjesse, https://freesound.org/people/yfjesse/sounds/579883/",
+  "licence": "CC0",
+  "how": "One Too Many's sfx/shutter (Pentax K1000) with a soft 5-11 kHz air shimmer under it",
+  "dur_s": 0.55
+ },
+ "typing": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "about ten soft thumb taps on glass at irregular gaps, 1.7 s",
+  "dur_s": 1.8
+ },
+ "send": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding up to C6 in 60 ms with a little airy swish",
+  "dur_s": 0.16
+ },
+ "receive": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two soft glass notes falling a third, E6 then C6, 90 ms apart",
+  "dur_s": 0.75
+ },
+ "ding": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a struck bell on C6 with near-harmonic partials, 1.4 s",
+  "dur_s": 1.4
+ },
+ "bulb": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "five high bell notes rising C6-E6-G6-C7-E7, 45 ms apart, over a faint 6-14 kHz shimmer",
+  "dur_s": 1.4
+ },
+ "cloud": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "warm 120-900 Hz air with a 95->65 Hz body, soft 35 ms onset, 0.7 s",
+  "dur_s": 0.7
+ },
+ "whoosh": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "air through a band-pass sweeping 500 Hz -> 2.6 kHz -> 700 Hz, 0.45 s, peak at mid-point",
+  "dur_s": 0.45
+ },
+ "whoosh_2": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a quicker swish, 700 Hz -> 3.2 kHz -> 1.2 kHz, 0.3 s",
+  "dur_s": 0.3
+ },
+ "footsteps": {
+  "source": "otm/step1-3: \"WoodType_1_Footstep_MensDressShoe_.wav\" by monte32 (https://freesound.org/people/monte32/sounds/405115/); otm/step4: \"Wood Floor Classic Shoe Footstep 1_10\" by Joao_Janz (https://freesound.org/people/Joao_Janz/sounds/504020/)",
+  "licence": "CC0",
+  "how": "One Too Many's step1-step4 (wood floor, CC0), 0.5 s apart, low-passed at 5.5 kHz",
+  "dur_s": 2.0
+ },
+ "run": {
+  "source": "otm/step1-4 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step1-step4 shortened and played 1.25x (lighter), seven steps 0.15 s apart",
+  "dur_s": 1.4
+ },
+ "door": {
+  "source": "otm/latch1: \"Lever Latch Close.wav\" by Glitchedtones, https://freesound.org/people/Glitchedtones/sounds/322434/",
+  "licence": "CC0",
+  "how": "a soft wooden thump with One Too Many's latch1 just after",
+  "dur_s": 0.5
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "id": "T2",
+ "role": "main",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for a light, friendly animated explainer video, about 90 seconds. Warm, cozy and playful. A softly plucked ukulele and a fingerpicked nylon-string guitar keep a gentle, bouncy rhythm; a music box and a glockenspiel play a simple, catchy, sing-song melody; light pizzicato strings answer it; a very soft kick drum and a quiet shaker mark the beat. C major, moderate tempo around 100 BPM, steady from start to end with no big build. Unobtrusive and uncluttered, leaving room for a voice-over, nothing too loud in the middle range. No vocals, no singing, no humming, no choir, no electric guitar, no heavy drums. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]\n[[C4]]\n[[D5]]"
+}
