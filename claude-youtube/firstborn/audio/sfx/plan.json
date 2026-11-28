@@ -296,7 +296,7 @@
  "party_murmur": {
   "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
   "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
-  "how": "two takes of earshot cafe/busy (seed 11, takes 1 and 2; a seamless 20 s loop) summed, low-passed at 1.5 kHz (4th order)",
+  "how": "two takes of earshot cafe/busy (seed 11, takes 1 and 2; a seamless 20 s loop) summed, low-passed at 3.5 kHz (4th order)",
   "dur_s": 20.0
  },
  "swoon": {
