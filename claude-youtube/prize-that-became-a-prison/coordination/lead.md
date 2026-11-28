@@ -741,3 +741,94 @@ Settled: **the stock carries no gift colour, and no cognac tote stays in the dis
 - **The stock that is left** (tan, chocolate, charcoal, taupe, navy, olive, bone, mustard, bottle green, slate) stays subdued. Keep its graded chroma below the gifts': aim for C ≤ 9 where cognac sits at 12-13. Keep the counter edge and the handover area to the dark neutrals (charcoal, taupe, slate, chocolate), so the bag being lifted is the only warm, saturated mass there.
 - **Mustard:** keep it, but at a low weight and nowhere within a bag's width of the duffel or the counter. The tote's failure colour must never sit next to the gift. That also clears C46's P2 note about the mustard shelf bag merging into the duffel's base in stall.
 - After the change, please measure the stall and purchase frames as you did for the evidence table: the graded hue and chroma of the three most saturated stock bags. Confirm that none falls within ΔE76 8 of the cognac panel (Lab about 20.9, 5.5, 11.0).
+
+### 2026-11-28 06:29 UTC · REPLY C47 · inspection_room
+Critique `coordination/critiques/inspection_room_r10.json` (checked by a second reader against the frames): **mean 5.62, lowest 4.5** (cast); pro level: no. Scores: composition 6, lighting 6, materials 6, set_dressing 6, grounding_scale 6, cast 4.5, story_read 5.5, technical 5.
+
+Stage mean 5.6. Not yet pro level. Scores are unchanged after checking.
+
+**What works.** The two new plates are the strongest close work in the room. The lineup (handbags.jpg) is a clean, well-separated row of products on an island of light. The touch plate (handbags_touch.jpg) registers with it exactly, except for the arm and its shadow. match.jpg is still the best-composed frame. empty, empty_ch05 and enter hold the room's geography: door at -X, scanner at +X, duffel at the door end.
+
+**The main problem: the stage is not one version of the room.**
+- Five frames (wide, two_shot, overhead, empty, tag) were rendered by 04:16 on 27 Nov. Their raw files are at 1e693ae and they were regraded at 06:14. That is before the later cap fitting, the cloth matching and the 28 Nov tote tint fix.
+- empty_ch05 (20:47 on 27 Nov, a02c114) also predates the tint fix.
+- The tote is the film's one recurring object. In every one of these frames that shows it, it measures mustard. Graded a/b hue is 72 (wide), 73 (two_shot), 81 (overhead) and 74 (empty_ch05). The new plates' front panel reads 63-67, and the lead's target is 60-65.
+- In the current edit, handbags_touch (04-08) cuts straight to the old two_shot (04-09). There the tote stands untouched in the middle of the bench.
+- The overhead is the fern-style hero angle of the discovery. It shows the old Ch 05 lineup and an open, splayed, palm-down hand on the tote. Both contradict the new touch plate.
+
+**The new close work.**
+- The fist reads as a stone mitten on a disembodied, ruler-straight arm.
+- The shadow of the hand and forearm takes the upper tote panel down about 2.3 stops, to a muddy brown.
+- The 22 mm lift and the new grip values in the current code (777d074) are not in the reviewed plate.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `overhead, two_shot, empty, empty_ch05, tag, wide`: Six frames come from older code. wide, two_shot, overhead, empty and tag were rendered by 04:16 on 27 Nov (1e693ae) and regraded at 06:14; empty_ch05 dates from 20:47 (a02c114). The four that show the tote read mustard: graded hue 72-81, against 63-67 on the new plates and a target of 60-65. The overhead shows the old Ch 05 lineup (turns 84-97) and an open, splayed palm on the tote, which contradicts handbags_touch. **Fix:** 1. Choose one Ch 00 layout. The *_pre layout fits the narration, because the handbags are found inside the luggage afterwards. So drop 'handbag-tote' from LAYOUT['ch00'].
+2. Do not add the tote to LAYOUT['ch11']. That is the empty room's layout. If the clean patch where the tote stood stays in Ch 11, move st.GHOST (now at TOTE00) to the tote's Ch 05 mark.
+3.
+- P2 `handbags_touch`: The shadow of the hand and forearm drops the upper tote panel by about 2.3 stops. At x 1950-2150, y 560-640 it reads L 17 / C 8.7 (RGB 52,40,31): a shapeless, muddy smudge between the tabs. It also puts the top seam in the dark. Graded luma down the centre column is 26-43 at y 520-620, against 95-113 on the clean plate. **Fix:** 1. For handbags_touch only, add a small area light linked only to the tote's meshes, with st.linked_light, like the BAG_RETURNS lights.
+   - Size 0.25 x 0.15 m, at about (0.55, 0.85, TOP+0.30).
+   - Aim it at the tote front (0.065, 0.155, TOP+0.20).
+   - Power 8-12 W.
+   - Colour: the room's return colour (0.91, 0.94, 1.0), or neutral at most, so the room keeps its cold fluorescent light.
+   - Set visible_camera and visible_glossy to False.
+2.
+- P3 `handbags_touch`: The fist reads as a stone mitten: fully closed, fingers merged, no visible thumb, knuckles to camera. The navy sleeve enters from the right edge as one straight, unbent tube rising about 20° to the fist, with no elbow, shoulder or body in frame, so it reads as a mechanical arm. The grip values now in the code (777d074) are not in the reviewed plate either. **Fix:** 1. In POSES['bag_touch'], open the grip so the fingers wrap the handles rather than vanish into the palm:
+   - f_index (30, 40, 28, 11)
+   - f_middle (34, 46, 30, 3)
+   - f_ring (38, 50, 32, -4)
+   - f_pinky (42, 54, 34, -8)
+2. Set thumb_splay to about +10, so the thumb crosses over the handles toward the lens.
+3. Turn the back of the hand up about 25°, so the fingertips show under the handles. Do not put this in the spec as roll_r: the palm 'down' solve in solve_pose overwrites it.
+- P4 `handbags_touch`: The reviewed plate has neither tote_lift=0.022 nor the new grip (both from 777d074). Once rendered, the lift is about 40 px at this camera. It moves the tote's base, contact shadow and top seam off the clean plate. **Fix:** 1. Render it and judge how it reads. It should look like the bag starting to rise in the grip, not a float: handles taut, feet just clear, the contact shadow softening.
+2. If the feet hang under slack handles, lower the lift toward 0.008-0.012.
+3. Check that only the tote, the arm and the shadows differ from the clean plate; everything left of x 1580 should be identical.
+4. Export seam_paths_px from that render. Do not reuse the clean plate's paths.
+- P5 `handbags`: The clean plate's front panel is not plain. A bright bulge across the middle (graded centre-column luma 105-121 at y 580-760) falls off sharply to a dark lower half (about 44 below y 840). It reads as a dent across the panel, and the split frame shows it too. The colour is in range on your panel box (hue 63.1, chroma 14.1), so no change of tint is needed. **Fix:** 1. Soften the bulge; do not change the tint. Try one of:
+   - a smooth limited to the tote's front panel;
+   - small turns around 325 (about 315-335).
+2. Compare the centre-column profile. Aim for a monotone falloff with no dip of more than 15 levels.
+3. Keep the top-seam stitch continuous between the tabs.
+4. A turn is the costlier route. The three bags match evidence_table purses in order and side for the split.
+- P6 `two_shot_pre, wide_pre`: In two_shot_pre, OfficerA's hand is bent up at the wrist, flat, with straight fingers and the palm to Dawn. That reads as 'stop', not 'are these your bags?'. The duffel under it is an almost featureless black mass in both frames; in two_shot_pre its graded median is 20, with a 5-95 % range of about 15-24. Both cameras give the duffel's top-band return 0 W. **Fix:** 1. Drop present_to_dawn from POSES['ch00']['OfficerA'] and let the palm-up solve set the hand. That branch aims hand_fk.R again, along the floor vector to Dawn, after the roll. It is the likeliest cause; confirm with a test render.
+2. For the low gesture: reach onto the duffel's top strap with palm 'down' and fingers about 25. This reads as 'this one?'. In _reach_point('duffel_hover'), use hi.z - 0.01 instead of + 0.05. That function also drives wide and two_shot.
+3.
+- P7 `dawn_close, two_shot_pre, wide_pre, enter`: Dawn's hair reads as a bald swim cap with a hairline seam in dawn_close, two_shot_pre and wide_pre, and on the soft foreground head in enter. The character decision asks for sculpted matte hair. The grooves still read in the older two_shot. The cause is in this stage: dawn() calls castkit.relax_sculpted_hair(h), added in 66f941e at 15:32 on 27 Nov to soften the terraced temple in close-up. **Fix:** 1. Keep the relax where it was needed and lighten it elsewhere. In apply_camera, give the hair's 'relax temple' smooth:
+   - its 36 iterations for dawn_close only;
+   - about 8-12 iterations for the other cameras.
+   Lift the 0.007 'volume' cap if the grooves need it.
+2. Check that the temple does not step again in dawn_close.
+3.
+
+### 2026-11-28 06:29 UTC · REPLY C48 · tim_desk
+Critique `coordination/critiques/tim_desk_r2.json` (checked by a second reader against the frames): **mean 5.5, lowest 5** (composition, lighting, cast, story_read); pro level: no. Scores: composition 5, lighting 5, materials 6, set_dressing 6, grounding_scale 6, cast 5, story_read 5, technical 6.
+
+One thing is clearly better than r1: the warm light now survives the grade on two of the three frames. On the graded desk frame the pad measures R-B +44 (hue 16). On the overhead the reply sheet measures +33, and 96% of lit pixels are warm. The set is carefully built: a worn five-board oak top, 43 filed envelopes in a card tray, a banded airmail bundle, a ruled pad with wire glasses, a blue-grey mug, slatted blinds throwing street-light stripes, and contact shadows everywhere. It still would not sit in a fern film.
+
+The camera this stage leans on most is `window`. The EDL uses it three times (01-07b, 07-06, 09-12: 17.3 s, against 12.3 s for `desk` and 5.8 s for `letters`), and it fails the stage's one job. The brightest large area in it is the cool blinds, not the lamp's pool. Of the pixels above luminance 60, only 21% are warm. The blinds region (x 790-1400, y 0-560) carries 42% of the frame's light at a mean luminance of 81, and the desk top carries about a tenth. Tim's head measures R-B -12: a cool grey back, with the pool falling beyond him on the desk. The frame also repeats the family home's double-hung window and blinds (home/blinds) in the same cool key. So it reads as another cold room of that house, not as the warm island the brief asks for. Test renders show that the slats are lit mainly by night_glow, not by the ceiling fill (fix 1).
+
+`desk` has a warm pool, but Tim's face reads mauve rather than lamplit: the lit cheek grades to hue 355, with G about equal to B. The cause is the laptop's cool screen light, which falls on the camera side of his face. In a test render with laptop_screen_light at 0, the cheek grades to hue 18 (G-B +16). The writing hand is a claw over the page and does not rest on it: the build log puts the heel 14.9 mm above the pad.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `window`: The stage's main camera (17.3 s in the EDL) reads cool. 79% of lit pixels are cool or neutral, the blinds carry 42% of the frame's light against about a tenth for the desk pool, and Tim's head is R-B -12. Test renders without Tim show that night_glow (x3.0) is what lights the slats. Excluding the slats from night_glow drops their graded mean from 83 to 65. Excluding them from room_fill only takes it to 81. **Fix:** Tested without Tim at 480x270, through the film's grade without grain. Re-check with Tim at full size.
+- Take the slats off the cool lights with light linking. After lights(), make a collection holding 'blind0_slats' and 'blind1_slats' (children of 'window_wall'). Set each of its collection_objects' light_linking.link_state to 'EXCLUDE', and set it as light_linking.receiver_collection on room_fill and night_glow. Shadow linking (blocker_collection) would not stop the slats receiving light.
+- P2 `window`: The angle is high and wide. The left third is an empty dark wall and bookcase. Tim is a small grey back whose head overlaps the laptop screen's bright edge. A file box is cut in the lower-right corner, and the frame shares the home stage's window composition. **Fix:** Tighten and pan from the current height rather than going low.
+- r1 raised this camera because a low one saw the desk top edge-on, with his torso over the pool. A test at z 1.45, lens 27, aimed at the lamp head let the blinds fill about half the frame and cut the pool at the bottom edge.
+- Keep loc (-1.68, 1.62, 2.09). Change lens 22 to about 30, and aim (0.10, -0.25, 0.83) to about (-0.18, -0.22, 0.92).
+- P3 `letters`: The overhead's right 14% is black floor beyond the desk edge (luminance 3): the frame reaches x -0.86 and the desk ends at -0.70. The lamp is a cut black mass at the left edge. The letter tray, the strongest 'years of letters' object, is cut by the top edge. **Fix:** At the desk top, the frame is 3.1 x 36 / lens m wide (1.116 m at lens 100), so its right edge sits at centre x minus 55.8 / lens. reply_env_a's far edge is already at x -0.70, so the correspondence has to come in from the edge first. Lens 105 centred at x -0.24 would still reach x -0.77, past the desk.
+- P4 `letters`: The correspondence does not read as a history.
+- The unfolded trifold reply reads as a thick blank board with a drop shadow.
+- The window envelopes read as blank cards, because the reply covers both windows.
+- The tray's two stocks (white and cream) and the few millimetres of size variation do not survive the grade, so everything except the airmail reads as one cream stock.
+- The bundle's band reads as a twig. **Fix:** In tim_desk_paper.py, tim_desk_mats.py and papers() in tim_desk_set.py:
+- Trifold: lower the panel lift in trifold_shape, up=(14, 10), to about (5, 4), so it stops casting a slab shadow. Make the creases visible from above: give the paper material a 1.5 mm darker, rougher crease band, and raise the crease ridge from 0.0007 to 0.0012.
+- Window envelopes: their glassine windows already exist (window_envelope makes a darker, glossier blank rectangle).
+- P5 `desk`: Tim's lit face reads mauve, not lamplit. The graded cheek is about (152, 130, 132), hue 355, G-B -2, while the hands grade to hue 8-16 and the pad to hue 16. Past the shade the face sees almost none of the bulb (build log: brow 0.08, eyes 0.00, nose 0.31). Its cool cast comes from laptop_screen_light (3.5 W, COOL), which falls on the camera side of his face. **Fix:** For 'desk', take the laptop's light off Tim: set TRIMS['desk']['laptop_screen_light'] to 0 (tested), or light-link it so Tim's meshes are excluded and the desk keeps its spill. Keep the lamp_spot override as it is. Accept when, on the graded frame, the lit cheek and hands measure hue 15-30 degrees with G-B of at least +12 and R-B of at least +30, and the pad stays at R-B +40 or more without clipping.
+- P6 `desk`: The writing hand is a claw. The fingers curl down evenly with gaps, and the barrel's upper end shows beside the thumb tip. Neither the palm heel nor the little-finger edge touches the pad. The build log puts the heel 14.9 mm above it at pitch -20, the last value in PITCHES['R'], so the search ran out of candidates. The hand reads as poised, not writing. **Fix:** In tim_desk.py:
+- Tuck the ring and little fingers into the palm: CURLS['R'] f_ring (27, 36, 19) to about (55, 70, 40), and f_pinky (30, 40, 22) to about (60, 75, 45).
+- Close the spread: SPREAD (2.0, 2.5, 4.5) to about (1, 1, 1.5). SPREAD serves both hands, which also suits fix 7.
+- Roll the hand onto its little-finger edge: PALM_TILT['R'] 40 to about 60.
+- Seat the heel: re-run with the new curls. If the heel gap is still over 3 mm, extend PITCHES['R'] past -20 or lower the wrist.
+- P7 `desk`: The left hand lies flat with straight fingers, the index parted from the rest: a mannequin's hand. CURLS['L'] are negative (-12, -12, -6 on index and middle), which cancels the body's rest curl. **Fix:** For a relaxed curl, set CURLS['L'] to about f_index (10, 14, 8), f_middle (12, 16, 9), f_ring (14, 18, 10) and f_pinky (16, 20, 12), with THUMB_CURL['L'] about 15. Let the fingertips hold the pad's corner down rather than lie flat across the sheet. Re-run the heel-and-fingertip contact search with the new curls; the build log has the left heel at 3.6 mm now.
+- P8 `desk`: The framing leaks at the edges. A hot laptop lid edge slashes diagonally through the lower-left corner as a bright line on a black slab. The framed picture on the back wall is cut by the top edge just over his head. **Fix:** Laptop: nudge CAMERAS['desk'] loc from (1.33, 0.08, 1.42) about 0.15 m toward +Y, or pan the aim about 0.06 m toward +Y, until the laptop's lid edge leaves the frame. Alternatively, turn LAPTOP so its glancing screen edge no longer faces this camera.
+Picture: show it whole or not at all. Move picture('pic', -0.2, 1.5) along the wall until its frame clears the top edge entirely, or lower it until the whole frame sits beside his head, not above it.
+- … 2 more in the file.
