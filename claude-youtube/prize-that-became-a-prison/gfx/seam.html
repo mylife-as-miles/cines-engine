@@ -221,10 +221,11 @@ function devFit(P) {
   return u => u < 0 ? f(0) + df(0) * u : u > 1 ? f(1) + df(1) * (u - 1) : f(u);
 }
 // The right-hand tote's front-lip stitch row in the split at the cut (gfx/split.py framing; output px), measured from the
-// pale stitches on the graded frame at 2.16 s; its ends are the cut's tA, tB. Re-measure when the plate or its framing changes.
-const HALF_SEAM = [[1162, 449.2], [1192, 451.4], [1222, 452.6], [1252, 454.7], [1282, 457.1], [1357, 463.2], [1387, 465.1],
-  [1417, 466.5], [1447, 467.9], [1477, 468.4], [1507, 468.3], [1537, 467.9], [1597, 466.8], [1627, 467.1], [1657, 465.9],
-  [1687, 465.2], [1717, 464.5], [1747, 464.1], [1766, 463.6]];
+// pale stitches on the graded frame at 2.16 s (plus 1 px: the red row's centre sat 1 px above the stitches' on the cut);
+// its ends are the cut's tA, tB. Re-measure when the plate or its framing changes.
+const HALF_SEAM = [[1162, 450.2], [1192, 452.4], [1222, 453.6], [1252, 455.7], [1282, 458.1], [1357, 464.2], [1387, 466.1],
+  [1417, 467.5], [1447, 468.9], [1477, 469.4], [1507, 469.3], [1537, 468.9], [1597, 467.8], [1627, 468.1], [1657, 466.9],
+  [1687, 466.2], [1717, 465.5], [1747, 465.1], [1766, 464.6]];
 const HALF_DEV = devFit(HALF_SEAM);
 // cutaway_half's resting view: the whole section (held open, bowed) fitted about 700 px wide (85 % of the earlier 820, so it
 // sits about 130 px off the divider and the frame's edge), its extents centred in the right half (x 962-1919, centre 1441)
@@ -237,8 +238,8 @@ const HALF = (() => {
   return { kf, of: [1441 - kf * (x0 + x1) / 2, 540 - kf * (y0 + y1) / 2], ext: [x0, y0, x1, y1] };
 })();
 window.SECTION = { SEC, HALF };
-// Off-screen layers for the section: the lining (drawn flat, then dropped column by column), the section (lining and
-// leather), and the section bowed (column by column). Local units are scaled by the view's scale before drawing, so nothing
+// Off-screen layers for the section: the lining (drawn flat, then dropped away by remap), the section (lining and
+// leather), and the section bowed (remap again). Local units are scaled by the view's scale before drawing, so nothing
 // is resampled but the sub-pixel drops.
 const OFF = [], off = i => { if (!OFF[i]) { const c = OFF[i] = document.createElement('canvas'); c.width = 1640; c.height = i === 2 ? 560 : 440;
   c.getContext('2d', { willReadFrequently: true }); } return OFF[i]; };
@@ -304,7 +305,7 @@ function cutaway(ctx, t, half) {
   const local = (c, clear) => { const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); if (clear) g.clearRect(0, 0, c.width, c.height);
     g.setTransform(s, 0, 0, s, MG - s * EX0, MG - s * EY0); return g; };
   const WD = Math.min(1640, Math.ceil(s * (X1 + D[0] + 24 - EX0) + 2 * MG)), HT = Math.min(440, Math.ceil(s * (bot + G + 24 - EY0) + 2 * MG));
-  // ---- the lining, flat (closed), into layer 1; then dropped column by column into layer 0 (the section)
+  // ---- the lining, flat (closed), into layer 1; then dropped away into layer 0 (the section)
   const gl = local(off(1), true);
   const fx = makePainter(gl, BIG);
   const { paint, lin, pat } = fx, TW = TWILL(), xl = X0 + LI;
