@@ -4264,5 +4264,339 @@
    "tags",
    "top_tags"
   ]
+ },
+ "G12_t2": {
+  "file": "audio/gen/score/G12_t2.mp3",
+  "duration_s": 58.72,
+  "tune_cents": 3.0,
+  "tune_cents_peaks": -0.4,
+  "tune_spread_cents": 12.0,
+  "lufs": -10.4,
+  "short_term_max_lufs": -8.0,
+  "true_peak_dbtp": 0.2,
+  "lra_lu": 9.8,
+  "key": [
+   {
+    "key": "C major",
+    "r": 0.885
+   },
+   {
+    "key": "G major",
+    "r": 0.723
+   },
+   {
+    "key": "C minor",
+    "r": 0.63
+   }
+  ],
+  "tempo_earshot": 120.2,
+  "f0_hz": 65.7,
+  "pulse_bpm": null,
+  "onsets": [
+   0.046,
+   3.971,
+   5.898,
+   5.979,
+   7.895,
+   11.854,
+   13.758,
+   15.778,
+   18.704,
+   19.725,
+   21.641,
+   21.699,
+   22.593,
+   22.686,
+   23.65,
+   26.598,
+   27.597,
+   29.466,
+   29.571,
+   31.463,
+   31.533,
+   33.007,
+   33.483,
+   34.458,
+   35.468,
+   36.92,
+   37.338,
+   37.431,
+   37.93,
+   38.406,
+   38.917,
+   39.369,
+   42.318,
+   43.317,
+   47.229,
+   48.251,
+   49.226,
+   50.19,
+   51.188
+  ],
+  "peak_at": 34.49,
+  "top_tags": [
+   [
+    "a sustained glass harp tone",
+    1.55,
+    "no match"
+   ],
+   [
+    "a cinematic hit with a long tail",
+    1.32,
+    "no match"
+   ],
+   [
+    "a music box melody",
+    1.21,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.14,
+    "no match"
+   ],
+   [
+    "church bells",
+    1.13,
+    "no match"
+   ],
+   [
+    "a singing bowl",
+    0.89,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "solo piano music",
+    3.36
+   ],
+   [
+    "sad and melancholic music",
+    3.24
+   ],
+   [
+    "dreamy and ethereal music",
+    3.06
+   ],
+   [
+    "dark and tense music",
+    3.01
+   ],
+   [
+    "romantic music",
+    2.76
+   ],
+   [
+    "playful children's piano music",
+    2.55
+   ],
+   [
+    "mysterious music",
+    2.43
+   ],
+   [
+    "warm and cozy music",
+    2.4
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.829
+   ],
+   [
+    "Piano",
+    0.438
+   ],
+   [
+    "New-age music",
+    0.393
+   ],
+   [
+    "Keyboard (musical)",
+    0.307
+   ],
+   [
+    "Electric piano",
+    0.258
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.667
+     ],
+     [
+      "Piano",
+      0.41
+     ],
+     [
+      "Keyboard (musical)",
+      0.294
+     ],
+     [
+      "Electric piano",
+      0.234
+     ],
+     [
+      "New-age music",
+      0.163
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "solo piano music",
+      3.93
+     ],
+     [
+      "sad and melancholic music",
+      3.42
+     ],
+     [
+      "dark and tense music",
+      2.93
+     ],
+     [
+      "a grand piano",
+      2.91
+     ]
+    ],
+    "lufs": -11.8
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.874
+     ],
+     [
+      "Piano",
+      0.278
+     ],
+     [
+      "Musical instrument",
+      0.217
+     ],
+     [
+      "New-age music",
+      0.182
+     ],
+     [
+      "Keyboard (musical)",
+      0.174
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.38
+     ],
+     [
+      "dreamy and ethereal music",
+      3.32
+     ],
+     [
+      "solo piano music",
+      3.0
+     ],
+     [
+      "dark and tense music",
+      2.99
+     ]
+    ],
+    "lufs": -9.8
+   },
+   {
+    "start": 40.0,
+    "end": 58.7,
+    "audioset": [
+     [
+      "Music",
+      0.822
+     ],
+     [
+      "New-age music",
+      0.488
+     ],
+     [
+      "Singing bowl",
+      0.384
+     ],
+     [
+      "Piano",
+      0.22
+     ],
+     [
+      "Keyboard (musical)",
+      0.145
+     ]
+    ],
+    "vocal": [
+     [
+      "Singing bowl",
+      0.384
+     ]
+    ],
+    "drum": [],
+    "music_hints": [
+     [
+      "dreamy and ethereal music",
+      2.91
+     ],
+     [
+      "solo piano music",
+      2.9
+     ],
+     [
+      "dark and tense music",
+      2.67
+     ],
+     [
+      "sad and melancholic music",
+      2.62
+     ]
+    ],
+    "lufs": -10.4
+   }
+  ],
+  "vocal_tags": [
+   "Singing bowl"
+  ],
+  "drum_tags": [],
+  "music_only": false,
+  "music_only_note": "FAIL: Singing bowl",
+  "mood_query": "a single soft piano note ringing out",
+  "mood_match": {
+   "verdict": "no match",
+   "z": 0.97,
+   "p_vs_alts": 0.0,
+   "summary": "G12_t2.mp3: 'a single soft piano note ringing out' -> no match (unvalidated: music / instrument / voice description) (z +0.9; would rank #57 among 322 vocabulary descriptions; cosine 0.10). Forced choice vs your alternatives: 'a single soft piano note ringing out' <1%, 'a piano melody' 99%, 'a bell ringing' <1%, 'a guitar note' <1%, 'a pop song with vocals' 1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'solo piano music' (z +3.3), 'sad and melancholic music' (z +3.2), 'dreamy and ethereal music' (z +3.0), 'dark and tense music' (z +3.0)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
  }
 }
