@@ -247,7 +247,7 @@ function cutaway(ctx, t, half) {
     ctx.save(); ctx.strokeStyle = pale(0.45 * open); ctx.lineWidth = 1.5 * U; ctx.beginPath(); ctx.moveTo(...e0); ctx.lineTo(...add(e0, 0.97)); ctx.stroke(); ctx.restore();
   }
   // the leather: a 42-unit sheet of the tote's cognac with a bevelled, rounded edge at the bag's top (the left end)
-  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#93512f', CUT = '#6c3a21', PB = PEBBLE(), FB = FIBRE();
+  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#9c5734', CUT = '#713d23', PB = PEBBLE(), FB = FIBRE();
   poly(SIL); ctx.fillStyle = '#4a2817'; ctx.fill();                   // under the faces, so no light seam shows between them
   const depthKey = (p) => lin(p, add(p), [[0, grey(255)], [0.5, grey(222)], [1, grey(168)]]);
   for (const s of sides(P)) {
