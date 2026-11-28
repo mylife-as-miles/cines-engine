@@ -51,11 +51,11 @@
           if (!happy) { const hn = ART.hand('hero', h, 'front'); const st = pop(t, T.photo, 0.15); if (t < T.photo + 0.5) GFX.at(c.g, hn.x + 30, hn.y - 30, { s: st.s * (1 - seg(t, T.photo + 0.25, T.photo + 0.5)) }, q => c.prop('flash', { x: 0, y: 0, r: 70 })); }
           c.flash(0.9 * flash(t, T.photo, 0.4));
         } },
-      { at: T.why, name: 'plain: why?', in: 'pop',
+      { at: T.why, name: 'plain: why?', in: 'pop', push: { from: 1.06, to: 1.1, x: 960, y: 380 },
         draw(c) { STAGE.plainHero(c, { pose: 'think', expr: 'confused', marks: c.t < T.because + 0.3 }); } },
       { at: T.because, name: 'plain: because this time, you chose it: the bulb',
         draw(c) { const h = STAGE.plainHero(c, { pose: c.t > T.chose ? 'point' : 'think', expr: c.t > T.chose ? 'happy' : 'neutral' }); STAGE.bulb(c, 'hero', h, T.because + 0.2, T.chose); } },
-      { at: T.same, name: 'plain: same yes, different reason: a trembling hand and a steady one', in: 'pop',
+      { at: T.same, name: 'plain: same yes, different reason: a trembling hand and a steady one', in: 'pop', push: { from: 1, to: 1.1, x: 1300, y: 500 },
         draw(c) {
           c.set('plain', {}); const t = c.t; const fade = 1 - seg(t, T.fear, T.fear + 0.5);
           [[620, T.same, true], [1300, T.different, false]].forEach(([x, t0, shaky]) => {

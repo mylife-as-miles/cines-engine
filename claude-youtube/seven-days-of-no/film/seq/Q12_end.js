@@ -10,9 +10,11 @@
     shots: [
       { at: from, name: 'end screen: the living room, the hero small at the left', in: 'fade',
         draw(c) {
-          const t = c.t; c.set('living', { tod: 'evening', table: false });
-          const a = c.anchor('living', 'left'); const waving = t < from + 2.2;
-          c.fig('hero', { x: a.x + 90, y: a.y, s: 0.78, face: 1, pose: waving ? 'wave' : 'stand', expr: 'happy', tint: ART.tintFor(c, 'living') });
+          const t = c.t;
+          // seated on the sofa's left seat, waving for the first seconds, then settled (the right of the frame stays clear)
+          const waving = t < from + 2.4;
+          STAGE.heroSofa(c, { tod: 'evening', table: false }, { seat_at: 'sofa_seat_l', pose: waving ? 'sit_handup' : 'sit_front', hold: waving ? undefined : 'mug', expr: 'happy', noFront: true,
+            override: waving ? { armR: { a: 2.3 + 0.18 * Math.sin(t * 9), e: 0.5, hand: 'open', flip: 1 } } : null });
         } },
     ],
   });
