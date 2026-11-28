@@ -45,8 +45,8 @@
     id: 'Q04', title: 'Wednesday: Mom', chapter: 'Wednesday: Mom', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'warm, a little comic' }); S.bed('living_room_evening', T.card, T.nine);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2); S.cue('whoosh', T.mom + 0.05);
-      S.cue('twitch', T.notFine + 0.05); S.cue('phone_buzz', T.calls2); S.cue('notify', T.calls2 + 0.1); S.cue('phone_buzz', T.again2); S.cue('notify', T.again2 + 0.1); S.cue('notify', T.again2 + 0.4);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2, { x: 0.27 }); S.cue('whoosh', T.mom + 0.05);
+      S.cue('twitch', T.notFine + 0.05); S.cue('phone_buzz', T.calls2, { x: 0.63 }); S.cue('notify', T.calls2 + 0.1, { x: 0.62 }); S.cue('phone_buzz', T.again2, { x: 0.63 }); S.cue('notify', T.again2 + 0.1, { x: 0.66 }); S.cue('notify', T.again2 + 0.4, { x: 0.58 });
       S.cue('whoosh', T.nine - 0.05); S.cue('notify', T.nine + 0.1); S.cue('receive', T.alive);
       S.cue('bird', T.day3 + 0.6); S.bed('evening_birds', T.day3, T.phone); S.cue('battery_low', T.exhausted); S.cue('sigh', T.exhausted + 0.4);
     },

@@ -335,7 +335,7 @@
   FILM.cuesheet = function () {
     if (!FILM._built) FILM.build();
     return FILM.seqs.map(s => { const ev = FILM.score(s); return { id: s.id, title: s.title, chapter: s.chapter || null, start: s.start, end: s.end,
-      cues: ev.cues.map(c => { const w = FILM.nearestWord(c.t); return Object.assign({ word: w ? w.w : null, word_t: w ? w.t0 : null }, c); }), beds: ev.beds, silences: ev.silences, ducks: ev.ducks }; });
+      cues: ev.cues.map(c => { const w = FILM.nearestWord(c.t), px = c.p && c.p.x; return Object.assign({ word: w ? w.w : null, word_t: w ? w.t0 : null, x: px == null ? 0.5 : +(px > 1 ? px / W : px).toFixed(3) }, c); }), beds: ev.beds, silences: ev.silences, ducks: ev.ducks }; });
   };
   // chapters for the player (and a check against publish/): every sequence with a chapter title
   FILM.chapters = () => { if (!FILM._built) FILM.build(); return FILM.seqs.filter(s => s.chapter).map(s => ({ t: s.start, title: s.chapter, id: s.id })); };

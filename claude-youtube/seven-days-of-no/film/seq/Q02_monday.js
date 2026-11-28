@@ -32,11 +32,11 @@
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'light, a little tense' }); S.bed('office_room', T.card, T.end);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05);
-      S.cue('footsteps', T.walks - 0.3, { n: 4, gap: 0.38 });
+      S.cue('footsteps', T.walks - 0.3, { n: 4, gap: 0.38, x: 0.82 });
       S.cue('pop', T.normally); S.cue('whoosh', T.today - 0.05);
       S.cue('blink', T.blinks + 0.05); S.cue('blink', T.blinks + 0.42);
-      S.cue('shrug', T.okay[0]); S.cue('footsteps', T.okay[1] + 0.3, { n: 5, gap: 0.42 });
-      S.cue('clang', T.war + 0.1); S.cue('shrug', T.shrug);
+      S.cue('shrug', T.okay[0], { x: 0.68 }); S.cue('footsteps', T.okay[1] + 0.3, { n: 5, gap: 0.42, x: 0.85 });
+      S.cue('clang', T.war + 0.1); S.cue('shrug', T.shrug, { x: 0.18 });
     },
     shots: [
       { at: T.card, name: 'office, 5:30: the day card over the hero at his desk', in: { type: 'wipe', dir: 'right' }, push: 1.04,

@@ -33,7 +33,7 @@
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'warm, settled' }); S.bed('living_room_evening', T.card, T.end);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('pop', P[0].t0); S.cue('pop', P[2].t0); /* the annoyed pair, then the respectful pair */ S.cue('deflate', T.quiet + 0.1);
-      S.cue('whoosh', T.nobody + 0.1); S.cue('sip', T.life + 0.2);
+      S.cue('whoosh', T.nobody + 0.1); S.cue('sip', T.life + 0.2, { x: 0.42 });
     },
     shots: [
       { at: T.card, name: 'living, warm evening: the day card over the hero with coffee', in: { type: 'wipe', dir: 'right' }, push: 1.04,

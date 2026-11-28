@@ -27,8 +27,8 @@
     id: 'Q06', title: 'Friday: a stranger', chapter: 'Friday: a stranger', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'bright, a dip, then a lift' }); S.bed('street_ambience', T.card, T.why);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('footsteps', T.tourist, { n: 4, gap: 0.36 });
-      S.cue('footsteps', T.hurt + 0.4, { n: 3, gap: 0.5, level: -6 }); S.cue('run', T.run + 0.1); S.cue('camera_shutter', T.photo); S.cue('flash', T.photo + 0.02);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('footsteps', T.tourist, { n: 4, gap: 0.36, x: 0.8 });
+      S.cue('footsteps', T.hurt + 0.4, { n: 3, gap: 0.5, level: -6, x: 0.72 }); S.cue('run', T.run + 0.1, { x: 0.3 }); S.cue('camera_shutter', T.photo, { x: 0.47 }); S.cue('flash', T.photo + 0.02, { x: 0.47 });
       S.cue('ding', T.happiest); S.cue('whoosh', T.why - 0.05); S.cue('ding', T.chose);
       S.cue('pop', T.same); S.cue('whoosh', T.fear); S.cue('ding', T.choice);
     },

@@ -26,7 +26,7 @@
     id: 'Q05', title: 'Thursday: lunch', chapter: 'Thursday: lunch', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'light, then wistful' }); S.bed('office_room', T.card, T.problem);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('footsteps', T.no[1] + 0.9, { n: 4, gap: 0.4 });
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('footsteps', T.no[1] + 0.9, { n: 4, gap: 0.4, x: 0.15 });
       S.cue('pop', T.know + 0.2); S.cue('swell', T.been); S.cue('whoosh', T.problem - 0.05); S.cue('pop', T.problem + 0.15);
       S.cue('stamp', T.no1); S.cue('stamp', T.no2);
     },

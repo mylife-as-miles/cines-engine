@@ -21,7 +21,7 @@
       S.bed('music', T.start, T.last, { mood: 'warm recap, then playful' });
       S.cue('whoosh', T.start - 0.1); S.cue('pop', T.tired);
       S.cue('whoosh', T.now - 0.05); S.cue('pop', T.now + 0.15); S.cue('typing', T.comments, { n: 16 }); S.cue('ding', T.comments + 2.3);
-      S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food);
+      S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food, { x: 0.62 });
     },
     shots: [
       { at: T.start, name: 'plain: the seven day cards again, each with its face', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.03 },

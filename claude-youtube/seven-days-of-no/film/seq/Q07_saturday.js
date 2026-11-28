@@ -25,9 +25,9 @@
     id: 'Q07', title: 'Saturday: the real answer', chapter: 'Saturday: the real answer', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'calm, confident' }); S.bed('living_room_morning', T.card, T.texts);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1); S.cue('receive', T.need);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1, { x: 0.61 }); S.cue('receive', T.need);
       S.cue('pop', T.doNot + 0.1); S.cue('dim', T.no + 0.1); S.cue('dim', T.panic + 0.05);
-      S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12) }); S.cue('send', T.canSend); S.cue('receive', T.perfect); S.cue('ding', T.perfect + 0.3);
+      S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12), x: 0.47 }); S.cue('send', T.canSend); S.cue('receive', T.perfect); S.cue('ding', T.perfect + 0.3);
       S.cue('pop', T.works + 0.1); S.cue('ding', T.real);
     },
     shots: [

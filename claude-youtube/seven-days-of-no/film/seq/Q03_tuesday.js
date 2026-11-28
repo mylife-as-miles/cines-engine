@@ -33,8 +33,8 @@
     id: 'Q03', title: 'Tuesday: a friend', chapter: 'Tuesday: a friend', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'gentle, then hollow at the pause' }); S.bed('living_room_evening', T.card, T.end);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2); S.cue('whoosh', T.friend + 0.05);
-      S.duck(T.small, T.now, 0.25); S.cue('pop', T.pause); S.cue('stomach_drop', T.drops);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2, { x: 0.27 }); S.cue('whoosh', T.friend + 0.05);
+      S.duck(T.small, T.now, 0.25); S.cue('pop', T.pause); S.cue('stomach_drop', T.drops, { x: 0.27 });
       S.cue('cloud', T.nobody + 0.4); S.cue('whoosh', T.comes + 0.2);
     },
     shots: [

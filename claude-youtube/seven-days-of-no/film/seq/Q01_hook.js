@@ -13,7 +13,7 @@
   const y3 = FILM.from(FILM.W('thing'));
   const T = {
     you: W('you'), yes: W('yes'), to: W('to'), everything: W('everything'), staying: W('staying'), lending: W('lending'), money: W('money'), going: W('going'),
-    yy: [y3.W('yes', 1), y3.W('yes', 2), y3.W('yes', 3)], yyEnd: y3.Wend('yes', 3), even: W('even'), whole: W('whole'), body: W('whole body'), sayingNo: W('saying no'), no: W('no', { after: FILM.W('saying') }),
+    yy: [y3.W('yes', 1), y3.W('yes', 2), y3.W('yes', 3)], yyEnd: y3.Wend('yes', 3), even: W('even'), whole: W('whole'), body: W('whole body'), sayingNo: W('saying no'), no: W('no', { after: FILM.W('saying') }), noEnd: Wend('no', { after: FILM.W('saying') }),   /* the burst slams where the spoken "no" ends (with its sound) */
     so: W('so here'), question: W('question'), forSeven: W('for seven'), sayNo: W('say no', { after: FILM.W('for seven') }), everyone: Wend('everyone'),
     notRude: W('not rude'), rude: W('rude'), not2: W('not', { after: FILM.W('rude') }), angry: W('angry'), just: W('just'), justNo: FILM.span('no', null, FILM.W('just')),
     lets: W("let's"), see: W('see', { after: FILM.W("let's") }), end: FILM.W('Monday'),
@@ -42,12 +42,12 @@
     id: 'Q01', title: 'The question', chapter: 'The question', from: 0,
     sound(S) {
       S.bed('music', 0, T.end, { mood: 'cozy, bouncy, light' });
-      S.cue('stamp', 0.12); LAND.filter(t => t > 0.2).slice(0, 8).forEach(t => S.cue('card_land', t)); S.cue('whoosh', T.staying - 0.08); S.cue('typing', T.staying + 0.1, { n: 8 }); S.cue('whoosh', T.lending - 0.08);
+      S.cue('stamp', 0.12); LAND.filter(t => t > 0.2).slice(0, 8).forEach(t => S.cue('card_land', t)); S.cue('whoosh', T.staying - 0.08); S.cue('typing', T.staying + 0.1, { n: 8, x: 0.8 }); S.cue('whoosh', T.lending - 0.08);
       S.cue('whoosh', T.going - 0.08); S.bed('party_murmur', T.going, T.yy[0]);
-      T.yy.forEach(t => S.cue('stamp', t + 0.02)); S.cue('wobble', T.even + 0.1); S.cue('shout_no', T.no); S.cue('pile_topple', T.no + 0.1);
+      T.yy.forEach(t => S.cue('stamp', t + 0.02)); S.cue('wobble', T.even + 0.1); S.cue('shout_no', T.noEnd); S.cue('pile_topple', T.noEnd + 0.1);
       S.cue('pop', T.so + 0.3); S.cue('whoosh', T.forSeven); STAMPS.forEach(t => S.cue('stamp', t));
       S.cue('pop', T.rude); S.cue('wrong', T.not2); S.cue('pop', T.angry); S.cue('wrong', T.just - 0.25); S.cue('ding', T.justNo[0]);
-      S.cue('footsteps', T.see, { n: 4, gap: 0.32 }); S.cue('whoosh', T.end - 0.12);
+      S.cue('footsteps', T.see, { n: 4, gap: 0.32, x: 0.68 }); S.cue('whoosh', T.end - 0.12);
     },
     shots: [
       { at: 0, name: 'cold open: YES stamps on a growing pile of requests; the hero nods faster and faster', push: { from: 1, to: 1.06, x: 1060, y: 500 },
@@ -78,11 +78,11 @@
           STAGE.plainHero(c, { x: 680, expr: 'happy', nod: 0.8 * nod(t, T.yy, 0.28), talk: [T.yy[0], T.yyEnd] }); pile(c); } },
       { at: T.even, name: 'the hard comic beat: the smile holds, a red NO! bursts out of his body and slams; the pile topples', push: { from: 1.02, to: 1.1, x: 900, y: 560 },
         draw(c) {
-          const t = c.t; if (t > T.no) c.impact(T.no, 0.45, 18, 3);
-          const h = STAGE.plainHero(c, { x: 680, expr: t > T.no + 0.15 ? 'surprised' : 'happy', faceOver: { sweat: 1 }, tremble: 3 + 6 * seg(t, T.even, T.no) });
-          pile(c, T.no + 0.05);
-          const hd = ART.head('hero', h); const grow = 0.55 + 0.3 * ease.outCubic(seg(t, T.even + 0.05, T.no - 0.1)), slam = t >= T.no ? 1 + 0.35 * (1 - ease.outBack(seg(t, T.no, T.no + 0.25), 2.5)) : 1;
-          const pulse = 1 + 0.04 * Math.sin(t * 22) * (t < T.no ? 1 : 0), s = (t < T.no ? grow : 1.05) * slam * pulse;
+          const t = c.t; if (t > T.noEnd) c.impact(T.noEnd, 0.45, 18, 3);
+          const h = STAGE.plainHero(c, { x: 680, expr: t > T.noEnd + 0.15 ? 'surprised' : 'happy', faceOver: { sweat: 1 }, tremble: 3 + 6 * seg(t, T.even, T.noEnd) });
+          pile(c, T.noEnd + 0.05);
+          const hd = ART.head('hero', h); const grow = 0.55 + 0.3 * ease.outCubic(seg(t, T.even + 0.05, T.noEnd - 0.1)), slam = t >= T.noEnd ? 1 + 0.35 * (1 - ease.outBack(seg(t, T.noEnd, T.noEnd + 0.25), 2.5)) : 1;
+          const pulse = 1 + 0.04 * Math.sin(t * 22) * (t < T.noEnd ? 1 : 0), s = (t < T.noEnd ? grow : 1.05) * slam * pulse;
           GFX.burst(c.g, hd.x + 120, hd.y + hd.r * 3.2, s, 'NO!', { rot: -0.08 });
           [[1.05, -0.5, T.whole], [-1.1, -0.2, T.sayingNo]].forEach(([fx, fy, t0]) => { const st = pop(t, t0, 0.3); GFX.at(c.g, hd.x + fx * hd.r, hd.y + fy * hd.r + 40 * seg(t, t0, t0 + 1.2), st, q => GFX.sweat(q, 0, 0, 1.6)); });
         } },
