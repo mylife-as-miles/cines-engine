@@ -102,7 +102,7 @@ TRIMS = {
     "dining": {"d_sky": 0.3, "street_hero": 1.5},                         # less side-window glow on the end wall beside the head chair
     # the close-up keeps round 1's foot-end glow (36 W); its floor stripes round the feet and the chair's own share
     # of the street light a little stronger than in the wide, where they would compete with the end-wall patch
-    "chair": {"d_sky": 1.4, "d_sky_end": 0.375, "street_side": 1.5, "street_hero": 2.0},
+    "chair": {"d_sky": 1.4, "d_sky_end": 0.375, "street": 0.75, "street_side": 1.5, "street_hero": 2.8},
 }
 # the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
 # the chair close-up, where the shafts lay a striped veil between the lens and the chair
@@ -405,7 +405,7 @@ def _knuckle(rig, finger, k):
 PALM_TILT = 15.0           # a resting hand leans a little onto its little-finger side
 
 
-def palm_down(holder, side, control="forearm_fk"):
+def palm_down(holder, side, control="forearm_fk", tilt=PALM_TILT):
     """Turn the forearm about its own axis (pronation) until the hand lies palm down: the line from the index
     knuckle to the little-finger knuckle runs out to her side, PALM_TILT degrees below level. Aimed by the shortest
     turn from the rest pose (arms hanging, palms in), a forearm laid along the table keeps its palm facing in, thumb
@@ -421,7 +421,7 @@ def palm_down(holder, side, control="forearm_fk"):
     if a_i is None or a_p is None:
         return 0.0
     axis = (mw.to_3x3() @ (fa.tail - fa.head)).normalized()
-    t = math.radians(PALM_TILT)
+    t = math.radians(tilt)
     want = Vector((side * math.cos(t), 0.0, -math.sin(t)))
     have = a_p - a_i
     have -= axis * have.dot(axis)
@@ -438,7 +438,7 @@ def palm_down(holder, side, control="forearm_fk"):
     return math.degrees(ang)
 
 
-def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0):
+def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0, *, palm_tilt=PALM_TILT):
     """Aim one arm: the upper arm at the elbow target (the elbow lands one upper-arm length from the shoulder along
     that line), the forearm at the wrist target and turned palm down, the hand on along the forearm tipped down
     `hand_pitch` degrees. Targets are world points; returns the world elbow, wrist and hand tip."""
@@ -452,22 +452,22 @@ def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0):
     e = mw @ pb[f"forearm_fk.{k}"].head
     rigged._aim(rig, f"forearm_fk.{k}", inv @ (Vector(wrist_t) - e))
     for _ in range(2):
-        palm_down(holder, side)
+        palm_down(holder, side, tilt=palm_tilt)
     w = mw @ pb[f"hand_fk.{k}"].head
     fd = (w - e).normalized()
     hd = (fd - Vector((0, 0, math.tan(math.radians(hand_pitch))))).normalized()
     rigged._aim(rig, f"hand_fk.{k}", inv @ hd)
-    palm_down(holder, side, control="hand_fk")
+    palm_down(holder, side, control="hand_fk", tilt=palm_tilt)
     bpy.context.view_layer.update()
     tip = mw @ pb[f"hand_fk.{k}"].tail
     return e, w, tip
 
 
-def rest_hand_on_top(holder, side, key, elbow, wrist, top, *, gap=0.002, pitch_limit=16.0):
+def rest_hand_on_top(holder, side, key, elbow, wrist, top, *, gap=0.002, pitch_limit=16.0, palm_tilt=PALM_TILT):
     """Set the palm heel and finger pads on a horizontal surface using the posed skin."""
     pitch = 1.0
     for _ in range(8):
-        e, w, tip = arm_to(holder, side, elbow, wrist, hand_pitch=pitch)
+        e, w, tip = arm_to(holder, side, elbow, wrist, hand_pitch=pitch, palm_tilt=palm_tilt)
         skin = rigged.hand_surface(holder, key)
         palm = min(p.z for p in skin["palm"])
         pads = min(p.z for p in skin["fingers"] + skin["thumb"])
@@ -640,7 +640,7 @@ def screen_light(scr):
 STREET = dict(d=(0.9, -0.36, -0.27), target=(4.45, 0.0, 0.66), energy=26000.0)
 STREET_CAM = {}            # a camera's own aim for the street light (and its twin): {cam: dict(d=, target=)}
 HERO = 1.3                 # the head chair's twin of the street light, as a share of the street light's energy
-FRIDGE_SPILL = 1.0         # W (6 W lit the whole door to 59/255 graded, as bright as the tile behind her)
+FRIDGE_SPILL = 2.3         # W (6 W lit the whole door to 59/255 graded, as bright as the tile behind her)
 
 
 def _street_xf(d, target):
@@ -717,40 +717,80 @@ def lights():
 def family_member(name, chair, age, height, weight, tone):
     """Pose the diner facing -Y, then rotate the finished pose with the chair."""
     x, y, turn = chair
-    seat_z = _STATE["cushions"]["gene" if name.startswith("Gene") else "tim"]
-    holder = people.man(name, age=age, height_cm=height, weight=weight, tone=tone)
-    gene = name.startswith("Gene")
-    if name == "Tim2014":
+    tim = name == "Tim2014"
+    older = name == "Gene2026"
+    seat_z = _STATE["cushions"]["tim" if tim else "gene"]
+    holder = people.man(name, age=age, height_cm=height, weight=weight, tone=tone,
+                        suit="male_casualsuit01" if tim else "male_casualsuit05")
+    if tim:
         people.tim_jaw(holder)
-    upper = dict(SOLVE, torso=(8 if gene else 0, 0), chest=(10 if gene else 3, 0), head=(5 if gene else 0, -6 if gene else 18),
-                 neck=(3, 0), fingers=4)
+        upper = dict(SOLVE, torso=(3, 0), chest=(8, 8), neck=(2, 0), head=(8, 22), fingers=4)
+    elif older:
+        upper = dict(SOLVE, torso=(4, 0), chest=(16, 0), neck=(8, 0), head=(18, -6), fingers=4)
+    else:
+        upper = dict(SOLVE, torso=(12, 0), chest=(14, 0), neck=(1, 0), head=(-5, -25), fingers=4)
     dz, hip = seat_figure(holder, seat_z, upper)
     holder.location.z += dz
     bpy.context.view_layer.update()
     rig = rigged.rig_of(holder)
+    glass_xy = None
     for side, k in ((1, "L"), (-1, "R")):
         shoulder = rig.matrix_world @ rig.pose.bones[f"upper_arm_fk.{k}"].head
         bone = rig.pose.bones[f"upper_arm_fk.{k}"]
         length = (rig.matrix_world @ bone.tail - shoulder).length
-        elbow_z = st.D_TOP + 0.037
+        elbow_z = st.D_TOP + (0.008 if tim and k == "L" else 0.019)
         elbow_y = shoulder.y - math.sqrt(max(0, length**2 - (shoulder.z - elbow_z)**2 - 0.015**2))
         elbow = (shoulder.x + side * 0.015, elbow_y, elbow_z)
-        wrist = (hip.x + side * 0.105, elbow_y - 0.255, st.D_TOP + 0.028)
-        rigged.articulate_hand(holder, k, {"f_index": (5, 7, 6), "f_middle": (7, 9, 7),
-                                         "f_ring": (9, 11, 8, 4), "f_pinky": (11, 12, 9, 7)})
-        rest_hand_on_top(holder, side, k, elbow, wrist, st.D_TOP, gap=0.001, pitch_limit=32.0)
+        if tim and k == "R":
+            wrist = (hip.x - 0.05, elbow_y - 0.20, st.D_TOP + 0.052)
+            rigged.articulate_hand(holder, k, {"f_index": (25, 30, 20), "f_middle": (30, 35, 25),
+                                             "f_ring": (35, 40, 30), "f_pinky": (40, 45, 35),
+                                             "thumb": (25, 18, 12)})
+            _, wrist_point, tip = arm_to(holder, side, elbow, wrist, hand_pitch=0.0, palm_tilt=85.0)
+            forward = (tip - wrist_point).xy.normalized()
+            inward = Vector((-forward.y, forward.x))
+            # Keep the rim between his thumb and fingertips while the base stays on the table.
+            glass_xy = wrist_point.xy + forward * 0.064 + inward * 0.031 + Vector((0.050, 0.026))
+            continue
+        if older and k == "L":
+            rigged.articulate_hand(holder, k, {"f_index": (14, 16, 10), "f_middle": (18, 18, 12),
+                                             "f_ring": (20, 22, 14), "f_pinky": (22, 24, 16)})
+            arm_to(holder, side, (elbow[0], shoulder.y - 0.07, seat_z + 0.23),
+                   (hip.x + 0.11, hip.y - 0.12, seat_z + 0.17), hand_pitch=3.0)
+            continue
+        reach = not tim and not older and k == "R"
+        if reach:
+            wrist = (hip.x - 0.18, elbow_y - 0.32, st.D_TOP + 0.043)
+            joints = {"f_index": (15, 18, 12), "f_middle": (17, 21, 14),
+                      "f_ring": (19, 23, 16), "f_pinky": (22, 25, 18)}
+        else:
+            wrist = (hip.x + side * (0.15 if tim else 0.10), elbow_y - 0.24, st.D_TOP + 0.027)
+            joints = ({"f_index": (2, 3, 2), "f_middle": (3, 4, 2), "f_ring": (4, 5, 3), "f_pinky": (4, 6, 4)}
+                      if tim else {"f_index": (4, 6, 3), "f_middle": (5, 7, 4),
+                                   "f_ring": (6, 8, 5), "f_pinky": (7, 10, 6)})
+        rigged.articulate_hand(holder, k, joints)
+        rest_hand_on_top(holder, side, k, elbow, wrist, st.D_TOP, gap=0.001,
+                         pitch_limit=8.0 if tim else 25.0 if reach else 16.0,
+                         palm_tilt=5.0 if tim else PALM_TILT)
     holder.rotation_euler.z = math.radians(turn + 90.0)
-    shift = holder.rotation_euler.to_matrix() @ Vector((hip.x, hip.y + (0.10 if gene else 0), 0.0))
+    rotation = holder.rotation_euler.to_matrix()
+    shift = rotation @ Vector((hip.x, hip.y + (0 if tim else 0.01), 0.0))
     holder.location.x, holder.location.y = x - shift.x, y - shift.y
+    if glass_xy is not None:
+        glass = bpy.data.objects["d_glass_tim"]
+        glass.location.xy = holder.location.xy + (rotation @ Vector((*glass_xy, 0.0))).xy
     bpy.context.view_layer.update()
-    if name == "Gene2014":
-        rigged._turn(rig, "head", -13.0, -25.0)  # meet Tim's gaze in the warm dinner
     return holder
 
 
 def family_layout(layout):
     """Only build the people needed by the requested camera. Restore hidden members on repeat visits."""
     warm = layout == "family"
+    for piece in _STATE["dinner"].children:
+        piece.hide_render = not warm
+    for piece in _STATE["gene_mug"]:
+        piece.hide_render = layout != "gene"
+    bpy.data.objects["d_bowl"].location.x = st.DT[0] - (0.42 if warm else 0.67)
     actors = _STATE["family"]
     if _STATE["with_cast"]:
         wanted = ("Gene2014", "Tim2014") if warm else ("Gene2026",) if layout == "gene" else ()
@@ -759,9 +799,9 @@ def family_layout(layout):
     for name in wanted:
         if name not in actors:
             if name == "Tim2014":
-                h = family_member(name, _STATE["tim_chair"], 0.49, 178, 0.52, (0.09, 0.115, 0.135))
+                h = family_member(name, _STATE["tim_chair"], 0.49, 178, 0.52, (0.05, 0.055, 0.065))
             else:
-                h = family_member(name, st.HEAD_CHAIR, 0.80 if warm else 0.95, 172, 0.37,
+                h = family_member(name, st.HEAD_CHAIR, 0.80 if warm else 0.95, 172, 0.37 if warm else 0.30,
                                   (0.14, 0.125, 0.10))
             actors[name] = (h, [(o, o.hide_render) for o in h.children_recursive if o.type == "MESH"])
     for name, (holder, members) in actors.items():
@@ -880,6 +920,7 @@ def build(cast=True):
     st.dining_chair("chair_dawn", cx, cy, ct, sat=0.7, val=0.85, size=CHAIR_SIZE)
     st.dining_chair("chair_k2", KT[0] - 0.74, KT[1] - 0.05, 0.0 - 8.0, sat=0.7, val=0.85)   # pushed up on her left
     st.dining()
+    _STATE["dinner"], _STATE["gene_mug"] = st.dining_service()
     st.dining_table()
     st.dining_chairs()
     _, sx, sy, turn = next(c for c in st.DINING_CHAIRS if c[0] == "chair_s2")
@@ -887,8 +928,12 @@ def build(cast=True):
                   cushions={"gene": seat_height(*st.HEAD_CHAIR[:2]), "tim": seat_height(sx, sy)})
     lights()
     st.M["bulb_warm"] = mt.glow("d_bulb_warm", (1.0, 0.54, 0.24), 3.0)
-    st.area("family_pendant", (*st.DT, st.D["h"] - 1.0), (0.33, 0.33), 72.0, (1.0, 0.41, 0.12),
-            spread=150, aim=(*st.DT, st.D_TOP))
+    pendant = st.area("family_pendant", (*st.DT, st.D["h"] - 1.0), (0.33, 0.33), 72.0, (1.0, 0.41, 0.12),
+                      spread=150, aim=(*st.DT, st.D_TOP))
+    flagged = bpy.data.collections.new("Keep pendant off the dining rug")
+    flagged.objects.link(bpy.data.objects["d_rug"])
+    flagged.collection_objects[0].light_linking.link_state = "EXCLUDE"
+    pendant.light_linking.receiver_collection = flagged
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
@@ -896,7 +941,7 @@ def build(cast=True):
     seat_z = seat_height(cx, cy - HIP_LOCAL)
     hands = None
     _STATE["cast"] = []
-    if cast:
+    if cast and any(camera.get("beat") == "ch02" for camera in CAMERAS.values()):
         d = dawn_home()
         place_dawn(d, seat_z)
         hands = arms_on_table(d)

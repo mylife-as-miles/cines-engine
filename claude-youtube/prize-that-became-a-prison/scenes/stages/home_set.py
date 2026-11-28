@@ -914,16 +914,17 @@ def laptop(loc, turn_deg, open_deg=112.0):
     return hold, scr
 
 
-def mug(loc, turn_deg=0.0):
+def mug(loc, turn_deg=0.0, *, name="mug"):
     x, y, z = loc
     prof = [(0.0, 0.0), (0.03, 0.0), (0.036, 0.004), (0.04, 0.012), (0.041, 0.06), (0.042, 0.092), (0.0405, 0.096),
             (0.0375, 0.094), (0.0365, 0.06), (0.035, 0.012), (0.0, 0.009)]
-    body = lathe("mug", prof, (x, y, z), M["mug"], segs=48)
-    lathe("mug_coffee", [(0.0, 0.0), (0.0362, 0.0), (0.0362, 0.001), (0.0, 0.001)], (x, y, z + 0.062), M["coffee"], segs=48)
+    body = lathe(name, prof, (x, y, z), M["mug"], segs=48)
+    lathe(name + "_coffee", [(0.0, 0.0), (0.0362, 0.0), (0.0362, 0.001), (0.0, 0.001)],
+          (x, y, z + 0.062), M["coffee"], segs=48)
     a = math.radians(turn_deg)
     d = Vector((math.cos(a), math.sin(a), 0.0))
     p = lambda r, zz: (x + d.x * r, y + d.y * r, z + zz)
-    tube("mug_handle", [p(0.038, 0.078), p(0.066, 0.074), p(0.072, 0.048), p(0.062, 0.024), p(0.038, 0.02)], 0.0065, M["mug"])
+    tube(name + "_handle", [p(0.038, 0.078), p(0.066, 0.074), p(0.072, 0.048), p(0.062, 0.024), p(0.038, 0.02)], 0.0065, M["mug"])
     return body
 
 
@@ -1062,6 +1063,46 @@ def dining():
     box("d_canvas", (0.62, 0.01, 0.42), (fx0, y0 + 0.012, fz), M["canvas"], bevel=0.002)
 
 
+def dining_service():
+    """Lay two places for the warm dinner and a single mug for Gene's later visit."""
+    dinner = bpy.data.objects.new("d_dinner", None)
+    bpy.context.scene.collection.objects.link(dinner)
+    dishes = mt.ceramic("dinner stoneware", (0.16, 0.156, 0.144), rough=0.52, speck=0.48)
+    napkin = mt.linen("dinner napkin", (0.22, 0.18, 0.15))
+    glass = mt.pbr("tumbler glass", (0.83, 0.88, 0.84), rough=(0.05, 0.05), cvar=0.0)
+    shader = glass.node_tree.nodes["Principled BSDF"]
+    shader.inputs["Transmission Weight"].default_value = 1.0
+    shader.inputs["IOR"].default_value = 1.46
+    plate = [(0.0, 0.003), (0.066, 0.003), (0.070, 0.0), (0.081, 0.0), (0.084, 0.004),
+             (0.100, 0.009), (0.114, 0.019), (0.113, 0.022), (0.107, 0.022),
+             (0.082, 0.011), (0.065, 0.009), (0.0, 0.009)]
+    tumbler = [(0.0, 0.0), (0.025, 0.0), (0.029, 0.005), (0.033, 0.087), (0.032, 0.091),
+               (0.030, 0.090), (0.028, 0.015), (0.024, 0.008), (0.0, 0.008)]
+    for name, place, napkin_place, cloth_turn in (
+        ("gene", (3.39, -0.095), (3.48, -0.30), 11),
+        ("tim", (3.15, 0.064), (2.98, 0.34), -13),
+    ):
+        lathe("d_plate_" + name, plate, (*place, D_TOP), dishes).parent = dinner
+        box("d_napkin_" + name, (0.115, 0.085, 0.008), (*napkin_place, D_TOP + 0.004), napkin,
+            bevel=0.003, rot=(0, 0, math.radians(cloth_turn)), parent=dinner)
+    lathe("d_glass_gene", tumbler, (3.22, -0.247, D_TOP), glass).parent = dinner
+    lathe("d_glass_tim", tumbler, (3.03, 0.16, D_TOP), glass).parent = dinner
+    serving = [(0.0, 0.001), (0.086, 0.001), (0.092, 0.007), (0.113, 0.024), (0.132, 0.041),
+               (0.133, 0.044), (0.129, 0.047), (0.119, 0.042), (0.095, 0.015), (0.0, 0.011)]
+    lid = [(0.0, 0.047), (0.126, 0.047), (0.126, 0.051), (0.115, 0.055), (0.085, 0.074),
+           (0.035, 0.083), (0.017, 0.084), (0.015, 0.096), (0.009, 0.102), (0.0, 0.103)]
+    for name, profile in (("d_serving_dish", serving), ("d_serving_lid", lid)):
+        lathe(name, profile, (2.70, 0.04, D_TOP), dishes).parent = dinner
+    fruit_tones = ((0.16, 0.06, 0.032), (0.22, 0.101, 0.027), (0.16, 0.14, 0.063))
+    for i, (dx, dy, size) in enumerate(((-0.055, -0.012, 0.033), (0.008, -0.028, 0.036), (0.016, 0.037, 0.033))):
+        fruit = mt.pbr(f"dinner fruit {i}", fruit_tones[i], rough=(0.52, 0.6), nscale=17, cvar=0.18)
+        sk.sphere(f"d_fruit_{i}", size, (DT[0] - 0.42 + dx, DT[1] - 0.04 + dy, D_TOP + size + 0.012),
+                  fruit, segs=20).parent = dinner
+    mug((3.56, -0.20, D_TOP), turn_deg=-22, name="d_gene_mug")
+    mug_parts = tuple(bpy.data.objects["d_gene_mug" + suffix] for suffix in ("", "_coffee", "_handle"))
+    return dinner, mug_parts
+
+
 BLIND_TILT = 14.0
 BLIND_TILT_END = 8.0
 
@@ -1100,15 +1141,15 @@ def dining_table():
                                plane_co=plane_co, plane_no=plane_no, clear_outer=True, dist=0.00001)
         bm.to_mesh(ob.data)
         bm.free()
-    top = mt.pbr("dining board edge", (0.075, 0.038, 0.021), rough=(0.38, 0.46), nscale=5,
-                 stretch=(1, 14, 9), cvar=0.12, bump=0.12, coat=0.25, spec=0.32)
+    top = mt.pbr("dining board edge", (0.088, 0.044, 0.024), rough=(0.54, 0.64), nscale=5,
+                 stretch=(1, 14, 9), cvar=0.12, bump=0.12, spec=0.25)
     board = box("d_flat_tabletop", (1.8, 0.967, thickness), (*DT, D_TOP - thickness / 2), top, bevel=0.006)
     bpy.context.view_layer.update()
     board.parent = t
     board.matrix_parent_inverse = t.matrix_world.inverted()
     # Treat just the board with the stage's top wood recipe, leaving the prop's legs on their own shader.
-    mt.tune_prop(board, spec=0.32, rough_floor=0.38,
-                 top_wood=((0.09, 0.045, 0.025), (0.06, 0.03, 0.017), 110.0),
+    mt.tune_prop(board, spec=0.25, rough_floor=0.58,
+                 top_wood=((0.117, 0.0585, 0.0325), (0.078, 0.039, 0.022), 110.0),
                  seam=0.3, tone=(0.93, 1.06), late_k=0.45)
     # a flag under the top at the foot end, seen by nothing but shadow rays: the street light through the end
     # blind's lowest gaps ran under the table and fell as a lone, crisp, unstriped patch on the rug by the near
