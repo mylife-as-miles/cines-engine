@@ -1,0 +1,48 @@
+{
+  "camera": "page_foot",
+  "resolution": [
+    2560,
+    1440
+  ],
+  "origin": "top-left pixel edge",
+  "depth_axis": "camera forward",
+  "focus_m": 0.399887,
+  "fstop": 8.0,
+  "lens_mm": 50.0,
+  "sensor_mm": 36.0,
+  "pages": [
+    {
+      "sheet": "document_single",
+      "corners": {
+        "top_left": [
+          1056.271,
+          -867.879
+        ],
+        "top_right": [
+          2441.724,
+          -576.626
+        ],
+        "bottom_right": [
+          1999.779,
+          1296.477
+        ],
+        "bottom_left": [
+          156.613,
+          747.982
+        ]
+      },
+      "depth_m": {
+        "top_left": 0.539889,
+        "top_right": 0.507292,
+        "bottom_right": 0.365406,
+        "bottom_left": 0.398003
+      },
+      "in_frame": {
+        "top_left": false,
+        "top_right": false,
+        "bottom_right": true,
+        "bottom_left": true
+      }
+    }
+  ]
+}

@@ -78,7 +78,7 @@ TABLE_EDGE_RETURN = 7.5
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
-    "handbag-tote": (0.35, "long", dict(sat=1.7, val=0.65, hue=0.525, rough_add=0.32), dict(spec=0.08)),
+    "handbag-tote": (0.35, "long", dict(sat=0.98, val=0.84, hue=0.50, rough_add=0.32), dict(spec=0.08)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28),
                        dict(spec=0.035, ceiling=(0.038, 0.033, 0.024), metal_limit=0.10)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25), dict(spec=0.35)),

@@ -76,7 +76,7 @@ PROPS = {  # size, axis, grade
     "extra-bag-closed": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
     # A warm leather face and black pebbled satchel under the same cool troffer.
-    "handbag-tote": (0.35, "long", dict(sat=1.70, val=0.65, hue=0.525, rough_add=0.32)),
+    "handbag-tote": (0.35, "long", dict(sat=1.005, val=0.84, hue=0.509, rough_add=0.32)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25)),
 }
@@ -1022,9 +1022,14 @@ def apply_camera(name):
     if li:
         li.visible_glossy = "lens_glow" not in cfg
     bpy.data.objects["floor_return"].hide_render = name != "overhead"
-    bpy.data.objects["handbags near bench flag"].hide_render = not cfg.get("insert_bench", False)
+    insert_bench = cfg.get("insert_bench", False)
+    bpy.data.objects["handbags near bench flag"].hide_render = not insert_bench
+    if insert_bench:
+        for obj in _STATE["dressing"]:
+            if obj.name.startswith("bench_gloves"):
+                obj.hide_render = True
     bench = bpy.data.objects["bench_top"]
-    bench.data.materials[0] = _STATE["insert_bench_material" if cfg.get("insert_bench") else "bench_material"]
+    bench.data.materials[0] = _STATE["insert_bench_material" if insert_bench else "bench_material"]
     floor_return = bpy.data.objects.get("overhead floor return")
     if floor_return is not None:
         floor_return.hide_render = name != "overhead"

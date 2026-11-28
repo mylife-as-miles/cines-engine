@@ -37,7 +37,7 @@ PROPS = {  # size, axis, grade, finish (spec)
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.5, rough_add=0.15), 0.3),
     # cognac: the red-brown that grades to salmon turned toward orange and lifted (inspection_room's values)
     # (under the warm lamp the inspection room's orange turn read yellow-olive after the grade: less hue, less sat)
-    "handbag-tote": (0.35, "long", dict(sat=1.0, val=0.66, hue=0.53, rough_add=0.2), 0.38),
+    "handbag-tote": (0.35, "long", dict(sat=1.08, val=1.04, hue=0.53, rough_add=0.2), 0.38),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12), 0.35),
     # glossy raspberry darkened toward burgundy (prop table: val ~0.55, rough_add ~0.25), a touch redder
     "handbag-shoulder": (0.32, "long", dict(sat=0.75, val=0.62, hue=0.49, rough_add=0.25), 0.3),
