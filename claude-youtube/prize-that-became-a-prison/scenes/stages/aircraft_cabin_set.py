@@ -947,26 +947,21 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     rot = aim.to_track_quat("Z", "Y").to_euler()
     housing = cyl("strobe housing", 0.034, 0.045, mount, M["wing_dark"], rot=rot)
     recv.objects.link(housing)
-    st = cyl("strobe", 0.015, 0.003, mount + aim * 0.023, M["nav_white"], rot=rot)
-    halo = bpy.data.objects.new("navlight_halo", bpy.data.meshes.new("navlight_halo"))
-    bm = bmesh.new()
-    bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.35)
-    bm.to_mesh(halo.data)
-    bm.free()
-    for p in halo.data.polygons:
-        p.use_smooth = True
-    _coll().objects.link(halo)
-    halo.location = st.location
-    halo.data.materials.append(M["nav_halo"])
-    halo.visible_shadow = False
+    st = cyl("strobe", 0.023, 0.003, mount + aim * 0.023, M["nav_white"], rot=rot)
+    radius = mt.STROBE_GLOW_RADIUS
+    halo = mesh_obj("navlight_halo", [(-radius, -radius, 0), (radius, -radius, 0),
+                                     (radius, radius, 0), (-radius, radius, 0)], [(0, 1, 2, 3)],
+                    M["nav_halo"], smooth=False, loc=st.location)
+    halo.rotation_euler = rot
+    halo.visible_shadow = halo.visible_diffuse = halo.visible_glossy = False
     spill = point("strobe spill", st.location + aim * 0.04, 4.0, (0.92, 0.96, 1.0), 0.035)
     spill.light_linking.receiver_collection = recv
     # the moon, out of shot above and ahead: a cool soft sun on the wing only
     li = bpy.data.lights.new("moon", "SUN")
-    li.energy, li.color, li.angle = 0.17, (0.62, 0.72, 1.0), math.radians(4.0)
+    li.energy, li.color, li.angle = 0.65, (0.62, 0.72, 1.0), math.radians(4.0)
     mo = bpy.data.objects.new("moon", li)
     _coll().objects.link(mo)
-    # low and ahead of the wing, so its upper skin carries a long soft sheen toward the cabin
+    # The moon is above the fuselage side, where it reaches the inboard face of the winglet.
     mo.rotation_euler = Vector(moon_dir).to_track_quat("Z", "Y").to_euler()
     mo.light_linking.receiver_collection = recv
     LIGHTS["moon"] = mo

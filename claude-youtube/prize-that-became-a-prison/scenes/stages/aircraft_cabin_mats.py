@@ -12,6 +12,7 @@ The node helpers are adapted from the departure gate's (departure_gate_mats.py),
 import bpy  # noqa: F401  (first: bmesh and mathutils only exist once bpy is loaded)
 
 M = {}
+STROBE_GLOW_RADIUS = 0.35
 
 
 # ---------------------------------------------------------------- node helpers
@@ -484,14 +485,17 @@ def paper(name, rgb=(0.46, 0.45, 0.42), rough=0.82, coat=0.0):
 
 
 def halo(name, rgb, strength):
-    """A soft glow round a small light: a transparent shell that emits where it faces the eye (no hard edge)."""
+    """A transparent glow that fades radially from the strobe's centre."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
     nt.nodes.remove(nt.nodes["Principled BSDF"])
-    lw = _n(nt, "ShaderNodeLayerWeight")
-    lw.inputs["Blend"].default_value = 0.5
-    f = _math(nt, "POWER", _math(nt, "SUBTRACT", 1.0, _out(lw, "Facing")), 3.0)
+    coordinate = _obj(nt)
+    distance = _n(nt, "ShaderNodeVectorMath", operation="DOT_PRODUCT")
+    _link(nt, coordinate, distance.inputs[0])
+    _link(nt, coordinate, distance.inputs[1])
+    falloff = _maprange(nt, distance.outputs["Value"], 0.0, STROBE_GLOW_RADIUS ** 2, 1.0, 0.0)
+    f = _math(nt, "POWER", falloff, 6.0)
     em = _n(nt, "ShaderNodeEmission")
     em.inputs["Color"].default_value = (*rgb, 1)
     _link(nt, _math(nt, "MULTIPLY", f, strength), em.inputs["Strength"])
@@ -544,7 +548,7 @@ def materials(lanes=(), *, moon_dir=(0.30, 0.60, 0.60)):
     M["sky"] = sky("night sky", moon_dir=moon_dir)
     M["wing"] = wing_paint("wing paint")
     M["wing_dark"] = pbr("wing edges", (0.16, 0.165, 0.17), (0.35, 0.5), spec=0.5)
-    M["nav_halo"] = halo("strobe halo", (0.91, 0.95, 1.0), 1.0)
-    M["nav_white"] = glow("strobe lens", (0.94, 0.97, 1.0), 48.0)
+    M["nav_halo"] = halo("strobe halo", (0.91, 0.95, 1.0), 0.29)
+    M["nav_white"] = glow("strobe lens", (0.94, 0.97, 1.0), 68.0)
     M["black"] = pbr("black void", (0.005, 0.005, 0.006), (0.8, 0.9))
     return M

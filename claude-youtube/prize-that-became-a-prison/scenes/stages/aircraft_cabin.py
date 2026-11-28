@@ -78,7 +78,7 @@ WINDOW_CAM = (-1.05, 4.42, 1.24)
 OVER_CAM = (-2.34, 3.75, 1.33)
 # The tip is fixed in aircraft coordinates; the camera sees it through the inner window reveal.
 WING_TIP = Vector((-30.0, 27.12, -2.8))
-MOON_DIR = (0.30, 0.60, 0.60)
+MOON_DIR = (0.68, 0.26, 0.68)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
