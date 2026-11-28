@@ -1,0 +1,59 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q11 · THE TREATY HOUSE, THE HALL · THE BARE HAND (second try)
+References: @Image 1 — first frame: the shard on the last sheet, the lamp beside it
+Reference mode · 5 s · 1 shot · 2.35:1 · photoreal live action · no speech · no music
+
+## SCENE INTENT
+A woman who has worn white gloves all her life lays her bare hand on a broken piece of grey rock, and leaves it there. One held shot.
+
+## GLOBAL LOCKS
+Character identity — one hand only is seen: a woman's hand, fifty-five years old, dark brown skin, bare; her wrist is in the white cuff of a long white coat sleeve. No face and no body are in the frame.
+Wardrobe override — none.
+Location / environment continuity — exactly @Image 1 from the first frame to the last: one pale sheet of paper on dark stone paving, a piece of grey rock lying on the sheet, a brass oil lamp alight at the right edge of the frame, other pale sheets soft beyond. Nothing in @Image 1 changes place.
+Props and temporal state — the grey rock and the paper stay where they are. The rock is hard stone, as tall as her hand is wide: it is the same size and stands the same height in the last frame as in the first. The hand rests on its top, well above the paper.
+
+## MOVIE COLOR
+Exactly as @Image 1: pale paper and grey rock in soft cool daylight, the lamp's small warm light from the right, the paving dark. The skin of the hand is lit by the same two lights: cool from above, warm from the right.
+Influences, each with its purpose — Denis Villeneuve, Arrival: a bare hand laid flat on a surface, large in the frame, and held. James Cameron: real weight; the hand has mass when it comes to rest.
+Camera package — ARRI Alexa 65, large format, spherical prime, fine grain, shallow focus on the rock. The camera is planted and does not move.
+
+## VOICE DNA (immutable)
+No voice.
+
+## AUDIO DESIGN
+Lamp hiss. Skin on stone. Quiet room.
+
+## FIRST-FRAME ANCHOR
+The shot opens exactly on @Image 1, the same framing. At the first frame no hand is in the frame.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–5.0 s
+[CAM] the view of @Image 1: close, 50 mm, from a forearm's height above the floor, looking down at the sheet; shallow focus on the rock; the camera holds still.
+[BLOCK] Exactly as @Image 1. The hand comes in from the top of the frame, above the rock.
+[ACT] For the first half second nothing moves but the flame. Then, from the top of the frame, one bare hand comes down, slowly, palm down, fingers loosely together: dark brown skin, the wrist in the white cuff of her coat sleeve. The palm comes to rest on the top of the rock and stops there, a hand's breadth above the paper; the fingers reach past the far edge of the rock and stay in the air, clear of the paper. The whole near face of the rock, with its pale vein, is in view below the hand from the first frame to the last. By 2.4 s the hand is at rest. From then to the end it lies there, still, on the top of the rock; only the flame moves.
+[DIALOGUE] / V.O. none.
+[SFX] lamp hiss; skin on stone.
+[STATE OUT] The bare hand at rest on the rock.
+
+## PERFORMANCE ARC
+The hand comes down without haste, and stays.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+One shot: a bare hand on rock, held.
+
+## PHYSICS LOCKS
+Normal speed and real weight. Five fingers, one hand. The hand slows as it nears the rock and stops when it meets it. The rock holds the hand up: stone, the same height throughout. The flame is small and steady.
+
+## AUDIO LOCKS
+No speech and no voice of any kind. No narration. No music or singing. No drone.
+
+## CONTINUITY LOCKS
+[POSITIVE] the first frame is @Image 1 · the rock, the sheet and the lamp where @Image 1 has them · the rock the same size and height from first frame to last · one bare hand, dark brown skin, a white cuff at the wrist · the hand at rest on the top of the rock from 2.4 s to the end, above the paper
+[NEGATIVE] a second hand · a face or a body in the frame · the rock lifted, gripped or moved · the paper moved · camera movement · captions or legible lettering · a voice
+
+## GENERATION PRIORITY ORDER
+1. The first frame is @Image 1  2. One bare hand comes down and comes to rest on the top of the rock, and stays  3. The rock keeps its size and height under the hand  4. Nothing else changes  5. No voice, no music
+
+## FINAL STATE
+The bare hand at rest on the rock, as in the last two and a half seconds of the shot.
