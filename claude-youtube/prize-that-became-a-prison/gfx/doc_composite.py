@@ -53,6 +53,27 @@ def grade_filter():
     return g.replace("allf=u", "allf=t+u")       # the grade's grain, made temporal for moving shots (fresh each frame)
 
 
+# The colour of the film's files. ffmpeg's scaler converts RGB to YUV with the BT.601 matrix unless it is told otherwise,
+# and every file here is tagged BT.709; a decoder trusts the tag, so a 601 conversion comes back warm and yellow (a solid
+# 200,100,50 read 210,105,45: the cognac tote went mustard). So every RGB -> YUV step names the matrix and the range
+# (TO_YUV) and the file keeps the tags (TAGS). Going back to RGB to composite (FROM_YUV) names them too, with accurate
+# rounding and full chroma interpolation (swscale's default rounding loses 1-2 levels each time). tools/check_colour.py
+# checks every path.
+TO_YUV = "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p"
+FROM_YUV = "scale=in_color_matrix=bt709:in_range=tv:flags=bicubic+accurate_rnd+full_chroma_int"
+TAGS = ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"]
+
+
+def grade_filter_yuv():
+    """grade_filter() for an encode to yuv420p: the conversion to BT.709 YUV, named, where ffmpeg's own (BT.601) one sat,
+    just before the grain, so the grain still lands on the 4:2:0 planes as it always has."""
+    g = grade_filter()
+    head, sep, tail = g.rpartition(",noise=")
+    if sep and "," not in tail:
+        return f"{head},{TO_YUV}{sep}{tail}"
+    return f"{g},{TO_YUV}"
+
+
 def srgb_to_lin(x):
     return np.where(x <= 0.04045, x / 12.92, ((x + 0.055) / 1.055) ** 2.4)
 
@@ -545,10 +566,10 @@ def main():
         return
     n = int(round(shot["length"] * a.fps))
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
+    venc = ["-vf", TO_YUV if a.nograde else grade_filter_yuv()]
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                           "-r", str(a.fps), "-i", "-", *vf, "-c:v", "libx264", "-crf", "16", "-preset", "slow",
-                           "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709",
-                           "-color_trc", "bt709", a.out], stdin=subprocess.PIPE)
+                           "-r", str(a.fps), "-i", "-", *venc, "-c:v", "libx264", "-crf", "16", "-preset", "slow",
+                           "-pix_fmt", "yuv420p", *TAGS, a.out], stdin=subprocess.PIPE)
     for i in range(n):
         ff.stdin.write(frame(i / a.fps).tobytes())
         if i % 24 == 0:

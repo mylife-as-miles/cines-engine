@@ -23,7 +23,7 @@ import tempfile
 import cv2
 import numpy as np
 
-from doc_composite import ease_push, grade_filter
+from doc_composite import TO_YUV, ease_push, grade_filter_yuv
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -234,16 +234,17 @@ TAGS = ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt70
 
 def deliver_plates(pre):
     """An ungraded frame of the two plates as the clip's file shows it: graded and encoded exactly as render_clip does it
-    (the grade inside the x264 encode, then the second, tagged encode) and decoded as a player or ffmpeg decodes it. Two
-    things move the colour on the way, so the tote is fitted on this, the cognac in the file and not in the RGB: every
-    encoder in this project converts with ffmpeg's default BT.601 matrix and tags BT.709, so warm colours come back a
-    little yellower; and inside the encode the grade's grain lands after the conversion to 4:2:0. Fitted on the RGB grade
-    instead (reel 11's first pass), the panel read hue 22.0 in the RGB and 24.0-24.4 in the clip."""
+    (the grade inside the x264 encode, then the second, tagged encode) and decoded as a player or ffmpeg decodes it. The
+    tote is fitted on this, the cognac in the file and not in the RGB: inside the encode the grade's grain lands after the
+    conversion to 4:2:0, and until 28 November 2026 every encoder here also converted with ffmpeg's default BT.601 matrix
+    while tagging BT.709, so warm colours came back a little yellower (reel 11's first pass, fitted on the RGB grade: the
+    panel read hue 22.0 in the RGB and 24.0-24.4 in the clip). The conversion is BT.709 now (doc_composite TO_YUV); the
+    fit still runs on the file, so it follows whatever the encode does."""
     tmp = tempfile.mkdtemp(prefix="split-")
     try:
         a, b = os.path.join(tmp, "a.mp4"), os.path.join(tmp, "b.mp4")
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-i", "-",
-                        "-vf", grade_filter(), "-frames:v", "1", "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", a],
+                        "-vf", grade_filter_yuv(), "-frames:v", "1", "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", *TAGS, a],
                        input=pre.tobytes(), check=True)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", a, "-vf", "format=yuv420p", "-c:v", "libx264", "-crf", "16",
                         "-pix_fmt", "yuv420p", *TAGS, b], check=True)
@@ -253,13 +254,13 @@ def deliver_plates(pre):
 
 
 def deliver_one(img):
-    """An RGB frame drawn by gfx/type_render.js (the cut-away) as its clip shows it: its encode (x264 CRF 14, BT.601
-    matrix, tagged BT.709), decoded by the tag."""
+    """An RGB frame drawn by gfx/type_render.js (the cut-away) as its clip shows it: its encode (x264 CRF 14, BT.709
+    matrix and tags), decoded by the tag."""
     tmp = tempfile.mkdtemp(prefix="split-")
     try:
         f = os.path.join(tmp, "one.mp4")
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-i", "-",
-                        "-frames:v", "1", "-c:v", "libx264", "-crf", "14", "-pix_fmt", "yuv420p", *TAGS, f],
+                        "-vf", TO_YUV, "-frames:v", "1", "-c:v", "libx264", "-crf", "14", "-pix_fmt", "yuv420p", *TAGS, f],
                        input=np.ascontiguousarray(img).tobytes(), check=True)
         return _decode(f)
     finally:
@@ -369,19 +370,21 @@ def main():
 def render_clip(a, n, tmp, frame, env, x1):
     graded, cut = os.path.join(tmp, "plates.mp4"), os.path.join(tmp, "cut.mp4")
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(a.fps),
-                           "-i", "-", "-vf", grade_filter(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", graded],
+                           "-i", "-", "-vf", grade_filter_yuv(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", *TAGS, graded],
                           stdin=subprocess.PIPE)
     for i in range(n):
         ff.stdin.write(frame(i / a.fps).tobytes())
     ff.stdin.close(); ff.wait()
     subprocess.run(["node", os.path.join(HERE, "type_render.js"), "seq", "cutaway_half", str(a.len - a.cut), cut,
                     "--page", os.path.join(HERE, "seam.html"), "--fps", str(a.fps)], check=True, env=env)
+    # both clips are BT.709 YUV, so the cut-away goes on in YUV untouched; the gutter is a strip of its RGB colour converted
+    # with the BT.709 matrix (drawbox converts its colour with BT.601's)
     fc = (f"[1:v]crop={W - x1}:{H}:{x1}:0,setpts=PTS+{a.cut}/TB[c];"
-          f"[0:v][c]overlay={x1}:0:enable='gte(t,{a.cut})':eof_action=pass,"
-          f"drawbox=x={HW}:y=0:w={GUT}:h={H}:color=0x0a0c0f:t=fill,format=yuv420p[v]")
+          f"color=c=0x0a0c0f:s={GUT}x{H}:r={a.fps},format=rgb24,{TO_YUV}[g];"
+          f"[0:v][c]overlay={x1}:0:enable='gte(t,{a.cut})':eof_action=pass[o];"
+          f"[o][g]overlay={HW}:0,format=yuv420p[v]")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", graded, "-i", cut, "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n),
-                    "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709",
-                    "-color_trc", "bt709", a.out], check=True)
+                    "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", *TAGS, a.out], check=True)
     print("wrote", a.out, n, "frames")
 
 

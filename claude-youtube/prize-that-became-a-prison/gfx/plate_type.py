@@ -19,7 +19,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from doc_composite import grade_filter  # noqa: E402
+from doc_composite import FROM_YUV, TAGS, TO_YUV, grade_filter_yuv  # noqa: E402
 
 W, H = 1920, 1080
 
@@ -45,7 +45,8 @@ def main():
     edge = tuple(float(v) for v in np.median(np.concatenate([plate[:4].reshape(-1, 3), plate[-4:].reshape(-1, 3), plate[:, :4].reshape(-1, 3), plate[:, -4:].reshape(-1, 3)]), 0))
     graded = os.path.join(tmp, "plate.mp4")
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(a.fps),
-                           "-i", "-", "-vf", grade_filter(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", graded], stdin=subprocess.PIPE)
+                           "-i", "-", "-vf", grade_filter_yuv(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", *TAGS, graded],
+                          stdin=subprocess.PIPE)
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     for i in range(n):
         p = i / max(1, n - 1); e = p * p * (3 - 2 * p)
@@ -66,10 +67,11 @@ def main():
             img = img * (1 - m[..., None]) + np.float32([3, 4, 6]) / 255 * m[..., None]
         ff.stdin.write((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8).tobytes())
     ff.stdin.close(); ff.wait()
+    # the type is laid on in RGB, as ffmpeg's own negotiation did it, with both conversions named (BT.709): left to
+    # itself the overlay's scaler went back to YUV with BT.601
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", graded, "-i", layer, "-filter_complex",
-                    "[1:v]format=rgba[t];[0:v][t]overlay=format=auto:eof_action=pass,format=yuv420p[v]", "-map", "[v]",
-                    "-frames:v", str(n), "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-colorspace", "bt709",
-                    "-color_primaries", "bt709", "-color_trc", "bt709", a.out], check=True)
+                    f"[0:v]{FROM_YUV},format=rgba[p];[1:v]format=rgba[t];[p][t]overlay=format=auto:eof_action=pass,{TO_YUV}[v]",
+                    "-map", "[v]", "-frames:v", str(n), "-c:v", "libx264", "-crf", "16", "-preset", "slow", *TAGS, a.out], check=True)
     print("wrote", a.out, n, "frames")
 
 

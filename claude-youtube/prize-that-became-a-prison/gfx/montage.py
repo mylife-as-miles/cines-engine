@@ -16,7 +16,7 @@ import tempfile
 import cv2
 import numpy as np
 
-from doc_composite import grade_filter
+from doc_composite import TAGS, grade_filter_yuv
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -42,7 +42,8 @@ def plate_shot(path, n, z0, z1, cx, cy, out):
     ph, pw = img.shape[:2]
     base = max(W / pw, H / ph)
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                           "-vf", grade_filter(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", out], stdin=subprocess.PIPE)
+                           "-vf", grade_filter_yuv(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", *TAGS, out],
+                          stdin=subprocess.PIPE)
     for i in range(n):
         z = z0 * (z1 / z0) ** (i / max(1, n - 1))          # constant speed in log space
         s = base * z
@@ -69,10 +70,11 @@ def main():
             plate_shot(p, n, z0, z1, cx, cy, out)
     lst = os.path.join(tmp, "list.txt")
     ins = sum([["-i", f] for f in parts], [])
+    # every part is BT.709 (plate_shot's encode, type_render.js), so the join leaves the YUV as it is: no conversion
     fc = "".join(f"[{i}:v]fps={FPS},scale={W}:{H},setsar=1,format=yuv420p[v{i}];" for i in range(len(parts)))
     fc += "".join(f"[v{i}]" for i in range(len(parts))) + f"concat=n={len(parts)}:v=1:a=0[v]"
     subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", fc, "-map", "[v]", "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p",
-                    "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", a.out], check=True)
+                    *TAGS, a.out], check=True)
     print("wrote", a.out, sum(s[1] for s in SHOTS), "frames")
 
 

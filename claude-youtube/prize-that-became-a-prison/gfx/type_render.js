@@ -27,8 +27,11 @@ const url = f => f ? 'file://' + path.resolve(f) : null;
     const [mode, t, out] = rest; fs.writeFileSync(out, await frame(mode, +t, opt.look, opt.bg)); console.log('wrote', out);
   } else if (cmd === 'seq') {
     const [mode, secs, out] = rest, fps = +(opt.fps || 24), n = Math.round(+secs * fps), alpha = out.endsWith('.mov');
+    // the RGB -> YUV conversion names the BT.709 matrix the file is tagged with (ffmpeg's default is BT.601, which a
+    // decoder reading the tag shows warm and yellow); see gfx/doc_composite.py TO_YUV and tools/check_colour.py
     const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-c:v', 'png', '-r', String(fps), '-i', '-',
-      ...(alpha ? ['-c:v', 'qtrle'] : ['-c:v', 'libx264', '-crf', '14', '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709']), out],
+      ...(alpha ? ['-c:v', 'qtrle'] : ['-vf', 'scale=out_color_matrix=bt709:out_range=tv,format=yuv420p', '-c:v', 'libx264', '-crf', '14',
+        '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709']), out],
       { stdio: ['pipe', 'inherit', 'inherit'] });
     for (let i = 0; i < n; i++) { const b = await frame(mode, i / fps, opt.look, opt.bg); if (!ff.stdin.write(b)) await new Promise(r => ff.stdin.once('drain', r)); }
     ff.stdin.end(); await new Promise(r => ff.on('close', r)); console.log(mode, n, 'frames ->', out);
