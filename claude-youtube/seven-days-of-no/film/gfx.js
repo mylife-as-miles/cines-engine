@@ -262,7 +262,7 @@
       case 'laptop': GFX.laptop(g, x, y, s); break;
       case 'mug': GFX.mug(g, x, y, s, o.t); break;
       case 'box': GFX.box(g, x, y, 220 * s, 170 * s); break;
-      case 'plate': GFX.plate(g, x, y, s); break;
+      case 'plate': case 'plateIcon': GFX.plate(g, x, y, s * 0.4); break;
       case 'banknote': GFX.banknote(g, x, y, s, r); break;
       case 'pot_helmet': GFX.pot(g, x, y, s, r); break;
       case 'pan': GFX.pan(g, x, y, s, r); break;

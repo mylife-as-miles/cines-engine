@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>SET close-ups</title>
+<style>html,body{margin:0;background:#222}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../kit/pov.js"></script>
+<script src="../kit/sets.js"></script>
+<script>
+// ?view=window|clock  &tod=evening|dusk  &todTo=dusk&todK=0.5  &bird=0.45  &clock=21:10&night=1   (no view: both, side by side)
+const q = new URLSearchParams(location.search);
+const g = document.getElementById('c').getContext('2d');
+SETS.ready().then(() => {
+  const w = { tod: q.get('tod') || 'evening', todTo: q.get('todTo'), todK: +(q.get('todK') || 0), bird: q.get('bird') != null ? +q.get('bird') : 0.45 };
+  const c = { clock: q.get('clock') || '17:30', night: q.get('night') === '1' };
+  if (q.get('view') === 'window') SETS.windowView(g, w);
+  else if (q.get('view') === 'clock') SETS.clockView(g, c);
+  else {
+    g.save(); g.beginPath(); g.rect(0, 0, 960, 1080); g.clip(); g.translate(0, 270); g.scale(0.5, 0.5); SETS.windowView(g, w); g.restore();
+    g.save(); g.beginPath(); g.rect(960, 0, 960, 1080); g.clip(); g.translate(960, 270); g.scale(0.5, 0.5); SETS.clockView(g, Object.assign({}, c, { clock: '21:10', night: true })); g.restore();
+  }
+  window.FRAME_READY = true;
+});
+</script></body></html>

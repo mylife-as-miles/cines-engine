@@ -8,8 +8,8 @@
  "notify": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "two soft glass notes rising a fourth, G5 then C6, 75 ms apart",
-  "dur_s": 0.6
+  "how": "two soft glass notes rising a fifth, C6 then G6, 60 ms apart",
+  "dur_s": 0.5
  },
  "pop": {
   "source": "synth (tools/synth_sfx.py)",
@@ -30,27 +30,15 @@
   "dur_s": 0.09
  },
  "stamp": {
-  "source": "synth (tools/synth_sfx.py)",
-  "licence": "made for this video (no licence needed)",
-  "how": "a low thump (130->55 Hz), a woody 410 Hz tok and a 12 ms paper slap",
-  "dur_s": 0.35
- },
- "camera_shutter": {
-  "source": "otm/shutter: \"Pentax K1000 Camera Shutter.wav\" by yfjesse, https://freesound.org/people/yfjesse/sounds/579883/",
+  "source": "otm/stamp1: \"Stamp.wav\" by abstraktgeneriert, https://freesound.org/people/abstraktgeneriert/sounds/213003/",
   "licence": "CC0",
-  "how": "One Too Many's sfx/shutter (Pentax K1000) with a soft 5-11 kHz air shimmer under it",
-  "dur_s": 0.55
- },
- "typing": {
-  "source": "synth (tools/synth_sfx.py)",
-  "licence": "made for this video (no licence needed)",
-  "how": "about ten soft thumb taps on glass at irregular gaps, 1.7 s",
-  "dur_s": 1.8
+  "how": "One Too Many's sfx/stamp1 (a rubber stamp) over a soft 120->70 Hz thump at -6 dB",
+  "dur_s": 0.4
  },
  "send": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a sine gliding up to C6 in 60 ms with a little airy swish",
+  "how": "a sine gliding up to C6 in 60 ms, with its octave, 0.16 s",
   "dur_s": 0.16
  },
  "receive": {
@@ -62,8 +50,8 @@
  "ding": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a struck bell on C6 with near-harmonic partials, 1.4 s",
-  "dur_s": 1.4
+  "how": "a glockenspiel-like note on C7 (partials 1, 2.76, 5.40, 8.93), 1.0 s",
+  "dur_s": 1.0
  },
  "bulb": {
   "source": "synth (tools/synth_sfx.py)",
@@ -74,8 +62,8 @@
  "cloud": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "warm 120-900 Hz air with a 95->65 Hz body, soft 35 ms onset, 0.7 s",
-  "dur_s": 0.7
+  "how": "warm air through a band-pass falling 1.2 kHz -> 300 Hz, a faint 85->60 Hz body, 30 ms onset, 0.6 s",
+  "dur_s": 0.6
  },
  "whoosh": {
   "source": "synth (tools/synth_sfx.py)",
@@ -95,16 +83,28 @@
   "how": "One Too Many's step1-step4 (wood floor, CC0), 0.5 s apart, low-passed at 5.5 kHz",
   "dur_s": 2.0
  },
- "run": {
-  "source": "otm/step1-4 (as footsteps)",
-  "licence": "CC0",
-  "how": "One Too Many's step1-step4 shortened and played 1.25x (lighter), seven steps 0.15 s apart",
-  "dur_s": 1.4
- },
  "door": {
-  "source": "otm/latch1: \"Lever Latch Close.wav\" by Glitchedtones, https://freesound.org/people/Glitchedtones/sounds/322434/",
-  "licence": "CC0",
-  "how": "a soft wooden thump with One Too Many's latch1 just after",
-  "dur_s": 0.5
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take door_b (1.15-3.0 s), finished (onset trim, fade): prompt \"a wooden interior door closing gently, a soft thud and a clean latch click, small quiet carpeted room, close\", seed 1007",
+  "dur_s": 1.093
+ },
+ "run": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take run_a (0.0-1.6 s), finished (onset trim, fade): prompt \"quick light running footsteps of sneakers on a pavement, a person running past, close, clean and dry\", seed 11",
+  "dur_s": 1.536
+ },
+ "typing": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take typing_sa (0.25-2.1 s), finished (onset trim, hiss gate, fade): prompt \"a thumb typing quickly on a smartphone touchscreen, soft light taps on glass, close, quiet room\", seed 21",
+  "dur_s": 1.85
+ },
+ "camera_shutter": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take shutter_sa (0.47-1.3 s), finished (onset trim, hiss gate, fade): prompt \"a camera shutter click, a single photo being taken with a small digital camera, crisp mechanical click, close, quiet room\", seed 31",
+  "dur_s": 0.72
  }
 }

@@ -163,6 +163,9 @@
   // the timeline: sequences ordered by `from`, each lasting to the next one's start (the last to TOTAL); shots flattened globally
   FILM.build = function () {
     const S = Object.values(FILM.lib).sort((a, b) => a.from - b.from); FILM.seqs = S;
+    // the sequences must fall in story order (film/load.js): a wrong anchor (a day name inside a sentence) would reorder them
+    const order = (global.FILM_SEQUENCES || []).map(n => n.slice(0, 3)).filter(id => FILM.lib[id]);
+    if (order.length && order.join() !== S.map(s => s.id).join()) warn('sequences out of story order: ' + S.map(s => s.id + '@' + s.from.toFixed(2)).join(' '));
     S.forEach((s, i) => { s.start = s.from; s.end = i + 1 < S.length ? S[i + 1].from : TOTAL; s.dur = s.end - s.start; });
     const all = [];
     for (const s of S) for (const sh of s.shots) {

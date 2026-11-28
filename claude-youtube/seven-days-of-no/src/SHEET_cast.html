@@ -3,9 +3,9 @@
 <script>
 /* SEVEN DAYS OF NO · CAST SHEET (reference, not part of the video; labels allowed)
    Band 1: the hero's eight expressions (design/refs/01_expressions.jpg) plus 'guilty' (ref 05).
-   Band 2: the cast line-up (ref 12). Band 3: the hero's poses (ref 02 and the stills), two rows. 1920 x 2700. */
+   Band 2: the cast line-up (ref 12). Band 3: the hero's poses (ref 02 and the stills), two rows. Band 4: the props. 1920 x 3020. */
 window.addEventListener('load', () => {
-  const W = 1920, H = 2700;
+  const W = 1920, H = 3020;
   document.documentElement.style.cssText = 'margin:0;background:#222'; document.body.style.cssText = 'margin:0;background:#222';
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.style.cssText = 'display:block;width:100vw'; document.body.appendChild(cv);
   const g = cv.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
@@ -44,6 +44,21 @@ window.addEventListener('load', () => {
     POV.figure(g, 'hero', Object.assign({ x: cx, y: fy, scale: s, shadow: '#E3D9C8' }, o));
     label(name, 170 + col * 316, fy + 46, 24);
   });
+  // ---- band 4: props
+  g.fillStyle = '#FFFFFF'; g.fillRect(0, 2700, W, 320);
+  const py = 2850;
+  POV.phone(g, 80, py, { s: 1.3, glow: 0.8 });
+  POV.phoneFlat(g, 230, py + 20, { s: 1.1, glow: 0.5 }); POV.buzz(g, 230, py + 18, { rx: 86 });
+  POV.laptop(g, 430, py + 10, { s: 1.0 });
+  POV.clipboard(g, 590, py, { s: 1.0, front: true });
+  POV.box(g, 740, py + 10, { s: 0.85 });
+  POV.mug(g, 880, py + 10, { s: 1.3, steam: 0.3 });
+  [['missed', POV.C.bubRed], ['mail', POV.C.bubBlue], ['chat', POV.C.bubGreen], ['bell', POV.C.bubYellow]].forEach(([k, c], i) => POV.notif(g, 990 + i * 92, py - 20 + (i % 2) * 50, { kind: k, bg: c, s: 1.1, tail: i % 2 ? -1 : 1 }));
+  POV.chatBubble(g, 1380, py - 30, { s: 1.1 }); POV.bell(g, 1380, py + 60, { s: 1.0 });
+  POV.thought(g, 1560, py - 10, { w: 120, h: 82, tail: [[1470, py + 90, 11], [1450, py + 120, 7]] });
+  POV.bulb(g, 1740, py + 10, { s: 1.0, glow: 0.6, sparkle: true });
+  POV.clock(g, 1860, py, { r: 52, h: 5, m: 30, shadow: '#E8E2D8' });
+  label('PROPS', 960, 3000, 24);
   window.FRAME_READY = true;
 });
 </script>

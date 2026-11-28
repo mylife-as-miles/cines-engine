@@ -145,3 +145,15 @@
     return c.fig('hero', Object.assign({ x: a.x, y: a.y, s: a.s, pose: 'stand', expr: 'neutral' }, o || {}));
   };
 })(window);
+
+// the hero on the living-room sofa (set, hero, then the coffee table in front): STAGE.heroSofa(c, {tod...}, {pose, expr, hold...})
+(function (global) {
+  const STAGE = global.STAGE, ART = global.ART;
+  STAGE.heroSofa = function (c, so, fo) {
+    so = Object.assign({ tod: 'evening' }, so || {}); c.set('living', so);
+    const sa = STAGE.sitAt(c, 'living', (fo && fo.seat_at) || 'sofa_seat_r', { floor: 990 });
+    const h = c.fig('hero', Object.assign(sa, { face: 1, pose: 'sit_front', expr: 'neutral', tint: ART.tintFor(c, 'living') }, fo || {}));
+    if (!(fo && fo.noFront)) c.setFront('living', so);
+    return h;
+  };
+})(window);

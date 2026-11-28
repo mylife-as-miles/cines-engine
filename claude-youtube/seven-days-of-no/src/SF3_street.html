@@ -12,9 +12,9 @@ window.addEventListener('load', async () => {
   if (hasSets) S = SETS.street(g, {});
   else { g.fillStyle = POV.C.stOrange; g.fillRect(0, 0, 1920, 760); g.fillStyle = POV.C.stPave; g.fillRect(0, 760, 1920, 320); S = { anchors: { left: { x: 765, y: 962 }, right: { x: 1220, y: 962 } } }; }
   const A = S.anchors, sh = POV.C.stShadow;
-  POV.figure(g, 'stranger', { x: A.right.x, y: A.right.y, facing: -1, pose: 'hold_phone', mode: 'out', expr: 'guilty', face: { eyes: { lid: 0.32, lidTilt: 0.3 } },
+  POV.figure(g, 'stranger', { x: A.right.x, y: A.right.y, facing: -1, pose: 'hold_phone', mode: 'out', override: { armR: { ik: [166, -150] } }, expr: 'guilty', face: { eyes: { lid: 0.32, lidTilt: 0.3 } },
     look: [0.2, 0.55], turn: 0.25, nod: 0.15, shadow: sh });
-  POV.figure(g, 'hero', { x: A.left.x, y: A.left.y, facing: 1, pose: 'hands_clasped', expr: 'guilty', look: [0.65, 0.7], turn: 0.3, nod: 0.25, shadow: sh });
+  POV.figure(g, 'hero', { x: A.left.x, y: A.left.y, facing: 1, pose: 'hands_clasped', override: { head: { tilt: 0.09 } }, expr: 'guilty', look: [0.65, 0.7], turn: 0.3, nod: 0.25, shadow: sh });
   if (hasSets && SETS.streetFront) SETS.streetFront(g, {});
   window.FRAME_READY = true;
 });

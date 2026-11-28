@@ -11,21 +11,25 @@ is a Stable Audio 3.0 Small take (tools/sfx_gen.py -> audio/gen/, finished here 
       -> audio/sfx/<name>.flac (48 kHz mono, 24-bit, peak -1 dBFS) and audio/sfx/plan.json (source of each)
 
 phone_buzz      the phone vibrating on the coffee table: two motor pulses (175 Hz and its odd harmonics), a clean rattle
-notify          a soft UI ping: two quick glass notes rising a fourth (G5, C6)
+notify          a soft UI ping: two quick glass notes rising a fifth (C6, G6)
 pop, pop_2/3    a bubble or icon appearing: a short round "bloop" (a sine gliding up), three pitches to cycle through
-stamp           a friendly thud: a soft low thump, a woody "tok" and a little paper slap (the NO stamp)
-camera_shutter  One Too Many's Pentax K1000 shutter (CC0), with a soft synthetic flash shimmer after it
-typing          1.7 s of soft thumb taps on glass (the reply being typed)
-send            the message leaving: a quick airy upward glide ending on C6
+stamp           a friendly thud: One Too Many's rubber stamp (CC0) over a soft low thump (the NO stamp)
+camera_shutter  a Stable Audio take of a small camera's shutter (click, clack), trimmed
+typing          a Stable Audio take of a thumb typing on a phone, 1.8 s, its hiss gated
+send            the message leaving: a quick round upward glide ending on C6
 receive         the reply arriving: two soft glass notes falling a third (E6, C6)
-ding            a bright clean bell (C6): the right answer lighting up
+ding            a bright glockenspiel note (C7): the right answer lighting up
 bulb            a bright twinkle: a quick rising sparkle of five high bell notes (C6 E6 G6 C7 E7) over soft shimmer
-cloud           a soft low puff: warm filtered air with a gentle low body (the grey cloud arriving)
+cloud           a soft low puff: warm air falling from 1.2 kHz to 300 Hz with a faint low body (the grey cloud arriving)
 whoosh, _2      a soft airy swish for wipes and cards sliding in (0.45 s and a quicker 0.3 s)
 footsteps       four calm steps on a wooden office floor (One Too Many's step1-4, CC0), 0.5 s apart
-run             seven quick light steps (the same recordings, lighter and faster): the hero running across frame
-door            a door closing softly with its latch (Stable Audio take if audio/gen/door*.wav exists, else One Too Many's
-                latch1 under a soft wooden thump)
+run             a Stable Audio take of quick light running steps, 1.6 s
+door            a Stable Audio take of a door closing with its latch
+
+Every pick was ranked with earshot against its description and alternatives (audio/sfx/check.json; the variants that
+lost are listed in audio/README.md). The Stable Audio takes (tools/sfx_gen.py, audio/gen_plan.json) are raw in
+audio/gen/ (not committed); TAKES says which take and window each finished sound is. Without the raw take, the
+committed audio/sfx/<name>.flac is kept as it is.
 """
 import json, os
 import numpy as np
@@ -38,6 +42,8 @@ OUT = os.path.join(ROOT, 'audio', 'sfx')
 OTM = os.path.normpath(os.path.join(ROOT, '..', '..', 'claude-film', 'one-too-many', 'audio', 'sfx'))
 GEN = os.path.join(ROOT, 'audio', 'gen')
 T = lambda d: np.arange(int(d * SR)) / SR
+TAKES = {'door': ('door_b', 1.15, 3.0, False), 'run': ('run_a', 0.0, 1.6, False), 'typing': ('typing_sa', 0.25, 2.1, True),
+         'camera_shutter': ('shutter_sa', 0.47, 1.3, True)}   # name: (audio/gen take, from s, to s, gate its hiss)
 NOTE = {'C5': 523.25, 'E5': 659.26, 'G5': 783.99, 'A5': 880.0, 'C6': 1046.50, 'D6': 1174.66, 'E6': 1318.51, 'G6': 1567.98,
         'C7': 2093.00, 'E7': 2637.02}
 
@@ -116,7 +122,7 @@ def swept_air(dur, f_path, bw, seed, peak_at=0.45):
         if len(blk) < 2 * hop: break
         out[s:s + 2 * hop] += blk * win
     out = out[:n]; u = np.linspace(0, 1, n)
-    env = np.where(u < peak_at, np.sin(np.pi / 2 * u / peak_at) ** 2, np.cos(np.pi / 2 * (u - peak_at) / (1 - peak_at)) ** 1.6)
+    env = np.where(u < peak_at, np.sin(np.pi / 2 * u / peak_at) ** 2, np.clip(np.cos(np.pi / 2 * (u - peak_at) / (1 - peak_at)), 0, 1) ** 1.6)
     return out * env
 
 
@@ -130,7 +136,7 @@ def resample(x, ratio):
     n = int(round(len(x) / ratio)); return signal.resample(x, n) if n > 8 else x
 
 
-def finish_take(x, sr):
+def finish_take(x, sr, gate=True):
     """A generated take finished as sound.md §3: to 48 kHz, onset trimmed (first 1 ms frame within 40 dB of the peak,
     cut 3 ms early, 2 ms de-click), 0.15 s raised-cosine fade-out."""
     if x.ndim > 1: x = x.mean(axis=1)
@@ -138,6 +144,10 @@ def finish_take(x, sr):
     fr = int(0.001 * SR); e = np.array([np.max(np.abs(x[i:i + fr])) for i in range(0, len(x) - fr, fr)])
     first = int(np.argmax(e >= np.max(e) * 10 ** (-40 / 20))); s = max(0, first * fr - int(0.003 * SR))
     x = x[s:]; x = fade(x, 0.002, 0.15)
+    # a gentle downward expander on the take's hiss (the quiet takes): 10 ms envelope, 30 dB under the peak, at most 15 dB down
+    if gate:
+      env = np.sqrt(np.convolve(x ** 2, np.ones(480) / 480, mode='same')) + 1e-12; thr = np.max(env) * 10 ** (-30 / 20)
+      g = np.clip(env / thr, 10 ** (-15 / 20), 1.0); g = np.convolve(g, np.ones(240) / 240, mode='same'); x = x * g
     # trim the tail once it stays 60 dB under the peak
     a = np.abs(x); thr = np.max(a) * 1e-3; last = len(x) - int(np.argmax(a[::-1] > thr))
     return fade(x[:min(len(x), last + int(0.05 * SR))], 0.002, 0.05)
@@ -156,9 +166,9 @@ def main():
     b = np.zeros(int(0.95 * SR)); place(b, buzz_pulse(0.34, seed=1), 0.0); place(b, buzz_pulse(0.34, seed=2), 0.5, 0.9)
     W('phone_buzz', b, 'two 0.34 s vibration-motor pulses, 0.5 s apart, with a clean table rattle')
 
-    # notify: G5 -> C6, soft
-    n = np.zeros(int(0.6 * SR)); place(n, glass(NOTE['G5'], 0.5, 10), 0.0, 0.8); place(n, glass(NOTE['C6'], 0.5, 9), 0.075)
-    W('notify', lp(n, 7000), 'two soft glass notes rising a fourth, G5 then C6, 75 ms apart')
+    # notify: C6 -> G6, soft (ranked over G5 -> C6, a single E6 and a marimba pair: 79 % 'notification' vs a doorbell)
+    n = np.zeros(int(0.5 * SR)); place(n, glass(NOTE['C6'], 0.4, 13), 0.0, 0.8); place(n, glass(NOTE['G6'], 0.4, 12), 0.06)
+    W('notify', lp(n, 9000), 'two soft glass notes rising a fifth, C6 then G6, 60 ms apart')
 
     # pops: a round bloop, three pitches
     for i, (f0, f1) in enumerate([(330, 880), (392, 1047), (294, 784)]):
@@ -166,39 +176,24 @@ def main():
         x = x + 0.18 * np.sin(2 * ph) * np.exp(-60 * T(0.09))
         W('pop' if i == 0 else f'pop_{i + 1}', fade(x, 0.001, 0.02), f'a sine gliding {f0}->{f1} Hz in 35 ms, decaying in 90 ms')
 
-    # stamp: a friendly thud
-    t = T(0.35)
-    thump = np.sin(2 * np.pi * np.cumsum(55 + 75 * np.exp(-t / 0.025)) / SR) * np.exp(-14 * t)
-    tok = np.sin(2 * np.pi * 410 * t) * np.exp(-55 * t) * 0.35 + np.sin(2 * np.pi * 980 * t) * np.exp(-90 * t) * 0.12
-    slap = bp(np.random.default_rng(4).standard_normal(len(t)), 500, 3200) * np.exp(-t / 0.012) * 0.25
-    W('stamp', fade(thump + tok + slap, 0.0008, 0.05), 'a low thump (130->55 Hz), a woody 410 Hz tok and a 12 ms paper slap')
+    # stamp: a friendly thud. One Too Many's rubber stamp over a soft thump (a synthetic thump alone read as a kick drum,
+    # which would fight the music's own kick; this reads as an impact, a thud)
+    t = T(0.35); thump = np.sin(2 * np.pi * np.cumsum(70 + 50 * np.exp(-t / 0.015)) / SR) * np.exp(-22 * t)
+    s1 = otm('stamp1'); x = np.zeros(int(0.4 * SR)); place(x, s1 / np.max(np.abs(s1)), 0.0); place(x, 0.5 * thump, 0.004)
+    W('stamp', fade(x, 0.0005, 0.05), "One Too Many's sfx/stamp1 (a rubber stamp) over a soft 120->70 Hz thump at -6 dB",
+      'otm/stamp1: "Stamp.wav" by abstraktgeneriert, https://freesound.org/people/abstraktgeneriert/sounds/213003/', 'CC0')
 
-    # camera shutter: the Pentax K1000 (CC0) and a soft flash shimmer
-    sh = otm('shutter'); x = np.zeros(int(0.55 * SR)); place(x, sh / np.max(np.abs(sh)), 0.0)
-    shimmer = air(0.4, 5000, 11000, 7, 1.2) * np.exp(-6 * T(0.4)) * 0.12
-    place(x, shimmer, 0.03)
-    W('camera_shutter', x, "One Too Many's sfx/shutter (Pentax K1000) with a soft 5-11 kHz air shimmer under it",
-      'otm/shutter: "Pentax K1000 Camera Shutter.wav" by yfjesse, https://freesound.org/people/yfjesse/sounds/579883/', 'CC0')
-
-    # typing: soft thumb taps
-    tb = np.zeros(int(1.8 * SR)); tt = 0.0; rng = np.random.default_rng(9)
-    while tt < 1.6:
-        place(tb, tick(3000 + rng.uniform(-250, 350), 220 + rng.uniform(-15, 15)), tt, rng.uniform(0.65, 1.0))
-        tt += rng.choice([0.12, 0.15, 0.18, 0.22]) if rng.uniform() > 0.1 else 0.32
-    W('typing', tb, 'about ten soft thumb taps on glass at irregular gaps, 1.7 s')
-
-    # send: an airy upward glide to C6
+    # send: a round upward glide to C6 (the airy swish read as a snare; without it, 98 % 'a message sent')
     x, ph = glide(NOTE['G5'] * 0.75, NOTE['C6'], 0.16, 0.06, 22); x = x + 0.2 * np.sin(2 * ph) * np.exp(-40 * T(0.16))
-    x = fade(x, 0.002, 0.04) + 0.25 * air(0.16, 2500, 8000, 11, 1.5)
-    W('send', x, 'a sine gliding up to C6 in 60 ms with a little airy swish')
+    W('send', fade(x, 0.002, 0.04), 'a sine gliding up to C6 in 60 ms, with its octave, 0.16 s')
 
     # receive: E6 -> C6
     r = np.zeros(int(0.75 * SR)); place(r, glass(NOTE['E6'], 0.6, 9), 0.0); place(r, glass(NOTE['C6'], 0.65, 7), 0.09, 0.85)
     W('receive', lp(r, 8000), 'two soft glass notes falling a third, E6 then C6, 90 ms apart')
 
-    # ding: a bright bell on C6
-    W('ding', bell(NOTE['C6'], 1.4, 3.2, ((1, 1, 1), (2.0, 0.35, 1.6), (3.0, 0.15, 2.4), (4.07, 0.06, 3.5))),
-      'a struck bell on C6 with near-harmonic partials, 1.4 s')
+    # ding: a glockenspiel note on C7 (a lower bell on C6 read as a gong)
+    W('ding', bell(NOTE['C7'], 1.0, 3.5, ((1, 1, 1), (2.76, 0.35, 2.2), (5.40, 0.12, 3.5), (8.93, 0.04, 5.0)), 0.0008),
+      'a glockenspiel-like note on C7 (partials 1, 2.76, 5.40, 8.93), 1.0 s')
 
     # bulb: a quick rising sparkle
     x = np.zeros(int(1.4 * SR))
@@ -207,11 +202,11 @@ def main():
     x += 0.1 * air(1.4, 6000, 14000, 13, 0.8) * np.exp(-2.5 * T(1.4))
     W('bulb', fade(x, 0.002, 0.2), 'five high bell notes rising C6-E6-G6-C7-E7, 45 ms apart, over a faint 6-14 kHz shimmer')
 
-    # cloud: a soft low puff
-    t = T(0.7); u = t / 0.7
-    puff = air(0.7, 120, 900, 15, 1.0) * np.exp(-5 * t) * np.minimum(1, t / 0.035)
-    puff = lp(puff, 900) + 0.35 * np.sin(2 * np.pi * np.cumsum(95 - 30 * u) / SR) * np.exp(-7 * t) * np.minimum(1, t / 0.03)
-    W('cloud', fade(puff, 0.003, 0.15), 'warm 120-900 Hz air with a 95->65 Hz body, soft 35 ms onset, 0.7 s')
+    # cloud: a soft low puff, falling (a static puff with a low body read as a drum hit or an explosion)
+    t = T(0.6)
+    puff = lp(swept_air(0.6, [1200, 700, 420, 300], 1.8, 23, 0.18), 2500)
+    puff = puff + 0.12 * np.sin(2 * np.pi * np.cumsum(85 - 25 * t / 0.6) / SR) * np.exp(-8 * t) * np.minimum(1, t / 0.03)
+    W('cloud', fade(puff, 0.03, 0.12), 'warm air through a band-pass falling 1.2 kHz -> 300 Hz, a faint 85->60 Hz body, 30 ms onset, 0.6 s')
 
     # whooshes
     W('whoosh', fade(swept_air(0.45, [500, 1400, 2600, 1600, 700], 1.6, 17, 0.5), 0.002, 0.04),
@@ -228,27 +223,20 @@ def main():
       'otm/step1-3: "WoodType_1_Footstep_MensDressShoe_.wav" by monte32 (https://freesound.org/people/monte32/sounds/405115/); '
       'otm/step4: "Wood Floor Classic Shoe Footstep 1_10" by Joao_Janz (https://freesound.org/people/Joao_Janz/sounds/504020/)', 'CC0')
 
-    # run: seven quick light steps
-    rn = np.zeros(int(1.4 * SR))
-    for i in range(7):
-        s = resample(steps[i % 4][: int(0.12 * SR)], 1.25); s = fade(lp(s, 6500), 0.0005, 0.03)
-        place(rn, s / np.max(np.abs(s)), 0.04 + 0.15 * i, [0.7, 0.9, 0.75, 0.95, 0.8, 0.9, 0.7][i])
-    W('run', fade(rn, 0.001, 0.1), "One Too Many's step1-step4 shortened and played 1.25x (lighter), seven steps 0.15 s apart",
-      'otm/step1-4 (as footsteps)', 'CC0')
-
-    # door: a Stable Audio take if one is chosen (audio/gen/door.wav), else a soft thump and One Too Many's latch
-    g = os.path.join(GEN, 'door.wav')
-    if os.path.exists(g):
-        x, sr = sf.read(g, dtype='float64'); x = finish_take(x, sr)
-        meta = json.load(open(os.path.join(GEN, 'plan.json')))['sounds'].get('door', {}) if os.path.exists(os.path.join(GEN, 'plan.json')) else {}
-        W('door', x, f"Stable Audio 3.0 Small SFX take, finished (trim, fade): prompt \"{meta.get('prompt', '')}\", seed {meta.get('seed')}",
-          'Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally', 'Stability AI Community License')
-    else:
-        t = T(0.4); th = np.sin(2 * np.pi * np.cumsum(70 + 40 * np.exp(-t / 0.02)) / SR) * np.exp(-12 * t)
-        th = th + 0.3 * bp(np.random.default_rng(21).standard_normal(len(t)), 150, 1200) * np.exp(-t / 0.03)
-        x = np.zeros(int(0.5 * SR)); place(x, th, 0.0); la = otm('latch1'); place(x, 0.6 * la / np.max(np.abs(la)), 0.02)
-        W('door', fade(x, 0.001, 0.08), "a soft wooden thump with One Too Many's latch1 just after",
-          'otm/latch1: "Lever Latch Close.wav" by Glitchedtones, https://freesound.org/people/Glitchedtones/sounds/322434/', 'CC0')
+    # the Stable Audio takes (door, run, typing, camera_shutter): each a window of one take, finished
+    gp = os.path.join(ROOT, 'audio', 'gen_plan.json'); gplan = json.load(open(gp)) if os.path.exists(gp) else {}
+    old = json.load(open(os.path.join(OUT, 'plan.json'))) if os.path.exists(os.path.join(OUT, 'plan.json')) else {}
+    for name, (take, a, b, gate) in TAKES.items():
+        g = os.path.join(GEN, take + '.wav')
+        if not os.path.exists(g):
+            if os.path.exists(os.path.join(OUT, name + '.flac')) and name in old:
+                plan[name] = old[name]; print(f'{name}: raw take {take} not here, kept the committed flac'); continue
+            raise SystemExit(f'{name}: need audio/gen/{take}.wav (python3 tools/sfx_gen.py --only {take})')
+        x, sr = sf.read(g, dtype='float64'); x = x[int(a * sr):int(b * sr)]; x = finish_take(x, sr, gate)
+        meta = gplan.get(take, {})
+        W(name, x, f"Stable Audio 3.0 Small SFX take {take} ({a}-{b} s), finished (onset trim, {'hiss gate, ' if gate else ''}fade): "
+                   f"prompt \"{meta.get('prompt', '')}\", seed {meta.get('seed')}",
+          'Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production', 'Stability AI Community License')
 
     json.dump(plan, open(os.path.join(OUT, 'plan.json'), 'w'), indent=1)
     print('wrote', ', '.join(f"{k} ({v['dur_s']} s)" for k, v in plan.items()))

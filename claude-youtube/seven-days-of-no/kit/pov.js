@@ -8,7 +8,16 @@
    who: hero | boss | friend | mum | coworker | stranger.   pose: a name in POV.POSES or a pose object (see POSES for the format).
    Body coordinates: origin at the pelvis, y down, scale 1 = 800 px from soles to head top; angles: 0 = straight down,
    + swings toward the facing side. Everything drawn for facing 1 and mirrored for facing -1.
-   Deterministic: never Math.random or the clock (POV.rng(seed) for variation). No filters on figures (fast: ~1-3 ms each). */
+   Deterministic: never Math.random or the clock (POV.rng(seed) for variation). No filters on figures (~0.5 ms each in Chromium).
+
+   More figure opts: face (per-expression overrides, e.g. {brows:{lift:.1}, mouth:{k:'flat'}}), nod (-1..1 features down), marks
+   (confused '??', sheet only), light (1|-1: side the light comes from; shade strips go opposite), lw (screen px), override
+   ({armR:{ik:[x,y]}, head:{tilt}} merged into the pose), drawProp(g, joints, F) (custom prop in the hand layer), prop:false.
+   holding: clipboard | phone | mug | sip | laptop | box (takes over the arms the prop needs; works with walk/stand/sit).
+   Returns world anchors {head, headTop, headR, mouth, handL, handR, elbowL, elbowR, pelvis, scale} for bubbles and props.
+   Props (world space): POV.phone, phoneFlat, laptop, laptopSide, clipboard, box, mug, notif (kind mail|chat|bell|call|missed),
+   chatBubble, bell, buzz, thought (plate icon), plateIcon, bulb (rays, glow, sparkle), clock, flash, shadow.
+   In a tinted set (living-room evening) pass the set's tint to figure() so skin and clothes take the same multiply. */
 (function (global) {
   'use strict';
   const W = 1920, H = 1080, TAU = Math.PI * 2, PI = Math.PI;
@@ -168,7 +177,7 @@
     tired: { brows: { lift: 0.02, tilt: 0.11, arch: 0.1 }, eyes: { lid: 0.52, lidTilt: 0.12, lower: 0.12, pupil: 1 }, circles: 1, mouth: { k: 'yawn', w: 0.14, h: 0.18 } },
     angry: { brows: { lift: -0.07, tilt: -0.18, arch: 0.0, thick: 1.4 }, eyes: { lid: 0.3, lidTilt: -0.55, pupil: 1 }, crease: 1, mouth: { k: 'grit', w: 0.19, h: 0.1 } },
     sad: { brows: { lift: 0.02, tilt: 0.14, arch: 0.08 }, eyes: { lid: 0.2, lidTilt: 0.35, pupil: 1.6, gloss: 1, lower: 0.1, pool: 1 }, tears: 1, mouth: { k: 'frown', w: 0.17, c: 0.08 } },
-    scared: { brows: { lift: 0.07, tilt: 0.15, arch: 0.1 }, eyes: { r: 1.18, pupil: 0.72 }, sweat: 1, mouth: { k: 'scream', w: 0.22, h: 0.14 } },
+    scared: { brows: { lift: 0.07, tilt: 0.15, arch: 0.1 }, eyes: { r: 1.18, pupil: 0.72 }, sweat: 1, mouth: { k: 'scream', w: 0.26, h: 0.19 } },
     guilty: { brows: { lift: 0.0, tilt: 0.13, arch: 0.06 }, eyes: { lid: 0.42, lidTilt: 0.3, pupil: 1 }, mouth: { k: 'frown', w: 0.13, c: 0.06 }, look: [0.45, 0.75] },
     tired_closed: { brows: { lift: 0.02, tilt: 0.11, arch: 0.1 }, eyes: { lid: 0.62, lidTilt: 0.1, lower: 0.12 }, circles: 1, mouth: { k: 'frown', w: 0.12, c: 0.05 } },
     worried: { brows: { lift: 0.03, tilt: 0.12, arch: 0.08 }, eyes: { r: 1.04, pupil: 0.95 }, mouth: { k: 'flat', w: 0.12 } },
@@ -257,10 +266,10 @@
       [-0.55, -0.18, 0.18, 0.55].forEach(t => polyline(g, [[mx + t * w, my - h], [mx + t * w, my + h]], lw * 0.5)); g.restore(); strokeP(g, p, lw * 0.85);
     } else if (m.k === 'scream') {
       const h = (m.h || 0.14) * R, p = new Path2D();
-      p.moveTo(mx - w, my); p.quadraticCurveTo(mx, my - h * 0.55, mx + w, my); p.quadraticCurveTo(mx + w * 0.85, my + h * 1.2, mx, my + h * 1.25); p.quadraticCurveTo(mx - w * 0.85, my + h * 1.2, mx - w, my); p.closePath();
+      p.moveTo(mx - w, my + h * 0.75); p.quadraticCurveTo(mx, my - h * 0.75, mx + w, my + h * 0.75); p.quadraticCurveTo(mx + w * 0.55, my + h * 1.25, mx, my + h * 1.22); p.quadraticCurveTo(mx - w * 0.55, my + h * 1.25, mx - w, my + h * 0.75); p.closePath();
       g.fillStyle = C.mouthIn; g.fill(p); g.save(); g.clip(p);
-      const t = new Path2D(); t.moveTo(mx - w * 1.2, my - h); t.lineTo(mx + w * 1.2, my - h); t.lineTo(mx + w * 1.2, my + h * 0.05); t.quadraticCurveTo(mx, my - h * 0.05, mx - w * 1.2, my + h * 0.05); t.closePath();
-      g.fillStyle = white; g.fill(t); g.fillStyle = C.tongue; g.fill(ell(mx, my + h * 1.15, w * 0.6, h * 0.42)); g.restore(); strokeP(g, p, lw * 0.85);
+      const t = new Path2D(); t.moveTo(mx - w * 1.2, my - h); t.lineTo(mx + w * 1.2, my - h); t.lineTo(mx + w * 1.2, my + h * 1.05); t.quadraticCurveTo(mx, my - h * 0.2, mx - w * 1.2, my + h * 1.05); t.closePath();
+      g.fillStyle = white; g.fill(t); g.fillStyle = C.tongue; g.fill(ell(mx, my + h * 1.2, w * 0.42, h * 0.3)); g.restore(); strokeP(g, p, lw * 0.85);
     }
   }
   function drop(g, x, y, r, col, lw, a) {   // a tear or sweat drop, point up
@@ -273,7 +282,7 @@
     strokeP(g, p, lw); g.fillStyle = INK; g.fill(circ(x, y + 0.8 * s, lw * 0.75));
   }
   function face(g, R, o, F) {
-    const E = resolveExpr(o.expr, o.face), skin = F.skinC, white = F.c('#FFFFFF'), lw = F.lw;
+    const E = resolveExpr(o.expr, o.face), skin = F.skinC, white = mix('#FFFFFF', F.c('#FFFFFF'), 0.45), lw = F.lw;
     const turn = clamp(o.turn || 0, -1, 1), fx = turn * 0.2 * R, nod = o.nod || 0;
     const eyeY = 0.04 * R + nod * 0.1 * R, ES = 0.385 * R * (1 - 0.12 * Math.abs(turn));
     const look = o.look || E.look || [0, 0], blink = o.blink || 0;
@@ -330,21 +339,21 @@
       fs(g, brim, c(hr.sh), lw);
     } else if (hr.k === 'curly') {
       const r = rng('curls'), circles = [];
-      for (let i = 0; i <= 12; i++) { const t = i / 12, a = PI * (0.97 + 1.06 * t); circles.push([Math.cos(a) * 96, -14 + Math.sin(a) * 104, 23 + r() * 6]); }
-      for (let i = 0; i < 7; i++) circles.push([-60 + i * 20, -68 + (i % 2) * 5, 15 + r() * 3]);
-      circles.push([0, -60, 60], [-40, -70, 50], [40, -70, 50]);
+      for (let i = 0; i <= 12; i++) { const t = i / 12, a = PI * (1.0 + 1.0 * t); circles.push([Math.cos(a) * 98, -30 + Math.sin(a) * 98, 23 + r() * 6]); }
+      for (let i = 0; i < 7; i++) circles.push([-60 + i * 20, -82 + (i % 2) * 5, 14 + r() * 3]);
+      circles.push([0, -78, 56], [-40, -86, 48], [40, -86, 48]);
       g.strokeStyle = INK; g.lineWidth = lw * 2; circles.forEach(q => g.stroke(circ(q[0], q[1], q[2])));
       g.fillStyle = c(hr.c); circles.forEach(q => g.fill(circ(q[0], q[1], q[2])));
       g.strokeStyle = c(hr.hi); g.lineWidth = ld * 0.9;
       circles.slice(0, 13).forEach((q, i) => { if (i % 2) return; const p = new Path2D(); p.arc(q[0] * 0.8, q[1] * 0.8 - 6, q[2] * 0.45, 0.6, 2.6); g.stroke(p); });
     } else if (hr.k === 'bucket') {
-      const crown = new Path2D(); crown.moveTo(-68, -50); crown.bezierCurveTo(-70, -98, -50, -124, 0, -125); crown.bezierCurveTo(50, -124, 70, -98, 68, -50); crown.closePath();
+      const crown = new Path2D(); crown.moveTo(-70, -52); crown.bezierCurveTo(-68, -92, -56, -116, -24, -118); crown.lineTo(24, -118); crown.bezierCurveTo(56, -116, 68, -92, 70, -52); crown.closePath();
       fs(g, crown, c(hr.c), lw);
-      g.save(); g.clip(crown); g.fillStyle = c(hr.sh); g.fill(spl([[30, -124], [66, -100], [72, -50], [44, -54], [46, -96]], true)); g.restore(); strokeP(g, crown, lw);
-      const brim = new Path2D(); brim.moveTo(-70, -56); brim.quadraticCurveTo(0, -72, 70, -56); brim.quadraticCurveTo(108, -40, 124, -16); brim.quadraticCurveTo(126, -8, 116, -10); brim.quadraticCurveTo(0, -34, -116, -10); brim.quadraticCurveTo(-126, -8, -124, -16); brim.quadraticCurveTo(-108, -40, -70, -56); brim.closePath();
+      g.save(); g.clip(crown); g.fillStyle = c(hr.sh); g.fill(P([[30, -124], [76, -124], [76, -48], [44, -48]])); g.restore(); strokeP(g, crown, lw);
+      const brim = new Path2D(); brim.moveTo(-72, -62); brim.quadraticCurveTo(0, -74, 72, -62); brim.quadraticCurveTo(110, -46, 134, -4); brim.quadraticCurveTo(136, 6, 124, 4); brim.quadraticCurveTo(0, -30, -124, 4); brim.quadraticCurveTo(-136, 6, -134, -4); brim.quadraticCurveTo(-110, -46, -72, -62); brim.closePath();
       fs(g, brim, c(hr.hi), lw);
-      g.save(); g.clip(brim); g.fillStyle = c(hr.c); g.fill(spl([[-130, -14], [0, -38], [130, -14], [130, 10], [-130, 10]], true)); g.restore(); strokeP(g, brim, lw);
-      polyline(g, quadPts([-68, -62], [0, -76], [68, -62], 10), ld);
+      g.save(); g.clip(brim); g.fillStyle = c(hr.c); g.fill(spl([[-140, 8], [0, -22], [140, 8], [140, 24], [-140, 24]], true)); g.restore(); strokeP(g, brim, lw);
+      polyline(g, quadPts([-68, -68], [0, -80], [68, -68], 10), ld);
     }
   }
   function glasses(g, F, turn) {
@@ -439,15 +448,21 @@
     if (t.k === 'hoodie') {
       g.save(); g.clip(body); polyline(g, [[-t.hw - 5, -10], [t.hw + 5, -10]], ld); g.restore();
       const pk = new Path2D(); pk.moveTo(-62, -10); pk.quadraticCurveTo(-58, -52, -40, -66); pk.lineTo(40, -66); pk.quadraticCurveTo(58, -52, 62, -10); strokeP(g, pk, ld);
-      polyline(g, [[0, -196], [0, t.hem]], ld);
-      const hood = spl([[-74, -206, 1], [-85, -234], [-70, -261], [-36, -280], [0, -286], [36, -280], [70, -261], [85, -234], [74, -206, 1], [42, -222], [0, -230], [-42, -222]], true, 0.9);
+      polyline(g, [[0, -188], [0, t.hem]], ld);
+      // the hood: a thick roll sitting on the shoulders, its U-shaped opening around the neck closing to a V at the zip
+      const hood = spl([[-76, -204, 1], [-84, -236], [-68, -264], [-36, -282], [0, -288], [36, -282], [68, -264], [84, -236], [76, -204, 1], [40, -214], [0, -222], [-40, -214]], true, 0.9);
       fs(g, hood, c(t.c), lw);
-      fs(g, spl([[-60, -232, 1], [-68, -256], [-44, -276], [0, -284], [44, -276], [68, -256], [60, -232, 1], [30, -248], [0, -252], [-30, -248]], true, 0.9), c(t.inner), ld);
-      neck(F, 19, -248);
-      const v = new Path2D(); v.moveTo(-42, -254); v.quadraticCurveTo(0, -234, 42, -254); v.lineTo(9, -194); v.lineTo(-9, -194); v.closePath(); g.fillStyle = c(t.under); g.fill(v);
-      polyline(g, quadPts([-20, -252], [0, -233], [20, -252], 8), ld);
-      [-1, 1].forEach(s => tube(g, quadPts([s * 58, -272], [s * 54, -222], [s * 3, -191], 10), 19, c(t.c), lw * 0.85));
-      [-1, 1].forEach(s => { const pts = quadPts([s * 21, -214], [s * 23, -170], [s * 23, -120], 6); tube(g, pts, 6.5, c(C.white), ld * 0.8); tube(g, [[s * 23, -126], [s * 23, -112]], 8.5, c(C.white), ld * 0.8); });
+      const open = spl([[-48, -276], [-47, -240], [-30, -208], [0, -186, 1], [30, -208], [47, -240], [48, -276], [0, -290]], true, 0.85);
+      g.save(); g.clip(open);
+      g.fillStyle = c(t.inner); g.fillRect(-60, -300, 120, 120);
+      const tee = new Path2D(); tee.moveTo(-60, -246); tee.quadraticCurveTo(-30, -250, -24, -252); tee.lineTo(24, -252); tee.quadraticCurveTo(30, -250, 60, -246); tee.lineTo(60, -170); tee.lineTo(-60, -170); tee.closePath();
+      g.fillStyle = c(t.under); g.fill(tee); strokeP(g, P([[-60, -246], [-24, -252]], false), ld * 0.8); strokeP(g, P([[60, -246], [24, -252]], false), ld * 0.8);
+      g.fillStyle = F.skinC; g.fill(P([[-24, -300], [-24, -252], [24, -252], [24, -300]]));
+      const nl = new Path2D(); nl.moveTo(-24, -253); nl.quadraticCurveTo(0, -232, 24, -253); g.fillStyle = F.skinC; g.fill(nl); strokeP(g, nl, lw * 0.8);
+      polyline(g, [[-24, -290], [-24, -252]], lw * 0.8); polyline(g, [[24, -290], [24, -252]], lw * 0.8);
+      g.restore();
+      strokeP(g, open, lw);
+      [-1, 1].forEach(s => { const pts = quadPts([s * 22, -206], [s * 24, -166], [s * 23, -120], 6); tube(g, pts, 6.5, c(C.white), ld * 0.8); tube(g, [[s * 23, -126], [s * 23, -112]], 8.5, c(C.white), ld * 0.8); });
     } else if (t.k === 'shirt') {
       neck(F, 18, -246);
       [[[-52, -150], [-44, -100]], [[50, -160], [44, -110]], [[-30, -40], [-20, -16]]].forEach(q => polyline(g, q, ld * 0.75));
@@ -528,8 +543,8 @@
     hold_phone: o => {
       const mode = o.mode || 'ear', base = Object.assign({ stance: 'front', armL: STAND_ARML }, STAND_LEGS);
       if (mode === 'ear') return Object.assign(base, { head: { tilt: 0.07 }, armR: { ik: [70, -322], bend: 1, ul: 0.85, hand: 'hold', flip: -1, hrot: 0.2 }, prop: { k: 'phone', at: [80, -362], a: 0.25, s: 0.9 } });
-      if (mode === 'show') return Object.assign(base, { armL: { a: -0.14, e: -2.72, hand: 'hold', flip: 1, hrot: 0.1 }, armR: STAND_ARMR, prop: { k: 'phone', hand: 'L', off: [-2, 4], a: -0.22, s: 0.95, screen: 1 } });
-      if (mode === 'out') return Object.assign(base, { armR: { ik: [130, -205], bend: 1, ul: 0.95, hand: 'hold', flip: -1, hrot: -0.4 }, prop: { k: 'phone', hand: 'R', off: [12, 6], a: -0.2, s: 0.95, screen: 1 } });
+      if (mode === 'show') return Object.assign(base, { armL: { a: -0.14, e: -2.72, hand: 'hold', flip: 1, hrot: 0.1 }, armR: STAND_ARMR, prop: { k: 'phone', hand: 'L', along: 40, off: [-6, 0], a: -0.22, s: 1.05, screen: 1, over: true } });
+      if (mode === 'out') return Object.assign(base, { armR: { ik: [168, -180], bend: 1, ul: 0.95, hand: 'hold', flip: 1, hrot: -0.35 }, prop: { k: 'phone', hand: 'R', along: 40, off: [4, 0], a: 0.28, s: 1, screen: 1 } });
       return Object.assign(base, { head: { nod: 0.6 }, armR: { ik: [40, -132], bend: -1, fl: 0.62, hand: 'hold', flip: -1, hrot: 0.35 }, prop: { k: 'phone', hand: 'R', along: 54, off: [0, 0], a: -0.1, s: 0.95, screen: 1 } });
     },
     hold_laptop: o => Object.assign({ stance: 'front', armL: { ik: [62, -84], bend: 1, fl: 0.75, hand: 'flat', flip: -1, hrot: -0.55 }, armR: { ik: [236, -74], bend: -1, fl: 1, hand: 'hold', flip: -1, hrot: 0.9 },
@@ -556,9 +571,11 @@
   };
   // the arms a held prop takes over (merged after the pose, so `holding` works with walk, stand, sit...)
   const HOLD = {
-    clipboard: p => ({ armL: { ik: [-50, -106], bend: 1, fl: 0.5, hand: 'hold', flip: -1, hrot: -0.9 }, prop: { k: 'clipboard', at: [-78, -122], a: 0.06, s: 0.92 } }),
+    clipboard: p => p.stance === 'side'
+      ? { armR: { ik: [34, -112], bend: -1, fl: 0.5, hand: 'hold', flip: -1, hrot: 0.3 }, prop: { k: 'clipboard', at: [10, -150], a: -0.32, s: 0.92 } }
+      : { armL: { ik: [-50, -106], bend: 1, fl: 0.5, hand: 'hold', flip: -1, hrot: -0.9 }, prop: { k: 'clipboard', at: [-78, -122], a: 0.06, s: 0.92 } },
     phone: p => p.prop && p.prop.k === 'phone' ? {} : POSES.hold_phone({ mode: 'front' }),
-    mug: p => ({ armR: { ik: [44, -138], bend: -1, fl: 0.5, hand: 'hold', flip: -1, hrot: -1.0 }, prop: { k: 'mug', hand: 'R', off: [12, -4], s: 0.95 } }),
+    mug: p => ({ armR: { ik: [30, -128], bend: -1, fl: 0.5, hand: 'fist', flip: -1, hrot: -0.6 }, prop: { k: 'mug', hand: 'R', along: 8, off: [40, -10], s: 1.2, steam: 0.2, handle: -1, over: true } }),
     sip: p => ({ armR: { ik: [42, -262], bend: -1, ul: 0.7, fl: 0.75, hand: 'hold', flip: -1, hrot: -1.1 }, prop: { k: 'mug', hand: 'R', off: [6, 2], s: 0.95 }, head: Object.assign({}, p.head, { tilt: -0.04 }) }),
     laptop: p => POSES.hold_laptop({}),
     box: p => POSES.hold_box({}),
@@ -566,20 +583,21 @@
 
   // ================================================================ props (world space; s = scale, a = rotation)
   const PROPS = {};
+  const tc = (o, h) => (o && o.tint ? mul(h, o.tint) : h);   // props take the scene's multiply tint too
   PROPS.phone = function (g, x, y, o) {
     o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
     g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
     if (o.glow) { const gr = g.createRadialGradient(0, 0, 10, 0, 0, 90); gr.addColorStop(0, rgba(C.phoneGlow, 0.7 * o.glow)); gr.addColorStop(1, rgba(C.phoneGlow, 0)); g.fillStyle = gr; g.fillRect(-90, -90, 180, 180); }
-    const body = rrect(-20, -37, 40, 74, 8); fs(g, body, C.phone, lw);
+    const body = rrect(-20, -37, 40, 74, 8); fs(g, body, tc(o, C.phone), lw);
     if (o.screen !== 0) { const sc = rrect(-15, -31, 30, 60, 4); g.fillStyle = o.glow ? mix(C.phoneScreen, '#FFFFFF', 0.35 * o.glow) : C.phoneScreen; g.fill(sc); g.save(); g.clip(sc); g.fillStyle = 'rgba(255,255,255,0.45)'; g.fill(P([[-20, 6], [20, -26], [20, -14], [-20, 18]])); g.restore(); strokeP(g, sc, lw * 0.5); }
     g.restore();
   };
   PROPS.phoneFlat = function (g, x, y, o) {   // lying on a table, seen from above at an angle
     o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
     g.save(); g.translate(x, y); g.scale(s, s);
-    if (o.glow) { const gr = g.createRadialGradient(0, -6, 10, 0, -6, 120); gr.addColorStop(0, rgba(C.phoneGlow, 0.55 * o.glow)); gr.addColorStop(1, rgba(C.phoneGlow, 0)); g.fillStyle = gr; g.fill(ell(0, -4, 130, 70)); }
+    if (o.glow) { g.save(); g.scale(1, 0.42); const gr = g.createRadialGradient(0, -10, 10, 0, -10, 120); gr.addColorStop(0, rgba(C.phoneGlow, 0.5 * o.glow)); gr.addColorStop(1, rgba(C.phoneGlow, 0)); g.fillStyle = gr; g.fill(circ(0, -10, 120)); g.restore(); }
     const q = [[-58, -10], [44, -26], [64, 2], [-38, 18]], th = [[-38, 18], [64, 2], [64, 9], [-38, 25]];
-    fs(g, P(th), '#2A2B31', lw); fs(g, spl(q.map(p => [p[0], p[1], 1]), true), C.phone, lw);
+    fs(g, P(th), tc(o, '#2A2B31'), lw); fs(g, spl(q.map(p => [p[0], p[1], 1]), true), tc(o, C.phone), lw);
     const sc = P([[-48, -8], [40, -21], [55, 0], [-33, 13]]); g.fillStyle = o.glow ? mix(C.phoneScreen, '#FFFFFF', 0.4 * o.glow) : C.phoneScreen; g.fill(sc);
     g.save(); g.clip(sc); g.fillStyle = 'rgba(255,255,255,0.5)'; g.fill(P([[-20, -20], [0, -24], [-12, 20], [-30, 20]])); g.restore(); strokeP(g, sc, lw * 0.5);
     g.restore();
@@ -624,9 +642,9 @@
     o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
     g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
     if (o.steam != null) { const t = o.steam; g.lineCap = 'round'; [-9, 6].forEach((sx, i) => { const p = new Path2D(), ph = TAU * (t + i * 0.37); p.moveTo(sx, -30); for (let k = 1; k <= 8; k++) p.lineTo(sx + sinA(ph + k * 0.9) * 5, -30 - k * 6); strokeP(g, p, 2.6 / s, C.steam); }); }
-    const hdl = new Path2D(); hdl.arc(24, 2, 11, -PI / 2, PI / 2); g.lineWidth = 7 + 2 * lw; g.strokeStyle = INK; g.stroke(hdl); g.lineWidth = 7; g.strokeStyle = C.mug; g.stroke(hdl);
+    const hs = o.handle || 1, mugC = tc(o, C.mug), hdl = new Path2D(); if (hs > 0) hdl.arc(24, 2, 11, -PI / 2, PI / 2); else hdl.arc(-24, 2, 11, PI / 2, PI * 1.5); g.lineWidth = 7 + 2 * lw; g.strokeStyle = INK; g.stroke(hdl); g.lineWidth = 7; g.strokeStyle = mugC; g.stroke(hdl);
     const b = new Path2D(); b.moveTo(-26, -18); b.lineTo(26, -18); b.quadraticCurveTo(26, 22, 6, 24); b.lineTo(-6, 24); b.quadraticCurveTo(-26, 22, -26, -18); b.closePath();
-    fs(g, b, C.mug, lw); fs(g, ell(0, -18, 26, 7), C.mug, lw); g.fillStyle = C.coffee; g.fill(ell(0, -17, 20, 4.5));
+    fs(g, b, mugC, lw); g.save(); g.clip(b); g.fillStyle = tc(o, '#E4E1DE'); g.fillRect(-28 * hs, -20, 12 * hs, 50); g.restore(); strokeP(g, b, lw); fs(g, ell(0, -18, 26, 7), mugC, lw); g.fillStyle = tc(o, C.coffee); g.fill(ell(0, -17, 20, 4.5));
     g.restore();
   };
   function bellPath() { const p = new Path2D(); p.moveTo(-14, 10); p.quadraticCurveTo(-11, 6, -11, -2); p.bezierCurveTo(-11, -14, -6, -18, 0, -18); p.bezierCurveTo(6, -18, 11, -14, 11, -2); p.quadraticCurveTo(11, 6, 14, 10); p.closePath(); return p; }
@@ -636,10 +654,13 @@
     else if (kind === 'chat') { const p = new Path2D(); p.ellipse(0, -2, 16, 12, 0, 0.75 * PI, 0.62 * PI); p.lineTo(-14, 14); p.closePath(); fs(g, p, col, lw); [-6, 0, 6].forEach(x => { g.fillStyle = INK; g.fill(circ(x, -2, 1.9)); }); }
     else if (kind === 'bell') { fs(g, bellPath(), col, lw); fs(g, circ(0, 13, 3.5), col, lw * 0.8); polyline(g, [[0, -18], [0, -21]], lw); }
     else if (kind === 'call' || kind === 'missed') {
-      g.save(); g.rotate(-0.25);
-      const p = new Path2D(); p.moveTo(-15, -12); p.quadraticCurveTo(-18, 10, 6, 17); p.lineTo(13, 10); p.lineTo(5, 3); p.lineTo(0, 8); p.quadraticCurveTo(-8, 2, -7, -6); p.lineTo(-1, -9); p.lineTo(-7, -18); p.closePath();
-      fs(g, p, col, lw); g.restore();
-      if (kind === 'missed') { g.lineCap = 'round'; strokeP(g, P([[6, -14], [14, -6], [20, -16]], false), lw * 1.6, INK); strokeP(g, P([[6, -14], [14, -6], [20, -16]], false), lw * 0.7, C.badgeRed); polyline(g, [[15, -17], [20, -16], [20, -11]], lw * 0.7, C.badgeRed); }
+      g.save(); g.translate(-3, 1); g.rotate(-2.36);
+      const arc = new Path2D(); arc.arc(0, 9, 16, PI * 1.12, PI * 1.88);
+      const e1 = rrect(-24, -2, 14, 16, 6), e2 = rrect(10, -2, 14, 16, 6);
+      g.lineCap = 'round'; g.strokeStyle = INK; g.lineWidth = 10 + 2 * lw; g.stroke(arc); g.lineWidth = 2 * lw; g.stroke(e1); g.stroke(e2);
+      g.strokeStyle = col; g.lineWidth = 10; g.stroke(arc); g.fillStyle = col; g.fill(e1); g.fill(e2);
+      g.restore();
+      if (kind === 'missed') { const ar = [[23, -21], [12, -10]], hd = [[12, -18], [12, -10], [20, -10]]; [ar, hd].forEach(q => { strokeP(g, P(q, false), 4 + 2 * lw, INK); }); [ar, hd].forEach(q => strokeP(g, P(q, false), 4, col)); }
     }
   }
   PROPS.notif = function (g, x, y, o) {   // an app notification: coloured rounded square with a tail and a white icon, no words
@@ -729,7 +750,7 @@
     const g = F.g; let at = pr.at;
     if (pr.hand) { const arm = pr.hand === 'L' ? J.armL : J.armR, d = dir(arm.ha), off = pr.off || [0, 0], k = pr.along || 30; at = [arm.Wr[0] + d[0] * k + off[0], arm.Wr[1] + d[1] * k + off[1]]; }
     if (!at) return;
-    const o = Object.assign({ lw: F.lw * 0.9 }, pr, { s: pr.s || 1 });
+    const o = Object.assign({ lw: F.lw * 0.9 }, pr, { s: pr.s || 1, tint: F.tint });
     o.lw = F.lw * 0.9 * (pr.s || 1);
     if (pr.k === 'phone') PROPS.phone(g, at[0], at[1], o);
     else if (pr.k === 'laptop') PROPS.laptop(g, at[0], at[1], o);
@@ -755,7 +776,7 @@
     const tint = opts.tint || null, cache = {};
     const c = tint ? (h => cache[h] || (cache[h] = mul(h, tint))) : (h => h);
     const lw = (opts.lw || LW.figure) / sc * (opts.scale || 1) / (opts.scale || 1) * 1, F = { g, ch, c, lw: lw, ld: lw * LW.detail / LW.figure, skinC: c(ch.skin), browC: c(ch.brow || INK) };
-    F.lw = (opts.lw ? opts.lw / sc : LW.figure / (ch.h || 1)); F.ld = F.lw * LW.detail / LW.figure;
+    F.lw = (opts.lw ? opts.lw / sc : LW.figure / (ch.h || 1)); F.ld = F.lw * LW.detail / LW.figure; F.tint = tint;
     const light = (opts.light == null ? 1 : opts.light) * facing;   // screen side the light comes from, in body space
     const B = ch.bottom, isSkirt = B.k === 'skirt', stance = pose.stance || 'front';
     g.save();
@@ -861,9 +882,11 @@
     const shoulderClip = A => { const cl = new Path2D(); cl.rect(-3000, -3000, 6000, 6000); cl.arc(A.S[0], A.S[1], t.arm * 0.62, 0, TAU); return cl; };
     const under = (pose.prop && pose.prop.under) || '';
     fa.forEach(A => { if (under.includes(A.sg < 0 ? 'L' : 'R')) drawArm(A, shoulderClip(A)); });
-    if (pose.prop && opts.prop !== false) drawProp(F, pose.prop, J);
+    const over = pose.prop && pose.prop.over;
+    if (pose.prop && opts.prop !== false && !over) drawProp(F, pose.prop, J);
     if (opts.drawProp) opts.drawProp(g, J, F);
     fa.forEach(A => { if (under.includes(A.sg < 0 ? 'L' : 'R')) drawHand(F, A.Wr, A.ha, A.hand, A.flip, A.hs); else drawArm(A, shoulderClip(A)); });
+    if (pose.prop && opts.prop !== false && over) drawProp(F, pose.prop, J);
     // ---- world-space anchors for the caller (bubbles, props)
     const M = g.getTransform(), wp = p => { const q = M.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
     const hm = J.head, hw = p => { const q = hm.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };

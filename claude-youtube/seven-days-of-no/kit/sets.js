@@ -124,16 +124,42 @@
     return { z, ox: W / 2 - cx * z, oy: H / 2 - cy * z };
   }
   function resFor(z) { return z <= 1.001 ? 1 : z <= 1.5 ? 1.5 : 2; }
-  function blit(g, xf, canvas, alpha) {
+  // cache resolution from the full device scale: camera zoom times whatever transform g already has (SETS.fit, a shake)
+  function devRes(g, xf) { const m = g.getTransform ? g.getTransform() : null; return resFor(xf.z * (m ? Math.hypot(m.a, m.b) : 1)); }
+  // Blit a cached layer through the camera. Only the visible part of the source is drawn (device bounds, an optional
+  // clip hint from SETS.call panels, and the layer's bbox), so zoom 1 is a 1:1 copy (~1 ms in headless Chromium);
+  // a scaled blit costs more (~8 ms for a full frame), which is why front layers carry a bbox.
+  let CLIP_HINT = null;
+  function blit(g, xf, canvas, alpha, bbox) {
+    const res = canvas.width / W;
     g.save(); g.transform(xf.z, 0, 0, xf.z, xf.ox, xf.oy);
-    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
     if (alpha != null) g.globalAlpha *= alpha;
-    g.drawImage(canvas, 0, 0, W, H); g.restore();
+    const m = g.getTransform ? g.getTransform() : null;
+    if (!m || Math.abs(m.b) > 1e-9 || Math.abs(m.c) > 1e-9 || m.a <= 0 || m.d <= 0) {
+      g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'medium'; g.drawImage(canvas, 0, 0, W, H); g.restore(); return;
+    }
+    const dev = CLIP_HINT || { x: 0, y: 0, w: g.canvas ? g.canvas.width : W, h: g.canvas ? g.canvas.height : H };
+    const B = bbox || { x: 0, y: 0, w: W, h: H };
+    let x0 = Math.max(B.x, 0, (dev.x - m.e) / m.a), y0 = Math.max(B.y, 0, (dev.y - m.f) / m.d);
+    let x1 = Math.min(B.x + B.w, W, (dev.x + dev.w - m.e) / m.a), y1 = Math.min(B.y + B.h, H, (dev.y + dev.h - m.f) / m.d);
+    if (x1 <= x0 || y1 <= y0) { g.restore(); return; }
+    // snap the source rect to whole source pixels
+    const px0 = Math.max(0, Math.floor(x0 * res)), py0 = Math.max(0, Math.floor(y0 * res));
+    const px1 = Math.min(canvas.width, Math.ceil(x1 * res)), py1 = Math.min(canvas.height, Math.ceil(y1 * res));
+    const k = 1 / res;
+    let dx = m.a * px0 * k + m.e, dy = m.d * py0 * k + m.f, dw = m.a * (px1 - px0) * k, dh = m.d * (py1 - py0) * k;
+    const oneToOne = Math.abs(dw - (px1 - px0)) < 1e-6 && Math.abs(dh - (py1 - py0)) < 1e-6;
+    if (oneToOne) { dx = Math.round(dx); dy = Math.round(dy); }
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    // 'low' = plain bilinear: ~6 ms for a full scaled frame here, against ~11 ms for 'medium' (mipmapped)
+    g.imageSmoothingEnabled = !oneToOne; g.imageSmoothingQuality = 'low';
+    g.drawImage(canvas, px0, py0, px1 - px0, py1 - py0, dx, dy, dw, dh);
+    g.restore();
   }
   function live(g, xf, fn) { g.save(); g.transform(xf.z, 0, 0, xf.z, xf.ox, xf.oy); g.lineJoin = 'round'; g.lineCap = 'round'; refresh(); fn(g); g.restore(); }
   function result(xf, anchorsSet, floorY, wallY, extra) {
     const anchors = {};
-    for (const k in anchorsSet) { const a = anchorsSet[k]; anchors[k] = Object.assign({}, a, { x: a.x * xf.z + xf.ox, y: a.y * xf.z + xf.oy, s: (a.s || 1) * xf.z }); }
+    for (const k in anchorsSet) { const a = anchorsSet[k]; if (!a) continue; anchors[k] = Object.assign({}, a, { x: a.x * xf.z + xf.ox, y: a.y * xf.z + xf.oy, s: (a.s || 1) * xf.z }); }
     return Object.assign({
       floorY: floorY * xf.z + xf.oy, wallY: wallY * xf.z + xf.oy, zoom: xf.z, anchors, anchorsSet, tint: null,
       toScreen: (x, y) => ({ x: x * xf.z + xf.ox, y: y * xf.z + xf.oy }),
@@ -344,7 +370,7 @@
     // outer frame corners (TL, TR, BR, BL) and opening, from ref 09
     const WX = OF.wallX, FY = OF.floorY;
     const xl = 118, xr = 495, xli = 164, xri = 444;
-    const top = (x) => vpY(xl, 30, x), topIn = (x) => vpY(xli, 72, x), fl = (x) => vpY(WX, FY, x);
+    const top = (x) => vpY(xl, 4, x), topIn = (x) => vpY(xli, 46, x), fl = (x) => vpY(WX, FY, x);
     return {
       outer: [xl, top(xl), xr, top(xr), xr, fl(xr), xl, fl(xl)],
       open: [xli, topIn(xli), xri, topIn(xri), xri, fl(xri), xli, fl(xli)],
@@ -468,14 +494,17 @@
     softFill(g, 24, 'rgba(255,214,140,0.5)', () => polyP(g, [lx - 40, ly - 40, lx + 40, ly - 40, lx + 190, 640, lx - 190, 640]), 'screen');
     // monitor glow on the wall
     softFill(g, 30, 'rgba(170,220,255,0.35)', () => ellP(g, 1110, 470, 90, 120), 'screen');
-    // the desk lamp: angled arm, cone shade (lit)
-    const base = [1300, 615];
-    shape(g, () => ellP(g, base[0], base[1] - 4, 36, 9), '#3E6F78', LW.small);
-    g.beginPath(); g.moveTo(base[0], base[1] - 6); g.lineTo(base[0] + 30, 520); g.lineTo(base[0] - 8, 470);
+    // the desk lamp: base, two-part arm, cone head tipped toward the desk, bright opening
+    const bx = 1300, by = 615, ex = 1334, ey = 528, hx = 1290, hy = 474;
+    shape(g, () => ellP(g, bx, by - 5, 38, 10), X.teal, LW.small, C.hoodieSh || '#2F7280', () => rectP(g, bx - 40, by - 4, 80, 12));
+    g.beginPath(); g.moveTo(bx, by - 10); g.lineTo(ex, ey); g.lineTo(hx, hy);
     g.lineWidth = 9 + LW.small * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 9; g.strokeStyle = X.teal; g.stroke();
-    ellP(g, base[0] + 30, 520, 9, 9); paint(g, X.teal, LW.detail);
-    shape(g, () => polyP(g, [base[0] - 8, 452, base[0] - 70, 520, base[0] + 2, 548, base[0] + 22, 470]), X.teal, LW.small, C.hoodieSh || '#2F7280', () => polyP(g, [base[0] - 8, 452, base[0] + 22, 470, base[0] + 2, 548, base[0] - 20, 540]));
-    ellP(g, base[0] - 34, 534, 38, 12); g.save(); g.translate(0, 0); paint(g, '#FFE9A8', LW.detail); g.restore();
+    ellP(g, ex, ey, 9, 9); paint(g, X.teal, LW.detail);
+    g.save(); g.translate(hx, hy); g.rotate(0.62);
+    shape(g, () => polyP(g, [-16, -10, 16, -10, 50, 66, -50, 66]), X.teal, LW.small, C.hoodieSh || '#2F7280', () => polyP(g, [4, -10, 16, -10, 50, 66, 20, 66]));
+    ellP(g, 0, 66, 50, 13); paint(g, '#FFF1C2', LW.small);
+    g.restore();
+    ellP(g, hx, hy - 4, 10, 10); paint(g, X.teal, LW.detail);
   }
 
   function officeAnchors(o) {
@@ -487,7 +516,7 @@
       desk: { x: 1186, y: 617, s: 1 },         // top of the hero's desk (centre)
       deskPhone: { x: 1265, y: 612, s: 1 },    // a spot on the desk top for the phone
       chair: { x: 1560, y: 760, s: 1 },        // seat of the office chair (hips), sitter faces left
-      backDesk: { x: 250, y: 575, s: 1 },
+      backDesk: o.view === 'door' ? undefined : { x: 250, y: 575, s: 1 },
       door: { x: o.view === 'door' ? D.floorMid[0] : 318, y: o.view === 'door' ? 935 : 962, s: o.view === 'door' ? 0.95 : 1 }, // standing in the doorway
       doorway: { x: D.floorMid[0], y: D.floorMid[1], s: 0.95 },
       window: { x: 1552, y: 307, s: 1 },
@@ -500,7 +529,7 @@
   SETS.office = function (g, o) {
     o = o || {};
     const xf = camXf(o.cam), key = 'office|' + (o.view || 'desk') + '|' + (o.night ? 1 : 0) + '|' + (o.chair === true ? 1 : 0);
-    blit(g, xf, layer(key, resFor(xf.z), (lg) => officeStatic(lg, o)));
+    blit(g, xf, layer(key, devRes(g, xf), (lg) => officeStatic(lg, o)));
     live(g, xf, (g2) => clockHands(g2, 960, 212, 95, o.clock != null ? o.clock : 17));
     return result(xf, officeAnchors(o), 962, OF.floorY, { tint: o.night ? '#9C98C4' : null });
   };
@@ -509,14 +538,14 @@
     const xf = camXf(o.cam), parts = o.parts || (o.view === 'door' ? ['door'] : []);
     if (!parts.length) return result(xf, officeAnchors(o), 962, OF.floorY);
     const key = 'officeFront|' + (o.view || 'desk') + '|' + parts.join(',') + '|' + (o.night ? 1 : 0);
-    blit(g, xf, layer(key, resFor(xf.z), (lg) => {
+    blit(g, xf, layer(key, devRes(g, xf), (lg) => {
       if (parts.includes('door') && o.view === 'door') {
         // the side wall around the opening and the frame: a figure standing in the doorway is seen through the opening
         const D = officeDoorGeom(), WX = OF.wallX, FY = OF.floorY;
         clipDo(lg, () => { lg.beginPath(); polyP(lg, [0, 0, D.outer[2] + 2, 0, D.outer[4] + 2, vpY(WX, FY, D.outer[4]) + 2, 0, vpY(WX, FY, 0) + 2]); lg.moveTo(D.open[0], D.open[1]); lg.lineTo(D.open[6], D.open[7] + 60); lg.lineTo(D.open[4], D.open[5] + 60); lg.lineTo(D.open[2], D.open[3]); lg.closePath(); }, () => officeStatic(lg, o), true);
       }
       if (parts.includes('desk')) officeHeroDesk(lg, o);
-    }));
+    }), null, parts.includes('desk') ? (parts.includes('door') ? null : { x: 980, y: 360, w: 420, h: 640 }) : { x: 0, y: 0, w: 520, h: 1060 });
     return result(xf, officeAnchors(o), 962, OF.floorY);
   };
 
@@ -676,8 +705,8 @@
     o = o || {};
     const tod = LIV_PAL[o.tod] ? o.tod : 'evening';
     const xf = camXf(o.cam), base = (t) => 'living|' + t + '|' + (o.table === false ? 0 : 1);
-    blit(g, xf, layer(base(tod), resFor(xf.z), (lg) => livingStatic(lg, o, tod)));
-    if (o.todTo && LIV_PAL[o.todTo] && o.todK > 0) blit(g, xf, layer(base(o.todTo), resFor(xf.z), (lg) => livingStatic(lg, o, o.todTo)), Math.min(1, o.todK));
+    blit(g, xf, layer(base(tod), devRes(g, xf), (lg) => livingStatic(lg, o, tod)));
+    if (o.todTo && LIV_PAL[o.todTo] && o.todK > 0) blit(g, xf, layer(base(o.todTo), devRes(g, xf), (lg) => livingStatic(lg, o, o.todTo)), Math.min(1, o.todK));
     if (o.bird != null) live(g, xf, (g2) => clipDo(g2, () => rectP(g2, 382, 127, 289, 360), () => { const k = o.bird; bird(g2, 360 + k * 360, 250 - 40 * Math.sin(k * 3), 1, k * 4); }));
     const P = LIV_PAL[o.todTo && o.todK >= 0.5 ? o.todTo : tod];
     return result(xf, livingAnchors(o), 990, LV.floorY, { tint: P.tint });
@@ -686,8 +715,9 @@
     o = o || {};
     const tod = LIV_PAL[o.tod] ? o.tod : 'evening', xf = camXf(o.cam);
     if (o.table !== false) {
-      blit(g, xf, layer('livingFront|' + tod, resFor(xf.z), (lg) => coffeeTable(lg, LIV_PAL[tod])));
-      if (o.todTo && LIV_PAL[o.todTo] && o.todK > 0) blit(g, xf, layer('livingFront|' + o.todTo, resFor(xf.z), (lg) => coffeeTable(lg, LIV_PAL[o.todTo])), Math.min(1, o.todK));
+      const bb = { x: 680, y: 816, w: 800, h: 264 };
+      blit(g, xf, layer('livingFront|' + tod, devRes(g, xf), (lg) => coffeeTable(lg, LIV_PAL[tod])), null, bb);
+      if (o.todTo && LIV_PAL[o.todTo] && o.todK > 0) blit(g, xf, layer('livingFront|' + o.todTo, devRes(g, xf), (lg) => coffeeTable(lg, LIV_PAL[o.todTo])), Math.min(1, o.todK), bb);
     }
     return result(xf, livingAnchors(o), 990, LV.floorY);
   };
@@ -766,12 +796,12 @@
   }
   SETS.street = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('street', resFor(xf.z), (lg) => streetStatic(lg, o)));
+    blit(g, xf, layer('street', devRes(g, xf), (lg) => streetStatic(lg, o)));
     return result(xf, streetAnchors(), 962, 851);
   };
   SETS.streetFront = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('streetFront', resFor(xf.z), (lg) => streetNear(lg)));
+    blit(g, xf, layer('streetFront', devRes(g, xf), (lg) => streetNear(lg)), null, { x: 1420, y: 0, w: 500, h: 930 });
     return result(xf, streetAnchors(), 962, 851);
   };
 
@@ -894,19 +924,19 @@
     // light: wall band and soft window beams
     wallBand(g, KI.wall, KI.wallSh, [0, 0, W, 440], [-20, 120, 600, 30, 1400, 30, W + 20, 140]);
     clipDo(g, () => rectP(g, 0, 440, 1590, 178), () => softFill(g, 12, 'rgba(255,248,226,0.4)', () => polyP(g, [820, 444, 1180, 444, 1300, FY, 760, FY]), 'screen'));
-    softFill(g, 14, 'rgba(255,244,214,0.3)', () => polyP(g, [760, FY + 2, 1300, FY + 2, 1460, H, 640, H]), 'screen');
+    softFill(g, 16, 'rgba(255,244,214,0.16)', () => polyP(g, [760, FY + 2, 1300, FY + 2, 1460, H, 640, H]), 'screen');
     line(g, 0, FY, 1590, FY, LW.arch);
     if (o.island) kitchenIsland(g);
   }
   function kitchenAnchors() { return { center: { x: 960, y: 985, s: 1 }, left: { x: 600, y: 985, s: 1 }, right: { x: 1320, y: 985, s: 1 }, counter: { x: 960, y: 620, s: 1 }, window: { x: 1000, y: 285, s: 1 }, island: { x: 960, y: 836, s: 1 } }; }
   SETS.mumKitchen = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('kitchen|' + (o.sky || 'sunset') + '|' + (o.island ? 1 : 0), resFor(xf.z), (lg) => kitchenStatic(lg, o)));
+    blit(g, xf, layer('kitchen|' + (o.sky || 'sunset') + '|' + (o.island ? 1 : 0), devRes(g, xf), (lg) => kitchenStatic(lg, o)));
     return result(xf, kitchenAnchors(), 985, 880);
   };
   SETS.mumKitchenFront = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('kitchenFront', resFor(xf.z), (lg) => kitchenIsland(lg)));
+    blit(g, xf, layer('kitchenFront', devRes(g, xf), (lg) => kitchenIsland(lg)), null, { x: 420, y: 720, w: 1080, h: 360 });
     return result(xf, kitchenAnchors(), 985, 880);
   };
 
@@ -958,12 +988,12 @@
   function flatAnchors() { return { center: { x: 960, y: 985, s: 1 }, left: { x: 640, y: 985, s: 1 }, right: { x: 1300, y: 985, s: 1 }, window: { x: 1510, y: 335, s: 1 }, boxes: { x: 280, y: 600, s: 1 } }; }
   SETS.friendFlat = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('flat|' + (o.sky || 'sunset'), resFor(xf.z), (lg) => flatStatic(lg, o)));
+    blit(g, xf, layer('flat|' + (o.sky || 'sunset'), devRes(g, xf), (lg) => flatStatic(lg, o)));
     return result(xf, flatAnchors(), 985, 846);
   };
   SETS.friendFlatFront = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('flatFront', resFor(xf.z), (lg) => flatFrontBoxes(lg)));
+    blit(g, xf, layer('flatFront', devRes(g, xf), (lg) => flatFrontBoxes(lg)), null, { x: 1420, y: 640, w: 500, h: 440 });
     return result(xf, flatAnchors(), 985, 846);
   };
 
@@ -1034,13 +1064,48 @@
   function partyAnchors() { return { left: { x: 480, y: 985, s: 1 }, center: { x: 800, y: 985, s: 1 }, right: { x: 1560, y: 985, s: 1 }, table: { x: 1310, y: 636, s: 1 }, behindTable: { x: 1310, y: 930, s: 0.95 } }; }
   SETS.party = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('party|' + (o.sky || 'dusk'), resFor(xf.z), (lg) => partyStatic(lg, o)));
+    blit(g, xf, layer('party|' + (o.sky || 'dusk'), devRes(g, xf), (lg) => partyStatic(lg, o)));
     return result(xf, partyAnchors(), 985, 846, { tint: null });
   };
   SETS.partyFront = function (g, o) {
     o = o || {}; const xf = camXf(o.cam);
-    blit(g, xf, layer('partyFront', resFor(xf.z), (lg) => snackTable(lg)));
+    blit(g, xf, layer('partyFront', devRes(g, xf), (lg) => snackTable(lg)), null, { x: 940, y: 480, w: 740, h: 520 });
     return result(xf, partyAnchors(), 985, 846);
+  };
+
+  // ================================================================ CLOSE-UPS: window and clock
+  // windowView: the living-room window filling the frame (Q04 "the window goes to dusk", "a calm sunset, a bird").
+  // opts: tod (evening|morning|dusk), todTo + todK (crossfade), bird (0..1 across the glass), cam
+  function windowViewStatic(g, tod) {
+    const P = LIV_PAL[tod] || LIV_PAL.evening;
+    rectP(g, 0, 0, W, H); paint(g, P.wall, 0);
+    if (P.lamp) softFill(g, 80, rgba(P.lit, 0.35), () => ellP(g, 60, 600, 420, 700));
+    windowBox(g, 470, 110, 980, 760, { frame: P.winFrame, sky: P.sky, seed: 5, ink: '#5E3A2A', t: 52, mull: 40, lw: 4.5 });
+    curtain(g, 250, 40, 260, 1010, P, false); curtain(g, 1410, 40, 260, 1010, P, true);
+    shape(g, () => rrP(g, 200, 26, 1520, 24, 12), P.rod, LW.small);
+    ellP(g, 200, 38, 24, 24); paint(g, P.rod, LW.small); ellP(g, 1720, 38, 24, 24); paint(g, P.rod, LW.small);
+    plant(g, 1280, 870, 1.0, { kind: 'small', pot: P.pot, potSh: dark(P.pot, 0.86), leaf: P.leaf, leafSh: P.leafSh });
+    overlay(g, 'multiply', () => softFill(g, 6, mulTo(P.wall, P.wallSh), () => { g.beginPath(); g.moveTo(-20, 160); g.bezierCurveTo(600, 30, 1300, 30, W + 20, 160); g.lineTo(W + 20, -20); g.lineTo(-20, -20); g.closePath(); }));
+  }
+  SETS.windowView = function (g, o) {
+    o = o || {}; const tod = LIV_PAL[o.tod] ? o.tod : 'evening', xf = camXf(o.cam);
+    blit(g, xf, layer('windowView|' + tod, devRes(g, xf), (lg) => windowViewStatic(lg, tod)));
+    if (o.todTo && LIV_PAL[o.todTo] && o.todK > 0) blit(g, xf, layer('windowView|' + o.todTo, devRes(g, xf), (lg) => windowViewStatic(lg, o.todTo)), Math.min(1, o.todK));
+    if (o.bird != null) live(g, xf, (g2) => clipDo(g2, () => rectP(g2, 522, 162, 876, 656), () => { const k = o.bird; bird(g2, 440 + k * 1040, 420 - 120 * Math.sin(k * 3.1), 2.2, k * 5); }));
+    return result(xf, { window: { x: 960, y: 490, s: 1 }, glass: { x: 960, y: 490, s: 1, w: 876, h: 656 }, sill: { x: 960, y: 870, s: 1 } }, 1080, 1080, { tint: (LIV_PAL[tod] || {}).tint || null });
+  };
+  // clockView: a big wall clock on the office wall. opts: clock (time), night, cam
+  SETS.clockView = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam), night = !!o.night;
+    blit(g, xf, layer('clockView|' + (night ? 1 : 0), devRes(g, xf), (lg) => {
+      rectP(lg, 0, 0, W, H); paint(lg, C.officeWallBack, 0);
+      overlay(lg, 'multiply', () => softFill(lg, 6, mulTo(C.officeWallBack, C.officeWallBackSh), () => { lg.beginPath(); lg.moveTo(-20, 230); lg.bezierCurveTo(500, 60, 1300, 50, W + 20, 260); lg.lineTo(W + 20, -20); lg.lineTo(-20, -20); lg.closePath(); })); 
+      softFill(lg, 14, 'rgba(255,248,226,0.35)', () => polyP(lg, [1300, -20, 1600, -20, 1100, H + 20, 800, H + 20]));
+      clockFace(lg, 960, 540, 380, '#E6C39F');
+      if (night) overlay(lg, 'multiply', () => { const gr = lg.createRadialGradient(1500, 900, 60, 1200, 700, 1500); gr.addColorStop(0, '#E9C6A0'); gr.addColorStop(0.4, '#9A8CB0'); gr.addColorStop(1, '#5E6192'); lg.fillStyle = gr; lg.fillRect(0, 0, W, H); });
+    }));
+    live(g, xf, (g2) => clockHands(g2, 960, 540, 380, o.clock != null ? o.clock : 17));
+    return result(xf, { clock: { x: 960, y: 540, s: 1, r: 380 } }, 1080, 1080, { tint: night ? '#9C98C4' : null });
   };
 
   // ================================================================ easing and text helpers
@@ -1070,7 +1135,9 @@
     rrP(g, r.x, r.y, r.w, r.h, rad); g.fillStyle = '#FFF4E3'; g.fill();
     const inner = { x: r.x + 14, y: r.y + 14, w: r.w - 28, h: r.h - 28 };
     g.save(); rrP(g, inner.x, inner.y, inner.w, inner.h, rad - 12); g.clip();
-    if (cb) cb(g, inner); else { g.fillStyle = '#E9C9A5'; g.fillRect(inner.x, inner.y, inner.w, inner.h); }
+    const m = g.getTransform ? g.getTransform() : null, prev = CLIP_HINT;
+    if (m && Math.abs(m.b) < 1e-9 && Math.abs(m.c) < 1e-9) CLIP_HINT = { x: m.a * inner.x + m.e, y: m.d * inner.y + m.f, w: m.a * inner.w, h: m.d * inner.h };
+    try { if (cb) cb(g, inner); else { g.fillStyle = '#E9C9A5'; g.fillRect(inner.x, inner.y, inner.w, inner.h); } } finally { CLIP_HINT = prev; }
     g.restore();
     g.lineJoin = 'round';
     rrP(g, inner.x, inner.y, inner.w, inner.h, rad - 12); paint(g, null, 3.5);

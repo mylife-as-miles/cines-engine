@@ -15,7 +15,7 @@ window.addEventListener('load', async () => {
   const A = S.anchors;
   // the boss: walking in from the right, clipboard at his side, mid-question
   POV.figure(g, 'boss', { x: 1470, y: A.right.y, facing: -1, pose: 'walk', phase: 0.18, holding: 'clipboard', expr: 'neutral',
-    face: { brows: { lift: 0.07, arch: 0.3 } }, mouth: 0.55, look: [0.55, 0.05], turn: 0.25, shadow: sh });
+    face: { brows: { lift: 0.08, arch: 0.32 }, mouth: { k: 'flat', w: 0.12 } }, mouth: 0.5, look: [0.55, 0.05], turn: 0.25, shadow: sh });
   // you: standing, turned toward him, eyebrows up, the smile gone
   POV.figure(g, 'hero', { x: A.left.x + 30, y: A.left.y, facing: 1, pose: 'stand', expr: 'surprised', face: { mouth: { k: 'o', w: 0.06, h: 0.07 }, eyes: { r: 1.05, pupil: 0.9 } },
     look: [0.75, -0.05], turn: 0.18, shadow: sh });

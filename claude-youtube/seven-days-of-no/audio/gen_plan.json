@@ -1,0 +1,74 @@
+{
+ "door_a": {
+  "prompt": "a wooden interior door closing gently, a soft thud and a clean latch click, small quiet carpeted room, close",
+  "dur": 3,
+  "seed": 7,
+  "match": "a door closing",
+  "alts": [
+   "a gunshot",
+   "a door knock",
+   "a drum hit",
+   "footsteps"
+  ]
+ },
+ "door_b": {
+  "prompt": "a wooden interior door closing gently, a soft thud and a clean latch click, small quiet carpeted room, close",
+  "dur": 3,
+  "seed": 1007,
+  "match": "a door closing",
+  "alts": [
+   "a gunshot",
+   "a door knock",
+   "a drum hit",
+   "footsteps"
+  ]
+ },
+ "run_a": {
+  "prompt": "quick light running footsteps of sneakers on a pavement, a person running past, close, clean and dry",
+  "dur": 3,
+  "seed": 11,
+  "match": "a person running",
+  "alts": [
+   "a person walking",
+   "a horse galloping",
+   "a drum roll",
+   "clapping"
+  ]
+ },
+ "run_b": {
+  "prompt": "quick light running footsteps of sneakers on a pavement, a person running past, close, clean and dry",
+  "dur": 3,
+  "seed": 1011,
+  "match": "a person running",
+  "alts": [
+   "a person walking",
+   "a horse galloping",
+   "a drum roll",
+   "clapping"
+  ]
+ },
+ "typing_sa": {
+  "prompt": "a thumb typing quickly on a smartphone touchscreen, soft light taps on glass, close, quiet room",
+  "dur": 3,
+  "seed": 21,
+  "match": "typing on a phone",
+  "alts": [
+   "a clock ticking",
+   "typing on a keyboard",
+   "rain",
+   "footsteps"
+  ]
+ },
+ "shutter_sa": {
+  "prompt": "a camera shutter click, a single photo being taken with a small digital camera, crisp mechanical click, close, quiet room",
+  "dur": 2,
+  "seed": 31,
+  "match": "a camera shutter",
+  "alts": [
+   "a gunshot",
+   "a stapler",
+   "typing on a keyboard",
+   "a door closing"
+  ]
+ }
+}
