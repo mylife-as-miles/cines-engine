@@ -371,6 +371,8 @@ def time_cmd(args):
             pc = dict(pieces[s["piece"]])
             src = {"kind": "piece", "name": s["piece"], "in": s.get("in", 0.0), "frames": n,
                    "file": pc.get("file"), "gen": dict(pc["gen"]), "fixed": pc.get("fixed", False)}
+            if pc.get("len"):                    # a fixed render length: the piece is made once and survives a re-time
+                src["len"] = pc["len"]
             over = {}
             for k, v in s.get("gen", {}).items():
                 if k == "cut_at":
@@ -383,6 +385,8 @@ def time_cmd(args):
                     over[k] = v
             if over:
                 src["gen"].update(over); src["override"] = True
+            if src.get("len") and src["in"] + dur > src["len"] + 1e-6:
+                warnings.append(f"{s['id']}: needs {src['in'] + dur:.2f} s of {src['name']}, made {src['len']} s long")
             if "max" in s and dur > s["max"] + 1e-6:
                 warnings.append(f"{s['id']}: {dur:.2f} s is longer than the {s['max']} s the piece allows from in={src['in']}")
             src["note_piece"] = pc.get("about", "")
@@ -1037,7 +1041,9 @@ def piece_plan(src):
         if need > round(secs * FPS):
             raise RuntimeError(f"piece {src['name']} lasts {secs:.2f} s; the shot needs {need / FPS:.2f} s from in={src['in']}")
     else:
-        secs = src.get("render_secs", need / FPS + 0.25)
+        secs = src.get("len") or src.get("render_secs", need / FPS + 0.25)
+        if need > round(secs * FPS) and not src.get("_lenient"):
+            raise RuntimeError(f"piece {src['name']} is made {secs:.2f} s long; the shot needs {need / FPS:.2f} s from in={src['in']}")
     key = hashlib.sha1(json.dumps({"gen": gen, "secs": round(secs, 3)}, sort_keys=True).encode()).hexdigest()[:12]
     j = None
     if gen["tool"] == "doc":
@@ -1067,7 +1073,7 @@ def shot_deps_t(e):
 
 
 def plan_command(src):
-    p = piece_plan(src)
+    p = piece_plan(dict(src, _lenient=True))     # `time` only describes; a piece too short is a warning here, an error at render
     c = piece_cmd(p["gen"], str(p["path"].relative_to(ROOT)), p["secs"])
     return p," ".join(str(x) if " " not in str(x) else f'"{x}"' for x in c).replace(PY, "<gfx python>")
 

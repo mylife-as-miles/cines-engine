@@ -334,9 +334,9 @@ function counterState(t) {
     // a year gathers as the step that brings it settles and drifts apart as soon as the next step starts, so
     // it never slides out of the frame whole; in the crane only 2014, gathering again at the span's start, and 2026 remain
     form: yr => { const k = yr - Y0;
-      if (k === 0) return Math.max(ramp(t, -0.15, 0.45) * (1 - ramp(prog, 0.04, 0.32)), ramp(t, CTR.crane[0] + 0.9, CTR.crane[1] + 0.3));
+      if (k === 0) return Math.max(ramp(t, -0.15, 0.45) * (1 - ramp(prog, 0.02, 0.2)), ramp(t, CTR.crane[0] + 0.9, CTR.crane[1] + 0.3));
       return ramp(prog, k - 0.12, k); },
-    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return t > CTR.crane[0] ? 0 : ramp(prog, 0.04, 0.32); return ramp(prog, k + 0.04, k + 0.32); },
+    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return t > CTR.crane[0] ? 0 : ramp(prog, 0.02, 0.2); return ramp(prog, k + 0.02, k + 0.2); },
     numPos: yr => { const n = numNear(yr); return [lerp(n[0], 0, u), lerp(n[1], 40 + capP(yr) * 0.66, u * u), lerp(n[2], (yr - Y0) * TLD, u)]; },
     numCap: yr => lerp(NUM.cap, capP(yr), u), numAlpha: yr => yr === Y0 ? lerp(1, .6, u) : 1,
   };

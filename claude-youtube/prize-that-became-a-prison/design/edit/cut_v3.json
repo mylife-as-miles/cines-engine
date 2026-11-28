@@ -25,7 +25,8 @@
    "gen": {
     "tool": "doc",
     "shot": "gfx/shots/scale_overweight.json"
-   }
+   },
+   "len": 5.0
   },
   "yes": {
    "file": null,
@@ -34,7 +35,8 @@
     "tool": "plate_type",
     "mode": "yes",
     "plate": "frames/raw/inspection_room/match.png"
-   }
+   },
+   "len": 4.6
   },
   "flash": {
    "file": null,
@@ -44,7 +46,8 @@
     "tool": "seam",
     "mode": "flash",
     "bg": "frames/graded/evidence_table/purses.jpg"
-   }
+   },
+   "len": 1.2
   },
   "montage": {
    "file": null,
@@ -61,7 +64,8 @@
     "tool": "plate_type",
     "mode": "title",
     "plate": "frames/raw/void_stage/bags.png"
-   }
+   },
+   "len": 4.2
   },
   "email": {
    "file": null,
@@ -70,7 +74,8 @@
    "gen": {
     "tool": "doc",
     "shot": "gfx/shots/screen_email.json"
-   }
+   },
+   "len": 7.5
   },
   "search": {
    "file": null,
@@ -79,7 +84,8 @@
    "gen": {
     "tool": "doc",
     "shot": "gfx/shots/screen_search.json"
-   }
+   },
+   "len": 5.5
   },
   "route_leg1": {
    "file": null,
@@ -88,7 +94,8 @@
     "tool": "canvas",
     "page": "gfx/route.html",
     "mode": "leg1"
-   }
+   },
+   "len": 6.5
   },
   "route_mainland": {
    "file": null,
@@ -97,7 +104,8 @@
     "tool": "canvas",
     "page": "gfx/route.html",
     "mode": "mainland"
-   }
+   },
+   "len": 9.0
   },
   "route_split": {
    "file": null,
@@ -106,7 +114,8 @@
     "tool": "canvas",
     "page": "gfx/route.html",
     "mode": "split"
-   }
+   },
+   "len": 6.5
   },
   "trace": {
    "file": null,
@@ -115,7 +124,8 @@
     "tool": "seam",
     "mode": "trace",
     "bg": "frames/graded/evidence_table/purses.jpg"
-   }
+   },
+   "len": 4.5
   },
   "cutaway": {
    "file": null,
@@ -123,7 +133,8 @@
    "gen": {
     "tool": "seam",
     "mode": "cutaway"
-   }
+   },
+   "len": 5.0
   },
   "doc_yes": {
    "file": null,
@@ -147,7 +158,8 @@
    "gen": {
     "tool": "split",
     "cut": 2.2
-   }
+   },
+   "len": 10.5
   },
   "calendar": {
    "file": null,
@@ -156,7 +168,8 @@
     "tool": "plate_type",
     "mode": "calendar",
     "plate": "frames/raw/void_stage/bags.png"
-   }
+   },
+   "len": 7.5
   },
   "counter": {
    "file": null,
@@ -177,7 +190,8 @@
    "gen": {
     "tool": "doc",
     "shot": "gfx/shots/s1_father.json"
-   }
+   },
+   "len": 8.5
   },
   "gene": {
    "file": null,
@@ -194,7 +208,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_fee.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_emails": {
    "file": null,
@@ -210,7 +225,17 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_gene.json"
-   }
+   },
+   "len": 8.5
+  },
+  "doc_enough": {
+   "file": null,
+   "about": "S1 p. 2, the emails line, then 'it wasn't enough' lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_enough.json"
+   },
+   "len": 9.0
   },
   "doc_cash": {
    "file": null,
@@ -218,7 +243,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_cash.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_foot": {
    "file": null,
@@ -226,7 +252,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_footnote.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_market": {
    "file": null,
@@ -234,7 +261,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_market.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_passport": {
    "file": null,
@@ -242,7 +270,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_passport.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_denies": {
    "file": null,
@@ -250,7 +279,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_denies.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_health": {
    "file": null,
@@ -258,7 +288,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_health.json"
-   }
+   },
+   "len": 8.5
   },
   "doc_work": {
    "file": null,
@@ -266,7 +297,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_work.json"
-   }
+   },
+   "len": 8.5
   },
   "casefile": {
    "file": null,
@@ -276,7 +308,8 @@
     "tool": "canvas",
     "page": "gfx/typetest.html",
     "mode": "casefile"
-   }
+   },
+   "len": 9.6
   },
   "doc_fire": {
    "file": null,
@@ -284,7 +317,8 @@
    "gen": {
     "tool": "doc",
     "shot": "design/edit/shots/s1_fire.json"
-   }
+   },
+   "len": 8.5
   }
  },
  "chapters": [
@@ -1018,16 +1052,7 @@
     {
      "id": "01-13",
      "at": "01.04@0.3",
-     "piece": "doc_gene",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
-        "at": "01.04@0.36",
-        "dur": 0.7
-       }
-      ]
-     }
+     "piece": "doc_gene"
     },
     {
      "id": "01-14",
@@ -1112,16 +1137,7 @@
     {
      "id": "01-21",
      "at": "01.06",
-     "piece": "doc_cash",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "email stating that she had won a cash prize.",
-        "at": "01.06@0.08",
-        "dur": 0.6
-       }
-      ]
-     }
+     "piece": "doc_cash"
     },
     {
      "id": "01-22",
@@ -1149,16 +1165,7 @@
      "id": "01-23b",
      "at": "01.06@0.8",
      "piece": "doc_cash",
-     "in": 3.0,
-     "gen": {
-      "marks": [
-       {
-        "phrase": "email stating that she had won a cash prize.",
-        "at": "01.06@0.08",
-        "dur": 0.6
-       }
-      ]
-     }
+     "in": 3.0
     },
     {
      "id": "01-24",
@@ -1203,16 +1210,7 @@
     {
      "id": "01-26b",
      "at": "01.08@0.22",
-     "piece": "doc_passport",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "they gave her checked out. With that, she sent them her passport information and they sent a",
-        "at": "01.08@0.26",
-        "dur": 0.6
-       }
-      ]
-     }
+     "piece": "doc_passport"
     },
     {
      "id": "01-27",
@@ -1625,16 +1623,7 @@
     {
      "id": "03-04",
      "at": "03.01@0.18",
-     "piece": "doc_market",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "so she and some people who organized her trips went to the Baiyun Leather market and the",
-        "at": "03.01@0.3",
-        "dur": 0.8
-       }
-      ]
-     }
+     "piece": "doc_market"
     },
     {
      "id": "03-04b",
@@ -1703,16 +1692,7 @@
     {
      "id": "03-11",
      "at": "03.05",
-     "piece": "doc_fee",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit",
-        "at": "03.05@0.1",
-        "dur": 0.8
-       }
-      ]
-     }
+     "piece": "doc_fee"
     },
     {
      "id": "03-12",
@@ -1936,10 +1916,7 @@
     {
      "id": "04-09",
      "at": "04.05",
-     "piece": "split",
-     "gen": {
-      "cut_at": "04.05@0.55"
-     }
+     "piece": "split_r7"
     },
     {
      "id": "04-10",
@@ -1989,17 +1966,8 @@
     },
     {
      "id": "04-16",
-     "at": "04.09@0.55",
-     "piece": "doc_foot",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "says she was on her way to Qingdao in China on an internal flight. I don’t know the reason for this discrepancy.",
-        "at": "04.10@0.45",
-        "dur": 0.9
-       }
-      ]
-     }
+     "at": "04.10",
+     "piece": "doc_foot"
     },
     {
      "id": "04-17",
@@ -2036,16 +2004,7 @@
     {
      "id": "04-19",
      "at": "04.12@0.56",
-     "piece": "doc_denies",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "in 2014 and charged with smuggling, a charge she vehemently denies.",
-        "at": "04.12@0.62",
-        "dur": 0.8
-       }
-      ]
-     }
+     "piece": "doc_denies"
     },
     {
      "id": "04-20",
@@ -2159,21 +2118,7 @@
     {
      "id": "05-03",
      "at": "05.02@0.2",
-     "piece": "doc_emails",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "answered all their questions, produced the emails she received from the organizers",
-        "at": "05.02@0.45",
-        "dur": 1.0
-       },
-       {
-        "phrase": "but unfortunately it wasn’t enough.",
-        "at": "05.h1+0.9",
-        "dur": 0.8
-       }
-      ]
-     }
+     "piece": "doc_enough"
     },
     {
      "id": "05-04",
@@ -2621,16 +2566,7 @@
     {
      "id": "07-05",
      "at": "07.03@0.2",
-     "piece": "doc_health",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "cancer) according to the doctors who examined her in prison. She has received numerous blood",
-        "at": "07.03@0.24",
-        "dur": 0.9
-       }
-      ]
-     }
+     "piece": "doc_health"
     },
     {
      "id": "07-05b",
@@ -2648,16 +2584,7 @@
     {
      "id": "07-07",
      "at": "07.04",
-     "piece": "doc_work",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "very pale. She told me that she still has to work in the prison despite her illness but that she can’t",
-        "at": "07.04@0.2",
-        "dur": 0.9
-       }
-      ]
-     }
+     "piece": "doc_work"
     },
     {
      "id": "07-07b",
@@ -2952,16 +2879,7 @@
     {
      "id": "08-04",
      "at": "08.02",
-     "piece": "doc_fire",
-     "gen": {
-      "marks": [
-       {
-        "phrase": "I once witnessed him save our next-door neighbors when their",
-        "at": "08.02@0.3",
-        "dur": 0.8
-       }
-      ]
-     }
+     "piece": "doc_fire"
     },
     {
      "id": "08-05",

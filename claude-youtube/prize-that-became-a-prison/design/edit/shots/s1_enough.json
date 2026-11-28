@@ -1,0 +1,45 @@
+{
+ "about": "Animatic v3, 5:41-5:52: S1 page 2, the emails line lit, then 'but unfortunately it wasn’t enough.' (the next line) lit in the silence. Fixed timing, so the piece survives a re-time.",
+ "plate": "frames/raw/evidence_table/page.png",
+ "corners": "frames/raw/evidence_table/page.corners.json",
+ "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
+ "page": 2,
+ "dpi": 400,
+ "marks": [
+  {
+   "phrase": "answered all their questions, produced the emails she received from the organizers",
+   "t": 1.0,
+   "dur": 1.0
+  },
+  {
+   "phrase": "but unfortunately it wasn’t enough.",
+   "t": 4.2,
+   "dur": 0.8
+  }
+ ],
+ "focus": "answered all their questions, produced the emails she received from the organizers",
+ "soft": [
+  "Since her incarceration she has developed physical ailments (uterine fibroids and possibly ovarian",
+  "cancer) according to the doctors who examined her in prison. She has received numerous blood",
+  "transfusions due to heavy bleeding and has been advised that she needs a hysterectomy, which",
+  "weight, her eyes are bulging. She has an abdominal bulge on her right side, and her complexion is",
+  "very pale. She told me that she still has to work in the prison despite her illness but that she can’t",
+  "lift heavy objects because her fibroids might rupture and she would start bleeding."
+ ],
+ "zoom": [
+  3.4,
+  3.6
+ ],
+ "end_offset": [
+  55,
+  -10
+ ],
+ "roll_deg": -9,
+ "focus_band": {
+  "sharp_lines": 1.8,
+  "ramp_lines": 3.5,
+  "blur_px": 3.6
+ },
+ "duration": 6.0,
+ "length": 8.0
+}
