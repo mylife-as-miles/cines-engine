@@ -253,9 +253,11 @@ A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by
 
 **11:06** NARRATOR: He never saw Dawn come home.
 
-**11:09** _(silence, 3.0 s)_
+**11:09** _(silence, 1.5 s)_
 
-**11:12** NARRATOR: That July, though he had told the commission it wouldn't be advisable, Tim went back.
+**11:10** TIM HUNT (real recording): "My dad passed in January and I promised him that I was going to bring her home. And I want to keep that promise to him so he can rest in peace."
+
+**11:24** NARRATOR: That July, though he had told the commission it wouldn't be advisable, Tim went back.
 
 **11:19** TIM HUNT (real recording): "I visited her two years ago and I was shocked two years ago. And I visited her a couple months ago and I'm even more shocked."
 

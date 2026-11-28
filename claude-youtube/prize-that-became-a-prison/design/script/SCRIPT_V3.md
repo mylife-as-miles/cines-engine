@@ -134,6 +134,8 @@ The author shared an outside editorial review: V3 is approved as the creative ma
   - Tim's ending comes about 11 s sooner.
   - Nothing follows Tim but YES turning to WHEN?: no narrator, no call to action.
 
+- **11:10, Tim's promise (added 28 Nov from the Reuters report the author supplied, IN-16).** After "He never saw Dawn come home." and a short silence, Tim's real voice: "My dad passed in January and I promised him that I was going to bring her home. And I want to keep that promise to him so he can rest in peace." It turns Gene's death into Tim's reason to go back in July. The rows after it run about 12 s later. Reuters needs a licence; without one, his voice plays over the empty chair.
+
 **Gates G1, G2 and G6: new leads, not yet verified.** The review cites Longscribe's automatic transcript of the official CECC recording of 22 Sep 2026 (YouTube t9DSmXBQB3Y). The lead session could not find that transcript, so treat these times as leads:
 - Tim begins about 1:27:11;
 - the repeated question and "I can't give you a date" (G1) at about 1:28:40-1:29:17;
@@ -427,8 +429,9 @@ The recording is the authority. Get 1:27:00-1:34:00, align Tim's actual words an
 | 10:55 | On January 25th, 2026, Gene Hunt died. He was ninety-two. | home `dining_gene`, cut to `chair_gene`; on "died", a straight cut to the same frame empty, home `chair` (registered within 0.001 px). TYPE: JANUARY 25, 2026 on the dark wall | — | The domestic tick stops dead on "died" |
 | 11:04 | *(silence)* (2.0 s) | home `chair`, empty, locked | — | Total silence: no score, no room tone |
 | 11:06 | He never saw Dawn come home. | straight cut to void_stage `chair`, the same chair alone in its pool, matched | — | Silence |
-| 11:09 | *(silence)* (3.0 s) | void_stage `chair`, push 3 % | — | Room tone returns; then, faint, the institutional tick: her clock never stopped |
-| 11:12 | That July, though he had told the commission it wouldn't be advisable, Tim went back. | prison_exterior `gate`; TYPE: JULY 2026 | — | The tick; rain |
+| 11:09 | *(silence)* (1.5 s) | void_stage `chair`, push 3 % | — | Room tone returns |
+| 11:10 | *(Tim Hunt's real voice)* | REAL Reuters interview, Tim at home in a white hoodie, in sync, pushed in to a medium close-up (IN-16); fallback without a Reuters licence: his voice over void_stage `chair`, the push continuing | **"My dad passed in January and I promised him that I was going to bring her home. And I want to keep that promise to him so he can rest in peace."** Tim Hunt, Reuters, May 2026 (IN-16, 178.0-193.9 s; transcript archive/media_reuters2026_transcript.json). Reuters licence needed (G4) | His voice alone; then, faint, the institutional tick: her clock never stopped |
+| 11:24 | That July, though he had told the commission it wouldn't be advisable, Tim went back. | prison_exterior `gate`; TYPE: JULY 2026 | — | The tick; rain |
 | 11:19 | *(Tim Hunt's real voice)* | prison_exterior `gate`, held, for the first sentence; on its full stop, a straight cut to the REAL NBC interview, Tim in sync, pushed in so the lower third and the bug are out of frame | **"I visited her two years ago and I was shocked two years ago. And I visited her a couple months ago and I'm even more shocked."** Tim Hunt, NBC 5 Chicago report of 25 Sep 2026 (IN-15; S4 in the ledger), 63.44-67.12 and 67.74-71.62 s. Speaker: pitch about 106 and 91 Hz; on camera at 1:09. Licence: NBCUniversal (G4). Nothing from 1:25-2:15 of that report (the Wells family's case) is used, and "It's going to happen this year" (2:54) is never used. | His room; the tick under it |
 | ↳ if IN-15 is not licensed | He did not recognize the sister he saw, he told the commission. | prison_exterior `gate`, held | S2 l.36 (written), paraphrased. If V03 shows he spoke "I did not recognize the sister I saw", play that instead, in its place in chapter 09 | The tick |
 
