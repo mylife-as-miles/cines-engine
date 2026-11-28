@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import bpy  # noqa: E402
 import numpy as np  # noqa: E402
-from mathutils import Matrix, Vector  # noqa: E402
+from mathutils import Matrix, Quaternion, Vector  # noqa: E402
 from mathutils.bvhtree import BVHTree  # noqa: E402
 from mathutils.geometry import convex_hull_2d  # noqa: E402
 
@@ -59,6 +59,7 @@ OTHERS = {   # copy of, scale (x, y, z) relative to the source, body tint (linea
     "stone_duffel": ("dawn_duffel", (0.95, 1.0, 0.92), (0.15, 0.14, 0.12)),
 }
 SHELL = "shell_case"
+NAVY_DOWN = "navy_case_face_down"
 FABRIC_MEDIAN = 0.03     # linear luminance of both bag textures' fabric (measured: sRGB median 0.19-0.20)
 
 # tags: start (local x, y as fractions of the bag's half length / half width), heading (deg from +X), length (m)
@@ -79,14 +80,14 @@ TAGS = {
 # 1.3 m ahead of the case, the duffel toward the walkway side (-Y), the case toward the chute side (+Y).
 LAYOUT = {
     # her soft case half through the curtain (the strips draped over it), the extra bag ahead of it on the rollers
-    "curtain": {"dawn_case": (0.245, 0.16, 174.0), "dawn_duffel": (1.35, -0.24, -6.0)},
+    "curtain": {"dawn_case": (0.245, 0.16, 174.0), "dawn_duffel": (1.15, -0.24, -6.0)},
     # her two bags nearest, then a gap, then other people's bags ahead of them, away down the belt into the dark
     "belt": {"dawn_case": (3.0, 0.18, -3.0), "dawn_duffel": (4.35, -0.22, 5.0), "navy_case": (7.9, 0.1, 5.0),
              "slate_case": (11.1, -0.15, 9.0), "olive_duffel": (14.4, 0.15, -4.0),
              "warm_stone_case": (17.7, -0.15, -6.0), "shell_case": (21.0, 0.14, -7.0), "stone_duffel": (24.4, -0.14, 84.0)},
     # Straight down at the sorter: the ribbed spinner, her pair, then a navy case.
     "overhead": {"shell_case": (8.55, -0.08, 16.0), "dawn_case": (9.45, 0.18, -4.0),
-                 "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (11.81, 0.12, 76.0)},
+                 "dawn_duffel": (10.72, -0.22, 3.0), NAVY_DOWN: (11.81, 0.12, 76.0)},
 }
 CAM_FOCUS = {"curtain": "focus_curtain", "belt": "focus_belt", "overhead": "focus_over"}
 CAMERAS = {
@@ -103,8 +104,8 @@ CAMERAS = {
     "belt": dict(loc=(0.9, 0.12, 1.18), aim=(14.0, -0.02, 0.23), lens=32, focus="focus_belt", fstop=4.0,
                  exposure=-1.2),
     # Ch 04/05: straight down on the belt at the sorter chute; her two bags among the others
-    "overhead": dict(loc=(10.05, -0.19, 3.22), aim=(10.05, -0.1899, BZ), lens=20, focus="focus_over", fstop=8.0,
-                     exposure=-1.5),
+    "overhead": dict(loc=(10.05, -0.05, 3.22), aim=(10.05, -0.0499, BZ), lens=20, focus="focus_over", fstop=8.0,
+                     exposure=-1.5, roll=17.0),
 }
 
 for camera in CAMERAS.values():
@@ -312,7 +313,7 @@ def tag(root, spec, rnd):
     a = math.radians(head)
     d = Vector((math.cos(a), math.sin(a), 0))
     side = Vector((-d.y, d.x, 0))
-    w = 0.043
+    w = 0.030 if "carry_grip" in root else 0.039
     p0 = Vector((fx * hx, fy * hy, 0))
     step = 0.006
     prof = []                       # (s, z): the highest of three casts across the strip's width
@@ -357,16 +358,17 @@ def tag(root, spec, rnd):
         # A folded adhesive tag makes a loop there; its tail falls to the belt and bends away.
         grip = Vector(root["carry_grip"])
         side = Vector((0, 1, 0))
-        pts = []
+        throat = grip + Vector((-0.016, 0, 0))
+        pts = [throat + Vector((0.0012, 0, -0.030 * (1 - j / 5))) for j in range(5)]
         for j in range(29):
             angle = math.pi + math.tau * j / 28
             pts.append(grip + Vector((0.016 * math.cos(angle), 0, 0.014 * math.sin(angle))))
         throat = pts[-1]
-        for j in range(1, 31):
-            t = j / 30
-            dz = min(throat.z - 0.002, 0.18 * t)
-            outward = 0.009 * math.sin(math.pi * t) + max(0.0, 0.18 * t - dz)
-            pts.append(throat + Vector((-outward, 0.010 * math.sin(t * math.pi), -dz)))
+        for j in range(1, 25):
+            t = j / 24
+            dz = min(throat.z - 0.003, 0.124 * t)
+            outward = 0.022 * math.sin(math.pi * t * 0.8) + max(0.0, 0.124 * t - dz)
+            pts.append(throat + Vector((-outward, 0.018 * math.sin(t * math.pi), -dz)))
     else:
         # A small return fold closes the strip around its anchor before the loose tail.
         anchor = pts[0]
@@ -374,7 +376,7 @@ def tag(root, spec, rnd):
         for j in range(23):
             angle = math.tau * j / 22
             loop.append(anchor + d * (0.016 * math.sin(angle))
-                        + Vector((0, 0, 0.013 * (1 - math.cos(angle)))))
+                        + Vector((0, 0, 0.005 * (1 - math.cos(angle)))))
         pts = loop + pts[1:]
     curl = rnd.choice((-1, 1)) * 0.0045
     vs, fs = [], []
@@ -453,32 +455,32 @@ def build_bags():
     holders = {}
     for name, (src, scale, tint) in OTHERS.items():
         holders[name] = (clone(loaded[src], name, tint, scale), DAWN[src]["lying"])
+    src, scale, tint = OTHERS["navy_case"]
+    holders[NAVY_DOWN] = (clone(loaded[src], NAVY_DOWN, tint, scale), True)
     for name, h in loaded.items():
         holders[name] = (h, DAWN[name]["lying"])
     holders[SHELL] = (shell_case(SHELL), False)
     for name, (h, lying) in holders.items():
         if lying:   # on its back: the front pocket up, the handle end toward -X
             h.rotation_euler = (0, math.radians(-90), 0)
+        if name == NAVY_DOWN:
+            pocket_up = h.rotation_euler.to_matrix()
+            h.rotation_euler = (Matrix.Rotation(math.pi, 3, "X") @ pocket_up).to_euler()
         roots[name] = seat(h, name)
         if "carry_grip" in h:
             roots[name]["carry_grip"] = list(h.matrix_world @ Vector(h["carry_grip"]))
     for name, r in roots.items():
-        tag(r, TAGS[name], rnd)
-    case_webbing(roots["navy_case"])
-    # Keep Dawn's plain zipper keeper from the train on the same case here.
-    shell = max(_meshes(roots["dawn_case"]), key=lambda obj: len(obj.data.vertices))
-    normal = Vector((0.61, 0, 0.7924)).normalized()
-    mount = Vector((0.115, 0.001, 0.279)) + normal * 0.008
-    nylon = sk.mat("matte charcoal zipper keeper", (0.021, 0.023, 0.026), rough=0.89)
-    keeper = st.box("suitcase zipper keeper", (0.057, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007, segs=5)
-    keeper.parent = shell
-    keeper.matrix_basis = Matrix.Translation(mount) @ Matrix.Rotation(math.asin(normal.x), 4, "Y")
+        tag(r, TAGS["navy_case" if name == NAVY_DOWN else name], rnd)
+    for name in ("navy_case", NAVY_DOWN):
+        case_webbing(roots[name])
+    props.suitcase_hardware_covers(roots["dawn_case"])
     _STATE["roots"] = roots
     return roots
 
 
 def set_layout(cam):
     bpy.data.objects["right end return"].hide_render = cam != "curtain"
+    bpy.data.objects["curtain duffel return"].hide_render = cam != "curtain"
     for light in _STATE["sorter_returns"]:
         light.hide_render = cam != "overhead"
     for light, power, spread in _STATE["lights"].values():
@@ -486,11 +488,11 @@ def set_layout(cam):
         if cam == "curtain":
             scale = {"behind_curtain": 5.8, "behind_curtain_low": 5.0, "batten0_light": 0.19,
                      "batten0_up": 0.16, "sbatten0_light": 0.0, "sbatten0_up": 0.0,
-                     "bulk_panel_light": 0.48, "bag_edge": 0.0}.get(name, 1.0)
+                     "bulk_panel_light": 0.30, "bag_edge": 0.0}.get(name, 1.0)
         elif cam == "overhead":
-            scale = 0.045 if name == "batten2_light" else 0.085
+            scale = 0.30 if name == "batten2_light" else 0.15
         else:
-            scale = 1.0
+            scale = {"bulk_n1_light": 1.6, "sbatten1_light": 1.56, "sbatten0_light": 1.75}.get(name, 1.0)
         light.data.energy = power * scale
         if spread is not None:
             light.data.spread = spread
@@ -560,6 +562,13 @@ def install_hook():
         fname = CAM_FOCUS.get(cam)
         if c is not None and fname and fname in bpy.data.objects:
             c.data.dof.focus_object = bpy.data.objects[fname]
+        if c is not None and cam == "overhead":
+            cfg = CAMERAS[cam]
+            for constraint in c.constraints:
+                if constraint.type == "TRACK_TO":
+                    constraint.influence = 0.0
+            direction = (Vector(cfg["aim"]) - c.location).to_track_quat("-Z", "Y")
+            c.rotation_euler = (direction @ Quaternion((0, 0, 1), math.radians(cfg["roll"]))).to_euler()
         render_settings()
         kw.setdefault("world", WORLD)
         print(f"BAGGAGE camera {cam}: layout {sorted(LAYOUT.get(cam, {}))}", flush=True)
@@ -573,16 +582,16 @@ def install_hook():
 def sorter_returns(roots):
     """Key Dawn's pair inside the sorter pool, with low returns for the separate cases and walkway."""
     fixtures = (
-        ("sorter key", (10.22, 0.22, 2.71), (10.11, -0.10, 0.80), (1.16, 0.42), 136, 67,
-         ("dawn_case", "dawn_duffel"), ("belt",)),
-        ("ribbed case return", (8.48, 0.20, 2.53), (8.55, -0.08, 0.83), (0.95, 0.53), 4, 74,
+        ("sorter key", (10.22, 0.22, 2.71), (10.11, -0.10, 0.80), (1.16, 0.42), 31, 74,
+         ("dawn_case", "dawn_duffel", NAVY_DOWN, SHELL), ("belt",)),
+        ("ribbed case return", (8.48, 0.20, 2.53), (8.55, -0.08, 0.83), (0.95, 0.53), 20, 74,
          (SHELL,), ()),
         ("navy case return", (11.88, 0.41, 2.44), (11.81, 0.12, 0.83), (0.76, 0.44), 30, 74,
-         ("navy_case",), ()),
+         (NAVY_DOWN,), ()),
         ("sorter duffel edge", (10.68, -0.54, 2.26), (10.72, -0.21, 0.84), (0.56, 0.24), 12, 61,
          ("dawn_duffel",), ()),
         ("walkway falloff", (10.02, -1.54, 2.47), (10.01, -1.72, 0.02), (3.60, 0.77), 13, 105,
-         (), ("floor",)),
+         (), ("floor", "line_conveyor", "diverter_actuator", "diverter_act_lid", "diverter_act_cable")),
     )
     lights = []
     for name, source, aim, size, power, spread, bags, surfaces in fixtures:
@@ -592,7 +601,7 @@ def sorter_returns(roots):
         receivers = bpy.data.collections.new(name + " receivers")
         objects = [bpy.data.objects[surface] for surface in surfaces]
         for bag in bags:
-            objects.extend(_meshes(roots[bag]))
+            objects.extend(obj for obj in _meshes(roots[bag]) if not obj.name.startswith("tag_"))
         for obj in objects:
             receivers.objects.link(obj)
         light.light_linking.receiver_collection = receivers
@@ -618,7 +627,17 @@ def build(cast=True):
     fill.light_linking.receiver_collection = receivers
     _STATE["lights"] = {o.name: (o, o.data.energy, getattr(o.data, "spread", None))
                         for o in bpy.context.scene.objects if o.type == "LIGHT"}
-    _STATE["sorter_returns"] = sorter_returns(build_bags())
+    roots = build_bags()
+    _STATE["sorter_returns"] = sorter_returns(roots)
+    pos = Vector((2.0, -0.81, 1.56))
+    target = Vector((1.17, -0.24, 0.91))
+    edge = st.light("curtain duffel return", pos, (0.44, 0.18), 6.0, st.COOL, spread=84,
+                    rot=(target - pos).to_track_quat("-Z", "Y").to_euler())
+    receivers = bpy.data.collections.new("Transfer duffel")
+    for obj in _meshes(roots["dawn_duffel"]):
+        if not obj.name.startswith("tag_"):
+            receivers.objects.link(obj)
+    edge.light_linking.receiver_collection = receivers
     for n in ("focus_curtain", "focus_belt", "focus_over"):
         st.focus(n, (0, 0, BZ))
     set_layout("belt")
