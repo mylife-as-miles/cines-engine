@@ -11,8 +11,11 @@ tagged BT.709. A decoder trusts the tag, so a 601 conversion read as 709 comes b
 
 The reference is the RGB the code renders: the patches themselves where nothing grades them (type_render.js,
 canvas_render.js, the type and the cut-away laid on after the grade), and the film's grade applied to them in RGB
-(gfx/doc_composite.py grade_filter, as scenes/shoot.py grades a still) where the path grades its plate. Over a type
-layer at half alpha the reference is the straight-alpha blend of the two. The decode honours each file's tags (an
+(gfx/doc_composite.py grade_filter, as scenes/shoot.py grades a still) where the path grades its plate, with the grain's
+own mean on the planes the path lays it on: ffmpeg's noise filter averages about -0.5 code values a plane, so grain on
+the 4:2:0 BT.709 planes (every graded plate alone: the conversion to YUV comes before the grain, where ffmpeg's own sat)
+moves a patch about (-1.5, -0.2, -1.6) in RGB, and grain on RGB planes (assemble's shots with type) -0.5 each. Over a
+type layer at half alpha the reference is the straight-alpha blend of the two. The decode honours each file's tags (an
 untagged file is read as BT.601, as ffmpeg reads it): `ffmpeg` is ffmpeg's own conversion to rgb24 (what ffmpeg-based
 tools and OpenCV see), `exact` is the same conversion with accurate rounding and full chroma interpolation (close to a
 player's float shader). The error is the largest per-channel difference of a patch's mean (its inner 32 x 32, over
@@ -143,25 +146,31 @@ def frames(f, exact=False):
     if exact:
         rng = "pc" if t.get("color_range") == "pc" else "tv"
         vf = ["-vf", f"scale=in_color_matrix={matrix_of(t)}:in_range={rng}:flags=bicubic+accurate_rnd+full_chroma_int,format=rgb24"]
-    p = subprocess.Popen(["ffmpeg", "-v", "error", "-i", str(f), *vf, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
-    while True:
-        b = p.stdout.read(W * H * 3)
-        if len(b) < W * H * 3:
-            break
-        yield np.frombuffer(b, np.uint8).reshape(H, W, 3)
-    p.wait()
+    p = subprocess.Popen(["ffmpeg", "-v", "error", "-i", str(f), *vf, "-fps_mode", "passthrough", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                         stdout=subprocess.PIPE)
+    try:
+        while True:
+            b = p.stdout.read(W * H * 3)
+            if len(b) < W * H * 3:
+                break
+            yield np.frombuffer(b, np.uint8).reshape(H, W, 3)
+    finally:
+        p.kill(); p.wait()
 
 
 def yuv_frames(f):
-    p = subprocess.Popen(["ffmpeg", "-v", "error", "-i", str(f), "-f", "rawvideo", "-pix_fmt", "yuv420p", "-"], stdout=subprocess.PIPE)
+    p = subprocess.Popen(["ffmpeg", "-v", "error", "-i", str(f), "-fps_mode", "passthrough", "-f", "rawvideo", "-pix_fmt", "yuv420p", "-"],
+                         stdout=subprocess.PIPE)
     n = W * H * 3 // 2
-    while True:
-        b = p.stdout.read(n)
-        if len(b) < n:
-            break
-        a = np.frombuffer(b, np.uint8)
-        yield a[:W * H].reshape(H, W), a[W * H:W * H * 5 // 4].reshape(H // 2, W // 2), a[W * H * 5 // 4:].reshape(H // 2, W // 2)
-    p.wait()
+    try:
+        while True:
+            b = p.stdout.read(n)
+            if len(b) < n:
+                break
+            a = np.frombuffer(b, np.uint8)
+            yield a[:W * H].reshape(H, W), a[W * H:W * H * 5 // 4].reshape(H // 2, W // 2), a[W * H * 5 // 4:].reshape(H // 2, W // 2)
+    finally:
+        p.kill(); p.wait()
 
 
 def gutter_rgb(f, frame_ids):
@@ -224,17 +233,53 @@ def page_still(sb, mode):
     return cv2.cvtColor(im, cv2.COLOR_BGRA2RGBA) if im.shape[2] == 4 else cv2.cvtColor(im, cv2.COLOR_BGR2RGBA)
 
 
-def graded_ref(img, n=12):
-    """The film's grade on an RGB frame, in RGB (as scenes/shoot.py grades a still), over n frames of grain."""
+def split_grain(g):
+    """The grade without its grain, and the grain (the last filter, ffmpeg's noise)."""
+    head, sep, tail = g.rpartition(",noise=")
+    return (head, "noise=" + tail) if sep and "," not in tail else (g, None)
+
+
+def graded_ref(img):
+    """The film's grade on an RGB frame, in RGB, without its grain (as scenes/shoot.py grades a still, less the grain)."""
     import doc_composite
-    p = subprocess.Popen(["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                          "-vf", doc_composite.grade_filter(), "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
-                         stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    out, _ = p.communicate(img.tobytes() * n)
-    a = np.frombuffer(out, np.uint8).reshape(n, H, W, 3)
-    bx = boxes()
-    ms = [box_means(f, bx) for f in a]
-    return {k: np.mean([m[k] for m in ms], 0) for k in ms[0]}
+    g, _ = split_grain(doc_composite.grade_filter())
+    out = run_bytes(["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-i", "-",
+                     "-vf", g, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], img.tobytes())
+    return box_means(np.frombuffer(out, np.uint8).reshape(H, W, 3), boxes())
+
+
+def run_bytes(cmd, data):
+    r = subprocess.run([str(c) for c in cmd], input=data, capture_output=True)
+    if r.returncode:
+        raise RuntimeError(f"failed: {' '.join(map(str, cmd))}\n{r.stderr[-1500:]}")
+    return r.stdout
+
+
+def grain_means():
+    """The grain's own mean, as RGB levels, on the two kinds of planes it is laid on: ffmpeg's noise filter averages about
+    -0.5 code values a plane, which on BT.709 4:2:0 planes is about (-1.5, -0.2, -1.6) in RGB and on RGB planes -0.5 each.
+    Measured here on flat mid grey, so a change to the grade's grain is followed."""
+    import doc_composite
+    _, noise = split_grain(doc_composite.grade_filter())
+    if noise is None:
+        return {"yuv": np.zeros(3), "rgb": np.zeros(3)}
+    d = {}
+    for fmt in ("yuv420p", "gbrp"):
+        planes = []
+        for vf in ([], ["-vf", noise]):
+            b = run_bytes(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", f"color=c=0x808080:s=640x360:r=24:d=1,format={fmt}", *vf,
+                           "-f", "rawvideo", "-pix_fmt", fmt, "-"], b"")
+            a = np.frombuffer(b, np.uint8).astype(np.float64)
+            if fmt == "yuv420p":
+                a = a.reshape(-1, 640 * 360 * 3 // 2)
+                planes.append(np.array([a[:, :640 * 360].mean(), a[:, 640 * 360:640 * 360 * 5 // 4].mean(), a[:, 640 * 360 * 5 // 4:].mean()]))
+            else:
+                planes.append(a.reshape(-1, 3, 640 * 360).mean((0, 2)))
+        d[fmt] = planes[1] - planes[0]
+    dy, du, dv = d["yuv420p"][0] / 219, d["yuv420p"][1] / 224, d["yuv420p"][2] / 224
+    yuv = np.array([dy + 1.5748 * dv, dy - 0.1873 * du - 0.4681 * dv, dy + 1.8556 * du]) * 255
+    g, b, r = d["gbrp"]                                    # gbrp's planes are G, B, R
+    return {"yuv": yuv, "rgb": np.array([r, g, b])}
 
 
 class Refs:
@@ -245,22 +290,27 @@ class Refs:
         plate = box_means(plate_image(), boxes())
         self.page_matches_plate = max(np.abs(page[k] - plate[k]).max() for k in page)
         self.page = page
-        self.graded = graded_ref(plate_image())
+        self.grain = grain_means()
+        g0 = graded_ref(plate_image())
+        # the graded plate as each path renders it: the grade, then its grain on 4:2:0 YUV planes (a plate alone: ffmpeg
+        # lays the grain after the conversion to the encoder's format) or on RGB planes (the assemble shots with type)
+        self.graded = {dom: {k: v + sh for k, v in g0.items()} for dom, sh in self.grain.items()}
         lay = box_means(self.layer_rgba[..., :3], boxes((1, 2)))
         alpha = {k: v[0] for k, v in box_means(np.repeat(self.layer_rgba[..., 3:], 3, 2), boxes((1, 2))).items()}
         self.layer = {k: lay[k] for k in lay if k[0] == 1}
-        self.blend = {k: (alpha[k] * lay[k] + (255 - alpha[k]) * self.graded[k]) / 255 for k in lay if k[0] == 2}
+        self.blend = {dom: {k: (alpha[k] * lay[k] + (255 - alpha[k]) * gr[k]) / 255 for k in lay if k[0] == 2}
+                      for dom, gr in self.graded.items()}
 
 
 def plan_all(ref):                      # every patch of the frame from one reference set
     return lambda k: [((r, i), r, i, ref[(r, i)]) for r, i, _, _ in boxes()]
 
 
-def plan_type(R):                       # a graded plate with the type layer on it: A plate, B layer, C blend
+def plan_type(R, dom):                  # a graded plate with the type layer on it: A plate, B layer, C blend
     def f(k):
-        out = [((0, i), 0, i, R.graded[(0, i)]) for i in range(14)]
+        out = [((0, i), 0, i, R.graded[dom][(0, i)]) for i in range(14)]
         out += [((1, i), 1, i, R.layer[(1, i)]) for i in range(14)]
-        out += [((2, i), 2, i, R.blend[(2, i)]) for i in range(14)]
+        out += [((2, i), 2, i, R.blend[dom][(2, i)]) for i in range(14)]
         return out
     return f
 
@@ -305,7 +355,7 @@ def path_doc(sb, R):
                                     "focus_uv": [0.5, 0.5], "zoom": [1.0, 1.0], "duration": 0.25, "length": 0.25}))
         out = sb.p(f"doc_{tag}.mp4")
         run([sys.executable, GFX / "doc_composite.py", "--shot", shot, "--out", out], cwd=ROOT)
-        res.append((name, out, plan_all(R.graded), None))
+        res.append((name, out, plan_all(R.graded["yuv"]), None))
     return res
 
 
@@ -319,15 +369,15 @@ def path_split(sb, R):
     split.render_clip(a, n, tmp, lambda t: img, sb.env, split.HW + split.GUT)
 
     def plan(k):
-        out = [((r, i, "L"), r, i, R.graded[(r, i)]) for r, i, _, _ in boxes(half=0)]
+        out = [((r, i, "L"), r, i, R.graded["yuv"][(r, i)]) for r, i, _, _ in boxes(half=0)]
         if k < cut_f:
-            out += [((r, i, "R plate"), r, i, R.graded[(r, i)]) for r, i, _, _ in boxes(half=1)]
+            out += [((r, i, "R plate"), r, i, R.graded["yuv"][(r, i)]) for r, i, _, _ in boxes(half=1)]
         else:
             out += [((r, i, "R cut-away"), r, i, R.page[(r, i)]) for r, i, _, _ in boxes(half=1)]
         return out
     res = [("split clip (render_clip)", Path(a.out), plan, list(range(n)))]
     got = split.deliver_plates(img)            # the tote fit's view of the clip: must be the clip
-    res.append(("split fit view (deliver_plates)", got, plan_all(R.graded), None))
+    res.append(("split fit view (deliver_plates)", got, plan_all(R.graded["yuv"]), None))
     return res
 
 
@@ -341,7 +391,7 @@ def path_plate_type(sb, R):
         plate_type.main()
     finally:
         sys.argv = argv
-    return [("plate_type (plate + type overlay)", out, plan_type(R), None)]
+    return [("plate_type (plate + type overlay)", out, plan_type(R, "yuv"), None)]
 
 
 def path_montage(sb, R):
@@ -356,7 +406,8 @@ def path_montage(sb, R):
     finally:
         sys.argv = argv
     return [("montage concat (plate, then seam)", out,
-             lambda k: [((r, i, "plate" if k < 6 else "seam"), r, i, (R.graded if k < 6 else R.page)[(r, i)]) for r, i, _, _ in boxes()], None)]
+             lambda k: [((r, i, "plate" if k < 6 else "seam"), r, i, (R.graded["yuv"] if k < 6 else R.page)[(r, i)]) for r, i, _, _ in boxes()],
+             None)]
 
 
 def path_assemble(sb, R):
@@ -380,7 +431,7 @@ def path_assemble(sb, R):
     for e in shots:
         asm.render_shot(e)
     asm.join_cmd(None)
-    plans = [plan_type(R), plan_all(R.graded), plan_all(R.page), plan_all(R.page)]
+    plans = [plan_type(R, "rgb"), plan_all(R.graded["yuv"]), plan_all(R.page), plan_all(R.page)]
     names = ["plate + type", "plate", "canvas piece", "type_render piece"]
     res = [(f"assemble cache: {nm}", asm.SHOTS / f"{e['id']}.mp4", pl, None) for nm, e, pl in zip(names, shots, plans)]
 

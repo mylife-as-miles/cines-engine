@@ -51,7 +51,8 @@ PATH_X = 5.55                    # her line on the right-hand pavement (kerb fac
 SPEED = 1.0                      # m/s
 CADENCE = 1.74                   # steps per second
 END_Y = 15.25                    # hips at the last frame: entering the light of the doorway before the boutique
-ARM_OUT = (13.0, 9.0)            # upper arm and forearm out from the side (deg), so the carriers clear the skirt
+ARM_OUT = {"L": (17.0, 13.0), "R": (13.0, 9.0)}   # upper arm, forearm out from the side (deg): the carriers clear
+                                                  # the skirt (the card bag hangs higher, beside the hip: more)
 ELBOW = 7.0                      # a carrying arm is nearly straight
 SWING = 3.6                      # arm swing amplitude (deg): carriers damp it
 GLANCE = -13.0                   # head turn toward the shop windows on her right over the second half (deg)
@@ -316,8 +317,8 @@ def walk(d, frames):
         s = -math.cos(w - 0.4)                               # -1 at the left heel strike: left arm back
         for side, sgn, sw in (("L", 1, s), ("R", -1, -s)):
             fwd = 2.5 + SWING * sw
-            rg._aim(rig, f"upper_arm_fk.{side}", rg._dir(0, fwd, sgn, ARM_OUT[0]))
-            rg._aim(rig, f"forearm_fk.{side}", rg._dir(0, fwd + ELBOW, sgn, ARM_OUT[1]))
+            rg._aim(rig, f"upper_arm_fk.{side}", rg._dir(0, fwd, sgn, ARM_OUT[side][0]))
+            rg._aim(rig, f"forearm_fk.{side}", rg._dir(0, fwd + ELBOW, sgn, ARM_OUT[side][1]))
         bpy.context.view_layer.update()
         B.grip_hand(rig, inv, "R", Vector((0.0, 1.0, 0.0)), Vector((1.0, 0.0, 0.0)))   # cords along, knuckles out
         B.grip_hand(rig, inv, "L", Vector((0.0, 1.0, 0.0)), Vector((-1.0, 0.0, 0.0)))
@@ -327,13 +328,20 @@ def walk(d, frames):
         if fi == 0:
             # open each fist until its hollow takes the gathered cords (once: the grip holds while she walks)
             for k in ("L", "R"):
-                for _ in range(8):
+                tried = []
+                for _ in range(6):
                     close_hand(pb, k, curl[k])
                     bpy.context.view_layer.update()
                     room, hollow = fist_room(rig, d, k)
+                    tried.append((room, curl[k], hollow))
                     if room >= CORD_R[k] + 0.0015:
                         break
-                    curl[k] *= 0.9
+                    curl[k] *= 0.92
+                # the tightest fist that takes the cords, else the one with the most room
+                ok = [x for x in tried if x[0] >= CORD_R[k] + 0.0015]
+                room, curl[k], hollow = max(ok, key=lambda x: x[1]) if ok else max(tried, key=lambda x: x[0])
+                close_hand(pb, k, curl[k])
+                bpy.context.view_layer.update()
                 d[f"grip_{k}"] = [float(c) for c in hollow]
                 print(f"AB grip {k}: fingers at {100 * curl[k]:.0f} % of a full fist, room for a "
                       f"{2000 * room:.1f} mm bundle (cords need {2000 * CORD_R[k]:.0f})", flush=True)
@@ -353,7 +361,7 @@ def walk(d, frames):
     return grips, drift
 
 
-CORD_R = {"R": 0.0075, "L": 0.0055}    # the two gathered cords of each carrier, as one bundle (kraft 5 mm, card 3.5)
+CORD_R = {"R": 0.0058, "L": 0.0048}    # the two gathered cords of each carrier, as one bundle (kraft 5 mm, card 3.5)
 
 
 def close_hand(pb, side, k):
@@ -417,7 +425,7 @@ def carry(bag, grips, frames, arm, yaw0, damp, seed):
 
 # ------------------------------------------------------------------ rain
 
-def rain(cam_path, exclude):
+def rain(cam_path, exclude, shelter):
     """Light rain over the stretch the camera sees: seeded drops, each with its own speed; position at time t
         z = floor_i + mod(z0_i - floor_i - v_i * t_r, H_i) - v_i * (t - t_r),  x = x0 + wind_x t,  y = y0 + wind_y t
     with t_r the time of the nearest whole frame, so a drop wraps from its floor to the top only between frames
@@ -552,7 +560,25 @@ def rain(cam_path, exclude):
     L.new(rad, sc_v.inputs["X"])
     L.new(rad, sc_v.inputs["Y"])
     L.new(attr("length"), sc_v.inputs["Z"])
-    L.new(sc_v.outputs[0], inst.inputs["Scale"])
+    # her shelter: drops inside a cylinder round her and her carriers (r 0.45 m, to 1.9 m) shrink to nothing (they
+    # land on her); scaled, not deleted, so every frame and sub-frame keeps one topology for the motion blur
+    oi = N.new("GeometryNodeObjectInfo")
+    oi.transform_space = "ORIGINAL"
+    oi.inputs["Object"].default_value = shelter
+    rel = N.new("ShaderNodeVectorMath")
+    rel.operation = "SUBTRACT"
+    L.new(comb.outputs[0], rel.inputs[0])
+    L.new(oi.outputs["Location"], rel.inputs[1])
+    rsep = N.new("ShaderNodeSeparateXYZ")
+    L.new(rel.outputs[0], rsep.inputs[0])
+    dxy = m("SQRT", m("ADD", m("MULTIPLY", rsep.outputs["X"], rsep.outputs["X"]),
+                      m("MULTIPLY", rsep.outputs["Y"], rsep.outputs["Y"])))
+    outside = m("MAXIMUM", m("GREATER_THAN", dxy, 0.45), m("GREATER_THAN", rsep.outputs["Z"], 1.9))
+    scl = N.new("ShaderNodeVectorMath")
+    scl.operation = "SCALE"
+    L.new(sc_v.outputs[0], scl.inputs[0])
+    L.new(outside, scl.inputs["Scale"])
+    L.new(scl.outputs[0], inst.inputs["Scale"])
     real = N.new("GeometryNodeRealizeInstances")
     L.new(inst.outputs[0], real.inputs[0])
     smat = N.new("GeometryNodeSetMaterial")
@@ -742,11 +768,15 @@ def build(base=None, save_base=None, frames=None):
             print(f"AB saved base {save_base}", flush=True)
     grips, drift = walk(d, frames)
     carry(bags["R"], grips["R"], frames, "R", 4.0, damp=4.2, seed=11)
-    carry(bags["L"], grips["L"], frames, "L", -6.0, damp=4.6, seed=12)
+    carry(bags["L"], grips["L"], frames, "L", 3.0, damp=4.6, seed=12)
     cam, path = camera(frames)
     C.film_settings(exposure=-1.65)
     look()
-    rain(path, [o for h in (d, *bags.values()) for o in h.children_recursive])
+    sc = bpy.context.scene
+    shelter = bpy.data.objects.new("rain shelter", None)       # follows her hips on the pavement
+    sc.collection.objects.link(shelter)
+    C.bake_object(shelter, frames, [Matrix.Translation((PATH_X, B.hip_y(C.t_of(f)), PZ)) for f in frames])
+    rain(path, [o for h in (d, *bags.values()) for o in h.children_recursive], shelter)
     ripples()
     steam()
     C.volumes_off_blur()

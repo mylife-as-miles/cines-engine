@@ -6,9 +6,12 @@ The set is scenes/stages/detention_corridor.py exactly as the film's `corridor` 
 trims applied through its own apply_camera). On top of it:
 - the camera dollies 1.2 m down the corridor's axis at a constant 0.25 m/s (eased only in the handles), level, from
   the plate's own position, lens 28 mm; f/4 focused 6.5 m out, so the near motes go soft and the far end stays sharp;
-- the corridor's haze is thicker (0.0018 -> 0.0042) and no longer uniform: a large, slow noise drifting toward the
-  camera makes the light's shapes breathe without reading as smoke;
-- 14,000 seeded dust motes, densest near the lens and under the lit fitting, each settling and swaying slowly;
+- the corridor's haze is thicker (0.0018 -> 0.0042) and no longer uniform (a large, still noise, so the light's shapes
+  vary in depth and shift with the dolly's parallax);
+- a shaft from the near cell's night light through its barred vision panel crosses the corridor in front of the
+  lens, in a pocket of denser air that lives only inside the beam, so the bars cut it into slats;
+- 5,100 seeded dust motes: half in that beam, the rest a sparse field (a little denser under the lit fitting), each
+  settling and swaying slowly;
 - the visitation door, ajar at 50 degrees, starts to swing shut at 1.4 s and settles closed at 4.2 s on a
   door-closer's curve (fast then slow); the cheat light in its gap fades with the opening so the warm wedge on the
   floor narrows away with it (the room's own lights are occluded by the leaf physically).
@@ -51,7 +54,9 @@ def door_angle(t):
 
 
 def haze_breathing(ob, density):
-    """Replace a homogeneous haze with one modulated by a large noise drifting toward the camera (scene time)."""
+    """Replace a homogeneous haze with one modulated by a large, still noise: the light's shapes vary in depth and
+    the dolly's parallax moves them. (A drifting noise was tried: a keyed value in a volume material makes Cycles
+    rebuild the volume every frame, 25 CPU-seconds a frame here, for a drift nobody could see.)"""
     m = ob.active_material
     nt = m.node_tree
     pv = next(n for n in nt.nodes if n.type == "PRINCIPLED_VOLUME")
@@ -59,7 +64,6 @@ def haze_breathing(ob, density):
     drift = nt.nodes.new("ShaderNodeMapping")
     drift.vector_type = "POINT"
     nt.links.new(tc.outputs["Object"], drift.inputs["Vector"])
-    # The mapping's location is keyed per frame below (0.05 m/s toward the lens, a little sideways and down).
     noise = nt.nodes.new("ShaderNodeTexNoise")
     noise.inputs["Scale"].default_value = 0.55
     noise.inputs["Detail"].default_value = 2.0
@@ -70,8 +74,6 @@ def haze_breathing(ob, density):
     ramp.inputs["To Min"].default_value, ramp.inputs["To Max"].default_value = 0.55 * density, 1.45 * density
     nt.links.new(noise.outputs["Fac"], ramp.inputs["Value"])
     nt.links.new(ramp.outputs["Result"], pv.inputs["Density"])
-    C.bake_vector(nt, f'nodes["{drift.name}"].inputs["Location"].default_value', C.FRAMES,
-                  [(0.012 * C.t_of(f), 0.05 * C.t_of(f), 0.008 * C.t_of(f)) for f in C.FRAMES])
     return m
 
 

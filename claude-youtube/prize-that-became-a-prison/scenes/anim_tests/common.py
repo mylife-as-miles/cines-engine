@@ -344,7 +344,7 @@ def local_haze(name, box_min, box_max, peak, centre, sigma, colour=(0.8, 0.86, 0
 
 
 def beam_haze(name, box_min, box_max, origin, target, half_width, peak, edge=0.10, colour=(0.8, 0.86, 0.92),
-              drift=(0.0, 0.04, 0.01), noise_scale=1.6):
+              drift=None, noise_scale=1.6):
     """Haze that lives only inside a light's beam: denser air in the cone from `origin` through `target` (half
     width `half_width` at the target, growing linearly with distance), fading to nothing over `edge` metres outside
     it and starting at the target (the window), with a slow drifting texture. The beam then reads as a shaft without
@@ -401,8 +401,9 @@ def beam_haze(name, box_min, box_max, origin, target, half_width, peak, edge=0.1
     pv.inputs["Color"].default_value = (*colour, 1)
     nt.links.new(b.outputs[0], pv.inputs["Density"])
     nt.links.new(pv.outputs[0], nt.nodes["Material Output"].inputs["Volume"])
-    bake_vector(nt, f'nodes["{mp.name}"].inputs["Location"].default_value', FRAMES,
-                [tuple(v * t_of(f) for v in drift) for f in FRAMES])
+    if drift:   # costly: any keyed value in a volume's material makes Cycles rebuild the volume every frame
+        bake_vector(nt, f'nodes["{mp.name}"].inputs["Location"].default_value', FRAMES,
+                    [tuple(v * t_of(f) for v in drift) for f in FRAMES])
     import setkit as sk
     lo, hi = Vector(box_min), Vector(box_max)
     ob = sk.box(name, tuple(hi - lo), tuple((lo + hi) / 2), m)

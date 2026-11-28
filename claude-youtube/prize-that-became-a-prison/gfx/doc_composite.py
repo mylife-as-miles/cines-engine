@@ -32,6 +32,7 @@ panel) and `focus_band.zoom_scaled` (the band's blur grows with the push, reachi
 blur does when it moves in: the email).
 """
 import argparse
+import atexit
 import json
 import os
 import re
@@ -210,21 +211,34 @@ class Page:
 
 
 class Texture:
-    """A moving texture (the laptop screen's UI) read from a video, frame by frame in order (or seeked for a still)."""
+    """A moving texture (the laptop screen's UI) read from a video, frame by frame in order (or from its start for a still).
+    ffmpeg decodes it by the file's own matrix (canvas_render.js writes BT.601 untagged, read as 601) with accurate rounding
+    and full chroma interpolation: OpenCV's decode, used before, rounded 1-2 levels low (the cognac's 100 green read 98)."""
     def __init__(self, path, fps):
-        self.cap, self.fps, self.i, self.img = cv2.VideoCapture(path), fps, -1, None
-        self.w, self.h = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.n = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.path, self.fps, self.i, self.img, self.proc = path, fps, -1, None, None
+        s = json.loads(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-count_packets", "-show_entries",
+                                       "stream=width,height,nb_read_packets", "-of", "json", path],
+                                      capture_output=True, text=True, check=True).stdout)["streams"][0]
+        self.w, self.h, self.n = int(s["width"]), int(s["height"]), int(s["nb_read_packets"])
+
+    def _open(self):
+        if self.proc:
+            self.proc.kill(); self.proc.wait()
+        self.proc = subprocess.Popen(["ffmpeg", "-v", "error", "-i", self.path, "-vf",
+                                      "scale=in_color_matrix=auto:in_range=auto:flags=bicubic+accurate_rnd+full_chroma_int,format=rgb24",
+                                      "-fps_mode", "passthrough", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+        atexit.register(self.proc.kill)       # the frames after the last one used are never read
+        self.i = -1
 
     def get(self, t):
         k = min(self.n - 1, max(0, int(round(t * self.fps))))
-        if k < self.i or self.img is None and k > 0:
-            self.cap.set(cv2.CAP_PROP_POS_FRAMES, k); self.i = k - 1
+        if self.proc is None or k < self.i:
+            self._open()
         while self.i < k:
-            ok, im = self.cap.read()
-            if not ok:
+            b = self.proc.stdout.read(self.w * self.h * 3)
+            if len(b) < self.w * self.h * 3:
                 break
-            self.img, self.i = cv2.cvtColor(im, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0, self.i + 1
+            self.img, self.i = np.frombuffer(b, np.uint8).reshape(self.h, self.w, 3).astype(np.float32) / 255.0, self.i + 1
         return self.img
 
 

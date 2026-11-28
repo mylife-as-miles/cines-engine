@@ -1,352 +1,487 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><title>story type</title>
 <style>
-@font-face{font-family:"InterD";src:url(fonts/InterDisplay-Thin.otf);font-weight:100}
-@font-face{font-family:"InterD";src:url(fonts/InterDisplay-Light.otf);font-weight:300}
-@font-face{font-family:"InterD";src:url(fonts/InterDisplay-Regular.otf);font-weight:400}
-@font-face{font-family:"InterD";src:url(fonts/InterDisplay-SemiBold.otf);font-weight:600}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-300-normal.woff2) format("woff2");font-weight:300}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-400-normal.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-500-normal.woff2) format("woff2");font-weight:500}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-600-normal.woff2) format("woff2");font-weight:600}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-400-italic.woff2) format("woff2");font-weight:400;font-style:italic}
-@font-face{font-family:"Bebas";src:url(fonts/bebas-neue-latin-400-normal.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"Oswald";src:url(fonts/oswald-latin-300-normal.woff2) format("woff2");font-weight:300}
-@font-face{font-family:"Oswald";src:url(fonts/oswald-latin-500-normal.woff2) format("woff2");font-weight:500}
+@font-face{font-family:"Archivo";src:url("fonts/archivo/Archivo%5Bwdth,wght%5D.ttf") format("truetype");font-weight:100 900}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-Regular.ttf");font-weight:400}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-Medium.ttf");font-weight:500}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-SemiBold.ttf");font-weight:600}
 html,body{margin:0;background:transparent}canvas{display:block}
 </style></head>
 <body><canvas id="c" width="1920" height="1080"></canvas>
 <script>
-// Story typography for The Prize That Became a Prison. Every frame is a pure function of t (seconds).
-// Contract (scripts/canvas_render.js): window.draw(mode, t), window.READY. Optional: window.LOOK ('A'|'B'|'C'),
-// window.BG (an image URL drawn under the type, for previews; omitted for the alpha layers that go over the plates).
-// Motion numbers from cinetic (references/copy-and-type.md §8, fx/TypePresets.tsx, fx/TypeFx.tsx, fx/Roll.tsx),
-// converted from its 60 fps frames to seconds. No glow, no overshoot, no fade-out of a statement: lines leave with
-// the cut. Red is never used here: in this film red marks only the seam.
-const W = 1920, H = 1080, f60 = n => n / 60;
-const cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
-const sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
-function bez(x1, y1, x2, y2) {            // cubic-bezier(x1,y1,x2,y2) as y(x), solved by Newton then bisection
-  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
-  const sx = u => ((ax * u + bx) * u + cx) * u, sy = u => ((ay * u + by) * u + cy) * u, dx = u => (3 * ax * u + 2 * bx) * u + cx;
-  return x => {
-    x = cl(x); let u = x;
-    for (let i = 0; i < 8; i++) { const e = sx(u) - x, d = dx(u); if (Math.abs(e) < 1e-6 || Math.abs(d) < 1e-6) break; u -= e / d; }
-    if (Math.abs(sx(u) - x) > 1e-5) { let lo = 0, hi = 1; u = x; for (let i = 0; i < 30; i++) { if (sx(u) < x) lo = u; else hi = u; u = (lo + hi) / 2; } }
-    return sy(u);
+'use strict';
+// Story typography for The Prize That Became a Prison, in the film's text system (DECISIONS, 28 November 2026: the
+// kinetic grotesk of the text test, gfx/typetest.html). Every frame is a pure function of t (seconds).
+// Contract (type_render.js / canvas_render.js): window.draw(mode, t), window.READY; window.plateCam(mode, t) gives the
+// plate's own move under a moment (gfx/plate_type.py); window.setBG(url) draws a plate under the type for previews.
+// window.LOOK is accepted and ignored: there is one system now (the three-look board and the cinema serif are retired).
+//
+// The system:
+//   Archivo (OFL) for every word: light running words (300) against heavy key words (800).
+//   IBM Plex Mono (OFL) for typed records (the chapter number, the year on the sentence card).
+//   One cold cyan, #8AD8E4, only for time: years, dates, the lit timeline, the strike on the sentence. Nothing else.
+//   Motion: words rise out of a mask under their baseline; key words land heavier from a slight blur; records type
+//   on; a change strikes, then the new words rise; the years live on a 3D timeline (camera, depth of field, parallax)
+//   as numerals gathered out of particles.
+// No red (it marks only the tote's seam), no labels, no credits, no glow, no fade to black. Text stays in y 70-900;
+// left-set supers start their ink on MARGIN.
+const W = 1920, H = 1080, FPS = 24;
+const COL = { ink: '#eef0f2', grey: '#8d97a2', grey2: '#b7bec6', acc: '#8ad8e4' };
+const ACC = a => `rgba(138,216,228,${a})`, INK = a => `rgba(238,240,242,${a})`;
+const SANS = 'Archivo', MONO = 'PlexMono';
+
+// ---------- math ----------
+const cl = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
+const lerp = (a, b, u) => a + (b - a) * u;
+const ramp = (t, a, b) => cl((t - a) / (b - a));
+const oExpo = u => u >= 1 ? 1 : 1 - Math.pow(2, -10 * u);
+const oCubic = u => 1 - Math.pow(1 - u, 3);
+const oQuint = u => 1 - Math.pow(1 - u, 5);
+const iQuad = u => u * u;
+const ioCubic = u => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+const ioQuint = u => u < .5 ? 16 * u * u * u * u * u : 1 - Math.pow(-2 * u + 2, 5) / 2;
+const sm = u => (u = cl(u), u * u * (3 - 2 * u));
+function rng(seed) { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+// ---------- the type styles ----------
+// size in px; track in em. Archivo's cap height is 0.69 em, its descender 0.20 em (measured in Chromium).
+const KEY = { fam: SANS, w: 800, track: -0.008 };   // heavy key words
+const RUN = { fam: SANS, w: 300, track: 0 };        // light running words
+const CAPS = { fam: SANS, w: 300, track: 0.26 };    // light tracked capitals: places, months
+const REC = { fam: MONO, w: 500, track: 0.16 };     // typed records
+const CAP = 0.69;
+function font(ctx, st, size) { ctx.font = `${st.w} ${size.toFixed(2)}px ${st.fam}`; ctx.letterSpacing = `${(size * st.track).toFixed(2)}px`; }
+// letterSpacing also adds space after the last glyph: measure without it
+function wid(ctx, text, st, size) { font(ctx, st, size); return ctx.measureText(text).width - size * st.track; }
+// One left margin for every left-set super: the x at which the first glyph's ink starts exactly on MARGIN.
+const MARGIN = 140;
+// The lowest baseline of a low-left super: above YouTube's bottom band (captions, controls), which starts near y 860.
+const LOW = 822;
+function inkX(ctx, text, st, size, m = MARGIN) { font(ctx, st, size); return m + ctx.measureText(text.charAt(0)).actualBoundingBoxLeft; }
+const MONTHS = /\b(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\b/i;
+const isTime = s => /\d/.test(s) || MONTHS.test(s);       // years, dates, months and day counts take the cyan
+
+// ---------- motion ----------
+// A word rising out of a mask that sits mb em under its baseline (0.32 lets descenders show; capitals use 0.04).
+// p: 0-1 through its entrance (an exponential ease-out, no overshoot). The font is already set.
+function rise(ctx, text, x, y, size, p, mb = 0.32) {
+  if (p <= 0) return;
+  if (p >= 1) { ctx.fillText(text, x, y); return; }
+  const e = oExpo(p), w = ctx.measureText(text).width;
+  ctx.save(); ctx.beginPath(); ctx.rect(x - size * .4, y - size * 1.3, w + size * .8, size * (1.3 + mb)); ctx.clip();
+  ctx.globalAlpha *= cl(p * 2.4);
+  ctx.fillText(text, x, y + (1 - e) * size * (0.76 + mb));
+  ctx.restore();
+}
+// The same mask, leaving: q 0-1, the word drops back under its baseline (an ease-in), fading in its last third.
+function sink(ctx, text, x, y, size, q, mb = 0.32) {
+  if (q >= 1) return;
+  if (q <= 0) { ctx.fillText(text, x, y); return; }
+  const w = ctx.measureText(text).width;
+  ctx.save(); ctx.beginPath(); ctx.rect(x - size * .4, y - size * 1.3, w + size * .8, size * (1.3 + mb)); ctx.clip();
+  ctx.globalAlpha *= cl((1 - q) * 3);
+  ctx.fillText(text, x, y + iQuad(q) * size * (0.76 + mb));
+  ctx.restore();
+}
+// A key word landing: from s0 times its size and b0 px out of focus to sharp, about the middle of its capitals.
+function slam(ctx, text, x, y, size, p, s0 = 1.08, b0 = 14) {
+  if (p <= 0) return;
+  if (p >= 1) { ctx.fillText(text, x, y); return; }
+  const e = oQuint(p), w = ctx.measureText(text).width, s = lerp(s0, 1, e), b = (1 - e) * b0, cy = y - size * CAP / 2;
+  ctx.save(); ctx.globalAlpha *= cl(p * 3.2);
+  if (b > .3) ctx.filter = `blur(${b.toFixed(1)}px)`;
+  ctx.translate(x + w / 2, cy); ctx.scale(s, s); ctx.fillText(text, -w / 2, y - cy);
+  ctx.restore();
+}
+// Typed records: the prefix of `text` at cps characters a second from t0, a block cursor (ink, never the accent) at
+// the head while typing and briefly after. `back` (a time) deletes it again, right to left.
+function typed(ctx, text, x, y, size, t, t0, cps, col, back = Infinity, cursorHold = 0.25) {
+  if (t < t0) return;
+  let k = Math.min(text.length, Math.floor((t - t0) * cps + 1e-6));
+  if (t >= back) k = Math.max(0, text.length - Math.floor((t - back) * cps * 1.4 + 1e-6));
+  const shown = text.slice(0, k);
+  ctx.fillStyle = col; if (k) ctx.fillText(shown, x, y);
+  const head = x + (k ? ctx.measureText(shown).width : 0), done = t0 + text.length / cps;
+  const typing = (t < done + cursorHold) || (t >= back && t < back + text.length / (cps * 1.4) + 0.04);
+  if (typing) { ctx.fillStyle = INK(0.9); ctx.fillRect(head + size * 0.06, y - size * 0.74, size * 0.5, size * 0.9); }
+}
+// A soft dark shade under a block of type on a lit plate: an ellipse, never a box.
+function shade(ctx, cx, cy, rx, ry, a) {
+  if (a <= 0.002) return;
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(rx / 330, ry / 330);
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330);
+  g.addColorStop(0, `rgba(3,5,8,${a})`); g.addColorStop(0.55, `rgba(3,5,8,${a * 0.62})`); g.addColorStop(1, 'rgba(3,5,8,0)');
+  ctx.fillStyle = g; ctx.fillRect(-330, -330, 660, 660); ctx.restore();
+}
+// Words of one line in mixed weights: [[text, style]], laid out with the light style's space; returns x of each word.
+function layout(ctx, words, size) {
+  const sp = (font(ctx, RUN, size), ctx.measureText(' ').width) * 1.05; let x = 0; const xs = [];
+  words.forEach(([w, st], i) => { xs.push(x); x += wid(ctx, w, st, size) + (i < words.length - 1 ? sp : 0); });
+  return { xs, width: x };
+}
+
+// =====================================================================================================
+// THE 3D TIMELINE (calendar, counter): one world for both, so the two read as one line seen at two moments.
+// The line runs along +z, a year every TLD units, 2014 at z 0; every year has a node (a ring and a dot) and nothing
+// else: no events, no months. Behind the progress the line is lit in the accent; ahead it is grey and fogged, and it
+// runs on past 2026 unlit. The current year is a numeral of particles that gathers as the progress reaches it and
+// drifts apart into dust when the progress moves on. Depth of field follows the current node.
+// =====================================================================================================
+const TLD = 900, Y0 = 2014, Y1 = 2026;
+const NUM = { x: 300, y: -190, dz: 120, cap: 180 };   // the numeral's centre beside its node (right of and above it), its cap height
+let DIGS = {}, NUMS = {}, DUST = [];
+function buildTimeline() {
+  const cw = 280, ch = 400, base = 340, c = document.createElement('canvas'); c.width = cw; c.height = ch;
+  const g = c.getContext('2d'); g.font = '600 320px Archivo'; g.textBaseline = 'alphabetic';
+  const capPx = 320 * CAP, adv = g.measureText('0').width / capPx;
+  for (const d of '0123456789') {
+    g.clearRect(0, 0, cw, ch); g.fillStyle = '#fff'; g.fillText(d, 20, base);
+    const data = g.getImageData(0, 0, cw, ch).data, r = rng(900 + +d), pts = [], step = 3.5;
+    for (let y = 0; y < ch; y += step) for (let x = 0; x < cw; x += step) {
+      const jx = x + (r() - .5) * step, jy = y + (r() - .5) * step, ix = Math.floor(jx), iy = Math.floor(jy);
+      if (ix < 0 || iy < 0 || ix >= cw || iy >= ch) continue;
+      if (data[(iy * cw + ix) * 4 + 3] > 140) pts.push([(jx - 20) / capPx, (jy - base) / capPx]);
+    }
+    DIGS[d] = pts;
+  }
+  for (let yr = Y0; yr <= Y1; yr++) {
+    const s = String(yr), r = rng(yr * 7 + 3), pts = [], tw = adv * s.length;
+    [...s].forEach((d, i) => DIGS[d].forEach(([u, v]) => {
+      const th = r() * Math.PI * 2, ph = Math.acos(2 * r() - 1), rad = 0.9 + r() * 4.2;     // scatter, in caps
+      const th2 = r() * Math.PI * 2, rad2 = 0.6 + r() * 2.2;                               // where it drifts off to
+      pts.push({ u: u + i * adv - tw / 2, v: v + 0.5, w: (r() - .5) * 0.1,
+        sx: Math.sin(ph) * Math.cos(th) * rad, sy: Math.sin(ph) * Math.sin(th) * rad * .6, sz: Math.cos(ph) * rad,
+        dx: Math.cos(th2) * rad2, dy: -0.4 - r() * 1.2, dz: Math.sin(th2) * rad2,
+        dl: r() * .45, dd: r() * .35, ph: r() * 6.283, b: .55 + r() * .45 });
+    }));
+    NUMS[yr] = pts;
+  }
+  const r = rng(77); DUST = [];
+  for (let i = 0; i < 520; i++) DUST.push({ x: (r() - .5) * 3400, y: -1500 + r() * 2300, z: -3000 + r() * 16000, b: .3 + r() * .7, s: .8 + r() * 1.6 });
+}
+function proj(cam, X, Y, Z) {
+  const dx = X - cam.x, dy = Y - cam.y, dz = Z - cam.z, cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  const x1 = dx * cy - dz * sy, z1 = dx * sy + dz * cy, y2 = dy * cp - z1 * sp, z2 = dy * sp + z1 * cp;
+  return { x: W / 2 + cam.ox + cam.f * x1 / z2, y: H / 2 + cam.oy + cam.f * y2 / z2, z: z2 };
+}
+function basis(cam) {                // camera right, screen-down and forward in world space (for billboards)
+  const cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  return { r: [cy, 0, -sy], u: [-sy * sp, cp, -cy * sp], f: [sy * cp, sp, cy * cp] };
+}
+const mixPose = (a, b, u) => { const o = {}; for (const k in a) o[k] = lerp(a[k], b[k], u); return o; };
+// Monotone cubic (Fritsch-Carlson) through [t, v] points, flat at the first and last: a smooth progress with no stop-go.
+function monotone(P) {
+  const n = P.length, d = [], m = [];
+  for (let i = 0; i < n - 1; i++) d.push((P[i + 1][1] - P[i][1]) / (P[i + 1][0] - P[i][0]));
+  m[0] = 0; m[n - 1] = 0;
+  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : 3 * (P[i + 1][0] - P[i - 1][0]) / ((2 * P[i + 1][0] - P[i][0] - P[i - 1][0]) / d[i - 1] + (P[i + 1][0] + P[i][0] - 2 * P[i - 1][0]) / d[i]);
+  return t => {
+    if (t <= P[0][0]) return P[0][1]; if (t >= P[n - 1][0]) return P[n - 1][1];
+    let i = 0; while (t > P[i + 1][0]) i++;
+    const h = P[i + 1][0] - P[i][0], s = (t - P[i][0]) / h, s2 = s * s, s3 = s2 * s;
+    return (2 * s3 - 3 * s2 + 1) * P[i][1] + (s3 - 2 * s2 + s) * h * m[i] + (-2 * s3 + 3 * s2) * P[i + 1][1] + (s3 - s2) * h * m[i + 1];
   };
 }
-const E = {
-  snapOut: bez(.137, .758, .128, .926), glide: bez(.172, .687, .393, .943), rise: bez(.17, .75, .29, .83),
-  over: bez(.232, .902, .794, .997), out: bez(.16, 1, .3, 1), inOut: bez(.673, .077, .288, .943),
-};
+// Draw the timeline. S: { cam, prog (years from 2014, the lit progress), form(yr) 0-1, gone(yr) 0-1, dof 0-1, fogN,
+// fogS, poster 0-1 (labels of the span), numScale }.
+function drawTimeline(ctx, t, S) {
+  const cam = S.cam, B = basis(cam), FOG = z => 1 - sm((z - S.fogN) / S.fogS);
+  const focusZ = proj(cam, 0, 0, S.focusYear * TLD).z;
+  const COC = z => Math.min(16, 22 * S.dof * Math.abs(z - focusZ) / Math.max(z, 1));
+  const progZ = S.prog * TLD;
+  // dust: fine, faint, and soft out of focus (the depth cue under everything else)
+  for (const d of DUST) {
+    const p = proj(cam, d.x, d.y, d.z); if (p.z < 120 || p.x < -30 || p.x > W + 30 || p.y < -30 || p.y > H + 30) continue;
+    const coc = COC(p.z), r = Math.max(.55, d.s * cam.f / p.z * .7), re = r + coc * .45;
+    const a = d.b * FOG(p.z) * Math.min(1, (r / re) ** 2 * 1.6) * .42 * cl((p.z - 250) / 400) * S.dust;
+    if (a < .01) continue;
+    ctx.fillStyle = INK(a); ctx.beginPath(); ctx.arc(p.x, p.y, re, 0, 6.283); ctx.fill();
+  }
+  // the line: grey ahead, the accent behind the progress, fading in from before 2014 and on past 2026 into the fog
+  const Z0 = -1.6 * TLD, Z1 = 15 * TLD, STEP = 150;
+  ctx.lineCap = 'round';
+  for (let z = Z0; z < Z1; z += STEP) {
+    const a = proj(cam, 0, 0, z), b = proj(cam, 0, 0, z + STEP); if (a.z < 60 || b.z < 60) continue;
+    const zm = z + STEP / 2, fog = FOG((a.z + b.z) / 2), lead = sm((zm - Z0) / (1.4 * TLD));
+    const lw = cl(2.4 * 1000 / ((a.z + b.z) / 2), 1.1, 3.6), lit = zm >= 0 && zm <= progZ;
+    ctx.strokeStyle = lit ? ACC(.95 * Math.max(fog, .3) * lead) : `rgba(160,172,186,${.42 * fog * lead})`; ctx.lineWidth = lw;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+  // the year nodes
+  for (let k = 0; k <= 12; k++) {
+    const p = proj(cam, 0, 0, k * TLD); if (p.z < 80) continue;
+    const fog = FOG(p.z), coc = COC(p.z), lit = S.prog >= k - 1e-3, r = cl(10 * cam.f / p.z, S.nodeMin, 22);
+    if (fog < .02) continue;
+    ctx.save(); if (coc > .7) ctx.filter = `blur(${(coc * .5).toFixed(1)}px)`;
+    ctx.strokeStyle = lit ? ACC(.95 * Math.max(fog, .4)) : `rgba(196,204,214,${.55 * fog})`; ctx.lineWidth = Math.max(1.2, r * .17);
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.stroke();
+    ctx.fillStyle = lit ? ACC(Math.max(fog, .4)) : INK(.6 * fog); ctx.beginPath(); ctx.arc(p.x, p.y, r * .38, 0, 6.283); ctx.fill();
+    const pu = ramp(S.prog, k - .02, k + .5);            // one soft ring as the progress reaches it
+    if (pu > 0 && pu < 1 && k > 0) { ctx.strokeStyle = ACC(.5 * (1 - pu)); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(p.x, p.y, r * (1 + 3 * oCubic(pu)), 0, 6.283); ctx.stroke(); }
+    ctx.restore();
+  }
+  // the numerals, far first
+  const list = [];
+  for (let yr = Y0; yr <= Y1; yr++) { const F = S.form(yr), G = S.gone(yr); if (F > 0 && G < 1) list.push({ yr, F, G }); }
+  list.map(o => ({ ...o, z: proj(cam, S.numX(o.yr), S.numY(o.yr), (o.yr - Y0) * TLD + NUM.dz).z })).sort((a, b) => b.z - a.z)
+    .forEach(o => drawNumeral(ctx, t, cam, B, o.yr, o.F, o.G, COC, FOG, S));
+}
+function drawNumeral(ctx, t, cam, B, yr, F, G, COC, FOG, S) {
+  const cx = S.numX(yr), cy = S.numY(yr), cz = (yr - Y0) * TLD + NUM.dz, cap = NUM.cap * S.numScale(yr);
+  const c = proj(cam, cx, cy, cz); if (c.z < 80) return;
+  const coc = COC(c.z), fog = FOG(c.z);
+  const rr = Math.max(.7, 1.15 * cam.f / c.z * S.numScale(yr)), re = rr + coc * .5, al = .94 * fog * Math.min(1, (rr / re) ** 2 * 1.3) * S.numAlpha(yr);
+  if (al < .01) return;
+  ctx.fillStyle = INK(al);
+  for (const q of NUMS[yr]) {
+    const f = oCubic(cl((F - q.dl) / (1 - q.dl))), g = iQuad(cl((G - q.dd) / (1 - q.dd)));
+    if (g >= 1) continue;
+    const sh = 1 - f, wob = .012 * Math.sin(t * 1.7 + q.ph);
+    const u = q.u + q.sx * sh + q.dx * g, v = q.v + q.sy * sh + wob + q.dy * g, w = q.w + q.sz * sh + q.dz * g;
+    const X = cx + cap * (B.r[0] * u + B.u[0] * v + B.f[0] * w), Y = cy + cap * (B.r[1] * u + B.u[1] * v + B.f[1] * w), Z = cz + cap * (B.r[2] * u + B.u[2] * v + B.f[2] * w);
+    const p = proj(cam, X, Y, Z); if (p.z < 60) continue;
+    const r = re * Math.sqrt(q.b), near = cl((p.z - 300) / 400);
+    const a = (.3 + .7 * f) * (1 - g) * near; if (a <= .01) continue;
+    ctx.globalAlpha = a;
+    if (r > 2.2) { ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.fill(); } else ctx.fillRect(p.x - r, p.y - r, r * 2, r * 2);
+  }
+  ctx.globalAlpha = 1;
+}
+// The near view of the line, shared by both moments: the camera above and to the left of the line, looking along it,
+// so the years recede up and to the right (the poster's left-to-right order), the numeral right of and above its node.
+const NEAR = (k, dz = 0) => ({ x: -330, y: -560, z: k * TLD - 1050 + dz, yaw: .34, pitch: .36, f: 1150 });
 
-// ---- the three looks on the board; the author picks one ----
-const LOOKS = {
-  A: { name: 'Report',       // Inter Display: a clean investigative grotesk
-    ink: '#e7e9ec', dim: 'rgba(231,233,236,0.62)',
-    sup: { fam: 'InterD', w: 400, size: 40, track: 0.2, caps: true },
-    sup2: { fam: 'InterD', w: 300, size: 92, track: 0.02, caps: true },
-    hero: { fam: 'InterD', w: 300, size: 300, track: -0.01, caps: true },
-    big: { fam: 'InterD', w: 300, size: 74, track: 0.04, caps: true },
-    num: { fam: 'InterD', w: 100, size: 230, track: -0.02, caps: true } },
-  B: { name: 'Cinema serif', // Cormorant Garamond: an engraved, film-title serif
-    ink: '#ece8e1', dim: 'rgba(236,232,225,0.62)',
-    sup: { fam: 'Cormorant', w: 600, size: 48, track: 0.2, caps: true },
-    sup2: { fam: 'Cormorant', w: 400, size: 104, track: 0.04, caps: true },
-    hero: { fam: 'Cormorant', w: 300, size: 340, track: 0.02, caps: true },
-    big: { fam: 'Cormorant', w: 500, size: 84, track: 0.08, caps: true },
-    num: { fam: 'Cormorant', w: 400, size: 250, track: 0.0, caps: true } },
-  C: { name: 'Condensed',    // Bebas Neue with Oswald: tall, heavy, the hardest hit
-    ink: '#e9eaec', dim: 'rgba(233,234,236,0.62)',
-    sup: { fam: 'Oswald', w: 500, size: 40, track: 0.18, caps: true },
-    sup2: { fam: 'Bebas', w: 400, size: 132, track: 0.03, caps: true },
-    hero: { fam: 'Bebas', w: 400, size: 320, track: 0.03, caps: true },
-    big: { fam: 'Bebas', w: 400, size: 120, track: 0.04, caps: true },
-    num: { fam: 'Oswald', w: 300, size: 250, track: -0.01, caps: true } },
-};
-const look = () => LOOKS[window.LOOK || 'A'];
-function font(ctx, st, scale = 1) {
-  ctx.font = `${st.italic ? 'italic ' : ''}${st.w} ${(st.size * scale).toFixed(2)}px "${st.fam}"`;
-  ctx.letterSpacing = `${(st.size * scale * st.track).toFixed(2)}px`;
-}
-// letterSpacing adds space after the last glyph too; measure without it for alignment
-function width(ctx, text, st, scale = 1) { font(ctx, st, scale); return ctx.measureText(text).width - st.size * scale * st.track; }
-// One left margin for every left-set super (place, date, card, chapter): the x at which a line's first glyph's ink
-// starts exactly at MARGIN, so glyph side bearings (the 2's, the J's overhang) no longer drift the edges apart.
-const MARGIN = 140;
-// The lowest baseline of any low-left super: out of YouTube's bottom band (captions, controls), which starts near y 860.
-const LOW = 822;
-function inkX(ctx, text, st, m = MARGIN) { font(ctx, st); return m + ctx.measureText(text.charAt(0)).actualBoundingBoxLeft; }
+// =====================================================================================================
+// THE MOMENTS. Each mode draws one moment; t is seconds from its cue. Positions sit on each plate's dark plain area.
+// =====================================================================================================
+const BAGX = 0.534 * W;   // the bag pair's centre on both bag plates (case 620-880, duffel 900-1430): YES and WHEN? over it
+const YES_Y = 0.29 * H + 18, YES_S = 276;   // YES's baseline and size: cap top about 141 px, about 47 px above the case handle
+const TITLEF = document.createElement('canvas'), CARDF = document.createElement('canvas');
 
-// ---- motion ----
-// Calm reveal, word by word: opacity over 28 f on snapOut, a rise of 0.33 line over 22 f on M.rise, words 11.5 f apart
-// (x0.7-1.4 by the previous word's length). Returns nothing; draws at baseline y.
-function reveal(ctx, text, x, y, st, t, t0, align = 'left', ink) {
-  // each word sits exactly where fillText(text) would put it (kerned and tracked), the positions changeLine uses too,
-  // so a line that later changes in place never jumps
-  const L = look(), words = text.split(' '), total = width(ctx, text, st);
-  const x0 = align === 'center' ? x - total / 2 : align === 'right' ? x - total : x;
-  let start = t0, idx = 0;
-  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink || L.ink;
-  words.forEach((w, i) => {
-    if (i) start += f60(11.5) * Math.min(1.4, Math.max(0.7, words[i - 1].length / 5));
-    font(ctx, st); const cx = x0 + ctx.measureText(text.slice(0, idx)).width; idx += w.length + 1;
-    const p = (t - start), a = E.snapOut(cl(p / f60(28))), r = 1 - E.rise(cl(p / f60(22)));
-    if (p > 0) { ctx.globalAlpha = a; ctx.fillText(w, cx, y + r * 0.33 * st.size * 1.15); }
-  });
-  ctx.restore();
-}
-// A hero that lands solid: cuts in at x1.7 and settles over 35 f on M.oversize (log-space scale), opacity 45->100 % in 6 f.
-function land(ctx, text, x, y, st, t, t0, opts = {}) {
-  // cuts in slightly large (about 115 %) and settles over 35 f on M.oversize, scaled about the middle of the cap height
-  // so it never leaves the frame; two frames of soft blur on arrival; opacity 45 -> 100 % in 6 f
-  if (t < t0) return;
-  const L = look(), p = cl((t - t0) / f60(35)), from = opts.from || 1.15, size = opts.scale || 1;
-  const s = from * Math.pow(1 / from, E.over(p)) * size;     // one continuous settle (no lock punch: at 24 fps it jolted)
-  const a = 0.45 + 0.55 * cl((t - t0) / f60(6)); font(ctx, st);
-  const capMid = ctx.measureText('H').actualBoundingBoxAscent / 2;
-  ctx.save(); ctx.translate(x, y - capMid); ctx.scale(s, s); ctx.globalAlpha = a; ctx.fillStyle = L.ink; ctx.textBaseline = 'alphabetic';
-  if ((t - t0) * 24 < 2) ctx.filter = 'blur(2px)';
-  ctx.fillText(text, -width(ctx, text, st) / 2, capMid); ctx.restore();
-}
-// YES -> WHEN?: hold, then YES erodes from its last letter (one every 3 f, each over 6 f, through a horizontal
-// blur copy); the new letters start 6 f in, 4 f apart, rise 0.45 em over 20 f on snapOut; the slot reflows over 24 f.
-function erode(ctx, a, b, x, y, st, t, t0) {
-  const L = look(), tf = (t - t0) * 60;
-  font(ctx, st); const wa = width(ctx, a, st), wb = width(ctx, b, st);
-  const k = E.snapOut(cl((tf - (a.length - 1) * 3 - 5) / 24)), slot = wa + (wb - wa) * k;
-  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
-  // old word, letters leaving last-first
-  const at = (s, i) => ctx.measureText(s.slice(0, i)).width;
-  const ax = x - slot / 2 + (slot - wa) / 2 * (1 - k);
-  for (let i = 0; i < a.length; i++) {
-    const order = a.length - 1 - i, q = cl((tf - order * 3) / 5), op = 1 - Math.min(1, 1.6 * q), cx = ax + at(a, i);
-    if (op > 0) { ctx.globalAlpha = op; ctx.fillText(a[i], cx, y); }
-    if (q > 0 && q < 0.7) { ctx.save(); ctx.globalAlpha = 0.45 * Math.sin(Math.PI * q / 0.7); ctx.filter = 'blur(6px)'; ctx.fillText(a[i], cx + 8, y); ctx.restore(); }
-  }
-  // new word, letters rising in order out of a slot at the baseline (clipped below it), once the old word has
-  // mostly gone, so no two letters ever sit on the same spot
-  const bx = x - slot / 2 + (slot - wb) / 2 * (1 - k);
-  const start = (a.length - 1) * 3 + 4;                               // once the last old letter is below 10 %, so none overlap
-  for (let i = 0; i < b.length; i++) {
-    const r = cl((tf - start - i * 4) / 20), op = Math.min(1, 2.5 * r), cx = bx + at(b, i), lw = at(b, i + 1) - at(b, i);
-    if (r > 0) {
-      ctx.save(); ctx.beginPath(); ctx.rect(cx - st.size * 0.2, y - st.size * 1.2, lw + st.size * 0.4, st.size * 1.42); ctx.clip();
-      ctx.globalAlpha = op; ctx.fillText(b[i], cx, y + (1 - E.snapOut(r)) * 0.45 * st.size); ctx.restore();
-    }
-  }
-  ctx.restore();
-}
-// A left-aligned line that changes in place: the old line's letters leave right to left (one every 1.2 f, each over
-// 5 f), then the new line's letters rise left to right (one every 1.5 f, each over 20 f), out of a slot at the baseline.
-function changeLine(ctx, a, b, x, y, st, t, t0, ink) {
-  const L = look(), tf = (t - t0) * 60; font(ctx, st);
-  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink || L.ink;
-  const at = (s, i) => ctx.measureText(s.slice(0, i)).width;          // kerned position of glyph i, as fillText(s) sets it
-  if (a) for (let i = 0; i < a.length; i++) {
-    const q = cl((tf - (a.length - 1 - i) * 1.2) / 5), op = 1 - q;
-    if (op > 0) { ctx.globalAlpha = op; ctx.fillText(a[i], x + at(a, i), y); }
-  }
-  const start = a ? (a.length - 1) * 1.2 + 6 : 0;                     // the old line is gone before the new one starts
-  if (b) for (let i = 0; i < b.length; i++) {
-    const r = cl((tf - start - i * 1.5) / 20), cx = x + at(b, i), lw = at(b, i + 1) - at(b, i);
-    if (r > 0) { ctx.save(); ctx.beginPath(); ctx.rect(cx - st.size * 0.1, y - st.size * 1.2, lw + st.size * 0.2, st.size * 1.42); ctx.clip();
-      ctx.globalAlpha = Math.min(1, 2.5 * r); ctx.fillText(b[i], cx, y + (1 - E.snapOut(r)) * 0.45 * st.size); ctx.restore(); }
-  }
-  ctx.restore();
-}
-// Rolling year digits (lining tabular figures, so nothing shifts sideways): from a to b one step, each changing digit
-// rolls up inside a one-line mask over `dur` seconds, eased in and out.
-const STRIP = document.createElement('canvas'), SLOT = document.createElement('canvas');
-function roll(ctx, a, b, x, y, st, t, t0) {
-  // An odometer. Each changing digit rolls up inside its own slot over 7 frames, eased in and out: the old digit and
-  // the new one are one slot apart at full opacity, so they never sit on top of each other. The slot is the row's own
-  // height (cap height plus a hair), its edges feathered over 12 % of a cap, and the strip carries a true shutter motion
-  // blur (see below), so the change reads as one quick roll (5 frames), not two stacked halves. The two digits are drawn at whole pixels into a strip that is then moved at sub-pixel offsets, so the roll
-  // never steps. Unchanged digits never move (tabular figures).
-  const L = look(), p = cl((t - t0) / (5 / 24)), r = p * p * (3 - 2 * p), sa = String(a), sb = String(b);
-  font(ctx, st); ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
-  const at = (s, i) => ctx.measureText(s.slice(0, i)).width, x0 = x - width(ctx, sb, st) / 2;
-  font(ctx, st); const cap = Math.ceil(ctx.measureText('0').actualBoundingBoxAscent), lead = Math.ceil(0.08 * cap), h = cap + 2 * lead, pad = Math.ceil(0.12 * st.size);
-  for (let i = 0; i < sb.length; i++) {
-    const cx = x0 + at(sb, i);
-    if (sa[i] === sb[i] || p >= 1) { ctx.globalAlpha = 1; ctx.fillText(sb[i], cx, y); continue; }
-    if (p <= 0) { ctx.globalAlpha = 1; ctx.fillText(sa[i], cx, y); continue; }
-    const w = Math.ceil(at(sb, i + 1) - at(sb, i)) + 2 * pad;
-    STRIP.width = w; STRIP.height = 2 * h; const g = STRIP.getContext('2d'); font(g, st); g.fillStyle = L.ink; g.textBaseline = 'alphabetic';
-    g.fillText(sa[i], pad, cap + lead); g.fillText(sb[i], pad, cap + lead + h);
-    SLOT.width = w; SLOT.height = h; const m = SLOT.getContext('2d');
-    // A true motion blur: a 180-degree shutter, i.e. the strip's travel over half a frame (dr per frame is
-    // 6p(1-p)/5 of the row), sampled 16 times and summed additively, so a moving digit is one smooth smear instead of
-    // stacked copies, and a still one stays sharp.
-    const N = 16, d = 0.5 * 6 * p * (1 - p) / 5;
-    m.globalCompositeOperation = 'lighter'; m.globalAlpha = 1 / N;
-    for (let k = 0; k < N; k++) m.drawImage(STRIP, 0, -h * (r + d * (k / (N - 1) - 0.5)));
-    m.globalAlpha = 1;
-    m.globalCompositeOperation = 'destination-in';
-    const gr = m.createLinearGradient(0, 0, 0, h); const f = 0.12 * cap / h;
-    gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(f, 'rgba(0,0,0,1)'); gr.addColorStop(1 - f, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-    m.fillStyle = gr; m.fillRect(0, 0, w, h);
-    ctx.globalAlpha = 1; ctx.drawImage(SLOT, cx - pad, y - cap - lead);
-  }
-  ctx.restore();
-}
-
-// The sentence card, one layout for the cold open and chapter 6: DEATH SENTENCE, then the reprieve (62 % of the main
-// line, never smaller), then the date above them. The block is fitted to x <= 0.43 W so it stays clear of a figure
-// standing centre or right. With `life`, the date fades first, then both lines change in place to LIFE IN PRISON (the
-// sentence was reduced to life later, so no date stands over it).
+// The sentence card, one layout for the cold open and chapter 6. A typed year (the record), DEATH SENTENCE heavy, WITH
+// A TWO-YEAR REPRIEVE light, the two lines justified to one width, the block's ink from MARGIN to about x 828 (clear
+// of a figure standing centre or right). With `life`: at 3.45 s the year deletes, a cyan strike runs through both
+// lines, the struck lines step down and aside, small and dim, and LIFE IN PRISON rises in their place.
+const CARD = { w: 688, y1: 0.42 * H, gap: 62 };
 function sentenceCard(ctx, t, life) {
-  // A justified pair: DEATH SENTENCE fitted to the width of TWO-YEAR REPRIEVE at the secondary size (the compound kept
-  // whole), the block from x 134 to about 817, clear of a figure centre or right; the date small above, first to arrive.
-  // With `life`, the date and the reprieve leave letter by letter while DEATH SENTENCE changes in place.
-  // the card's secondary line is 1.12x the film's secondary size (cap about 36 px), for phone legibility; the plate under
-  // it is pushed to 1.2x against its left edge (PLATE.death_2017 / sentence_life), which carries the figure about 160 px
-  // right of the block's end
-  const L = look(), q = Object.assign({}, L.sup, { size: L.sup.size * 1.12 }), maxW = width(ctx, 'TWO-YEAR REPRIEVE', q);
-  const big = Object.assign({}, L.big); big.size *= Math.min(1.15, maxW / width(ctx, 'DEATH SENTENCE', big));
-  const y1 = 0.42 * H, y2 = y1 + big.size * 0.95, yd = y1 - big.size * 1.05;
-  const x = Math.max(inkX(ctx, '2017', q), inkX(ctx, 'DEATH SENTENCE', big), inkX(ctx, 'TWO-YEAR REPRIEVE', q));   // the leftmost ink on MARGIN
-  if (!life || t < 3.45) {
-    reveal(ctx, '2017', x, yd, q, t, 0.0);
-    reveal(ctx, 'DEATH SENTENCE', x, y1, big, t, 0.3);
-    reveal(ctx, 'TWO-YEAR REPRIEVE', x, y2, q, t, 0.8);
-  } else {
-    changeLine(ctx, '2017', '', x, yd, q, t, 3.45);
-    changeLine(ctx, 'DEATH SENTENCE', 'LIFE IN PRISON', x, y1, big, t, 3.45);
-    changeLine(ctx, 'TWO-YEAR REPRIEVE', '', x, y2, q, t, 3.45);
+  const sD = CARD.w / (wid(ctx, 'DEATH SENTENCE', KEY, 100) / 100), sR = CARD.w / (wid(ctx, 'WITH A TWO-YEAR REPRIEVE', RUN, 100) / 100);
+  const sY = 40, y1 = CARD.y1, y2 = y1 + CARD.gap, yd = y1 - sD * CAP - 30;
+  const xD = inkX(ctx, 'DEATH SENTENCE', KEY, sD), xR = inkX(ctx, 'WITH A TWO-YEAR REPRIEVE', RUN, sR), xY = inkX(ctx, '2017', REC, sY);
+  ctx.save(); ctx.textBaseline = 'alphabetic';
+  // the year, typed: the record of when
+  font(ctx, REC, sY); typed(ctx, '2017', xY, yd, sY, t, 0.0, 24, COL.acc, life ? 3.45 : Infinity, 0.3);
+  // the old block, drawn into its own layer so it can step aside as one piece, strikes and all
+  const T0 = 3.45, k = life ? ioCubic(ramp(t, T0 + 0.25, T0 + 0.6)) : 0;
+  const L = CARDF; if (L.width !== W) { L.width = W; L.height = H; }
+  const o = L.getContext('2d'); o.setTransform(1, 0, 0, 1, 0, 0); o.clearRect(0, 0, W, H); o.textBaseline = 'alphabetic'; o.fillStyle = COL.ink;
+  font(o, KEY, sD); slam(o, 'DEATH SENTENCE', xD, y1, sD, ramp(t, 0.30, 0.56));
+  font(o, RUN, sR); o.fillStyle = INK(0.92);
+  { let x = xR; 'WITH A TWO-YEAR REPRIEVE'.split(' ').forEach((wd, i) => { const t0 = 0.72 + i * 0.07; rise(o, wd, x, y2, sR, ramp(t, t0, t0 + 0.34)); x += o.measureText(wd + ' ').width; }); }
+  if (life) {
+    // the strikes, in the accent, through the middle of each line's capitals
+    const s1 = oExpo(ramp(t, T0, T0 + 0.22)), s2 = oExpo(ramp(t, T0 + 0.05, T0 + 0.27));
+    o.fillStyle = COL.acc;
+    if (s1 > 0) o.fillRect(xD - 6, y1 - sD * CAP * 0.5 - 3, (CARD.w + 12) * s1, 6);
+    if (s2 > 0) o.fillRect(xR - 5, y2 - sR * CAP * 0.5 - 2, (CARD.w + 10) * s2, 4);
   }
+  // step aside: scaled to 0.56 about the block's left end, under the new line, at half strength
+  const sc = lerp(1, 0.56, k), dy = lerp(0, 74, k);
+  ctx.save(); ctx.globalAlpha = lerp(1, 0.5, k);
+  ctx.translate(MARGIN, y1 - sD * CAP + dy); ctx.scale(sc, sc); ctx.translate(-MARGIN, -(y1 - sD * CAP));
+  ctx.drawImage(L, 0, 0); ctx.restore();
+  if (life) {
+    const sL = 84; font(ctx, KEY, sL); ctx.fillStyle = COL.ink; let x = inkX(ctx, 'LIFE IN PRISON', KEY, sL);
+    'LIFE IN PRISON'.split(' ').forEach((wd, i) => { const t0 = T0 + 0.45 + i * 0.07; rise(ctx, wd, x, y1, sL, ramp(t, t0, t0 + 0.34), 0.04); x += ctx.measureText(wd + ' ').width; });
+  }
+  ctx.restore();
 }
-// ---- the film's type moments ----
-// Each mode draws one moment; t is seconds from the moment's cue. Positions are fractions of the frame and sit on the
-// plate's darkest plain area (checked on the stills).
-const FRAME = document.createElement('canvas');
-const TITLEF = document.createElement('canvas');   // the title block, drawn whole before its drift
-const YES_Y = 0.29 * H + 18;
-const BAGX = 0.534 * W;   // the bag pair's centre on both bag plates (case 620-880, duffel 900-1430 at 1920): YES and WHEN? sit over it   // YES's baseline: cap top about 117 px (clear of YouTube's top bar), about 47 px above the case handle on the native 2560 bag plates
-const CAL_X = 110 + 190;   // the calendar's centre: left edge at about 110 px, about 140 px clear of the case
+
+// The calendar (chapter 5, Dawn's wait for trial) and the counter (chapter 7, the twelve years): the timeline's two
+// moments. Calendar: the near view travels 2014 -> 2017, a year every 1.7 s (the year's numeral readable about 0.2 s
+// after its tick). Counter: the same near view at 2014, then the progress runs on through the years, each gap a little
+// longer (0.55 s growing to 1.0 s, 2026 arriving at 9.73 s), and the camera cranes back to the whole span, 2014 to
+// 2026 lit, while the plate pulls back from the cell.
+const CAL = { hold: 1.7, ox: -250, oy: -260 };
+function calendarState(t) {
+  const A = [0, 1, 2, 3].map(k => k * CAL.hold);
+  // the lit progress and the camera: each step leaves 0.55 s before its tick and lands 0.3 s after, eased in and out
+  let prog = 0; for (let k = 1; k <= 3; k++) prog += ioCubic(ramp(t, A[k] - 0.55, A[k] + 0.3));
+  const creep = 40 * t, intro = oCubic(ramp(t, -0.3, 0.7));
+  const cam = Object.assign(NEAR(prog, creep - 700 * (1 - intro)), { ox: CAL.ox, oy: CAL.oy });
+  return {
+    cam, prog, focusYear: prog, dof: 1, fogN: 2600, fogS: 3600, dust: 1, nodeMin: 3,
+    form: yr => { const k = yr - Y0; if (k > 3) return 0; return k === 0 ? ramp(t, -0.2, 0.55) : ramp(t, A[k] - 0.5, A[k] + 0.2); },
+    gone: yr => { const k = yr - Y0; return k >= 3 ? 0 : ramp(t, A[k + 1] - 0.45, A[k + 1] + 0.3); },
+    numX: () => NUM.x, numY: () => NUM.y, numScale: () => 1, numAlpha: () => 1,
+  };
+}
+const CTR_TICKS = (() => { const k = [1.2]; for (let i = 1; i < 12; i++) k.push(k[i - 1] + 0.55 + 0.45 * (i - 1) / 10); return k; })();
+const CTR_PROG = monotone([[0, 0], [0.62, 0], ...CTR_TICKS.map((tk, i) => [tk, i + 1])]);
+const CTR = { ox: -330, oy: -330, crane: [10.1, 13.4] };
+// the crane's end: side-on above the middle of the span, looking down at it, so 2014 sits left and 2026 right
+const POSTER = { x: 6400, y: -2600, z: 5400, yaw: -Math.PI / 2, pitch: .34, f: 1150, ox: 0, oy: -300 };
+function counterState(t) {
+  const prog = CTR_PROG(t), u = ioQuint(ramp(t, CTR.crane[0], CTR.crane[1]));
+  const near = Object.assign(NEAR(prog, 40 * Math.min(t, 1.2)), { ox: CTR.ox, oy: CTR.oy });
+  const cam = mixPose(near, POSTER, u);
+  const d = Math.max(0, t - CTR.crane[1]); cam.x += 60 * d; cam.yaw += .004 * d;     // the poster keeps drifting
+  const cur = Math.round(prog);
+  return {
+    cam, prog, focusYear: lerp(prog, 6, u), dof: 1 - u, fogN: lerp(2600, 9000, u), fogS: lerp(3600, 9000, u), dust: 1 - .5 * u, nodeMin: lerp(3, 5, u),
+    // each year gathers as the progress comes within 0.55 of it and drifts apart once the progress is 0.35 past it;
+    // in the crane back only 2014 (gathering again at the span's start) and 2026 remain
+    form: yr => { const k = yr - Y0; if (k === 0) return Math.max(ramp(t, -0.2, 0.55) * (1 - ramp(prog, 0.35, 0.85)), ramp(t, CTR.crane[0] + 0.6, CTR.crane[1] + 0.2));
+      return ramp(prog, k - 0.6, k - 0.02); },
+    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return 0; return ramp(prog, k + 0.35, k + 0.85); },
+    numX: yr => NUM.x * lerp(1, 1.0, u), numY: yr => NUM.y * lerp(1, 2.6, u), numScale: yr => lerp(1, yr === Y1 ? 3.3 : 2.4, u),
+    numAlpha: yr => yr === Y0 ? lerp(1, .62, u) : 1, cur,
+  };
+}
+
 const MOMENTS = {
-  place_2014: (ctx, t) => { const L = look();      // checkin_hall wide, low left
-    const y = LOW - (L.sup.size * 1.25 + 34);                    // CHINA's baseline on LOW
-    reveal(ctx, '2014', inkX(ctx, '2014', L.sup2), y, L.sup2, t, 0.0);
-    reveal(ctx, 'CHINA', inkX(ctx, 'CHINA', L.sup), LOW, L.sup, t, 0.35); },
-  yes: (ctx, t) => { const L = look();             // above the two bags (void bags / inspection match), twice
-    if (t < 3.0) land(ctx, 'YES', BAGX, YES_Y, L.hero, t, 0.0);
-    // the second: the same word on a much tighter, darker frame (PLATE.yes: 1.4x on the pair, the light closing hard);
-    // the escalation is the camera's and the light's, so the word keeps its size and stays clear of the top bar
-    else land(ctx, 'YES', 0.5 * W, YES_Y + 12, L.hero, t, 3.0, { from: 1.12 }); },
-  yes_when: (ctx, t) => { const L = look();
-    if (t < 0.9) land(ctx, 'YES', BAGX, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', BAGX, YES_Y, L.hero, t, 0.9); },
-  death_2017: (ctx, t) => sentenceCard(ctx, t, false),   // cold open
-  sentence_life: (ctx, t) => sentenceCard(ctx, t, true),  // chapter 6: the same card, then life
-  calendar: (ctx, t) => { const L = look();        // ch 5, beside the empty pool: 2014, 2015, 2016, 2017, each held
-    const hold = 1.7, k = Math.min(3, Math.floor(t / hold)), u = t - k * hold;
-    const cs = Object.assign({}, L.num, { size: L.num.size * 0.8 });
-    if (k === 0) land(ctx, '2014', CAL_X, 0.56 * H, cs, t, 0.0, { from: 1.3 });
-    else roll(ctx, 2013 + k, 2014 + k, CAL_X, 0.56 * H, cs, u, 0.0); },
-  counter: (ctx, t) => { const L = look();         // void cell, camera locked: twelve years, each one a beat
-    // 2014 holds 1.2 s; then one year at a time, the gaps growing from 0.55 s to 1.0 s, so the years feel heavier as
-    // they pile up; 2026 lands at about 10 s and holds (the moment runs 14 s or more)
-    const ticks = [1.2]; for (let k = 1; k < 12; k++) ticks.push(ticks[k - 1] + 0.55 + 0.45 * (k - 1) / 10);
-    let k = 0; while (k < 12 && t >= ticks[k]) k++;
-    // 82 % of the number size, cap top about 114 px, about 25 px above the cell at the start of the pull-back. The year
-    // is drawn at a fixed baseline into an offscreen frame and placed with a sub-pixel offset, so its slow descent as
-    // the cell recedes never steps a pixel at a time.
-    const st = Object.assign({}, L.num, { size: L.num.size * 0.82 }), base = 0.225 * H;
-    const dy = 120 * (t > 10 ? (1 - Math.cos(Math.PI * cl((t - 10) / 4))) / 2 : 0);
-    FRAME.width = W; FRAME.height = H; const o = FRAME.getContext('2d');
-    if (k === 0) land(o, '2014', 0.5 * W, base, st, t, 0.0, { from: 1.25 });
-    else roll(o, 2013 + k, 2014 + k, 0.5 * W, base, st, t - ticks[k - 1], 0.0);
-    ctx.drawImage(FRAME, 0, dy); },
-  title: (ctx, t) => { const L = look();           // over void bags in the beam
-    // A hierarchy, so the title is not one more super: THE PRIZE THAT small in wide-tracked caps, a hairline drawing
-    // out under it, then BECAME A PRISON large (the turn the film is about), fitted inside 74 % of the frame width.
-    // It lands on the score's peak (each line cut in slightly large, settling), then the block drifts 1.5 % larger
-    // through the hold. The block is drawn once per frame offscreen at whole-pixel baselines and the drift scales that
-    // image (bilinear), so the slow growth never ticks a pixel at a time.
-    const small = Object.assign({}, L.sup, { size: L.sup.size * 0.92, track: 0.36 });
-    const big = Object.assign({}, L.big, { size: L.big.size * 1.55, track: 0.06 });
-    big.size *= Math.min(1, 0.74 * W / width(ctx, 'BECAME A PRISON', big));
-    font(ctx, big); const capB = ctx.measureText('H').actualBoundingBoxAscent;
-    const yS = 152, yR = yS + 34, yB = Math.round(yR + 30 + capB);       // small caps' cap top about 120 px
-    const F = TITLEF; if (F.width !== W) { F.width = W; F.height = H; }
-    const o = F.getContext('2d'); o.clearRect(0, 0, W, H);
-    land(o, 'THE PRIZE THAT', 0.5 * W, yS, small, t, 0.0, { from: 1.06 });
-    const len = 168 * E.out(cl((t - 0.2) / 0.7));
-    if (len > 0.5) { o.save(); o.fillStyle = L.dim; o.fillRect(0.5 * W - len / 2, yR - 0.75, len, 1.5); o.restore(); }
-    land(o, 'BECAME A PRISON', 0.5 * W, yB, big, t, 0.35, { from: 1.08 });
-    const d = 1 + 0.015 * sm((t - 0.9) / 4.1), cy = (yS - 32 + yB) / 2;
-    ctx.save(); ctx.translate(0.5 * W, cy); ctx.scale(d, d); ctx.translate(-0.5 * W, -cy); ctx.drawImage(F, 0, 0); ctx.restore(); },
-  place: (ctx, t) => { const L = look();           // the other place and date supers, on 2014 / CHINA's pattern
-    // A line at the large super size (fitted to `fit` x W if given), an optional second line at the secondary size.
-    // pos=ll: low left like 2014 / CHINA (the chapter title keeps the top left); pos=tc: top centre (the Hong Kong wide's
-    // strip of night sky). shade=1 lays the soft shade under it on a lit plate.
-    // `pre` sets a secondary line above the large one (JULY over 2026), where one long line would reach the light.
-    // URL hash: a=CHICAGO[&b=...][&pre=...][&pos=ll|tc][&fit=0.245][&y=0.16][&shade=1][&t0=0]
-    const P = new URLSearchParams(location.hash.slice(1));
-    const a = P.get('a') || 'CHICAGO', b = P.get('b') || '', pre = P.get('pre') || '', pos = P.get('pos') || 'll', t0 = +(P.get('t0') || 0);
-    const big = Object.assign({}, L.sup2), fit = +(P.get('fit') || 0);
-    if (fit) big.size *= Math.min(1, fit * W / width(ctx, a, big));
-    const tc = pos === 'tc', x = tc ? 0.5 * W : 0.072 * W, gapB = L.sup.size * 1.25 + 34 * big.size / L.sup2.size;
-    const y = tc ? +(P.get('y') || 0.16) * H : (b ? LOW - gapB : LOW);   // low left: the lowest line's baseline on LOW
-    const yb = y + gapB, align = tc ? 'center' : 'left';
-    if (P.get('shade')) {
-      const wa = Math.max(width(ctx, a, big), b ? width(ctx, b, L.sup) : 0), gx = tc ? x : x + wa / 2, gy = (y + (b ? yb : y)) / 2 - big.size * 0.3;
-      ctx.save(); ctx.translate(gx, gy); ctx.scale(1.7, 1);
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.42 * sm((t - t0) / 0.6)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
-      ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
-    }
-    const lx = (txt, st) => tc ? x : inkX(ctx, txt, st);
-    reveal(ctx, a, lx(a, big), y, big, t, t0, align);
-    if (b) reveal(ctx, b, lx(b, L.sup), yb, L.sup, t, t0 + 0.35, align);
-    if (pre) reveal(ctx, pre, lx(pre, L.sup), y - big.size * 0.98, L.sup, t, t0 + 0.2, align);
+  // 2014 / CHINA, low left over checkin_hall wide: the year heavy in the accent, the place light below it
+  place_2014: (ctx, t) => {
+    const sA = 112, sB = 46, yB = LOW, yA = LOW - sB * CAP - 30;
+    ctx.textBaseline = 'alphabetic';
+    font(ctx, KEY, sA); ctx.fillStyle = COL.acc; slam(ctx, '2014', inkX(ctx, '2014', KEY, sA), yA, sA, ramp(t, 0.0, 0.26));
+    font(ctx, CAPS, sB); ctx.fillStyle = COL.ink; rise(ctx, 'CHINA', inkX(ctx, 'CHINA', CAPS, sB), yB, sB, ramp(t, 0.3, 0.62), 0.04);
   },
-  chapter: (ctx, t) => { const L = look();         // each chapter's title, a small super over its establishing shot
-    // The number at the secondary size, a hairline drawing out beside it, then the title in italic sentence case (the
-    // chapters' own voice, apart from the evidential capitals). Top left, the place and date supers keep the lower
-    // left, so the two can share a wide. `side=r` mirrors it where the plate's top left is busy. With `out`, the
-    // letters leave right to left and the hairline retracts, so the shot carries on clean.
-    // URL hash: n=01&title=The+winner[&side=r][&out=4.2][&y=200]. `y` moves the number's baseline down (default 140)
-    // where a hard edge in the plate would run through the block (hotel_room accept: the headboard's top rail).
+  // YES over the two bags, twice: the second on a much tighter, darker frame (PLATE.yes), landing harder
+  yes: (ctx, t) => {
+    font(ctx, KEY, YES_S); ctx.fillStyle = COL.ink; ctx.textBaseline = 'alphabetic';
+    const w = wid(ctx, 'YES', KEY, YES_S);
+    if (t < 3.0) slam(ctx, 'YES', BAGX - w / 2, YES_Y, YES_S, ramp(t, 0, 0.3), 1.08, 16);
+    else slam(ctx, 'YES', 0.5 * W - w / 2, YES_Y + 12, YES_S, ramp(t, 3.0, 3.2), 1.16, 26);
+  },
+  // the film's last change, its signature: YES sinks back under its line and WHEN? rises out of the same line, letter
+  // by letter, centred over the bags; no two letters are ever up in the same place
+  yes_when: (ctx, t) => {
+    font(ctx, KEY, YES_S); ctx.fillStyle = COL.ink; ctx.textBaseline = 'alphabetic';
+    const a = 'YES', b = 'WHEN?', wa = wid(ctx, a, KEY, YES_S), wb = wid(ctx, b, KEY, YES_S), ax = BAGX - wa / 2, bx = BAGX - wb / 2;
+    const at = (s, i) => ctx.measureText(s.slice(0, i)).width, u = t - 0.9;
+    // a wave from left to right: each old letter goes under, and the new letters come up behind it, so a new letter
+    // only rises where the old one above that place is already (almost) gone
+    for (let i = 0; i < a.length; i++) sink(ctx, a[i], ax + at(a, i), YES_Y, YES_S, ramp(u, i * 0.06, i * 0.06 + 0.2), 0.04);
+    for (let i = 0; i < b.length; i++) rise(ctx, b[i], bx + at(b, i), YES_Y, YES_S, ramp(u, 0.17 + i * 0.06, 0.17 + i * 0.06 + 0.36), 0.04);
+  },
+  death_2017: (ctx, t) => sentenceCard(ctx, t, false),   // cold open and chapter 6
+  sentence_life: (ctx, t) => sentenceCard(ctx, t, true),  // chapter 6: the same card, then life
+  calendar: (ctx, t) => drawTimeline(ctx, t, calendarState(t)),
+  counter: (ctx, t) => drawTimeline(ctx, t, counterState(t)),
+  // The title over the bags in the beam. PRIZE lands alone, heavy; it turns into PRISON in place (the P, R and I hold,
+  // Z and E sink, S, O and N rise); the camera pulls back and PRISON settles into the lockup as the rest assembles
+  // around it: THE PRIZE THAT / BECAME A PRISON, light running words, the two key words heavy. Complete at 2.35 s,
+  // held to the cut (2.65 s). The lockup is drawn once per frame offscreen and drifted as one image, so the slow
+  // growth never ticks a pixel.
+  title: (ctx, t) => {
+    const F = TITLEF; if (F.width !== W) { F.width = W; F.height = H; }
+    const o = F.getContext('2d'); o.setTransform(1, 0, 0, 1, 0, 0); o.clearRect(0, 0, W, H); o.textBaseline = 'alphabetic'; o.fillStyle = COL.ink;
+    const BIG = 212, S = 114, yBig = 300, yL1 = 200, yL2 = 330, cx = 0.5 * W;
+    const L1 = [['THE', RUN], ['PRIZE', KEY], ['THAT', RUN]], L2 = [['BECAME', RUN], ['A', RUN], ['PRISON', KEY]];
+    const l1 = layout(o, L1, S), l2 = layout(o, L2, S), x1 = cx - l1.width / 2, x2 = cx - l2.width / 2;
+    // 1. PRIZE alone, then PRISON in its place
+    font(o, KEY, BIG);
+    const wPrize = wid(o, 'PRIZE', KEY, BIG), wPrison = wid(o, 'PRISON', KEY, BIG);
+    const at = (s, i) => o.measureText(s.slice(0, i)).width;
+    const sl = ioCubic(ramp(t, 0.95, 1.55)), left = lerp(cx - wPrize / 2, cx - wPrison / 2, sl);   // the word re-centres as it grows
+    const zoom = ioCubic(ramp(t, 1.45, 2.1));
+    if (zoom <= 0) {
+      if (t < 0.95) slam(o, 'PRIZE', left, yBig, BIG, ramp(t, 0, 0.3), 1.08, 16);
+      else {
+        o.fillText('PRI', left, yBig);
+        sink(o, 'Z', left + at('PRIZE', 3), yBig, BIG, ramp(t, 0.95, 1.13), 0.04);
+        sink(o, 'E', left + at('PRIZE', 4), yBig, BIG, ramp(t, 1.0, 1.18), 0.04);
+        for (let i = 3; i < 6; i++) rise(o, 'PRISON'[i], left + at('PRISON', i), yBig, BIG, ramp(t, 1.13 + (i - 3) * 0.06, 1.13 + (i - 3) * 0.06 + 0.34), 0.04);
+      }
+    } else {
+      // 2. the pull back: PRISON scales about the one point that carries it into its place in the lockup
+      const k = S / BIG, s = Math.pow(k, zoom), p0 = [cx - wPrison / 2, yBig], p1 = [x2 + l2.xs[2], yL2];
+      const Q = [(p1[0] - p0[0] * k) / (1 - k), (p1[1] - p0[1] * k) / (1 - k)];
+      o.save(); o.translate(Q[0] + (p0[0] - Q[0]) * s, Q[1] + (p0[1] - Q[1]) * s); o.scale(s, s); font(o, KEY, BIG); o.fillText('PRISON', 0, 0); o.restore();
+    }
+    // 3. the rest of the lockup assembles around it
+    const put = (line, xs, x0, y, starts) => line.forEach(([w, st], i) => {
+      if (starts[i] == null) return; font(o, st, S); const x = x0 + xs[i], p = ramp(t, starts[i], starts[i] + (st === KEY ? 0.26 : 0.34));
+      if (st === KEY) slam(o, w, x, y, S, p, 1.08, 12); else rise(o, w, x, y, S, p, 0.04);
+    });
+    put(L1, l1.xs, x1, yL1, [1.66, 1.74, 1.84]);
+    put(L2, l2.xs, x2, yL2, [1.96, 2.04, null]);
+    const d = 1 + 0.012 * sm((t - 2.1) / 2.9), dcy = (yL1 - S * CAP + yL2) / 2;
+    ctx.save(); ctx.translate(cx, dcy); ctx.scale(d, d); ctx.translate(-cx, -dcy); ctx.drawImage(F, 0, 0); ctx.restore();
+  },
+  // The other place and date supers on 2014 / CHINA's pattern. a: the main line (heavy; the accent when it is time),
+  // b: a light line under it, pre: a light line over it (JULY over 2026). pos=ll: low left, the lowest line on LOW;
+  // pos=tc: top centre at y (a fraction of H). fit: the main line at most fit x W wide. shade=1: a soft shade under it.
+  // URL hash: a=CHICAGO[&b=...][&pre=...][&pos=ll|tc][&fit=0.245][&y=0.16][&shade=1][&t0=0]
+  place: (ctx, t) => {
+    const P = new URLSearchParams(location.hash.slice(1));
+    const a = P.get('a') || 'CHICAGO', b = P.get('b') || '', pre = P.get('pre') || '', tc = (P.get('pos') || 'll') === 'tc', t0 = +(P.get('t0') || 0);
+    let sA = 112; const sB = 46, fit = +(P.get('fit') || 0);
+    if (fit) sA *= Math.min(1, fit * W / wid(ctx, a, KEY, sA));
+    const gapB = sB * CAP + 30, yA = tc ? +(P.get('y') || 0.16) * H : (b ? LOW - gapB : LOW), yB = yA + gapB, yP = yA - sA * CAP - 26;
+    const xOf = (txt, st, s) => tc ? 0.5 * W - wid(ctx, txt, st, s) / 2 : inkX(ctx, txt, st, s);
+    if (P.get('shade')) {
+      const wa = Math.max(wid(ctx, a, KEY, sA), b ? wid(ctx, b, CAPS, sB) : 0, pre ? wid(ctx, pre, CAPS, sB) : 0);
+      const top = pre ? yP - sB * CAP : yA - sA * CAP, bot = b ? yB : yA;
+      shade(ctx, tc ? 0.5 * W : MARGIN + wa / 2, (top + bot) / 2, wa * 0.85 + 120, (bot - top) * 0.9 + 90, 0.45 * sm((t - t0) / 0.5));
+    }
+    ctx.textBaseline = 'alphabetic';
+    if (pre) { font(ctx, CAPS, sB); ctx.fillStyle = isTime(pre) ? COL.acc : COL.ink; rise(ctx, pre, xOf(pre, CAPS, sB), yP, sB, ramp(t, t0, t0 + 0.32), 0.04); }
+    const tA = t0 + (pre ? 0.16 : 0);
+    font(ctx, KEY, sA); ctx.fillStyle = isTime(a) ? COL.acc : COL.ink; slam(ctx, a, xOf(a, KEY, sA), yA, sA, ramp(t, tA, tA + 0.26));
+    if (b) { font(ctx, CAPS, sB); ctx.fillStyle = isTime(b) ? COL.acc : COL.ink; rise(ctx, b, xOf(b, CAPS, sB), yB, sB, ramp(t, tA + 0.3, tA + 0.62), 0.04); }
+  },
+  // Each chapter's title, top left over its establishing shot, on one line: the number typed in the mono (the record),
+  // a hairline drawing out after it, then the title in heavy sentence case rising letter by letter out of its mask.
+  // With `out`, the title sinks back right to left, the hairline retracts and the number deletes, so the shot carries
+  // on clean. One line keeps the block in y 132-190 (207 with a descender): 45 px or more clear of the framed picture
+  // on chicago_night wide (its top edge at y 260, about 252 at the end of the push) and under the lit window at the
+  // top left of prison_exterior gate (y 48-115). URL hash: n=01&title=The+winner[&side=r][&out=4.2][&y=104], y as
+  // before: the title's baseline is y + 86 (hotel_room accept: y=200, under the headboard's top rail).
+  chapter: (ctx, t) => {
     const P = new URLSearchParams(location.hash.slice(1));
     const n = P.get('n') || '01', title = P.get('title') || 'The winner', right = P.get('side') === 'r', out = +(P.get('out') || 0);
-    const num = L.sup, ti = { fam: L.sup.fam, w: 400, size: 100, track: 0.004, italic: true };
-    const x0 = MARGIN, yN = +(P.get('y') || 140), yT = yN + 90, wN = width(ctx, n, num), wT = width(ctx, title, ti);   // number cap top 108-110, title baseline 230
-    const xr = W - x0, xN = right ? xr - wN : inkX(ctx, n, num), xT = right ? xr - wT : inkX(ctx, title, ti);   // left: ink on MARGIN
-    const leaving = out && t >= out, lu = leaving ? (t - out) : 0, env = sm(t / 0.6) * (1 - sm((lu - 0.25) / 0.4));
-    // a soft shade under the block, so the type reads on a lit wall as well as a dark one; never a box
-    const gx = right ? xr - 0.5 * Math.max(wT, 260) : x0 + 0.5 * Math.max(wT, 260), gy = yN + 40;
-    ctx.save(); ctx.translate(gx, gy); ctx.scale(1.7, 1);
-    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.42 * env})`); g.addColorStop(1, 'rgba(3,5,8,0)');
-    ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
-    // the hairline beside the number: draws out from the number, retracts as the title leaves
-    font(ctx, num); const capN = ctx.measureText('0').actualBoundingBoxAscent;
-    const draw = E.out(cl((t - 0.15) / 0.6)) * (1 - E.inOut(cl(lu / 0.3))), len = 96 * draw, gap = 24;
-    if (len > 0.5) { ctx.save(); ctx.fillStyle = L.dim; ctx.fillRect(right ? xN - gap - len : xN + wN + gap, yN - capN / 2 - 1, len, 2); ctx.restore(); }
-    if (!leaving) { reveal(ctx, n, xN, yN, num, t, 0.0, 'left', 'rgba(236,232,225,0.82)'); reveal(ctx, title, xT, yT, ti, t, 0.3); }
-    else { changeLine(ctx, title, '', xT, yT, ti, t, out); changeLine(ctx, n, '', xN, yN, num, t, out + 0.12, 'rgba(236,232,225,0.82)'); }
+    const sN = 32, sT = 84, yT = +(P.get('y') || 104) + 86, yN = yT - sT * CAP / 2 + sN * CAP / 2;   // the number's capitals centred on the title's
+    const wN = wid(ctx, n, REC, sN), wT = wid(ctx, title, KEY, sT), HL = 56, gap = 18;
+    const xr = W - MARGIN, xN = right ? xr - wN : inkX(ctx, n, REC, sN);
+    const xT = right ? xr - wN - 2 * gap - HL - wT : xN + wN + 2 * gap + HL;
+    const lu = out && t >= out ? t - out : -1, env = sm(t / 0.5) * (lu < 0 ? 1 : 1 - sm((lu - 0.25) / 0.4));
+    const bw = wN + 2 * gap + HL + wT;
+    shade(ctx, right ? xr - bw * 0.45 : MARGIN + bw * 0.45, yT - sT * CAP / 2, bw * 0.66 + 150, 120, 0.46 * env);
+    ctx.textBaseline = 'alphabetic';
+    // the number, typed, then deleted last
+    font(ctx, REC, sN); typed(ctx, n, xN, yN, sN, t, 0.0, 16, INK(0.86), out ? out + 0.3 : Infinity, 0.2);
+    // the hairline between them
+    const hl = oExpo(ramp(t, 0.12, 0.6)) * (lu < 0 ? 1 : 1 - ioCubic(ramp(lu, 0.12, 0.38))), len = HL * hl;
+    if (len > 0.5) { ctx.fillStyle = INK(0.42); ctx.fillRect(right ? xN - gap - len : xN + wN + gap, yN - sN * CAP / 2 - 0.75, len, 1.5); }
+    // the title, letter by letter (prefix widths keep the kerning)
+    font(ctx, KEY, sT); ctx.fillStyle = COL.ink;
+    for (let i = 0; i < title.length; i++) {
+      if (title[i] === ' ') continue;
+      const x = xT + ctx.measureText(title.slice(0, i)).width;
+      if (lu < 0) rise(ctx, title[i], x, yT, sT, ramp(t, 0.22 + i * 0.024, 0.22 + i * 0.024 + 0.36));
+      else { const s0 = (title.length - 1 - i) * 0.014; sink(ctx, title[i], x, yT, sT, ramp(lu, s0, s0 + 0.2)); }
+    }
   },
-  date_gene: (ctx, t) => { const L = look();
-    // a wider, deeper shade (C38: the blind-light patch on the wall behind the chair competed with the date): an
-    // ellipse centred a little right of the line's middle, never a box
-    ctx.save(); ctx.translate(0.24 * W, LOW - 0.02 * H); ctx.scale(1.5, 1);
-    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.52 * sm(t / 0.5)})`); g.addColorStop(0.55, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
-    ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
-    reveal(ctx, 'JANUARY 25, 2026', inkX(ctx, 'JANUARY 25, 2026', L.sup), LOW, L.sup, t, 0.0); },
+  // Gene's date over the empty chair: one line, all time, so all in the accent; the month and day light, the year
+  // heavy. A deep soft shade, because the blind light on the wall behind the chair is bright.
+  date_gene: (ctx, t) => {
+    const s = 64, y = LOW;
+    const words = [['JANUARY', RUN], ['25,', RUN], ['2026', KEY]], L = layout(ctx, words, s), x0 = inkX(ctx, 'JANUARY', RUN, s);
+    shade(ctx, MARGIN + L.width * 0.5, y - s * CAP / 2, L.width * 0.8 + 170, 130, 0.72 * sm(t / 0.45));
+    ctx.textBaseline = 'alphabetic'; ctx.fillStyle = COL.acc;
+    words.forEach(([w, st], i) => { font(ctx, st, s); const x = x0 + L.xs[i];
+      if (st === KEY) slam(ctx, w, x, y, s, ramp(t, 0.34, 0.6)); else rise(ctx, w, x, y, s, ramp(t, i * 0.08, i * 0.08 + 0.34)); });
+  },
 };
 
-// The plate's own move under some moments (the final compositor applies the same numbers to the Blender plate):
-// z zoom about (cx, cy) in frame fractions, and `spot`: a darkening outside a radius (frame-width fractions), the
-// spotlight narrowing. The second YES is a straight cut to a tighter frame with the light closing in on the bags.
+// The plate's own move under some moments (plate_type.py applies the same numbers to the Blender plate): z, a zoom
+// about (cx, cy) in frame fractions, and `spot`, a darkening outside a radius (frame-width fractions), the light
+// narrowing. The second YES is a straight cut to a tighter frame with the light closing in on the bags.
 const PLATE = {
-  // the counter's cell framed a little low (cy 0.48): at the 1.6x start the cell's roof sits about 35 px lower, so 2014
-  // clears it by about 50 px without rising under YouTube's top bar
   counter: t => ({ z: 1.0, cx: 0.5, cy: 0.48, spot: null }),
   yes: t => t < 3.0 ? { z: 1.0, cx: 0.5, cy: 0.5, spot: null }
-                    : { z: 1.4, cx: 0.534, cy: 0.425, spot: { r: 0.46 - 0.15 * E.out(cl((t - 3.0) / 0.9)), dark: 0.82, cy: 0.67 } },
-  // the sentence card's plates: in to 1.2x and held against their left edge (the clamp), so the figure sits right of
-  // the card with room
+                    : { z: 1.4, cx: 0.534, cy: 0.425, spot: { r: 0.46 - 0.15 * oExpo(cl((t - 3.0) / 0.9)), dark: 0.82, cy: 0.67 } },
   death_2017: t => ({ z: 1.2, cx: 0.4, cy: 0.5, spot: null }),
   sentence_life: t => ({ z: 1.2, cx: 0.4, cy: 0.5, spot: null }),
 };
@@ -354,23 +489,22 @@ window.plateCam = (mode, t) => (PLATE[mode] ? PLATE[mode](t) : { z: 1, cx: 0.5, 
 let bgImg = null;
 window.draw = (mode, t) => {
   const ctx = document.getElementById('c').getContext('2d');
-  ctx.clearRect(0, 0, W, H);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.letterSpacing = '0px';
   if (bgImg) {
     const cam = window.plateCam(mode, t), s = Math.max(W / bgImg.width, H / bgImg.height) * cam.z;
     const dw = bgImg.width * s, dh = bgImg.height * s;
-    const bx = Math.min(0, Math.max(W - dw, W * 0.5 - dw * cam.cx)), by = Math.min(0, Math.max(H - dh, H * 0.5 - dh * cam.cy));
-    ctx.drawImage(bgImg, bx, by, dw, dh);
-    if (cam.spot) {                                  // the light closing in: a soft dark surround, never black
+    const bx = dw >= W ? Math.min(0, Math.max(W - dw, W * 0.5 - dw * cam.cx)) : W * 0.5 - dw * cam.cx;
+    const by = dh >= H ? Math.min(0, Math.max(H - dh, H * 0.5 - dh * cam.cy)) : H * 0.5 - dh * cam.cy;
+    ctx.fillStyle = '#030405'; ctx.fillRect(0, 0, W, H); ctx.drawImage(bgImg, bx, by, dw, dh);
+    if (cam.spot) {
       const sy = H * (cam.spot.cy || 0.58), g = ctx.createRadialGradient(W / 2, sy, W * cam.spot.r * 0.55, W / 2, sy, W * cam.spot.r);
       g.addColorStop(0, 'rgba(3,4,6,0)'); g.addColorStop(1, `rgba(3,4,6,${cam.spot.dark})`);
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     }
   }
-  MOMENTS[mode](ctx, t);
+  ctx.save(); MOMENTS[mode](ctx, t); ctx.restore();
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
-document.fonts.load('300 40px "InterD"').then(() => Promise.all([
-  '100 40px "InterD"', '400 40px "InterD"', '600 40px "InterD"', '300 40px "Cormorant"', '400 40px "Cormorant"', '500 40px "Cormorant"',
-  'italic 400 40px "Cormorant"', '400 40px "Bebas"', '300 40px "Oswald"', '500 40px "Oswald"'].map(f => document.fonts.load(f))))
-  .then(() => { window.READY = true; });
+Promise.all(['300 64px Archivo', '600 64px Archivo', '800 64px Archivo', '500 32px PlexMono'].map(f => document.fonts.load(f)))
+  .then(() => { buildTimeline(); window.READY = true; });
 </script></body></html>

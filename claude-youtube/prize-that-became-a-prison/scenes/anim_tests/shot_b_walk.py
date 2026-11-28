@@ -309,7 +309,7 @@ def build(base=None, frames=None):
         bpy.context.view_layer.update()
         if fi == 0:
             # open each fist until its hollow takes the handle (once: the grip does not change while she walks)
-            for k, bar_r in (("L", 0.009), ("R", 0.0145)):
+            for k, bar_r in (("L", 0.004), ("R", 0.0095)):
                 for _ in range(8):
                     close_hand(pb, k, curl[k])
                     bpy.context.view_layer.update()
@@ -362,7 +362,8 @@ def build(base=None, frames=None):
 
 
 CAM_X, CAM_Z, AIM_Z = 3.45, 1.02, 0.84
-LEFT_OUT = (27.0, 30.0)            # the duffel arm: upper arm and forearm out from the side (deg), so the bag clears
+GRIP_SHRINK = 0.38                 # the case's grip bar cross-section shrunk by this (about 29 mm -> 18 mm)
+LEFT_OUT = (29.0, 33.0)            # the duffel arm: upper arm and forearm out from the side (deg), so the bag clears
                                    # the leg and skirt (at 17/12 its inner face reached the middle of the thigh)
 LENS, FSTOP = 32.0, 4.0
 
@@ -517,7 +518,26 @@ def case_follow(frames, grips):
         o.matrix_world = Matrix.LocRotScale(loc + Vector((0, 0, EXT / 2)), rot,
                                             Vector((sc.x, sc.y, sc.z * (h + EXT) / h)))
     bpy.context.view_layer.update()
-    grip_local = Vector((gx, 0.0, top + EXT - 0.012))
+    # a slimmer grip bar (about 18 mm), so it sits in the hollow of her closed hand: shrink the bar's cross-section
+    # toward its own axis between the rails, fading out where it turns down into them
+    pts2 = [shell.matrix_world @ v.co for v in shell.data.vertices]
+    top2 = max(p.z for p in pts2)
+    bar = [p for p in pts2 if p.z > top2 - 0.035 and abs(p.y) < 0.075]
+    cx, cz = sum(p.x for p in bar) / len(bar), sum(p.z for p in bar) / len(bar)
+    inv_sh = shell.matrix_world.inverted()
+    shrunk = 0
+    for v in shell.data.vertices:
+        p = shell.matrix_world @ v.co
+        if p.z > top2 - 0.035:
+            w = 1.0 - C.smooth((abs(p.y) - 0.040) / 0.035)
+            if w > 0:
+                q = Vector((cx + (p.x - cx) * (1 - GRIP_SHRINK * w), p.y, cz + (p.z - cz) * (1 - GRIP_SHRINK * w)))
+                v.co = inv_sh @ q
+                shrunk += 1
+    shell.data.update()
+    bpy.context.view_layer.update()
+    print(f"ANIM case: grip bar slimmed by {100 * GRIP_SHRINK:.0f} % ({shrunk} vertices)", flush=True)
+    grip_local = Vector((cx, 0.0, cz))
     wheels = [p for p in pts if p.z < 0.02 and p.x < -0.05]
     axle_local = Vector((sum(p.x for p in wheels) / len(wheels), 0.0, 0.011))
     d_local = grip_local - axle_local
@@ -577,7 +597,7 @@ def duffel_follow(frames, grips):
             h = dt / 4
             # a held bag: the fist and both handles damp it hard; only part of the hand's jolt reaches it
             ath = -(9.81 / Lp) * math.sin(th) + 0.5 * acc.y / Lp * math.cos(th) - 9.0 * vth
-            aph = -(9.81 / Lp) * math.sin(ph) - 0.5 * acc.x / Lp * math.cos(ph) - 9.0 * vph
+            aph = -(9.81 / Lp) * math.sin(ph) - 0.15 * acc.x / Lp * math.cos(ph) - 14.0 * vph   # little sideways
             vth += ath * h
             vph += aph * h
             th += vth * h
