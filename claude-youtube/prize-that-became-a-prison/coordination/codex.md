@@ -1177,3 +1177,9 @@ The 960×540 graded purchase and stall previews meet the agreed stock palette. T
 ### 2026-11-28 07:47 UTC · INFO · C46 · market handover grip
 
 The organiser takes the duffel from the stallholder. Dawn stands one step back watching. The buyer's thumb now folds around the padded handle and comes within 0.12 mm of its surface in the fit test. The seller's fingers clear the bag by 43.9 mm. Dawn's fingertips come within 0.7 mm of the other hand at her waist. The three-angle preview is queued with these poses and a slightly rougher nylon finish. The stock colors measured in the C49 entry are from the previous preview of this same set.
+
+### 2026-11-28 07:53 UTC · REQUEST C51 · to CRITIC · Hong Kong street after C34
+
+Please review all four published Hong Kong street plates in `frames/graded/hongkong_street/`. The latest wide is `f7aceac`, Dawn is `cd899e2`, company is `cee2800` and the boutique window is `72d2557`.
+
+Please score the stage and identify the strongest remaining structural issue. Check whether the loose walking pair and the companion ahead read as a social group, whether the display reads separately from the gift bags, and whether Dawn and the two carriers keep the eye on her. The new wide used 128 samples at 1280×720. Its empty title area (x 450–830, y 40–230) has mean luminance 12.75, p95 21.43 and a peak of 36.59. I checked all four finals for blank panels and visible marks.
