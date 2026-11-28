@@ -24,7 +24,7 @@
       S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food); S.cue('pop', T.see);
     },
     shots: [
-      { at: T.start, name: 'plain: the seven day cards again, each with its face', in: { type: 'wipe', dir: 'right' },
+      { at: T.start, name: 'plain: the seven day cards again, each with its face', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
           DAYS3.forEach((d, i) => {
@@ -32,24 +32,28 @@
               draw: g2 => { GFX.text(g2, d, 0, -118, { size: 40, weight: 900, color: '#FFFFFF' }); g2.save(); g2.translate(0, 30); GFX.portrait(c, 'hero', 0, 0, 82, { expr: FACES[i], bg: '#BFE3E0' }); g2.restore(); } }));
           });
         } },
-      { at: T.would, name: 'plain: tired, a little guilty, a lot more honest',
+      { at: T.would, name: 'plain: tired, a little guilty, a lot more honest', push: { from: 1.06, to: 1 + 0.0001 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
           [[480, 'tired_closed', T.tired], [960, 'guilty', T.guilty], [1440, 'happy', T.honest]].forEach(([x, expr, t0]) => GFX.at(c.g, x, 520, pop(t, t0 - 0.05, 0.34), () => { c.g.translate(-x, -520); GFX.portrait(c, 'hero', x, 520, 210, { expr, bg: '#FFF4E3' }); }));
         } },
-      { at: T.now, name: 'plain: tell me in the comments: a big comment bubble', in: 'pop',
+      { at: T.now, name: 'plain: tell me in the comments: a friendly comment bubble', in: 'pop', push: { from: 1, to: 1.08, x: 1100, y: 480 },
         draw(c) {
           c.set('plain', {}); const t = c.t; const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 });
-          c.fig('hero', { x: 330, y: a.y, s: a.s * 0.9, face: 1, pose: 'point', expr: 'happy' });
-          const n = seg(t, T.comments, T.go - 0.4); GFX.at(c.g, 1180, 470, pop(t, T.now + 0.15, 0.36), q => GFX.comment(q, 0, 0, 1060, 470, { lines: [0.9 * Math.min(1, n * 3), 0.75 * FILM.clamp(n * 3 - 1, 0, 1), 0.5 * FILM.clamp(n * 3 - 2, 0, 1)] }));
+          c.fig('hero', { x: 330, y: a.y, s: a.s * 0.9, face: 1, pose: 'point', expr: 'happy', nod: 0.1 * FILM.wob(t, 0.4, 3) });
+          const n = seg(t, T.comments, T.go - 0.9);
+          GFX.at(c.g, 1180, 470, pop(t, T.now + 0.15, 0.36), q => GFX.comment(q, 0, 0, 1040, 440, { k: n, heart: seg(t, T.go - 0.8, T.go - 0.5), t, tail: [-330, 330] }));
         } },
-      { at: T.go, name: "plain: I'll go first; I said no to food (he pushes the plate away)", in: 'pop',
+      { at: T.go, name: "close: I'll go first; I said no to food: his hand pushes the plate away", in: 'pop',
         draw(c) {
-          const t = c.t; c.set('plain', {}); const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 });
-          const push = ease.outCubic(seg(t, T.food - 0.05, T.food + 0.5));
-          c.fig('hero', { x: 820, y: a.y, s: a.s, face: 1, pose: t > T.food - 0.15 && t < T.food + 1.2 ? 'push_away' : 'stand', expr: t > T.food ? 'happy' : 'neutral', talk: [T.goSpan, T.joke] });
-          GFX.table(c.g, 960, 760, 1200);
-          c.prop('plateIcon', { x: 1060 + push * 560, y: 712, s: 2.2 });
+          const t = c.t; c.camera({ x: 1010, y: 470, zoom: 1.5 + 0.04 * seg(t, T.go, T.see) }); c.set('plain', {});
+          const X = 800, Y = 980, TY = 700, push = ease.outCubic(seg(t, T.food - 0.05, T.food + 0.6)), plateX = 1040 + 340 * push;
+          const k = seg(t, T.food - 0.45, T.food - 0.1) * (1 - seg(t, T.food + 1.1, T.food + 1.5));
+          const tx = Math.min(plateX - 170, X + 255) - X, ty = (TY - 24) - (Y - 330);
+          const override = k > 0 ? { armR: { ik: [FILM.lerp(70, tx, k), FILM.lerp(-60, ty, k)], bend: -1, ul: 1, hand: 'open', flip: 1, hrot: -0.2 } } : null;
+          c.fig('hero', { x: X, y: Y, s: 1, face: 1, pose: 'stand', override, expr: t > T.food ? 'happy' : 'neutral', talk: [T.goSpan, T.joke], look: t < T.said ? [0, 0] : [0.6, 0.4] });
+          GFX.table(c.g, 1010, TY, 1500);
+          GFX.platePersp(c.g, plateX, TY - 4, 1.25);
         } },
       { at: T.see, name: 'plain: see you in the next one: a wave',
         draw(c) { STAGE.plainHero(c, { pose: 'wave', expr: 'happy', talk: T.seeSpan }); } },

@@ -245,14 +245,40 @@
     if (o.puffs !== false) { [[x + w + 40, y + h + 30, 26], [x + w + 82, y + h + 70, 17]].forEach(p => { g.beginPath(); g.arc(p[0], p[1], p[2], 0, TAU); inked(g, GFX.CREAM, LW()); }); }
     g.restore();
   };
-  // a YouTube-neutral comment bubble: an avatar, a name line and text lines (no platform logo)
+  // a friendly comment bubble (no platform logo): a smiling avatar, a name, two lines that write themselves in (k 0..1), a heart
+  // that pops (heart 0..1); tail toward [x, y] relative to the centre
   GFX.comment = function (g, cx, cy, w, h, o) {
-    o = o || {}; GFX.bubble(g, cx, cy, w, h, { tail: [cx - w * 0.3, cy + h * 0.5 + 90], draw: (q) => {
-      q.beginPath(); q.arc(-w / 2 + 90, -h / 2 + 90, 46, 0, TAU); inked(q, GFX.TEAL, 5);
-      rr(q, -w / 2 + 160, -h / 2 + 64, 260, 30, 15); q.fillStyle = '#C9D2DB'; q.fill();
-      const lines = o.lines || [0.86, 0.7, 0.52]; lines.forEach((k, i) => { rr(q, -w / 2 + 160, -h / 2 + 128 + i * 50, (w - 220) * k, 26, 13); q.fillStyle = '#E3E8EE'; q.fill(); });
-      if (o.text) text(q, o.text, -w / 2 + 160, -h / 2 + 140, { size: 40, weight: 700, align: 'left' });
-    } });
+    o = o || {}; const k = FILM.clamp(o.k == null ? 1 : o.k, 0, 1), lw = LW() + 1;
+    g.save(); g.translate(cx, cy);
+    rr(g, -w / 2 + 14, -h / 2 + 16, w, h, 54); g.fillStyle = 'rgba(28,28,28,0.16)'; g.fill();
+    const tail = o.tail || [-w * 0.32, h * 0.75];
+    g.beginPath(); g.moveTo(-w * 0.3, h / 2 - 4); g.lineTo(tail[0], tail[1]); g.lineTo(-w * 0.16, h / 2 - 4); g.closePath(); inked(g, '#FFFFFF', lw);
+    rr(g, -w / 2, -h / 2, w, h, 54); inked(g, '#FFFFFF', lw);
+    g.beginPath(); g.moveTo(-w * 0.3 + lw, h / 2 - 4); g.lineTo(-w * 0.16 - lw, h / 2 - 4); g.lineWidth = lw * 2; g.strokeStyle = '#FFFFFF'; g.stroke();
+    // the avatar: a round smiling face on a warm ground
+    const ax = -w / 2 + 110, ay = -h / 2 + 115; g.beginPath(); g.arc(ax, ay, 66, 0, TAU); inked(g, '#F4BF54', lw); GFX.face(g, ax, ay + 4, 46, 'happy');
+    // the name and a little time stamp
+    rr(g, ax + 100, ay - 36, 250, 34, 17); g.fillStyle = '#3A8594'; g.fill(); rr(g, ax + 370, ay - 30, 90, 22, 11); g.fillStyle = '#D5DCE2'; g.fill();
+    // two lines writing themselves in, with a caret
+    const L = [[ax + 100, ay + 40, w - 330], [ax + 100, ay + 100, (w - 330) * 0.68]];
+    L.forEach(([x, y, lw2], i) => { const u = FILM.clamp(k * 2 - i, 0, 1); if (u <= 0) return; rr(g, x, y, Math.max(26, lw2 * u), 28, 14); g.fillStyle = '#C9D3DC'; g.fill();
+      if (u < 1 && Math.floor((o.t || 0) * 3) % 2 === 0) { g.fillStyle = '#3A8594'; g.fillRect(x + lw2 * u + 8, y - 4, 6, 36); } });
+    // the heart (and a soft burst when it lands)
+    const hk = o.heart || 0; if (hk > 0) { const st = 0.35 + 0.65 * FILM.ease.outBack(Math.min(1, hk), 2.4); const hx = w / 2 - 110, hy = h / 2 - 90;
+      g.save(); g.translate(hx, hy); g.scale(st, st); g.beginPath(); g.moveTo(0, 34); g.bezierCurveTo(-62, -6, -40, -62, 0, -28); g.bezierCurveTo(40, -62, 62, -6, 0, 34); g.closePath(); inked(g, '#E5534B', lw); g.restore();
+      if (hk < 1) { g.save(); g.globalAlpha = 1 - hk; g.strokeStyle = '#E5534B'; g.lineWidth = 6; g.lineCap = 'round'; for (let i = 0; i < 8; i++) { const a = i / 8 * TAU, r0 = 60 + 40 * hk; g.beginPath(); g.moveTo(hx + Math.cos(a) * r0, hy + Math.sin(a) * r0); g.lineTo(hx + Math.cos(a) * (r0 + 22), hy + Math.sin(a) * (r0 + 22)); g.stroke(); } g.restore(); } }
+    g.restore();
+  };
+  // a plate seen from the front on a table (the closing joke): rim, food, a fork and knife beside it; (x, y) = the table contact
+  GFX.platePersp = function (g, x, y, s) {
+    s = s || 1; g.save(); g.translate(x, y); g.scale(s, s);
+    g.beginPath(); g.ellipse(6, 4, 160, 30, 0, 0, TAU); g.fillStyle = 'rgba(80,40,20,0.18)'; g.fill();
+    g.beginPath(); g.ellipse(0, -14, 150, 40, 0, 0, TAU); inked(g, '#FFFFFF', 5); g.beginPath(); g.ellipse(0, -16, 104, 26, 0, 0, TAU); g.lineWidth = 3; g.strokeStyle = '#D6DCE2'; g.stroke();
+    g.beginPath(); g.moveTo(-70, -16); g.bezierCurveTo(-70, -70, 30, -78, 40, -24); g.closePath(); inked(g, col('steak', '#8E5A3C'), 4.5);
+    g.beginPath(); g.moveTo(-40, -50); g.lineTo(10, -58); g.moveTo(-50, -36); g.lineTo(20, -44); g.lineWidth = 3; g.strokeStyle = '#6B3F27'; g.stroke();
+    [[56, -30], [74, -24], [64, -40]].forEach(([px, py]) => { g.beginPath(); g.arc(px, py, 11, 0, TAU); inked(g, GFX.GREEN, 3.5); });
+    g.save(); g.translate(-90, -30); g.rotate(-0.5); rr(g, -8, -26, 16, 52, 8); inked(g, col('carrot', '#E98A3C'), 3.5); g.restore();
+    g.restore();
   };
   // a named prop drawn by the engine (fallback when POV has no prop of that name)
   GFX.prop = function (g, name, o) {

@@ -153,14 +153,16 @@
       const phase = op.phase != null ? op.phase : op.walk != null ? op.walk / 2 : (op.pose === 'wave' ? t * 1.4 : 0);
       const po = { x: op.x, y: op.y, scale: op.s, facing: op.face, pose, phase, expr: EXPR_ALIAS[op.expr] || op.expr || 'neutral', look: op.look, blink: op.blink, mouth: op.mouth,
         turn: op.turn, nod: op.nod, holding: op.hold, tint: op.tint || null, shadow: op.shadow === false ? null : (op.shadow || (op.y < H + 40 ? 'rgba(140,70,20,0.18)' : null)),
-        marks: op.marks, override: op.override, prop: op.prop, drawProp: op.drawProp, face: op.faceOver, mode: op.mode, seat: op.seat, view: op.view, stride: op.stride, lw: op.lw };
+        marks: op.marks, override: op.override, prop: op.prop, drawProp: op.drawProp, face: op.faceOver, mode: op.mode, seat: op.seat, view: op.view, stride: op.stride, lw: op.lw,
+        seatAt: op.seatAt, thigh: op.thigh, q: op.q };
       try { out = P.figure(g, who, po); } catch (e) { FILM.warn('POV.figure(' + who + '): ' + e.message); out = null; }
     }
     if (!out) { ART.placeholders.fig[who] = 1; placeholderFig(g, who, op); out = placeholderAnchors(op); }
     else {
       // the kit reports device pixels: bring them back to the caller's world space
       const wp = p => { const q = toWorld.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
-      out = { head: wp(out.head), headTop: wp(out.headTop), mouth: wp(out.mouth), handL: wp(out.handL), handR: wp(out.handR), pelvis: wp(out.pelvis), headR: out.headR };
+      const o2 = { head: wp(out.head), headTop: wp(out.headTop), mouth: wp(out.mouth), handL: wp(out.handL), handR: wp(out.handR), pelvis: wp(out.pelvis), headR: out.headR };
+      ['seat', 'lap', 'knee', 'feet'].forEach(k => { if (out[k]) o2[k] = wp(out[k]); }); out = o2;
     }
     g.restore();
     op.A = out; return op;

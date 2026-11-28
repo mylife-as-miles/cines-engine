@@ -25,6 +25,17 @@
   const BUBBLE = h => { const hd = ART.head('hero', h); return { w: 560, h: 210, size: 44, at: [hd.x + hd.r + 330, hd.y - 70] }; };
   const BUTTONS = [['YES', T.yes, '#77CC81'], ['NO', T.no, '#E5534B'], ['YES, BUT NOT LIKE THAT', T.yesBut, '#3A8594']];
 
+  function buttons(c) {
+    c.set('plain', {}); const t = c.t; const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 });
+    const pressed = seg(t, T.purpose, T.purpose + 0.12) * (1 - seg(t, T.purpose + 0.35, T.purpose + 0.5));
+    c.fig('hero', { x: 430, y: a.y, s: a.s * 0.95, face: 1, pose: t > T.decide ? 'point' : 'stand', expr: t > T.purpose ? 'happy' : 'neutral', nod: 0.1 * FILM.wob(t, 0.4, 5), dx: 6 * FILM.wob(t, 0.25, 9) });
+    BUTTONS.forEach(([label, t0, fill], i) => {
+      const rise = 1 - ease.outBack(seg(t, t0 - 0.05, t0 + 0.35)); if (t < t0 - 0.05) return; const isPick = i === 2;
+      const y = 300 + i * 230 + rise * 700;
+      STAGE.pill(c, 1260, y, label, { size: i === 2 ? 64 : 84, fill, color: '#FFFFFF', minW: 900, press: isPick ? pressed : 0, lit: isPick ? seg(t, T.purpose + 0.1, T.purpose + 0.4) : 0, dim: !isPick && t > T.purpose ? 0.5 * seg(t, T.purpose, T.purpose + 0.3) : 0 });
+    });
+  }
+
   FILM.seq({
     id: 'Q10', title: 'Try this instead', chapter: 'Try this instead', from: T.start,
     sound(S) {
@@ -36,7 +47,7 @@
     shots: [
       { at: T.start, name: 'plain: do not say no to everyone: pointing at the viewer (ref 02)', in: { type: 'wipe', dir: 'right', color: '#3A8594' }, push: { from: 1, to: 1.06 },
         draw(c) { STAGE.plainHero(c, { pose: 'point', expr: 'happy', turn: 0 }); } },
-      { at: T.try, name: 'plain: try this instead (a finger up)', in: 'pop',
+      { at: T.try, name: 'plain: try this instead (a finger up)', in: 'pop', push: { from: 1.1, to: 1.14, x: 960, y: 380 },
         draw(c) { STAGE.plainHero(c, { pose: 'finger_up', expr: 'happy' }); } },
       { at: T.forWeek, name: 'office: the coworker asks; "let me think and get back to you"', push: { from: 1, to: 1.05, x: 900, y: 520 },
         draw(c) { const h = exchange(c, c.t); STAGE.speech(c, 'hero', h, 'Let me think and get back to you.', T.letMe[0], null, BUBBLE(h)); } },
@@ -46,17 +57,8 @@
           STAGE.speech(c, 'hero', h, 'Let me think and get back to you.', T.letMe[0], null, BUBBLE(h));
           if (frozen) { c.screen(); c.g.fillStyle = `rgba(60,90,100,${0.35 * seg(t, T.pause, T.pause + 0.2)})`; c.g.fillRect(0, 0, 1920, 1080); GFX.at(c.g, 960, 540, pop(t, T.pause + 0.05, 0.32), q => GFX.pauseSign(q, 0, 0, 1.3)); c.reset(); }
         } },
-      { at: T.choose, name: 'plain: three buttons rise, one per word; he presses one, on purpose', in: 'pop',
-        draw(c) {
-          c.set('plain', {}); const t = c.t; const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 });
-          const pressed = seg(t, T.purpose, T.purpose + 0.12) * (1 - seg(t, T.purpose + 0.35, T.purpose + 0.5));
-          c.fig('hero', { x: 430, y: a.y, s: a.s * 0.95, face: 1, pose: t > T.decide ? 'point' : 'stand', expr: t > T.purpose ? 'happy' : 'neutral' });
-          BUTTONS.forEach(([label, t0, fill], i) => {
-            const rise = 1 - ease.outBack(seg(t, t0 - 0.05, t0 + 0.35)); if (t < t0 - 0.05) return; const isPick = i === 2;
-            const y = 300 + i * 230 + rise * 700;
-            STAGE.pill(c, 1260, y, label, { size: i === 2 ? 64 : 84, fill, color: '#FFFFFF', minW: 900, press: isPick ? pressed : 0, lit: isPick ? seg(t, T.purpose + 0.1, T.purpose + 0.4) : 0, dim: !isPick && t > T.purpose ? 0.5 * seg(t, T.purpose, T.purpose + 0.3) : 0 });
-          });
-        } },
+      { at: T.choose, name: 'plain: three buttons rise, one per word', in: 'pop', push: { from: 1, to: 1.06, x: 1100, y: 540 }, draw: buttons },
+      { at: T.decide, name: 'plain, closer: he presses one, on purpose', push: { from: 1.28, to: 1.34, x: 1080, y: 700 }, draw: buttons },
     ],
   });
 })();

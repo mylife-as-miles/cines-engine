@@ -8,10 +8,16 @@
   const { seg, pop, ease } = FILM;
   const T = {
     start: W("here's"), noticed: W('noticed'), most: W('most of'), kindness: W('kindness'), fear: W('fear'), fearThat: W('fear that'), liking: W('liking'),
-    guilty: W('that guilty'), tuesday: W('tuesday'), proof: W('proof'), changing: W('changing'), habit: W('habit'), like: Wend('like'),
+    guilty: W('that guilty'), tuesday: W('tuesday'), itWas: W('it was not'), proof: W('proof'), changing: W('changing'), habit: W('habit'), like: Wend('like'),
     end: FILM.W('so do not'),
   };
   const CAST = [['boss', 330, 300, 'angry'], ['friend', 1590, 300, 'angry'], ['mum', 360, 790, 'sad'], ['coworker', 1560, 790, 'confused'], ['stranger', 1290, 135, 'sad']];
+
+  function cloudBack(c) {
+    const t = c.t, h = STAGE.plainHero(c, { expr: t > T.itWas ? 'worried' : 'guilty', look: [0.7, -0.5] }); const hd = ART.head('hero', h);
+    const x = 1500 + 520 * (1 - ease.outCubic(seg(t, T.guilty, T.guilty + 1.6))), y = hd.y - hd.r * 1.6 + Math.sin(t * 1.8) * 8;
+    GFX.cloud(c.g, x, y, 1.1);
+  }
 
   FILM.seq({
     id: 'Q09', title: 'Why we say yes', chapter: 'Why we say yes', from: T.start,
@@ -21,9 +27,9 @@
       CAST.forEach((p, i) => S.cue('pop', T.fearThat + 0.1 + i * 0.22)); S.cue('cloud', T.guilty + 0.2); S.cue('rain', T.changing); S.cue('grow', T.habit);
     },
     shots: [
-      { at: T.start, name: 'plain: the bulb lights', in: { type: 'wipe', dir: 'right', color: '#3A8594' },
+      { at: T.start, name: 'plain: the bulb lights', in: { type: 'wipe', dir: 'right', color: '#3A8594' }, push: { from: 1.04, to: 1.1, x: 960, y: 320 },
         draw(c) { const h = STAGE.plainHero(c, { pose: 'think', expr: c.t > T.noticed ? 'surprised' : 'neutral' }); STAGE.bulb(c, 'hero', h, T.start + 0.2, T.noticed); } },
-      { at: T.most, name: 'plain: a big YES card in his hands; it flips to a scared face',
+      { at: T.most, name: 'plain: a big YES card in his hands; it flips to a scared face', push: { from: 1, to: 1.08, x: 960, y: 420 },
         draw(c) {
           const t = c.t, h = STAGE.plainHero(c, { pose: 'hold_card', expr: t > T.fear ? 'scared' : 'neutral' });
           const hl = ART.hand('hero', h, 'back'), hr = ART.hand('hero', h, 'front'); const cx = (hl.x + hr.x) / 2, cy = (hl.y + hr.y) / 2 - 40;
@@ -35,13 +41,9 @@
           const t = c.t; STAGE.plainHero(c, { expr: 'scared', faceOver: { look: [Math.sin(t * 1.5) * 0.6, -0.1] } });
           CAST.forEach(([who, x, y, expr], i) => GFX.at(c.g, x, y, pop(t, T.fearThat + 0.1 + i * 0.22, 0.32), () => { c.g.translate(-x, -y); GFX.portrait(c, who, x, y, 130, { expr }); }));
         } },
-      { at: T.guilty, name: 'plain: the grey cloud from Tuesday drifts back in',
-        draw(c) {
-          const t = c.t, h = STAGE.plainHero(c, { expr: 'guilty' }); const hd = ART.head('hero', h);
-          const x = 1500 + 520 * (1 - ease.outCubic(seg(t, T.guilty, T.guilty + 1.6))), y = hd.y - hd.r * 1.6 + Math.sin(t * 1.8) * 8;
-          GFX.cloud(c.g, x, y, 1.1);
-        } },
-      { at: T.changing, name: 'plain: the cloud rains a little; a green sprout grows under it',
+      { at: T.guilty, name: 'plain: the grey cloud from Tuesday drifts back in', push: { from: 1, to: 1.05, x: 1200, y: 420 }, draw: cloudBack },
+      { at: T.itWas, name: 'plain, closer: it was not proof you did something wrong', push: { from: 1.3, to: 1.36, x: 1180, y: 400 }, draw: cloudBack },
+      { at: T.changing, name: 'plain: the cloud rains a little; a green sprout grows under it', push: { from: 1.04, to: 1.1, x: 1250, y: 560 },
         draw(c) {
           const t = c.t, h = STAGE.plainHero(c, { expr: t > T.habit ? 'happy' : 'guilty' }); const hd = ART.head('hero', h);
           const x = 1500, y = hd.y - hd.r * 1.6 + Math.sin(t * 1.8) * 8;

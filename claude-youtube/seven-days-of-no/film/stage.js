@@ -156,8 +156,9 @@
   const STAGE = global.STAGE, ART = global.ART;
   STAGE.heroSofa = function (c, so, fo) {
     so = Object.assign({ tod: 'evening' }, so || {}); c.set('living', so);
-    const sa = STAGE.sitAt(c, 'living', (fo && fo.seat_at) || 'sofa_seat_r', { floor: 990, sofa: true });
-    const h = c.fig('hero', Object.assign(sa, { face: 1, pose: 'sit_front', expr: 'neutral', tint: ART.tintFor(c, 'living') }, fo || {}));
+    // POV's seatAt: the seat contact lands exactly on the sofa's seat anchor, the feet on the floor
+    const a = c.anchor('living', (fo && fo.seat_at) || 'sofa_seat_r');
+    const h = c.fig('hero', Object.assign({ x: a.x, y: 990, s: a.s, seatAt: { x: a.x, y: a.y }, face: 1, pose: 'sit_sofa', expr: 'neutral', tint: ART.tintFor(c, 'living') }, fo || {}));
     if (!(fo && fo.noFront)) c.setFront('living', so);
     return h;
   };

@@ -53,7 +53,7 @@ The video is code. `FILM.renderAt(t)` draws any instant of the 225.5 s timeline 
 
 - `FILM.talk(t, span|spans)`: mouth 0..1 from the narration's loudness, gated to the words. `c.fig(who, { talk: span })` does this for you.
 - `FILM.blink(t, seed)`: seeded blinks (automatic per character). `FILM.blinkAt(t, [times])` scripts them (`c.fig(..., { blinks: [...] })`).
-- `FILM.pop(t, t0, d)`: a squash pop-in `{s, sx, sy, a, on}`. Also `FILM.popOut(t, t1)` and `FILM.popInOut(t, t0, t1)`. `GFX.at(g, x, y, state, fn)` applies any of them.
+- `FILM.pop(t, t0, d)`: a squash pop-in `{s, sx, sy, a, on}`, starting at 35% scale (never a speck). Also `FILM.popOut(t, t1)` and `FILM.popInOut(t, t0, t1)`. `GFX.at(g, x, y, state, fn)` applies any of them.
 - `FILM.stamp(t, t0)` (`STAGE.stamp(c, x, y, t0, 'NO')`): a stamp landing with a shake.
 - `FILM.flash(t, t0, d)`: a camera flash. `FILM.quake(t, t0, d, amp)`: a screen shake.
 - Others: `FILM.tremble(t, amp)`, `FILM.nod(t, [times])`, `FILM.punch(t, [times], amt)` (quick push-ins), `FILM.slide(t, t0, from)`, `FILM.breath`.
@@ -62,7 +62,7 @@ The video is code. `FILM.renderAt(t)` draws any instant of the 225.5 s timeline 
 ## Art (the kits' contract, as the adapter calls them)
 
 **Sets.** `c.set(name, opts)` calls `SETS[name](g, opts)`, and `c.setFront(name, opts)` calls `SETS[name + 'Front']`.
-- The sets are `office` (`view: 'desk'|'door'`, `night`, `clock: '9:20'`), `living` (`tod: 'evening'|'morning'|'dusk'`, `todTo`/`todK`, `bird`, `table`), `street` and `plain`.
+- The sets are `office` (`view: 'desk'|'door'`, `night`, `clock: '9:20'`), `living` (`tod: 'evening'|'morning'|'dusk'`, `todTo`/`todK`, `bird`, `table`), `street`, `plain`, `mumKitchen`, `friendFlat` and `party`, each with its Front piece. `GFX.kitchen` and `GFX.movingFlat` stand in only when the kit lacks a room.
 - `c.anchor(set, name)` returns `{x, y, s}` in world px, from the set's `anchorsSet`.
 - `ART.tintFor(c, 'living')` is the set's figure tint.
 
@@ -70,7 +70,8 @@ The video is code. `FILM.renderAt(t)` draws any instant of the 225.5 s timeline 
 - Its options are `x, y` (the feet), `s` (1 = 800 px tall), `face` (±1), `pose`, `expr`, `walk`/`phase`, `talk`, `blinks`, `mouth`, `nod`, `look`, `hold`, `mode`, `seat`/`view` (for `sit`), `tint`, `faceOver` (POV's face override), `override`, `alpha`, `tremble`, `dx`, `dy`.
 - It returns the options with `A`, the figure's anchors in world px (head, headR, hands); `ART.head` and `ART.hand` read them.
 - Poses: POV's, plus the engine's `run`, `handup`, `stomach`, `peace`, `type`, `finger_up`, `push_away`, `hold_card`, `sit_front`, `sit_phone`, `sit_laptop`, `sit_stomach` and `sit_handup`.
-- `STAGE.sitAt(c, set, anchor)` seats a figure on a seat anchor.
+- Every sofa scene goes through `STAGE.heroSofa(c, setOpts, figOpts)`: POV's three-quarter `sit_sofa` with `seatAt` on the `sofa_seat_*` anchor, the feet on the floor, then `livingFront` (the coffee table) in front. Add props with `hold: 'mug'|'sip'|'phone_ear'|'laptop'`, or use the poses `sit_phone`, `sit_laptop`, `sit_stomach` and `sit_handup`.
+- `STAGE.plainHero` gives the plain bust idle life (a weight shift, a head drift, a breath; `still: true` turns it off). Change the framing every 5–8 s: a new shot with its own `push`.
 
 **Props.** `c.prop(name, opts)` uses `POV.PROPS[name]` (for example `phoneFlat`, `buzz`, `flash`, `plateIcon`) or falls back to `GFX`.
 

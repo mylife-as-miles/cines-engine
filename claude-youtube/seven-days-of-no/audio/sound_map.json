@@ -7,6 +7,8 @@
   "speech_gap_merge_s": 1.2,
   "duck_attack_s": 0.35,
   "duck_release_s": 0.9,
+  "presence_dip_db": 3.0,
+  "presence_hz": 2500,
   "crossfade_s": 1.0,
   "resume_gap_s": 4.0,
   "same_cue_min_gap_s": 0.15,

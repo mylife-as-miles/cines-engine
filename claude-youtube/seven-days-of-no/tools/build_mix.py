@@ -4,7 +4,7 @@
 # ///
 """Mix Seven Days of No's soundtrack: the author's narration, the music beds and the effects, mastered for YouTube.
 
-  /home/user/leonxlnx/earshot/.venv/bin/python tools/build_mix.py      (or: uv run tools/build_mix.py)
+  /home/user/leonxlnx/earshot/.venv/bin/python tools/build_mix.py [--sheet audio/cues_draft.json]   (or: uv run tools/build_mix.py)
       -> out/mix/seven_days_mix.wav (48 kHz stereo, 24-bit), out/mix/stems/{voice,music,fx}.flac, out/mix/report.json
 
 Reads the cue sheet the engine writes (out/cuesheet.json: named beds and cues on the clock), or audio/cues_draft.json
@@ -19,7 +19,8 @@ music bed is); audio/sound_map.json (which file and level each cue is, and the m
 3. Ducking: speech regions from the narration's own envelope (pauses under 1.2 s merged, so the music does not pump
    between sentences). In each region the music is held 12 dB under the voice's level there (its 3 s loudness, ridden
    down only, never up), with a 0.35 s attack before the words and a 0.9 s release after. Where no one speaks (the
-   stop-down, the end screen) the bed plays at its own level. The cue sheet's silences mute the music (Q10's freeze;
+   stop-down, the end screen) the bed plays at its own level. Under the voice the music also takes a gentle 3 dB
+   presence dip at 2.5 kHz (zero-phase), so the consonants stay clear without pulling the bed down further. The cue sheet's silences mute the music (Q10's freeze;
    a cue placed inside one, like the freeze itself, still plays); its ducks (level factors) apply to the music.
 4. Effects: each cue's sound at rel_db re Lv (its loudest 100 ms, K-weighted), peak- or start-aligned, panned.
 5. Master: gain to -14 LUFS integrated, then a look-ahead true-peak limiter (4x oversampled detection) at -1.5 dBTP,
@@ -229,8 +230,10 @@ def music_spans(cs, M, T, missing, report):
 
 def main():
     cs_path = os.path.join(ROOT, 'out', 'cuesheet.json')
+    if '--sheet' in sys.argv: cs_path = os.path.abspath(sys.argv[sys.argv.index('--sheet') + 1])
     draft = not os.path.exists(cs_path)
     if draft: cs_path = os.path.join(ROOT, 'audio', 'cues_draft.json')
+    draft = draft or cs_path.endswith('cues_draft.json')
     cs = normalise(json.load(open(cs_path))); plan = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
     M = json.load(open(os.path.join(ROOT, 'audio', 'sound_map.json'))); MX = M['mix']
     T = float(cs['total']); N = int(round(T * SR)); missing = set(); report = {'cuesheet': os.path.relpath(cs_path, ROOT), 'draft': draft}
@@ -289,7 +292,7 @@ def main():
     regs = speech_regions(voice, MX['speech_gap_merge_s'])
     ctl = lambda y: np.interp(tt, np.arange(len(y)) / SR, y)       # a per-sample curve at the control rate
     lm = -0.691 + 10 * np.log10(ctl(ms_window(music, 3.0)) + 1e-12)
-    duck = np.zeros(nc); att, rel = MX['duck_attack_s'], MX['duck_release_s']
+    duck = np.zeros(nc); wsp = np.zeros(nc); att, rel = MX['duck_attack_s'], MX['duck_release_s']
     for r0, r1 in regs:
         i0, i1 = int(r0 * rate), min(nc, int(r1 * rate) + 1)
         seg = voice[int(r0 * SR):int(r1 * SR)]
@@ -305,7 +308,7 @@ def main():
         if hi > lo:
             core = d[i0:i1]; dd = float(np.min(uniform_filter1d(core, size=max(1, int(1.0 * rate))))) if len(core) else 0.0
             d[lo:i0] = d[i0] if i0 < nc else dd; d[i1:hi] = d[i1 - 1] if i1 > 0 else dd
-        duck = np.minimum(duck, w * d)
+        duck = np.minimum(duck, w * d); wsp = np.maximum(wsp, w)
     duck = uniform_filter1d(duck, size=int(0.5 * rate))         # gentle: no step faster than half a second
     ctrl = undb(duck)
     for x in cs.get('ducks', []):
@@ -314,6 +317,13 @@ def main():
     sil = [(x['t0'], x['t1']) for x in cs.get('silences', [])]; mute = np.ones(nc)
     for a, b2 in sil: mute = np.minimum(mute, np.interp(tt, [a - 0.05, a, b2, b2 + 0.3], [1, 0, 0, 1]))
     music *= np.interp(np.arange(N) / SR, tt, ctrl * mute)[:, None]
+    # where someone speaks, a gentle presence dip in the music (zero-phase, so the blend in and out is clean): room for
+    # the consonants without pulling the whole bed down further
+    if MX.get('presence_dip_db'):
+        A = 10 ** (-MX['presence_dip_db'] / 2 / 40); w0 = 2 * np.pi * MX['presence_hz'] / SR; al = np.sin(w0) / (2 * 0.7); c = np.cos(w0)
+        bq = np.array([1 + al * A, -2 * c, 1 - al * A]); aq = np.array([1 + al / A, -2 * c, 1 - al / A])
+        dipped = signal.filtfilt(bq / aq[0], aq / aq[0], music, axis=0)          # two passes: half the dip each
+        music += (dipped - music) * np.interp(np.arange(N) / SR, tt, uniform_filter1d(wsp, size=int(0.5 * rate)))[:, None]
     # a faint air floor under the music bus, so no moment is digitally dead (the cue sheet's silences take it too)
     rng = np.random.default_rng(5); fl = signal.sosfilt(signal.butter(2, [60, 900], 'bandpass', fs=SR, output='sos'), rng.standard_normal((N, 2)), axis=0)
     fl *= undb(MX['air_floor_lufs'] - lufs(fl[: 30 * SR])); music += fl * np.interp(np.arange(N) / SR, tt, mute)[:, None]
