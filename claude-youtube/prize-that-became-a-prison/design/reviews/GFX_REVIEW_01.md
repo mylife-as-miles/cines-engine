@@ -140,3 +140,46 @@ so the split's fixed match left a mustard tote beside a brown one. The split now
 dE 1.0), and Codex has the numbers to bring the tote back to cognac in every stage. Chapter 3's title sits lower on the
 new hotel plate, clear of the headboard rail. The editor dropped HONG KONG / 9 DAYS from the street wide: the route
 map puts both on screen 2 s earlier.
+
+## Reel 8 (28 November 2026, an eighth reviewer, seeing nothing before)
+
+**7.5, fail** against 8.5. At the bar: 2014 / CHINA, the sentence card, the chapter title, JANUARY 25, 2026 and
+WHEN?. Weakest: the cut-away (5), the search and the two-line map (6.5), the split frame (6.5).
+
+| Fault (reel 8) | Done for reel 9 |
+| --- | --- |
+| The cut-away's lining was invisible on a phone and the slab looked like a slide-template plank | A pale lining, both layers lit by the plates' soft key, matched grain, and the gap held open about 1.5 s |
+| The Qingdao line seemed to arrive at a bullseye; the two disputed legs were treated unequally | No ring; both lines end the same way, in the same open arrowhead with the same gap |
+| "9 DAYS" at Hong Kong | Checked: S1 gives nine days in Hong Kong and nine on the mainland. It stands |
+| The search double-exposed over the app tiles, and the query ended unreadably small | The dropdown pops opaque; the pull-back ends tighter on a darker query |
+| Statement page 1: the marker ran into "not", and the type was small | Each stroke ends past its closing quote; both pages pushed in further |
+| The split frame had no warm half | The gift half graded warm (an amber key on the table) |
+| The title had no identity, and its lines ticked by a pixel | THE PRIZE THAT in small tracked caps over a hairline rule, BECAME A PRISON large; drawn offscreen and placed at fractional positions |
+| The statement pages' push-in started with a jolt | Eased in over about 12 frames |
+| The year counter's cadence was uneven, and 2014 crowded the cell roof | Roll times from one monotonic curve; the year raised |
+| The mainland fill left out Hainan; slivers in the Arctic islands | Every PRC polygon filled except Hong Kong, Macau and Taiwan (Hainan was lit in reel 9; the reviewer's second claim was false); the map clipped in the far north |
+| Map labels popped off at the joins | Not changed: in the film each map piece is separated by plate shots, so a label leaving with a straight cut is a cut |
+| Left margins drifted between 132 and 145 px | One margin (140 px, measured to the ink) for every story super |
+
+## Reel 9 (28 November 2026, a ninth reviewer, seeing nothing before)
+
+**7.3, fail** against 8.5. Best: 2014 / CHINA, the sentence card, the chapter title, LIFE IN PRISON, page 2,
+JANUARY 25, 2026 and WHEN? (8.0). Weakest: the cut-away (6.0), the mail, the two-line map and the calendar (6.5).
+
+| Fault (reel 9) | Done for reel 10 |
+| --- | --- |
+| The scale shot's camera reversed at frame 16 (+3.4 to −11.7 px a frame) | The push's two ends are clamped to the crop the plate allows, not its path, so the centre moves on one eased line (−6.7 easing to 0 px a frame, never reversing) |
+| The digit rolls in the calendar and the counter showed 3-4 stacked copies | A 16-sample shutter blur on the roll, weighted to the motion, in place of the stacked copies |
+| The mail's prize line had a 24 px cap height | Pushed 1.83x further (cap 45 px, the line across 64 % of the frame) with a sliver of bezel kept; the mail client's sidebar narrowed to make room |
+| The mail push hitched at 38.21 s | Fixed by the same endpoint clamp |
+| The cut-away read as a plank or a book cover, and the lining hinged like a lid | Fine pebble grain, a painted rounded edge, a bow matched to the seam it is cut from, and a lining that stays stitched at the lip and runs parallel below the leather. In the split it fills 85 % of the half |
+| The two-line map left the right 55 % empty, with dashes about 4 px | Centred on 120 E 15 N at about 1.8x, 5.5 px dashes with a dark edge and a 2 px glow, a steady 3 % push. AUSTRALIA sits on open water west of the Kimberley, because no strip of land in frame is wide enough for the name |
+| "Is this contest legitimate?" was out of focus in the caption band | The camera drifts the result to y 550 and the focus racks to it |
+| The highlighter swiped in 7 frames, khaki with a wide feather, on greyish paper | 20-frame eased swipes; a pale yellow with a 2-3 px edge; the paper lifted to about 225 |
+| 2014 / CHINA and JANUARY 25, 2026 sat in the caption band | Lowest baseline 822 |
+| The second YES was too weak | A 1.4x push, the light closed to a spot, and the word placed over the bags |
+| The mail roll's weight flickered (bold snapping) | Each phrase drawn once into its own bitmap; only position and opacity animate |
+| The map's moves braked in about 6 frames | A velocity curve that lands in a 25-33 frame cubic ease-out, straight into the push |
+| The seam's head was a soft salmon blob | 10-12 px in the line's own red, with a hot core and a 1-2 px bloom. The line is 2.5-4 px wide and follows the leather's light |
+| The OVERWEIGHT display read as printed | A backlit segment LCD: edge-lit falloff with LED hot spots, a face recessed behind the bezel glass, a soft segment shadow on the backplane. The bar lights segment by segment, and the four segments past the limit stand taller and blink with the word. No colour |
+| The split's warm half was underexposed | A lamp just out of frame at top left, with a warm pool at the tote's foot (+0.6 stop on the tote), and a per-channel shoulder so the red does not clip |
