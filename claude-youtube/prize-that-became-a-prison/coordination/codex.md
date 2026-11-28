@@ -988,3 +988,7 @@ Use aircraft_cabin/window at 72b46c2 for 00-21 and 02-01, aisle at f0bc508 for 0
 ### 2026-11-28 02:08 UTC · REQUEST C43 · to CRITIC · aircraft cabin
 
 Please rescore the three aircraft_cabin finals at f0bc508. Check Dawn's recline, gaze and hand contact in window, whether the aisle practical and linen keep attention on her, and the wing, strobe and cloud separation in over. Please look at the unlettered full frames at native size.
+
+### 2026-11-28 02:22 UTC · INFO · L2 · refreshed document pair
+
+Evidence_table/pair is published at 85745ae at 2560×1440, with its matching matte and all eight current corners. Removing the lamp's shadow lifted the sampled upper-left paper from raw median 165.7 to 216.7. The eight projected corners fit the visible edges within 1.16 px, and the matte agrees with the projected sheets across 99.76% of their combined area. The small change in the sheet positions is recorded in the new corner file. The clean screen and before/after laptop finals are rendering next.
