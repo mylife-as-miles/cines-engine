@@ -162,7 +162,7 @@ def _vmath(nt, op, a, b=None):
     return n.outputs["Value"] if op in ("DISTANCE", "LENGTH", "DOT_PRODUCT") else n.outputs["Vector"]
 
 
-def stage_floor(cell=None, bags=None, dawn=None):
+def stage_floor(cell=None, bags=None, dawn=None, chair=None):
     """A black-box stage floor: 1.22 x 2.44 m hardboard sheets painted matt black, each a few per cent off its
     neighbours, the butt joints a 2 mm dark groove; heel marks (thin dark streaks) and fine pale scratches along the
     traffic directions, ghosts of old spike tape (strips and crosses, a little glossier and greyer where the adhesive
@@ -178,11 +178,14 @@ def stage_floor(cell=None, bags=None, dawn=None):
     board = _out(br, "Color")
     seam = _out(br, "Fac")
     board_detail = 1.0
-    if dawn is not None:
-        # A continuous patch of painted floor under the standing spotlight.
+    clean_pools = [centre for centre in (dawn, chair) if centre is not None]
+    if clean_pools:
+        # Keep the paint continuous under the standing and chair spotlights.
         pos = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]
-        distance = _vmath(nt, "DISTANCE", pos, (*dawn, 0.0))
-        board_detail = _maprange(nt, distance, 1.4, 1.8, 0.0, 1.0)
+        for centre in clean_pools:
+            distance = _vmath(nt, "DISTANCE", pos, (*centre, 0.0))
+            fade = _maprange(nt, distance, 1.4, 1.8, 0.0, 1.0)
+            board_detail = _math(nt, "MINIMUM", board_detail, fade)
         board = _mix(nt, board_detail, (1.0, 1.0, 1.0), board)
         seam = _math(nt, "MULTIPLY", seam, board_detail)
     base = _mix(nt, 1.0, (0.086, 0.086, 0.09), board, "MULTIPLY")
@@ -238,7 +241,8 @@ def stage_floor(cell=None, bags=None, dawn=None):
         d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
         near = _math(nt, "LESS_THAN", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", px, cell[0])), 20.0)
         fade = _math(nt, "MULTIPLY", _maprange(nt, d, 0.15, 1.0, 0.0, 0.88), near)
-        base = _mix(nt, fade, base, (0.01, 0.01, 0.011))
+        # The cell fade crosses the chair island, so keep it outside the clean floor.
+        base = _mix(nt, _math(nt, "MULTIPLY", fade, board_detail), base, (0.01, 0.01, 0.011))
     nt.links.new(base, b.inputs["Base Color"])
     rough = _maprange(nt, mott, 0.3, 0.7, 0.58, 0.68)
     rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", dk, -0.08))
@@ -418,9 +422,9 @@ def frosted_glow(name, rgb, strength, top_z=None, sill_z=None):
     return m
 
 
-def materials(cell=None, bags=None, dawn=None):
+def materials(cell=None, bags=None, dawn=None, chair=None):
     M.clear()
-    stage_floor(cell, bags, dawn)
+    stage_floor(cell, bags, dawn, chair)
     block_paint()
     section()
     cell_floor(cell or (0.0, 0.0))

@@ -862,7 +862,7 @@ def build(cast=True):
     st.LIGHTS.clear()
     _STATE.update(groups={}, with_cast=cast, originally_hidden=set())
     _STATE["cast"] = []
-    st.materials(cell=C, bags=G, dawn=D)
+    st.materials(cell=C, bags=G, dawn=D, chair=CHAIR)
     st.floor()
     _island("dawn", build_dawn_island)
     _island("cell", build_cell_island)
