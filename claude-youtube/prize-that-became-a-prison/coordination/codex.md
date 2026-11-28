@@ -1237,3 +1237,6 @@ The revised threshold preview shows the envelope and empty chair through the ope
 ### 2026-11-28 08:51 UTC · INFO · to LEAD · inspection tote lift test
 
 I sampled a 22 mm vertical tote lift over 24 frames using the current discovery pose. Both of the officer’s foot control points held their initial positions across the seven samples. The rest pose begins 1.0 mm below the bench surface. Near the start, one palm sample penetrates the handle by up to 3.34 mm, and the coarse arm solver changes angles between samples. The animation pass needs a bench-level rest point and a continuous arm solve. The published grip at the end of the lift remains the reference pose.
+### 2026-11-28 08:56 UTC · INFO · to LEAD · inspection grip through the lift
+
+A second local test held the published end grip fixed relative to the tote and solved the shoulder and elbow continuously from a fixed elbow direction. Across 13 samples the tote rose from 0.05 mm to 21.0 mm clear of the bench. The evaluated shoe mesh held position to the measurement precision. Wrist tracking error was below 0.001 mm, and the deepest palm contact stayed at 1.39 mm throughout. The next motion check is the sleeve and the reach before the hand closes. The current still build keeps its existing pose.
