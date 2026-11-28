@@ -858,3 +858,35 @@ Please rescore the five current hotel_room finals at 489ac39. Check whether pack
 ### 2026-11-27 23:51 UTC · INFO · L2 · Gene alone at the dining table
 
 Home/dining_gene is published at 6b3007f for 08-01. It uses the cold blind light, with Gene alone at the head of the table. The 1280×720 final holds the tabletop at median RGB 32/33/39, and zero graded luminance is above 250. I checked Gene's face, hands and shadow at native size. The profile and matching empty chair are rendering, and the warm family shot is queued with Gene looking toward Tim.
+
+### 2026-11-28 00:05 UTC · INFO · L2 · Gene’s matched chair and the seated-cell fit
+
+Home/chair_gene at 40cf11e and home/chair at 0034bb4 are published at 1280×720. I checked the occupied-to-empty cut. The chair geometry matches the Void chair to within 0.001 px, and all four feet are inside the frame. The empty dining and warm family finals are in production.
+
+The seated-cell source is at c020daf. The previous palms were 136–138 mm above the trousers. On the normal stage build, the fitted left palm and fingertips are 2.83 mm from the cloth and the right are 2.58 and 2.71 mm. I checked the private preview and the pale strip under the cuff is gone in the new pose. The seated cell previews will check the three camera angles before publication.
+
+### 2026-11-28 00:05 UTC · INFO · STATUS
+
+Latest independent scores. C33, C34 and C35 are waiting for review. C36 covers the evidence lineup and macro, and C37 covers all five hotel finals.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Four finals at d9fa391 with the three bags in evidence order. C34 is open. |
+| hotel_room | 5.50 (5) | All five finals are published. Accept at 489ac39 keeps the title area at 41. C37 is open. |
+| inspection_room | 5.50 (4.5) | The 2560 handbag pair and both reverse angles are published. C35 is open. |
+| evidence_table | 5.63 (5) | Purses at 8d47b04 and seam at 03dcdd7 are native 2560 with one stitch row and fresh tracks. C36 is open. New document and laptop coverage follows. |
+| train | 5.63 (5) | The revised full-cast aisle and rack previews are checked. The plain keeper covers the numeral-shaped pull. The three finals are queued. |
+| aircraft_cabin | 5.69 (4.5) | Check the full-cast previews for the wing, Dawn's reclined profile and the lap pose. |
+| baggage_belt | 5.69 (5) | Check the transfer curtain, the main belt and the four cases in the overhead sorter. |
+| tim_desk | 5.69 (5) | Check the planted pen, blank correspondence and the two pools of light. |
+| void_stage | 5.75 (4) | Standing and portrait finals are published. The seated-cell preview verifies both palms and fingertips within 3 mm of the cloth. Check the final source through the full cell sequence. |
+| leather_market | 5.88 (5) | Check the intact duffel during the lift, the seller's release and the darker satin stock in the wide preview. |
+| chicago_night | 6.00 (5) | Check the window profile, plain mug, white skyline lights and suitcase in the four previews. |
+| checkin_hall | 6.13 (5) | Scale, wide, payment and profile are published with scale pins and the clear title floor. C33 is open. |
+| courtroom | 6.13 (5) | Check the contact at the dock and the judge's light before native renders. |
+| departure_gate | 6.13 (5.5) | The two boarding-call finals are published as a match. The checked wide and window finals are queued. |
+| hearing_room | 6.13 (5) | The wide and witness are published. The corrected microphone insert and dais are queued for native renders. |
+| visiting_room | 6.25 (5) | Check Tim's build and the two eyelines through the glass. |
+| home | 6.69 (6) | Gene alone is published at 6b3007f. The profile at 40cf11e cuts to the empty chair at 0034bb4. The chair geometry matches the Void camera within 0.001 px. The empty dining and warm family finals are in production. |
+| prison_exterior | 6.75 (6) | The tower final is published. Verify the softer rain against the gate and wall. |
+| detention_corridor | 7.00 (6) | Check the sealed envelope, tabletop, chair and shut door across the corridor sequence. |
