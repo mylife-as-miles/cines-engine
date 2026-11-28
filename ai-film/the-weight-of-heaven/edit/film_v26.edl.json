@@ -1,0 +1,15 @@
+{
+ "file": "out/review/film_v26.mp4",
+ "frames": 4561,
+ "seconds": 190.0417,
+ "is": "cut v25 to the end of \"We were chosen.\" (frame 4128), then Q10 take 2 whole",
+ "take": "out/takes/Q10_t2.mp4",
+ "take_starts_at_s": 172.0,
+ "take_frames": 433,
+ "take_gain_db": -4.11,
+ "voice_level_before_db": -26.3,
+ "voice_level_of_take_db": -22.2,
+ "peak_dbfs": -1.89,
+ "excerpt": "out/review/film_v26_hall.mp4",
+ "excerpt_starts_at_s": 137.0
+}
