@@ -329,7 +329,7 @@ def boarding_card(name, w, h, perf_x, rgb=(0.66, 0.66, 0.63), rough=0.75):
     return m
 
 
-def thermal(name, rgb=(0.62, 0.625, 0.64)):
+def thermal(name, rgb=(0.62, 0.625, 0.64), *, spec=0.4):
     """Thermal till roll: a thin, slightly cool coated strip, satin-matt, faint greying where handled, and thin
     enough that the lamp glows through a curl (translucency)."""
     m, nt, b = _new(name)
@@ -340,7 +340,7 @@ def thermal(name, rgb=(0.62, 0.625, 0.64)):
     col = _mix(nt, _maprange(nt, drift, 0.3, 0.7, 0.0, 1.0), tuple(c * 1.03 for c in rgb), col)
     _link(nt, col, b.inputs["Base Color"])
     _link(nt, _math(nt, "ADD", 0.55, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.05)), b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.4
+    b.inputs["Specular IOR Level"].default_value = spec
     b1 = _bump(nt, b, _noise(nt, o, 600.0, 2.0, 0.5), 0.05, 0.0001)
     _bump(nt, b, _noise(nt, o, 1.0, 4.0, 0.6, mapping=(60.0, 900.0, 60.0)), 0.04, 0.0002, normal=b1.outputs["Normal"])
     _translucent(nt, b, 0.15, rgb)
@@ -572,6 +572,26 @@ def matte(name, rgb, rough=0.8):
 
 
 # ---------------------------------------------------------------- generated props
+
+def tote_fittings(mat):
+    """Warm, muted hardware on the cognac tote's shared leather material."""
+    if not mat.use_nodes:
+        return
+    nt = mat.node_tree
+    shader = nt.nodes.get("Principled BSDF")
+    if shader is None:
+        return
+    base = shader.inputs["Base Color"]
+    metal = shader.inputs["Metallic"]
+    if not base.is_linked or not metal.is_linked:
+        return
+    source = base.links[0].from_socket
+    fittings = _maprange(nt, metal.links[0].from_socket, 0.075, 0.13, 0.0, 1.0)
+    value = _n(nt, "ShaderNodeRGBToBW")
+    _link(nt, source, value.inputs["Color"])
+    bronze = _mix(nt, 1.0, (0.96, 0.42, 0.30), value.outputs[0], "MULTIPLY")
+    _link(nt, _mix(nt, fittings, source, bronze), base)
+
 
 def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None, leather_grain=False):
     """Control a prop's reflectance, weave and base colour."""

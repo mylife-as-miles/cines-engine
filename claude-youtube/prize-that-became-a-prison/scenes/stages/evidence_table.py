@@ -72,13 +72,12 @@ CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheet
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
 # (x, y, turn: the roll at its left end, seen nearly end on)
-RECEIPT_C4 = (0.14, -0.33, 73.0)
+RECEIPT_C4 = (0.176, -0.355, 73.0)
 TABLE_EDGE_RETURN = 7.5
 # the purses for Ch 04: a staggered row lit from the lamp on the left; the darkest (burgundy) nearest the lamp, the
 # cognac tote farthest. Turns put each bag's clean front toward the camera at the front left.
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
-BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
-    # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
+BAG_GRADE = {  # size, axis, dye and finish. The warm key and fixed grade keep the tote cognac and the hobo burgundy.
     "handbag-tote": (0.35, "long", dict(sat=0.955, val=0.84, hue=0.50, rough_add=0.32),
                      dict(spec=0.08, leather_grain=True)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.33, rough_add=0.28),
@@ -551,6 +550,8 @@ def bags():
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, to_metres=to_m, **fin)
+                    if name == "handbag-tote":
+                        mt.tote_fittings(slot.material)
         if name == "handbag-tote":
             props.tote_topstitch(h, soften_lip_normals=True, lip_normal_band=28, behind_tabs=True, slant=0.22,
                                  thread_colour=(0.30, 0.20, 0.11))
@@ -1092,8 +1093,8 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.10, 0.10, 0.105)),
-                                   *RECEIPT_C4, seed=12))
+    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.053, 0.054, 0.057), spec=0.16)
+    group("receipt_c4", pp.receipt("receipt_c4", receipt_stock, *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.
     group("booklet on wood", pp.passport("passport before", M["cover"], M["pages"], 0.21, 0.06, -28.0,
