@@ -1053,27 +1053,46 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
     so.thickness, so.offset = 0.0012, -1.0
     body.parent = root
 
-    def flap(name, poly, lift, mat):
+    def flap(name, hinge, edge, lift):
+        # Sample the inside of each flap as well as its outline. The layers
+        # conform to the same paper bulge without bridging across it.
+        profile = []
+        for (x0, y0), (x1, y1) in zip(edge, edge[1:]):
+            steps = math.ceil((x1 - x0) * nu / W)
+            for i in range(steps):
+                t = i / steps
+                profile.append((x0 + (x1 - x0) * t, y0 + (y1 - y0) * t))
+        profile.append(edge[-1])
         bm = bmesh.new()
-        vv = [bm.verts.new((x, y, 0.0)) for x, y in poly]
-        bm.faces.new(vv)
-        for _ in range(3):
-            bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=2, use_grid_fill=True)
-        bmesh.ops.triangulate(bm, faces=bm.faces[:])
-        for v in bm.verts:
-            v.co.z = pill(v.co.x, v.co.y) + 0.0012 + lift
-        ob = mesh_obj(name, bm, mat, smooth=True)
+        rows = nv // 2
+        columns = []
+        for x, y in profile:
+            if y == hinge:
+                corner = bm.verts.new((x, y, pill(x, y) + 0.0012 + lift))
+                columns.append([corner] * (rows + 1))
+                continue
+            column = []
+            for j in range(rows + 1):
+                v = hinge + (y - hinge) * j / rows
+                column.append(bm.verts.new((x, v, pill(x, v) + 0.0012 + lift)))
+            columns.append(column)
+        for left, right in zip(columns, columns[1:]):
+            for j in range(rows):
+                face = (left[j], right[j], right[j + 1], left[j + 1])
+                if hinge > 0:
+                    face = face[::-1]
+                bm.faces.new(tuple(dict.fromkeys(face)))
+        ob = mesh_obj(name, bm, m["flap"], smooth=True)
         s = ob.modifiers.new("card", "SOLIDIFY")
         s.thickness, s.offset = 0.0003, -1.0
         ob.parent = root
         return ob
-    e = 0.0015                                           # flaps stop just short of the body's edges
+    x, y = W / 2 - 0.0015, D / 2 - 0.0015                 # just inside the body
     tip = -D * 0.06
-    flap("envelope_bottom_flap", [(-W / 2 + e, -D / 2 + e), (W / 2 - e, -D / 2 + e), (W * 0.1, D * 0.1), (-W * 0.1, D * 0.1)],
-         0.0003, m["flap"])
-    flap("envelope_top_flap", [(-W / 2 + e, D / 2 - e), (-W * 0.03, tip + 0.005),
-                               (-W * 0.012, tip + 0.001), (0.0, tip), (W * 0.012, tip + 0.001),
-                               (W * 0.03, tip + 0.005), (W / 2 - e, D / 2 - e)], 0.0006, m["flap"])
+    flap("envelope_bottom_flap", -y, [(-x, -y), (-W * 0.1, D * 0.1), (W * 0.1, D * 0.1), (x, -y)], 0.0003)
+    flap("envelope_top_flap", y, [(-x, y), (-W * 0.03, tip + 0.005),
+                                  (-W * 0.012, tip + 0.001), (0.0, tip), (W * 0.012, tip + 0.001),
+                                  (W * 0.03, tip + 0.005), (x, y)], 0.0006)
     return root
 
 
