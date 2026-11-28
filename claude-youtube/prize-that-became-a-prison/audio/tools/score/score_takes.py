@@ -6,7 +6,7 @@
 Per generation, TAKES names the chosen take and what it needs:
 - fine tuning: the offset measured by score_check.py (mean of its two estimates) is removed by resampling
   (soxr) when it is over 1 cent; a few cents move the tempo by less than 0.2 %.
-- key: Lyria 3.5 did not follow the keys asked for (8 of 9 takes; see audio/score/README.md). G1 (the pulse,
+- key: Lyria 3.5 did not follow the keys asked for (8 of 9 planned takes; the raw keys are in check.json). G1 (the pulse,
   under the D drone at 0:53-1:05) came back on C#2 and G2 (the title) on C2: both are moved to D, the film's home
   key, with Rubber Band (pitch and tempo in one pass, transients mixed, quality pitch mode, channels together),
   and their pulse is set to 76 bpm (both measured 74.9 bpm). Every other take keeps its own key: it plays alone,

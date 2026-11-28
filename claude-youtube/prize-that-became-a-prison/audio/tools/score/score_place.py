@@ -99,11 +99,14 @@ def main():
         y = signal.sosfiltfilt(hp, y, axis=0)
         n = int(round(p['span_s'] * SR)); short = n - len(y)
         y = y[:n]
+        if p.get('build_db'):                              # a designed rise across the cue, linear in dB, into its exit
+            y = y * (10 ** ((-p['build_db'] * (1 - np.arange(len(y)) / len(y))) / 20))[:, None]
         # level: the music's own level is the plan's in-gap level
         gap_target = vref + p['level_in_gaps_db']
         by_peak = cid in ('SC00d', 'SC09c')
         if not by_peak:
             L = F.integrated_lufs(y); y = y * 10 ** ((gap_target - L) / 20)
+        if p.get('trim_db'): y = y * 10 ** (p['trim_db'] / 20)   # a measured correction (placements.json says why)
         m = len(y)
         fi, fo = min(m, int(p['fade_in_s'] * SR)), min(m, int(p['fade_out_s'] * SR))
         if fi: y[:fi] *= ramp(fi, p.get('fade_in_curve', 'cos'))[:, None]
