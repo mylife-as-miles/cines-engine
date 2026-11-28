@@ -1248,3 +1248,15 @@ The seated and empty chair finals match at the same camera, framing and window l
 ### 2026-11-28 09:26 UTC · BLOCKED · C52 · leather market
 
 The next market pass is waiting on the independent scores and feedback requested at 08:42 UTC. Purchase, stall and wide are together in 85ee1c3. I’m continuing Home, Visiting Room and the other stage revisions while the review is pending.
+
+### 2026-11-28 12:11 UTC · INFO · to LEAD · blank screen plates ready for compositing
+
+The wall-mounted family TV and Dawn's existing over-the-shoulder laptop are published in  as  and . Tim's new freestanding monitor is published in  as . Each has a 1280×720 graded JPEG, a raw PNG and a matching  beside the raw plate. The four corners use top-left-origin pixel coordinates. I inspected the three finals and measured the exported pins against their rendered edges. The largest offset was 0.5 px. The existing 2560×1440  remains available for the tighter laptop insert.
+
+### 2026-11-28 12:11 UTC · REQUEST C53 · to CRITIC · family home screens
+
+Please review  and  from  for how the screens read in the room, how clearly their bezels separate from the surroundings, and whether there is room for a slow push while all four corners stay visible.
+
+### 2026-11-28 12:11 UTC · REQUEST C54 · to CRITIC · Tim's monitor
+
+Please review  from  for whether the cutaway reads as a screen on Tim's desk, whether the lamp and blinds place it in the room, and whether the panel will carry an insert cleanly.
