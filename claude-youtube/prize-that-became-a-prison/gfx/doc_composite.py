@@ -1,23 +1,28 @@
 """Pin a real document page onto a blank-sheet plate, light it with the plate, mark a phrase, push in, grade.
 
     <gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --out out/gfx/s1_yes.mp4 [--still 3.0 out.png]
-    <gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --camlog     (the zoom and its rate, per frame)
+    <gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --camlog     (the camera per frame, the strokes)
 
 A shot file (JSON) names the plate and its corner pins (from evidence_table `page` / `pair`), the PDF page, the
-phrases to mark (in order, with their start times), the phrases to keep soft (privacy), the framing and the push.
+phrases to mark (in order, with their timing), the phrases to keep soft (privacy), the framing and the push.
 Everything is a function of t, so any frame can be rendered alone.
 
 How it composites. The page is rasterised once (pdftoppm), its words located with pdftotext -bbox. For each frame the
 page is warped straight into the output frame through one homography: page corners -> the plate's pins -> the crop
 of the camera move. So the text stays sharp at any zoom, and the plate (paper falloff and wood) is resampled under
-it. The page is an albedo: paper 1.0, ink about 0.07, the marker a yellow reflectance; it multiplies the lit blank
-sheet in linear light, so the lamp's falloff, the paper's warmth and the grade all carry onto the page. A focus band
-keeps the marked line sharp and softens lines away from it (two fixed blur levels, cinetic's rule), which is also
-what keeps private lines unreadable. The film's grade (GRADE in scenes/shoot.py) is applied last, with its grain.
+it. The page is an albedo: paper 1.0, ink about 0.07, the marker a pale yellow reflectance; it multiplies the lit
+blank sheet in linear light, so the lamp's falloff, the paper's warmth and the grade all carry onto the page. The
+sheet under the page gets the page's own exposure (`page_gain`, linear, with a hue-keeping shoulder), so the paper
+reads white after the grade; the grade itself is never touched. A focus band keeps the marked line sharp and softens
+lines away from it (two fixed blur levels, cinetic's rule), which is also what keeps private lines unreadable. The
+film's grade (GRADE in scenes/shoot.py) is applied last, with its grain.
 Motion numbers from cinetic: the push runs in log space, 2-8 % a shot, landing 60/85/97 % of the way at 25/50/75 %
 of its time, then creeping (when `length` outlasts `duration`; the creep's rate eases in over 12 frames from the
-push's own landing rate, so the end push never starts with a jolt); the marker writes each line in about half a
-second with a dry, fixed-seed edge.
+push's own landing rate, so the end push never starts with a jolt). The push's ends are clamped to the plate, never
+its path, so the centre moves on one straight eased line. An optional `drift` eases the camera on after the push
+lands somewhere new (the search). A mark (`t`, `dur` a line) ends at t + dur x lines, on its spoken word; each line's
+stroke is a hand's stroke (ramped speed) that spends `swipe_frames` (20) crossing the screen, with a dry, fixed-seed
+edge feathered 2-3 px on screen.
 """
 import argparse
 import json
@@ -64,9 +69,10 @@ def ease_push_rate(p):       # d ease_push / dp
 # The page and its marker. The lit paper peaked at 186-189/255 after the grade (grey, and the marker read khaki), so the
 # page's own exposure lifts the sheet under the page (in linear light, the page quad only; never the grade). The marker
 # is a pale highlighter yellow, multiplied into the paper like ink; its edge is feathered by a fixed amount on screen.
-PAGE_GAIN = 1.55             # linear gain on the lit sheet: the paper peaks near 225/255 after the grade
-MARKER_RGB = [1.0, 0.93, 0.30]
-MARKER_FEATHER_PX = 0.75     # Gaussian sigma of the stroke's edge on screen, px (with the render's softness: 2-3 px 10-90 %)
+PAGE_GAIN = 1.6              # linear gain on the lit sheet: the paper peaks near 225/255 after the grade
+PAGE_KNEE = 0.8              # linear level where the lifted sheet's brightest channel starts to roll off (no clipped red)
+MARKER_RGB = [1.0, 1.0, 0.35]  # a clean pale yellow (was 0.97, 0.86, 0.30: khaki on the grey paper, after the grade)
+MARKER_FEATHER_PX = 0.5      # Gaussian sigma of the stroke's edge on screen, px (with the render's softness: 2-3 px 10-90 %)
 
 CREEP = 0.0012               # after the push lands: a one-way creep in, log zoom per frame (24 fps)
 CREEP_IN = 12                # frames over which the creep's rate eases in, so the end push never starts with a jolt
@@ -365,7 +371,7 @@ def main():
             sigma = feather / max(np.hypot(*(ab[1] - ab[0])), 1e-6)   # screen px -> page px, across the line
             ts = te - nfr / a.fps
             strokes.append(dict(line=lines[i], i=i, n=n, pad=pad, t=ts, T=nfr / a.fps, sigma=sigma, seed=7 + 31 * mi + i,
-                                mark=mi, on=(on[0] / 400, on[-1] / 400) if len(on) else None))
+                                mark=mi, on=(round(on[0] / 400, 3), round(on[-1] / 400, 3)) if len(on) else None))
             te = ts - LINE_GAP / a.fps
 
     def frame(t):
@@ -409,6 +415,13 @@ def main():
             cv2.fillConvexPoly(pm, np.int32(np.round(np.clip(q, -1e5, 1e5) * 16)), 255, lineType=cv2.LINE_AA, shift=4)
             pm = cv2.GaussianBlur(pm.astype(np.float32) / 255.0, (0, 0), 1.0)
             lit *= (1.0 + (gain - 1.0) * pm)[..., None]
+            # a shoulder on the brightest channel, hue kept (the lamp-warm sheet's red would clip first): above KNEE
+            # the largest channel rolls off toward 1.0 and the other two follow it in proportion
+            mx = lit.max(-1, keepdims=True)
+            over = mx > PAGE_KNEE
+            if over.any():
+                soft = PAGE_KNEE + (1 - PAGE_KNEE) * np.tanh((mx - PAGE_KNEE) / (1 - PAGE_KNEE))
+                lit = np.where(over, lit * soft / np.maximum(mx, 1e-6), lit)
         out = lin_to_srgb(lit)
         # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels, or a
         # continuous depth of field with "continuous": true)

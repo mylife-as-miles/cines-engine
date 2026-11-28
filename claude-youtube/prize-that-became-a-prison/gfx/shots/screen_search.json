@@ -1,5 +1,5 @@
 {
-  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`): a search home page, the query typed, then a full results page; generic results only. One fixed camera centre (start_center = focus + end_offset) frames the home field at the start and the results field at the top at the end, so the camera only eases back a little (3.1 to 2.8) and the query stays big enough to read on a phone (x-height about 31 px at the end).",
+  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`): a search home page, the query typed, then a full results page; generic results only. One fixed camera centre (start_center = focus + end_offset) frames the home field at the start and the results field at the top at the end, so the camera only eases back a little (3.1 to 2.8) and the query stays big enough to read on a phone (x-height about 31 px at the end). When the results page arrives (Enter at 3.53 s, the results in by 3.88 s) the camera drifts down and a little left (`drift`, 3.35-4.55 s, eased in and out) until the invented result 'Is this contest legitimate?' sits at y 550 with its start at x 260, clear of the caption band, and holds; the focus racks from the query to that line over the same move (3.5-4.4 s). At the hold the left edge shows a sliver of the laptop's bezel, as the email's end does.",
   "plate": "frames/raw/evidence_table/screen.png",
   "corners": "frames/raw/evidence_table/screen.corners.json",
   "texture": {
@@ -32,8 +32,20 @@
     "continuous": true
   },
   "focus_rack": {
-    "t": 3.53,
-    "v": 0.134,
-    "dur": 0.3
+    "t": 3.5,
+    "v": 0.556,
+    "dur": 0.9
+  },
+  "drift": {
+    "t": 3.35,
+    "dur": 1.2,
+    "uv": [
+      0.08,
+      0.556
+    ],
+    "to": [
+      260,
+      550
+    ]
   }
 }

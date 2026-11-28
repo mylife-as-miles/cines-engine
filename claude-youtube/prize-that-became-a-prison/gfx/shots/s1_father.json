@@ -1,5 +1,5 @@
 {
-  "about": "Chapter 7 into 8: Tim's 2024 statement (S1, page 2), the line about his father lit as the voice reaches it. The medical lines higher on the page stay soft. Framed as tight as the whole lit phrase allows (about 1.65x the first cut, x-height about 30 px): at 40 px the phrase is wider than the frame, and a crop would read 'live long enough to see his daughter free', the opposite of what it says.",
+  "about": "Chapter 7 into 8: Tim's 2024 statement (S1, page 2), the line about his father lit as the voice reaches it. The medical lines higher on the page stay soft. Framed as tight as the whole lit phrase allows (about 1.65x the first cut, x-height about 30 px): at 40 px the phrase is wider than the frame, and a crop would read 'live long enough to see his daughter free', the opposite of what it says. The mark still ends at t + dur (2.0 s, on the spoken words); its stroke now takes 20 frames (the composite's swipe_frames), from 1.17 s.",
   "plate": "frames/raw/evidence_table/page.png",
   "corners": "frames/raw/evidence_table/page.corners.json",
   "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",

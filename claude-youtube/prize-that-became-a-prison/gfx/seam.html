@@ -7,10 +7,12 @@
 //   flash    cold open: the trace runs along the tote's front-lip seam in 0.55 s and is gone with the cut at 1.0 s
 //   trace    chapter 3: the trace draws in full over 1.8 s and holds
 //   cutaway  chapter 3: a section of the bag wall, lit like the plates (a soft top key) and grained like them: cognac
-//            leather over a pale woven lining. The lining swings down to open an empty cavity between the two layers,
-//            holds it open 1.7 s, and closes again (the sound is a small metallic click). The cavity is dark and empty:
-//            all that shows in it is the lining's own inner face in shadow, lit only from the open end; red marks only
-//            the seam's stitches. Nothing is drawn inside the space (no packets, no substance, no object); no words.
+//            leather (a fine pebble grain on its face, its cut edge rounded and edge-painted, the whole sheet bowed a
+//            little as the tote's seam is) over a pale woven lining. The lining drops away parallel to the leather (its
+//            stitched end at the bag's lip stays put) to open an empty gap between the two layers, holds it open 1.8 s,
+//            and closes again on a small click at 4.05 s. The gap is dark and empty: all that shows in it is the lining's
+//            own upper face in shadow, lit only from the open cut and the open end; red marks only the seam's stitches.
+//            Nothing is drawn inside the space (no packets, no substance, no object); no words.
 //   cutaway_half  chapter 4's split frame: the same section fitted into the right half (x 962-1919, gfx/split.py), opening
 //            on a match from the right-hand tote's top seam, and held open (it does not close).
 // The seam path is read from a JSON in plate pixels (window.SEAM: {space:[w,h], seam:[[x,y],...]}): the prototype is
@@ -18,27 +20,81 @@
 // Contract: window.draw(mode, t), window.READY; window.setBG(url) for previews over the plate.
 const W = 1920, H = 1080, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const sm = x => { x = cl(x); return x * x * (3 - 2 * x); }, eo = x => 1 - Math.pow(1 - cl(x), 3);
-const RED = '200,52,44';                       // a deep red (OKLCH C about 0.18), not neon
-let bgImg = null;
-function pts() {                       // plate pixels -> output; hidden samples (behind the handle tabs) become null
-  const s = window.SEAM, k = W / s.space[0], occ = s.occluded || [];
-  return s.seam.map(([x, y], i) => occ[i] ? null : [x * k, y * k]);
+const RED = '200,52,44', REDV = [200, 52, 44];       // a deep red (OKLCH C about 0.18), not neon
+const PLATE = '../frames/graded/evidence_table/purses.jpg';   // the graded plate the trace runs over (its light sets the line)
+let bgImg = null, SM = null, LIGHT = null, FULL_DEV = null;
+function pts() { return SM; }          // the seam in output px at the plate's resting view; hidden samples (behind the handle tabs) null
+// The path, read from plate pixels and smoothed a little across the seam (a Gaussian of 1.5 samples on y, within each visible
+// run): the projected samples carry a 1 px ripple that read as a wobbling vector line.
+function smoothSeam(s) {
+  const k = W / s.space[0], occ = s.occluded || [], P = s.seam.map(([x, y], i) => occ[i] ? null : [x * k, y * k]);
+  const run = []; let r = -1; P.forEach((p, i) => { if (p && (i === 0 || !P[i - 1])) r++; run.push(p ? r : -1); });
+  return P.map((p, i) => {
+    if (!p) return null; let a = 0, w = 0;
+    for (let j = i - 4; j <= i + 4; j++) { if (j < 0 || j >= P.length || run[j] !== run[i]) continue; const g = Math.exp(-((j - i) ** 2) / 4.5); a += g * P[j][1]; w += g; }
+    return [p[0], a / w];
+  });
 }
+// The leather's light along the seam, per sample, 0 (in shadow) to 1 (lit): the plate's luma just under the stitch row
+// (a 5 x 6 px window), smoothed along the seam (sigma 6 samples, hidden samples skipped) and spread between its 10th and
+// 90th percentiles. It sets the line's width (2.5-4 px) and how bright its red runs, as a thread catches the key.
+function seamLight(img) {
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.drawImage(img, 0, 0, W, H);
+  const d = g.getImageData(0, 0, W, H).data;
+  const raw = SM.map(p => { if (!p) return null; const x = Math.round(p[0]), y = Math.round(p[1]); let a = 0, n = 0;
+    for (let yy = y + 2; yy <= y + 7; yy++) for (let xx = x - 2; xx <= x + 2; xx++) { const j = 4 * (yy * W + xx); a += 0.2126 * d[j] + 0.7152 * d[j + 1] + 0.0722 * d[j + 2]; n++; }
+    return a / n; });
+  const s = raw.map((_, i) => { let a = 0, w = 0;
+    for (let j = i - 18; j <= i + 18; j++) { if (j < 0 || j >= raw.length || raw[j] == null) continue; const q = Math.exp(-((j - i) ** 2) / 72); a += q * raw[j]; w += q; }
+    return w ? a / w : 0; });
+  const v = s.filter((_, i) => raw[i] != null).sort((a, b) => a - b), lo = v[Math.floor(0.1 * v.length)], hi = v[Math.floor(0.9 * v.length)];
+  return s.map(x => cl((x - lo) / Math.max(1e-3, hi - lo)));
+}
+let _lc = null;
+const LC = () => { if (!_lc) { _lc = document.createElement('canvas'); _lc.width = W; _lc.height = H; } return _lc; };
 function trace(ctx, p, f, a = 1) {
-  if (f <= 0) return; const n = Math.max(1, Math.floor((p.length - 1) * f));
-  ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  for (const [w, al] of [[9, 0.10], [5, 0.22], [2.4, 0.95]]) {          // a soft bloom under a fine line
-    ctx.strokeStyle = `rgba(${RED},${al * a})`; ctx.lineWidth = w; ctx.beginPath(); let pen = false;
-    for (let i = 0; i <= n; i++) {                                    // a new subpath after each hidden run
-      if (!p[i]) { pen = false; continue; }
-      pen ? ctx.lineTo(...p[i]) : ctx.moveTo(...p[i]); pen = true;
-    }
-    ctx.stroke();
+  // The line: a ribbon whose width follows the leather's light (2.5 px in shadow, 4 px where the key lies on the seam) and
+  // whose red runs a little deeper in shadow and a little brighter where lit, with a 1-2 px bloom. The head: about 11 px,
+  // the line's own red with a hot core and the same tight bloom; it rides between samples, hides behind the handle tabs as
+  // the line does, and fades in the last few percent as the line comes to rest.
+  if (f <= 0) return;
+  const m = ctx.getTransform(), z = Math.hypot(m.a, m.b), N = p.length - 1, fe = N * Math.min(f, 1), n = Math.floor(fe), fr = fe - n;
+  const L = LIGHT || p.map(() => 0.6), runs = []; let run = null;
+  for (let i = 0; i <= n; i++) { if (!p[i]) { run = null; continue; } if (!run) runs.push(run = []); run.push([p[i][0], p[i][1], L[i]]); }
+  let head = null;
+  if (f < 1 && n < N && p[n] && p[n + 1]) {
+    head = [p[n][0] + (p[n + 1][0] - p[n][0]) * fr, p[n][1] + (p[n + 1][1] - p[n][1]) * fr, L[n] + (L[n + 1] - L[n]) * fr];
+    run.push(head);
   }
-  let hn = n; while (hn > 0 && !p[hn]) hn--;
-  if (f < 1 && p[hn]) { const h = p[hn], g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 18);
-    g.addColorStop(0, `rgba(255,120,100,${0.7 * a})`); g.addColorStop(1, `rgba(${RED},0)`);
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 18, 0, 7); ctx.fill(); }
+  const lc = LC(), g = lc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.setTransform(m);
+  const all = runs.flat(); if (!all.length) return;
+  const x0 = all[0][0], x1 = Math.max(x0 + 1, all[all.length - 1][0]);       // the seam runs left to right (x rises)
+  const gr = g.createLinearGradient(x0, 0, x1, 0), shade = l => { const k = 0.86 + 0.24 * l; return `rgb(${REDV.map(v => Math.min(255, Math.round(v * k))).join(',')})`; };
+  for (let i = 0; i < all.length; i += 3) gr.addColorStop(cl((all[i][0] - x0) / (x1 - x0)), shade(all[i][2]));
+  gr.addColorStop(1, shade(all[all.length - 1][2]));
+  g.fillStyle = gr;
+  for (const R of runs) {
+    const wd = q => (2.5 + 1.5 * q[2]) / z / 2, Lf = [], Rt = [];
+    R.forEach((q, i) => {
+      const a0 = R[Math.max(0, i - 1)], a1 = R[Math.min(R.length - 1, i + 1)], tx = a1[0] - a0[0], ty = a1[1] - a0[1], tl = Math.hypot(tx, ty) || 1;
+      const nx = -ty / tl, ny = tx / tl, w = wd(q); Lf.push([q[0] + nx * w, q[1] + ny * w]); Rt.push([q[0] - nx * w, q[1] - ny * w]);
+    });
+    g.beginPath(); Lf.forEach((q, i) => i ? g.lineTo(...q) : g.moveTo(...q)); Rt.reverse().forEach(q => g.lineTo(...q)); g.closePath(); g.fill();
+    for (const q of [R[0], R[R.length - 1]]) { g.beginPath(); g.arc(q[0], q[1], wd(q), 0, 7); g.fill(); }   // round ends
+  }
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = 0.5 * a; ctx.filter = 'blur(1.3px)'; ctx.drawImage(lc, 0, 0);          // the bloom, 1-2 px
+  ctx.filter = 'none'; ctx.globalAlpha = 0.97 * a; ctx.drawImage(lc, 0, 0);
+  ctx.globalAlpha = 1;
+  if (head) {
+    const ha = a * cl((1 - f) / 0.035), hx = m.a * head[0] + m.c * head[1] + m.e, hy = m.b * head[0] + m.d * head[1] + m.f;
+    const rg = (r0, r1, stops) => { const q = ctx.createRadialGradient(hx, hy, r0, hx, hy, r1); stops.forEach(([o, c]) => q.addColorStop(o, c)); return q; };
+    ctx.fillStyle = rg(4.2, 6.6, [[0, `rgba(${RED},${0.55 * ha})`], [1, `rgba(${RED},0)`]]);           // the bloom
+    ctx.beginPath(); ctx.arc(hx, hy, 6.6, 0, 7); ctx.fill();
+    ctx.fillStyle = `rgba(${shade(0.75).slice(4, -1)},${ha})`; ctx.beginPath(); ctx.arc(hx, hy, 5.0, 0, 7); ctx.fill();   // the body
+    ctx.fillStyle = rg(0, 3.0, [[0, `rgba(255,150,122,${ha})`], [0.45, `rgba(238,92,72,${0.85 * ha})`], [1, `rgba(${RED},0)`]]);   // the hot core
+    ctx.beginPath(); ctx.arc(hx, hy, 3.0, 0, 7); ctx.fill();
+  }
   ctx.restore();
 }
 function rng(seed) { let x = seed >>> 0; return () => ((x = (x * 1664525 + 1013904223) >>> 0) / 4294967296); }
@@ -67,7 +123,7 @@ function grain(ctx, t) {
   ctx.putImageData(img, 0, 0);
 }
 // Material textures, made once and seeded (grey about 0.5, laid on with 'overlay', so each scales its material's own colour):
-// the leather's pebble grain, the fibres of its cut section, and the lining's 2/1 twill.
+// the leather's pebble grain and its slow mottle, the fibres of its cut end, and the lining's 2/1 twill.
 function tex(w, h, fn) {
   const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'), im = g.createImageData(w, h);
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
@@ -76,20 +132,34 @@ function tex(w, h, fn) {
   }
   g.putImageData(im, 0, 0); return c;
 }
-let _peb = null, _fib = null, _twl = null;
-function PEBBLE() {          // domed cells split by dark creases (the distance to the nearest cell centre against the next)
-  if (_peb) return _peb; const N = 48, S = 256 / N, r = rng(31), P = [];
-  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) P.push([(i + 0.15 + 0.7 * r()) * S, (j + 0.15 + 0.7 * r()) * S, r()]);
-  return (_peb = tex(256, 256, (x, y) => {
-    const ci = Math.floor(x / S), cj = Math.floor(y / S); let f1 = 1e9, f2 = 1e9, tone = 0.5;
+let _peb = null, _mot = null, _fib = null, _twl = null;
+function PEBBLE() {
+  // A fine pebble grain: low domed cells about 11 px across (at the section's resting view) split by fine creases, each
+  // dome lit on its near, upper side by the key (relief from the height field's slope), with pores between.
+  if (_peb) return _peb; const T = 256, N = 23, S = T / N, r = rng(31), P = [];
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) P.push([(i + 0.2 + 0.6 * r()) * S, (j + 0.2 + 0.6 * r()) * S, 0.7 + 0.6 * r()]);
+  const h = new Float32Array(T * T), cr = new Float32Array(T * T);
+  for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {
+    const ci = Math.floor(x / S), cj = Math.floor(y / S); let f1 = 1e9, f2 = 1e9, tone = 1;
     for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
       const a = ci + di, b = cj + dj, p = P[((b + N) % N) * N + (a + N) % N];
-      const px = p[0] + (a < 0 ? -256 : a >= N ? 256 : 0), py = p[1] + (b < 0 ? -256 : b >= N ? 256 : 0), dd = Math.hypot(x - px, y - py);
+      const px = p[0] + (a < 0 ? -T : a >= N ? T : 0), py = p[1] + (b < 0 ? -T : b >= N ? T : 0), dd = Math.hypot(x - px, y - py);
       if (dd < f1) { f2 = f1; f1 = dd; tone = p[2]; } else if (dd < f2) f2 = dd;
     }
-    const crease = Math.min(1, (f2 - f1) / 1.6), dome = 1 - Math.min(1, f1 / S);
-    return 0.5 + 0.1 * (crease - 0.78) + 0.05 * (dome - 0.45) + 0.03 * (tone - 0.5) + 0.03 * (r() - 0.5);
+    const c = Math.min(1, (f2 - f1) / 1.5); cr[y * T + x] = c;
+    h[y * T + x] = tone * Math.sqrt(Math.max(0, 1 - (f1 / (0.75 * S)) ** 2)) * (0.35 + 0.65 * c);
+  }
+  const H2 = (x, y) => h[((y + T) % T) * T + (x + T) % T];
+  return (_peb = tex(T, T, (x, y) => {
+    const sl = 0.9 * (H2(x, y + 1) - H2(x, y - 1)) + 0.35 * (H2(x + 1, y) - H2(x - 1, y));   // the near (+y) and left slopes face the key
+    return 0.5 + 0.2 * sl + 0.1 * (cr[y * T + x] - 0.8) + 0.04 * (r() - 0.5);
   }));
+}
+function MOTTLE() {          // the hide's slow unevenness: two octaves of smooth value noise, a few percent
+  if (_mot) return _mot; const w = 512, h = 256, r = rng(91), oct = [[16, 8], [64, 32]].map(([a, b]) => ({ a, b, v: Array.from({ length: a * b }, r) }));
+  const val = (o, x, y) => { const u = x / w * o.a, v = y / h * o.b, i = Math.floor(u), j = Math.floor(v), s = (1 - Math.cos(Math.PI * (u - i))) / 2, t = (1 - Math.cos(Math.PI * (v - j))) / 2;
+    const q = (a, b) => o.v[((b % o.b) * o.a) + (a % o.a)]; return (q(i, j) * (1 - s) + q(i + 1, j) * s) * (1 - t) + (q(i, j + 1) * (1 - s) + q(i + 1, j + 1) * s) * t; };
+  return (_mot = tex(w, h, (x, y) => 0.5 + 0.09 * (val(oct[0], x, y) - 0.5) + 0.05 * (val(oct[1], x, y) - 0.5)));
 }
 function FIBRE() {           // the cut leather: short, fine fibres (a felted look, not a wood grain)
   if (_fib) return _fib; const w = 256, h = 64, K = 32, r = rng(57), rows = Array.from({ length: h }, () => Array.from({ length: K }, r));
@@ -107,21 +177,20 @@ function TWILL() {           // a 2/1 twill of 3-unit threads: the warp floats o
 }
 // The section, in its own units (output px at the full frame's resting view). The leather is a 42-unit sheet and the lining
 // 24 (thick enough to read as a second layer on a phone); D is how far the top face recedes (an oblique view). The left end is
-// the tote's top edge, where the leather's cut edge is bevelled round (radii RT, RB) and the lining stops just short of it
-// (LI). The lining folds down about its top face at HX, right of the four stitches that hold the two layers, by up to ANG.
-const SEC = { X0: 330, X1: 1560, Y: 524, D: [170, -136], LEA: 42, LIN: 24, RT: 13, RB: 8, LI: 4, HX: 450, ANG: 0.13 };
-const rotAbout = a => { const hx = SEC.HX, hy = SEC.Y + SEC.LEA, c = Math.cos(a), s = Math.sin(a);
-  return ([x, y]) => [hx + (x - hx) * c - (y - hy) * s, hy + (x - hx) * s + (y - hy) * c]; };
-function leatherProfile() {          // the cut face, clockwise: the rounded top edge, the top, the end, the bottom, the round
+// the tote's top edge, where the leather's edge is rounded (radii RT, RB) and the lining stops just short of it (LI). Its cut
+// edge along the front is edge-painted and rounded over at the top (RO). The stitch row runs SY below the top. The lining is
+// held to the leather by four stitches at the lip; right of them it bends away over XS0-XS1 and runs parallel to the leather,
+// G below it when open. The whole sheet bows: at rest a sag of BOW in the middle; on frame 1 the bow of the seam it is cut from.
+const SEC = { X0: 330, X1: 1560, Y: 524, D: [170, -136], LEA: 42, LIN: 24, RT: 16, RB: 9, LI: 4, RO: 10, SY: 15,
+              G: 68, XS0: 470, XS1: 610, BOW: 16 };
+const sA = [SEC.X0 + 18, SEC.Y + SEC.SY], sB = [SEC.X1 - 14, SEC.Y + SEC.SY];   // the front edge's stitch row, end to end
+const bend = x => sm((x - SEC.XS0) / (SEC.XS1 - SEC.XS0));
+function leatherProfile() {          // the front edge, clockwise: the rounded lip, the top, the end, the bottom, the round
   const { X0, X1, Y, LEA, RT, RB } = SEC, p = [];
   for (let i = 0; i <= 8; i++) { const a = Math.PI * (1 + i / 16); p.push([X0 + RT + RT * Math.cos(a), Y + RT + RT * Math.sin(a)]); }
   p.push([X1, Y], [X1, Y + LEA]);
   for (let i = 0; i <= 8; i++) { const a = Math.PI * (0.5 + i / 16); p.push([X0 + RB + RB * Math.cos(a), Y + LEA - RB + RB * Math.sin(a)]); }
   return p;
-}
-function liningProfile(a) {          // flat to the fold, then turned down about its top face (the fold's inner corner below it)
-  const { X0, X1, Y, LEA, LIN, LI, HX } = SEC, top = Y + LEA, bot = top + LIN, r = rotAbout(a);
-  return [[X0 + LI, top], [HX, top], r([X1, top]), r([X1, bot]), [HX - LIN * Math.tan(a / 2), bot], [X0 + LI, bot]];
 }
 function hull(P) {                   // convex hull (monotone chain)
   P = P.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
@@ -131,53 +200,162 @@ function hull(P) {                   // convex hull (monotone chain)
   return lo.slice(0, -1).concat(up.slice(0, -1));
 }
 const sweep = P => P.concat(P.map(([x, y]) => [x + SEC.D[0], y + SEC.D[1]]));
-// cutaway_half's resting view: the whole section (held open) fitted about 820 px wide, its extents centred in the right half
-// (x 962-1919, centre 1441) and on the frame's middle (y 540). From the extents, so it follows any change to SEC.
+const restBow = u => SEC.BOW * 4 * u * (1 - u);
+// The frame-1 bow: the line the cut is matched to, as its deviation from its own chord (output px, + below), a least-squares
+// quartic in u (0 at its first point, 1 at its last), continued straight beyond the ends.
+function devFit(P) {
+  const A = P[0], B = P[P.length - 1], L = Math.hypot(B[0] - A[0], B[1] - A[1]), tx = (B[0] - A[0]) / L, ty = (B[1] - A[1]) / L, n = 5;
+  const M = Array.from({ length: n }, () => new Array(n + 1).fill(0));
+  for (const [x, y] of P) {
+    const u = ((x - A[0]) * tx + (y - A[1]) * ty) / L, d = -(x - A[0]) * ty + (y - A[1]) * tx, pw = [1];
+    for (let k = 1; k < 2 * n; k++) pw.push(pw[k - 1] * u);
+    for (let r = 0; r < n; r++) { for (let c = 0; c < n; c++) M[r][c] += pw[r + c]; M[r][n] += pw[r] * d; }
+  }
+  for (let i = 0; i < n; i++) {                                      // Gauss-Jordan, partial pivoting
+    let p = i; for (let r = i + 1; r < n; r++) if (Math.abs(M[r][i]) > Math.abs(M[p][i])) p = r; [M[i], M[p]] = [M[p], M[i]];
+    for (let r = 0; r < n; r++) if (r !== i) { const f = M[r][i] / M[i][i]; for (let c = i; c <= n; c++) M[r][c] -= f * M[i][c]; }
+  }
+  const c = M.map((row, i) => row[n] / row[i]);
+  const f = u => c[0] + u * (c[1] + u * (c[2] + u * (c[3] + u * c[4]))), df = u => c[1] + u * (2 * c[2] + u * (3 * c[3] + u * 4 * c[4]));
+  return u => u < 0 ? f(0) + df(0) * u : u > 1 ? f(1) + df(1) * (u - 1) : f(u);
+}
+// The right-hand tote's front-lip stitch row in the split at the cut (gfx/split.py framing; output px), measured from the
+// pale stitches on the graded frame at 2.16 s; its ends are the cut's tA, tB. Re-measure when the plate or its framing changes.
+const HALF_SEAM = [[1162, 449.2], [1192, 451.4], [1222, 452.6], [1252, 454.7], [1282, 457.1], [1357, 463.2], [1387, 465.1],
+  [1417, 466.5], [1447, 467.9], [1477, 468.4], [1507, 468.3], [1537, 467.9], [1597, 466.8], [1627, 467.1], [1657, 465.9],
+  [1687, 465.2], [1717, 464.5], [1747, 464.1], [1766, 463.6]];
+const HALF_DEV = devFit(HALF_SEAM);
+// cutaway_half's resting view: the whole section (held open, bowed) fitted about 700 px wide (85 % of the earlier 820, so it
+// sits about 130 px off the divider and the frame's edge), its extents centred in the right half (x 962-1919, centre 1441)
+// and on the frame's middle (y 540). From the extents, so it follows any change to SEC.
 const HALF = (() => {
-  const all = sweep(leatherProfile().concat(liningProfile(SEC.ANG))), xs = all.map(p => p[0]), ys = all.map(p => p[1]);
-  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), kf = 820 / (x1 - x0);
+  const { X0, X1, Y, LEA, LIN, LI, G } = SEC, lin = [[X0 + LI, Y + LEA], [X1, Y + LEA + G], [X1, Y + LEA + G + LIN], [X0 + LI, Y + LEA + LIN]];
+  const all = sweep(leatherProfile().concat(lin)).map(([x, y]) => [x, y + restBow((x - sA[0]) / (sB[0] - sA[0]))]);
+  const xs = all.map(p => p[0]), ys = all.map(p => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), kf = 0.85 * 820 / (x1 - x0);
   return { kf, of: [1441 - kf * (x0 + x1) / 2, 540 - kf * (y0 + y1) / 2], ext: [x0, y0, x1, y1] };
 })();
 window.SECTION = { SEC, HALF };
+// Off-screen layers for the section: the lining (drawn flat, then dropped column by column), the section (lining and
+// leather), and the section bowed (column by column). Local units are scaled by the view's scale before drawing, so nothing
+// is resampled but the sub-pixel drops.
+const OFF = [], off = i => { if (!OFF[i]) { const c = OFF[i] = document.createElement('canvas'); c.width = 1640; c.height = i === 2 ? 560 : 440;
+  c.getContext('2d', { willReadFrequently: true }); } return OFF[i]; };
+const EX0 = SEC.X0 - 24, EY0 = SEC.Y + SEC.D[1] - 24, MG = 4, BM = 60;   // the local extents' origin, a margin, the bow's room
+// Move a layer's pixels down by a displacement field (local units, from the local point the pixel shows), into dst at row
+// offset oy. The section is drawn in an oblique view, so a point's place along the section is not its column: on the faces
+// that recede (above the front line yf) it is the column less the depth, read from the height above that line. The source
+// row is found by one fixed-point step and sampled linearly (premultiplied), so the edges stay clean.
+function remap(src, dst, wd, ht, hd, oy, s, yf, dyf) {
+  const sd = src.getContext('2d').getImageData(0, 0, wd, ht).data, g = dst.getContext('2d'), img = g.createImageData(wd, hd), dd = img.data;
+  const Dx = SEC.D[0], Dy = -SEC.D[1], at = (xl, yl) => dyf(xl - Dx * cl((yf - yl) / Dy));
+  for (let q = 0; q < wd; q++) {
+    const xl = EX0 + (q + 0.5 - MG) / s;
+    for (let r = 0; r < hd; r++) {
+      const yd = r + 0.5 - oy; let y = yd - s * at(xl, EY0 + (yd - MG) / s); y = yd - s * at(xl, EY0 + (y - MG) / s);
+      const fy = y - 0.5, i0 = Math.floor(fy), t = fy - i0; if (i0 < -1 || i0 >= ht) continue;
+      const j0 = 4 * (i0 * wd + q), j1 = j0 + 4 * wd, a0 = i0 >= 0 ? sd[j0 + 3] * (1 - t) : 0, a1 = i0 + 1 < ht ? sd[j1 + 3] * t : 0, a = a0 + a1;
+      if (a <= 0) continue; const o = 4 * (r * wd + q);
+      for (let c = 0; c < 3; c++) dd[o + c] = ((a0 ? sd[j0 + c] * a0 : 0) + (a1 ? sd[j1 + c] * a1 : 0)) / a;
+      dd[o + 3] = a;
+    }
+  }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, dst.width, dst.height); g.putImageData(img, 0, 0);
+}
 function cutaway(ctx, t, half) {
-  // A section through the bag wall at the top seam, an extruded sheet in an oblique view: the cut face shows the leather
+  // A section through the bag wall at the top seam, an extruded sheet in an oblique view: the front edge shows the leather
   // over the lining; the top face recedes. It opens on a straight match cut from the tote: on frame 1 its red stitch row
-  // lies on the tote's seam as the trace shot leaves it (slope and push included), then the view eases back to the whole
-  // section (1.2 s). The lining swings down about its fold to open an empty space between it and the leather (dark, lit
-  // only from its open end, nothing inside it), holds, then closes over 0.45 s (the split holds it open).
+  // lies on the tote's seam as the shot cut from leaves it (slope, push and the seam's own bow included), then the view eases
+  // back to the whole section (1.2 s). The lining drops away parallel to the leather to open an empty space between them
+  // (dark, lit only from its open cut and open end, nothing inside it), holds, then closes over 0.45 s, gathering speed into
+  // the click at 4.05 s (the split holds it open).
   const CX = half ? 1441 : W * 0.5;                                     // the centre of the view: the frame, or the right half
   const vg = ctx.createRadialGradient(CX, H * 0.5, 120 * (half ? 0.6 : 1), CX, H * 0.5, W * (half ? 0.36 : 0.62));
   vg.addColorStop(0, 'rgba(26,32,42,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
-  const ground = () => { ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H); };
-  ground();                                                             // the dark ground (about #0b0f16 around the section)
-  const { X0, X1, Y, D, LEA, LIN, HX } = SEC, SY = 11;
-  const sA = [X0 + 18, Y + SY], sB = [X1 - 14, Y + SY];               // the cut face's stitch row, end to end
-  // Where the tote's seam is on the frame cut from. Full frame: the seam path itself (purses.seam.json) as the trace shot
-  // leaves it, pushed in by the trace's own move at its end (z = 1 + 0.02 TEND about (1500, 380); TEND from the hash,
-  // default 3.5 s), slope included. The split's right half: its tote's rim, left corner to right end (gfx/split.py).
-  let tA, tB;
-  if (half) { tA = [1160, 462]; tB = [1770, 467]; }   // the right tote's front-lip stitch line (the 2560 render, gfx/split.py framing)
-  else { const P = pts().filter(Boolean), z = 1 + 0.02 * TEND, f = [1500, 380], m = q => [f[0] + (q[0] - f[0]) * z, f[1] + (q[1] - f[1]) * z];
-         tA = m(P[0]); tB = m(P[P.length - 1]); }
-  // the resting view: the whole section (full frame), or the section fitted into the right half (HALF)
+  ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);   // the dark ground
+  const { X0, X1, Y, D, LEA, LIN, LI, G, XS0, XS1 } = SEC, top = Y + LEA, bot = top + LIN;
+  // Where the tote's seam is on the frame cut from. Full frame: the seam path itself (purses.seam.json, smoothed as the trace
+  // draws it) as the trace shot leaves it, pushed in by the trace's own move at its end (z = 1 + 0.02 TEND about (1500, 380);
+  // TEND from the hash, default 3.5 s). The split's right half: its tote's stitch row (HALF_SEAM).
+  let tA, tB, dev;
+  if (half) { tA = HALF_SEAM[0]; tB = HALF_SEAM[HALF_SEAM.length - 1]; dev = HALF_DEV; }
+  else { const P = SM.filter(Boolean).map(pushT); tA = P[0]; tB = P[P.length - 1]; dev = FULL_DEV; }
   const kf = half ? HALF.kf : 1, of = half ? HALF.of : [0, 0];
-  // frame 1: a similarity that lays the stitch row (sA-sB, level) exactly on the seam (tA-tB, sloped); it eases to the
-  // resting view (scale kf, level, offset of) over 1.2 s
+  // frame 1: a similarity that lays the stitch row (sA-sB, level) exactly on the seam's chord (tA-tB, sloped), bowed as the
+  // seam bows; it eases to the resting view (scale kf, level, offset of, the resting bow) over 1.2 s
   const e = sm(t / 1.2), k0 = Math.hypot(tB[0] - tA[0], tB[1] - tA[1]) / (sB[0] - sA[0]), r0 = Math.atan2(tB[1] - tA[1], tB[0] - tA[0]);
   const k = k0 + (kf - k0) * e, rot0 = r0 * (1 - e), T = [tA[0] + (kf * sA[0] + of[0] - tA[0]) * e, tA[1] + (kf * sA[1] + of[1] - tA[1]) * e];
-  const drift = 1 + 0.02 * sm(t / 5);
-  // opens 1.1-1.9 s as the view settles, holds 1.7 s, closes 3.6-4.05 s on the click (the split holds it open)
-  const open = sm((t - 1.1) / 0.8) * (half ? 1 : 1 - sm((t - 3.6) / 0.45));
-  ctx.save(); ctx.translate(CX, H / 2); ctx.scale(drift, drift); ctx.translate(-CX, -H / 2);
-  ctx.translate(T[0], T[1]); ctx.rotate(rot0); ctx.scale(k, k); ctx.translate(-sA[0], -sA[1]);
-  const ang = SEC.ANG * open, rot = rotAbout(ang), top = Y + LEA, bot = top + LIN, RA = [HX, top];   // RA: the fold's hinge
-  const add = (p, s = 1) => [p[0] + D[0] * s, p[1] + D[1] * s];
-  const poly = (pts) => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
-  const lin = (a, b, stops) => { const g = ctx.createLinearGradient(...a, ...b); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; };
+  const drift = 1 + 0.02 * sm(t / 5), s = k * drift, O = [CX * (1 - drift) + drift * T[0], H / 2 * (1 - drift) + drift * T[1]];
+  const bow = u => (1 - e) * dev(u) / k0 + e * restBow(u);           // local units, + down
+  // opens 1.1-1.9 s as the view settles, holds 1.7 s, closes 3.6-4.05 s, landing on the click (the split holds it open)
+  const open = sm((t - 1.1) / 0.8) * (half ? 1 : 1 - cl((t - 3.6) / 0.45) ** 2);
+  // the soft contact shadow under the section, on the frame (it does not bow)
+  ctx.save(); ctx.translate(O[0], O[1]); ctx.rotate(rot0); ctx.scale(s, s); ctx.translate(-sA[0], -sA[1]);
+  { const cy = bot + G * open + 40 + 0.6 * SEC.BOW * e, g = ctx.createRadialGradient((X0 + X1) / 2 + 60, cy, 40, (X0 + X1) / 2 + 60, cy, (X1 - X0) * 0.6);
+    g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.scale(1, 0.18);
+    ctx.fillRect(X0 - 200, (bot - 80) / 0.18, X1 - X0 + 520, 600); }
+  ctx.restore();
+  const U = 1 / s, DL = Math.hypot(...D), dz = [D[0] / (2 * DL), D[1] / (2 * DL)];   // U: one output px; dz: a unit into depth
+  const add = (p, f = 1) => [p[0] + D[0] * f, p[1] + D[1] * f];
   const grey = v => `rgb(${v | 0},${v | 0},${v | 0})`, warm = a => `rgba(255,224,188,${a})`, pale = a => `rgba(252,244,228,${a})`;
-  const pat = (img, m) => { const p = ctx.createPattern(img, 'repeat'); p.setTransform(new DOMMatrix(m)); return p; };
-  const U = 1 / (k * drift), DL = Math.hypot(...D), dz = [D[0] / (2 * DL), D[1] / (2 * DL)];   // U: one output px; dz: a unit into depth
   const BIG = [X0 - 600, Y - 600, X1 - X0 + 1400, 1400];
+  const local = (c, clear) => { const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); if (clear) g.clearRect(0, 0, c.width, c.height);
+    g.setTransform(s, 0, 0, s, MG - s * EX0, MG - s * EY0); return g; };
+  const WD = Math.min(1640, Math.ceil(s * (X1 + D[0] + 24 - EX0) + 2 * MG)), HT = Math.min(440, Math.ceil(s * (bot + G + 24 - EY0) + 2 * MG));
+  // ---- the lining, flat (closed), into layer 1; then dropped column by column into layer 0 (the section)
+  const gl = local(off(1), true);
+  const fx = makePainter(gl, BIG);
+  const { paint, lin, pat } = fx, TW = TWILL(), xl = X0 + LI;
+  if (open > 0.004) {
+    // the floor of the gap: the lining's own upper face, in shadow under the leather. Light reaches it only through the open
+    // cut (front) and the open end (right), so it is darkest in the bend and deep under the leather. No fill, no hatching, no
+    // shapes: one surface in shadow, darker than both layers but not the ground's colour.
+    paint([[xl, top], [X1, top], add([X1, top]), add([xl, top])], '#5a554d', [
+      ['overlay', pat(TW, [1, 0, dz[0], dz[1], X0, top]), 0.6],
+      ['multiply', grey(72)],                                           // in the leather's shadow
+      ['multiply', lin([XS0, 0], [XS1 + 140, 0], [[0, grey(40)], [1, grey(255)]])],   // the bend, a crease that light barely reaches
+      ['screen', lin([X0, top], add([X0, top], 0.4), [[0, pale(0.13)], [0.3, pale(0.05)], [1, pale(0)]])],   // light in through the open cut
+      ['screen', lin([X1 - 320, 0], [X1 + D[0], 0], [[0, pale(0)], [0.62, pale(0.055)], [1, pale(0.1)]])],    // and through the open end
+      ['multiply', lin([X1, top], add([X1, top]), [[0, grey(255)], [0.5, grey(196)], [1, grey(140)]])],     // fading as it goes back
+      ['multiply', grey(255 * (0.4 + 0.6 * open))],
+    ]);
+  }
+  paint([[X1, top], [X1, bot], add([X1, bot]), add([X1, top])], '#5e5a52', [      // its far end, turned away from the key
+    ['overlay', pat(TW, [dz[0], dz[1], 0, 1, X1, top])],
+    ['multiply', lin([X1, top], [X1, bot], [[0, grey(255)], [1, grey(196)]])],
+    ['multiply', lin([X1, top], add([X1, top]), [[0, grey(255)], [1, grey(205)]])],
+  ]);
+  const KX = keyX(lin);
+  paint([[xl, top], [X1, top], [X1, bot], [xl, bot]], '#827c70', [                // its cut face: a pale twill
+    ['overlay', pat(TW, [1, 0, 0, 1, X0, top])],
+    ['multiply', lin([0, top], [0, bot], [[0, grey(255)], [0.5, grey(232)], [1, grey(192)]])],
+    ['multiply', KX],
+    // the rim light: where the gap uncovers the lining's top edge the key catches it (2 px) with a soft glow under it
+    () => { gl.globalCompositeOperation = 'screen'; const rim = lin([XS0, 0], [XS1 + 60, 0], [[0, pale(0)], [1, pale(0.9 * open)]]);
+      gl.fillStyle = rim; gl.fillRect(xl, top, X1 - xl, 2 * U);
+      gl.fillStyle = lin([0, top + 2 * U], [0, top + 8 * U], [[0, pale(0.2 * open)], [1, pale(0)]]); gl.fillRect(XS1, top + 2 * U, X1 - XS1, 6 * U); },
+    // where the layers still touch, a dark contact line instead
+    () => { gl.globalCompositeOperation = 'multiply'; const v = 70 + 185 * open;
+      gl.fillStyle = lin([XS0, 0], [XS1, 0], [[0, grey(70)], [1, grey(v)]]); gl.fillRect(xl, top, X1 - xl, 1.3 * U); },
+  ]);
+  gl.save(); gl.strokeStyle = pale(0.45 * open); gl.lineWidth = 1.5 * U; gl.beginPath(); gl.moveTo(X1, top); gl.lineTo(...add([X1, top], 0.97)); gl.stroke(); gl.restore();
+  // drop it: the stitched end stays, the rest comes away parallel to the leather beyond the bend
+  remap(off(1), off(0), WD, HT, HT, 0, s, top, x => G * open * bend(x));
+  // ---- the leather, over it
+  const g0 = local(off(0), false);
+  drawLeather(g0, makePainter(g0, BIG), { U, k: s, dz, add, grey, warm, pale, open });
+  // ---- bow the whole section (along it; flat across its ends) and lay it on the frame
+  remap(off(0), off(2), WD, HT, HT + 2 * BM, BM, s, Y, x => bow(cl((x - sA[0]) / (sB[0] - sA[0]))));
+  ctx.save(); ctx.translate(O[0], O[1]); ctx.rotate(rot0); ctx.translate(s * (EX0 - sA[0]) - MG, s * (EY0 - sA[1]) - MG - BM);
+  ctx.drawImage(off(2), 0, 0); ctx.restore();
+  grain(ctx, t);
+}
+// The key's pool along the section: brightest a little left of centre, falling off toward both ends.
+const keyX = lin => lin([SEC.X0, 0], [SEC.X1 + SEC.D[0], 0], [[0, 'rgb(212,212,212)'], [0.3, 'rgb(255,255,255)'], [0.55, 'rgb(248,248,248)'], [1, 'rgb(160,160,160)']]);
+function makePainter(ctx, BIG) {
+  const poly = pts => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
+  const lin = (a, b, stops) => { const g = ctx.createLinearGradient(...a, ...b); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; };
+  const pat = (img, m) => { const p = ctx.createPattern(img, 'repeat'); p.setTransform(new DOMMatrix(m)); return p; };
   // paint: clip to a face, fill its material, then lay its texture and its light. A layer is [composite, style, alpha] over
   // the whole face, or a function that draws its own shape (clipped to the face).
   const paint = (pts, base, layers) => {
@@ -189,100 +367,64 @@ function cutaway(ctx, t, half) {
     }
     ctx.restore();
   };
-  const sides = P => P.map((p, i) => [p, P[(i + 1) % P.length]])           // the side faces the view sees (outward normal . D > 0)
+  return { poly, lin, pat, paint, BIG };
+}
+function drawLeather(ctx, { poly, lin, pat, paint, BIG }, { U, k, dz, add, grey, warm, pale, open }) {
+  // The leather: a 42-unit sheet of the tote's cognac. Its face (the top) carries a fine pebble grain over a slow mottle, under
+  // the plates' soft top key: a broad pool from above, brightest a little left of centre and nearest the viewer, falling off
+  // toward both ends and away into depth, with a soft sheen the grain breaks up. Its front edge is rounded over at the top and
+  // edge-painted: a smooth, slightly glossy deep brown bead, a highlight running along the round, darkening downward to a
+  // small round at the bottom that catches a little of the pale lining when the gap is open. No outlines: every edge is a
+  // change of light.
+  const { X0, X1, Y, D, LEA, RO } = SEC, top = Y + LEA, KX = keyX(lin);
+  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#9a5532', EDGE = '#6c3621', PB = PEBBLE(), MO = MOTTLE(), FB = FIBRE();
+  poly(SIL); ctx.fillStyle = '#3a1f13'; ctx.fill();                   // under the faces, so no light seam shows between them
+  const depthKey = (p) => lin(p, add(p), [[0, grey(255)], [0.45, grey(200)], [1, grey(104)]]);
+  const sides = P.map((p, i) => [p, P[(i + 1) % P.length]])           // the side faces the view sees (outward normal . D > 0)
     .map(([p, q]) => { const n = [q[1] - p[1], p[0] - q[0]], l = Math.hypot(...n) || 1; return { p, q, n: [n[0] / l, n[1] / l] }; })
     .filter(s => s.n[0] * D[0] + s.n[1] * D[1] > 1e-6);
-  // The light is the plates' soft top key: a broad pool from above, brightest a little left of centre and nearest the viewer,
-  // falling off toward both ends and into depth. Faces that look up take most of it; the cut faces take less and darken
-  // downward. Materials: the tote's cognac (warm red-brown) with a pebble grain, its cut section fibrous with the denser grain
-  // layer at the top and a lit arris; the lining a pale greige twill. No outlines: every edge is a change of light.
-  const KX = lin([X0, 0], [X1 + D[0], 0], [[0, grey(212)], [0.3, grey(255)], [0.55, grey(248)], [1, grey(160)]]);
-  // a soft contact shadow under the whole section
-  { ctx.save(); const cy = bot + 40, g = ctx.createRadialGradient((X0 + X1) / 2 + 60, cy, 40, (X0 + X1) / 2 + 60, cy, (X1 - X0) * 0.6);
-    g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.scale(1, 0.18);
-    ctx.fillRect(X0 - 200, (bot - 80) / 0.18, X1 - X0 + 520, 600); ctx.restore(); }
-  // The cavity: when the lining swings down, the space between the layers is empty air. What shows through its open cut is
-  // the lining's own inner face, in shadow under the leather: light reaches it only from the open end (right) and the cut
-  // plane (front), so it is darkest in the fold and deep under the leather. No fill, no hatching, no shapes: one surface in
-  // shadow, so the gap reads as a hollow, darker than both layers but not the ground's colour.
-  if (open > 0.005) {
-    const f0 = RA, f1 = rot([X1, top]);
-    paint([f0, f1, add(f1), add(f0)], '#57514a', [
-      ['multiply', lin(f0, f1, [[0, grey(20)], [0.22, grey(70)], [0.6, grey(118)], [1, grey(160)]])],
-      ['multiply', lin(f0, add(f0), [[0, grey(255)], [0.1, grey(205)], [0.5, grey(128)], [1, grey(150)]])],
-      ['multiply', grey(255 * (0.3 + 0.7 * open))],
-    ]);
-  }
-  // the lining: a pale twill sheet; its cut face (flat to the fold, then turned down with the fold) and its far end
-  const LIN_C = '#827c70', TW = TWILL();
-  const liningFace = (x0, x1, lit) => paint([[x0, top], [x1, top], [x1, bot], [x0, bot]], LIN_C, [
-    ['overlay', pat(TW, [1, 0, 0, 1, X0, top])],
-    ['multiply', lin([0, top], [0, bot], [[0, grey(255)], [0.5, grey(232)], [1, grey(192)]])],
-    ['multiply', KX],
-    ['screen', lin([0, top], [0, top + 7], [[0, pale(0.14 * lit)], [1, pale(0)]])],
-  ]);
-  {
-    const e0 = rot([X1, top]), e1 = rot([X1, bot]), sn = Math.sin(ang), cs = Math.cos(ang);
-    paint([e0, e1, add(e1), add(e0)], '#5e5a52', [                    // the far end, turned away from the key
-      ['overlay', pat(TW, [dz[0], dz[1], -sn, cs, ...e0])],
-      ['multiply', lin(e0, e1, [[0, grey(255)], [1, grey(196)]])],
-      ['multiply', lin(e0, add(e0), [[0, grey(255)], [1, grey(205)]])],
-    ]);
-    liningFace(X0 + SEC.LI, HX, 0);
-    ctx.save(); ctx.translate(...RA); ctx.rotate(ang); ctx.translate(-RA[0], -RA[1]);
-    liningFace(HX, X1, open);
-    // the rim light: the key catches the lining's top edge where the gap uncovers it (2 px), with a soft glow under it; where
-    // the layers still touch, a dark contact line instead
-    ctx.save(); ctx.globalCompositeOperation = 'screen';
-    ctx.fillStyle = lin([HX, 0], [X1, 0], [[0, pale(0)], [0.07, pale(0.9 * open)], [1, pale(0.9 * open)]]); ctx.fillRect(HX, top, X1 - HX, 2 * U);
-    ctx.fillStyle = lin([0, top + 2 * U], [0, top + 8 * U], [[0, pale(0.2 * open)], [1, pale(0)]]); ctx.fillRect(HX + 60, top + 2 * U, X1 - HX - 60, 6 * U);
-    ctx.restore();
-    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 1 - open; ctx.fillStyle = grey(70); ctx.fillRect(HX, top, X1 - HX, 1.3 * U); ctx.restore();
-    ctx.restore();
-    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = grey(70); ctx.fillRect(X0 + SEC.LI, top, HX - X0 - SEC.LI, 1.3 * U); ctx.restore();
-    ctx.save(); ctx.strokeStyle = pale(0.45 * open); ctx.lineWidth = 1.5 * U; ctx.beginPath(); ctx.moveTo(...e0); ctx.lineTo(...add(e0, 0.97)); ctx.stroke(); ctx.restore();
-  }
-  // the leather: a 42-unit sheet of the tote's cognac with a bevelled, rounded edge at the bag's top (the left end)
-  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#9c5734', CUT = '#713d23', PB = PEBBLE(), FB = FIBRE();
-  poly(SIL); ctx.fillStyle = '#4a2817'; ctx.fill();                   // under the faces, so no light seam shows between them
-  const depthKey = (p) => lin(p, add(p), [[0, grey(255)], [0.5, grey(222)], [1, grey(168)]]);
-  for (const s of sides(P)) {
+  for (const s of sides) {
     const Q = [s.p, s.q, add(s.q), add(s.p)];
-    if (s.n[0] > 0.7) {                                                 // the far end: a cut face turned away from the viewer
-      paint(Q, '#4c2918', [['overlay', pat(FB, [dz[0], dz[1], 0, 1, X1, Y])], ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [1, grey(186)]])],
+    if (s.n[0] > 0.7) {                                                 // the far end: a cut turned away from the viewer
+      paint(Q, '#40221a', [['overlay', pat(FB, [dz[0], dz[1], 0, 1, X1, Y])], ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [1, grey(176)]])],
         ['multiply', depthKey(s.p)]]);
       continue;
     }
-    const up = cl(-s.n[1]), toward = cl(-0.5 * s.n[0] - 0.85 * s.n[1]);  // how much it faces the key (from above, a little front-left)
+    const up = cl(-s.n[1]), face = up > 0.9;                            // the face, or a facet of the rounded lip
     paint(Q, TOP, [
-      ['overlay', pat(PB, [1, 0, dz[0], dz[1], X0, Y])],
+      ['overlay', pat(MO, [1.6, 0, dz[0] * 2, dz[1] * 2, X0, Y])],
       ['multiply', depthKey(s.p)],
       ['multiply', KX],
-      ['multiply', grey(255 * (0.5 + 0.5 * up))],
-      ['screen', lin(s.p, add(s.p, 0.035), [[0, warm(0.18 + 0.17 * toward)], [1, warm(0)]])],  // the lit arris along the near edge
-      () => {                                                           // the leather's soft sheen: a broad highlight from the key
-        if (up < 0.9) return; ctx.globalCompositeOperation = 'screen';
-        const cx = X0 + 0.36 * (X1 - X0) + 0.25 * D[0], cy = Y + 0.25 * D[1];
-        ctx.translate(cx, cy); ctx.scale(1, 0.13); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 600);
-        g.addColorStop(0, warm(0.2)); g.addColorStop(0.5, warm(0.07)); g.addColorStop(1, warm(0)); ctx.fillStyle = g; ctx.fillRect(-900, -900, 1800, 1800);
+      ['multiply', grey(255 * (0.55 + 0.45 * up))],
+      () => {                                                           // the soft sheen, a broad highlight from the key
+        if (!face) return; ctx.globalCompositeOperation = 'screen';
+        const cx = X0 + 0.36 * (X1 - X0) + 0.22 * D[0], cy = Y + 0.22 * D[1];
+        ctx.translate(cx, cy); ctx.scale(1, 0.14); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 640);
+        g.addColorStop(0, warm(0.2)); g.addColorStop(0.45, warm(0.08)); g.addColorStop(1, warm(0)); ctx.fillStyle = g; ctx.fillRect(-900, -900, 1800, 1800);
       },
+      ['overlay', pat(PB, [1, 0, dz[0], dz[1], X0, Y])],                // the grain, over the light, so it breaks up the sheen
+      ['overlay', pat(PB, [1, 0, dz[0], dz[1], X0 + 7, Y + 3]), 0.5],
+      // the near edge rounding over into the front edge: the light rises to a highlight just before the edge
+      () => { if (!face) return; ctx.globalCompositeOperation = 'screen';
+        ctx.fillStyle = lin(s.p, add(s.p, 0.075), [[0, warm(0.12)], [0.18, warm(0.34)], [0.5, warm(0.1)], [1, warm(0)]]); ctx.fillRect(...BIG); },
     ]);
   }
-  // the cut face: the cut through the leather, fibrous, darker than the top and darkening downward, its denser grain layer
-  // a thin darker band under a lit arris, the rounded end catching a little key; a faint bounce from the pale lining on its
-  // lower edge where the gap is open
-  paint(P, CUT, [
-    ['overlay', pat(FB, [1, 0, 0, 1, X0, Y])],
-    ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [0.05, grey(255)], [0.07, grey(208)], [0.15, grey(214)], [0.19, grey(255)], [1, grey(176)]])],
+  // the front edge: edge paint over a rounded bead. Its light across its height (y' 0 at the top): the top face's tone where it
+  // turns over, a highlight on the round, then the bead facing forward and turning down, darkest on the bottom round.
+  const yy = f => Y + LEA * f;
+  paint(P, EDGE, [
+    ['overlay', pat(FB, [1, 0, 0, 1, X0, Y]), 0.3],                    // the paint lies over the fibres; they barely show
+    ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [RO / LEA, grey(240)], [0.38, grey(226)], [0.7, grey(186)], [0.86, grey(150)], [1, grey(108)]])],
     ['multiply', KX],
-    ['screen', lin([0, Y], [0, Y + 4], [[0, warm(0.3)], [1, warm(0)]])],
-    ['screen', lin([X0, 0], [X0 + 12, 0], [[0, warm(0.16)], [1, warm(0)]])],
-    () => { ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = lin([0, top], [0, top - 4], [[0, pale(0.2 * open)], [1, pale(0)]]);
-      poly([[HX + 40, top], [X1, top], [X1, top - 4], [HX + 260, top - 4]]); ctx.fill(); },
+    ['screen', lin([0, Y], [0, yy(0.5)], [[0, warm(0.2)], [0.08, warm(0.5)], [0.2, warm(0.22)], [0.45, warm(0.07)], [0.62, warm(0.1)], [0.8, warm(0.03)], [1, warm(0)]])],
+    ['screen', lin([X0, 0], [X0 + 14, 0], [[0, warm(0.18)], [1, warm(0)]])],   // the rounded lip catching a little key
+    () => { ctx.globalCompositeOperation = 'screen';                     // a bounce from the pale lining on the bottom round
+      ctx.fillStyle = lin([0, top], [0, top - 5], [[0, pale(0.24 * open)], [1, pale(0)]]);
+      poly([[SEC.XS0, top], [X1, top], [X1, top - 5], [SEC.XS1, top - 5]]); ctx.fill(); },
   ]);
-  // the seam, in the film's red and the only red: a running stitch along the cut face (the row that lands on the tote's seam
-  // on the cut), the same stitch along the top face's near-left edge into depth, and four stitches through both layers at
-  // the fold. The thread runs hole to hole and sinks into small dark awl holes at every stitch end.
+  // the seam, in the film's red and the only red: a running stitch along the front edge (the row that lands on the tote's
+  // seam on the cut), the same stitch along the face's near-left edge into depth, and four stitches through both layers at
+  // the lip. The thread runs hole to hole and sinks into small dark awl holes at every stitch end.
   const px = 1 / Math.max(k, 0.6);                                     // keeps the thread about 2 px wide when the view is small
   const run = (a, b, n, hr, sq = 1) => {
     const H2 = Array.from({ length: n + 1 }, (_, i) => [a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n]);
@@ -295,12 +437,11 @@ function cutaway(ctx, t, half) {
   run(sA, sB, 101, 1.9);                                               // 101 stitches of about 12, a hole at each end
   run(add([X0 + 18, Y], 0.06), add([X0 + 18, Y], 0.94), 15, 1.6, 0.7);
   for (let i = 0; i < 4; i++) {                                        // through both layers: the awl's channel, the thread in it
-    const x = X0 + 30 + i * 26, a = [x, Y + 1.5], b = [x, Y + LEA + LIN - 1.5];
+    const x = X0 + 30 + i * 26, a = [x, Y + 1.5], b = [x, Y + LEA + SEC.LIN - 1.5];
     ctx.strokeStyle = 'rgba(7,5,4,0.75)'; ctx.lineWidth = 4.2 * px; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
     ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.1 * px; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
   }
-  ctx.restore(); ctx.restore();
-  grain(ctx, t);
+  ctx.restore();
 }
 window.draw = (mode, t) => {
   const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
@@ -318,5 +459,12 @@ window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); }
 // the hash: a seam JSON path (older use), or parameters: seam=<path>&tend=<the trace shot's length in s, for the match>
 const HP = location.hash.includes('=') ? new URLSearchParams(location.hash.slice(1)) : null;
 const TEND = HP && HP.get('tend') ? +HP.get('tend') : 3.5;
-fetch(window.SEAM_URL || (HP ? (HP.get('seam') || '../frames/raw/evidence_table/purses.seam.json') : (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json'))).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
+const pushT = q => { const z = 1 + 0.02 * TEND, f = [1500, 380]; return [f[0] + (q[0] - f[0]) * z, f[1] + (q[1] - f[1]) * z]; };
+fetch(window.SEAM_URL || (HP ? (HP.get('seam') || '../frames/raw/evidence_table/purses.seam.json') : (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json'))).then(r => r.json()).then(j => {
+  window.SEAM = j; SM = smoothSeam(j); FULL_DEV = devFit(SM.filter(Boolean).map(pushT));
+  const img = new Image();
+  img.onload = () => { LIGHT = seamLight(img); window.READY = true; };
+  img.onerror = () => { LIGHT = SM.map(() => 0.6); window.READY = true; };
+  img.src = PLATE;
+});
 </script></body></html>

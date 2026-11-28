@@ -71,17 +71,38 @@ def fit_match(left, right, lbox, rbox):
 
 # The gift half's light: the evidence plate is lit neutral, so the two halves read dark against bright rather than warm
 # against cold. The left plate is warmed before the film's grade, as a warmer lamp would warm it in Blender: a tungsten
-# gain (about 3200 K against the plates' neutral) and a soft practical glow from the top left, out of frame. The film's
-# grade (A fixed) runs over both halves unchanged after it, so it is the light that differs, not the grade.
-WARM = dict(gain=(1.42, 1.06, 0.66), lift=1.30, glow=dict(x=0.06, y=0.04, r=0.75, amt=0.20, col=(1.0, 0.64, 0.32)))
+# gain (about 3200 K against the plates' neutral) and a soft practical glow from the top left, out of frame. On that, the
+# practical's own light (reel 10: the gift side read murky, the half peaking at 108 and the tote at luma 68): a lamp just
+# out of frame at the top left whose light falls off with distance (inverse square, softened by its shade), worked in
+# linear light and warm (its colour `col`, luma 1). It lifts the tote by `stops` at its centre, more on its near (left,
+# upper) side and less toward the far corner, so the tote and table are modelled by the lamp rather than brightened flat;
+# and a gentle warm pool where the lamp lands on the table at the tote's foot. Positions are fractions of the half (x of
+# its width, y of its height) at the shot's first frame, held in plate pixels so the light stays put under the push. The
+# film's grade (A fixed) runs over both halves unchanged after it, so it is the light that differs, not the grade.
+WARM = dict(gain=(1.42, 1.06, 0.66), lift=1.30, glow=dict(x=0.06, y=0.04, r=0.75, amt=0.20, col=(1.0, 0.64, 0.32)),
+            lamp=dict(x=-0.14, y=-0.10, r=0.62, at=(0.50, 0.58), stops=0.75, col=(1.16, 0.97, 0.66)),
+            pool=dict(x=0.50, y=0.88, rx=0.40, ry=0.085, stops=0.55, col=(1.16, 0.97, 0.66)))
 
 
 def warm_light(img, h):
     out = img * np.float32(WARM["gain"]) * WARM["lift"]
-    g = WARM["glow"]; hh, ww = img.shape[:2]
-    # the glow sits in plate pixels at the half's top left (the window's corner), so it holds still with the push
-    gx, gy = h["cx"] - HW / 2 / h["s"] + g["x"] * HW / h["s"], h["cy"] - H / 2 / h["s"] + g["y"] * H / h["s"]
+    hh, ww = img.shape[:2]
     yy, xx = np.mgrid[0:hh, 0:ww].astype(np.float32)
+    x0, y0 = h["cx"] - HW / 2 / h["s"], h["cy"] - H / 2 / h["s"]           # the half's top left at the first frame, in plate px
+    fx, fy = (xx - x0) * h["s"], (yy - y0) * h["s"]                       # output px within the half
+    # the practical: a linear-light gain field, 1 + a * falloff, its falloff 1 / (1 + (d / r)^2), scaled so the tote's centre
+    # gets `stops`; applied to the code values as gain^(1/2.2), as the plates' own light would have been
+    L = WARM["lamp"]; r = L["r"] * HW
+    fall = lambda px, py: 1.0 / (1.0 + ((px - L["x"] * HW) ** 2 + (py - L["y"] * H) ** 2) / r ** 2)
+    a = (2 ** L["stops"] - 1) / fall(L["at"][0] * HW, L["at"][1] * H)
+    gain = 1 + a * fall(fx, fy)[..., None] * np.float32(L["col"])
+    P = WARM["pool"]
+    pool = np.exp(-0.5 * (((fx - P["x"] * HW) / (P["rx"] * HW)) ** 2 + ((fy - P["y"] * H) / (P["ry"] * H)) ** 2))
+    gain += (2 ** P["stops"] - 1) * pool[..., None] * np.float32(P["col"])
+    out *= gain ** np.float32(1 / 2.2)
+    g = WARM["glow"]
+    # the glow sits in plate pixels at the half's top left (the window's corner), so it holds still with the push
+    gx, gy = x0 + g["x"] * HW / h["s"], y0 + g["y"] * H / h["s"]
     d2 = ((xx - gx) ** 2 + (yy - gy) ** 2) / (g["r"] * HW / h["s"]) ** 2
     out += (255 * g["amt"] * np.exp(-d2 * 2.2))[..., None] * np.float32(g["col"])
     return out

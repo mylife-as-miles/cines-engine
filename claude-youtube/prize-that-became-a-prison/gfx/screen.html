@@ -23,11 +23,11 @@ function chrome(ctx) {                      // a generic window: no traffic ligh
   rr(ctx, 360, 14, 640, 36, 18, '#ffffff');                       // a search field, empty
   ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, 64.5); ctx.lineTo(W, 64.5); ctx.stroke();
 }
-function sidebar(ctx) {
-  ctx.fillStyle = C.side; ctx.fillRect(0, 65, 250, H - 65);
-  rr(ctx, 24, 92, 160, 44, 22, C.accent);                         // compose button, no word on it
+function sidebar(ctx, sw = 250) {
+  ctx.fillStyle = C.side; ctx.fillRect(0, 65, sw, H - 65);
+  rr(ctx, 24, 92, Math.min(160, sw - 48), 44, 22, C.accent);      // compose button, no word on it
   const items = ['Inbox', 'Starred', 'Sent', 'Drafts', 'Archive'];
-  items.forEach((s, i) => { if (i === 0) rr(ctx, 12, 160 + i * 46, 226, 40, 20, '#dbe4f2'); txt(ctx, s, 40, 187 + i * 46, 21, i === 0 ? C.ink : C.soft, i === 0 ? 600 : 400); });
+  items.forEach((s, i) => { if (i === 0) rr(ctx, 12, 160 + i * 46, sw - 24, 40, 20, '#dbe4f2'); txt(ctx, s, 40, 187 + i * 46, 21, i === 0 ? C.ink : C.soft, i === 0 ? 600 : 400); });
 }
 function inboxRows(ctx, t, hi) {
   const r = rand(11);
@@ -82,24 +82,27 @@ function prizeLine(ctx, t, x, y) {
   g.globalCompositeOperation = 'destination-in'; g.fillStyle = gr; g.fillRect(0, 0, 800, wh);
   ctx.drawImage(PWIN, Math.round(px) - 4, wy0);
 }
+// The letter sits close to a narrow sidebar (190 px, the body at x = 230), so the shot's push can end with the prize
+// line at about 60 % of the frame and a sliver of the laptop's bezel still at the left edge.
+const SB = 190, BX = 230;
 function email(ctx, t) {
-  chrome(ctx); sidebar(ctx);
-  ctx.fillStyle = C.panel; ctx.fillRect(250, 65, W - 250, H - 65);
-  txt(ctx, 'Congratulations — you have been selected', 300, 150, 34, C.ink, 700);
-  ctx.fillStyle = '#9aa3b0'; ctx.beginPath(); ctx.arc(322, 214, 22, 0, 7); ctx.fill();     // sender avatar, blank
-  txt(ctx, 'Notifications', 360, 212, 21, C.ink, 600); txt(ctx, 'to me', 360, 240, 18, C.soft);   // generic, kept soft by the composite's focus
-  ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(300, 262.5); ctx.lineTo(W - 60, 262.5); ctx.stroke();
-  txt(ctx, 'Dear winner,', 300, 330, 28, C.ink);
-  txt(ctx, 'We are delighted to tell you that your entry has been selected.', 300, 392, 28, C.ink);
-  prizeLine(ctx, t, 300, 448);
+  chrome(ctx); sidebar(ctx, SB);
+  ctx.fillStyle = C.panel; ctx.fillRect(SB, 65, W - SB, H - 65);
+  txt(ctx, 'Congratulations — you have been selected', BX, 150, 34, C.ink, 700);
+  ctx.fillStyle = '#9aa3b0'; ctx.beginPath(); ctx.arc(BX + 22, 214, 22, 0, 7); ctx.fill();     // sender avatar, blank
+  txt(ctx, 'Notifications', BX + 60, 212, 21, C.ink, 600); txt(ctx, 'to me', BX + 60, 240, 18, C.soft);   // generic, kept soft by the composite's focus
+  ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(BX, 262.5); ctx.lineTo(W - 60, 262.5); ctx.stroke();
+  txt(ctx, 'Dear winner,', BX, 330, 28, C.ink);
+  txt(ctx, 'We are delighted to tell you that your entry has been selected.', BX, 392, 28, C.ink);
+  prizeLine(ctx, t, BX, 448);
   // the rest of the letter: plain, generic wording that the composite's focus band keeps out of focus, so it reads as
   // a letter, never as a quotation (nothing here is from the real email)
   const body = ['Our team will be in touch shortly to arrange the details of your prize.',
                 'Please reply to this message to confirm your entry and your contact details.',
                 'All arrangements will be made for you, at no cost to you.',
                 'We look forward to hearing from you.', '', 'With warm regards,', 'The prize team'];
-  body.forEach((line, i) => txt(ctx, line, 300, 520 + i * 44, 26, i > 4 ? C.soft : C.ink));
-  rr(ctx, 300, 860, 200, 52, 26, C.accent); txt(ctx, 'Reply', 365, 894, 22, '#ffffff', 600);
+  body.forEach((line, i) => txt(ctx, line, BX, 520 + i * 44, 26, i > 4 ? C.soft : C.ink));
+  rr(ctx, BX, 860, 200, 52, 26, C.accent); txt(ctx, 'Reply', BX + 65, 894, 22, '#ffffff', 600);
 }
 // The search, in two pages like a real one. The home page: the field in the upper middle of the screen, typed like a
 // person (2-6 frames a letter in an irregular rhythm, a pause after each space), the suggestion list dropping under it.

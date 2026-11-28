@@ -1,5 +1,5 @@
 {
-  "about": "Chapter 1: the prize email on the laptop (evidence_table `screen`); the prize line cycles through the three accounts' versions.",
+  "about": "Chapter 1: the prize email on the laptop (evidence_table `screen`); the prize line rolls through the three accounts' versions. The push runs from the whole laptop screen (zoom 1.4) to the prize line (3.2, 1.83x the old 1.75): at the end its cap height is about 46 px and it spans about 64 % of the width, its start at 29 %, and the left edge keeps a sliver of the laptop: the bezel's dark band and the lid's edge glint, the display's edge about 72 px in. One eased path: both ends are allowed framings, so the centre moves on one straight line (the start used to sit outside the plate's crop and the clamp held it, then let go: a 2.4 px/frame drift that stopped dead at 0.46 s).",
   "plate": "frames/raw/evidence_table/screen.png",
   "corners": "frames/raw/evidence_table/screen.corners.json",
   "texture": {
@@ -13,7 +13,7 @@
   "em_px": 34,
   "zoom": [
     1.4,
-    1.75
+    3.2
   ],
   "duration": 7.0,
   "length": 7.5,
@@ -22,5 +22,9 @@
     "ramp_lines": 4.5,
     "blur_px": 6.0,
     "continuous": true
-  }
+  },
+  "end_offset": [
+    -98.2,
+    -2.8
+  ]
 }
