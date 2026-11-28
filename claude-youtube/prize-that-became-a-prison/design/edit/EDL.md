@@ -99,7 +99,7 @@ Scene presentation by running time (DECISIONS: Fluorescent Noir 50 %, Evidence T
 
 | Shot | Starts | Length | Picture (source) | Story type | Voice it covers | Sound (script) |
 | --- | --- | --- | --- | --- | --- | --- |
-| 03-01 | 3:52.20 | 6.92 s | `hotel_room` `accept`, push in 7.6 % | `chapter` (n=03&title=The+gift&out=5.00) | 03.01 “Just before the next leg of the trip, the organizers told Dawn she had…” | A soft room |
+| 03-01 | 3:52.20 | 6.92 s | `hotel_room` `accept`, push in 7.6 % | `chapter` (n=03&title=The+gift&y=200&out=5.00) | 03.01 “Just before the next leg of the trip, the organizers told Dawn she had…” | A soft room |
 | 03-02 | 3:59.12 | 2.42 s | `hotel_room` `overhead_pre`, push in 2.7 % |  | 03.01 “Just before the next leg of the trip, the organizers told Dawn she had…” / 03.02 “She accepted them. Why wouldn't she? These were the people who had pai…” | A soft room |
 | 03-03 | 4:01.54 | 4.50 s | `aircraft_cabin` `over`, push in 5.0 % |  | 03.02 “She accepted them. Why wouldn't she? These were the people who had pai…” | Engine hum, far |
 | 03-04 | 4:06.04 | 3.62 s | `hotel_room` `overhead`, push in 4.0 % |  | 03.03 “But there was a problem. Her luggage was already full.” | Zips |

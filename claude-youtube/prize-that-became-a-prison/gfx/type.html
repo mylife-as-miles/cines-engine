@@ -280,11 +280,12 @@ const MOMENTS = {
     // chapters' own voice, apart from the evidential capitals). Top left, the place and date supers keep the lower
     // left, so the two can share a wide. `side=r` mirrors it where the plate's top left is busy. With `out`, the
     // letters leave right to left and the hairline retracts, so the shot carries on clean.
-    // URL hash: n=01&title=The+winner[&side=r][&out=4.2]
+    // URL hash: n=01&title=The+winner[&side=r][&out=4.2][&y=200]. `y` moves the number's baseline down (default 140)
+    // where a hard edge in the plate would run through the block (hotel_room accept: the headboard's top rail).
     const P = new URLSearchParams(location.hash.slice(1));
     const n = P.get('n') || '01', title = P.get('title') || 'The winner', right = P.get('side') === 'r', out = +(P.get('out') || 0);
     const num = L.sup, ti = { fam: L.sup.fam, w: 400, size: 100, track: 0.004, italic: true };
-    const x0 = 0.072 * W, yN = 140, yT = yN + 90, wN = width(ctx, n, num), wT = width(ctx, title, ti);   // number cap top 108-110, title baseline 230
+    const x0 = 0.072 * W, yN = +(P.get('y') || 140), yT = yN + 90, wN = width(ctx, n, num), wT = width(ctx, title, ti);   // number cap top 108-110, title baseline 230
     const xr = W - x0, xN = right ? xr - wN : x0, xT = right ? xr - wT : x0;
     const leaving = out && t >= out, lu = leaving ? (t - out) : 0, env = sm(t / 0.6) * (1 - sm((lu - 0.25) / 0.4));
     // a soft shade under the block, so the type reads on a lit wall as well as a dark one; never a box
