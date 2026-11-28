@@ -70,7 +70,7 @@ CAMERAS = {
     # no haze (it grained the reflection) and twice the samples, so his ghost in the glass comes out smooth
     "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=50, focus="fx_dawn", fstop=2.8, beat="ch08", haze=False,
                   spp_k=2.0, refl=1.5, film=1.3),
-    "reverse": dict(loc=(BXO + 0.34, 1.67, 1.35), aim=(BXO, -0.75, 1.17), lens=53, focus="fx_tim",
+    "reverse": dict(loc=(BXO + 0.34, 1.67, 1.35), aim=(BXO, -0.75, 1.17), lens=53, focus="fx_tim", fstop=2.8,
                     haze=False, beat="ch08", spp_k=2.0, refl=0.7, film=1.3),
     # Ch 08: an empty booth from a visitor's seat, a little behind it: the near phone with its handset on the hook
     # in the right third, the glass and its marks across the middle (the night light on the back wall reflecting in
@@ -89,7 +89,7 @@ TRIMS = {
     "empty": {f"fitv{EMPTY}": 0.15, f"fiti{EMPTY}": 0.35, f"fitv{st.OCC}": 0.0, f"fiti{st.OCC}": 0.0,
               "bounce": 0.0, "idoor2": 0.3},
     "reverse": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35,
-                f"fiti{st.OCC}": 0.35, "bounce_Tim": 1.4},
+                f"fiti{st.OCC}": 0.35, f"fitv{st.OCC}_down": 0.55, "bounce_Tim": 1.0},
     # over Tim's shoulder: his own fitting turned down so the back of his head in the foreground falls darker than
     # Dawn's face, the counter's bounce into his face raised so his reflection in the glass still reads
     "glass": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35, f"fitv{st.OCC}": 0.5,
@@ -738,6 +738,16 @@ def build_cast():
         li.rotation_euler = (e - li.location).to_track_quat("-Z", "Y").to_euler()
         li.visible_volume_scatter = False
         _STATE["cast"].append(li)
+    eyes = eye_centre(t)
+    rim = st.area("rim_Tim", tuple(eyes + Vector((0, -0.45, 0.55))), (0.3, 0.1), 6.0, st.COOL,
+                  spread=65, glossy=False)
+    rim.rotation_euler = (eyes + Vector((0, 0, -0.23)) - rim.location).to_track_quat("-Z", "Y").to_euler()
+    rim.visible_camera = rim.visible_volume_scatter = False
+    clothes = bpy.data.collections.new("Tim reverse shoulder light")
+    for obj in t.children_recursive:
+        if obj.type == "MESH" and "male_elegantsuit01" in obj.name:
+            clothes.objects.link(obj)
+    rim.light_linking.receiver_collection = clothes
     # focus marks and a report
     st.empty("fx_dawn", tuple(eye_centre(d)))
     st.empty("fx_tim", tuple(eye_centre(t)))
@@ -843,13 +853,23 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     show = cfg.get("cast", True)
+    reverse = name == "reverse"
     for o in _STATE["cast"]:
         o.hide_render = not show
+    dawn_cord = bpy.data.objects.get("cord_Dawn")
+    if dawn_cord is not None:
+        # Keep the foreground cable from crossing her cheek in Tim's reverse.
+        dawn_cord.visible_camera = not reverse
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         b = _STATE["base"].setdefault(n, ob.data.energy)
         k = next((v for p, v in trims.items() if n == p or n.startswith(p + "_")), 1.0)
         ob.data.energy = b * k
+    if rim := st.LIGHTS.get("rim_Tim"):
+        rim.hide_render = not reverse
+    visitor_down = st.LIGHTS[f"fitv{st.OCC}_down"].data
+    spread = _STATE.setdefault("visitor down spread", visitor_down.spread)
+    visitor_down.spread = math.radians(60) if reverse else spread
     for n, mat in st.PARTS.get("lens", {}).items():
         mr = mat.node_tree.nodes.get("lens_strength")
         if mr is None:
@@ -909,6 +929,7 @@ def build(cast=True):
     st.M.clear()
     st.LIGHTS.clear()
     st.PARTS.clear()
+    _STATE.clear()
     _STATE.update({"cast": [], "holders": {}, "base": {}, "lens_base": {}})
     st.materials()
     st.shell()
