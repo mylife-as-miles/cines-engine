@@ -42,27 +42,23 @@ function trace(ctx, p, f, a = 1) {
   ctx.restore();
 }
 function rng(seed) { let x = seed >>> 0; return () => ((x = (x * 1664525 + 1013904223) >>> 0) / 4294967296); }
-function grain(ctx, t) {                 // per-frame grain (sigma about 1 luma), so the dark ground never bands or freezes
-  const f = Math.round(t * 24), r = rng(9173 + f * 131), img = ctx.getImageData(0, 0, W, H), d = img.data;
-  for (let i = 0; i < d.length; i += 4) { const n = (r() + r() + r() - 1.5) * 2.4; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
-  ctx.putImageData(img, 0, 0);
-}
-// The cut-away's grain, fresh each frame: a fine monochrome grain (a 3 x 3 binomial blur of white noise, sd 2.2 code values)
-// with a little independent colour noise in each channel (sd 0.9), as the film grade's own noise has. The plates' grain is
-// per-pixel noise that rides through three encodes; a finer or weaker grain here is wiped out by x264 (the reel 8 cut-away
-// kept a quarter of it). Measured through this piece's encode (CRF 14) and the reel's (CRF 19), this lands at the plates'
-// level: about 1 code value of fine grain at luma 15. (The trace and flash keep grain() above: their plate carries its own.)
+// The grain, fresh each frame, over the whole frame (every mode: the cut-away's drawn surfaces and ground, and the trace and
+// flash over their plate, whose own grain is frozen in the still): a fine monochrome grain (a 3 x 3 binomial blur of white
+// noise, sd 2.2 code values) with a little independent colour noise in each channel (sd 0.9), as the film grade's own noise
+// has. The plates' grain is per-pixel noise that rides through three encodes; a finer or weaker grain here is wiped out by
+// x264 (reel 8 kept a quarter of the cut-away's earlier sd 1.2 grain, half of the trace's). Measured through this piece's
+// encode (CRF 14) and the reel's (CRF 19), this lands at the plates' level: about 1 code value of fine grain at luma 15.
 let _gm = null, _gt = null;
-function grainCut(ctx, t) {
+function grain(ctx, t) {
   const f = Math.round(t * 24), img = ctx.getImageData(0, 0, W, H), d = img.data, n = W * H;
   if (!_gm) { _gm = new Float32Array(n); _gt = new Float32Array(n); }
   const m = _gm, b = _gt;
   let s = (Math.imul(f + 7, 0x9e3779b1) ^ 0x5bd1e995) | 0 || 1;          // xorshift32, seeded by the frame
   const r = () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) * 2.3283064365386963e-10; };
   for (let i = 0; i < n; i++) m[i] = r() + r() + r() - 1.5;               // sd 0.5
-  for (let y = 0; y < H; y++) { const o = y * W; b[o] = m[o]; b[o + W - 1] = m[o + W - 1];
+  for (let y = 0; y < H; y++) { const o = y * W; b[o] = 0.5 * (m[o] + m[o + 1]); b[o + W - 1] = 0.5 * (m[o + W - 1] + m[o + W - 2]);   // edges mirrored
     for (let x = 1; x < W - 1; x++) b[o + x] = 0.25 * m[o + x - 1] + 0.5 * m[o + x] + 0.25 * m[o + x + 1]; }
-  for (let x = 0; x < W; x++) { m[x] = b[x]; m[n - W + x] = b[n - W + x]; }
+  for (let x = 0; x < W; x++) { m[x] = 0.5 * (b[x] + b[x + W]); m[n - W + x] = 0.5 * (b[n - W + x] + b[n - 2 * W + x]); }
   for (let i = W; i < n - W; i++) m[i] = 0.25 * b[i - W] + 0.5 * b[i] + 0.25 * b[i + W];   // sd 0.5 x 0.375
   const G = 2.2 / 0.1875, C = 0.9 * Math.sqrt(12);
   for (let i = 0, j = 0; i < n; i++, j += 4) {
@@ -304,7 +300,7 @@ function cutaway(ctx, t, half) {
     ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.1 * px; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
   }
   ctx.restore(); ctx.restore();
-  grainCut(ctx, t);
+  grain(ctx, t);
 }
 window.draw = (mode, t) => {
   const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
