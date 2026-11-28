@@ -1,5 +1,5 @@
 {
-  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`): a search home page, the query typed, then a full results page; generic results only.",
+  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`): a search home page, the query typed, then a full results page; generic results only. One fixed camera centre (start_center = focus + end_offset) frames the home field at the start and the results field at the top at the end, so the camera only eases back a little (3.1 to 2.8) and the query stays big enough to read on a phone (x-height about 31 px at the end).",
   "plate": "frames/raw/evidence_table/screen.png",
   "corners": "frames/raw/evidence_table/screen.corners.json",
   "texture": {
@@ -7,13 +7,21 @@
     "fps": 24
   },
   "focus_uv": [
-    0.47,
-    0.4
+    0.408,
+    0.2482
   ],
   "em_px": 34,
   "zoom": [
-    2.75,
-    1.55
+    3.1,
+    2.8
+  ],
+  "start_center": [
+    1179.5,
+    372.7
+  ],
+  "end_offset": [
+    1.1,
+    57.3
   ],
   "duration": 5.5,
   "length": 5.5,
@@ -25,7 +33,7 @@
   },
   "focus_rack": {
     "t": 3.53,
-    "v": 0.128,
+    "v": 0.134,
     "dur": 0.3
   }
 }

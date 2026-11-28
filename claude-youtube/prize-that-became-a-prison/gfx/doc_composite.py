@@ -53,6 +53,27 @@ def ease_push(p):            # 60 / 85 / 97 % of the move at 25 / 50 / 75 % of t
     return (1 - np.exp(-k * p)) / (1 - np.exp(-k))
 
 
+def ease_push_rate(p):       # d ease_push / dp
+    k = 3.7
+    return k * np.exp(-k * min(max(p, 0.0), 1.0)) / (1 - np.exp(-k))
+
+
+CREEP = 0.0012               # after the push lands: a one-way creep in, log zoom per frame (24 fps)
+CREEP_IN = 12                # frames over which the creep's rate eases in, so the end push never starts with a jolt
+
+
+def creep_log(u, r0):
+    """Log zoom the creep has added u frames after landing. Its rate eases from r0 (the push's own rate as it lands) to
+    CREEP over CREEP_IN frames along a smoothstep, then holds."""
+    if u <= 0:
+        return 0.0
+    n = float(CREEP_IN)
+    if u < n:
+        x = u / n
+        return CREEP * u - (CREEP - r0) * (u - n * (x ** 3 - x ** 4 / 2))
+    return CREEP * u - (CREEP - r0) * n / 2
+
+
 def ease_inout(p):           # the marker's stroke: stdInOut
     p = min(max(p, 0.0), 1.0)
     return p * p * (3 - 2 * p)
@@ -161,6 +182,7 @@ def main():
     ap.add_argument("--still", nargs=2, metavar=("T", "PNG"))
     ap.add_argument("--fps", type=float, default=24)
     ap.add_argument("--nograde", action="store_true")
+    ap.add_argument("--camlog", action="store_true", help="print the zoom and its rate per frame, render nothing")
     a = ap.parse_args()
     shot = json.load(open(a.shot))
     rel = lambda p: p if os.path.isabs(p) else os.path.join(ROOT, p)
@@ -199,12 +221,18 @@ def main():
     dur = shot["duration"]
     roll = np.deg2rad(shot.get("roll_deg", 0.0))   # optional roll so the lines sit nearer level on screen
 
-    def frame(t):
+    r_land = np.log(z1 / z0) * ease_push_rate(1.0) / (dur * 24)   # the push's log-zoom rate per frame as it lands
+
+    def camera(t):
         p = ease_push(t / dur)
         z = z0 * (z1 / z0) ** p
         c = c0 + (c1 - c0) * p
-        if t > dur:                           # a one-way creep after landing
-            z *= 1 + 0.0012 * (t - dur) * 24
+        if t > dur:                           # a one-way creep after landing, its rate eased in (no jolt)
+            z *= np.exp(creep_log((t - dur) * 24, r_land))
+        return z, c
+
+    def frame(t):
+        z, c = camera(t)
         k = W / PW * z
         # keep the crop inside the plate (no mirrored plate at the edges), whatever the focus point
         hw, hh = W / 2 / k * (1 + abs(np.sin(roll))), H / 2 / k * (1 + abs(np.sin(roll)))
@@ -270,6 +298,14 @@ def main():
                 out = out * (1 - wgt) + soft * wgt
         return (np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8)
 
+    if a.camlog:                              # the camera's zoom per frame and its rate (per mille per frame), no render
+        n = int(round(shot["length"] * a.fps))
+        zs = [camera(i / a.fps)[0] for i in range(n)]
+        print("frame\tt\tzoom\trate_permille")
+        for i in range(n):
+            r = (zs[i + 1] / zs[i] - 1) * 1000 if i + 1 < n else float("nan")
+            print(f"{i}\t{i / a.fps:.3f}\t{zs[i]:.5f}\t{r:.4f}")
+        return
     vf = [] if a.nograde else ["-vf", grade_filter()]
     if a.still:
         t, png = float(a.still[0]), a.still[1]
