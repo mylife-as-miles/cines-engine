@@ -70,8 +70,8 @@ CAMERAS = {
 # per-camera light changes (absolute watts by light name)
 TRIMS = {
     # The doorway is the brightest part of the distant room, with a quieter spill on the corridor floor.
-    "corridor": {"room_warm": 2000.0, "vd_spill": 0.0, "vd_floor_wedge": 1020.0,
-                 "pendant_light": 0.0, "pendant_pool": 80.0, "pendant_glow": 5.0},
+    "corridor": {"room_warm": 2200.0, "vd_spill": 0.0, "vd_floor_wedge": 260.0,
+                 "pendant_light": 0.0, "pendant_pool": 60.0, "pendant_glow": 5.0},
     # the door close-up: a raking key from the hinge side does the shaping; the fitting beyond the door turned
     # down so it does not fill; a dim fill on the hinge strip (frame trim, knuckles, hinge leaves) at frame left,
     # which the grade's vignette otherwise crushed to a black slab
