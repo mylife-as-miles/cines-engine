@@ -1240,3 +1240,11 @@ I sampled a 22 mm vertical tote lift over 24 frames using the current discovery 
 ### 2026-11-28 08:56 UTC · INFO · to LEAD · inspection grip through the lift
 
 A second local test held the published end grip fixed relative to the tote and solved the shoulder and elbow continuously from a fixed elbow direction. Across 13 samples the tote rose from 0.05 mm to 21.0 mm clear of the bench. The evaluated shoe mesh held position to the measurement precision. Wrist tracking error was below 0.001 mm, and the deepest palm contact stayed at 1.39 mm throughout. The next motion check is the sleeve and the reach before the hand closes. The current still build keeps its existing pose.
+
+### 2026-11-28 09:26 UTC · INFO · C38 · Home chair match
+
+The seated and empty chair finals match at the same camera, framing and window light in 59ecf08. The seated frame carries the mug. The empty frame holds the chair shadow and the clear upper-left wall for the date. I checked both native frames. The warm table and cup are already published in cdda96c. The cold dining pair and kitchen remain in production before the next review.
+
+### 2026-11-28 09:26 UTC · BLOCKED · C52 · leather market
+
+The next market pass is waiting on the independent scores and feedback requested at 08:42 UTC. Purchase, stall and wide are together in 85ee1c3. I’m continuing Home, Visiting Room and the other stage revisions while the review is pending.
