@@ -110,3 +110,33 @@ reel 7 takes the odometer every reference uses and feathers its edges, which ans
 Not changed: the calendar and the counter keep different layouts (different plates and moments: the calendar sits beside
 the bags, the counter over the cell). New in reel 7: the cold open's flash-forward montage, the chapter titles (chapter
 1 shown), the chapter 4 split frame, the chapter 7 statement (Tim's line about his father).
+
+## Reel 7 (27 November 2026, a seventh reviewer, seeing nothing before)
+
+**7.7, fail** against 8.5 (up from 7.2). At the bar: YES twice, the one-second seam, the full seam, the statement's
+second page, YES → WHEN? (8.5). Weakest: the two-line map and the cut-away (6.5), the split frame and the mainland
+map (7.0).
+
+| Fault (reel 7) | Done for reel 8 |
+| --- | --- |
+| "9 DAYS" may sit on the wrong leg | Checked against the sources: S1 gives nine days in Hong Kong and nine more on the mainland, so both labels stand |
+| The cut-away seemed to show a packet in the wall (a lighter hatched fill); the leather read as a plank | The hidden space is drawn in the ground colour with only a faint dashed edge, empty (the narration says "authorities say", so nothing is shown inside); thin stitched leather (42 px) and lining (18 px) |
+| The Qingdao line had a right-angle elbow; its hollow marker read as ⊘ | One smooth arc; the marker filled, so no coastline shows through |
+| Outlines thickened with the zoom and the coast grew spikes | Screen-constant strokes (land 1.1 px, region 1.4 px) with round joins, on Natural Earth 1:50m land; the region stroked on its frontier only |
+| The coastline ran through AUSTRALIA | Every label masks the lines under it |
+| The sentence card was too small for a phone | About 12 % larger, the figure moved clear of it |
+| The two totes in the split did not look like one bag | The right tote graded to the left (dE 0.8 on the front panels), on Codex's native 2560 plate without the raised blob |
+| The chapter title clipped the framed print; "01" too dim | The block clear of the print; the number brighter (0.82) on a soft shade |
+| The ring at the mainland's line acted as a pin | No departure marker: each disputed flight rises out of the lit land from its own unmarked point |
+| The page 1 marker strokes ended at different points | Per-mark padding, so each stroke ends exactly at its line's last character |
+| The year rolls showed stacked half-digits for three frames | A five-frame roll with a slot feathered at 12 % of the cap height and a vertical motion blur |
+| The film title was a stock fade | The two lines staggered 0.3 s with a slow 1.5 % drift |
+| The search opened on a second of soft grey | Typing from the first frame |
+| The tighter YES crowded the suitcase handle | The overshoot cut from 1.25x to 1.12x, the word placed clear |
+| OVERWEIGHT was soft | The plate's focus racks onto the display as the push lands, so the word is crisp when it holds; the plate is now the native 2880 render |
+
+**After reel 8 was built (the animatic):** Codex re-rendered the evidence purses (8d47b04) and the tote turned mustard,
+so the split's fixed match left a mustard tote beside a brown one. The split now refits its match on every run (raw
+dE 1.0), and Codex has the numbers to bring the tote back to cognac in every stage. Chapter 3's title sits lower on the
+new hotel plate, clear of the headboard rail. The editor dropped HONG KONG / 9 DAYS from the street wide: the route
+map puts both on screen 2 s earlier.
