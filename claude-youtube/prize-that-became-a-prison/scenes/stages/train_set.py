@@ -509,7 +509,7 @@ def _welt_on_pad(name, sx, hw, front, yv, zv, hgt, m, coll, inset=0.036, r=0.004
     return tube(name, pts, r, m, coll=coll, closed=True, res=3)
 
 
-def seat_unit(name="seat_pair"):
+def seat_unit(name="seat_pair", linen_angles=(0, 0)):
     """One 2-seat unit into a new (unlinked) collection. Origin at the pair's centre on the floor; sitters face -Y;
     y = 0 is about their hip point."""
     m = materials()
@@ -554,12 +554,18 @@ def seat_unit(name="seat_pair"):
         ftop = f2 + zv * (h2 / 2)
         flap = 0.14
         c1 = f2 + zv * (h2 / 2 - flap / 2) - yv * (lt / 2 + 0.002)
-        box(f"linen_front_{k}", (cw, lt, flap), tuple(c1 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025, rot=(-RECLINE, 0, 0), coll=coll)
         c2 = ftop + yv * (BACK_T / 2) + zv * (lt / 2 + 0.002)
-        box(f"linen_top_{k}", (cw, BACK_T + 2 * lt + 0.01, lt), tuple(c2 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025,
-            rot=(-RECLINE, 0, 0), coll=coll)
         c3 = f2 + zv * (h2 / 2 - 0.04) + yv * (BACK_T + lt / 2 + 0.002)
-        box(f"linen_back_{k}", (cw, lt, 0.08), tuple(c3 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025, rot=(-RECLINE, 0, 0), coll=coll)
+        angle = linen_angles[k]
+        if angle is not None:
+            # Skew the leading edge without lifting the cover from the pad.
+            shift = math.tan(math.radians(angle))
+            for label, size, centre in (("front", (cw, lt, flap), c1), ("top", (cw, BACK_T + 2 * lt + 0.01, lt), c2),
+                                        ("back", (cw, lt, 0.08), c3)):
+                cover = box(f"linen_{label}_{k}", size, centre + Vector((sx, 0, 0)), m["linen"], bevel=0.0025,
+                            rot=(-RECLINE, 0, 0), coll=coll)
+                for v in cover.data.vertices:
+                    v.co.x += shift * (v.co.z + centre.z - c2.z)
         # the moulded shell behind the back: a pale plastic skin, a fold-down tray and its latch, a dark pocket
         sh_z0, sh_z1 = 0.3, BACK_TOP - 0.02
         zm = (sh_z0 + sh_z1) / 2
@@ -627,13 +633,15 @@ def _smooth(t):
     return t * t * (3 - 2 * t)
 
 
-def curtain_bunch(name, s, yb, m, mtie, z0=SILL + 0.045, z1=TOP + 0.1, pleats=4, phase=0.0):
+def curtain_bunch(name, s, yb, m, mtie, z0=SILL + 0.045, z1=TOP + 0.1, pleats=4, phase=0.0, draw=0.0):
     """A pleated curtain gathered at the window's side and tied back: wide at its head and its hem, cinched at the
     tie; four soft folds whose depth swells where the cloth gathers; its edges meet the wall."""
     tie = 0.42
     nu, nv = 36, 26
 
     def width(t):
+        if draw:
+            return abs(draw) + 0.07 + 0.035 * math.cos(math.pi * t)
         if t < tie:
             return 0.13 + (0.058 - 0.13) * _smooth(t / tie)
         return 0.058 + (0.15 - 0.058) * _smooth((t - tie) / (1 - tie))
@@ -643,13 +651,13 @@ def curtain_bunch(name, s, yb, m, mtie, z0=SILL + 0.045, z1=TOP + 0.1, pleats=4,
         t = j / nv
         z = z0 + (z1 - z0) * t
         w = width(t)
-        d = 0.024 + 0.034 * (w / 0.15)
+        d = 0.024 + 0.034 * min(w / 0.15, 1.0)
         for i in range(nu + 1):
             u = i / nu
             env = math.sin(math.pi * u) ** 0.6
             fold = 0.55 + 0.45 * math.cos(2 * math.pi * pleats * u + phase + 2.2 * t)
             x = s * (XW - 0.012 - d * env * fold)
-            verts.append((x, yb + w * (u - 0.5), z))
+            verts.append((x, yb + draw / 2 + w * (u - 0.5), z))
     for j in range(nv):
         for i in range(nu):
             a = j * (nu + 1) + i
@@ -659,6 +667,8 @@ def curtain_bunch(name, s, yb, m, mtie, z0=SILL + 0.045, z1=TOP + 0.1, pleats=4,
     so.thickness, so.offset = 0.003, 0.0
     sub = ob.modifiers.new("soft", "SUBSURF")
     sub.levels = sub.render_levels = 1
+    if draw:
+        return ob
     # the tie: a band round the gathered cloth
     zt = z0 + (z1 - z0) * tie
     w = width(tie)
@@ -672,10 +682,11 @@ def curtain_bunch(name, s, yb, m, mtie, z0=SILL + 0.045, z1=TOP + 0.1, pleats=4,
 
 
 def curtains():
-    """At each window, a curtain tied back at either side; a slim rail over the windows carries them."""
+    """A slim rail carries the mostly tied-back window curtains."""
     m = materials()
     M.setdefault("curtain", mt.upholstery("curtain", rgb=(0.034, 0.04, 0.056), weave=700.0, wear=0.12))
     M.setdefault("curtain_tie", mt.upholstery("curtain tie", rgb=(0.025, 0.028, 0.038), weave=500.0, wear=0.0))
+    drawn = {("L", 4, 1): -0.42, ("R", 3, -1): 0.37, ("R", 5, 1): -0.51}
     for s in (-1, 1):
         side = "L" if s < 0 else "R"
         tube(f"curtain_rail_{side}", [(s * (XW - 0.016), Y0 + 0.2, TOP + 0.115), (s * (XW - 0.016), Y1 - 0.2, TOP + 0.115)], 0.007,
@@ -683,7 +694,7 @@ def curtains():
         for i, yc in enumerate(WIN_Y):
             for e in (-1, 1):
                 curtain_bunch(f"curtain_{side}{i}_{e:+d}", s, yc + e * (WIN_HW + 0.045), M["curtain"], M["curtain_tie"],
-                              phase=0.7 * i + (1.3 if e > 0 else 0.0))
+                              phase=0.7 * i + (1.3 if e > 0 else 0.0), draw=drawn.get((side, i, e), 0.0))
 
 
 # ---------------------------------------------------------------- other travellers' luggage
@@ -711,9 +722,11 @@ def holdall(name, x, y, length, width, height, rgb, turn=0.0):
 
 
 def luggage():
-    """Three other bags down the carriage, each over a traveller's seat: muted, small in frame, never as dark or as
-    close as Dawn's two."""
+    """Other travellers' muted canvas bags stay behind Dawn's single case."""
+    holdall("bag_mid_1", -(XW - 0.19), ROW_Y[6] - 0.08, 0.39, 0.29, 0.22, (0.068, 0.061, 0.048), turn=-4.0)
+    holdall("bag_mid_2", XW - 0.18, ROW_Y[6] + 0.10, 0.45, 0.28, 0.19, (0.047, 0.055, 0.062), turn=5.0)
     holdall("bag_far_1", -(XW - 0.2), ROW_Y[9] - 0.1, 0.62, 0.34, 0.27, (0.05, 0.048, 0.044), turn=2.0)
+    holdall("bag_far_left", -(XW - 0.19), ROW_Y[12] - 0.13, 0.46, 0.32, 0.20, (0.067, 0.055, 0.049), turn=-1.0)
     holdall("bag_far_2", XW - 0.19, ROW_Y[7] + 0.05, 0.55, 0.3, 0.3, (0.035, 0.042, 0.05), turn=-3.0)
     holdall("bag_far_3", XW - 0.2, ROW_Y[11] - 0.05, 0.7, 0.36, 0.24, (0.06, 0.055, 0.05), turn=1.0)
 
@@ -744,7 +757,11 @@ def outside(hero=(), seed=7):
             d = 3.5 + rng.random() ** 1.6 * 55.0
             y = rng.uniform(-12.0, 60.0)
             z = rng.uniform(-2.5, 3.8) * (0.4 + d / 40.0)
-            length = rng.uniform(2.5, 8.0) * (0.6 + d / 14.0)
+            if i % 3 == 1:
+                length = rng.uniform(1.2, 2.5)
+            else:
+                window_span = 2 * WIN_HW * (1.0 + d / 1.2)
+                length = min(rng.uniform(2.4, 5.6) * (0.6 + d / 18.0), window_span * 1.65, 12.0)
             hgt = rng.uniform(0.025, 0.08) * (0.5 + d / 18.0)
             stren = rng.uniform(1.2, 4.5) * (1.0 + d / 30.0)
             specs.append((s * (XW + d), y, z, length, hgt, colour(), stren))
