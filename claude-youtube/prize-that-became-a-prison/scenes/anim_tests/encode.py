@@ -6,6 +6,12 @@
 Grade A is GRADE in scenes/shoot.py, read from that file (or from grade_A.txt in the GPU package, written from it),
 with its grain made temporal (allf=u -> allf=t+u) as the film's other moving shots have it (gfx/doc_composite.py,
 gfx/plate_type.py): a static grain pattern over moving pictures reads as dirt on the lens.
+
+Colour: the RGB frames are converted to YUV with the BT.709 matrix, named, and the file is tagged BT.709, as every
+encode path of the film does since the colour fix (gfx/doc_composite.py TO_YUV, TAGS, grade_filter_yuv; checked by
+tools/check_colour.py). The conversion sits just before the grain, so the grain lands on the 4:2:0 planes as in the
+film's other graded plates. (ffmpeg's own conversion is BT.601: in a BT.709-tagged file the cognac tote went mustard.)
+The strings are copied here so the GPU box needs no repository; keep them in step with gfx/doc_composite.py.
 """
 import argparse
 import ast
@@ -14,6 +20,19 @@ import shutil
 import subprocess
 import sys
 import tempfile
+
+
+TO_YUV = "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p"     # = gfx/doc_composite.py TO_YUV
+TAGS = ["-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"]   # = gfx/doc_composite.py TAGS
+
+
+def grade_filter_yuv(g):
+    """The grade with the BT.709 conversion where ffmpeg's own (BT.601) one would sit, just before the grain
+    (gfx/doc_composite.py grade_filter_yuv)."""
+    head, sep, tail = g.rpartition(",noise=")
+    if sep and "," not in tail:
+        return f"{head},{TO_YUV}{sep}{tail}"
+    return f"{g},{TO_YUV}"
 
 
 def grade_from_shoot(path):
@@ -35,6 +54,7 @@ def main():
     ap.add_argument("--fps", type=int, default=24)
     ap.add_argument("--crf", type=int, default=16)
     ap.add_argument("--ext", default="png")
+    ap.add_argument("--nograde", action="store_true", help="BT.709 conversion only (for clay or Eevee/Cycles A-B)")
     a = ap.parse_args()
     here = os.path.dirname(os.path.abspath(__file__))
     if a.grade:
@@ -56,13 +76,14 @@ def main():
     for i, n in enumerate(want):
         os.symlink(os.path.abspath(os.path.join(a.frames, f"{prefix}{n:04d}.{a.ext}")),
                    os.path.join(tmp, f"{i:05d}.{a.ext}"))
+    vf = TO_YUV if a.nograde else grade_filter_yuv(grade)
     cmd = ["ffmpeg", "-loglevel", "error", "-y", "-framerate", str(a.fps), "-i", os.path.join(tmp, f"%05d.{a.ext}"),
-           "-vf", grade + ",format=yuv420p", "-c:v", "libx264", "-preset", "slow", "-crf", str(a.crf),
-           "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
-           "-movflags", "+faststart", a.out]
+           "-vf", vf, "-c:v", "libx264", "-preset", "slow", "-crf", str(a.crf), "-pix_fmt", "yuv420p", *TAGS,
+           "-color_range", "tv", "-movflags", "+faststart", a.out]
     subprocess.run(cmd, check=True)
     shutil.rmtree(tmp)
-    print(f"ENCODE {a.out}: frames {a.first}-{last} ({len(want)} at {a.fps} fps), grade A (temporal grain)")
+    print(f"ENCODE {a.out}: frames {a.first}-{last} ({len(want)} at {a.fps} fps), "
+          f"{'no grade' if a.nograde else 'grade A (temporal grain)'}, BT.709")
 
 
 if __name__ == "__main__":
