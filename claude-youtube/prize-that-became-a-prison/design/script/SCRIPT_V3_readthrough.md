@@ -1,6 +1,6 @@
 # The Prize That Became a Prison: script V3, read-through
 
-A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, chapter by chapter. NARRATOR is the narration. REAL VOICE is a real recording of Tim or Gene Hunt, word for word from the clip. The full production script, with picture, sources, sound and the fact-check ledger, is `SCRIPT_V3.md`.
+A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by chapter. NARRATOR is the narration; TIM HUNT / GENE HUNT (real recording) is a real recording, word for word from the clip. The full production script (picture, sources, sound, the fact-check ledger) is `SCRIPT_V3.md`. Regenerate with `python3 tools/script_readthrough.py`.
 
 ## 00 · The same question (0:00–1:08, about 68 s)
 
@@ -65,7 +65,7 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **1:47** TIM HUNT (real recording): "She received an email stating that she had won an all-expenses-paid trip to Hong Kong. She didn't believe it at first, but checked on the company and believed they were legitimate."
 
-**2:00** NARRATOR: On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother.
+**2:00** NARRATOR: His written statement calls the prize cash.
 
 **2:08** NARRATOR: She told her father, too.
 
@@ -111,9 +111,7 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **3:55** NARRATOR: "...she even paid a small excess weight fee," he wrote.
 
-**3:59** _(silence, 0.8 s)_
-
-**4:00** NARRATOR: Even.
+**3:59** _(silence, 1.6 s: the highlighted word does the work)_
 
 **4:01** NARRATOR: The fee. The yes. The bags she packed. Every one of those details, we have from her brother.
 
@@ -147,15 +145,15 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **4:52** NARRATOR: More than two kilograms of methamphetamine, about four and a half pounds, authorities say.
 
-**4:57** NARRATOR: We haven't seen the court's record of the case.
+**4:57** _(silence, 0.6 s)_
 
-**5:01** NARRATOR: And one word in his account is disputed. He put the dispute on the record himself.
+**5:01** NARRATOR: One detail is unresolved.
 
-**5:08** NARRATOR: Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao.
+**5:05** NARRATOR: Dawn told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao.
 
-**5:16** NARRATOR: "I don't know the reason for this discrepancy." Neither do we.
+**5:13** NARRATOR: He doesn't know why. Neither do we.
 
-**5:21** NARRATOR: Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.
+**5:17** NARRATOR: What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.
 
 **5:32** NARRATOR: The trip ended in that room. The case was only beginning.
 
@@ -169,7 +167,7 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **5:52** _(silence, 1.0 s)_
 
-**5:53** NARRATOR: In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it.
+**5:53** NARRATOR: In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established.
 
 **6:16** _(silence, 3.0 s)_
 
@@ -249,7 +247,7 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **10:52** NARRATOR: None of it brought her home.
 
-**10:55** NARRATOR: On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two.
+**10:55** NARRATOR: On January 25th, 2026, Gene Hunt died. He was ninety-two.
 
 **11:04** _(silence, 2.0 s)_
 
@@ -275,13 +273,13 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **11:57** NARRATOR: But there was one thing she kept coming back to.
 
-**12:02** REAL VOICE (real recording): "And she keeps asking me the same question. 'When?' She wants a date. A date when she will be released. And I have to tell her: 'I don't know.' 'I don't have a date.' 'I can't give you a date.'"
+**12:02** TIM HUNT (real recording): "And she keeps asking me the same question. 'When?' She wants a date. A date when she will be released. And I have to tell her: 'I don't know.' 'I don't have a date.' 'I can't give you a date.'"
 
 **↳ if G1 fails** NARRATOR: She wants a date.
 
 **12:25** _(silence, 3.0 s)_
 
-**12:28** REAL VOICE (real recording): "And when I tell her that, she becomes angry. She tells me that all of this has done is 'fill her head with false hopes.'"
+**12:28** TIM HUNT (real recording): "And when I tell her that, she becomes angry. She tells me that all of this has done is 'fill her head with false hopes.'"
 
 **↳ if G2 fails** NARRATOR: When he tells her that, he wrote, she becomes angry. All of this, she says, has only filled her head with false hopes.
 
@@ -289,11 +287,9 @@ A plain read-through of `SCRIPT_V3.md` (13:50): only what the audience hears, ch
 
 **12:43** TIM HUNT (real recording): "I see a woman who continues to hold on to the hope that one day she will be free."
 
-**12:47** NARRATOR: Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it.
+**12:47** NARRATOR: Twelve years ago, officers asked Dawn a question. She answered it.
 
 **12:56** NARRATOR: Now she's the one asking. And no one has given her a date.
-
-**13:02** NARRATOR: Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family.
 
 **13:13** NARRATOR: As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.
 
