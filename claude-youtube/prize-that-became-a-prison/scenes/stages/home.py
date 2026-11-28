@@ -701,8 +701,28 @@ def lights():
     # the grade's vignette corner and still graded at ~7/255 (the critic asked 15-25); it falls off fast, so the head
     # of the table and the lit end wall barely change
     ew = st.D_END_WIN
-    st.area("d_sky_end", (st.D["x0"] + 0.08, ew["cy"], (ew["z0"] + ew["z1"]) / 2), (ew["z1"] - ew["z0"] - 0.1, ew["w"] - 0.1),
-            96.0, (0.5, 0.6, 0.85), spread=130, aim=(2.4, -0.75, 0.45))
+    sky = st.area("d_sky_end", (st.D["x0"] + 0.08, ew["cy"], (ew["z0"] + ew["z1"]) / 2),
+                  (ew["z1"] - ew["z0"] - 0.1, ew["w"] - 0.1), 96.0, (0.5, 0.6, 0.85),
+                  spread=130, aim=(2.4, -0.75, 0.45))
+    # Balance the two window sources on the same board in both cold dining frames.
+    board = bpy.data.objects["d_flat_tabletop"]
+    board_only = bpy.data.collections.new("Dining tabletop only")
+    board_only.objects.link(board)
+    room_only = bpy.data.collections.new("Foot window fill without tabletop")
+    room_only.objects.link(board)
+    room_only.collection_objects[0].light_linking.link_state = "EXCLUDE"
+    _STATE["table_sky_exclusion"] = room_only
+    stripes = street_spot("d_table_stripes", STREET["d"], STREET["target"], STREET["energy"] * 1.55)
+    table_sky = sky.copy()
+    table_sky.name = "d_table_sky"
+    table_sky.data = sky.data.copy()
+    table_sky.data.energy *= 0.10
+    bpy.context.scene.collection.objects.link(table_sky)
+    st.LIGHTS[table_sky.name] = table_sky
+    for ob in (stripes, table_sky):
+        ob.light_linking.receiver_collection = board_only
+        ob.visible_glossy = False
+        ob.visible_volume_scatter = False
     # outside the kitchen window: a faint cool lamp over the neighbour's back door rakes their painted brick
     yw = st.K["y1"] + st.K_OUT
     st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.6, 3.4), (st.WARM_WIN[0] + 0.5, yw - 0.02, 1.4), 600.0, (0.62, 0.72, 1.0),
@@ -850,6 +870,9 @@ def apply_camera(name):
     layout = spec.get("layout")
     family_layout(layout)
     trims = dict(TRIMS.get(framing, {}), family_pendant=0.0)
+    cold_table = name in ("dining", "dining_gene")
+    trims.update(d_table_stripes=float(cold_table), d_table_sky=float(cold_table))
+    st.LIGHTS["d_sky_end"].light_linking.receiver_collection = _STATE["table_sky_exclusion"] if cold_table else None
     if layout == "family":
         trims.update(family_pendant=1.0, d_sky=0.20, d_sky_end=0.30,
                      street=0.10, street_hero=0.12, street_side=0.12)
@@ -857,7 +880,7 @@ def apply_camera(name):
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
     aim = STREET_CAM.get(name, STREET)
-    for n in ("street", "street_hero"):
+    for n in ("street", "street_hero", "d_table_stripes"):
         ob = st.LIGHTS.get(n)
         if ob is not None:
             ob.location, ob.rotation_euler = _street_xf(aim["d"], aim["target"])
