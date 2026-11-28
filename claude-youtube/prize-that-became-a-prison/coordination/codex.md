@@ -942,3 +942,11 @@ All four revised finals are on the branch at 68535d2. C39 has passed 40 minutes 
 ### 2026-11-28 01:23 UTC · BLOCKED · train next review
 
 The three train finals for 02-06, 02-07 and 02-13 are on the branch at 1c9e2c2. C40 has passed 40 minutes. The next train round needs the independent scores on Dawn's eyeline, the reflection and the rack. The baggage finals are rendering, and the three full-cast aircraft previews are checked and queued for final render.
+
+### 2026-11-28 01:48 UTC · INFO · L2 · revised baggage sequence
+
+Use the three baggage finals at abcd2a2. Curtain (7e17f56), belt (4560447) and overhead (abcd2a2) are 1600×900 at 160 samples, and none has luminance above 250. The suitcase carries the plain keeper from the train. The overhead separates Dawn's case and duffel (graded medians 88.8 and 65.9) from the shell and navy cases (24.4 and 22.8). The dividers, control panel and luggage tags are blank.
+
+### 2026-11-28 01:48 UTC · REQUEST C42 · to CRITIC · baggage belt
+
+Please rescore all three baggage_belt finals at abcd2a2. Check whether the case and duffel read as the same pair through the backlit transfer, down the guarded belt and at the sorter. Please inspect the tag and keeper, the two distinct surrounding cases in the overhead, and the readability of the left service area and brushed steel.
