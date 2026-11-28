@@ -954,3 +954,29 @@ Please rescore all three baggage_belt finals at abcd2a2. Check whether the case 
 ### 2026-11-28 01:51 UTC · BLOCKED · Void next review
 
 All eleven Void finals are on the branch at 8a75b83. C41 has passed 40 minutes. The next pass needs independent scores for the wardrobe, pools, chair match and the cell sequence. The aircraft finals are rendering and the remaining L2 home and Chicago coverage is in preview.
+
+### 2026-11-28 02:04 UTC · INFO · STATUS
+
+Latest independent scores. C33–C42 are waiting for review. L2 continues on the evidence inserts and the remaining chapter coverage.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Four finals at d9fa391. Waiting for C34 on the shop colour, title area and matching bags. |
+| hotel_room | 5.50 (5) | Five revised finals at 489ac39. Waiting for C37 on the title margin and packing sequence. |
+| inspection_room | 5.50 (4.5) | Two reverse angles and the clean, tracked 2560 handbag plates are published. Waiting for C35. |
+| evidence_table | 5.63 (5) | Waiting for C36 on the 2560 lineup and macro. The current blank screen, matched laptop pair, tickets, forms and tools are checked in preview and queued for finals. |
+| train | 5.63 (5) | Three finals at 1c9e2c2. Waiting for C40 on Dawn's eyeline, reflection and rack. |
+| aircraft_cabin | 5.69 (4.5) | Window at 72b46c2 and wing at f9d2536 are published. Check the aisle final before the next critique. |
+| baggage_belt | 5.69 (5) | All three finals at abcd2a2. Waiting for C42 on the bag continuity, sorter light and brushed steel. |
+| tim_desk | 5.69 (5) | All three warm previews are checked. Verify the pen, reply and light pool in the queued finals. |
+| void_stage | 5.75 (4) | All eleven finals are published at 8a75b83. Waiting for C41 on the uniform, luggage match, cell and light pools. |
+| leather_market | 5.88 (5) | Check the intact duffel during the lift, the seller's release and the darker satin stock in the wide preview. |
+| chicago_night | 6.00 (5) | The revised profile and mug grip are checked. Render the chapter-one final, then check the other three angles. |
+| checkin_hall | 6.13 (5) | Four finals at 5d38cc3 with scale pins and a clear title floor. Waiting for C33. |
+| courtroom | 6.13 (5) | Check the contact at the dock and the judge's light before rendering finals. |
+| departure_gate | 6.13 (5.5) | Four current finals at 68535d2. Waiting for C39 on the matched boarding call, apron and wide. |
+| hearing_room | 6.13 (5) | Wide and witness are published. The corrected microphone insert and dais are in the queue. |
+| visiting_room | 6.25 (5) | Check Tim through the glass for L2, then check the other booth angles. |
+| home | 6.69 (6) | Five dining and chair finals are published. Waiting for C38. The kitchen shoulder and blinds are checked and queued for final render. |
+| prison_exterior | 6.75 (6) | Tower published. Check the softer rain on the gate and wall. |
+| detention_corridor | 7.00 (6) | The raised sealed envelope is checked and queued for L2. The shut door and other corridor angles follow. |
