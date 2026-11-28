@@ -128,7 +128,7 @@ function layout(ctx, words, size) {
 // drifts apart into dust when the progress moves on. Depth of field follows the current node.
 // =====================================================================================================
 const TLD = 900, Y0 = 2014, Y1 = 2026;
-const NUM = { x: 300, y: -190, dz: 120, cap: 180 };   // the numeral's centre beside its node (right of and above it), its cap height
+const NUM = { x: -100, y: 160, z: -220, cap: 125 };   // the near view's numeral: its centre below and before its node, its cap height
 let DIGS = {}, NUMS = {}, DUST = [];
 function buildTimeline() {
   const cw = 280, ch = 400, base = 340, c = document.createElement('canvas'); c.width = cw; c.height = ch;
@@ -147,11 +147,11 @@ function buildTimeline() {
   for (let yr = Y0; yr <= Y1; yr++) {
     const s = String(yr), r = rng(yr * 7 + 3), pts = [], tw = adv * s.length;
     [...s].forEach((d, i) => DIGS[d].forEach(([u, v]) => {
-      const th = r() * Math.PI * 2, ph = Math.acos(2 * r() - 1), rad = 0.9 + r() * 4.2;     // scatter, in caps
-      const th2 = r() * Math.PI * 2, rad2 = 0.6 + r() * 2.2;                               // where it drifts off to
+      const th = r() * Math.PI * 2, ph = Math.acos(2 * r() - 1), rad = 0.3 + r() * 1.1;     // scatter, in caps
+      const th2 = r() * Math.PI * 2, rad2 = 0.15 + r() * 0.7;                              // where it drifts off to
       pts.push({ u: u + i * adv - tw / 2, v: v + 0.5, w: (r() - .5) * 0.1,
-        sx: Math.sin(ph) * Math.cos(th) * rad, sy: Math.sin(ph) * Math.sin(th) * rad * .6, sz: Math.cos(ph) * rad,
-        dx: Math.cos(th2) * rad2, dy: -0.4 - r() * 1.2, dz: Math.sin(th2) * rad2,
+        sx: Math.sin(ph) * Math.cos(th) * rad, sy: Math.sin(ph) * Math.sin(th) * rad * .6, sz: Math.cos(ph) * rad * .6,
+        dx: Math.cos(th2) * rad2, dy: -0.15 - r() * 0.6, dz: Math.sin(th2) * rad2,
         dl: r() * .45, dd: r() * .35, ph: r() * 6.283, b: .55 + r() * .45 });
     }));
     NUMS[yr] = pts;
@@ -182,8 +182,8 @@ function monotone(P) {
     return (2 * s3 - 3 * s2 + 1) * P[i][1] + (s3 - 2 * s2 + s) * h * m[i] + (-2 * s3 + 3 * s2) * P[i + 1][1] + (s3 - s2) * h * m[i + 1];
   };
 }
-// Draw the timeline. S: { cam, prog (years from 2014, the lit progress), form(yr) 0-1, gone(yr) 0-1, dof 0-1, fogN,
-// fogS, poster 0-1 (labels of the span), numScale }.
+// Draw the timeline. S: { cam, prog (years from 2014, the lit progress), focusYear, form(yr) 0-1, gone(yr) 0-1, dof 0-1,
+// fogN, fogS, dust, nodeMin, numPos(yr) [x, y, z] (the numeral's centre in the world), numCap(yr), numAlpha(yr) }.
 function drawTimeline(ctx, t, S) {
   const cam = S.cam, B = basis(cam), FOG = z => 1 - sm((z - S.fogN) / S.fogS);
   const focusZ = proj(cam, 0, 0, S.focusYear * TLD).z;
@@ -223,14 +223,14 @@ function drawTimeline(ctx, t, S) {
   // the numerals, far first
   const list = [];
   for (let yr = Y0; yr <= Y1; yr++) { const F = S.form(yr), G = S.gone(yr); if (F > 0 && G < 1) list.push({ yr, F, G }); }
-  list.map(o => ({ ...o, z: proj(cam, S.numX(o.yr), S.numY(o.yr), (o.yr - Y0) * TLD + NUM.dz).z })).sort((a, b) => b.z - a.z)
+  list.map(o => ({ ...o, z: proj(cam, ...S.numPos(o.yr)).z })).sort((a, b) => b.z - a.z)
     .forEach(o => drawNumeral(ctx, t, cam, B, o.yr, o.F, o.G, COC, FOG, S));
 }
 function drawNumeral(ctx, t, cam, B, yr, F, G, COC, FOG, S) {
-  const cx = S.numX(yr), cy = S.numY(yr), cz = (yr - Y0) * TLD + NUM.dz, cap = NUM.cap * S.numScale(yr);
+  const [cx, cy, cz] = S.numPos(yr), cap = S.numCap(yr);
   const c = proj(cam, cx, cy, cz); if (c.z < 80) return;
   const coc = COC(c.z), fog = FOG(c.z);
-  const rr = Math.max(.7, 1.15 * cam.f / c.z * S.numScale(yr)), re = rr + coc * .5, al = .94 * fog * Math.min(1, (rr / re) ** 2 * 1.3) * S.numAlpha(yr);
+  const rr = Math.max(.7, 1.15 * cam.f / c.z * cap / NUM.cap), re = rr + coc * .5, al = .94 * fog * Math.min(1, (rr / re) ** 2 * 1.3) * S.numAlpha(yr);
   if (al < .01) return;
   ctx.fillStyle = INK(al);
   for (const q of NUMS[yr]) {
@@ -241,15 +241,17 @@ function drawNumeral(ctx, t, cam, B, yr, F, G, COC, FOG, S) {
     const X = cx + cap * (B.r[0] * u + B.u[0] * v + B.f[0] * w), Y = cy + cap * (B.r[1] * u + B.u[1] * v + B.f[1] * w), Z = cz + cap * (B.r[2] * u + B.u[2] * v + B.f[2] * w);
     const p = proj(cam, X, Y, Z); if (p.z < 60) continue;
     const r = re * Math.sqrt(q.b), near = cl((p.z - 300) / 400);
-    const a = (.3 + .7 * f) * (1 - g) * near; if (a <= .01) continue;
+    const a = (.3 + .7 * f) * (1 - g) * (1 - g) * near; if (a <= .01) continue;
     ctx.globalAlpha = a;
     if (r > 2.2) { ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.fill(); } else ctx.fillRect(p.x - r, p.y - r, r * 2, r * 2);
   }
   ctx.globalAlpha = 1;
 }
-// The near view of the line, shared by both moments: the camera above and to the left of the line, looking along it,
-// so the years recede up and to the right (the poster's left-to-right order), the numeral right of and above its node.
-const NEAR = (k, dz = 0) => ({ x: -330, y: -560, z: k * TLD - 1050 + dz, yaw: .34, pitch: .36, f: 1150 });
+// The near view of the line, shared by both moments: the camera above and well to the side of the line, looking
+// along it, so the years recede to the right and a little up (the crane's left-to-right order), the numeral of the
+// current year below and before its node, in the dark under the line.
+const NEAR = (k, dz = 0) => ({ x: 1000, y: -300, z: k * TLD - 500 + dz, yaw: -1.0, pitch: .15, f: 1150 });
+const numNear = yr => [NUM.x, NUM.y, (yr - Y0) * TLD + NUM.z];
 
 // =====================================================================================================
 // THE MOMENTS. Each mode draws one moment; t is seconds from its cue. Positions sit on each plate's dark plain area.
@@ -301,40 +303,54 @@ function sentenceCard(ctx, t, life) {
 // after its tick). Counter: the same near view at 2014, then the progress runs on through the years, each gap a little
 // longer (0.55 s growing to 1.0 s, 2026 arriving at 9.73 s), and the camera cranes back to the whole span, 2014 to
 // 2026 lit, while the plate pulls back from the cell.
-const CAL = { hold: 1.7, ox: -250, oy: -260 };
+const CAL = { hold: 1.7, ox: -240, oy: -340 };   // the current node at about (600, 331) on the bags plate
 function calendarState(t) {
   const A = [0, 1, 2, 3].map(k => k * CAL.hold);
-  // the lit progress and the camera: each step leaves 0.55 s before its tick and lands 0.3 s after, eased in and out
+  // each step leaves 0.55 s before its tick and lands 0.3 s after, eased in and out; a slow creep under it all
   let prog = 0; for (let k = 1; k <= 3; k++) prog += ioCubic(ramp(t, A[k] - 0.55, A[k] + 0.3));
-  const creep = 40 * t, intro = oCubic(ramp(t, -0.3, 0.7));
-  const cam = Object.assign(NEAR(prog, creep - 700 * (1 - intro)), { ox: CAL.ox, oy: CAL.oy });
+  const intro = oCubic(ramp(t, -0.3, 0.8));
+  const cam = Object.assign(NEAR(prog, 40 * (t - CAL.hold * prog) - 520 * (1 - intro)), { ox: CAL.ox, oy: CAL.oy });   // a slow creep at each year, given back on the way to the next
   return {
     cam, prog, focusYear: prog, dof: 1, fogN: 2600, fogS: 3600, dust: 1, nodeMin: 3,
-    form: yr => { const k = yr - Y0; if (k > 3) return 0; return k === 0 ? ramp(t, -0.2, 0.55) : ramp(t, A[k] - 0.5, A[k] + 0.2); },
-    gone: yr => { const k = yr - Y0; return k >= 3 ? 0 : ramp(t, A[k + 1] - 0.45, A[k + 1] + 0.3); },
-    numX: () => NUM.x, numY: () => NUM.y, numScale: () => 1, numAlpha: () => 1,
+    // a year gathers as its node slides into place (readable about 0.3 s after its tick) and drifts apart as the
+    // camera leaves it, gone before the next one starts
+    form: yr => { const k = yr - Y0; if (k > 3) return 0; return k === 0 ? ramp(t, -0.15, 0.45) : ramp(t, A[k] + 0.04, A[k] + 0.44); },
+    gone: yr => { const k = yr - Y0; return k >= 3 ? 0 : ramp(t, A[k + 1] - 0.6, A[k + 1] - 0.1); },
+    numPos: numNear, numCap: () => NUM.cap, numAlpha: () => 1,
   };
 }
+// The counter's progress: 2014 held, then each year arrives on its tick (CTR_TICKS, the odometer's old rhythm), the
+// camera easing toward every node without stopping (three quarters an ease in and out, a quarter constant speed), so
+// it pulses gently from year to year; it comes to rest on 2026.
 const CTR_TICKS = (() => { const k = [1.2]; for (let i = 1; i < 12; i++) k.push(k[i - 1] + 0.55 + 0.45 * (i - 1) / 10); return k; })();
-const CTR_PROG = monotone([[0, 0], [0.62, 0], ...CTR_TICKS.map((tk, i) => [tk, i + 1])]);
-const CTR = { ox: -330, oy: -330, crane: [10.1, 13.4] };
-// the crane's end: side-on above the middle of the span, looking down at it, so 2014 sits left and 2026 right
-const POSTER = { x: 6400, y: -2600, z: 5400, yaw: -Math.PI / 2, pitch: .34, f: 1150, ox: 0, oy: -300 };
+function ctrProg(t) {
+  const arr = [0.5, ...CTR_TICKS];
+  if (t <= arr[0]) return 0; if (t >= arr[12]) return 12;
+  let k = 0; while (t > arr[k + 1]) k++;
+  const u = (t - arr[k]) / (arr[k + 1] - arr[k]);
+  const lin = k === 0 ? u * u * (2 - u) : k === 11 ? u + u * u - u * u * u : u;     // from rest into the first, to rest on the last
+  return k + 0.75 * ioCubic(u) + 0.25 * lin;
+}
+const CTR = { ox: -270, oy: -381, crane: [10.1, 13.4] };   // the current node at about (630, 290): above and left of the cell
+// the crane's end: side-on and above the middle of the span, so 2014 sits left (x 233) and 2026 right (x 1687), the line
+// at y 245 over the cell, each numeral centred under its node
+const POSTER = { x: 8200, y: -2400, z: 5400, yaw: -Math.PI / 2, pitch: .28, f: 1150, ox: 0, oy: -300 };
 function counterState(t) {
-  const prog = CTR_PROG(t), u = ioQuint(ramp(t, CTR.crane[0], CTR.crane[1]));
-  const near = Object.assign(NEAR(prog, 40 * Math.min(t, 1.2)), { ox: CTR.ox, oy: CTR.oy });
+  const prog = ctrProg(t), u = ioQuint(ramp(t, CTR.crane[0], CTR.crane[1]));
+  const near = Object.assign(NEAR(prog, 36 * Math.min(t, 1.2)), { ox: CTR.ox, oy: CTR.oy });
   const cam = mixPose(near, POSTER, u);
-  const d = Math.max(0, t - CTR.crane[1]); cam.x += 60 * d; cam.yaw += .004 * d;     // the poster keeps drifting
-  const cur = Math.round(prog);
+  const d = Math.max(0, t - CTR.crane[1]); cam.x += 70 * d; cam.yaw += .002 * d;     // the poster keeps drifting
+  const capP = yr => yr === Y1 ? 900 : 640;
   return {
-    cam, prog, focusYear: lerp(prog, 6, u), dof: 1 - u, fogN: lerp(2600, 9000, u), fogS: lerp(3600, 9000, u), dust: 1 - .5 * u, nodeMin: lerp(3, 5, u),
-    // each year gathers as the progress comes within 0.55 of it and drifts apart once the progress is 0.35 past it;
-    // in the crane back only 2014 (gathering again at the span's start) and 2026 remain
-    form: yr => { const k = yr - Y0; if (k === 0) return Math.max(ramp(t, -0.2, 0.55) * (1 - ramp(prog, 0.35, 0.85)), ramp(t, CTR.crane[0] + 0.6, CTR.crane[1] + 0.2));
-      return ramp(prog, k - 0.6, k - 0.02); },
-    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return 0; return ramp(prog, k + 0.35, k + 0.85); },
-    numX: yr => NUM.x * lerp(1, 1.0, u), numY: yr => NUM.y * lerp(1, 2.6, u), numScale: yr => lerp(1, yr === Y1 ? 3.3 : 2.4, u),
-    numAlpha: yr => yr === Y0 ? lerp(1, .62, u) : 1, cur,
+    cam, prog, focusYear: lerp(prog, 6, u), dof: 1 - u, fogN: lerp(2600, 11000, u), fogS: lerp(3600, 9000, u), dust: 1 - .4 * u, nodeMin: lerp(3, 4.5, u),
+    // a year gathers as the progress comes within 0.42 of it and drifts apart once the progress is 0.38 past it; in
+    // the crane only 2014, gathering again at the span's start, and 2026 remain
+    form: yr => { const k = yr - Y0;
+      if (k === 0) return Math.max(ramp(t, -0.15, 0.45) * (1 - ramp(prog, 0.38, 0.68)), ramp(t, CTR.crane[0] + 0.9, CTR.crane[1] + 0.3));
+      return ramp(prog, k - 0.42, k - 0.08); },
+    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return t > CTR.crane[0] ? 0 : ramp(prog, 0.38, 0.68); return ramp(prog, k + 0.38, k + 0.68); },
+    numPos: yr => { const n = numNear(yr); return [lerp(n[0], 0, u), lerp(n[1], 40 + capP(yr) * 0.72, u), lerp(n[2], (yr - Y0) * TLD, u)]; },
+    numCap: yr => lerp(NUM.cap, capP(yr), u), numAlpha: yr => yr === Y0 ? lerp(1, .6, u) : 1,
   };
 }
 

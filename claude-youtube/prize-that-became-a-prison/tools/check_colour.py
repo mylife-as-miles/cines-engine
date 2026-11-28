@@ -20,10 +20,11 @@ untagged file is read as BT.601, as ffmpeg reads it): `ffmpeg` is ffmpeg's own c
 tools and OpenCV see), `exact` is the same conversion with accurate rounding and full chroma interpolation (close to a
 player's float shader). The error is the largest per-channel difference of a patch's mean (its inner 32 x 32, over
 every frame of the path), in 8-bit levels; a path passes when no patch is off by more than 3 on the `ffmpeg` decode.
-The split's 4 px gutter (10,12,15) is read straight from the YUV planes and converted by the tags in floating point.
+The split's 4 px gutter (10,12,15) is read straight from the YUV planes and converted by the tags in floating point
+(its luma is exact; x264 smears the chroma of a strip two chroma samples wide into its neighbours, about 2.5 levels).
 
 Nothing here renders a reel: each path makes a quarter or half second at 1080p in a temporary sandbox, removed after
-(--keep leaves it). Takes about two minutes.
+(--keep leaves it). Takes about a minute and a half.
 """
 import argparse
 import importlib.util

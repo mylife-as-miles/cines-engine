@@ -71,8 +71,23 @@ done
 ```
 
 (`./run_gpu.sh check|test|all|encode` runs steps 2 to 5 with the same commands.) Frames already on disk are skipped,
-so a stopped box resumes where it was. Copy `frames/` home while it runs (`rsync -a frames/ <home>:...`), because
-anything left on a box is lost when it stops.
+so a stopped box resumes where it was.
+
+Measured here, every frame of A and B has about 20 single-threaded CPU-seconds of work before the GPU starts: Dawn's
+deformed body, clothes and hair are evaluated at render subdivision for the three motion-blur steps and re-synced.
+C has about 5. On a box CPU this is perhaps 8-12 s a frame, and the GPU waits during it. If `nvidia-smi` shows the
+GPU idle between frames, run two processes per GPU, so one syncs while the other samples. The card holds both
+scenes easily. Use `--shard` over 2N, with each pair on one `CUDA_VISIBLE_DEVICES`:
+
+```sh
+for i in $(seq 0 $((2*N-1))); do
+  CUDA_VISIBLE_DEVICES=$((i/2)) $BLENDER -b --factory-startup -P render.py -- \
+    --blend blend/$s.blend --out frames/$s --shard $i/$((2*N)) --device OPTIX > logs_${s}_$i.txt 2>&1 &
+done; wait
+```
+
+Copy `frames/` home while it runs (`rsync -a frames/ <home>:...`), because anything left on a box is lost when it
+stops.
 
 ## 5. Assemble the MP4s (grade A applied here, not in the render)
 
