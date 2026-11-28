@@ -7,6 +7,26 @@ cards were rejected as boring). Pacing alternates fast and slow for retention, l
 
 This replaces the "3D still + 2D push" method of animatics v1 and v2. The script stays SCRIPT_V3.
 
+## The current plan: hero shots only (the author, 28 Nov)
+
+> "You not need to animate all part some part will be still just camera tilting... Only animate the important part
+> like rain etc... Hand typing etc... So we only use let's credit"
+
+- **Most shots stay a single high-quality frame with a camera move.** The move is a tilt, pan, slow push or rack focus, done in 2.5D with depth parallax by tools/assemble.py, as now. Cheap 2D motion can be added on top (drifting dust, flicker, steam). All of this is made here for free.
+- **Only the hero moments are animated and path traced on the GPU.** There are about 20 of them, about 80 s of film:
+  - a hand typing the reply to the prize email, and the search;
+  - Dawn walking in the Hong Kong rain, the wet street reflecting the neon;
+  - the bags going onto the check-in scale, and on the baggage belt;
+  - the officer lifting the tote in the inspection room (cloth);
+  - dust and haze drifting in the detention corridor, and a cell door closing;
+  - Tim's hand writing letters;
+  - the aircraft window: clouds and the wing strobe;
+  - the blind light moving across Gene's empty chair as time passes;
+  - the visiting-room handset and glass.
+- **Cost: about 1,500-2,000 credits (about $75-100) for the whole film.** That is about 2,400 Cycles frames at about 18 s, plus re-renders and test frames. It fits the credits the author already holds. Any hero shot that looks right in Eevee costs less.
+
+The full-animation numbers below are kept for reference. They are now the upper bound, not the plan.
+
 ## What fern actually does (from the contact sheets in the analysis folder)
 
 - Animated mannequins in real-feeling rooms: typing, sitting, turning; close-ups of hands on lit keyboards.
