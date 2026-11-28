@@ -101,6 +101,21 @@ class Page:
         s = dpi / 72.0
         self.words = [(m.group(5), float(m.group(1)) * s, float(m.group(2)) * s, float(m.group(3)) * s, float(m.group(4)) * s)
                       for m in re.finditer(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">(.*?)</word>', html)]
+        # Privacy: a real person's contact details never reach the screen. Every word that is an email address or a
+        # phone number (S1's letter ends with Tim Hunt's) is erased from the ink and from the word list, on every page
+        # of every document, whatever a shot frames.
+        contact = re.compile(r'@|^\(?\d{3}\)?[-.\s]?\d{3}[-.]\d{4}$|^\d{3}[-.]\d{3}[-.]\d{4}$|^\d{3}[-.]\d{4}$')
+        keep = []
+        for w in self.words:
+            if contact.search(w[0]):
+                py, px = 0.06 * (w[4] - w[2]), 0.3 * (w[4] - w[2])   # tight above and below (the signature sits close above)
+                y0, y1 = int(max(0, w[2] - py)), int(min(self.h, w[4] + py))
+                x0, x1 = int(max(0, w[1] - px)), int(min(self.w, w[3] + px))
+                self.ink[y0:y1, x0:x1] = 0.0
+            else:
+                keep.append(w)
+        self.redacted = len(self.words) - len(keep)
+        self.words = keep
 
     def find(self, phrase):
         """The word boxes of a phrase (first occurrence), grouped into lines: [[(x0,y0,x1,y1), ...], ...]."""
