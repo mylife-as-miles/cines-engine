@@ -384,7 +384,9 @@ def recolour(mat, median_lum, gamma=0.65, spec=0.4, rough_add=0.15):
     met = b.inputs["Metallic"]
     if met.is_linked:
         original_metal = met.links[0].from_socket
-        col = _mix(nt, _maprange(nt, original_metal, 0.3, 0.6, 0.0, 1.0), col, src)
+        brass = _n(nt, "ShaderNodeHueSaturation", Saturation=0.35, Value=0.8)
+        _link(nt, src, brass.inputs["Color"])
+        col = _mix(nt, _maprange(nt, original_metal, 0.3, 0.6, 0.0, 1.0), col, brass.outputs["Color"])
         _link(nt, _math(nt, "MINIMUM", original_metal, 0.17), met)
     else:
         met.default_value = min(met.default_value, 0.17)
