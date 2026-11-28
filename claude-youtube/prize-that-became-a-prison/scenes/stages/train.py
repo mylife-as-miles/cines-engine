@@ -41,8 +41,7 @@ EXPOSURE = -1.4
 DAWN_ROW, DAWN_SIDE = 4, "L"
 SEAT_X, SEAT_Y = st.seat_world(DAWN_SIDE, DAWN_ROW, "window")
 GLASS_X = -(st.XW + st.REVEAL)                  # the inner face of her window's glass
-LOOK = Vector((GLASS_X - 0.06, SEAT_Y - 2.8, 1.16))  # a passing light through the next bay, ahead of her
-AISLE_LOOK = Vector((GLASS_X - 1.2, SEAT_Y - 1.6, 1.12))
+LOOK = Vector((GLASS_X - 1.2, SEAT_Y - 1.6, 1.12))   # out through her own window
 CUSHION_SINK = 0.012                            # how far a sitter settles into the cushion
 
 # strip light levels per (bay, side): bay 2 is over Dawn; travellers sit under bays 3-6
@@ -69,29 +68,31 @@ CAMERAS = {
     # Ch 03: one-point down the carriage from the near end at a standing eye line: the rows, the racks, the strip
     # lights converging on the vestibule door; Dawn's head at the window a third of the way along, under the one
     # burning bay and her reading lamp, her only suitcase on the rack above her
-    "aisle": dict(loc=(0.25, st.Y0 + 1.12, 1.6), aim=(0.0, st.Y1, 2.08), lens=38, focus="fx_dawn", fstop=5.6, beat="ch03",
+    "aisle": dict(loc=(0.25, st.Y0 + 1.12, 1.6), aim=(0.0, st.Y1, 1.92), lens=42, focus="fx_dawn", fstop=5.6, beat="ch03",
                   exposure=-1.05),
     # Ch 03: from over the seat back in front of her: her head turned to the window in near profile, her face
-    # frontal and faint in the black glass, the lights streaking past behind it
+    # in three-quarter view in the black glass, with a passing light crossing it
     "seat": dict(loc=(-0.35, SEAT_Y - 0.5, 1.32), aim=(-1.38, SEAT_Y + 0.05, 1.18), lens=35, focus="fx_seat", fstop=4.0,
                  beat="ch03"),
     # Ch 03: a controlled close-up on the suitcase on the rack above her, the carriage soft beyond
-    # The racks recede beyond it, with the top of Dawn’s head under the rail.
-    "rack": dict(loc=(0.35, SEAT_Y - 1.40, 1.98), aim=(-1.20, SEAT_Y + 1.40, 1.605), lens=40, focus="fx_bags", fstop=2.8,
+    # The rack recedes beyond the case, with room clear above its handle.
+    "rack": dict(loc=(0.20, SEAT_Y - 1.05, 1.92), aim=(-1.20, SEAT_Y + 0.60, 1.95), lens=55, focus="fx_bags", fstop=2.8,
                  beat="ch03", exposure=-1.2),
 }
 HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z), distance beyond the glass, length, height, rgb, k)
     ((0.0, -0.06, 0.17), 12.0, 9.0, 0.07, (1.0, 0.56, 0.24), 2.6),
-    ((0.0, -0.08, -0.25), 6.0, 3.2, 0.04, (0.78, 0.86, 1.0), 1.8),
+    ((0.0, -0.08, -0.25), 6.0, 1.7, 0.04, (0.78, 0.86, 1.0), 1.8),
     ((0.0, -0.4, 0.06), 34.0, 8.0, 0.16, (1.0, 0.78, 0.55), 1.6),
+    ((0.0, -0.02, -0.07), 18.0, 4.5, 0.025, (1.0, 0.62, 0.3), 1.2),
 ]
 SEAT_CAM_OFFSET = (0.68, -0.30, 0.06)      # the seat camera from her eyes: toward the aisle, in front, a little above
 if os.environ.get("TRAIN_CAMS"):        # a re-render of some cameras with `--cam all` (one build)
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["TRAIN_CAMS"].split(",")}
 TRIMS = {
     "aisle": {"face_fill": 2.4, "reading_lamp": 1.1, "bun_rim": 0.0, "bag_edge": 0.5,
-              "hair_glass": 0.0, "strip_R2_light": 0.57},
-    "seat": {"night_light": 0.0, "bag_edge": 0.0, "reading_lamp": 0.8, "face_fill": 0.73},
+              "hair_glass": 0.0, "strip_R2_light": 0.57, "rack_bar_fill": 0.0},
+    "seat": {"night_light": 0.0, "bag_edge": 0.0, "reading_lamp": 0.8, "face_fill": 0.73,
+             "hair_glass": 1.4, "rack_bar_fill": 0.0},
     "rack": {"face_fill": 0.0, "bun_rim": 0.0, "hair_glass": 0.0},
 }
 GLASS_REFL = {"aisle": 0.06, "seat": 0.07, "rack": 0.06}
@@ -407,7 +408,7 @@ def place_dawn():
     s.solve_legs(seat_z)
     g = s.place(SEAT_X, SEAT_Y, seat_z)
     s.lean_to_back(SEAT_X, SEAT_Y, seat_z)
-    aim_head(s, LOOK)
+    aim_head(s, LOOK, base_turn=(-10, -22))
     s.settle_hands()
     pts = body_points(h)
     hip = hip_world(h)
@@ -487,6 +488,69 @@ def attendant():
 
 
 # ---------------------------------------------------------------- props
+def dress_seats():
+    variants = {("L", 6): (3, 0), ("R", 5): (0, -4), ("R", 8): (0, None)}
+    st.seats(st.seat_unit(), skip={(row, side) for side, row in variants})
+    for (side, row), linen in variants.items():
+        name = f"seats_{side}{row}"
+        pair = bpy.data.objects.new(name, None)
+        pair.instance_type = "COLLECTION"
+        pair.instance_collection = st.seat_unit(f"{name} linen", linen_angles=linen)
+        pair.location = ((-1 if side == "L" else 1) * st.PAIR_X, st.ROW_Y[row], 0.0)
+        bpy.context.scene.collection.objects.link(pair)
+
+    x, y = st.seat_world("R", 5, "aisle")
+    # The coat runs up the front of the backrest, over its crown and
+    # down the back. The ends hang loose from the supported folds.
+    coat_profile = [
+        (st.back_y(0.70) - 0.06, 0.70, 0.30),
+        (st.back_y(0.87) - 0.037, 0.87, 0.29),
+        (st.back_y(1.04) - 0.018, 1.04, 0.26),
+        (st.back_y(st.BACK_TOP) - 0.005, 1.087, 0.24),
+        (st.back_y(st.BACK_TOP) + 0.048, 1.094, 0.24),
+        (st.back_y(st.BACK_TOP) + 0.101, 1.070, 0.25),
+        (st.back_y(0.94) + 0.127, 0.94, 0.27),
+        (st.back_y(0.79) + 0.145, 0.79, 0.31),
+    ]
+    verts, faces = [], []
+    columns = 13
+    for j, (offset, height, width) in enumerate(coat_profile):
+        hang = abs(2 * j / (len(coat_profile) - 1) - 1)
+        for i in range(columns):
+            u = i / (columns - 1)
+            fold = math.sin(5 * math.pi * u + j * 0.35)
+            verts.append((x + (u - 0.5) * width + 0.035, y + offset + 0.009 * hang * fold,
+                          height + 0.008 * hang * fold + 0.025 * hang * (u - 0.5)))
+        if j:
+            for i in range(columns - 1):
+                a = (j - 1) * columns + i
+                faces.append((a, a + 1, a + columns + 1, a + columns))
+    coat_cloth = st.mt.upholstery("unmarked wool travelling coat", rgb=(0.041, 0.038, 0.035), weave=510, wear=0.10)
+    coat = st.mesh_obj("coat draped over R5 aisle seat", verts, faces, coat_cloth)
+    smooth = coat.modifiers.new("soft folds", "SUBSURF")
+    smooth.levels = smooth.render_levels = 2
+    coat.modifiers.new("wool thickness", "SOLIDIFY").thickness = 0.004
+
+    x, y = st.seat_world("R", 8, "window")
+    linen = st.box("folded linen on R8 cushion", (0.19, 0.13, 0.013),
+                   (x - 0.02, y - 0.06, st.cushion_top(-0.06) + 0.006), st.M["linen"],
+                   bevel=0.006, rot=(-0.064, 0, -0.21))
+    for vertex in linen.data.vertices:
+        vertex.co.z += 0.003 * math.sin(45 * vertex.co.x + 16 * vertex.co.y)
+
+    x, y = st.seat_world("L", 9, "aisle")
+    paper = sk.mat("plain kraft paper", (0.23, 0.16, 0.10), rough=0.85)
+    lid = sk.mat("plain cup lid", (0.16, 0.15, 0.13), rough=0.66)
+    bottle = sk.mat("unlabelled smoky bottle", (0.058, 0.091, 0.080), rough=0.44)
+    cup_bottom = st.cushion_top(-0.08) - 0.003
+    sk.cyl("plain paper cup", 0.026, 0.089, (x + 0.07, y - 0.08, cup_bottom + 0.0445), paper, r2=0.039)
+    sk.cyl("plain cup lid", 0.040, 0.008, (x + 0.07, y - 0.08, cup_bottom + 0.089), lid)
+    bottle_bottom = st.cushion_top(0.085) - 0.003
+    sk.cyl("unlabelled bottle body", 0.027, 0.110, (x - 0.06, y + 0.085, bottle_bottom + 0.055), bottle)
+    sk.cyl("unlabelled bottle shoulder", 0.027, 0.022, (x - 0.06, y + 0.085, bottle_bottom + 0.121), bottle, r2=0.013)
+    sk.cyl("unlabelled bottle cap", 0.014, 0.015, (x - 0.06, y + 0.085, bottle_bottom + 0.137), lid)
+
+
 def rack_case():
     """On the inbound train she has one suitcase. The duffel is bought later."""
     bed = st.RACK_Z + st.BAR_R
@@ -545,14 +609,30 @@ def rack_case():
     # The scanned pull curls into a numeral. A plain fabric keeper covers it
     # on the case itself, so it stays in place across the wide and rack insert.
     shell = max(meshes, key=lambda obj: len(obj.data.vertices))
+    scale = shell.matrix_world.to_scale().x
     normal = Vector((0.61, 0, 0.7924)).normalized()
     rotation = Matrix.Rotation(math.asin(normal.x), 4, "Y")
     mount = Vector((0.115, 0.001, 0.279)) + normal * 0.008
+    pocket_side = rotation.to_3x3() @ Vector((1, 0, 0))
+    mount += pocket_side * (0.012 / scale)
     nylon = sk.mat("matte charcoal zipper keeper", (0.021, 0.023, 0.026), rough=0.89)
-    keeper = st.box("suitcase zipper keeper", (0.057, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007, segs=5)
+    keeper = st.box("suitcase zipper keeper", (0.080, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007, segs=5)
     keeper.parent = shell
     keeper.matrix_basis = Matrix.Translation(mount) @ rotation
     meshes.append(keeper)
+    # The two scanned hubs have bright curls. Fit matte covers to the
+    # measured centres and axle directions on the unposed shell.
+    for label, centre, direction in (
+        ("upper", (0.1035, 0.204, -0.466), (1.0, 0.0, 0.0)),
+        ("lower", (0.103, -0.200, -0.460), (0.944, -0.33, 0.0)),
+    ):
+        axis = Vector(direction).normalized()
+        cap = sk.cyl(f"suitcase {label} wheel axle cover", 0.024 / scale, 0.006 / scale, (0, 0, 0), nylon, verts=48)
+        cap.parent = shell
+        cap.matrix_basis = Matrix.Translation(Vector(centre) + axis * (0.001 / scale)) @ axis.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        for face in cap.data.polygons:
+            face.use_smooth = len(face.vertices) == 4
+        meshes.append(cap)
     _STATE["bag_meshes"] = meshes
     print(f"TRAIN only suitcase: rack contact {dz * 1000:+.1f} mm from initial mark", flush=True)
     return lo, hi
@@ -606,13 +686,6 @@ def apply_camera(name):
     for amount in _STATE["bag_mute"]:
         amount.default_value = float(name == "aisle")
     sitter = _STATE["dawn_sitter"]
-    if sitter is not None and (name == "aisle") != _STATE["aisle_pose"]:
-        if name == "aisle":
-            aim_head(sitter, AISLE_LOOK, base_turn=(-10, -22))
-        else:
-            sitter.upper["chest"], sitter.upper["neck"], sitter.upper["head"] = _STATE["seat_pose"]
-        sitter.settle_hands()
-        _STATE["aisle_pose"] = name == "aisle"
     for obj in _STATE["cove_seams"]:
         obj.hide_render = name == "rack"
     lamp = st.LIGHTS["reading_lamp"]
@@ -713,11 +786,14 @@ def set_cameras(eyes, bag_box, dawn_holder):
         CAMERAS["seat"].update(loc=tuple(round(v, 4) for v in cam), aim=tuple(round(v, 4) for v in aim))
         _focus("fx_refl", mirror)
         _focus("fx_seat", eyes.lerp(mirror, 0.30))
-        rim = eyes + Vector((0.08, 0.25, 0.19))
+        bun = bpy.data.objects.get(f"{dawn_holder['body']}_bun") if dawn_holder is not None else None
+        bun_centre = (bun.matrix_world @ (sum((Vector(p) for p in bun.bound_box), Vector()) / 8)
+                      if bun is not None else eyes + Vector((0, 0.12, 0.06)))
+        rim = bun_centre + Vector((0.12, 0.14, 0.15))
         st.area("bun_rim", rim, (0.05, 0.05), 2.0, st.LAMP, spread=55,
-                rot=(eyes + Vector((0, 0.12, 0.06)) - rim).to_track_quat("-Z", "Y").to_euler())
-        # three passing lights placed through the glass around her reflection: one above her head, one below at
-        # her collar, one far and faint beyond; none across her face
+                rot=(bun_centre - rim).to_track_quat("-Z", "Y").to_euler())
+        # Position selected outside lights through the glass, including the
+        # short, dim streak that crosses the reflected lower face.
         ray = lambda off, dist: cam + (on_glass + Vector(off) - cam) * ((GLASS_X - dist - cam.x) / (on_glass.x - cam.x))
         for i, (off, dist, ln, hg, rgb, k) in enumerate(HERO_STREAKS):
             p = ray(off, dist)
@@ -731,25 +807,29 @@ def set_cameras(eyes, bag_box, dawn_holder):
             if face:
                 nose = max(face, key=lambda p: forward.dot(p - eyes))
                 clear.append((nose, 0.04, 0.05))
-            source = eyes + Vector((-0.16, 0.02, 0.20))
+            source = bun_centre + Vector((-0.17, -0.06, 0.17))
             light = st.area("hair_glass", source, (0.14, 0.14), 1.8, st.LAMP, spread=60,
-                            rot=(eyes + Vector((0, 0.10, 0.10)) - source).to_track_quat("-Z", "Y").to_euler())
+                            rot=(bun_centre - source).to_track_quat("-Z", "Y").to_euler())
             receivers = bpy.data.collections.new("Dawn reflected portrait")
             receivers.objects.link(body)
             hair = bpy.data.objects.get(f"{body.name}_hair")
             if hair is not None:
                 receivers.objects.link(hair)
+            if bun is not None:
+                receivers.objects.link(bun)
             light.light_linking.receiver_collection = receivers
         keep_clear(CAMERAS["seat"], clear)
         print(f"TRAIN seat camera {CAMERAS['seat']['loc']} aim {CAMERAS['seat']['aim']}: reflection on the glass at "
               f"{tuple(round(v, 3) for v in on_glass)}", flush=True)
     if "aisle" in CAMERAS:
         origin = Vector(CAMERAS["aisle"]["loc"])
-        for i, (side, bay, z, depth) in enumerate(((-1, 1, 1.25, 9), (1, 1, 1.38, 12),
-                                                    (-1, 2, 1.25, 17), (1, 2, 1.15, 10), (-1, 3, 1.30, 14))):
+        for i, (side, bay, z, depth, length) in enumerate((
+            (-1, 1, 1.25, 9, 6.4), (1, 1, 1.38, 12, 6.8), (-1, 2, 1.25, 17, 9.0),
+            (1, 2, 1.15, 10, 5.7), (-1, 3, 1.30, 14, 7.2), (1, 1, 1.13, 15, 4.2),
+        )):
             pane = Vector((side * abs(GLASS_X), st.WIN_Y[bay], z))
             centre = pane + (pane - origin) * (depth / abs(pane.x - origin.x))
-            st.streak_obj(f"aisle_motion_{i}", *centre, 7 + i, 0.07, (1.0, 0.56, 0.24), 7.0)
+            st.streak_obj(f"aisle_motion_{i}", *centre, length, 0.06, (1.0, 0.56, 0.24), 11.0 if side > 0 else 7.0)
     if bag_box:
         lo, hi = bag_box
         target = Vector((hi.x, (lo.y + hi.y) / 2, lo.z * 0.6 + hi.z * 0.4))
@@ -760,6 +840,15 @@ def set_cameras(eyes, bag_box, dawn_holder):
         for obj in _STATE["bag_meshes"]:
             receivers.objects.link(obj)
         light.light_linking.receiver_collection = receivers
+        bar_source = Vector((-0.90, SEAT_Y + 0.50, st.RACK_Z - 0.23))
+        bar_target = Vector((-1.26, bar_source.y, st.RACK_Z))
+        bars = st.area("rack_bar_fill", bar_source, (0.03, 1.5), 6.0, st.COOL, spread=77,
+                       rot=(bar_target - bar_source).to_track_quat("-Z", "Y").to_euler())
+        receivers = bpy.data.collections.new("Left rack tubes")
+        for obj in bpy.data.objects:
+            if obj.name.startswith("rack_bar_L"):
+                receivers.objects.link(obj)
+        bars.light_linking.receiver_collection = receivers
         _focus("fx_bags", target)
 
 
@@ -782,8 +871,7 @@ def build(cast=True):
     st.walls()
     st.end_walls()
     st.racks()
-    coll = st.seat_unit()
-    st.seats(coll)
+    dress_seats()
     st.luggage()
     st.curtains()
     st.outside()
@@ -796,13 +884,11 @@ def build(cast=True):
     _STATE["passengers"] = []
     _STATE["dawn_sitter"] = None
     _STATE["attendant"] = []
-    _STATE["aisle_pose"] = False
     d = None
     if cast:
         sitter = place_dawn()
         d = sitter.h
         _STATE["dawn_sitter"] = sitter
-        _STATE["seat_pose"] = tuple(sitter.upper[k] for k in ("chest", "neck", "head"))
         eyes = eye_centre(d)
         _STATE["dawn"] = d
         _STATE["cast"] = [d] + list(d.children_recursive)
