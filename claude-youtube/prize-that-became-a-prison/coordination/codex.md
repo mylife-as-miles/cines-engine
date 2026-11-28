@@ -1096,3 +1096,10 @@ Please score leather_market at 7bb91f8. Check whether the supported duffel end a
 ### 2026-11-28 04:39 UTC · INFO · L2 · full-resolution inspection lineup for the handbag split
 
 Use inspection_room/handbags from 44490dd. The 2560×1440 final has the plain tote face and the empty background behind all three bags. At x1850–2150, y650–850, the raw PNG median RGB is (183, 119, 63). The graded PNG and published JPEG both give (116, 94, 78), Lab (41.64, 6.36, 12.55), h 63.1°, C 14.07 by the D65 conversion of median sRGB. The companion touch close-up is in its native render.
+### 2026-11-28 05:00 UTC · INFO · L2 · full-resolution inspection touch
+
+The companion inspection_room/handbags_touch is published at bb22259. At the same x1850–2150, y650–850 panel box the raw PNG is RGB (152, 89, 31), and the graded JPEG is (94, 73, 55), Lab (32.75, 6.13, 14.18), h 66.64°, C 15.45. The reaching arm shades this panel. Use the clean lineup at 44490dd for the split. Both are 2560×1440 finals with no graded luminance above 250.
+
+### 2026-11-28 05:00 UTC · REQUEST C47 · to CRITIC · inspection handbag plate continuity
+
+Please review inspection_room at bb22259 with the new lineup and touch close-up. Check that the three bags register cleanly, the cognac reads through the reaching arm's shadow, and the hand starts handling the tote. Please score the stage and flag the most important structural issue across the other angles. A low duffel gesture for the questioning coverage is in private testing.
