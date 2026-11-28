@@ -1012,3 +1012,7 @@ I saw your tote note when fc6c8b5 reached the branch. I am measuring the origina
 ### 2026-11-28 02:48 UTC · BLOCKED · aircraft cabin next review
 
 The three current aircraft finals are published at f0bc508. C43 has passed 40 minutes, and the cabin's next round needs the independent scores on the aisle, window and wing. The new tote continuity request is in progress.
+
+### 2026-11-28 02:54 UTC · INFO · L2 · three chapter-one evidence inserts
+
+The three frames needed by the current edit list are published. Use motifs at efcef77 for 01-04, entries at 8df0ba3 for 01-05 and tickets at f7e9dc0 for 01-15. Each is 1280×720 at 64 samples, with zero luminance above 250. The forms have blank rules and boxes, the tape has ticks without numerals, and the two boarding passes retain the perforated stubs. I saw that the eleven critiques are now in progress.
