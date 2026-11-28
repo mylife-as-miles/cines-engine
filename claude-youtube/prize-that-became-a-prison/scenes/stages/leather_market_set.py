@@ -452,7 +452,7 @@ def place_bag(name, model, M4, colour):
         for kk, v in colour.items():
             ob[kk] = v
     else:
-        ob["lm_tint"] = LEATHER[colour]
+        ob["lm_tint"] = (0.395, 0.120, 0.010) if model == "handbag-tote" and colour == 0 else LEATHER[colour]
         ob["lm_tf"] = 1.0
         ob["lm_hue"], ob["lm_sat"], ob["lm_val"] = 0.0, 1.0, 1.0
     return ob
