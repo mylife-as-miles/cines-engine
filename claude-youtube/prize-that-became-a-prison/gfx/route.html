@@ -25,7 +25,7 @@ const PU = (lat, lon) => P(lat, U(lon));
 // unmarked point (departA, departQ): no dot, no ring, no name. ausAim is never drawn: it is only where the Australia
 // arc would make landfall (the Tiwi Islands' north coast), chosen so the arrowhead, stopped GAP px short of Australia's
 // lit land, sits in the Banda Sea pointing down a clear channel between the islands at the continent.
-const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], departA: [26.3, 110.6], departQ: [27.0, 104.5], ausAim: [-11.2, 130.38], australia: [-25.57, 134.36], qingdao: [36.07, 120.38] };
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], departA: [26.3, 110.6], departQ: [27.0, 104.5], ausAim: [-11.2, 130.3], australia: [-25.57, 134.36], qingdao: [36.07, 120.38] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
 const INK = '#ece8e1', LAND_C = '#1f2833', LIT = 0.12;   // land, and the white a lit region lays over it
@@ -204,7 +204,7 @@ const leg1 = () => gc(CITY.chicago, CITY.hongkong);
 // the edge of Qingdao's dot.
 const legA = (z = ZOOM) => trunc(bow(CITY.departA, CITY.ausAim, -0.12, 200), p => landDist(p, 'AUS'), GAP / z);
 const legQ = (z = ZOOM) => { const q = PU(...CITY.qingdao);
-  return trunc(bow(CITY.departQ, CITY.qingdao, 0.05, 120), p => Math.hypot(p[0] - q[0], p[1] - q[1]) - QDOT / z, GAP / z); };
+  return trunc(bow(CITY.departQ, CITY.qingdao, 0.02, 120), p => Math.hypot(p[0] - q[0], p[1] - q[1]) - QDOT / z, GAP / z); };
 const RISE = 32;   // map px over which each disputed line rises out of the lit land from its unmarked start
 // One label system: place names at 48 px semibold (cap height about 30 px), the day counts at 68 px; labels sit on open
 // water or inside the lit land, never across another country, with no leader lines; every named point has a dot.
