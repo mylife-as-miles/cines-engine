@@ -1,0 +1,111 @@
+{
+ "file": "out/review/film_v27.mp4",
+ "frames": 4640,
+ "seconds": 193.3333,
+ "shots_from_the_yard": [
+  {
+   "name": "the cutter over the wall",
+   "starts_at_s": 140.0,
+   "frames": 58
+  },
+  {
+   "name": "the spear; the two watch",
+   "starts_at_s": 142.417,
+   "frames": 98
+  },
+  {
+   "name": "Karst; Serath close",
+   "starts_at_s": 146.5,
+   "frames": 113
+  },
+  {
+   "name": "Karst: \"We stopped carrying it.\"",
+   "starts_at_s": 151.208,
+   "frames": 72
+  },
+  {
+   "name": "the hall, wide",
+   "starts_at_s": 154.208,
+   "frames": 70
+  },
+  {
+   "name": "her profile at the slab",
+   "starts_at_s": 157.125,
+   "frames": 153
+  },
+  {
+   "name": "the hall, wide",
+   "starts_at_s": 163.5,
+   "frames": 70
+  },
+  {
+   "name": "Karst opens the shutters",
+   "starts_at_s": 166.417,
+   "frames": 134
+  },
+  {
+   "name": "Serath: \"We were chosen.\"",
+   "starts_at_s": 172.0,
+   "frames": 79
+  },
+  {
+   "name": "Q10 take 2, whole",
+   "starts_at_s": 175.292,
+   "frames": 433
+  }
+ ],
+ "song": {
+  "runs_on_from_s": 147.504,
+  "between_lines_db": -17.0,
+  "under_a_voice_db": -25.0,
+  "where_something_is_seen_db": -13.0,
+  "out_over_last_s": 1.2
+ },
+ "spoken_at_s": [
+  [
+   147.9,
+   149.94
+  ],
+  [
+   152.09,
+   153.17
+  ],
+  [
+   157.62,
+   163.22
+  ],
+  [
+   163.93,
+   165.93
+  ],
+  [
+   169.82,
+   171.72
+  ],
+  [
+   174.19,
+   174.88
+  ],
+  [
+   176.99,
+   177.74
+  ],
+  [
+   179.29,
+   180.34
+  ],
+  [
+   181.94,
+   183.54
+  ],
+  [
+   185.04,
+   185.69
+  ],
+  [
+   191.69,
+   192.59
+  ]
+ ],
+ "peak_dbfs": -1.89
+}
