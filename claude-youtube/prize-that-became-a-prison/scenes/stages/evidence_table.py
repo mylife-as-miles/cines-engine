@@ -42,6 +42,7 @@ TL, TW, TT = 2.2, 1.05, 0.045      # table length (x), depth (y), top thickness
 EXPOSURE = -1.5
 WARM = (1.0, 0.85, 0.68)           # the lamp: a warm-white incandescent
 COOL = (0.8, 0.88, 1.0)            # the laptop screen
+BAG_LIGHT = (0.94, 1.0, 0.68)      # the lamp and bounce balance for the two leather plates
 
 # The desk lamp (desk-lamp.glb at 0.55 m, turn 0, base centred on the origin): its shade looks along +Y and down. A
 # ray probe of the shade's cavity puts the bulb about here and the reflector's axis 47 degrees below horizontal.
@@ -78,7 +79,7 @@ TABLE_EDGE_RETURN = 7.5
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
-    "handbag-tote": (0.35, "long", dict(sat=0.98, val=0.84, hue=0.50, rough_add=0.32),
+    "handbag-tote": (0.35, "long", dict(sat=0.955, val=0.84, hue=0.50, rough_add=0.32),
                      dict(spec=0.08, leather_grain=True)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.33, rough_add=0.28),
                        dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10)),
@@ -136,7 +137,7 @@ CAMERAS["motifs"] = dict(loc=(0.11, -0.62, TOP + 0.44), aim=(-0.015, -0.002, TOP
                         focus="fx_entries", fstop=4, beat="document", show=("art materials",),
                         lamp=(-0.42, 0.16, -120), exposure=-1.5)
 CAMERAS["seam"] = dict(loc=(0.012, -0.47, TOP + 0.34), aim=(0.22, -0.19, TOP + 0.248), lens=63,
-                      focus="fx_seam_mid", fstop=6.3, beat="ch04", exposure=-1.4,
+                      focus="fx_seam_mid", fstop=6.3, beat="ch04", exposure=-0.76,
                       final_res=(2560, 1440), hide=("receipt_c4", "mug"))
 CAMERAS["visa"] = dict(loc=(0.105, -0.29, TOP + 0.30), aim=(-0.028, 0.002, TOP + 0.018), lens=69,
                       focus="fx_open_booklet", fstop=6.3, beat="document", show=("open booklet",),
@@ -894,14 +895,16 @@ def apply_camera(name):
     plate = beat == "plate"
     for ob in _STATE["lamp_meshes"]:
         ob.hide_render = plate
+    spot = bpy.data.objects["lamp_spot"].data
     if "spot" in cfg:
         degrees, blend = cfg["spot"]
-        spot = bpy.data.objects["lamp_spot"].data
         spot.spot_size, spot.spot_blend = math.radians(degrees), blend
     reveal = name in ("purses", "seam")
+    edge = bpy.data.objects["table edge bounce"].data
+    spot.color = edge.color = BAG_LIGHT if reveal else WARM
+    edge.energy = 4.5 if name == "purses" else TABLE_EDGE_RETURN
     bpy.data.objects["cone_haze"].hide_render = plate or reveal
     bpy.data.objects["bag edge return"].hide_render = name != "purses"
-    bpy.data.objects["table edge bounce"].data.energy = 4.5 if name == "purses" else TABLE_EDGE_RETURN
     bpy.data.objects["tote lip graze"].hide_render = name != "seam"
     for shutter in _STATE["lip shutters"]:
         shutter.hide_render = name != "seam"
