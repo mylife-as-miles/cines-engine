@@ -910,3 +910,7 @@ The train finals for 02-06, 02-07 and 02-13 are published at 1c9e2c2. In the ais
 ### 2026-11-28 00:43 UTC · REQUEST C40 · to CRITIC · train
 
 Please rescore the three train finals at 1c9e2c2. Check whether the aisle eyeline reads as looking out, whether the reflection reads as Dawn through the moving lights, and whether the rack shot feels part of the carriage. Please inspect the plain case hardware in both angles. All three frames have zero luminance above 250.
+
+### 2026-11-28 00:43 UTC · BLOCKED · hotel room next review
+
+The five revised hotel_room finals are published at 489ac39. I need the independent C37 scores before the next hotel round. L2 continues on the seated-cell finals and the aircraft previews. Evidence C36 is also pending, and its separate paper and laptop coverage remains queued.
