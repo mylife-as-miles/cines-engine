@@ -1196,12 +1196,12 @@
     },
     {
      "id": "03-16",
-     "at": "03.10@0.80",
+     "at": "03.10@0.835",
      "plate": "baggage_belt/curtain",
      "move": "in",
      "row": "baggage_belt `curtain`, `belt`",
      "sound": "Belt rollers; the pulse returns",
-     "change": "The seam and cut-away move to the last line (\"whatever was hidden in those linings\") so they land on the words; `belt` already played in the cold open, so `curtain` ends the chapter."
+     "change": "The seam and cut-away move to the last line (\"whatever was hidden in those linings\") so they land on the words; `belt` already played in the cold open, so `curtain` ends the chapter. Cue moved from @0.80 (LEAD, 28 Nov): the cut-away's close runs 3.6-4.05 s, so its shot now lasts about 4.2 s and the close lands on screen before the cut."
     }
    ]
   },
