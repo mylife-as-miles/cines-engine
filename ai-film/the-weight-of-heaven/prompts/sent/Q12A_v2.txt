@@ -1,0 +1,70 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q12A · THE TREATY HOUSE, THE HALL · THE PLAIN
+References: @Image 1 — a frame of this film: Karst at the opening, looking out over the plain: the framing and the light of shot 1 · @Image 2 — character sheet: SERATH · @Image 3 — character sheet: KARST · @Image 4 — a frame of this film: Serath's close shot: the framing and the light of shot 2
+Reference mode · 13 s · 2 shots · 2.35:1 · photoreal live action · spoken English: two speakers, each phrase said once · no music
+
+## SCENE INTENT
+Serath, Grand Admiral of a kingdom of cities held up in the sky, and Karst, an engineer of her own people who went over to the people of the ground long ago, are in an old hall on a great empty plain. She has just admitted that she sealed orders she never read. Now he stands at the tall opening with his back to her and looks out at the plain, and he tells her what it could do for her kingdom; and she answers him in three words. It plays as one quiet, unbroken moment: a man looking out, a woman watching his back, both voices low, nothing hurried.
+
+## GLOBAL LOCKS
+Character identity — KARST exactly as @Image 3 and as he is in @Image 1: a man of fifty-six, grey in his dark hair and short beard, a long pale stained engineer's coat. SERATH exactly as @Image 2 and as she is in @Image 4: a woman of fifty-five, short tightly curled black hair going grey, a long white coat, a heavy gold collar at her throat. From the sheets take face, hair and clothes only. Each face, costume, voice and line stays with its one person.
+Wardrobe override — none: both exactly as their sheets. No hands are in any frame.
+Location / environment continuity — an old hall of dark masonry. One tall opening in its wall gives onto the plain, a wooden shutter standing open beside it, as @Image 1. Outside the ground is flat, dark grey and empty to a level horizon, under a white overcast sky. No sun, no people, no buildings out there.
+Light — each shot is lit exactly as its frame. Shot 1, as @Image 1: Karst faces the white sky; its soft light is on the edge of his face, and his back, toward us, is in the shade of the room. Shot 2, as @Image 4: the daylight is on Serath's temple, her cheek and the side of her neck at the right of the frame; the side of her face toward the left of the frame is in soft shade. A small oil lamp stands on the floor below the frame; it adds only a faint warm touch from below and is never seen.
+Where each is — Karst stands at the opening, a few steps from her, his back to her, looking out. Serath is inside the hall, low beside a rock on the floor. Each is framed alone. In his shot we are behind his shoulder and see what he sees. In her shot she is on the right of the frame and looks up toward the left, at his back.
+Props and temporal state — no object is in any frame.
+
+## MOVIE COLOR
+Dark masonry, pale cloth, white sky; the gold of Serath's collar is the only strong colour. Shot 1 is exposed for the sky: the sky soft and white, never burnt out, the plain dark grey, the man a mid-dark shape before them. Shot 2 is low key: her face dim, the room dark around it.
+Influences, each with its purpose — Denis Villeneuve, Arrival and Dune: a figure seen from behind at one side of the frame, with the wide empty thing it looks at filling the rest; stillness; a face close and dim against the dark. James Cameron: every look is answered by what it looks at.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Each shot is on a steady, planted camera and does not move.
+
+## VOICE DNA (immutable)
+SERATH: The high speech of Orison: a soft, unplaced Received Pronunciation, older and gentler than a modern one, with no regional mark. A woman of fifty-five with a low alto, warm but closed, a little grain at the bottom of the range. She speaks at a measured pace; she never hurries, and her voice stays low but fully voiced, never a whisper.
+KARST: The grammar of the court spoken with the vowels of the ground: an educated Received Pronunciation flattened toward a northern English plainness by nineteen years below. A man of fifty-six with a dry, tired baritone, a slight rasp, low energy. He is unhurried. His sentences end flat. He is never angry. When something matters most he gets quieter, not louder.
+Only these two are in the hall.
+
+## AUDIO DESIGN
+The sound of a bare room of masonry, recorded as it is: close, dry and very quiet, with a little of the room on the voices. Through the opening, far off and faint, air moving over open ground. Both voices are close and clear. Nothing else sounds.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–8.6 s
+[CAM] the view of @Image 1: from behind his shoulder, 50 mm, at the height of his shoulder, level; the camera is planted and holds still. Focus is on him; the plain beyond is a little soft.
+[BLOCK] Exactly as @Image 1: Karst from behind his shoulder, from the chest up, on the right third of the frame, his brow, nose, mouth and beard seen from the side against the sky. The left two thirds of the frame are the white sky and, under it, the flat grey plain; the level horizon runs just under the middle of the frame, at the height of his collar. The planks of the open shutter stand behind him at the right edge.
+[ACT] He looks out at the plain; his head and shoulders keep the angle of @Image 1 from the first frame to the last. For the first second nothing moves and his mouth is closed. Then he says the three phrases one after another, as statements, with one slow breath between each, his eyes on the plain. We see his lips and his beard move, from the side, as he speaks. His mouth is closed whenever he is not speaking. After the last phrase he is still.
+[DIALOGUE] / V.O. KARST (1.3 to 2.5 s): "That will carry you." — flat and certain. Then, after one breath (3.9 to 4.9 s): "It is stone." — the same flat voice. Then, after one breath (6.3 to 7.6 s): "It has no children." — quieter; flat at the end.
+[SFX] his voice, close; his breath; far off, air over open ground.
+[STATE OUT] Karst looking out, his mouth closed.
+
+### SHOT 2
+[TIME] 8.6–13.0 s
+[CAM] the view of @Image 4: close-up, 85 mm, at the height of her collar, level; shallow focus on her nearer eye; the camera is planted and holds still.
+[BLOCK] Exactly as @Image 4: Serath alone in the frame, head and shoulders, her head right of the centre of the frame, in three-quarter face turned toward the left of the frame, her head a little bowed, the gold collar at the bottom of the frame, the dark behind her. Her eyes are raised to the left, on Karst's back; her eyes go past the left side of the camera and never meet it.
+[ACT] At the first frame she is still, her eyes on him, her mouth closed. For a little more than a second she only looks. Then she says the line, low and level: her lips part only a little and her brow does not move. Her mouth closes. She goes on looking at him, still, to the end.
+[DIALOGUE] / V.O. SERATH (10.0 to 11.1 s): "And your price." — quiet but fully voiced, her own low alto; level, not a challenge: one who expects to pay.
+[SFX] her breath; her voice, close.
+[STATE OUT] Serath looking up to the left, her mouth closed.
+
+## PERFORMANCE ARC
+KARST: looks at the plain → three bare statements → is still.
+SERATH: watches his back → the one question → goes on watching.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+Two shots: what he looks at, then the one who must answer it.
+
+## PHYSICS LOCKS
+Normal speed and real weight throughout. Each stays where they are from the first frame of the take to the last. Cloth hangs. Eyes move at a living pace, never snapping.
+
+## AUDIO LOCKS
+Each quoted phrase is spoken once, word for word, by the one named, in the order written: Karst's three phrases, then Serath's one. Nothing else is said by anyone. No narration. Karst speaks only in shot 1; Serath's mouth moves only during her one phrase in shot 2. Speech is unhurried in every phrase. No music, no singing, no score.
+
+## CONTINUITY LOCKS
+[POSITIVE] shot 1 is the view of @Image 1 · shot 2 is the view of @Image 4 · each shot lit as its frame · Karst on the right third, from behind his shoulder, the plain and the sky on the left two thirds · the plain empty to a level horizon · the gold collar on Serath alone · only the two of them
+[NEGATIVE] hands in the frame · objects held · other people · anything on the plain · captions, subtitles or legible lettering · a look into the lens · narration · camera movement or shake · anyone changing their place · warm firelight on the faces · sunlight or blue sky
+
+## GENERATION PRIORITY ORDER
+1. Every quoted phrase, word for word, once, each in its speaker's one voice, unhurried  2. Character identity from the sheets  3. Two shots in order, each with its own framing and length, each on a still camera  4. Shot 1 as @Image 1, shot 2 as @Image 4  5. Shot 1 exposed for the sky; shot 2 low key  6. Sound: a quiet bare room, far air, no music
+
+## FINAL STATE
+Shot 2 as written.
