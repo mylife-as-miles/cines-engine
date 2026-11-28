@@ -49,16 +49,38 @@ function inboxRows(ctx, t, hi) {
   }
   if (hi > 0) { ctx.save(); ctx.globalAlpha = 0.08 * hi; ctx.fillStyle = C.accent; ctx.fillRect(250, 80, W - 250, 74); ctx.restore(); }
 }
-// The prize line, in its three versions; each one erodes out and the next rises in (story wording, not the email's)
+// The prize line, in its three versions (story wording, not the email's). Each one rolls up and out as the next rolls
+// up into its place, like a counter. Only position and opacity animate: each phrase is set once, at full opacity, into
+// its own bitmap (so its weight can never change), the bitmaps move, and a window with soft top and bottom edges fades
+// them only as they cross its edges. Nothing changes the glyphs themselves (an alpha fade on the whole phrase read as a
+// change of weight: thin while faint, bold once solid).
 const PRIZE = ['a cash prize.', 'an international trip.', 'a travel package with cash.'];
+const PRIZE_PER = 2.2, ROLL = 0.45, ROLL_D = 52;        // a version every 2.2 s; the roll takes 0.45 s and travels 52 px (clear of the window)
+const PIMG = {};
+function phraseBitmap(s) {                              // the phrase at full opacity, baseline at 44, ink from x = 4
+  if (!PIMG[s]) { const c = document.createElement('canvas'); c.width = 800; c.height = 64;
+    txt(c.getContext('2d'), s, 4, 44, 30, C.ink, 600); PIMG[s] = c; }
+  return PIMG[s];
+}
+let PWIN = null;
 function prizeLine(ctx, t, x, y) {
-  const per = 2.2, i = Math.min(PRIZE.length - 1, Math.floor(t / per)), u = t - i * per;
   const pre = 'You have won ';
   txt(ctx, pre, x, y, 30, C.ink, 400);
   ctx.font = '400 30px "Inter"'; const px = x + ctx.measureText(pre).width;
-  const s = PRIZE[i], inA = sm(u / 0.35), out = i < PRIZE.length - 1 ? sm((u - (per - 0.3)) / 0.3) : 0;
-  ctx.save(); ctx.beginPath(); ctx.rect(px - 4, y - 36, 760, 48); ctx.clip();
-  ctx.globalAlpha = inA * (1 - out); txt(ctx, s, px, y + (1 - inA) * 18 - out * 10, 30, C.ink, 600); ctx.restore();
+  // which roll is under way: k = 0 rolls the first version in at the start, k = 1, 2 roll each version out for the next
+  const k = Math.max(0, Math.min(PRIZE.length - 1, Math.round(t / PRIZE_PER)));
+  const s = k === 0 ? sm(t / ROLL) : sm((t - (k * PRIZE_PER - ROLL / 2)) / ROLL);
+  const wy0 = y - 42, wh = 66;                           // the window: opaque from y - 30 to y + 12, soft 10 px edges
+  if (!PWIN) { PWIN = document.createElement('canvas'); PWIN.width = 800; PWIN.height = wh; }
+  const g = PWIN.getContext('2d'); g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, 800, wh);
+  const put = (i, base) => g.drawImage(phraseBitmap(PRIZE[i]), 0, base - wy0 - 44);
+  if (k > 0) put(k - 1, y - s * ROLL_D);                 // the outgoing version, rolling up and out
+  put(k, y + (1 - s) * ROLL_D);                          // the incoming (or resting) version
+  const gr = g.createLinearGradient(0, 0, 0, wh);
+  gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(12 / wh, 'rgba(0,0,0,1)');
+  gr.addColorStop(54 / wh, 'rgba(0,0,0,1)'); gr.addColorStop(64 / wh, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.globalCompositeOperation = 'destination-in'; g.fillStyle = gr; g.fillRect(0, 0, 800, wh);
+  ctx.drawImage(PWIN, Math.round(px) - 4, wy0);
 }
 function email(ctx, t) {
   chrome(ctx); sidebar(ctx);

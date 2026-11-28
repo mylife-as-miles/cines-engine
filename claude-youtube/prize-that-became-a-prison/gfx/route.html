@@ -123,13 +123,16 @@ function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre m
   const c = [from[0] + (to[0] - from[0]) * p, from[1] + (to[1] - from[1]) * p];
   ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * c[0], H / 2 - z * c[1]);
 }
-function camAt(ctx, [cx, cy, z]) {                   // a camera at the framing [x, y, zoom] ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy); }
+function camAt(ctx, [cx, cy, z]) {                   // a camera at the framing [x, y, zoom]
+  ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy);
+}
 // The mainland and split cameras. Under every hold runs one slow push, PUSH (3 % in 5 s, a constant rate in log zoom),
 // and each move is added on top of it, so a move lands into the push instead of stopping. A move pans evenly on screen
 // (the centre travels in proportion to 1/zoom, so a zoom-in does not race across the map at the end) and is timed by
-// glide(): velocity 12x(1-x)^2, rising from rest and then easing out as a cubic over the last two thirds of the move.
+// glide(): velocity in proportion to x^1.5 (1-x)^2, rising gently from rest to its peak at 43 % of the move, then a cubic
+// ease-out (velocity falling as the square of the time left) over the remaining 57 %.
 const PUSH = Math.log(1.03) / 5;
-const glide = x => { x = cl(x); return x * x * (6 - 8 * x + 3 * x * x); };
+const glide = x => { x = cl(x); return Math.sqrt(x) * x * x * (0.4 - 4 * x / 7 + 2 * x * x / 9) / (0.4 - 4 / 7 + 2 / 9); };
 function moveTo(a, b, u) {                            // the framing [x, y, zoom] a fraction u of the way from a to b
   const k = Math.log(b[2] / a[2]), z = a[2] * Math.exp(k * u);
   const g = Math.abs(k) < 1e-6 ? u : (1 / a[2] - 1 / z) / (1 / a[2] - 1 / b[2]);
@@ -215,17 +218,17 @@ const RISE = 32;   // map px over which each disputed line rises out of the lit 
 // One label system: place names at 48 px semibold (cap height about 30 px), the day counts at 68 px; labels sit on open
 // water or inside the lit land, never across another country, with no leader lines; every named point has a dot.
 const NAME = 48, DAYS = 68;
-// mainland: in on the mainland while it is named (0-2.4 s), then back and south as the Australia line draws (4.4-6.0 s),
+// mainland: in on the mainland while it is named (0-2.4 s), then back and south as the Australia line draws (4.4-6.2 s),
 // landing on the split's framing and pushing on into it. split: the two disputed lines fill the frame, centred on
 // 120 E, 15 N, with the slow push. The pull-back's target is the split's opening frame with the push still to come taken
 // out, so mainland's last frame (7.5 s) is split's first.
 const MAIN_C = PU(34.5, 99.5), SPLIT_C = PU(15, 120), SPLIT_Z = 1.79, MAIN_END = 7.5;
 const M0 = [W * 0.47, H * 0.41, 1.04], M1 = [MAIN_C[0], MAIN_C[1], 2.5], M2 = [SPLIT_C[0], SPLIT_C[1], SPLIT_Z * Math.exp(-PUSH * MAIN_END)];
-const mainCam = t => { const [x, y, z] = t < 4.4 ? moveTo(M0, M1, glide(t / 2.4)) : moveTo(M1, M2, glide((t - 4.4) / 1.6)); return [x, y, z * Math.exp(PUSH * t)]; };
+const mainCam = t => { const [x, y, z] = t < 4.4 ? moveTo(M0, M1, glide(t / 2.4)) : moveTo(M1, M2, glide((t - 4.4) / 1.8)); return [x, y, z * Math.exp(PUSH * t)]; };
 const splitCam = t => [SPLIT_C[0], SPLIT_C[1], SPLIT_Z * Math.exp(PUSH * t)];
 // AUSTRALIA in the split's framing: only the continent's top end is in frame, too narrow at this zoom for the name, so
 // the name sits on open water just west of it (the Indian Ocean below Timor), right-aligned short of the Kimberley coast.
-const AUS_L = PU(-14.3, 124.2);
+const AUS_L = PU(-13.6, 122.6);
 const MODES = {
   leg1(ctx, t) {
     camera(ctx, t, [W / 2, H * 0.41], [W * 0.47, H * 0.41], 1.0, 1.04, 6);   // framed low enough that the arc's top stays below y 110
@@ -258,8 +261,8 @@ const MODES = {
     dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(zEnd))); arrowEnd(ctx, A, fA); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'right', 600);
     dashed(ctx, Q, fQ, 1, RISE / plen(Q), dashPhase(legQ(zEnd))); arrowEnd(ctx, Q, fQ);
     pin(ctx, qx, qy, sm((t - 2.3) / 0.3));                               // Qingdao, named in the sources: the line stops GAP px short of it
-    // above and left of the dot, on the lit mainland, never in line with it (offsets in screen px)
-    label(ctx, 'QINGDAO', qx - 16 / ZOOM, qy - 46 / ZOOM, NAME, t, 2.4, 'right', 600);
+    // above and left of the dot, on the lit mainland clear of the Bohai coast, never in line with it (offsets in screen px)
+    label(ctx, 'QINGDAO', qx - 54 / ZOOM, qy - 42 / ZOOM, NAME, t, 2.4, 'right', 600);
   },
 };
 function grain(ctx, t) {                  // fresh grain each frame (sigma about 1.2 luma), so a map is never a dead still

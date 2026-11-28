@@ -61,6 +61,13 @@ def ease_push_rate(p):       # d ease_push / dp
     return k * np.exp(-k * min(max(p, 0.0), 1.0)) / (1 - np.exp(-k))
 
 
+# The page and its marker. The lit paper peaked at 186-189/255 after the grade (grey, and the marker read khaki), so the
+# page's own exposure lifts the sheet under the page (in linear light, the page quad only; never the grade). The marker
+# is a pale highlighter yellow, multiplied into the paper like ink; its edge is feathered by a fixed amount on screen.
+PAGE_GAIN = 1.55             # linear gain on the lit sheet: the paper peaks near 225/255 after the grade
+MARKER_RGB = [1.0, 0.93, 0.30]
+MARKER_FEATHER_PX = 0.75     # Gaussian sigma of the stroke's edge on screen, px (with the render's softness: 2-3 px 10-90 %)
+
 CREEP = 0.0012               # after the push lands: a one-way creep in, log zoom per frame (24 fps)
 CREEP_IN = 12                # frames over which the creep's rate eases in, so the end push never starts with a jolt
 
@@ -77,9 +84,34 @@ def creep_log(u, r0):
     return CREEP * u - (CREEP - r0) * n / 2
 
 
-def ease_inout(p):           # the marker's stroke: stdInOut
+def ease_inout(p):           # stdInOut (the focus rack, the texture rack, the drift)
     p = min(max(p, 0.0), 1.0)
     return p * p * (3 - 2 * p)
+
+
+STROKE_RAMP = 0.2            # the marker's speed ramps up over the first 20 % of a stroke's time and down over the last
+SWIPE_FRAMES = 20            # frames a line's stroke spends crossing the screen (a 14-18-frame visible sweep: the first
+                             # and last frames of a ramp barely move), whatever part of the line runs off the frame
+LINE_GAP = 2                 # frames between one line's stroke ending and the next line's starting (the pen moves down)
+
+
+def ease_stroke(u, a=STROKE_RAMP):
+    """A hand's stroke: speed ramps up, holds, ramps down (a trapezoid velocity), 0..1 over u = 0..1."""
+    u = min(max(u, 0.0), 1.0)
+    v = 1.0 / (1.0 - a)
+    if u < a:
+        return 0.5 * v * u * u / a
+    if u > 1 - a:
+        return 1.0 - 0.5 * v * (1 - u) ** 2 / a
+    return 0.5 * v * a + v * (u - a)
+
+
+_U = np.linspace(0, 1, 2001)
+_S = np.array([ease_stroke(u) for u in _U])
+
+
+def ease_stroke_inv(s):
+    return float(np.interp(s, _S, _U))
 
 
 def norm(w):
@@ -162,35 +194,47 @@ class Texture:
         return self.img
 
 
-def marker_mask(page, lines, progress, seed=7, pad=(0.25, 0.25)):
-    """Coverage 0..1 of a marker stroke over `lines`, written left to right, line after line; progress 0..1 overall."""
-    m = np.zeros((page.h, page.w), np.float32)
-    if progress <= 0:
-        return m
+def stroke_band(line, i, n, pad):
+    """A line's marker band in page pixels: (x0, x1, top, bottom, em). The band is about 1.3 x-heights tall and sits on
+    the line; it starts pad[0] em before the first word and ends pad[1] em past the last (0.25 em on all but the last
+    line of a mark, whose end pad is per mark: a quote, a stop)."""
+    x0 = min(b[0] for b in line); x1 = max(b[2] for b in line)
+    y0 = min(b[1] for b in line); y1 = max(b[3] for b in line)
+    em = y1 - y0                               # the word box: ascent to descent
+    x0 -= pad[0] * em; x1 += (pad[1] if i == n - 1 else 0.25) * em
+    base, xh = y0 + 0.77 * em, 0.42 * em       # baseline and x-height, estimated from the box
+    return x0, x1, base - 1.12 * xh, base + 0.20 * xh, em
+
+
+def stroke_mask(page, line, i, n, pad, p, sigma, seed):
+    """Coverage 0..1 of one line's marker stroke written to fraction p (0..1, already eased), as (mask, y0, x0): the
+    mask covers only the stroke's box. Edges are antialiased (fractional coverage of each pixel row, and of the
+    leading column), then feathered by `sigma` page pixels (set per shot from the screen scale, so the feather is the
+    same 2-3 px on screen at any zoom). A dry edge: a slow wobble of the top and bottom, fixed per line (its own seed),
+    so it never boils."""
+    if p <= 0:
+        return None
+    x0, x1, y0, y1, em = stroke_band(line, i, n, pad)
     rng = np.random.default_rng(seed)
-    n = len(lines)
-    for i, line in enumerate(lines):
-        p = ease_inout(progress * n - i)
-        if p <= 0:
-            continue
-        x0 = min(b[0] for b in line); x1 = max(b[2] for b in line)
-        y0 = min(b[1] for b in line); y1 = max(b[3] for b in line)
-        em = y1 - y0                           # the word box: ascent to descent
-        x0 -= pad[0] * em; x1 += (pad[1] if i == n - 1 else 0.25) * em   # the last line's end pad is per mark (a quote, a stop)
-        base, xh = y0 + 0.77 * em, 0.42 * em   # baseline and x-height, estimated from the box
-        y0, y1 = base - 1.12 * xh, base + 0.20 * xh   # a band about 1.3 x-heights tall, sitting on the line
-        xe = x0 + (x1 - x0) * p
-        xs = np.arange(int(x0), int(xe) + 1)
-        if len(xs) < 2:
-            continue
-        # a dry edge: low-frequency wobble of the top and bottom, fixed per line so it never boils
-        knots = rng.normal(0, 0.06 * em, size=(2, max(4, len(xs) // 60 + 2)))
-        top = y0 + np.interp(xs, np.linspace(xs[0], xs[-1], knots.shape[1]), knots[0])
-        bot = y1 + np.interp(xs, np.linspace(xs[0], xs[-1], knots.shape[1]), knots[1])
-        for x, a, b in zip(xs, top, bot):
-            m[max(0, int(a)):min(page.h, int(b)), x] = 1.0
-    m = cv2.GaussianBlur(m, (0, 0), 0.06 * (lines[0][0][3] - lines[0][0][1]))
-    return np.clip(m, 0, 1)
+    knots = rng.normal(0, 0.035 * em, size=(2, max(4, int((x1 - x0) // 160) + 2)))
+    xe = x0 + (x1 - x0) * p
+    xs = np.arange(int(np.floor(x0)), int(np.ceil(xe)))
+    if len(xs) < 2:
+        return None
+    kx = np.linspace(x0, x1, knots.shape[1])           # the wobble is fixed along the whole line, not stretched
+    top = y0 + np.interp(xs + 0.5, kx, knots[0])
+    bot = y1 + np.interp(xs + 0.5, kx, knots[1])
+    m = int(np.ceil(3 * sigma)) + 2
+    ry0 = int(np.floor(top.min())) - m; ry1 = int(np.ceil(bot.max())) + m
+    rx0 = xs[0] - m; rx1 = xs[-1] + 1 + m
+    ys = np.arange(ry0, ry1)[:, None].astype(np.float32)
+    cov = np.clip(np.minimum(bot[None, :], ys + 1) - np.maximum(top[None, :], ys), 0, 1)
+    colw = np.clip(np.minimum(xs + 1, xe) - np.maximum(xs, x0), 0, 1)   # partial first and leading columns
+    box = np.zeros((ry1 - ry0, rx1 - rx0), np.float32)
+    box[:, m:m + len(xs)] = cov * colw[None, :]
+    if sigma > 0.05:
+        box = cv2.GaussianBlur(box, (0, 0), sigma)
+    return box, ry0, rx0
 
 
 def main():
@@ -222,9 +266,12 @@ def main():
             y0 = int(min(b[1] for b in line) - 6); y1 = int(max(b[3] for b in line) + 6)
             band = ink[y0:y1]
             ink[y0:y1] = cv2.GaussianBlur(band, (0, 0), 14) * 0.85
-    marks = [(page.find(mk["phrase"]), mk["t"], mk.get("dur", 0.5), tuple(mk.get("pad_em", (0.25, 0.25)))) for mk in shot.get("marks", [])]
-    yellow = np.float32(shot.get("marker_rgb", [0.97, 0.86, 0.30]))   # display-referred reflectance, linearised below
+    marks = [(page.find(mk["phrase"]), mk["t"], mk.get("dur", 0.5), tuple(mk.get("pad_em", (0.25, 0.25))),
+              mk.get("swipe_frames", shot.get("swipe_frames", SWIPE_FRAMES))) for mk in shot.get("marks", [])]
+    yellow = np.float32(shot.get("marker_rgb", MARKER_RGB))   # display-referred reflectance, linearised below
     yellow_lin = srgb_to_lin(yellow)
+    feather = shot.get("marker_feather_px", MARKER_FEATHER_PX)
+    gain = 1.0 if tex else shot.get("page_gain", PAGE_GAIN)   # the page's own exposure: a screen keeps its glow
 
     # framing: the crop centre and zoom follow a log-space push toward `focus` (a phrase, in plate pixels)
     if tex:                                   # a screen: focus is a point given as fractions of the texture
@@ -235,13 +282,26 @@ def main():
         fx = np.mean([(b[0] + b[2]) / 2 for line in fl for b in line]); fy = np.mean([(b[1] + b[3]) / 2 for line in fl for b in line])
     focus_plate = cv2.perspectiveTransform(np.float64([[[fx, fy]]]), H_pp)[0, 0]
     z0, z1 = shot["zoom"]                     # zoom relative to the full plate (1.0 = the whole 2560 frame)
-    c0 = np.float64(shot.get("start_center", focus_plate)); c1 = focus_plate + np.float64(shot.get("end_offset", [0, 0]))
     dur = shot["duration"]
     roll = np.deg2rad(shot.get("roll_deg", 0.0))   # optional roll so the lines sit nearer level on screen
+    cr, sr = np.cos(roll), np.sin(roll)
+
+    def clamp(c, z):
+        """Keep the crop inside the plate (no mirrored plate at the edges), whatever the focus point."""
+        k = W / PW * z
+        hw, hh = W / 2 / k * (1 + abs(sr)), H / 2 / k * (1 + abs(sr))
+        return np.array([min(max(c[0], hw), PW - hw), min(max(c[1], hh), PH - hh)])
+
+    # The push's two ends are clamped, not its path. A centre clamped frame by frame rides the moving edge of the
+    # allowed region and leaves it with a kink (the scale's +3.6 -> -11.5 px/frame jolt; the mail's drift that stopped
+    # dead). The allowed region's half-size changes with 1/zoom, which is convex along a log-space push, so the
+    # straight path between two allowed ends stays allowed: the per-frame clamp below never acts on it.
+    c0 = clamp(np.float64(shot.get("start_center", focus_plate)), z0)
+    c1 = clamp(focus_plate + np.float64(shot.get("end_offset", [0, 0])), z1)
 
     r_land = np.log(z1 / z0) * ease_push_rate(1.0) / (dur * 24)   # the push's log-zoom rate per frame as it lands
 
-    def camera(t):
+    def push(t):
         p = ease_push(t / dur)
         z = z0 * (z1 / z0) ** p
         c = c0 + (c1 - c0) * p
@@ -249,25 +309,83 @@ def main():
             z *= np.exp(creep_log((t - dur) * 24, r_land))
         return z, c
 
-    def frame(t):
-        z, c = camera(t)
+    def screen_matrix(z):
         k = W / PW * z
-        # keep the crop inside the plate (no mirrored plate at the edges), whatever the focus point
-        hw, hh = W / 2 / k * (1 + abs(np.sin(roll))), H / 2 / k * (1 + abs(np.sin(roll)))
-        c = np.array([min(max(c[0], hw), PW - hw), min(max(c[1], hh), PH - hh)])
-        cr, sr = np.cos(roll), np.sin(roll)
-        A = np.array([[k * cr, -k * sr, 0], [k * sr, k * cr, 0], [0, 0, 1]], np.float64)
-        A[:2, 2] = np.array([W / 2, H / 2]) - A[:2, :2] @ c
+        return np.array([[k * cr, -k * sr], [k * sr, k * cr]], np.float64)
+
+    # an optional second move on top of the push ("drift": {"t", "dur", "uv", "to"}): from t, over dur, the camera eases
+    # (in and out) until the point uv (fractions of the page or texture) sits at screen position `to` ([x, y]; null
+    # keeps that axis), then holds. The search uses it to bring the result that matters up out of the caption band.
+    drift = shot.get("drift")
+    drift_d = np.zeros(2)
+    if drift:
+        q = cv2.perspectiveTransform(np.float64([[[drift["uv"][0] * page.w, drift["uv"][1] * page.h]]]), H_pp)[0, 0]
+        ze, ce = push(drift["t"] + drift["dur"])
+        M = screen_matrix(ze)
+        s_end = np.array([W / 2, H / 2]) + M @ (q - ce)
+        to = drift.get("to", [None, None])
+        want = np.array([s_end[0] if to[0] is None else to[0], s_end[1] if to[1] is None else to[1]], np.float64)
+        drift_d = np.linalg.solve(M, s_end - want)
+
+    def camera(t):
+        z, c = push(t)
+        if drift:
+            c = c + drift_d * ease_inout((t - drift["t"]) / drift["dur"])
+        return z, clamp(c, z)                 # a safety net only (see above); the camlog flags any frame it moves
+
+    def view(t):
+        z, c = camera(t)
+        M = screen_matrix(z)
+        A = np.eye(3)
+        A[:2, :2] = M
+        A[:2, 2] = np.array([W / 2, H / 2]) - M @ c
+        return A, A @ H_pp
+
+    # The marks. A mark ends where its (t, dur) timing always ended it, t + dur x lines, on its spoken word; each line's
+    # stroke is a hand's stroke (speed ramps up, holds, ramps down) timed so it spends `swipe_frames` crossing the
+    # screen: a line whose start runs off the frame begins its stroke off screen, earlier, and enters at speed. Lines
+    # are written in order, the pen moving down between them. The feather is set per stroke from the screen scale.
+    strokes = []
+    for mi, (lines, t0, d, pad, swipe) in enumerate(marks):
+        n = len(lines)
+        te = t0 + d * n
+        for i in reversed(range(n)):
+            x0, x1, y0, y1, em = stroke_band(lines[i], i, n, pad)
+            _, Ht = view(te)
+            xs = np.linspace(x0, x1, 401)
+            pts = cv2.perspectiveTransform(np.stack([xs, np.full_like(xs, (y0 + y1) / 2)], -1)[None], Ht)[0]
+            on = np.where((pts[:, 0] >= 0) & (pts[:, 0] < W) & (pts[:, 1] >= 0) & (pts[:, 1] < H))[0]
+            if len(on) and (on[-1] - on[0]) / 400 > 0.05:
+                frac = ease_stroke_inv(on[-1] / 400) - ease_stroke_inv(on[0] / 400)
+                nfr = min(swipe / max(frac, 1e-3), 3 * swipe)
+                xm = xs[(on[0] + on[-1]) // 2]
+            else:
+                nfr, xm = swipe, (x0 + x1) / 2
+            ab = cv2.perspectiveTransform(np.float64([[[xm, (y0 + y1) / 2], [xm, (y0 + y1) / 2 + 1]]]), Ht)[0]
+            sigma = feather / max(np.hypot(*(ab[1] - ab[0])), 1e-6)   # screen px -> page px, across the line
+            ts = te - nfr / a.fps
+            strokes.append(dict(line=lines[i], i=i, n=n, pad=pad, t=ts, T=nfr / a.fps, sigma=sigma, seed=7 + 31 * mi + i,
+                                mark=mi, on=(on[0] / 400, on[-1] / 400) if len(on) else None))
+            te = ts - LINE_GAP / a.fps
+
+    def frame(t):
+        A, Ht = view(t)
         base = cv2.warpAffine(plate, A[:2], (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
-        Ht = A @ H_pp
         if tex:                               # an emissive screen: the UI scales the blank display's own glow
             alb = srgb_to_lin(tex.get(t)).astype(np.float32)
         else:                                 # page albedo for this frame (marker under the ink)
             mk = np.zeros((page.h, page.w), np.float32)
-            for lines, t0, d, pad in marks:
-                prog = (t - t0) / (d * len(lines))
-                if prog > 0:
-                    mk = np.maximum(mk, marker_mask(page, lines, min(prog, 1.0), pad=pad))
+            for st in strokes:
+                u = (t - st["t"]) / st["T"]
+                if u <= 0:
+                    continue
+                r = stroke_mask(page, st["line"], st["i"], st["n"], st["pad"], ease_stroke(u), st["sigma"], st["seed"])
+                if r is None:
+                    continue
+                box, by, bx = r
+                ya, yb, xa, xb = max(by, 0), min(by + box.shape[0], page.h), max(bx, 0), min(bx + box.shape[1], page.w)
+                if ya < yb and xa < xb:
+                    mk[ya:yb, xa:xb] = np.maximum(mk[ya:yb, xa:xb], box[ya - by:yb - by, xa - bx:xb - bx])
             ink_lin = 1.0 - 0.93 * ink              # ink reflectance about 0.07
             alb = np.stack([ink_lin * (1 - mk + mk * yellow_lin[i]) for i in range(3)], -1)
         # pre-scale the page texture near the output scale so the warp does not alias
@@ -284,7 +402,14 @@ def main():
         if tr:
             tb = tb + (tr[2] - tb) * ease_inout((t - tr[0]) / (tr[1] - tr[0]))
         alb_w = cv2.GaussianBlur(alb_w, (0, 0), tb)
-        out = lin_to_srgb(srgb_to_lin(base) * alb_w)
+        lit = srgb_to_lin(base) * alb_w
+        if gain != 1.0:                       # the page's own exposure: the sheet under the page quad only, in linear light
+            q = cv2.perspectiveTransform(src[None].astype(np.float64), Ht)[0]
+            pm = np.zeros((H, W), np.uint8)
+            cv2.fillConvexPoly(pm, np.int32(np.round(np.clip(q, -1e5, 1e5) * 16)), 255, lineType=cv2.LINE_AA, shift=4)
+            pm = cv2.GaussianBlur(pm.astype(np.float32) / 255.0, (0, 0), 1.0)
+            lit *= (1.0 + (gain - 1.0) * pm)[..., None]
+        out = lin_to_srgb(lit)
         # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels, or a
         # continuous depth of field with "continuous": true)
         band = shot.get("focus_band")
@@ -316,13 +441,23 @@ def main():
                 out = out * (1 - wgt) + soft * wgt
         return (np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8)
 
-    if a.camlog:                              # the camera's zoom per frame and its rate (per mille per frame), no render
+    if a.camlog:                              # the camera per frame, and the marks' strokes; no render
         n = int(round(shot["length"] * a.fps))
-        zs = [camera(i / a.fps)[0] for i in range(n)]
-        print("frame\tt\tzoom\trate_permille")
+        cams = [camera(i / a.fps) for i in range(n)]
+        print("frame\tt\tzoom\trate_permille\tcentre_x\tcentre_y\tscreen_vx\tscreen_vy\tclamped")
         for i in range(n):
-            r = (zs[i + 1] / zs[i] - 1) * 1000 if i + 1 < n else float("nan")
-            print(f"{i}\t{i / a.fps:.3f}\t{zs[i]:.5f}\t{r:.4f}")
+            z, c = cams[i]
+            r = (cams[i + 1][0] / z - 1) * 1000 if i + 1 < n else float("nan")
+            # the screen velocity of what sits at the frame centre (px per frame, toward the next frame)
+            v = screen_matrix(cams[i + 1][0]) @ (c - cams[i + 1][1]) if i + 1 < n else np.array([np.nan, np.nan])
+            pz, pc = push(i / a.fps)
+            raw = pc + (drift_d * ease_inout((i / a.fps - drift["t"]) / drift["dur"]) if drift else 0)
+            cl = "yes" if np.abs(raw - c).max() > 1e-6 else "-"
+            print(f"{i}\t{i / a.fps:.3f}\t{z:.5f}\t{r:.4f}\t{c[0]:.2f}\t{c[1]:.2f}\t{v[0]:+.2f}\t{v[1]:+.2f}\t{cl}")
+        for st in strokes:
+            print(f"mark {st['mark']} line {st['i'] + 1}/{st['n']}: stroke {st['t']:.3f}-{st['t'] + st['T']:.3f} s "
+                  f"(frames {st['t'] * a.fps:.1f}-{(st['t'] + st['T']) * a.fps:.1f}), on screen {st['on']}, "
+                  f"feather sigma {st['sigma']:.2f} page px")
         return
     vf = [] if a.nograde else ["-vf", grade_filter()]
     if a.still:

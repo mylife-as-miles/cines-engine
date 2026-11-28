@@ -1,5 +1,5 @@
 {
-  "about": "Cold open 0:00 and chapter 3: the check-in scale's display (checkin_hall `scale`). A bar fills past the limit tick, then OVERWEIGHT; no weight is shown. The display sits 2.77-2.92 m away with focus at 2.29 m, f/2.8: 3-4 px of defocus, matched by tex_blur_px; as the push lands on the display, the focus racks onto it (tex_blur_rack), so OVERWEIGHT is crisp when it holds.",
+  "about": "Cold open 0:00 and chapter 3: the check-in scale's display (checkin_hall `scale`). A bar fills past the limit tick, then OVERWEIGHT; no weight is shown. The display sits 2.77-2.92 m away with focus at 2.29 m, f/2.8: 3-4 px of defocus, matched by tex_blur_px; as the push lands on the display, the focus racks onto it (tex_blur_rack), so OVERWEIGHT is crisp when it holds. The push runs from the whole plate (zoom 1.0, centre 1440,810: the only centre a full-plate frame allows) to the display, with the ends written as the frame really shows them (the old start_center 960,540 and end 1761.7,376.6 lay outside the plate's crop at their zooms; the per-frame clamp rode the edge and released at frame 16, a +3.6 to -11.5 px/frame reversal). Now one eased path: the screen moves one way, -6.7 px/frame easing to 0, never reversing.",
   "plate": "frames/raw/checkin_hall/scale.png",
   "corners": "frames/raw/checkin_hall/scale.corners.json",
   "texture": {
@@ -16,12 +16,12 @@
     1.35
   ],
   "start_center": [
-    960,
-    540
+    1440.0,
+    810.0
   ],
   "end_offset": [
     -120,
-    60
+    283.4
   ],
   "tex_blur_px": 1.25,
   "duration": 5.0,
