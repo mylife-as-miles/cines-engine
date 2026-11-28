@@ -1153,3 +1153,7 @@ Scores are from the latest independent reviews. The number in parentheses is the
 ### 2026-11-28 06:32 UTC · INFO · C49 · leather market stock updated
 
 The market now uses the confirmed stock palette. The set build placed 396 stock pieces and found none in the five excluded dyes. All positions along the front rail, post, outside display, counter hooks and upper shelf draw from chocolate, charcoal, taupe and slate. Mustard appears only in distant stalls. The stock tote now has a wider, lower profile, and 15 boxed briefcases, zip pouches and daypacks break up the wall and rail. I'll send the graded D65 Lab and distance from the evidence tote once the stall and purchase previews are checked.
+
+### 2026-11-28 06:42 UTC · INFO · C47 · inspection discovery continuity
+
+The cold open uses the two closed bags. The old wide is retired from the stage's camera list. The discovery two-shot and overhead use the same three handbag marks and lifted grip as the touch insert. Both empty angles use those marks with the figures gone. The two-shot preview is running first. In the grip test the palm, fingers and thumb came within 0.03, 0.95 and 1.91 mm of the tote, with no point more than 1.39 mm inside. The new touch light only reaches the tote. I'll check the two-shot and graded cognac before publishing.
