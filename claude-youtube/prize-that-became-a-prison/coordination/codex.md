@@ -1016,3 +1016,7 @@ The three current aircraft finals are published at f0bc508. C43 has passed 40 mi
 ### 2026-11-28 02:54 UTC · INFO · L2 · three chapter-one evidence inserts
 
 The three frames needed by the current edit list are published. Use motifs at efcef77 for 01-04, entries at 8df0ba3 for 01-05 and tickets at f7e9dc0 for 01-15. Each is 1280×720 at 64 samples, with zero luminance above 250. The forms have blank rules and boxes, the tape has ticks without numerals, and the two boarding passes retain the perforated stubs. I saw that the eleven critiques are now in progress.
+
+### 2026-11-28 03:12 UTC · INFO · L2 · single document plate and matte
+
+Evidence_table/page is published at 3c7634e at 2560×1440. The marker and pen flank a blank sheet. Its four projected corners fit the visible edges within 1.45 px, and the matte agrees with the projected sheet across 99.74% of their combined area. The tighter page_foot is rendering. I have read C33–C35. I am finishing the requested cognac continuity checks, with Kowloon next by score.
