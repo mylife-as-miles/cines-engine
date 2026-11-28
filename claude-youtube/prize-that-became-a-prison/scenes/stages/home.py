@@ -719,6 +719,7 @@ def family_member(name, chair, age, height, weight, tone):
     x, y, turn = chair
     tim = name == "Tim2014"
     older = name == "Gene2026"
+    seat_rear = 0.091 if older else 0.0
     seat_z = _STATE["cushions"]["tim" if tim else "gene"]
     holder = people.man(name, age=age, height_cm=height, weight=weight, tone=tone,
                         suit="male_casualsuit01" if tim else "male_casualsuit05")
@@ -726,7 +727,7 @@ def family_member(name, chair, age, height, weight, tone):
         people.tim_jaw(holder)
         upper = dict(SOLVE, torso=(3, 0), chest=(8, 8), neck=(2, 0), head=(8, 22), fingers=4)
     elif older:
-        upper = dict(SOLVE, torso=(4, 0), chest=(16, 0), neck=(8, 0), head=(18, -6), fingers=4)
+        upper = dict(SOLVE, torso=(4, 0), chest=(13, 0), neck=(8, 0), head=(18, -6), fingers=4)
     else:
         upper = dict(SOLVE, torso=(12, 0), chest=(14, 0), neck=(1, 0), head=(-5, -25), fingers=4)
     dz, hip = seat_figure(holder, seat_z, upper)
@@ -738,7 +739,7 @@ def family_member(name, chair, age, height, weight, tone):
         shoulder = rig.matrix_world @ rig.pose.bones[f"upper_arm_fk.{k}"].head
         bone = rig.pose.bones[f"upper_arm_fk.{k}"]
         length = (rig.matrix_world @ bone.tail - shoulder).length
-        elbow_z = st.D_TOP + (0.008 if tim and k == "L" else 0.019)
+        elbow_z = st.D_TOP + (0.057 if older else 0.008 if tim and k == "L" else 0.019)
         elbow_y = shoulder.y - math.sqrt(max(0, length**2 - (shoulder.z - elbow_z)**2 - 0.015**2))
         elbow = (shoulder.x + side * 0.015, elbow_y, elbow_z)
         if tim and k == "R":
@@ -766,7 +767,10 @@ def family_member(name, chair, age, height, weight, tone):
             joints = {"f_index": (15, 18, 12), "f_middle": (17, 21, 14),
                       "f_ring": (19, 23, 16), "f_pinky": (22, 25, 18)}
         else:
-            wrist = (hip.x + side * (0.15 if tim else 0.10), elbow_y - 0.24, st.D_TOP + 0.027)
+            if older:
+                wrist = (elbow[0] - 0.015, elbow_y - 0.26, st.D_TOP + 0.030)
+            else:
+                wrist = (hip.x + side * (0.15 if tim else 0.10), elbow_y - 0.24, st.D_TOP + 0.027)
             joints = ({"f_index": (2, 3, 2), "f_middle": (3, 4, 2), "f_ring": (4, 5, 3), "f_pinky": (4, 6, 4)}
                       if tim else {"f_index": (4, 6, 3), "f_middle": (5, 7, 4),
                                    "f_ring": (6, 8, 5), "f_pinky": (7, 10, 6)})
@@ -776,7 +780,7 @@ def family_member(name, chair, age, height, weight, tone):
                          palm_tilt=5.0 if tim else PALM_TILT)
     holder.rotation_euler.z = math.radians(turn + 90.0)
     rotation = holder.rotation_euler.to_matrix()
-    shift = rotation @ Vector((hip.x, hip.y + (0 if tim else 0.01), 0.0))
+    shift = rotation @ Vector((hip.x, hip.y + (0 if tim else 0.01) - seat_rear, 0.0))
     holder.location.x, holder.location.y = x - shift.x, y - shift.y
     if glass_point is not None:
         glass = bpy.data.objects["d_glass_tim"]
