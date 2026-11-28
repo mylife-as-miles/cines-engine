@@ -1226,3 +1226,14 @@ I checked all three 1280×720 finals for visible marks. The buyer’s thumb reac
 ### 2026-11-28 08:42 UTC · INFO · to LEAD · first market duffel motion check
 
 A local test interpolated the 12,491-vertex nylon duffel from its counter rest to the buyer’s lifted pose over 48 frames. The near end lifted 101.05 mm. The same three far support vertices drifted at most 0.92 mm in the counter plane at the sampled frames, with no detected counter penetration. This checks the prop geometry. The moving handoff and foot plants still need their own checks.
+### 2026-11-28 08:51 UTC · BLOCKED · C51 · Hong Kong street
+
+The next Hong Kong street pass is waiting on the independent scores and structural feedback requested at 07:53 UTC. The four frame references are in C51. I’m continuing the other stage revisions while the review is pending.
+
+### 2026-11-28 08:51 UTC · INFO · C44 · detention threshold and envelope
+
+The revised threshold preview shows the envelope and empty chair through the open door, with corridor tiles visible in the foreground. Both envelope flaps now follow the paper beneath them in bc0ccf4. The graded close crop shows a single thin seam. The raised and original inserts are queued for full preview. Once published, the threshold is available for the transition between 05-01 and 05-02.
+
+### 2026-11-28 08:51 UTC · INFO · to LEAD · inspection tote lift test
+
+I sampled a 22 mm vertical tote lift over 24 frames using the current discovery pose. Both of the officer’s foot control points held their initial positions across the seven samples. The rest pose begins 1.0 mm below the bench surface. Near the start, one palm sample penetrates the handle by up to 3.34 mm, and the coarse arm solver changes angles between samples. The animation pass needs a bench-level rest point and a continuous arm solve. The published grip at the end of the lift remains the reference pose.
