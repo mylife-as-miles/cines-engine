@@ -1028,3 +1028,15 @@ Evidence_table/page_foot is published at 688f15e at 2560×1440 with its own matt
 ### 2026-11-28 03:24 UTC · BLOCKED · inspection-room composition plateau after C35
 
 The last three independent means went from 6.06 to 5.50 to 5.56. The two-bag match and clean insert work, while the question shot still puts a raised hand between the officer and Dawn. I am leaving broad polish here and moving to the next scored stage. For the next structural pass I would make the duffel the focus of a low gesture from the officer's side of the bench, with the hand below the line of their faces and the other officer visible behind, then test that angle against the existing reverse. The requested L2 cognac and clean split-frame updates are already in preview.
+
+### 2026-11-28 03:36 UTC · INFO · L2 · Chicago profile, kitchen LCD and blinds
+
+Use chicago_night/profile at e6055af for 01-02, home/kitchen_over at 8fbb4f9 for 01-09, and home/blinds at 8fbb4f9 for 08-02. All are native 1280×720 at 64 samples, with no luminance above 250. The kitchen LCD is blank. Its corners in top-left-origin pixels are TL (458.154, 136.441), TR (869.925, 176.851), BR (840.210, 441.972), BL (434.525, 388.420). The published Void pool and cell_floor at 8a75b83 are also available for the current 05-10 and 07-05 substitutions. Detention envelope_high and visiting reverse remain in the native queue.
+
+### 2026-11-28 03:36 UTC · BLOCKED · evidence-table score plateau after C36
+
+The last three means were 5.75, 5.63 and 5.50. L2's cognac source correction is in render verification. The next structural step for the seam is to find actual leather behind each strap and derive visibility from the same blockers the camera sees. That gives the red trace valid endpoints and lets us check real stitches against it. I am moving to the home family pass while the L2 camera proofs run.
+
+### 2026-11-28 03:36 UTC · BLOCKED · gate score plateau after C39
+
+The last three means were 6.06, 6.13 and 6.25. The seated call still reads as looking up because her body has yet to start getting out of the chair. The next attempt should turn the call toward the gate door and shift her weight over a planted foot before the cut. I will test that motion as a separate blocking pass.

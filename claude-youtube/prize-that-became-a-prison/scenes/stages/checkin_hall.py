@@ -58,9 +58,10 @@ CAMERAS = {
                   exposure=-1.6),
     "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_scale", fstop=5.6,
                   exposure=-2.0, final_res=(2880, 1620)),
-    "profile": dict(loc=(5.2, -0.50, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
+    "profile": dict(loc=(5.2, -0.50, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8,
+                    final_res=(1920, 1080)),
     "shoulder": dict(loc=(0.6752, 1.6734, 1.53), aim=(0.2146, -0.2529, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
-                     exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
+                     exposure=-2.65, final_res=(1920, 1080)),
 }
 MON = (-0.2, 0.5, 30.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
 POST = (SX + 0.57, 0.95)  # scale display post (relative to the desk centre): at the scale's back corner, clear of
@@ -132,7 +133,7 @@ def _fmix(nt, fac, a, b):
 
 
 def pbr(name, rgb, rough=(0.4, 0.55), metal=0.0, nscale=4.0, stretch=(1, 1, 1), cvar=0.12, bump=0.0, bscale=90.0,
-        aniso=0.0, coat=0.0, ribs=None, wear=None, smudge=None):
+        aniso=0.0, coat=0.0, ribs=None, wear=None, smudge=None, polished_x=None):
     """A principled material with roughness and tone variation (no surface reads as one flat value).
 
     wear=(kick_h, reveal_z): a scuffed kick zone from the floor to kick_h (darker, rougher, patchy) and a soft
@@ -156,7 +157,7 @@ def pbr(name, rgb, rough=(0.4, 0.55), metal=0.0, nscale=4.0, stretch=(1, 1, 1), 
     dark = tuple(c * (1 - cvar) for c in rgb)
     lite = tuple(min(1.0, c * (1 + cvar)) for c in rgb)
     col_s = _mix(nt, _range(nt, _noise(nt, v, nscale * 0.37, 4.0), 0.3, 0.7, 0.0, 1.0), dark, lite)
-    if wear or smudge:
+    if wear or smudge or polished_x is not None:
         geo = nt.nodes.new("ShaderNodeNewGeometry")
         sep = nt.nodes.new("ShaderNodeSeparateXYZ")
         nt.links.new(geo.outputs["Position"], sep.inputs[0])
@@ -182,6 +183,16 @@ def pbr(name, rgb, rough=(0.4, 0.55), metal=0.0, nscale=4.0, stretch=(1, 1, 1), 
         col_s = _mix(nt, _range(nt, dist.outputs[0], 0.0, 0.06, 0.35, 0.0), col_s, tuple(c * 0.7 for c in rgb))
     if smudge:
         rough_s = _fmix(nt, _range(nt, patch, 0.55, 0.85, 0.0, 1.0), rough_s, smudge)
+    if polished_x is not None:
+        offset = nt.nodes.new("ShaderNodeMath")
+        offset.operation = "SUBTRACT"
+        nt.links.new(sep.outputs["X"], offset.inputs[0])
+        offset.inputs[1].default_value = polished_x
+        distance = nt.nodes.new("ShaderNodeMath")
+        distance.operation = "ABSOLUTE"
+        nt.links.new(offset.outputs[0], distance.inputs[0])
+        wear_zone = _range(nt, distance.outputs[0], 0.12, 0.35, 0.65, 0.0)
+        rough_s = _fmix(nt, wear_zone, rough_s, 0.32)
     nt.links.new(rough_s, b.inputs["Roughness"])
     nt.links.new(col_s, b.inputs["Base Color"])
     if bump or ribs:
@@ -411,7 +422,7 @@ def materials():
         laminate_side=pbr("laminate side", (0.052, 0.051, 0.05), (0.35, 0.55), nscale=6, cvar=0.08, bump=0.04, bscale=300,
                           wear=(0.25, 0.7), smudge=0.6),
         laminate_dark=pbr("laminate dark", (0.035, 0.036, 0.039), (0.35, 0.55), nscale=6, cvar=0.12, bump=0.04, bscale=300,
-                          wear=(0.3, 0.7)),
+                          wear=(0.38, 0.7)),
         kick=pbr("kick plate", (0.012, 0.012, 0.013), (0.55, 0.75), nscale=12, cvar=0.2, wear=(0.1, 0.05)),
         painted=pbr("painted steel", (0.03, 0.032, 0.035), (0.4, 0.55), nscale=5, cvar=0.12, coat=0.15, wear=(0.2, 0.25)),
         stainless=stainless_plate(),
@@ -419,7 +430,8 @@ def materials():
         pvc=pbr("pvc strip", (0.05, 0.055, 0.058), (0.3, 0.42), nscale=4, stretch=(1, 1, 0.2), cvar=0.15, coat=0.2),
         passport=pbr("passport cover", (0.021, 0.015, 0.025), (0.67, 0.76), nscale=30, cvar=0.1, bump=0.1, bscale=500),
         tray=pbr("grey tray", (0.11, 0.113, 0.118), (0.45, 0.6), nscale=9, cvar=0.1),
-        top=pbr("dark solid surface", (0.028, 0.030, 0.034), (0.48, 0.59), nscale=40, cvar=0.09, coat=0.025, smudge=0.40),
+        top=pbr("dark solid surface", (0.028, 0.030, 0.034), (0.48, 0.59), nscale=40, cvar=0.09,
+                bump=0.05, bscale=600, coat=0.025, smudge=0.34, polished_x=DAWN[0]),
         steel=pbr("brushed steel", (0.6, 0.61, 0.63), (0.22, 0.4), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08, aniso=0.5),
         steel_y=pbr("longitudinal brushed steel", (0.53, 0.54, 0.56), (0.34, 0.49), metal=1.0,
                     nscale=3, stretch=(30, 1, 30), cvar=0.05, aniso=0.35),
@@ -730,6 +742,7 @@ def desk(x0, idx, open_):
     # dark transaction ledge (overhangs the front) with a 6 mm dull-steel nosing, the lower work surface behind it
     box(p + "ledge", (2 * hw + 0.04, 0.358, 0.035), (x0, 0.139, LEDGE + 0.0175), m["top"], bevel=0.008)
     box(p + "nosing", (2 * hw + 0.044, 0.008, 0.006), (x0, -0.0415, LEDGE + 0.0285), m["steel_dark"], bevel=0.002)
+    box(p + "ledge back band", (2 * hw + 0.034, 0.004, 0.004), (x0, 0.317, LEDGE + 0.025), m["steel_dark"], bevel=0.001)
     box(p + "upstand", (2 * hw - 0.06, 0.025, LEDGE - WORK), (x0, 0.328, WORK + (LEDGE - WORK) / 2), m["top"], bevel=0.005)
     box(p + "work", (2 * hw - 0.06, 0.45, 0.03), (x0, 0.53, WORK - 0.015), m["top"], bevel=B)
     box(p + "back", (2 * hw - 0.06, 0.02, WORK - 0.2), (x0, 0.7, 0.16 + (WORK - 0.2) / 2), m["laminate_side"], bevel=0.004)
@@ -792,9 +805,14 @@ def desk(x0, idx, open_):
         terminal = box(p + "payment terminal", (0.075, 0.155, 0.035),
                        (x0 + 0.18, 0.20, LEDGE + 0.0525), m["plastic"], bevel=0.006,
                        rot=(0, 0, math.radians(-9)))
-        blank = screen_mat("terminal blank glass", (0.33, 0.45, 0.53), 1.2)
+        screen_colour = (0.33, 0.45, 0.53)
+        blank = screen_mat("terminal blank glass", screen_colour, 3.0)
         child(box(p + "terminal glass", (0.050, 0.038, 0.0012), (0, 0.033, 0.0178), blank,
                   bevel=0.0018, rot=(math.radians(6), 0, 0)), terminal)
+        spill = light(p + "terminal spill", (0, 0.028, 0.030), (0.06, 0.05), 0.30, colour=screen_colour,
+                      rot=Vector((0, -1, -0.3)).to_track_quat("-Z", "Y").to_euler(), spread=90)
+        child(spill, terminal)
+        spill.visible_camera = False
         for row in range(4):
             for column in (-1, 0, 1):
                 child(box(p + "plain terminal key", (0.010, 0.008, 0.002),
@@ -956,7 +974,7 @@ def position_lights(x0, idx, level):
             # the scale: the bags sit in the dark under their own dim pool and the display's glow
             cut = box(p + "scale_cutter", (0.01, 1.5, 1.8), (x0 + 0.78, 0.15, 2.25), m["plastic"])
             dot = box(p + "hand flag", (0.28, 0.21, 0.005), (x0 + 0.30, 0.12, 1.55), m["plastic"])
-            pad_flag = box(p + "hand flag2", (0.14, 0.10, 0.004), (x0 + 0.30, 0.12, LEDGE + 0.385), m["plastic"])
+            pad_flag = box(p + "hand flag2", (0.20, 0.14, 0.004), (x0 + 0.30, 0.12, LEDGE + 0.355), m["plastic"])
             for ob in (fl, cut, dot, pad_flag):
                 for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
                     setattr(ob, attr, False)
@@ -1033,7 +1051,31 @@ def bags():
     props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5,
                         val=0.25, rough_add=0.3)
     case = props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.35, val=0.5)
-    finishes = {slot.material for mesh in props.meshes(case) for slot in mesh.material_slots if slot.material}
+    case_meshes = props.meshes(case)
+    bpy.context.view_layer.update()
+    centre = case.matrix_world.translation.copy()
+    rotation = case.matrix_world.to_3x3().normalized()
+    unrotate = rotation.transposed()
+    grip = []
+    lift = Vector((0.0, 0.0, 0.04))
+    for mesh in case_meshes:
+        world = mesh.matrix_world
+        local_lift = world.inverted().to_3x3() @ lift
+        for vertex in mesh.data.vertices:
+            point = unrotate @ (world @ vertex.co - centre)
+            if point.z > 0.535 and point.x < -0.06:
+                grip.append(point)
+                vertex.co += local_lift
+        mesh.data.update()
+    if grip:
+        grip_x = (min(p.x for p in grip) + max(p.x for p in grip)) / 2
+        rail_height = 0.61 + lift.z - 0.50
+        for y in (min(p.y for p in grip) + 0.007, max(p.y for p in grip) - 0.007):
+            rail = centre + rotation @ Vector((grip_x, y, 0.50 + rail_height / 2))
+            rod = sk.cyl("case grip rail", 0.0085, rail_height, rail, materials()["steel_y"], verts=24)
+            rod.parent = case
+            rod.matrix_world = Matrix.Translation(rail)
+    finishes = {slot.material for mesh in case_meshes for slot in mesh.material_slots if slot.material}
     for finish in finishes:
         if not finish.use_nodes:
             continue
@@ -1211,7 +1253,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     target = Vector(wrist_target)
     pitch = 0.0
     bends = {"index": curl - 2, "middle": curl - 1, "ring": curl + 2, "pinky": curl + 6}
-    lower, upper = (-22.0, 5.0) if passing else (3.0, 27.0)
+    lower, upper = (-22.0, 12.0) if passing else (3.0, 27.0)
     tolerance = 0.00025 if passing else 0.0015
     if passing:
         bends["pinky"] = curl
@@ -1247,9 +1289,8 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         bpy.context.view_layer.update()
         if passing:
             # The thumb tracks the booklet edge, the three centre pads press its trailing half.
-            # Counter the rig's natural resting curl. The pads lie lengthwise
-            # on the card instead of balancing on the ends of the fingers.
-            spread = {"index": 0, "middle": 0, "ring": 0, "pinky": 2}
+            # A slight curl and inward spread keep the pads in contact with the card.
+            spread = {"index": 2, "middle": 1, "ring": -1, "pinky": -1}
             joints = {"f_" + f: (bend, -6, -2, spread[f]) for f, bend in bends.items()}
             joints["thumb"] = (5, 24, 5, 15)
             rigged.articulate_hand(holder, k, joints)
@@ -1390,10 +1431,16 @@ def build(cast=True):
         profile_trims.append((fixture, fixture.data.energy, factor))
     monitor = bpy.data.objects["desk0_mon_light"]
     monitor_aim = monitor.rotation_euler.copy()
+    monitor_energy = monitor.data.energy
     monitor_spread = monitor.data.spread
     profile_aim = (monitor.location - Vector((AGENT[0] - 0.05, AGENT[1] - 0.12, 1.62))).to_track_quat("Z", "Y").to_euler()
     d = people.dawn()                  # the shared cast: flat taupe blouse and skirt, plain black flats
-    castkit.relax_sculpted_hair(d)
+    castkit.relax_sculpted_hair(d, hairline_inset=0.0015)
+    hair = bpy.data.objects[d["body"] + "_hair"]
+    hair_finish = hair.active_material.copy()
+    hair_finish.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.20
+    for part in (hair, bpy.data.objects[d["body"] + "_bun"]):
+        part.data.materials[0] = hair_finish
     a = people.staff("Agent", 0)       # airline staff: plain dark suit, no insignia
     place(d, (DAWN[0], DAWN[1], 0), 192)
     place(a, (*AGENT, 0.041), 6)
@@ -1412,7 +1459,7 @@ def build(cast=True):
     nodes = net_material.node_tree.nodes
     nodes.remove(nodes["Principled BSDF"])
     filter_node = nodes.new("ShaderNodeBsdfTransparent")
-    filter_node.inputs["Color"].default_value = (0.5, 0.5, 0.5, 1.0)
+    filter_node.inputs["Color"].default_value = (0.33, 0.33, 0.33, 1.0)
     net_material.node_tree.links.new(filter_node.outputs[0], nodes["Material Output"].inputs["Surface"])
     net_mesh = bpy.data.meshes.new("Keyboard net")
     net_mesh.from_pydata([(-0.087, 0.597, 1.093), (0.301, 0.597, 1.093),
@@ -1428,23 +1475,43 @@ def build(cast=True):
     dawn_meshes = [ob for ob in d.children_recursive if ob.type == "MESH" and ob.visible_camera]
     agent_meshes = [ob for ob in a.children_recursive if ob.type == "MESH" and ob.visible_camera]
     agent_mark = a.location.copy()
+    island = bpy.data.objects["pos0_island"]
+    island_receivers = island.light_linking.receiver_collection
+    bare_agent = bpy.data.collections.new("Keep check-in island off the agent's suit")
+    agent_body = a["body"]
+    for ob in agent_meshes:
+        if ob.name != agent_body and not ob.name.startswith(agent_body + "_"):
+            bare_agent.objects.link(ob)
+            bare_agent.collection_objects[-1].light_linking.link_state = "EXCLUDE"
+    # The shifted agent leaves a dark foreground edge in the shoulder view.
+    shifted_x = agent_mark.x + 0.24
+    shoulder_edge = light("Agent reverse edge", (shifted_x - 0.29, agent_mark.y - 0.40, 1.94),
+                          (0.30, 0.10), 3.2, spread=65)
+    target = Vector((shifted_x - 0.07, agent_mark.y, 1.57))
+    shoulder_edge.rotation_euler = (target - shoulder_edge.location).to_track_quat("-Z", "Y").to_euler()
+    shoulder_edge.visible_camera = shoulder_edge.visible_glossy = False
+    shoulder_edge.hide_render = True
 
     def render(*args, **kwargs):
         cam = bpy.context.scene.camera
         name = cam.get("stage_camera") if cam else None
         hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes if name == "scale" else ()
         profile = name == "profile"
+        shoulder = name == "shoulder"
         edge.hide_render = profile
         keyboard_net.hide_render = not profile
+        shoulder_edge.hide_render = not shoulder
         fill.data.energy = 7.0 if profile else 2.5
         for fixture, watts, factor in profile_trims:
             fixture.data.energy = watts * factor if profile else watts
-        monitor.rotation_euler = profile_aim if profile else monitor_aim
+        monitor.rotation_euler = profile_aim if profile or name == "wide" else monitor_aim
+        monitor.data.energy = 7.5 if profile else monitor_energy
         monitor.data.spread = math.radians(60) if profile else monitor_spread
+        island.light_linking.receiver_collection = bare_agent if name == "wide" else island_receivers
         # Pull the foreground shoulder into the reverse. The wide and the
         # profile keep the physical contact with his keyboard.
-        if name == "shoulder":
-            a.location.x = agent_mark.x + 0.24
+        if shoulder:
+            a.location.x = shifted_x
         try:
             for ob in hidden:
                 ob.visible_camera = False
@@ -1452,11 +1519,14 @@ def build(cast=True):
         finally:
             edge.hide_render = False
             keyboard_net.hide_render = True
+            shoulder_edge.hide_render = True
             fill.data.energy = 2.5
             for fixture, watts, _ in profile_trims:
                 fixture.data.energy = watts
             monitor.rotation_euler = monitor_aim
+            monitor.data.energy = monitor_energy
             monitor.data.spread = monitor_spread
+            island.light_linking.receiver_collection = island_receivers
             a.location = agent_mark
             for ob in hidden:
                 ob.visible_camera = True
@@ -1487,7 +1557,8 @@ def pose_cast(d, a):
                           "f_ring": (17, 15, 12, 3), "f_pinky": (18, 16, 13, 6), "thumb": (22, 8, 9, -12)}}}
     gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
     fwd = (Vector((-0.208, 0.978, 0)) + 1.25 * Vector((0.978, 0.208, 0))).normalized()
-    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.184, 0.043, LEDGE + 0.08), LEDGE + 0.04216, fwd, curl=-8, passing=True, palm_drop=-0.002)
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.184, 0.043, LEDGE + 0.08), LEDGE + 0.04216, fwd,
+                     curl=9, passing=True, palm_drop=-0.002)
     # Put the booklet under the solved finger pads. Leave the far edge and a corner
     # exposed so the page block reads as a closed passport.
     for part in ("back", "pages", "front"):
