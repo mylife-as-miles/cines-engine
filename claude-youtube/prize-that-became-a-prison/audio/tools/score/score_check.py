@@ -54,7 +54,7 @@ def audioset(d):
 
 
 def flags(labels):
-    v = [(a, p) for a, p in labels if any(w.lower() in a.lower() for w in VOCAL)]
+    v = [(a, p) for a, p in labels if any(w.lower() in a.lower() for w in VOCAL) and 'bowl' not in a.lower()]   # a singing bowl is not a voice
     d = [(a, p) for a, p in labels if any(w.lower() in a.lower() for w in DRUM)]
     return v, d
 

@@ -139,15 +139,33 @@ def main():
     cand = find('G11', q, span['SC09b'], start=l11 + span['SC09a'] + 2.0)
     W['SC09b'] = {'source': 'G11', 'pieces': [{'from': round(cand[0]['start'], 3), 'to': round(cand[0]['start'] + span['SC09b'], 3)}],
                   'query': q, 'candidates': cand, 'rule': 'earshot find, best, after SC09a\'s window'}
-    # --- SC09c: one A (G12 when its condition was met)
-    g = SOURCE['SC09c'][0] if SOURCE['SC09c'][0] in T else 'G3'
-    o12 = [v for v in ons(g) if v >= lead(g) - 0.05]
-    n1 = o12[0] if o12 else lead(g)
-    nxt = next((v for v in o12[1:] if v > n1 + 0.5), dur(g))
-    to = min(nxt - 0.05, n1 - 0.01 + span['SC09c'])
-    W['SC09c'] = {'source': g, 'source_why': SOURCE['SC09c'][1] if g != 'G3' else 'the plan', 'pieces': [{'from': round(n1 - 0.01, 3), 'to': round(to, 3)}],
-                  'note_onset_src_s': round(n1, 3), 'next_onset_src_s': round(nxt, 3),
-                  'rule': 'the first note, from its attack until just before the next one (or the span)'}
+    # --- SC09c: one A. Candidates: strokes with >= 4 s to the next onset whose spectrum is one A and its harmonics
+    # (measured: G11 7.63 s and 19.48 s, A2 at 110.36 Hz, +6 c). earshot picks the one that reads most as a lone
+    # piano note; that piece alone is retuned to A = 440 (the drone's A2 is 110.00 Hz).
+    g = SOURCE['SC09c'][0]
+    import librosa as _lr
+    yy = _lr.to_mono(take(g).T); oo = ons(g); best = None
+    for i, n1 in enumerate(oo):
+        nxt = oo[i + 1] if i + 1 < len(oo) else dur(g)
+        if nxt - n1 < 4.0: continue
+        seg = yy[int((n1 + 0.08) * SR):int(min(nxt - 0.05, n1 + 2.5) * SR)]
+        N = 1 << 18; X = np.abs(np.fft.rfft(seg * np.hanning(len(seg)), n=N)); fr = np.fft.rfftfreq(N, 1 / SR)
+        X = X * ((fr > 50) & (fr < 2500))
+        pkx = [i2 for i2 in range(1, len(X) - 1) if X[i2] > X[i2 - 1] and X[i2] >= X[i2 + 1] and X[i2] > X.max() * 0.25]
+        f0 = min(fr[i2] for i2 in pkx)
+        if not all(abs(fr[i2] / f0 - round(fr[i2] / f0)) < 0.03 for i2 in pkx): continue
+        midi = 69 + 12 * np.log2(f0 / 440.0)
+        if int(round(midi)) % 12 != 9: continue                     # an A
+        m = api.match(path(g), 'a single soft piano note ringing out', alts=['a piano chord', 'a piano melody', 'a bell ringing'],
+                      start=n1 - 0.01, end=nxt - 0.05)
+        c = {'onset': round(n1, 3), 'next': round(nxt, 3), 'f0_hz': round(float(f0), 2), 'cents': round(float((midi - round(midi)) * 100), 1),
+             'z': m.get('z'), 'verdict': m.get('verdict')}
+        if best is None or (c['z'] or 0) > (best['z'] or 0): best = c
+        W.setdefault('_SC09c_candidates', []).append(c)
+    to = min(best['next'] - 0.05, best['onset'] - 0.01 + span['SC09c'])
+    W['SC09c'] = {'source': g, 'source_why': SOURCE['SC09c'][1], 'pieces': [{'from': round(best['onset'] - 0.01, 3), 'to': round(to, 3)}],
+                  'retune_cents': -best['cents'], 'note': best, 'candidates': W.pop('_SC09c_candidates'),
+                  'rule': f"a lone A{int(round(69 + 12 * np.log2(best['f0_hz'] / 440.0))) // 12 - 1} ({best['f0_hz']} Hz, {best['cents']:+.1f} c, retuned) from its attack to just before the next note"}
     for k, v in W.items():
         L = sum((pc.get('stretch_to') or pc['to'] - pc['from']) for pc in v['pieces']) - v.get('join_s', 0.0) * (len(v['pieces']) - 1)
         v['length_s'] = round(L, 3); v['span_s'] = span[k]

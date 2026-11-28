@@ -51,7 +51,8 @@ CHOICE = {
               'fade_in_s': 2.0, 'fade_out_s': 0.012, 'hard_out': True},
     'SC00d': {'start': ('voice_end', '00.sil3', 0.0), 'peak': ('row', '00.17', 0.0), 'end': ('row', '00.17', 4.0),
               'why': 'from nothing at the end of the near silence after "answer" (the row gives 81.542, inside it); the peak on the first frame of the title (shot 00-30); 4 s decay.',
-              'fade_in_s': 2.5, 'fade_out_s': 4.0},
+              'fade_in_s': 6.0, 'fade_in_curve': 'db', 'fade_out_s': 4.0,
+              'curve_why': 'the montage is 6.2 s on the EDL clock and any 6 s of the take rises only 1-2 dB: the entry is a 6 s crescendo from nothing (-40 dB to 0, linear in dB) into the peak'},
     'SC01': {'start': ('row', '01.01', 0.5), 'end': ('voice', '01.sil1', 0.0),
              'why': 'starts on its row (the Chicago wide); decays before the 1.5 s silence (the row gives 176.292: the edit added two shots after departure_gate window).',
              'fade_in_s': 3.0, 'fade_out_s': 2.5},
@@ -86,7 +87,7 @@ CHOICE = {
               'fade_in_s': 3.0, 'fade_out_s': 0.6},
     'SC09c': {'start': ('shot', '09-18', 1.667), 'end': ('voice', '09.sil2', 0.0),
               'why': 'the A sounds as WHEN? has risen out of YES (shot 09-18: YES holds 0.9 s, the five letters rise over the next 0.77 s), after "asking." (the row gives 723.792, under "linked below"); rings out and is gone before the last 2 s of silence.',
-              'fade_in_s': 0.005, 'fade_out_s': 3.0},
+              'fade_in_s': 0.005, 'fade_out_s': 1.0},
 }
 
 
@@ -124,6 +125,7 @@ def main():
              'start_event': list(ch['start']), 'end_event': list(ch['end']), 'why': ch['why'],
              'level_under_voice_db': c['level_re_voice_db_under_voice'], 'level_in_gaps_db': c['level_re_voice_db_in_gaps'],
              'fade_in_s': ch['fade_in_s'], 'fade_out_s': ch['fade_out_s'], 'hard_out': ch.get('hard_out', False),
+             'fade_in_curve': ch.get('fade_in_curve', 'cos'), 'fade_out_curve': ch.get('fade_out_curve', 'cos'),
              'entry': c['entry'], 'exit': c['exit']}
         if 'peak' in ch: p['peak_s'] = t(ch['peak'])
         if 'thin_by' in ch: p['thin_by_s'] = t(ch['thin_by'])

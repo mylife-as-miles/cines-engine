@@ -996,5 +996,47 @@
    ]
   },
   "in_tune_within_5_cents": true
+ },
+ "G7": {
+  "take": "G7_t1",
+  "raw": "audio/gen/score/G7_t1.mp3",
+  "file": "audio/score/takes/G7.flac",
+  "duration_s": 65.151,
+  "raw_tune_cents": 1.4,
+  "fine_retune_cents": -1.4,
+  "transpose_cents": 0,
+  "why_key": "kept in its own key",
+  "raw_key": "A minor",
+  "tempo_factor": 1.0,
+  "method": "resample (soxr)",
+  "filter": "aresample=48000:resampler=soxr:precision=28,asetrate=47959.8143,aresample=48000:resampler=soxr:precision=28",
+  "after": {
+   "tune_cents": 2.5,
+   "tune_cents_peaks": -2.0,
+   "key": "A minor",
+   "pulse_bpm": null,
+   "lufs": -12.1,
+   "true_peak_dbtp": -0.0,
+   "onsets": [
+    0.104,
+    6.896,
+    7.86,
+    12.678,
+    13.677,
+    15.604,
+    23.359,
+    31.057,
+    37.883,
+    38.835,
+    42.69,
+    43.654,
+    44.64,
+    46.602,
+    52.384,
+    54.288,
+    60.163
+   ]
+  },
+  "in_tune_within_5_cents": true
  }
 }

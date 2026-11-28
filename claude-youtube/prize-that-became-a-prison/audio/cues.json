@@ -1,8 +1,8 @@
 {
  "film": "The Prize That Became a Prison",
- "clock": "SCRIPT_V2 script clock, seconds (design/script/SCRIPT_V2.md). Each cue carries its chapter, direction row and offset from the row start; when the edit is re-timed, set rows[].t0 from the cut and run audio/tools/retime.py.",
+ "clock": "the edit's clock: design/edit/EDL.json (17495 frames at 24 fps)",
  "fps": 24,
- "duration_s": 775.0,
+ "duration_s": 728.958,
  "energy": "calm",
  "lufs": -14,
  "true_peak_dbtp": -1.0,
@@ -25,630 +25,835 @@
   "note": "Built from audio/score_plan.json once the score exists (not generated: waiting on the author's go for Lyria)."
  },
  "voice": [],
- "voice_note": "Filled from the narration takes (audio/vo/, another agent).",
+ "voice_note": "Placed by audio/tools/mix.py from design/edit/EDL.json voice[] (each narration segment at its EDL start; a later line waits for the earlier one to end plus 0.2 s). The read is chosen with --voice (scratch now: audio/vo/scratch/lines.json and <chapter>_<nn>.wav).",
  "duck_db": 9,
- "duck_note": "Score ducks 9 dB under the voice where they compete; beds are already set under the voice and are not ducked. Stop-downs (silences with \"stop-down\") beat ducking at the YES lines.",
+ "duck_note": "audio/tools/mix.py side-chains the score (8 dB) and the beds (3 dB) under the voice: lines closer than 0.8 s are one duck, 0.25 s look-ahead, 0.8 s release. Effects are not ducked (their levels are set re voice). Stop-downs (silences with \"stop-down\") beat ducking at the YES lines.",
  "rows": [
   {
    "id": "00.01",
    "chapter": "00",
    "t0": 0.0,
    "t1": 4.0,
-   "picture": "checkin_hall scale"
+   "picture": "checkin_hall scale",
+   "shots": [
+    "00-01"
+   ]
   },
   {
    "id": "00.02",
    "chapter": "00",
    "t0": 4.0,
-   "t1": 9.0,
-   "picture": "checkin_hall shoulder"
+   "t1": 8.333,
+   "picture": "checkin_hall shoulder",
+   "shots": [
+    "00-02"
+   ]
   },
   {
    "id": "00.03",
    "chapter": "00",
-   "t0": 9.0,
-   "t1": 15.0,
-   "picture": "checkin_hall wide"
+   "t0": 8.333,
+   "t1": 19.333,
+   "picture": "checkin_hall wide",
+   "shots": [
+    "00-03",
+    "00-05"
+   ]
   },
   {
    "id": "00.04",
    "chapter": "00",
-   "t0": 15.0,
-   "t1": 20.0,
-   "picture": "departure_gate seated_called"
+   "t0": 19.333,
+   "t1": 22.583,
+   "picture": "departure_gate seated_called",
+   "shots": [
+    "00-06"
+   ]
   },
   {
    "id": "00.05",
    "chapter": "00",
-   "t0": 20.0,
-   "t1": 27.0,
-   "picture": "inspection_room enter, wide"
+   "t0": 22.583,
+   "t1": 26.958,
+   "picture": "inspection_room enter, wide",
+   "shots": [
+    "00-07",
+    "00-08"
+   ]
   },
   {
    "id": "00.06",
    "chapter": "00",
-   "t0": 27.0,
-   "t1": 33.0,
-   "picture": "inspection_room two_shot, dawn_close"
+   "t0": 26.958,
+   "t1": 32.667,
+   "picture": "inspection_room two_shot, dawn_close",
+   "shots": [
+    "00-09",
+    "00-11"
+   ]
   },
   {
    "id": "00.07",
    "chapter": "00",
-   "t0": 33.0,
-   "t1": 37.0,
-   "picture": "inspection_room match (YES)"
+   "t0": 32.667,
+   "t1": 34.917,
+   "picture": "inspection_room match (YES)",
+   "shots": [
+    "00-12"
+   ]
   },
   {
    "id": "00.08",
    "chapter": "00",
-   "t0": 37.0,
-   "t1": 43.0,
-   "picture": "inspection_room match (YES again)"
+   "t0": 34.917,
+   "t1": 41.167,
+   "picture": "inspection_room match (YES again)",
+   "shots": [
+    "00-13",
+    "00-15"
+   ]
   },
   {
    "id": "00.09",
    "chapter": "00",
-   "t0": 43.0,
-   "t1": 47.0,
-   "picture": "inspection_room handbags"
+   "t0": 41.167,
+   "t1": 45.542,
+   "picture": "inspection_room handbags",
+   "shots": [
+    "00-16"
+   ]
   },
   {
    "id": "00.10",
    "chapter": "00",
-   "t0": 47.0,
-   "t1": 56.0,
-   "picture": "evidence_table purses (red trace)"
+   "t0": 45.542,
+   "t1": 52.792,
+   "picture": "evidence_table purses (red trace)",
+   "shots": [
+    "00-17",
+    "00-18"
+   ]
   },
   {
    "id": "00.11",
    "chapter": "00",
-   "t0": 56.0,
-   "t1": 64.0,
-   "picture": "void_stage dawn"
+   "t0": 52.792,
+   "t1": 61.917,
+   "picture": "void_stage dawn",
+   "shots": [
+    "00-19",
+    "00-21"
+   ]
   },
   {
    "id": "00.12",
    "chapter": "00",
-   "t0": 64.0,
-   "t1": 70.0,
-   "picture": "inspection_room match -> void_stage bags"
+   "t0": 61.917,
+   "t1": 68.458,
+   "picture": "inspection_room match -> void_stage bags",
+   "shots": [
+    "00-22",
+    "00-24"
+   ]
   },
   {
    "id": "00.13",
    "chapter": "00",
-   "t0": 70.0,
-   "t1": 77.0,
-   "picture": "void_stage dawn_high (DEATH SENTENCE / 2017)"
+   "t0": 68.458,
+   "t1": 73.542,
+   "picture": "void_stage dawn_high (DEATH SENTENCE / 2017)",
+   "shots": [
+    "00-25"
+   ]
   },
   {
    "id": "00.14",
    "chapter": "00",
-   "t0": 77.0,
-   "t1": 81.0,
-   "picture": "prison_exterior tower"
+   "t0": 73.542,
+   "t1": 76.042,
+   "picture": "prison_exterior tower",
+   "shots": [
+    "00-26"
+   ]
   },
   {
    "id": "00.15",
    "chapter": "00",
-   "t0": 81.0,
-   "t1": 87.0,
-   "picture": "hearing_room wide -> witness"
+   "t0": 76.042,
+   "t1": 82.875,
+   "picture": "hearing_room wide -> witness",
+   "shots": [
+    "00-27",
+    "00-28"
+   ]
   },
   {
    "id": "00.16",
    "chapter": "00",
-   "t0": 87.0,
-   "t1": 97.0,
-   "picture": "montage (0.5-0.8 s a shot)"
+   "t0": 82.875,
+   "t1": 89.083,
+   "picture": "montage (0.5-0.8 s a shot)",
+   "shots": [
+    "00-29"
+   ]
   },
   {
    "id": "00.17",
    "chapter": "00",
-   "t0": 97.0,
-   "t1": 102.0,
-   "picture": "void_stage bags in the beam (TITLE)"
+   "t0": 89.083,
+   "t1": 94.083,
+   "picture": "void_stage bags in the beam (TITLE)",
+   "shots": [
+    "00-30"
+   ]
   },
   {
    "id": "01.01",
    "chapter": "01",
-   "t0": 102.0,
-   "t1": 112.0,
-   "picture": "chicago_night wide -> profile"
+   "t0": 94.083,
+   "t1": 108.208,
+   "picture": "chicago_night wide -> profile",
+   "shots": [
+    "01-01",
+    "01-03"
+   ]
   },
   {
    "id": "01.02",
    "chapter": "01",
-   "t0": 112.0,
-   "t1": 124.0,
-   "picture": "evidence_table motifs, entries"
+   "t0": 108.208,
+   "t1": 118.417,
+   "picture": "evidence_table motifs, entries",
+   "shots": [
+    "01-04",
+    "01-05"
+   ]
   },
   {
    "id": "01.03",
    "chapter": "01",
-   "t0": 124.0,
-   "t1": 140.0,
-   "picture": "home dining (warm; Gene, Tim)"
+   "t0": 118.417,
+   "t1": 137.417,
+   "picture": "home dining (warm; Gene, Tim)",
+   "shots": [
+    "01-06",
+    "01-07b"
+   ]
   },
   {
    "id": "01.04",
    "chapter": "01",
-   "t0": 140.0,
-   "t1": 148.0,
-   "picture": "home kitchen -> kitchen_over (inbox)"
+   "t0": 137.417,
+   "t1": 143.458,
+   "picture": "home kitchen -> kitchen_over (inbox)",
+   "shots": [
+    "01-08",
+    "01-09"
+   ]
   },
   {
    "id": "01.05",
    "chapter": "01",
-   "t0": 148.0,
-   "t1": 162.0,
-   "picture": "evidence_table screen: the email"
+   "t0": 143.458,
+   "t1": 157.958,
+   "picture": "evidence_table screen: the email",
+   "shots": [
+    "01-10",
+    "01-11"
+   ]
   },
   {
    "id": "01.06",
    "chapter": "01",
-   "t0": 162.0,
-   "t1": 171.0,
-   "picture": "evidence_table screen: a search"
+   "t0": 157.958,
+   "t1": 170.792,
+   "picture": "evidence_table screen: a search",
+   "shots": [
+    "01-12",
+    "01-14"
+   ]
   },
   {
    "id": "01.07",
    "chapter": "01",
-   "t0": 171.0,
-   "t1": 178.0,
-   "picture": "evidence_table tickets"
+   "t0": 170.792,
+   "t1": 175.708,
+   "picture": "evidence_table tickets",
+   "shots": [
+    "01-15"
+   ]
   },
   {
    "id": "01.08",
    "chapter": "01",
-   "t0": 178.0,
-   "t1": 185.0,
-   "picture": "departure_gate window"
+   "t0": 175.708,
+   "t1": 186.875,
+   "picture": "departure_gate window",
+   "shots": [
+    "01-16",
+    "01-17"
+   ]
   },
   {
    "id": "02.01",
    "chapter": "02",
-   "t0": 185.0,
-   "t1": 194.0,
-   "picture": "aircraft_cabin window, over"
+   "t0": 186.875,
+   "t1": 195.625,
+   "picture": "aircraft_cabin window, over",
+   "shots": [
+    "02-01",
+    "02-02"
+   ]
   },
   {
    "id": "02.02",
    "chapter": "02",
-   "t0": 194.0,
-   "t1": 204.0,
-   "picture": "hongkong_street wide, dawn"
+   "t0": 195.625,
+   "t1": 199.333,
+   "picture": "hongkong_street wide, dawn",
+   "shots": [
+    "02-03"
+   ]
   },
   {
    "id": "02.03",
    "chapter": "02",
-   "t0": 204.0,
-   "t1": 210.0,
-   "picture": "hongkong_street company"
+   "t0": 214.75,
+   "t1": 219.75,
+   "picture": "hongkong_street company",
+   "shots": [
+    "02-11"
+   ]
   },
   {
    "id": "02.04",
    "chapter": "02",
-   "t0": 210.0,
-   "t1": 218.0,
-   "picture": "hotel_room window"
+   "t0": 212.875,
+   "t1": 214.75,
+   "picture": "hotel_room window",
+   "shots": [
+    "02-10"
+   ]
   },
   {
    "id": "02.05",
    "chapter": "02",
-   "t0": 218.0,
-   "t1": 230.0,
-   "picture": "train seat, aisle"
+   "t0": 199.333,
+   "t1": 209.708,
+   "picture": "train seat, aisle",
+   "shots": [
+    "02-05",
+    "02-07"
+   ]
   },
   {
    "id": "02.06",
    "chapter": "02",
-   "t0": 230.0,
-   "t1": 240.0,
-   "picture": "route map: dashed line to Australia"
+   "t0": 219.75,
+   "t1": 232.208,
+   "picture": "route map: dashed line to Australia",
+   "shots": [
+    "02-12",
+    "02-14"
+   ]
   },
   {
    "id": "03.01",
    "chapter": "03",
-   "t0": 240.0,
-   "t1": 250.0,
-   "picture": "hotel_room accept"
+   "t0": 232.208,
+   "t1": 249.667,
+   "picture": "hotel_room accept",
+   "shots": [
+    "03-01",
+    "03-04"
+   ]
   },
   {
    "id": "03.02",
    "chapter": "03",
-   "t0": 250.0,
-   "t1": 264.0,
-   "picture": "leather_market wide, stall, purchase"
+   "t0": 249.667,
+   "t1": 257.75,
+   "picture": "leather_market wide, stall, purchase",
+   "shots": [
+    "03-05",
+    "03-07"
+   ]
   },
   {
    "id": "03.03",
    "chapter": "03",
-   "t0": 264.0,
-   "t1": 270.0,
-   "picture": "hotel_room pack"
+   "t0": 257.75,
+   "t1": 263.375,
+   "picture": "hotel_room pack",
+   "shots": [
+    "03-08",
+    "03-09"
+   ]
   },
   {
    "id": "03.04",
    "chapter": "03",
-   "t0": 270.0,
-   "t1": 278.0,
-   "picture": "evidence_table purses: the seam"
+   "t0": 278.25,
+   "t1": 286.625,
+   "picture": "evidence_table purses: the seam",
+   "shots": [
+    "03-14",
+    "03-15"
+   ]
   },
   {
    "id": "03.05",
    "chapter": "03",
-   "t0": 278.0,
-   "t1": 286.0,
-   "picture": "checkin_hall scale (matched)"
+   "t0": 263.375,
+   "t1": 278.25,
+   "picture": "checkin_hall scale (matched)",
+   "shots": [
+    "03-10",
+    "03-13"
+   ]
   },
   {
    "id": "03.06",
    "chapter": "03",
-   "t0": 286.0,
-   "t1": 305.0,
-   "picture": "baggage_belt curtain, belt"
+   "t0": 286.625,
+   "t1": 289.292,
+   "picture": "baggage_belt curtain, belt",
+   "shots": [
+    "03-16"
+   ]
   },
   {
    "id": "04.01",
    "chapter": "04",
-   "t0": 305.0,
-   "t1": 312.0,
-   "picture": "departure_gate seated_called (held)"
+   "t0": 289.292,
+   "t1": 293.458,
+   "picture": "departure_gate seated_called (held)",
+   "shots": [
+    "04-01"
+   ]
   },
   {
    "id": "04.02",
    "chapter": "04",
-   "t0": 312.0,
-   "t1": 317.0,
-   "picture": "inspection_room enter, wide"
+   "t0": 293.458,
+   "t1": 297.708,
+   "picture": "inspection_room enter, wide",
+   "shots": [
+    "04-02",
+    "04-03"
+   ]
   },
   {
    "id": "04.03",
    "chapter": "04",
-   "t0": 317.0,
-   "t1": 327.0,
-   "picture": "inspection_room match (YES, YES)"
+   "t0": 297.708,
+   "t1": 307.833,
+   "picture": "inspection_room match (YES, YES)",
+   "shots": [
+    "04-04",
+    "04-07"
+   ]
   },
   {
    "id": "04.04",
    "chapter": "04",
-   "t0": 327.0,
-   "t1": 333.0,
-   "picture": "inspection_room handbags (officer's hand)"
+   "t0": 307.833,
+   "t1": 311.542,
+   "picture": "inspection_room handbags (officer's hand)",
+   "shots": [
+    "04-08"
+   ]
   },
   {
    "id": "04.05",
    "chapter": "04",
-   "t0": 333.0,
-   "t1": 345.0,
-   "picture": "split frame: purses | handbags"
+   "t0": 311.542,
+   "t1": 321.458,
+   "picture": "split frame: purses | handbags",
+   "shots": [
+    "04-09",
+    "04-10"
+   ]
   },
   {
    "id": "04.06",
    "chapter": "04",
-   "t0": 345.0,
-   "t1": 352.0,
-   "picture": "inspection_room empty"
+   "t0": 321.458,
+   "t1": 336.333,
+   "picture": "inspection_room empty",
+   "shots": [
+    "04-11",
+    "04-16"
+   ]
   },
   {
    "id": "04.07",
    "chapter": "04",
-   "t0": 352.0,
-   "t1": 368.0,
-   "picture": "route map: Australia / Qingdao"
+   "t0": 336.333,
+   "t1": 349.042,
+   "picture": "route map: Australia / Qingdao",
+   "shots": [
+    "04-17",
+    "04-18"
+   ]
   },
   {
    "id": "04.08",
    "chapter": "04",
-   "t0": 368.0,
-   "t1": 380.0,
-   "picture": "detention_corridor corridor (2014)"
+   "t0": 349.042,
+   "t1": 357.667,
+   "picture": "detention_corridor corridor (2014)",
+   "shots": [
+    "04-19",
+    "04-20"
+   ]
   },
   {
    "id": "05.01",
    "chapter": "05",
-   "t0": 380.0,
-   "t1": 392.0,
-   "picture": "detention_corridor door, chair"
+   "t0": 357.667,
+   "t1": 367.875,
+   "picture": "detention_corridor door, chair",
+   "shots": [
+    "05-01",
+    "05-02"
+   ]
   },
   {
    "id": "05.02",
    "chapter": "05",
-   "t0": 392.0,
-   "t1": 402.0,
-   "picture": "detention_corridor envelope_high"
+   "t0": 367.875,
+   "t1": 401.042,
+   "picture": "detention_corridor envelope_high",
+   "shots": [
+    "05-03",
+    "05-08"
+   ]
   },
   {
    "id": "05.03",
    "chapter": "05",
-   "t0": 402.0,
-   "t1": 430.0,
-   "picture": "void_stage pool (calendar 2014-2017)"
+   "t0": 401.042,
+   "t1": 416.167,
+   "picture": "void_stage pool (calendar 2014-2017)",
+   "shots": [
+    "05-09a",
+    "05-10"
+   ]
   },
   {
    "id": "05.04",
    "chapter": "05",
-   "t0": 430.0,
-   "t1": 445.0,
-   "picture": "detention_corridor corridor, locked"
+   "t0": 416.167,
+   "t1": 420.625,
+   "picture": "detention_corridor corridor, locked",
+   "shots": [
+    "05-11"
+   ]
   },
   {
    "id": "06.01",
    "chapter": "06",
-   "t0": 445.0,
-   "t1": 450.0,
-   "picture": "courtroom wide (2017)"
+   "t0": 420.625,
+   "t1": 424.917,
+   "picture": "courtroom wide (2017)",
+   "shots": [
+    "06-01"
+   ]
   },
   {
    "id": "06.02",
    "chapter": "06",
-   "t0": 450.0,
-   "t1": 468.0,
-   "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)"
+   "t0": 424.917,
+   "t1": 437.25,
+   "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)",
+   "shots": [
+    "06-02",
+    "06-05"
+   ]
   },
   {
    "id": "06.03",
    "chapter": "06",
-   "t0": 468.0,
-   "t1": 475.0,
-   "picture": "courtroom dock"
+   "t0": 428.542,
+   "t1": 431.708,
+   "picture": "courtroom dock",
+   "shots": [
+    "06-03"
+   ]
   },
   {
    "id": "06.04",
    "chapter": "06",
-   "t0": 475.0,
-   "t1": 482.0,
-   "picture": "courtroom bench"
+   "t0": 463.667,
+   "t1": 470.25,
+   "picture": "courtroom bench",
+   "shots": [
+    "06-11"
+   ]
   },
   {
    "id": "06.05",
    "chapter": "06",
-   "t0": 482.0,
-   "t1": 495.0,
-   "picture": "evidence_table pair (ministry)"
+   "t0": 440.0,
+   "t1": 448.0,
+   "picture": "evidence_table pair (ministry)",
+   "shots": [
+    "06-07"
+   ]
   },
   {
    "id": "06.06",
    "chapter": "06",
-   "t0": 495.0,
-   "t1": 513.0,
-   "picture": "void_stage divide"
+   "t0": 470.25,
+   "t1": 476.708,
+   "picture": "void_stage divide",
+   "shots": [
+    "06-12",
+    "06-13"
+   ]
   },
   {
    "id": "06.07",
    "chapter": "06",
-   "t0": 513.0,
-   "t1": 525.0,
-   "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")"
+   "t0": 476.708,
+   "t1": 481.167,
+   "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")",
+   "shots": [
+    "06-14"
+   ]
   },
   {
    "id": "07.01",
    "chapter": "07",
-   "t0": 525.0,
-   "t1": 535.0,
-   "picture": "prison_exterior wall, gate"
+   "t0": 481.167,
+   "t1": 488.167,
+   "picture": "prison_exterior wall, gate",
+   "shots": [
+    "07-01",
+    "07-02"
+   ]
   },
   {
    "id": "07.02",
    "chapter": "07",
-   "t0": 535.0,
-   "t1": 555.0,
-   "picture": "visiting_room wide, glass"
+   "t0": 488.167,
+   "t1": 503.583,
+   "picture": "visiting_room wide, glass",
+   "shots": [
+    "07-03",
+    "07-04"
+   ]
   },
   {
    "id": "07.03",
    "chapter": "07",
-   "t0": 555.0,
-   "t1": 570.0,
-   "picture": "void_stage cell_far -> cell_floor"
+   "t0": 503.583,
+   "t1": 516.292,
+   "picture": "void_stage cell_far -> cell_floor",
+   "shots": [
+    "07-05"
+   ]
   },
   {
    "id": "07.04",
    "chapter": "07",
-   "t0": 570.0,
-   "t1": 580.0,
-   "picture": "tim_desk letters, lamp"
+   "t0": 516.292,
+   "t1": 524.417,
+   "picture": "tim_desk letters, lamp",
+   "shots": [
+    "07-06",
+    "07-07"
+   ]
   },
   {
    "id": "07.05",
    "chapter": "07",
-   "t0": 580.0,
-   "t1": 588.0,
-   "picture": "hearing_room wide, witness (SEPTEMBER 2024)"
+   "t0": 524.417,
+   "t1": 533.917,
+   "picture": "hearing_room wide, witness (SEPTEMBER 2024)",
+   "shots": [
+    "07-08",
+    "07-09"
+   ]
   },
   {
    "id": "07.06",
    "chapter": "07",
-   "t0": 588.0,
-   "t1": 596.0,
-   "picture": "evidence_table page (S1 lit)"
+   "t0": 561.542,
+   "t1": 566.708,
+   "picture": "evidence_table page (S1 lit)",
+   "shots": [
+    "07-15"
+   ]
   },
   {
    "id": "07.07",
    "chapter": "07",
-   "t0": 596.0,
-   "t1": 610.0,
-   "picture": "tim_desk bill page (MAY 2025)"
+   "t0": 533.917,
+   "t1": 561.542,
+   "picture": "tim_desk bill page (MAY 2025)",
+   "shots": [
+    "07-10",
+    "07-14"
+   ]
   },
   {
    "id": "08.01",
    "chapter": "08",
-   "t0": 610.0,
-   "t1": 624.0,
-   "picture": "home dining, cold, Gene alone"
+   "t0": 566.708,
+   "t1": 581.125,
+   "picture": "home dining, cold, Gene alone",
+   "shots": [
+    "08-01",
+    "08-02"
+   ]
   },
   {
    "id": "08.02",
    "chapter": "08",
-   "t0": 624.0,
-   "t1": 638.0,
-   "picture": "home chair, Gene in profile"
+   "t0": 607.958,
+   "t1": 612.458,
+   "picture": "home chair, Gene in profile",
+   "shots": [
+    "08-07a"
+   ]
   },
   {
    "id": "08.03",
    "chapter": "08",
-   "t0": 638.0,
-   "t1": 648.0,
-   "picture": "home blinds (JANUARY 25, 2026)"
+   "t0": 612.458,
+   "t1": 615.25,
+   "picture": "home blinds (JANUARY 25, 2026)",
+   "shots": [
+    "08-07"
+   ]
   },
   {
    "id": "08.04",
    "chapter": "08",
-   "t0": 648.0,
-   "t1": 656.0,
-   "picture": "home chair, empty"
+   "t0": 612.458,
+   "t1": 615.25,
+   "picture": "home chair, empty",
+   "shots": [
+    "08-07"
+   ]
   },
   {
    "id": "08.05",
    "chapter": "08",
-   "t0": 656.0,
-   "t1": 670.0,
-   "picture": "void_stage chair"
+   "t0": 615.25,
+   "t1": 622.708,
+   "picture": "void_stage chair",
+   "shots": [
+    "08-08"
+   ]
   },
   {
    "id": "09.01",
    "chapter": "09",
-   "t0": 670.0,
-   "t1": 678.0,
-   "picture": "prison_exterior gate (JULY 2026)"
+   "t0": 622.708,
+   "t1": 629.542,
+   "picture": "prison_exterior gate (JULY 2026)",
+   "shots": [
+    "09-01"
+   ]
   },
   {
    "id": "09.02",
    "chapter": "09",
-   "t0": 678.0,
-   "t1": 698.0,
-   "picture": "visiting_room reverse"
+   "t0": 629.542,
+   "t1": 645.75,
+   "picture": "visiting_room reverse",
+   "shots": [
+    "09-02",
+    "09-03"
+   ]
   },
   {
    "id": "09.03",
    "chapter": "09",
-   "t0": 698.0,
-   "t1": 708.0,
-   "picture": "visiting_room glass, locked, long hold"
+   "t0": 645.75,
+   "t1": 652.917,
+   "picture": "visiting_room glass, locked, long hold",
+   "shots": [
+    "09-04"
+   ]
   },
   {
    "id": "09.04",
    "chapter": "09",
-   "t0": 708.0,
-   "t1": 714.0,
-   "picture": "visiting_room empty"
+   "t0": 652.917,
+   "t1": 655.75,
+   "picture": "visiting_room empty",
+   "shots": [
+    "09-05"
+   ]
   },
   {
    "id": "09.05",
    "chapter": "09",
-   "t0": 714.0,
-   "t1": 722.0,
-   "picture": "hearing_room witness (SEPTEMBER 2026)"
+   "t0": 655.75,
+   "t1": 662.583,
+   "picture": "hearing_room witness (SEPTEMBER 2026)",
+   "shots": [
+    "09-06"
+   ]
   },
   {
    "id": "09.06",
    "chapter": "09",
-   "t0": 722.0,
-   "t1": 728.0,
-   "picture": "home chair, empty"
+   "t0": 662.583,
+   "t1": 669.708,
+   "picture": "home chair, empty",
+   "shots": [
+    "09-07",
+    "09-08"
+   ]
   },
   {
    "id": "09.07",
    "chapter": "09",
-   "t0": 728.0,
-   "t1": 734.0,
-   "picture": "hearing_room wide (matched)"
+   "t0": 669.708,
+   "t1": 676.583,
+   "picture": "hearing_room wide (matched)",
+   "shots": [
+    "09-09"
+   ]
   },
   {
    "id": "09.08",
    "chapter": "09",
-   "t0": 734.0,
-   "t1": 752.0,
-   "picture": "void_stage dawn"
+   "t0": 676.583,
+   "t1": 712.792,
+   "picture": "void_stage dawn",
+   "shots": [
+    "09-10",
+    "09-16"
+   ]
   },
   {
    "id": "09.09",
    "chapter": "09",
-   "t0": 752.0,
-   "t1": 768.0,
-   "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)"
+   "t0": 712.792,
+   "t1": 717.125,
+   "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)",
+   "shots": [
+    "09-17"
+   ]
   },
   {
    "id": "09.10",
    "chapter": "09",
-   "t0": 768.0,
-   "t1": 775.0,
-   "picture": "void_stage bags held (end screen)"
+   "t0": 717.125,
+   "t1": 728.958,
+   "picture": "void_stage bags held (end screen)",
+   "shots": [
+    "09-18"
+   ]
   }
  ],
  "beds": [
-  {
-   "id": "terminal_hall.0",
-   "sound": "audio/sfx/amb_terminal_hall.flac",
-   "rows": [
-    "00.01",
-    "00.04"
-   ],
-   "chapter": "00",
-   "t0": 0.0,
-   "t1": 20.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": "Terminal room tone. Under the scale in 0:00-0:09, then up a little on the wide."
-  },
-  {
-   "id": "terminal_hall.1",
-   "sound": "audio/sfx/amb_terminal_hall.flac",
-   "rows": [
-    "01.08",
-    "01.08"
-   ],
-   "chapter": "01",
-   "t0": 178.0,
-   "t1": 183.5,
-   "offset_in_s": 0,
-   "offset_out_s": -1.5,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "terminal_hall.2",
-   "sound": "audio/sfx/amb_terminal_hall.flac",
-   "rows": [
-    "03.05",
-    "03.05"
-   ],
-   "chapter": "03",
-   "t0": 278.0,
-   "t1": 286.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "terminal_hall.3",
-   "sound": "audio/sfx/amb_terminal_hall.flac",
-   "rows": [
-    "04.01",
-    "04.01"
-   ],
-   "chapter": "04",
-   "t0": 305.0,
-   "t1": 312.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": ""
-  },
   {
    "id": "checkin_belt.0",
    "sound": "audio/sfx/amb_checkin_belt.flac",
@@ -658,140 +863,48 @@
    ],
    "chapter": "00",
    "t0": 0.0,
-   "t1": 9.0,
+   "t1": 8.333,
    "offset_in_s": 0,
    "offset_out_s": 0,
    "level_re_voice_db": -24,
    "fade_in_s": 0.05,
    "fade_out_s": 0.6,
    "loop": true,
-   "note": "Belt motor on the scale shots."
+   "note": "Belt motor on the scale shots.",
+   "edl": {
+    "t0": {
+     "shot": "00-01"
+    },
+    "t1": {
+     "shot": "00-03"
+    }
+   }
   },
   {
-   "id": "checkin_belt.1",
-   "sound": "audio/sfx/amb_checkin_belt.flac",
+   "id": "terminal_hall.0",
+   "sound": "audio/sfx/amb_terminal_hall.flac",
    "rows": [
-    "03.05",
-    "03.05"
+    "00.01",
+    "00.04"
    ],
-   "chapter": "03",
-   "t0": 278.0,
-   "t1": 286.0,
+   "chapter": "00",
+   "t0": 0.0,
+   "t1": 22.583,
    "offset_in_s": 0,
    "offset_out_s": 0,
-   "level_re_voice_db": -24,
-   "fade_in_s": 0.05,
-   "fade_out_s": 0.6,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "baggage_belt.0",
-   "sound": "audio/sfx/amb_baggage_belt.flac",
-   "rows": [
-    "03.06",
-    "03.06"
-   ],
-   "chapter": "03",
-   "t0": 286.0,
-   "t1": 305.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -22,
+   "level_re_voice_db": -26,
    "fade_in_s": 0.3,
-   "fade_out_s": 0.8,
+   "fade_out_s": 0.4,
    "loop": true,
-   "note": "Belt rollers; the pulse returns over it."
-  },
-  {
-   "id": "inspection_room.0",
-   "sound": "audio/sfx/amb_inspection_room.flac",
-   "rows": [
-    "00.05",
-    "00.09"
-   ],
-   "chapter": "00",
-   "t0": 20.0,
-   "t1": 47.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": "The room. Out with the hard stop at the discovery (5:31); back after the silence, on the split frame (5:33). At 1:04 and 12:32 it vanishes with the room on the match cut to the void."
-  },
-  {
-   "id": "inspection_room.1",
-   "sound": "audio/sfx/amb_inspection_room.flac",
-   "rows": [
-    "00.12",
-    "00.12"
-   ],
-   "chapter": "00",
-   "t0": 64.0,
-   "t1": 65.0,
-   "offset_in_s": 0,
-   "offset_out_s": -5.0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "inspection_room.2",
-   "sound": "audio/sfx/amb_inspection_room.flac",
-   "rows": [
-    "04.02",
-    "04.04"
-   ],
-   "chapter": "04",
-   "t0": 312.0,
-   "t1": 331.0,
-   "offset_in_s": 0,
-   "offset_out_s": -2.0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "inspection_room.3",
-   "sound": "audio/sfx/amb_inspection_room.flac",
-   "rows": [
-    "04.05",
-    "04.06"
-   ],
-   "chapter": "04",
-   "t0": 333.0,
-   "t1": 352.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "inspection_room.4",
-   "sound": "audio/sfx/amb_inspection_room.flac",
-   "rows": [
-    "09.09",
-    "09.09"
-   ],
-   "chapter": "09",
-   "t0": 752.0,
-   "t1": 756.0,
-   "offset_in_s": 0,
-   "offset_out_s": -12.0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
+   "note": "Terminal room tone. Under the scale in 0:00-0:09, then up a little on the wide.",
+   "edl": {
+    "t0": {
+     "shot": "00-01"
+    },
+    "t1": {
+     "shot": "00-07"
+    }
+   }
   },
   {
    "id": "fluorescent_hum.0",
@@ -801,699 +914,130 @@
     "00.09"
    ],
    "chapter": "00",
-   "t0": 20.0,
-   "t1": 47.0,
+   "t0": 22.583,
+   "t1": 39.583,
    "offset_in_s": 0,
    "offset_out_s": 0,
    "level_re_voice_db": -30,
    "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
+   "fade_out_s": 0.1,
    "loop": true,
-   "note": "50 Hz tubes (China). Under the inspection room at -30; the bed of the detention corridor."
+   "note": "50 Hz tubes (China). Under the inspection room at -30; the bed of the detention corridor.",
+   "edl": {
+    "t0": {
+     "shot": "00-07"
+    },
+    "t1": {
+     "shot": "00-15"
+    }
+   }
   },
   {
-   "id": "fluorescent_hum.1",
-   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "id": "inspection_room.0",
+   "sound": "audio/sfx/amb_inspection_room.flac",
    "rows": [
-    "00.12",
-    "00.12"
+    "00.05",
+    "00.09"
    ],
    "chapter": "00",
-   "t0": 64.0,
-   "t1": 65.0,
-   "offset_in_s": 0,
-   "offset_out_s": -5.0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "fluorescent_hum.2",
-   "sound": "audio/sfx/amb_fluorescent_hum.flac",
-   "rows": [
-    "04.02",
-    "04.04"
-   ],
-   "chapter": "04",
-   "t0": 312.0,
-   "t1": 331.0,
-   "offset_in_s": 0,
-   "offset_out_s": -2.0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "fluorescent_hum.3",
-   "sound": "audio/sfx/amb_fluorescent_hum.flac",
-   "rows": [
-    "04.05",
-    "04.06"
-   ],
-   "chapter": "04",
-   "t0": 333.0,
-   "t1": 352.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "fluorescent_hum.4",
-   "sound": "audio/sfx/amb_fluorescent_hum.flac",
-   "rows": [
-    "04.08",
-    "05.02"
-   ],
-   "chapter": "04",
-   "t0": 368.0,
-   "t1": 402.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "fluorescent_hum.5",
-   "sound": "audio/sfx/amb_fluorescent_hum.flac",
-   "rows": [
-    "05.04",
-    "05.04"
-   ],
-   "chapter": "05",
-   "t0": 430.0,
-   "t1": 445.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.0",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "00.11",
-    "00.11"
-   ],
-   "chapter": "00",
-   "t0": 56.0,
-   "t1": 64.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": "The void's own air, barely there. In Ch 08 it is the \"room tone\" that returns after the total silence."
-  },
-  {
-   "id": "void_air.1",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "00.12",
-    "00.13"
-   ],
-   "chapter": "00",
-   "t0": 65.0,
-   "t1": 77.0,
-   "offset_in_s": 1.0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.2",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "00.17",
-    "00.17"
-   ],
-   "chapter": "00",
-   "t0": 97.0,
-   "t1": 102.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.3",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "05.03",
-    "05.03"
-   ],
-   "chapter": "05",
-   "t0": 402.0,
-   "t1": 430.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.4",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "06.02",
-    "06.02"
-   ],
-   "chapter": "06",
-   "t0": 450.0,
-   "t1": 468.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.5",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "06.06",
-    "06.07"
-   ],
-   "chapter": "06",
-   "t0": 495.0,
-   "t1": 525.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.6",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "07.03",
-    "07.03"
-   ],
-   "chapter": "07",
-   "t0": 555.0,
-   "t1": 570.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.7",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "08.05",
-    "08.05"
-   ],
-   "chapter": "08",
-   "t0": 656.0,
-   "t1": 670.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "void_air.8",
-   "sound": "audio/sfx/amb_void_air.flac",
-   "rows": [
-    "09.08",
-    "09.10"
-   ],
-   "chapter": "09",
-   "t0": 734.0,
-   "t1": 773.0,
-   "offset_in_s": 0,
-   "offset_out_s": -2.0,
-   "level_re_voice_db": -34,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "rain_concrete.0",
-   "sound": "audio/sfx/amb_rain_concrete.flac",
-   "rows": [
-    "00.14",
-    "00.14"
-   ],
-   "chapter": "00",
-   "t0": 77.0,
-   "t1": 81.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -24,
-   "fade_in_s": 0.6,
-   "fade_out_s": 0.8,
-   "loop": true,
-   "note": "Rain and wind at the prison."
-  },
-  {
-   "id": "rain_concrete.1",
-   "sound": "audio/sfx/amb_rain_concrete.flac",
-   "rows": [
-    "07.01",
-    "07.01"
-   ],
-   "chapter": "07",
-   "t0": 524.0,
-   "t1": 535.0,
-   "offset_in_s": -1.0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -24,
-   "fade_in_s": 0.6,
-   "fade_out_s": 0.8,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "rain_concrete.2",
-   "sound": "audio/sfx/amb_rain_concrete.flac",
-   "rows": [
-    "09.01",
-    "09.01"
-   ],
-   "chapter": "09",
-   "t0": 669.0,
-   "t1": 678.0,
-   "offset_in_s": -1.0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -24,
-   "fade_in_s": 0.6,
-   "fade_out_s": 0.8,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "hearing_room.0",
-   "sound": "audio/sfx/amb_hearing_room.flac",
-   "rows": [
-    "00.15",
-    "00.15"
-   ],
-   "chapter": "00",
-   "t0": 81.0,
-   "t1": 87.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": "A large room, very quiet. At 1:25 it drops to near silence for 1 s after \"answer\"."
-  },
-  {
-   "id": "hearing_room.1",
-   "sound": "audio/sfx/amb_hearing_room.flac",
-   "rows": [
-    "07.05",
-    "07.05"
-   ],
-   "chapter": "07",
-   "t0": 580.0,
-   "t1": 588.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "hearing_room.2",
-   "sound": "audio/sfx/amb_hearing_room.flac",
-   "rows": [
-    "09.05",
-    "09.05"
-   ],
-   "chapter": "09",
-   "t0": 714.0,
-   "t1": 722.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "hearing_room.3",
-   "sound": "audio/sfx/amb_hearing_room.flac",
-   "rows": [
-    "09.07",
-    "09.07"
-   ],
-   "chapter": "09",
-   "t0": 728.0,
-   "t1": 734.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.4,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "chicago_night.0",
-   "sound": "audio/sfx/amb_chicago_night.flac",
-   "rows": [
-    "01.01",
-    "01.01"
-   ],
-   "chapter": "01",
-   "t0": 102.0,
-   "t1": 112.0,
+   "t0": 22.583,
+   "t1": 39.583,
    "offset_in_s": 0,
    "offset_out_s": 0,
    "level_re_voice_db": -28,
-   "fade_in_s": 1.0,
-   "fade_out_s": 0.8,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.1,
    "loop": true,
-   "note": "City through glass."
+   "note": "The room. Out with the hard stop at the discovery (5:31); back after the silence, on the split frame (5:33). At 1:04 and 12:32 it vanishes with the room on the match cut to the void.",
+   "edl": {
+    "t0": {
+     "shot": "00-07"
+    },
+    "t1": {
+     "shot": "00-15"
+    }
+   },
+   "edl_note": "through the hotel flash (00-14); out for the belt flash"
   },
   {
-   "id": "home_room.0",
-   "sound": "audio/sfx/amb_home_room.flac",
+   "id": "baggage_belt.f0",
+   "sound": "audio/sfx/amb_baggage_belt.flac",
    "rows": [
-    "01.03",
-    "01.04"
-   ],
-   "chapter": "01",
-   "t0": 124.0,
-   "t1": 148.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -32,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": "The house (and Tim's desk). In Ch 08 it cuts out with the clock on the cut to the empty chair (10:48)."
-  },
-  {
-   "id": "home_room.1",
-   "sound": "audio/sfx/amb_home_room.flac",
-   "rows": [
-    "07.04",
-    "07.04"
-   ],
-   "chapter": "07",
-   "t0": 570.0,
-   "t1": 580.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -32,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "home_room.2",
-   "sound": "audio/sfx/amb_home_room.flac",
-   "rows": [
-    "07.07",
-    "07.07"
-   ],
-   "chapter": "07",
-   "t0": 596.0,
-   "t1": 608.0,
-   "offset_in_s": 0,
-   "offset_out_s": -2.0,
-   "level_re_voice_db": -32,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "home_room.3",
-   "sound": "audio/sfx/amb_home_room.flac",
-   "rows": [
-    "08.01",
-    "08.03"
-   ],
-   "chapter": "08",
-   "t0": 610.0,
-   "t1": 648.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -32,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "home_room.4",
-   "sound": "audio/sfx/amb_home_room.flac",
-   "rows": [
-    "09.06",
-    "09.06"
-   ],
-   "chapter": "09",
-   "t0": 722.0,
-   "t1": 728.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -32,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "aircraft_cabin.0",
-   "sound": "audio/sfx/amb_aircraft_cabin.flac",
-   "rows": [
-    "02.01",
-    "02.01"
-   ],
-   "chapter": "02",
-   "t0": 185.0,
-   "t1": 194.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.5,
-   "fade_out_s": 0.6,
-   "loop": true,
-   "note": "Engine hum."
-  },
-  {
-   "id": "hk_street.0",
-   "sound": "audio/sfx/amb_hk_street.flac",
-   "rows": [
-    "02.02",
-    "02.03"
-   ],
-   "chapter": "02",
-   "t0": 194.0,
-   "t1": 210.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -24,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.6,
-   "loop": true,
-   "note": "Street, trams, rain on awnings."
-  },
-  {
-   "id": "hotel_room.0",
-   "sound": "audio/sfx/amb_hotel_room.flac",
-   "rows": [
-    "02.04",
-    "02.04"
-   ],
-   "chapter": "02",
-   "t0": 210.0,
-   "t1": 218.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": "Air conditioner, the city far below; \"a soft room\" in Ch 03."
-  },
-  {
-   "id": "hotel_room.1",
-   "sound": "audio/sfx/amb_hotel_room.flac",
-   "rows": [
-    "03.01",
-    "03.01"
+    "03.06",
+    "03.06"
    ],
    "chapter": "03",
-   "t0": 240.0,
-   "t1": 250.0,
+   "t0": 39.583,
+   "t1": 41.155,
    "offset_in_s": 0,
    "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.5,
+   "level_re_voice_db": -22,
+   "fade_in_s": 0.1,
+   "fade_out_s": 0.0,
    "loop": true,
-   "note": ""
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "00-15"
+    },
+    "t1": {
+     "voice": "00.sil1"
+    }
+   },
+   "edl_note": "the EDL: \"Belt rollers, cut off for the silence\""
   },
   {
-   "id": "hotel_room.2",
-   "sound": "audio/sfx/amb_hotel_room.flac",
+   "id": "fluorescent_hum.0b",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
    "rows": [
-    "03.03",
-    "03.03"
+    "00.05",
+    "00.09"
    ],
-   "chapter": "03",
-   "t0": 264.0,
-   "t1": 270.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.5,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "train.0",
-   "sound": "audio/sfx/amb_train.flac",
-   "rows": [
-    "02.05",
-    "02.05"
-   ],
-   "chapter": "02",
-   "t0": 218.0,
-   "t1": 230.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.6,
-   "loop": true,
-   "note": "Rails."
-  },
-  {
-   "id": "market.0",
-   "sound": "audio/sfx/amb_market.flac",
-   "rows": [
-    "03.02",
-    "03.02"
-   ],
-   "chapter": "03",
-   "t0": 250.0,
-   "t1": 264.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -26,
-   "fade_in_s": 0.4,
-   "fade_out_s": 0.6,
-   "loop": true,
-   "note": "Market, no walla."
-  },
-  {
-   "id": "courtroom.0",
-   "sound": "audio/sfx/amb_courtroom.flac",
-   "rows": [
-    "06.01",
-    "06.01"
-   ],
-   "chapter": "06",
-   "t0": 445.0,
-   "t1": 450.0,
+   "chapter": "00",
+   "t0": 41.167,
+   "t1": 45.542,
    "offset_in_s": 0,
    "offset_out_s": 0,
    "level_re_voice_db": -30,
    "fade_in_s": 0.3,
-   "fade_out_s": 0.4,
+   "fade_out_s": 0.1,
    "loop": true,
-   "note": "Room tone, no gavel."
+   "edl": {
+    "t0": {
+     "shot": "00-16"
+    },
+    "t1": {
+     "shot": "00-17"
+    }
+   },
+   "added_in_edit": true
   },
   {
-   "id": "courtroom.1",
-   "sound": "audio/sfx/amb_courtroom.flac",
+   "id": "inspection_room.0b",
+   "sound": "audio/sfx/amb_inspection_room.flac",
    "rows": [
-    "06.03",
-    "06.04"
+    "00.05",
+    "00.09"
    ],
-   "chapter": "06",
-   "t0": 468.0,
-   "t1": 482.0,
+   "chapter": "00",
+   "t0": 41.167,
+   "t1": 45.542,
    "offset_in_s": 0,
    "offset_out_s": 0,
-   "level_re_voice_db": -30,
+   "level_re_voice_db": -28,
    "fade_in_s": 0.3,
-   "fade_out_s": 0.4,
+   "fade_out_s": 0.1,
    "loop": true,
-   "note": ""
-  },
-  {
-   "id": "phone_line.0",
-   "sound": "audio/sfx/amb_phone_line.flac",
-   "rows": [
-    "07.02",
-    "07.02"
-   ],
-   "chapter": "07",
-   "t0": 535.0,
-   "t1": 555.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.05,
-   "loop": true,
-   "note": "The handset line's hiss. In Ch 09 it cuts at 11:38.5: the silence under \"When would she be released?\"."
-  },
-  {
-   "id": "phone_line.1",
-   "sound": "audio/sfx/amb_phone_line.flac",
-   "rows": [
-    "09.02",
-    "09.02"
-   ],
-   "chapter": "09",
-   "t0": 678.0,
-   "t1": 698.5,
-   "offset_in_s": 0,
-   "offset_out_s": 0.5,
-   "level_re_voice_db": -30,
-   "fade_in_s": 0.2,
-   "fade_out_s": 0.05,
-   "loop": true,
-   "note": ""
+   "edl": {
+    "t0": {
+     "shot": "00-16"
+    },
+    "t1": {
+     "shot": "00-17"
+    }
+   },
+   "edl_note": "through the hotel flash (00-14); out for the belt flash",
+   "added_in_edit": true
   },
   {
    "id": "evidence_room.0",
@@ -1503,159 +1047,23 @@
     "00.10"
    ],
    "chapter": "00",
-   "t0": 47.0,
-   "t1": 56.0,
+   "t0": 45.542,
+   "t1": 52.792,
    "offset_in_s": 0,
    "offset_out_s": 0,
    "level_re_voice_db": -36,
    "fade_in_s": 0.3,
    "fade_out_s": 0.3,
    "loop": true,
-   "note": "The evidence table's near-silent room under paper."
-  },
-  {
-   "id": "evidence_room.1",
-   "sound": "audio/sfx/amb_evidence_room.flac",
-   "rows": [
-    "01.02",
-    "01.02"
-   ],
-   "chapter": "01",
-   "t0": 112.0,
-   "t1": 124.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -36,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "evidence_room.2",
-   "sound": "audio/sfx/amb_evidence_room.flac",
-   "rows": [
-    "01.05",
-    "01.07"
-   ],
-   "chapter": "01",
-   "t0": 148.0,
-   "t1": 178.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -36,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "evidence_room.3",
-   "sound": "audio/sfx/amb_evidence_room.flac",
-   "rows": [
-    "03.04",
-    "03.04"
-   ],
-   "chapter": "03",
-   "t0": 270.0,
-   "t1": 278.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -36,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "evidence_room.4",
-   "sound": "audio/sfx/amb_evidence_room.flac",
-   "rows": [
-    "06.05",
-    "06.05"
-   ],
-   "chapter": "06",
-   "t0": 482.0,
-   "t1": 495.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -36,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "evidence_room.5",
-   "sound": "audio/sfx/amb_evidence_room.flac",
-   "rows": [
-    "07.06",
-    "07.06"
-   ],
-   "chapter": "07",
-   "t0": 588.0,
-   "t1": 596.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -36,
-   "fade_in_s": 0.3,
-   "fade_out_s": 0.3,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "clock.0",
-   "sound": "audio/sfx/sfx_clock_tick.flac",
-   "rows": [
-    "01.03",
-    "01.03"
-   ],
-   "chapter": "01",
-   "t0": 124.0,
-   "t1": 140.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.0,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": "A clock. Ch 05: very low (-32), it stops on \"worse\" (7:18.2): a hard stop between ticks, no fade. Ch 08: it stops dead on the cut to the empty chair (10:48)."
-  },
-  {
-   "id": "clock.1",
-   "sound": "audio/sfx/sfx_clock_tick.flac",
-   "rows": [
-    "05.03",
-    "05.04"
-   ],
-   "chapter": "05",
-   "t0": 402.0,
-   "t1": 438.2,
-   "offset_in_s": 0,
-   "offset_out_s": -6.8,
-   "level_re_voice_db": -32,
-   "fade_in_s": 0.0,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": ""
-  },
-  {
-   "id": "clock.2",
-   "sound": "audio/sfx/sfx_clock_tick.flac",
-   "rows": [
-    "08.01",
-    "08.03"
-   ],
-   "chapter": "08",
-   "t0": 610.0,
-   "t1": 648.0,
-   "offset_in_s": 0,
-   "offset_out_s": 0,
-   "level_re_voice_db": -28,
-   "fade_in_s": 0.0,
-   "fade_out_s": 0.0,
-   "loop": true,
-   "note": ""
+   "note": "The evidence table's near-silent room under paper.",
+   "edl": {
+    "t0": {
+     "shot": "00-17"
+    },
+    "t1": {
+     "shot": "00-19"
+    }
+   }
   },
   {
    "id": "drone.0",
@@ -1665,15 +1073,2572 @@
     "00.11"
    ],
    "chapter": "00",
-   "t0": 56.0,
-   "t1": 65.0,
+   "t0": 52.792,
+   "t1": 65.137,
    "offset_in_s": 0,
    "offset_out_s": 1.0,
    "level_re_voice_db": -24,
    "fade_in_s": 2.5,
    "fade_out_s": 0.0,
    "loop": true,
-   "note": "THE DRONE: in under void_stage dawn (0:56), cut dead with the score at \"were not\" (1:05); returns quietly at 12:32 under YES -> WHEN? and gives way to the one warm piano note (score SC09c), out by 12:46."
+   "note": "THE DRONE: in under void_stage dawn (0:56), cut dead with the score at \"were not\" (1:05); returns quietly at 12:32 under YES -> WHEN? and gives way to the one warm piano note (score SC09c), out by 12:46.",
+   "edl": {
+    "t0": {
+     "shot": "00-19"
+    },
+    "t1": {
+     "voice": "00.12",
+     "at": "speech_end"
+    }
+   },
+   "edl_note": "cut dead with the score at \"were not.\""
+  },
+  {
+   "id": "void_air.0",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "00.11",
+    "00.11"
+   ],
+   "chapter": "00",
+   "t0": 52.792,
+   "t1": 61.917,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "The void's own air, barely there. In Ch 08 it is the \"room tone\" that returns after the total silence.",
+   "edl": {
+    "t0": {
+     "shot": "00-19"
+    },
+    "t1": {
+     "shot": "00-22"
+    }
+   }
+  },
+  {
+   "id": "fluorescent_hum.1",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "00.12",
+    "00.12"
+   ],
+   "chapter": "00",
+   "t0": 61.917,
+   "t1": 63.208,
+   "offset_in_s": 0,
+   "offset_out_s": -5.0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "00-22"
+    },
+    "t1": {
+     "shot": "00-23"
+    }
+   }
+  },
+  {
+   "id": "inspection_room.1",
+   "sound": "audio/sfx/amb_inspection_room.flac",
+   "rows": [
+    "00.12",
+    "00.12"
+   ],
+   "chapter": "00",
+   "t0": 61.917,
+   "t1": 63.208,
+   "offset_in_s": 0,
+   "offset_out_s": -5.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "00-22"
+    },
+    "t1": {
+     "shot": "00-23"
+    }
+   },
+   "edl_note": "vanishes with the room on the match cut to the void"
+  },
+  {
+   "id": "void_air.1",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "00.12",
+    "00.13"
+   ],
+   "chapter": "00",
+   "t0": 63.208,
+   "t1": 66.625,
+   "offset_in_s": 1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "00-23"
+    },
+    "t1": {
+     "shot": "00-24"
+    }
+   }
+  },
+  {
+   "id": "courtroom.e0",
+   "sound": "audio/sfx/amb_courtroom.flac",
+   "rows": [
+    "06.01",
+    "06.01"
+   ],
+   "chapter": "06",
+   "t0": 66.625,
+   "t1": 68.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "00-24"
+    },
+    "t1": {
+     "shot": "00-25"
+    }
+   },
+   "edl_note": "added shot (courtroom wide, \"Three years later, a court\"); the EDL: room tone"
+  },
+  {
+   "id": "void_air.1b",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "00.12",
+    "00.13"
+   ],
+   "chapter": "00",
+   "t0": 68.458,
+   "t1": 73.542,
+   "offset_in_s": 1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "00-25"
+    },
+    "t1": {
+     "shot": "00-26"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "rain_concrete.0",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "00.14",
+    "00.14"
+   ],
+   "chapter": "00",
+   "t0": 73.542,
+   "t1": 76.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "Rain and wind at the prison.",
+   "edl": {
+    "t0": {
+     "shot": "00-26"
+    },
+    "t1": {
+     "shot": "00-27"
+    }
+   }
+  },
+  {
+   "id": "hearing_room.0",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "00.15",
+    "00.15"
+   ],
+   "chapter": "00",
+   "t0": 76.042,
+   "t1": 81.856,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "A large room, very quiet. At 1:25 it drops to near silence for 1 s after \"answer\".",
+   "edl": {
+    "t0": {
+     "shot": "00-27"
+    },
+    "t1": {
+     "voice": "00.sil3"
+    }
+   }
+  },
+  {
+   "id": "hearing_room.0b",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "00.15",
+    "00.15"
+   ],
+   "chapter": "00",
+   "t0": 81.856,
+   "t1": 82.875,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -40,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.2,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "voice": "00.sil3"
+    },
+    "t1": {
+     "shot": "00-29"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "near silence after \"answer\" (-40 re voice)"
+  },
+  {
+   "id": "void_air.2",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "00.17",
+    "00.17"
+   ],
+   "chapter": "00",
+   "t0": 89.083,
+   "t1": 93.083,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "00-30"
+    },
+    "t1": {
+     "shot": "00-30",
+     "offset_s": 4.0
+    }
+   },
+   "edl_note": "out for the last second: all but the decaying score tail"
+  },
+  {
+   "id": "chicago_night.0",
+   "sound": "audio/sfx/amb_chicago_night.flac",
+   "rows": [
+    "01.01",
+    "01.01"
+   ],
+   "chapter": "01",
+   "t0": 94.083,
+   "t1": 108.208,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 1.0,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "City through glass.",
+   "edl": {
+    "t0": {
+     "shot": "01-01"
+    },
+    "t1": {
+     "shot": "01-04"
+    }
+   }
+  },
+  {
+   "id": "evidence_room.1",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "01.02",
+    "01.02"
+   ],
+   "chapter": "01",
+   "t0": 108.208,
+   "t1": 118.417,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "01-04"
+    },
+    "t1": {
+     "shot": "01-06"
+    }
+   }
+  },
+  {
+   "id": "clock.0",
+   "sound": "audio/sfx/sfx_clock_tick.flac",
+   "rows": [
+    "01.03",
+    "01.03"
+   ],
+   "chapter": "01",
+   "t0": 118.417,
+   "t1": 137.417,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "A clock. Ch 05: very low (-32), it stops on \"worse\" (7:18.2): a hard stop between ticks, no fade. Ch 08: it stops dead on the cut to the empty chair (10:48).",
+   "edl": {
+    "t0": {
+     "shot": "01-06"
+    },
+    "t1": {
+     "shot": "01-08"
+    }
+   },
+   "edl_note": "a clock at the warm dining table (01-06 to 01-07b), out on the cut to the kitchen",
+   "kind": "clock",
+   "cells": {
+    "first_tick_s": 0.028,
+    "period_s": 1.0,
+    "count": 22
+   },
+   "phase_s": 0.0,
+   "phase_why": "clear of the two marker strokes at 126.3-127.7 s"
+  },
+  {
+   "id": "home_room.0",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "01.03",
+    "01.04"
+   ],
+   "chapter": "01",
+   "t0": 118.417,
+   "t1": 143.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "The house (and Tim's desk). In Ch 08 it cuts out with the clock on the cut to the empty chair (10:48).",
+   "edl": {
+    "t0": {
+     "shot": "01-06"
+    },
+    "t1": {
+     "shot": "01-10"
+    }
+   },
+   "edl_note": "under the doc_gene page, Tim's desk, the kitchen and its laptop"
+  },
+  {
+   "id": "evidence_room.2",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "01.05",
+    "01.07"
+   ],
+   "chapter": "01",
+   "t0": 143.458,
+   "t1": 150.667,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "01-10"
+    },
+    "t1": {
+     "shot": "01-11"
+    }
+   }
+  },
+  {
+   "id": "terminal_hall.1",
+   "sound": "audio/sfx/amb_terminal_hall.flac",
+   "rows": [
+    "01.08",
+    "01.08"
+   ],
+   "chapter": "01",
+   "t0": 150.667,
+   "t1": 157.958,
+   "offset_in_s": 0,
+   "offset_out_s": -1.5,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "01-11"
+    },
+    "t1": {
+     "shot": "01-12"
+    }
+   },
+   "edl_note": "the gate moved to 01-11 (departure_gate wide)"
+  },
+  {
+   "id": "evidence_room.2b",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "01.05",
+    "01.07"
+   ],
+   "chapter": "01",
+   "t0": 157.958,
+   "t1": 168.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "01-12"
+    },
+    "t1": {
+     "shot": "01-14"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "chicago_night.e1",
+   "sound": "audio/sfx/amb_chicago_night.flac",
+   "rows": [
+    "01.01",
+    "01.01"
+   ],
+   "chapter": "01",
+   "t0": 168.042,
+   "t1": 170.792,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "01-14"
+    },
+    "t1": {
+     "shot": "01-15"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: back in her apartment (\"City through glass\")"
+  },
+  {
+   "id": "evidence_room.2c",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "01.05",
+    "01.07"
+   ],
+   "chapter": "01",
+   "t0": 170.792,
+   "t1": 175.708,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "01-15"
+    },
+    "t1": {
+     "shot": "01-16"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "aircraft_cabin.e0",
+   "sound": "audio/sfx/amb_aircraft_cabin.flac",
+   "rows": [
+    "02.01",
+    "02.01"
+   ],
+   "chapter": "02",
+   "t0": 175.708,
+   "t1": 181.083,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "01-16"
+    },
+    "t1": {
+     "shot": "01-17"
+    }
+   },
+   "edl_note": "added shot: the cabin aisle (\"Engine hum, low\")"
+  },
+  {
+   "id": "hk_street.e0",
+   "sound": "audio/sfx/amb_hk_street.flac",
+   "rows": [
+    "02.02",
+    "02.03"
+   ],
+   "chapter": "02",
+   "t0": 181.083,
+   "t1": 186.875,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "01-17"
+    },
+    "t1": {
+     "shot": "02-01"
+    }
+   },
+   "edl_note": "added shot: a Hong Kong shop window; the 1.5 s silence keeps the street's air"
+  },
+  {
+   "id": "aircraft_cabin.0",
+   "sound": "audio/sfx/amb_aircraft_cabin.flac",
+   "rows": [
+    "02.01",
+    "02.01"
+   ],
+   "chapter": "02",
+   "t0": 186.875,
+   "t1": 195.625,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Engine hum.",
+   "edl": {
+    "t0": {
+     "shot": "02-01"
+    },
+    "t1": {
+     "shot": "02-03"
+    }
+   },
+   "edl_note": "under the route map too (\"Engine hum\")"
+  },
+  {
+   "id": "hk_street.0",
+   "sound": "audio/sfx/amb_hk_street.flac",
+   "rows": [
+    "02.02",
+    "02.03"
+   ],
+   "chapter": "02",
+   "t0": 195.625,
+   "t1": 199.333,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Street, trams, rain on awnings.",
+   "edl": {
+    "t0": {
+     "shot": "02-03"
+    },
+    "t1": {
+     "shot": "02-05"
+    }
+   }
+  },
+  {
+   "id": "train.e0",
+   "sound": "audio/sfx/amb_train.flac",
+   "rows": [
+    "02.05",
+    "02.05"
+   ],
+   "chapter": "02",
+   "t0": 199.333,
+   "t1": 203.208,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "02-05"
+    },
+    "t1": {
+     "shot": "02-06"
+    }
+   },
+   "edl_note": "the route map: \"Rails, far\""
+  },
+  {
+   "id": "train.0",
+   "sound": "audio/sfx/amb_train.flac",
+   "rows": [
+    "02.05",
+    "02.05"
+   ],
+   "chapter": "02",
+   "t0": 203.208,
+   "t1": 209.708,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Rails.",
+   "edl": {
+    "t0": {
+     "shot": "02-06"
+    },
+    "t1": {
+     "shot": "02-08"
+    }
+   }
+  },
+  {
+   "id": "evidence_room.e0",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "01.05",
+    "01.07"
+   ],
+   "chapter": "01",
+   "t0": 209.708,
+   "t1": 212.875,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.15,
+   "fade_out_s": 0.15,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "02-08"
+    },
+    "t1": {
+     "shot": "02-10"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "the email and the passport, cut on each noun"
+  },
+  {
+   "id": "hotel_room.0",
+   "sound": "audio/sfx/amb_hotel_room.flac",
+   "rows": [
+    "02.04",
+    "02.04"
+   ],
+   "chapter": "02",
+   "t0": 212.875,
+   "t1": 214.75,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.15,
+   "fade_out_s": 0.15,
+   "loop": true,
+   "note": "Air conditioner, the city far below; \"a soft room\" in Ch 03.",
+   "edl": {
+    "t0": {
+     "shot": "02-10"
+    },
+    "t1": {
+     "shot": "02-11"
+    }
+   }
+  },
+  {
+   "id": "hk_street.0b",
+   "sound": "audio/sfx/amb_hk_street.flac",
+   "rows": [
+    "02.02",
+    "02.03"
+   ],
+   "chapter": "02",
+   "t0": 214.75,
+   "t1": 219.75,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.15,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "02-11"
+    },
+    "t1": {
+     "shot": "02-12"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "train.0b",
+   "sound": "audio/sfx/amb_train.flac",
+   "rows": [
+    "02.05",
+    "02.05"
+   ],
+   "chapter": "02",
+   "t0": 224.833,
+   "t1": 227.792,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "02-13"
+    },
+    "t1": {
+     "shot": "02-14"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "evidence_room.e1",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "01.05",
+    "01.07"
+   ],
+   "chapter": "01",
+   "t0": 227.792,
+   "t1": 232.208,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "02-14"
+    },
+    "t1": {
+     "shot": "03-01"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "hotel_room.1",
+   "sound": "audio/sfx/amb_hotel_room.flac",
+   "rows": [
+    "03.01",
+    "03.01"
+   ],
+   "chapter": "03",
+   "t0": 232.208,
+   "t1": 241.542,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "03-01"
+    },
+    "t1": {
+     "shot": "03-03"
+    }
+   }
+  },
+  {
+   "id": "aircraft_cabin.e1",
+   "sound": "audio/sfx/amb_aircraft_cabin.flac",
+   "rows": [
+    "02.01",
+    "02.01"
+   ],
+   "chapter": "02",
+   "t0": 241.542,
+   "t1": 246.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "03-03"
+    },
+    "t1": {
+     "shot": "03-04"
+    }
+   },
+   "edl_note": "added shot: \"Engine hum, far\"",
+   "added_in_edit": true
+  },
+  {
+   "id": "hotel_room.1b",
+   "sound": "audio/sfx/amb_hotel_room.flac",
+   "rows": [
+    "03.01",
+    "03.01"
+   ],
+   "chapter": "03",
+   "t0": 246.042,
+   "t1": 249.667,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "03-04"
+    },
+    "t1": {
+     "shot": "03-05"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "market.0",
+   "sound": "audio/sfx/amb_market.flac",
+   "rows": [
+    "03.02",
+    "03.02"
+   ],
+   "chapter": "03",
+   "t0": 249.667,
+   "t1": 257.75,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Market, no walla.",
+   "edl": {
+    "t0": {
+     "shot": "03-05"
+    },
+    "t1": {
+     "shot": "03-08"
+    }
+   }
+  },
+  {
+   "id": "hotel_room.2",
+   "sound": "audio/sfx/amb_hotel_room.flac",
+   "rows": [
+    "03.03",
+    "03.03"
+   ],
+   "chapter": "03",
+   "t0": 257.75,
+   "t1": 261.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "03-08"
+    },
+    "t1": {
+     "shot": "03-09"
+    }
+   }
+  },
+  {
+   "id": "baggage_belt.e1",
+   "sound": "audio/sfx/amb_baggage_belt.flac",
+   "rows": [
+    "03.06",
+    "03.06"
+   ],
+   "chapter": "03",
+   "t0": 261.0,
+   "t1": 263.375,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "03-09"
+    },
+    "t1": {
+     "shot": "03-10"
+    }
+   },
+   "edl_note": "added shot: the two bags on the belt from above"
+  },
+  {
+   "id": "terminal_hall.2",
+   "sound": "audio/sfx/amb_terminal_hall.flac",
+   "rows": [
+    "03.05",
+    "03.05"
+   ],
+   "chapter": "03",
+   "t0": 263.375,
+   "t1": 270.125,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "03-10"
+    },
+    "t1": {
+     "shot": "03-13"
+    }
+   }
+  },
+  {
+   "id": "checkin_belt.1",
+   "sound": "audio/sfx/amb_checkin_belt.flac",
+   "rows": [
+    "03.05",
+    "03.05"
+   ],
+   "chapter": "03",
+   "t0": 266.0,
+   "t1": 270.125,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.05,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "03-11"
+    },
+    "t1": {
+     "shot": "03-13"
+    }
+   }
+  },
+  {
+   "id": "evidence_room.3",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "03.04",
+    "03.04"
+   ],
+   "chapter": "03",
+   "t0": 270.125,
+   "t1": 286.625,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "03-13"
+    },
+    "t1": {
+     "shot": "03-16"
+    }
+   },
+   "edl_note": "the fee line, the trace and the cut-away"
+  },
+  {
+   "id": "baggage_belt.0",
+   "sound": "audio/sfx/amb_baggage_belt.flac",
+   "rows": [
+    "03.06",
+    "03.06"
+   ],
+   "chapter": "03",
+   "t0": 286.625,
+   "t1": 289.292,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -22,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "Belt rollers; the pulse returns over it.",
+   "edl": {
+    "t0": {
+     "shot": "03-16"
+    },
+    "t1": {
+     "shot": "04-01"
+    }
+   }
+  },
+  {
+   "id": "terminal_hall.3",
+   "sound": "audio/sfx/amb_terminal_hall.flac",
+   "rows": [
+    "04.01",
+    "04.01"
+   ],
+   "chapter": "04",
+   "t0": 289.292,
+   "t1": 293.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "04-01"
+    },
+    "t1": {
+     "shot": "04-02"
+    }
+   }
+  },
+  {
+   "id": "fluorescent_hum.2",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "04.02",
+    "04.04"
+   ],
+   "chapter": "04",
+   "t0": 293.458,
+   "t1": 310.561,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "04-02"
+    },
+    "t1": {
+     "voice": "04.07",
+     "at": "speech_end"
+    }
+   }
+  },
+  {
+   "id": "inspection_room.2",
+   "sound": "audio/sfx/amb_inspection_room.flac",
+   "rows": [
+    "04.02",
+    "04.04"
+   ],
+   "chapter": "04",
+   "t0": 293.458,
+   "t1": 310.561,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "04-02"
+    },
+    "t1": {
+     "voice": "04.07",
+     "at": "speech_end"
+    }
+   },
+   "edl_note": "hard stop on \"...inside the linings.\""
+  },
+  {
+   "id": "fluorescent_hum.3",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 311.542,
+   "t1": 328.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "04-09"
+    },
+    "t1": {
+     "shot": "04-15"
+    }
+   }
+  },
+  {
+   "id": "inspection_room.3",
+   "sound": "audio/sfx/amb_inspection_room.flac",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 311.542,
+   "t1": 328.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "04-09"
+    },
+    "t1": {
+     "shot": "04-15"
+    }
+   },
+   "edl_note": "the room returns on the two-shot, with \"Think about the two conversations\""
+  },
+  {
+   "id": "terminal_hall.e4",
+   "sound": "audio/sfx/amb_terminal_hall.flac",
+   "rows": [
+    "04.01",
+    "04.01"
+   ],
+   "chapter": "04",
+   "t0": 328.458,
+   "t1": 332.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "04-15"
+    },
+    "t1": {
+     "shot": "04-16"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the aircraft at the gate"
+  },
+  {
+   "id": "evidence_room.e2",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "03.04",
+    "03.04"
+   ],
+   "chapter": "03",
+   "t0": 332.042,
+   "t1": 336.333,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "04-16"
+    },
+    "t1": {
+     "shot": "04-17"
+    }
+   },
+   "edl_note": "the fee line, the trace and the cut-away",
+   "added_in_edit": true
+  },
+  {
+   "id": "fluorescent_hum.3b",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 343.833,
+   "t1": 349.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "04-18"
+    },
+    "t1": {
+     "shot": "04-19"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "inspection_room.3b",
+   "sound": "audio/sfx/amb_inspection_room.flac",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 343.833,
+   "t1": 349.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "04-18"
+    },
+    "t1": {
+     "shot": "04-19"
+    }
+   },
+   "edl_note": "the room returns on the two-shot, with \"Think about the two conversations\"",
+   "added_in_edit": true
+  },
+  {
+   "id": "fluorescent_hum.4",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "04.08",
+    "05.02"
+   ],
+   "chapter": "04",
+   "t0": 349.042,
+   "t1": 352.542,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "04-19"
+    },
+    "t1": {
+     "shot": "04-20"
+    }
+   },
+   "edl_note": "the detention corridor (2014)"
+  },
+  {
+   "id": "fluorescent_hum.e5",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 352.542,
+   "t1": 357.667,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "04-20"
+    },
+    "t1": {
+     "shot": "05-01"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "inspection_room.e5",
+   "sound": "audio/sfx/amb_inspection_room.flac",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 352.542,
+   "t1": 357.667,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "04-20"
+    },
+    "t1": {
+     "shot": "05-01"
+    }
+   },
+   "edl_note": "\"The trip ended in that room\": room tone, then the 1.5 s silence",
+   "added_in_edit": true
+  },
+  {
+   "id": "fluorescent_hum.4b",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "04.08",
+    "05.02"
+   ],
+   "chapter": "04",
+   "t0": 357.667,
+   "t1": 385.917,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "05-01"
+    },
+    "t1": {
+     "shot": "05-07"
+    }
+   },
+   "edl_note": "the corridor, under the statement page, the email and the envelope",
+   "added_in_edit": true
+  },
+  {
+   "id": "hearing_room.e1",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "07.05",
+    "07.05"
+   ],
+   "chapter": "07",
+   "t0": 385.917,
+   "t1": 401.042,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "05-07"
+    },
+    "t1": {
+     "shot": "05-09a"
+    }
+   },
+   "edl_note": "added shots: Tim's hands, the dais (\"A large quiet room\")"
+  },
+  {
+   "id": "clock.1",
+   "sound": "audio/sfx/sfx_clock_tick.flac",
+   "rows": [
+    "05.03",
+    "05.04"
+   ],
+   "chapter": "05",
+   "t0": 401.042,
+   "t1": 417.026,
+   "offset_in_s": 0,
+   "offset_out_s": -6.8,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "05-09a"
+    },
+    "t1": {
+     "voice": "05.07",
+     "word_s": 0.84
+    }
+   },
+   "edl_note": "very low, from the blank sheet through the calendar; it stops on \"worse\", between ticks",
+   "kind": "clock",
+   "cells": {
+    "first_tick_s": 0.028,
+    "period_s": 1.0,
+    "count": 22
+   },
+   "phase_s": 0.816,
+   "phase_why": "at least 0.2 s from the calendar's three year ticks; the last tick 0.21 s before \"worse\""
+  },
+  {
+   "id": "evidence_room.e3",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "03.04",
+    "03.04"
+   ],
+   "chapter": "03",
+   "t0": 401.042,
+   "t1": 404.833,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "05-09a"
+    },
+    "t1": {
+     "shot": "05-09"
+    }
+   },
+   "edl_note": "the fee line, the trace and the cut-away",
+   "added_in_edit": true
+  },
+  {
+   "id": "void_air.3",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "05.03",
+    "05.03"
+   ],
+   "chapter": "05",
+   "t0": 404.833,
+   "t1": 416.167,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "05-09"
+    },
+    "t1": {
+     "shot": "05-11"
+    }
+   }
+  },
+  {
+   "id": "fluorescent_hum.5",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "05.04",
+    "05.04"
+   ],
+   "chapter": "05",
+   "t0": 416.167,
+   "t1": 420.625,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "05-11"
+    },
+    "t1": {
+     "shot": "06-01"
+    }
+   }
+  },
+  {
+   "id": "courtroom.0",
+   "sound": "audio/sfx/amb_courtroom.flac",
+   "rows": [
+    "06.01",
+    "06.01"
+   ],
+   "chapter": "06",
+   "t0": 420.625,
+   "t1": 424.917,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "Room tone, no gavel.",
+   "edl": {
+    "t0": {
+     "shot": "06-01"
+    },
+    "t1": {
+     "shot": "06-02"
+    }
+   }
+  },
+  {
+   "id": "void_air.4",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "06.02",
+    "06.02"
+   ],
+   "chapter": "06",
+   "t0": 424.917,
+   "t1": 428.542,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "06-02"
+    },
+    "t1": {
+     "shot": "06-03"
+    }
+   }
+  },
+  {
+   "id": "courtroom.1",
+   "sound": "audio/sfx/amb_courtroom.flac",
+   "rows": [
+    "06.03",
+    "06.04"
+   ],
+   "chapter": "06",
+   "t0": 428.542,
+   "t1": 431.708,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "06-03"
+    },
+    "t1": {
+     "shot": "06-04"
+    }
+   }
+  },
+  {
+   "id": "void_air.4b",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "06.02",
+    "06.02"
+   ],
+   "chapter": "06",
+   "t0": 431.708,
+   "t1": 437.25,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "06-04"
+    },
+    "t1": {
+     "shot": "06-06"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "rain_concrete.e1",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "00.14",
+    "00.14"
+   ],
+   "chapter": "00",
+   "t0": 437.25,
+   "t1": 440.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "06-06"
+    },
+    "t1": {
+     "shot": "06-07"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the prison wall"
+  },
+  {
+   "id": "evidence_room.4",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "06.05",
+    "06.05"
+   ],
+   "chapter": "06",
+   "t0": 440.0,
+   "t1": 448.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "06-07"
+    },
+    "t1": {
+     "shot": "06-08"
+    }
+   }
+  },
+  {
+   "id": "rain_concrete.e2",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "00.14",
+    "00.14"
+   ],
+   "chapter": "00",
+   "t0": 448.0,
+   "t1": 453.917,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "06-08"
+    },
+    "t1": {
+     "shot": "06-09"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the tower (\"Rain, wind\")"
+  },
+  {
+   "id": "hk_street.e1",
+   "sound": "audio/sfx/amb_hk_street.flac",
+   "rows": [
+    "02.02",
+    "02.03"
+   ],
+   "chapter": "02",
+   "t0": 453.917,
+   "t1": 458.792,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "06-09"
+    },
+    "t1": {
+     "shot": "06-10"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the organisers (\"Street, far\")"
+  },
+  {
+   "id": "baggage_belt.e2",
+   "sound": "audio/sfx/amb_baggage_belt.flac",
+   "rows": [
+    "03.06",
+    "03.06"
+   ],
+   "chapter": "03",
+   "t0": 458.792,
+   "t1": 463.667,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "06-10"
+    },
+    "t1": {
+     "shot": "06-11"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the bags on the belt"
+  },
+  {
+   "id": "courtroom.1b",
+   "sound": "audio/sfx/amb_courtroom.flac",
+   "rows": [
+    "06.03",
+    "06.04"
+   ],
+   "chapter": "06",
+   "t0": 463.667,
+   "t1": 470.25,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "06-11"
+    },
+    "t1": {
+     "shot": "06-12"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "void_air.5",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "06.06",
+    "06.07"
+   ],
+   "chapter": "06",
+   "t0": 470.25,
+   "t1": 481.167,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "06-12"
+    },
+    "t1": {
+     "shot": "07-01"
+    }
+   }
+  },
+  {
+   "id": "rain_concrete.1",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "07.01",
+    "07.01"
+   ],
+   "chapter": "07",
+   "t0": 480.167,
+   "t1": 488.167,
+   "offset_in_s": -1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "07-01",
+     "offset_s": -1.0
+    },
+    "t1": {
+     "shot": "07-03"
+    }
+   },
+   "edl_note": "leads the cut by 1 s"
+  },
+  {
+   "id": "phone_line.0",
+   "sound": "audio/sfx/amb_phone_line.flac",
+   "rows": [
+    "07.02",
+    "07.02"
+   ],
+   "chapter": "07",
+   "t0": 488.167,
+   "t1": 503.583,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": "The handset line's hiss. In Ch 09 it cuts at 11:38.5: the silence under \"When would she be released?\".",
+   "edl": {
+    "t0": {
+     "shot": "07-03"
+    },
+    "t1": {
+     "shot": "07-05"
+    }
+   }
+  },
+  {
+   "id": "void_air.6",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "07.03",
+    "07.03"
+   ],
+   "chapter": "07",
+   "t0": 503.583,
+   "t1": 516.292,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "07-05"
+    },
+    "t1": {
+     "shot": "07-06"
+    }
+   }
+  },
+  {
+   "id": "home_room.1",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "07.04",
+    "07.04"
+   ],
+   "chapter": "07",
+   "t0": 516.292,
+   "t1": 524.417,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "07-06"
+    },
+    "t1": {
+     "shot": "07-08"
+    }
+   }
+  },
+  {
+   "id": "hearing_room.1",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "07.05",
+    "07.05"
+   ],
+   "chapter": "07",
+   "t0": 524.417,
+   "t1": 533.917,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "07-08"
+    },
+    "t1": {
+     "shot": "07-10"
+    }
+   }
+  },
+  {
+   "id": "home_room.2",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "07.07",
+    "07.07"
+   ],
+   "chapter": "07",
+   "t0": 533.917,
+   "t1": 542.833,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "07-10"
+    },
+    "t1": {
+     "shot": "07-11"
+    }
+   }
+  },
+  {
+   "id": "hearing_room.1b",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "07.05",
+    "07.05"
+   ],
+   "chapter": "07",
+   "t0": 542.833,
+   "t1": 548.583,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "07-11"
+    },
+    "t1": {
+     "shot": "07-11b"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "rain_concrete.e3",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "00.14",
+    "00.14"
+   ],
+   "chapter": "00",
+   "t0": 548.583,
+   "t1": 554.083,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "07-11b"
+    },
+    "t1": {
+     "shot": "07-12"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the tower (\"Rain, wind\")"
+  },
+  {
+   "id": "home_room.2b",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "07.07",
+    "07.07"
+   ],
+   "chapter": "07",
+   "t0": 554.083,
+   "t1": 556.875,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "07-12"
+    },
+    "t1": {
+     "shot": "07-13"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "fluorescent_hum.e6",
+   "sound": "audio/sfx/amb_fluorescent_hum.flac",
+   "rows": [
+    "05.04",
+    "05.04"
+   ],
+   "chapter": "05",
+   "t0": 556.875,
+   "t1": 559.542,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "07-13"
+    },
+    "t1": {
+     "shot": "07-14"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: the detention door"
+  },
+  {
+   "id": "void_air.6b",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "07.03",
+    "07.03"
+   ],
+   "chapter": "07",
+   "t0": 559.542,
+   "t1": 561.542,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "07-14"
+    },
+    "t1": {
+     "shot": "07-15"
+    }
+   },
+   "added_in_edit": true
+  },
+  {
+   "id": "evidence_room.5",
+   "sound": "audio/sfx/amb_evidence_room.flac",
+   "rows": [
+    "07.06",
+    "07.06"
+   ],
+   "chapter": "07",
+   "t0": 561.542,
+   "t1": 566.708,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "07-15"
+    },
+    "t1": {
+     "shot": "08-01"
+    }
+   }
+  },
+  {
+   "id": "clock.2",
+   "sound": "audio/sfx/sfx_clock_tick.flac",
+   "rows": [
+    "08.01",
+    "08.03"
+   ],
+   "chapter": "08",
+   "t0": 566.708,
+   "t1": 612.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "08-01"
+    },
+    "t1": {
+     "shot": "08-07"
+    }
+   },
+   "edl_note": "runs through the chapter and stops dead on the cut to the empty chair (612.458, on \"died\"), between ticks",
+   "kind": "clock",
+   "cells": {
+    "first_tick_s": 0.028,
+    "period_s": 1.0,
+    "count": 22
+   },
+   "phase_s": 0.0,
+   "phase_why": "the last tick 0.46 s before the cut to the empty chair"
+  },
+  {
+   "id": "home_room.3",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "08.01",
+    "08.03"
+   ],
+   "chapter": "08",
+   "t0": 566.708,
+   "t1": 584.875,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "08-01"
+    },
+    "t1": {
+     "shot": "08-04"
+    }
+   },
+   "edl_note": "the cold house, under Dawn in the light too (08-03): his house, his clock"
+  },
+  {
+   "id": "hearing_room.e2",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "07.05",
+    "07.05"
+   ],
+   "chapter": "07",
+   "t0": 584.875,
+   "t1": 593.583,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "08-04"
+    },
+    "t1": {
+     "shot": "08-05"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added shot: Tim at the witness table (\"A large quiet room, far\")"
+  },
+  {
+   "id": "home_room.3b",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "08.01",
+    "08.03"
+   ],
+   "chapter": "08",
+   "t0": 593.583,
+   "t1": 612.458,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "08-05"
+    },
+    "t1": {
+     "shot": "08-07"
+    }
+   },
+   "edl_note": "cuts out with the clock on the cut to the empty chair (on \"died\")",
+   "added_in_edit": true
+  },
+  {
+   "id": "void_air.7",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "08.05",
+    "08.05"
+   ],
+   "chapter": "08",
+   "t0": 621.715,
+   "t1": 622.708,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "voice": "08.06",
+     "at": "speech_end",
+     "offset_s": 2.0
+    },
+    "t1": {
+     "shot": "09-01"
+    }
+   },
+   "edl_note": "the void's air returns 2 s after \"He never saw Dawn come home.\" (the plan's 2 s), with the chair alone in its pool"
+  },
+  {
+   "id": "rain_concrete.2",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "09.01",
+    "09.01"
+   ],
+   "chapter": "09",
+   "t0": 622.708,
+   "t1": 629.542,
+   "offset_in_s": -1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-01"
+    },
+    "t1": {
+     "shot": "09-02"
+    }
+   },
+   "edl_note": "no 1 s lead into chapter 9 here: it would land on the void's air returning (08.sil2)"
+  },
+  {
+   "id": "hearing_room.e3",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "09.05",
+    "09.05"
+   ],
+   "chapter": "09",
+   "t0": 629.542,
+   "t1": 634.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "added_in_edit": true,
+   "edl": {
+    "t0": {
+     "shot": "09-02"
+    },
+    "t1": {
+     "shot": "09-03"
+    }
+   },
+   "edl_note": "added shot: \"He told lawmakers\" on Tim's hands"
+  },
+  {
+   "id": "phone_line.1",
+   "sound": "audio/sfx/amb_phone_line.flac",
+   "rows": [
+    "09.02",
+    "09.02"
+   ],
+   "chapter": "09",
+   "t0": 634.0,
+   "t1": 645.75,
+   "offset_in_s": 0,
+   "offset_out_s": 0.5,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-03"
+    },
+    "t1": {
+     "shot": "09-04"
+    }
+   },
+   "edl_note": "the line's hiss cuts out on the cut to the glass, for the question"
+  },
+  {
+   "id": "hearing_room.2",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "09.05",
+    "09.05"
+   ],
+   "chapter": "09",
+   "t0": 655.75,
+   "t1": 662.583,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-06"
+    },
+    "t1": {
+     "shot": "09-07"
+    }
+   }
+  },
+  {
+   "id": "home_room.4",
+   "sound": "audio/sfx/amb_home_room.flac",
+   "rows": [
+    "09.06",
+    "09.06"
+   ],
+   "chapter": "09",
+   "t0": 662.583,
+   "t1": 669.708,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-07"
+    },
+    "t1": {
+     "shot": "09-09"
+    }
+   },
+   "edl_note": "the empty chair and Tim's desk"
+  },
+  {
+   "id": "hearing_room.3",
+   "sound": "audio/sfx/amb_hearing_room.flac",
+   "rows": [
+    "09.07",
+    "09.07"
+   ],
+   "chapter": "09",
+   "t0": 669.708,
+   "t1": 676.583,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-09"
+    },
+    "t1": {
+     "shot": "09-10"
+    }
+   }
+  },
+  {
+   "id": "void_air.8",
+   "sound": "audio/sfx/amb_void_air.flac",
+   "rows": [
+    "09.08",
+    "09.10"
+   ],
+   "chapter": "09",
+   "t0": 676.583,
+   "t1": 726.968,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-10"
+    },
+    "t1": {
+     "voice": "09.sil2"
+    }
+   },
+   "edl_note": "the status line and the advice over the void's air (the plan), to the last 2 s"
+  },
+  {
+   "id": "rain_concrete.e4",
+   "sound": "audio/sfx/amb_rain_concrete.flac",
+   "rows": [
+    "00.14",
+    "00.14"
+   ],
+   "chapter": "00",
+   "t0": 682.625,
+   "t1": 689.375,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.8,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "edl": {
+    "t0": {
+     "shot": "09-11"
+    },
+    "t1": {
+     "shot": "09-12"
+    }
+   },
+   "added_in_edit": true,
+   "edl_note": "added: the status line moved onto the prison wall (\"Rain\"); kept under the void's air, low"
+  },
+  {
+   "id": "inspection_room.4",
+   "sound": "audio/sfx/amb_inspection_room.flac",
+   "rows": [
+    "09.09",
+    "09.09"
+   ],
+   "chapter": "09",
+   "t0": 709.542,
+   "t1": 717.125,
+   "offset_in_s": 0,
+   "offset_out_s": -12.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-16"
+    },
+    "t1": {
+     "shot": "09-18"
+    }
+   },
+   "edl_note": "vanishes on the match cut to the void's bags"
   },
   {
    "id": "drone.1",
@@ -1683,15 +3648,24 @@
     "09.09"
    ],
    "chapter": "09",
-   "t0": 752.0,
-   "t1": 766.0,
+   "t0": 712.792,
+   "t1": 721.821,
    "offset_in_s": 0,
    "offset_out_s": -2.0,
    "level_re_voice_db": -28,
    "fade_in_s": 2.5,
-   "fade_out_s": 0.0,
+   "fade_out_s": 1.5,
    "loop": true,
-   "note": ""
+   "note": "",
+   "edl": {
+    "t0": {
+     "shot": "09-17"
+    },
+    "t1": {
+     "voice": "09.16"
+    }
+   },
+   "edl_note": "returns quietly under YES -> WHEN?; gives way before the last line (the score's one warm note, SC09c, is the score session's)"
   }
  ],
  "silence_ok": [
@@ -1700,100 +3674,100 @@
    2.0
   ],
   [
-   33.0,
-   44.0
+   32.667,
+   42.155
   ],
   [
-   43.0,
-   44.0
+   41.155,
+   42.155
   ],
   [
-   65.0,
-   66.5
+   65.137,
+   66.637
   ],
   [
-   85.0,
-   86.5
+   81.856,
+   82.856
   ],
   [
-   101.0,
-   102.0
+   93.083,
+   94.083
   ],
   [
-   183.5,
-   185.0
+   185.361,
+   186.861
   ],
   [
-   238.0,
-   239.5
+   231.201,
+   232.201
   ],
   [
-   278.5,
-   280.5
+   265.292,
+   267.292
   ],
   [
-   319.4,
-   320.0
+   299.655,
+   300.255
   ],
   [
-   322.4,
-   323.0
+   302.215,
+   302.815
   ],
   [
-   331.0,
-   333.0
+   310.561,
+   311.542
   ],
   [
-   378.0,
-   380.0
+   356.174,
+   357.674
   ],
   [
-   441.0,
-   443.0
+   419.14,
+   420.64
   ],
   [
-   447.5,
-   449.0
+   423.417,
+   424.917
   ],
   [
-   513.5,
-   515.0
+   475.206,
+   476.706
   ],
   [
-   520.0,
-   522.0
+   479.181,
+   481.181
   ],
   [
-   607.5,
-   609.0
+   565.188,
+   566.688
   ],
   [
-   640.5,
-   642.0
+   606.455,
+   607.955
   ],
   [
-   648.0,
-   654.5
+   612.458,
+   621.715
   ],
   [
-   698.5,
-   708.0
+   645.75,
+   652.917
   ],
   [
-   729.0,
-   730.0
+   678.311,
+   679.311
   ],
   [
-   731.0,
-   733.0
+   680.614,
+   682.614
   ],
   [
-   734.0,
-   752.0
+   682.614,
+   712.792
   ],
   [
-   773.0,
-   775.0
+   726.968,
+   728.958
   ]
  ],
  "silences": [
@@ -1805,267 +3779,519 @@
    "t0": 0.0,
    "t1": 2.0,
    "out": "score",
-   "why": "No music for 2 s: the belt, the beep and the hall only."
+   "why": "No music for 2 s: the belt, the beep and the hall only.",
+   "edl": {
+    "t0": {
+     "shot": "00-01"
+    },
+    "t1": {
+     "shot": "00-01",
+     "offset_s": 2.0
+    }
+   }
   },
   {
    "id": "after_yes",
    "chapter": "00",
    "row": "00.07",
    "offset_s": 0.0,
-   "t0": 33.0,
-   "t1": 44.0,
+   "t0": 32.667,
+   "t1": 42.155,
    "out": "score",
-   "why": "The pulse stops dead on \"Yes.\" (0:33) and stays out through the second YES; voice and room only."
+   "why": "The pulse stops dead on \"Yes.\" (0:33) and stays out through the second YES; voice and room only.",
+   "edl": {
+    "t0": {
+     "shot": "00-12"
+    },
+    "t1": {
+     "voice": "00.10"
+    }
+   },
+   "edl_note": "from YES landing on \"she says yes.\" to \"Inside the luggage...\""
   },
   {
    "id": "linings_drop",
    "chapter": "00",
    "row": "00.09",
    "offset_s": 0.0,
-   "t0": 43.0,
-   "t1": 44.0,
+   "t0": 41.155,
+   "t1": 42.155,
    "out": "score, effects",
-   "why": "(silence, 1 s) before \"Inside the luggage...\": room tone low."
+   "why": "(silence, 1 s) before \"Inside the luggage...\": room tone low.",
+   "edl": {
+    "t0": {
+     "voice": "00.sil1"
+    },
+    "t1": {
+     "voice": "00.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "were_not",
    "chapter": "00",
    "row": "00.12",
    "offset_s": 1.0,
-   "t0": 65.0,
-   "t1": 66.5,
+   "t0": 65.137,
+   "t1": 66.637,
    "out": "score, drone, room",
-   "why": "Score and drone cut dead at \"were not.\" (1:05); 1.5 s of the void's air only, then \"Three years later...\"."
+   "why": "Score and drone cut dead at \"were not.\" (1:05); 1.5 s of the void's air only, then \"Three years later...\".",
+   "edl": {
+    "t0": {
+     "voice": "00.sil2"
+    },
+    "t1": {
+     "voice": "00.sil2",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "after_answer",
    "chapter": "00",
    "row": "00.15",
    "offset_s": 4.0,
-   "t0": 85.0,
-   "t1": 86.5,
+   "t0": 81.856,
+   "t1": 82.856,
    "out": "score",
-   "why": "1 s of near silence after \"answer\" (1:25): the hearing room drops to near silence (-40 re voice)."
+   "why": "1 s of near silence after \"answer\" (1:25): the hearing room drops to near silence (-40 re voice).",
+   "edl": {
+    "t0": {
+     "voice": "00.sil3"
+    },
+    "t1": {
+     "voice": "00.sil3",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "title_decay",
    "chapter": "00",
    "row": "00.17",
    "offset_s": 4.0,
-   "t0": 101.0,
-   "t1": 102.0,
+   "t0": 93.083,
+   "t1": 94.083,
    "out": "all but the decaying score tail",
-   "why": "The score decays to silence over 4 s; cut on the silence to Ch 01 (1:42)."
+   "why": "The score decays to silence over 4 s; cut on the silence to Ch 01 (1:42).",
+   "edl": {
+    "t0": {
+     "shot": "00-30",
+     "offset_s": 4.0
+    },
+    "t1": {
+     "shot": "01-01"
+    }
+   }
   },
   {
    "id": "ch01_end",
    "chapter": "01",
    "row": "01.08",
    "offset_s": 5.5,
-   "t0": 183.5,
-   "t1": 185.0,
+   "t0": 185.361,
+   "t1": 186.861,
    "out": "score",
-   "why": "(silence, 1.5 s): the gate's room only."
+   "why": "(silence, 1.5 s): the gate's room only.",
+   "edl": {
+    "t0": {
+     "voice": "01.sil1"
+    },
+    "t1": {
+     "voice": "01.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "ch02_end",
    "chapter": "02",
    "row": "02.06",
    "offset_s": 8.0,
-   "t0": 238.0,
-   "t1": 239.5,
+   "t0": 231.201,
+   "t1": 232.201,
    "out": "score",
-   "why": "The travel pad drops out on \"one more gift\" (3:57); 1 s of silence."
+   "why": "The travel pad drops out on \"one more gift\" (3:57); 1 s of silence.",
+   "edl": {
+    "t0": {
+     "voice": "02.sil1"
+    },
+    "t1": {
+     "voice": "02.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "fee_drop",
    "chapter": "03",
    "row": "03.05",
    "offset_s": 0.5,
-   "t0": 278.5,
-   "t1": 280.5,
+   "t0": 265.292,
+   "t1": 267.292,
    "out": "score",
-   "why": "Drop before \"Overweight.\" (4:38.5-4:40.5): belt and hall low; then the beep."
+   "why": "Drop before \"Overweight.\" (4:38.5-4:40.5): belt and hall low; then the beep.",
+   "edl": {
+    "t0": {
+     "shot": "03-11",
+     "offset_s": -0.708
+    },
+    "t1": {
+     "shot": "03-11",
+     "offset_s": 1.292
+    }
+   },
+   "edl_note": "2 s, ending on the beep and \"Overweight.\""
   },
   {
    "id": "yes_stop_1",
    "chapter": "04",
    "row": "04.03",
    "offset_s": 2.4,
-   "t0": 319.4,
-   "t1": 320.0,
+   "t0": 299.655,
+   "t1": 300.255,
    "out": "score (stop-down)",
-   "why": "The pulse stops 0.6 s before the first \"Yes\" (5:20) and comes back after it."
+   "why": "The pulse stops 0.6 s before the first \"Yes\" (5:20) and comes back after it.",
+   "edl": {
+    "t0": {
+     "voice": "04.03",
+     "offset_s": -0.6
+    },
+    "t1": {
+     "voice": "04.03"
+    }
+   }
   },
   {
    "id": "yes_stop_2",
    "chapter": "04",
    "row": "04.03",
    "offset_s": 5.4,
-   "t0": 322.4,
-   "t1": 323.0,
+   "t0": 302.215,
+   "t1": 302.815,
    "out": "score (stop-down)",
-   "why": "The same before the second \"Yes\" (5:23)."
+   "why": "The same before the second \"Yes\" (5:23).",
+   "edl": {
+    "t0": {
+     "voice": "04.05",
+     "offset_s": -0.6
+    },
+    "t1": {
+     "voice": "04.05"
+    }
+   }
   },
   {
    "id": "discovery",
    "chapter": "04",
    "row": "04.04",
    "offset_s": 4.0,
-   "t0": 331.0,
-   "t1": 333.0,
+   "t0": 310.561,
+   "t1": 311.542,
    "out": "score, beds",
-   "why": "Hard stop on \"...inside the linings.\" (5:31): the pulse and the room cut together; 1.5 s of silence (air floor only), then the room returns on the split frame (5:33)."
+   "why": "Hard stop on \"...inside the linings.\" (5:31): the pulse and the room cut together; 1.5 s of silence (air floor only), then the room returns on the split frame (5:33).",
+   "edl": {
+    "t0": {
+     "voice": "04.07",
+     "at": "speech_end"
+    },
+    "t1": {
+     "shot": "04-09"
+    }
+   },
+   "edl_note": "the edit's silence is 1 s (04.sil1); the room returns on the two-shot"
   },
   {
    "id": "ch04_end",
    "chapter": "04",
    "row": "04.08",
    "offset_s": 10.0,
-   "t0": 378.0,
-   "t1": 380.0,
+   "t0": 356.174,
+   "t1": 357.674,
    "out": "score",
-   "why": "(silence, 1.5 s): the corridor hum only."
+   "why": "(silence, 1.5 s): the corridor hum only.",
+   "edl": {
+    "t0": {
+     "voice": "04.sil2"
+    },
+    "t1": {
+     "voice": "04.sil2",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "clock_stop",
    "chapter": "05",
    "row": "05.04",
    "offset_s": 8.2,
-   "t0": 438.2,
-   "t1": 438.2,
+   "t0": 417.026,
+   "t1": 417.026,
    "out": "clock",
-   "why": "The clock stops on \"worse\" (7:18.2), between ticks."
+   "why": "The clock stops on \"worse\" (7:18.2), between ticks.",
+   "edl": {
+    "t0": {
+     "voice": "05.07",
+     "word_s": 0.84
+    },
+    "t1": {
+     "voice": "05.07",
+     "word_s": 0.84
+    }
+   }
   },
   {
    "id": "ch05_end",
    "chapter": "05",
    "row": "05.04",
    "offset_s": 11.0,
-   "t0": 441.0,
-   "t1": 443.0,
+   "t0": 419.14,
+   "t1": 420.64,
    "out": "score",
-   "why": "(silence, 1.5 s): the corridor hum only."
+   "why": "(silence, 1.5 s): the corridor hum only.",
+   "edl": {
+    "t0": {
+     "voice": "05.sil1"
+    },
+    "t1": {
+     "voice": "05.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "sentence_drop",
    "chapter": "06",
    "row": "06.01",
    "offset_s": 2.5,
-   "t0": 447.5,
-   "t1": 449.0,
+   "t0": 423.417,
+   "t1": 424.917,
    "out": "score",
-   "why": "Drop before \"A death sentence\" (7:27.5-7:29): courtroom tone only."
+   "why": "Drop before \"A death sentence\" (7:27.5-7:29): courtroom tone only.",
+   "edl": {
+    "t0": {
+     "shot": "06-02",
+     "offset_s": -1.5
+    },
+    "t1": {
+     "shot": "06-02"
+    }
+   }
   },
   {
    "id": "deceived_drop",
    "chapter": "06",
    "row": "06.07",
    "offset_s": 0.5,
-   "t0": 513.5,
-   "t1": 515.0,
+   "t0": 475.206,
+   "t1": 476.706,
    "out": "score",
-   "why": "Drop before \"Deceived.\" (8:33.5): the score has thinned out; the void's air only."
+   "why": "Drop before \"Deceived.\" (8:33.5): the score has thinned out; the void's air only.",
+   "edl": {
+    "t0": {
+     "voice": "06.07",
+     "offset_s": -1.5
+    },
+    "t1": {
+     "voice": "06.07"
+    }
+   }
   },
   {
    "id": "deceived_after",
    "chapter": "06",
    "row": "06.07",
    "offset_s": 7.0,
-   "t0": 520.0,
-   "t1": 522.0,
+   "t0": 479.181,
+   "t1": 481.181,
    "out": "score",
-   "why": "Silence, 2 s, after \"And guilty anyway.\", then cut."
+   "why": "Silence, 2 s, after \"And guilty anyway.\", then cut.",
+   "edl": {
+    "t0": {
+     "voice": "06.sil1"
+    },
+    "t1": {
+     "voice": "06.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "ch07_end",
    "chapter": "07",
    "row": "07.07",
    "offset_s": 11.5,
-   "t0": 607.5,
-   "t1": 609.0,
+   "t0": 565.188,
+   "t1": 566.688,
    "out": "score",
-   "why": "(silence, 1.5 s)."
+   "why": "(silence, 1.5 s).",
+   "edl": {
+    "t0": {
+     "voice": "07.sil1"
+    },
+    "t1": {
+     "voice": "07.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "gene_drop",
    "chapter": "08",
    "row": "08.03",
    "offset_s": 2.5,
-   "t0": 640.5,
-   "t1": 642.0,
+   "t0": 606.455,
+   "t1": 607.955,
    "out": "score",
-   "why": "Drop before \"On January 25th, 2026, Gene Hunt died.\" (10:40.5): the clock and the room only."
+   "why": "Drop before \"On January 25th, 2026, Gene Hunt died.\" (10:40.5): the clock and the room only.",
+   "edl": {
+    "t0": {
+     "voice": "08.05",
+     "offset_s": -1.5
+    },
+    "t1": {
+     "voice": "08.05"
+    }
+   }
   },
   {
    "id": "gene_total",
    "chapter": "08",
    "row": "08.04",
    "offset_s": 0.0,
-   "t0": 648.0,
-   "t1": 654.5,
+   "t0": 612.458,
+   "t1": 621.715,
    "out": "everything but the air floor (score, room tone, clock)",
-   "why": "TOTAL SILENCE on the cut to the empty chair (10:48): 2 s, \"He never saw Dawn come home.\" over it, then 2 s more. The loudest moment of the film."
+   "why": "TOTAL SILENCE on the cut to the empty chair (10:48): 2 s, \"He never saw Dawn come home.\" over it, then 2 s more. The loudest moment of the film.",
+   "edl": {
+    "t0": {
+     "shot": "08-07"
+    },
+    "t1": {
+     "voice": "08.06",
+     "at": "speech_end",
+     "offset_s": 2.0
+    }
+   },
+   "edl_note": "from the cut to the empty chair (on \"died\") through \"He was ninety-two.\", the Void chair and its 2 s silence (08.sil1), \"He never saw Dawn come home.\" and 2 s more: 9.26 s; the plan's 6.5 s (2 s, the line, 2 s) is its last part, on 08-08"
   },
   {
    "id": "gene_room_returns",
    "chapter": "08",
    "row": "08.05",
    "offset_s": 0.0,
-   "t0": 656.0,
-   "t1": 656.0,
+   "t0": 621.715,
+   "t1": 621.715,
    "out": "-",
-   "why": "Room tone (the void's air, -30 re voice) returns on the cut to void_stage chair (10:56)."
+   "why": "Room tone (the void's air, -30 re voice) returns on the cut to void_stage chair (10:56).",
+   "edl": {
+    "t0": {
+     "voice": "08.06",
+     "at": "speech_end",
+     "offset_s": 2.0
+    },
+    "t1": {
+     "voice": "08.06",
+     "at": "speech_end",
+     "offset_s": 2.0
+    }
+   }
   },
   {
    "id": "question",
    "chapter": "09",
    "row": "09.03",
    "offset_s": 0.5,
-   "t0": 698.5,
-   "t1": 708.0,
+   "t0": 645.75,
+   "t1": 652.917,
    "out": "score, phone line",
-   "why": "Silence under \"When would she be released?\" (11:38.5-11:48): the line's hiss cuts out; the air floor only."
+   "why": "Silence under \"When would she be released?\" (11:38.5-11:48): the line's hiss cuts out; the air floor only.",
+   "edl": {
+    "t0": {
+     "shot": "09-04"
+    },
+    "t1": {
+     "shot": "09-05"
+    }
+   },
+   "edl_note": "the hiss cuts on the cut to the glass; silence under the three lines to \"Tim could not give her a date.\""
   },
   {
    "id": "hers_drop",
    "chapter": "09",
    "row": "09.07",
    "offset_s": 1.0,
-   "t0": 729.0,
-   "t1": 730.0,
+   "t0": 678.311,
+   "t1": 679.311,
    "out": "score",
-   "why": "Drop before \"It was hers.\" (12:09)."
+   "why": "Drop before \"It was hers.\" (12:09).",
+   "edl": {
+    "t0": {
+     "voice": "09.10",
+     "offset_s": -1.0
+    },
+    "t1": {
+     "voice": "09.10"
+    }
+   }
   },
   {
    "id": "hers_after",
    "chapter": "09",
    "row": "09.07",
    "offset_s": 3.0,
-   "t0": 731.0,
-   "t1": 733.0,
+   "t0": 680.614,
+   "t1": 682.614,
    "out": "score",
-   "why": "(silence, 2 s) after \"It was hers.\""
+   "why": "(silence, 2 s) after \"It was hers.\"",
+   "edl": {
+    "t0": {
+     "voice": "09.sil1"
+    },
+    "t1": {
+     "voice": "09.sil1",
+     "at": "end"
+    }
+   }
   },
   {
    "id": "status_line",
    "chapter": "09",
    "row": "09.08",
    "offset_s": 0.0,
-   "t0": 734.0,
-   "t1": 752.0,
+   "t0": 682.614,
+   "t1": 712.792,
    "out": "score, effects",
-   "why": "void_stage dawn: Silence. The status line and the State Department line over the void's air only."
+   "why": "void_stage dawn: Silence. The status line and the State Department line over the void's air only.",
+   "edl": {
+    "t0": {
+     "voice": "09.11"
+    },
+    "t1": {
+     "shot": "09-17"
+    }
+   },
+   "edl_note": "the status line and the State Department's advice, to the match cut where the drone returns"
   },
   {
    "id": "very_end",
    "chapter": "09",
    "row": "09.10",
    "offset_s": 5.0,
-   "t0": 773.0,
-   "t1": 775.0,
+   "t0": 726.968,
+   "t1": 728.958,
    "out": "everything but the air floor",
-   "why": "Two seconds of silence at the very end."
+   "why": "Two seconds of silence at the very end.",
+   "edl": {
+    "t0": {
+     "voice": "09.sil2"
+    },
+    "t1": {
+     "shot": "09-18",
+     "at": "end"
+    }
+   }
   }
  ],
  "drops_before_reveals": [
@@ -2085,7 +4311,7 @@
  "cues": [
   {
    "id": "00.01-scale_beep",
-   "t": 0.6,
+   "t": 1.292,
    "sound": "audio/sfx/sfx_scale_beep.flac",
    "weight": "hero",
    "align": "start",
@@ -2094,7 +4320,12 @@
    "offset_s": 0.6,
    "anchor": "the display settles on OVERWEIGHT",
    "level_re_voice_db": -14,
-   "why": "The film's first sound; paid off at 4:41."
+   "why": "The film's first sound; paid off at 4:41.",
+   "edl": {
+    "shot": "00-01",
+    "offset_s": 1.292
+   },
+   "edl_note": "OVERWEIGHT's first lit frame (frame 31: gfx/scale.html lights it once t > 1.25 s)"
   },
   {
    "id": "00.02-booklet",
@@ -2107,11 +4338,15 @@
    "offset_s": 0.6,
    "anchor": "her hand slides the booklet across",
    "level_re_voice_db": -18,
-   "why": "Paper on laminate."
+   "why": "Paper on laminate.",
+   "edl": {
+    "shot": "00-02",
+    "offset_s": 0.6
+   }
   },
   {
    "id": "00.03-tannoy_far",
-   "t": 10.2,
+   "t": 9.533,
    "sound": "audio/sfx/sfx_tannoy_far.flac",
    "weight": "support",
    "align": "start",
@@ -2120,11 +4355,15 @@
    "offset_s": 1.2,
    "anchor": "the wide; behind \"It's 2014, at an airport in China\"",
    "level_re_voice_db": -24,
-   "why": "A far tannoy, no intelligible words."
+   "why": "A far tannoy, no intelligible words.",
+   "edl": {
+    "shot": "00-03",
+    "offset_s": 1.2
+   }
   },
   {
    "id": "00.04-tannoy_near",
-   "t": 15.2,
+   "t": 19.533,
    "sound": "audio/sfx/sfx_tannoy_near.flac",
    "weight": "support",
    "align": "start",
@@ -2133,11 +4372,15 @@
    "offset_s": 0.2,
    "anchor": "her head lifts",
    "level_re_voice_db": -21,
-   "why": "The tannoy, closer: she is being called. The pulse starts under it."
+   "why": "The tannoy, closer: she is being called. The pulse starts under it.",
+   "edl": {
+    "shot": "00-06",
+    "offset_s": 0.2
+   }
   },
   {
    "id": "00.05-door_inspection",
-   "t": 20.5,
+   "t": 23.083,
    "sound": "audio/sfx/sfx_door_steel.flac",
    "weight": "hero",
    "align": "peak",
@@ -2146,11 +4389,68 @@
    "offset_s": 0.5,
    "anchor": "the door closes behind her",
    "level_re_voice_db": -15,
-   "why": "Door, steel."
+   "why": "Door, steel.",
+   "edl": {
+    "shot": "00-07",
+    "offset_s": 0.5
+   }
+  },
+  {
+   "id": "00-12-yes_hit_1",
+   "t": 32.667,
+   "sound": "audio/sfx/kit/impact-heavy-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "impact-heavy-soft",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 0.018,
+   "chapter": "00",
+   "edl": {
+    "shot": "00-12"
+   },
+   "level_re_voice_db": -21,
+   "why": "YES lands (gfx/type.html yes: land at t0, 0 s); tuned to D2 (73.4 Hz) by rate 1.028, low-passed so it is felt more than heard",
+   "rate": 1.028,
+   "lp_hz": 1200
+  },
+  {
+   "id": "00-13-yes_hit_2",
+   "t": 34.917,
+   "sound": "audio/sfx/kit/impact-heavy-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "impact-heavy-soft",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 0.018,
+   "chapter": "00",
+   "edl": {
+    "shot": "00-13"
+   },
+   "level_re_voice_db": -18.5,
+   "why": "the second YES: a straight cut to the tighter frame at 3.0 s into the piece; a touch heavier (+2.5 dB, darker); tuned to D2 (73.4 Hz) by rate 1.028, low-passed so it is felt more than heard",
+   "rate": 1.028,
+   "lp_hz": 900
+  },
+  {
+   "id": "00-17-seam_air",
+   "t": 46.142,
+   "sound": "audio/sfx/kit/reverse-whoosh-medium-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "reverse-whoosh-medium-soft",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 0.679,
+   "chapter": "00",
+   "edl": {
+    "shot": "00-17",
+    "offset_s": 0.6
+   },
+   "level_re_voice_db": -22,
+   "why": "the red flash: the seam draws in 0.6 s (gfx/seam.html flash, sm(t / 0.6)); the air-pull stops as the line completes, 0.4 s before the cut"
   },
   {
    "id": "00.10-zip_tote",
-   "t": 48.0,
+   "t": 46.642,
    "sound": "audio/sfx/sfx_zip.flac",
    "weight": "hero",
    "align": "start",
@@ -2159,11 +4459,16 @@
    "offset_s": 1.0,
    "anchor": "the push in on the tote, before \"sewn into the linings\"",
    "level_re_voice_db": -16,
-   "why": "A dry, close zip."
+   "why": "A dry, close zip.",
+   "edl": {
+    "shot": "00-18",
+    "offset_s": 0.1
+   },
+   "edl_note": "on the push in on the tote, just after the red flash leaves with the cut (the flash now lands on \"sewn into the linings\")"
   },
   {
    "id": "00.13-impact_sentence_open",
-   "t": 70.0,
+   "t": 68.458,
    "sound": "audio/sfx/sfx_impact_low.flac",
    "weight": "hero",
    "align": "peak",
@@ -2172,11 +4477,32 @@
    "offset_s": 0.0,
    "anchor": "\"...a court sentences her to death\": on the cut to DEATH SENTENCE / 2017",
    "level_re_voice_db": -11,
-   "why": "One low impact (1 of 2 in the film)."
+   "why": "One low impact (1 of 2 in the film).",
+   "edl": {
+    "shot": "00-25"
+   }
+  },
+  {
+   "id": "00-30-title_boom",
+   "t": 89.083,
+   "sound": "audio/sfx/kit/boom-hit-medium.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "boom-hit-medium",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 0.038,
+   "chapter": "00",
+   "edl": {
+    "shot": "00-30"
+   },
+   "level_re_voice_db": -13,
+   "why": "THE PRIZE THAT lands on the shot's first frame with the score's title peak: a deep rounded boom (A1, 55 Hz at rate 1.028) under the music, low-passed at 2.5 kHz so it adds weight, not an edge",
+   "rate": 1.028,
+   "lp_hz": 2500
   },
   {
    "id": "01.02-pencil_entries",
-   "t": 113.5,
+   "t": 109.305,
    "sound": "audio/sfx/sfx_pencil_paper.flac",
    "weight": "support",
    "align": "start",
@@ -2185,11 +4511,16 @@
    "offset_s": 1.5,
    "anchor": "\"liked to enter sweepstakes\"",
    "level_re_voice_db": -20,
-   "why": "Pencils, paper."
+   "why": "Pencils, paper.",
+   "edl": {
+    "voice": "01.03",
+    "word_s": 4.72
+   },
+   "edl_note": "\"liked to enter sweepstakes\" (word time from the scratch read), on evidence_table motifs"
   },
   {
    "id": "01.02-paper_entries",
-   "t": 119.0,
+   "t": 113.845,
    "sound": "audio/sfx/sfx_paper_handle.flac",
    "weight": "support",
    "align": "peak",
@@ -2198,50 +4529,94 @@
    "offset_s": 7.0,
    "anchor": "\"every entry was a small possibility\"",
    "level_re_voice_db": -21,
-   "why": "Paper."
+   "why": "Paper.",
+   "edl": {
+    "voice": "01.03",
+    "word_s": 9.26
+   },
+   "edl_note": "\"every entry was a small possibility\", on evidence_table entries"
+  },
+  {
+   "id": "01-07-marker_1",
+   "t": 126.33,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-07",
+    "offset_s": 0.955
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 1 of 2: S1 p. 2, Gene's service (doc_gene); 0.7 s a line",
+   "rate": 0.85,
+   "group": "marker-01-07",
+   "center_in_s": 0.7
+  },
+  {
+   "id": "01-07-marker_2",
+   "t": 127.03,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-07",
+    "offset_s": 1.655
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 2 of 2: S1 p. 2, Gene's service (doc_gene); 0.7 s a line",
+   "rate": 0.85,
+   "group": "marker-01-07",
+   "center_in_s": 0.7
   },
   {
    "id": "01.04-mail_chime",
-   "t": 143.5,
-   "sound": "audio/sfx/sfx_mail_chime.flac",
+   "t": 142.953,
+   "sound": "audio/sfx/kit/notification-message-in-soft.flac",
    "weight": "support",
-   "align": "start",
+   "align": "sync",
    "chapter": "01",
    "row": "01.04",
    "offset_s": 3.5,
    "anchor": "the message lands, after \"What arrived in Dawn's inbox...\"",
-   "level_re_voice_db": -20,
-   "why": "One muted chime (an invented mail client)."
+   "level_re_voice_db": -22,
+   "why": "One muted chime: the kit's message-arriving note (warm marimba A5), low-passed at 2.5 kHz. Of six candidates it is the least like a success chime to earshot (forced choice 0.44 against 0.88-1.00).",
+   "edl": {
+    "voice": "01.07",
+    "at": "speech_end",
+    "offset_s": 0.29
+   },
+   "edl_note": "in the beat after \"It looked like she had won.\", 0.5 s before the cut to the email: the chime rings out before \"The message said...\" begins",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "notification-message-in-soft",
+   "sync_at": 0.046,
+   "lp_hz": 2500,
+   "was": "audio/sfx/sfx_mail_chime.flac (made; wants the ear: earshot heard it as \"a success chime\", z +4.5)"
   },
   {
-   "id": "01.06-keys_search",
-   "t": 162.8,
-   "sound": "audio/sfx/sfx_keys_typing.flac",
+   "id": "01-11-tannoy_far",
+   "t": 151.667,
+   "sound": "audio/sfx/sfx_tannoy_far.flac",
    "weight": "support",
    "align": "start",
    "chapter": "01",
-   "row": "01.06",
-   "offset_s": 0.8,
-   "anchor": "\"she looked the organizers up online\"",
-   "level_re_voice_db": -21,
-   "why": "Keys."
-  },
-  {
-   "id": "01.07-paper_tickets",
-   "t": 172.0,
-   "sound": "audio/sfx/sfx_paper_handle.flac",
-   "weight": "support",
-   "align": "peak",
-   "chapter": "01",
-   "row": "01.07",
-   "offset_s": 1.0,
-   "anchor": "\"The tickets.\"",
-   "level_re_voice_db": -18,
-   "why": "Paper."
+   "edl": {
+    "shot": "01-11",
+    "offset_s": 1.0
+   },
+   "level_re_voice_db": -24,
+   "why": "The departure gate (01-11): the EDL's Sound column asks for a far tannoy; the cold open's, at its level (no words, a far loudspeaker)."
   },
   {
    "id": "01.08-boarding_chime",
-   "t": 179.5,
+   "t": 152.167,
    "sound": "audio/sfx/sfx_boarding_chime.flac",
    "weight": "support",
    "align": "start",
@@ -2250,11 +4625,550 @@
    "offset_s": 1.5,
    "anchor": "the gate window",
    "level_re_voice_db": -22,
-   "why": "A boarding chime, far."
+   "why": "A boarding chime, far.",
+   "edl": {
+    "shot": "01-11",
+    "offset_s": 1.5
+   },
+   "mute": true,
+   "mute_why": "The film's rule (lead, 28 Nov): the only chime is the mail chime. Also flagged \"made; wants the ear\"; the edit moved the gate to 01-11, where a far tannoy is placed instead (the EDL's Sound column)."
+  },
+  {
+   "id": "01.06-keys_search",
+   "t": 157.958,
+   "sound": "audio/sfx/sfx_keys_typing.flac",
+   "weight": "support",
+   "align": "start",
+   "chapter": "01",
+   "row": "01.06",
+   "offset_s": 0.8,
+   "anchor": "\"she looked the organizers up online\"",
+   "level_re_voice_db": -21,
+   "why": "Keys.",
+   "edl": {
+    "shot": "01-12"
+   },
+   "mute": true,
+   "mute_why": "Replaced by one sfx-kit keypress per letter on the search's own typing rhythm (gfx/screen.html QT), group search-typing."
+  },
+  {
+   "id": "01.12-key_00",
+   "t": 158.042,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.0833
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"p\" appears (gfx/screen.html QT[0] = 0.0833 s)",
+   "rate": 0.968,
+   "gain_db": 1.15,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_01",
+   "t": 158.167,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.2083
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"r\" appears (gfx/screen.html QT[1] = 0.2083 s)",
+   "rate": 1.013,
+   "gain_db": 1.47,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_02",
+   "t": 158.25,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.2917
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"i\" appears (gfx/screen.html QT[2] = 0.2917 s)",
+   "rate": 0.953,
+   "gain_db": 0.82,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_03",
+   "t": 158.333,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.375
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"z\" appears (gfx/screen.html QT[3] = 0.3750 s)",
+   "rate": 0.989,
+   "gain_db": -0.24,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_04",
+   "t": 158.5,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.5417
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"e\" appears (gfx/screen.html QT[4] = 0.5417 s)",
+   "rate": 0.977,
+   "gain_db": 1.25,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_05",
+   "t": 158.583,
+   "sound": "audio/sfx/kit/keyboard-space-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-space-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.625
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \" \" appears (gfx/screen.html QT[5] = 0.6250 s)",
+   "rate": 0.955,
+   "gain_db": 0.52,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_06",
+   "t": 158.875,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 0.9167
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"c\" appears (gfx/screen.html QT[6] = 0.9167 s)",
+   "rate": 1.003,
+   "gain_db": 0.23,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_07",
+   "t": 158.958,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.0
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"o\" appears (gfx/screen.html QT[7] = 1.0000 s)",
+   "rate": 1.013,
+   "gain_db": 1.22,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_08",
+   "t": 159.208,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.25
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"n\" appears (gfx/screen.html QT[8] = 1.2500 s)",
+   "rate": 1.03,
+   "gain_db": -0.21,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_09",
+   "t": 159.292,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.3333
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"t\" appears (gfx/screen.html QT[9] = 1.3333 s)",
+   "rate": 0.998,
+   "gain_db": -0.54,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_10",
+   "t": 159.417,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.4583
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"e\" appears (gfx/screen.html QT[10] = 1.4583 s)",
+   "rate": 0.978,
+   "gain_db": 0.27,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_11",
+   "t": 159.5,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.5417
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"s\" appears (gfx/screen.html QT[11] = 1.5417 s)",
+   "rate": 1.05,
+   "gain_db": 1.32,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_12",
+   "t": 159.583,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.625
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"t\" appears (gfx/screen.html QT[12] = 1.6250 s)",
+   "rate": 0.991,
+   "gain_db": -0.89,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_13",
+   "t": 159.708,
+   "sound": "audio/sfx/kit/keyboard-space-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-space-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 1.75
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \" \" appears (gfx/screen.html QT[13] = 1.7500 s)",
+   "rate": 0.996,
+   "gain_db": -0.73,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_14",
+   "t": 159.958,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.0
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"o\" appears (gfx/screen.html QT[14] = 2.0000 s)",
+   "rate": 0.95,
+   "gain_db": 1.33,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_15",
+   "t": 160.042,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.0833
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"r\" appears (gfx/screen.html QT[15] = 2.0833 s)",
+   "rate": 0.981,
+   "gain_db": 1.48,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_16",
+   "t": 160.208,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.25
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"g\" appears (gfx/screen.html QT[16] = 2.2500 s)",
+   "rate": 0.983,
+   "gain_db": 1.0,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_17",
+   "t": 160.292,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.3333
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"a\" appears (gfx/screen.html QT[17] = 2.3333 s)",
+   "rate": 0.98,
+   "gain_db": 1.07,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_18",
+   "t": 160.417,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.4583
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"n\" appears (gfx/screen.html QT[18] = 2.4583 s)",
+   "rate": 1.009,
+   "gain_db": 1.03,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_19",
+   "t": 160.5,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.5417
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"i\" appears (gfx/screen.html QT[19] = 2.5417 s)",
+   "rate": 1.037,
+   "gain_db": -0.66,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_20",
+   "t": 160.75,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.7917
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"z\" appears (gfx/screen.html QT[20] = 2.7917 s)",
+   "rate": 1.018,
+   "gain_db": 0.68,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_21",
+   "t": 160.833,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 2.875
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"e\" appears (gfx/screen.html QT[21] = 2.8750 s)",
+   "rate": 1.021,
+   "gain_db": 0.6,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_22",
+   "t": 160.958,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 3.0
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"r\" appears (gfx/screen.html QT[22] = 3.0000 s)",
+   "rate": 1.048,
+   "gain_db": -0.88,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_23",
+   "t": 161.042,
+   "sound": "audio/sfx/kit/keyboard-letter-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-letter-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 3.0833
+   },
+   "level_re_voice_db": -24,
+   "why": "the search: \"s\" appears (gfx/screen.html QT[23] = 3.0833 s)",
+   "rate": 1.013,
+   "gain_db": 0.38,
+   "group": "search-typing"
+  },
+  {
+   "id": "01.12-key_enter",
+   "t": 161.492,
+   "sound": "audio/sfx/kit/keyboard-return-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "keyboard-return-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.009,
+   "chapter": "01",
+   "edl": {
+    "shot": "01-12",
+    "offset_s": 3.5333
+   },
+   "level_re_voice_db": -22,
+   "why": "Enter: the results page replaces the home page at QENTER = QDONE + 0.45 s (frame 85, measured on the clip)",
+   "group": "search-typing"
+  },
+  {
+   "id": "01.07-paper_tickets",
+   "t": 170.776,
+   "sound": "audio/sfx/sfx_paper_handle.flac",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "01",
+   "row": "01.07",
+   "offset_s": 1.0,
+   "anchor": "\"The tickets.\"",
+   "level_re_voice_db": -18,
+   "why": "Paper.",
+   "edl": {
+    "voice": "01.11"
+   },
+   "edl_note": "\"The tickets.\" (the cut to the tickets is 16 ms later)"
   },
   {
    "id": "03.02-shutter_market",
-   "t": 252.0,
+   "t": 251.667,
    "sound": "audio/sfx/sfx_shutter_roll.flac",
    "weight": "support",
    "align": "start",
@@ -2263,11 +5177,15 @@
    "offset_s": 2.0,
    "anchor": "the stall",
    "level_re_voice_db": -22,
-   "why": "Metal shutters."
+   "why": "Metal shutters.",
+   "edl": {
+    "shot": "03-05",
+    "offset_s": 2.0
+   }
   },
   {
    "id": "03.03-zip_pack_1",
-   "t": 265.0,
+   "t": 258.05,
    "sound": "audio/sfx/sfx_zip.flac",
    "weight": "support",
    "align": "start",
@@ -2276,11 +5194,16 @@
    "offset_s": 1.0,
    "anchor": "\"Dawn packed the handbags herself\"",
    "level_re_voice_db": -18,
-   "why": "Zips."
+   "why": "Zips.",
+   "edl": {
+    "shot": "03-08",
+    "offset_s": 0.3
+   },
+   "edl_note": "\"Dawn packed the handbags herself\", on hotel_room pack"
   },
   {
    "id": "03.03-zip_pack_2",
-   "t": 268.0,
+   "t": 259.867,
    "sound": "audio/sfx/sfx_zip.flac",
    "weight": "support",
    "align": "start",
@@ -2289,24 +5212,16 @@
    "offset_s": 4.0,
    "anchor": "\"Both checked in her name\"",
    "level_re_voice_db": -19,
-   "why": "Zips."
-  },
-  {
-   "id": "03.04-seam_click",
-   "t": 276.5,
-   "sound": "audio/sfx/sfx_seam_click.flac",
-   "weight": "hero",
-   "align": "peak",
-   "chapter": "03",
-   "row": "03.04",
-   "offset_s": 6.5,
-   "anchor": "the red trace ends and the cut-away closes",
-   "level_re_voice_db": -16,
-   "why": "A small metallic click as it closes."
+   "why": "Zips.",
+   "edl": {
+    "shot": "03-08a",
+    "offset_s": 0.2
+   },
+   "edl_note": "\"Two pieces of luggage\", on the packed case and duffel from above (the edit moved \"Both checked in her name\" onto the belt)"
   },
   {
    "id": "03.05-scale_beep_again",
-   "t": 280.8,
+   "t": 267.292,
    "sound": "audio/sfx/sfx_scale_beep.flac",
    "weight": "hero",
    "align": "start",
@@ -2315,11 +5230,115 @@
    "offset_s": 2.8,
    "anchor": "just before \"Overweight.\"",
    "level_re_voice_db": -14,
-   "why": "The same beep as 0:00 (the same file, the same level)."
+   "why": "The same beep as 0:00 (the same file, the same level).",
+   "edl": {
+    "shot": "03-11",
+    "offset_s": 1.292
+   },
+   "edl_note": "OVERWEIGHT's first lit frame, with \"Overweight.\" (the voice starts 2 ms earlier)"
+  },
+  {
+   "id": "03.12-card_payment",
+   "t": 269.757,
+   "sound": "audio/sfx/kit/money-card-tap.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "money-card-tap",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.113,
+   "chapter": "03",
+   "edl": {
+    "voice": "03.08",
+    "at": "speech_end"
+   },
+   "level_re_voice_db": -22,
+   "why": "a quiet card payment under \"She paid the fee.\": the reader's beep as the line ends, the tap 0.11 s before it, before the cut to the fee line",
+   "lp_hz": 6000
+  },
+  {
+   "id": "03-13-marker_1",
+   "t": 271.041,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "03",
+   "edl": {
+    "shot": "03-13",
+    "offset_s": 0.916
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 1 of 2: S1 p. 1, the fee line (doc_fee); 0.8 s a line",
+   "rate": 0.85,
+   "group": "marker-03-13",
+   "center_in_s": 0.8
+  },
+  {
+   "id": "03-13-marker_2",
+   "t": 271.841,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "03",
+   "edl": {
+    "shot": "03-13",
+    "offset_s": 1.716
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 2 of 2: S1 p. 1, the fee line (doc_fee); 0.8 s a line",
+   "rate": 0.85,
+   "group": "marker-03-13",
+   "center_in_s": 0.8
+  },
+  {
+   "id": "03-14-seam_air",
+   "t": 280.05,
+   "sound": "audio/sfx/kit/reverse-whoosh-long-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "reverse-whoosh-long-soft",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 1.192,
+   "chapter": "03",
+   "edl": {
+    "shot": "03-14",
+    "offset_s": 1.8
+   },
+   "level_re_voice_db": -20,
+   "why": "the red trace draws in 1.8 s (gfx/seam.html trace, sm(t / 1.8)); the long soft air-pull, slowed to rate 0.85 (1.23 s), stops as the line completes",
+   "rate": 0.85
+  },
+  {
+   "id": "03.04-seam_click",
+   "t": 286.508,
+   "sound": "audio/sfx/kit/mechanical-switch-heavy.flac",
+   "weight": "hero",
+   "align": "sync",
+   "chapter": "03",
+   "row": "03.04",
+   "offset_s": 6.5,
+   "anchor": "the red trace ends and the cut-away closes",
+   "level_re_voice_db": -16,
+   "why": "A low, dry click as the gap closes (lead, 28 Nov): a heavy switch's deep, solid clack (centroid 0.85 kHz), low-passed at 4 kHz; passes \"a small dry click\" (forced choice 85 %).",
+   "edl": {
+    "shot": "03-15",
+    "offset_s": 4.05
+   },
+   "edl_note": "the cut-away's gap closes: gfx/seam.html closes the lining over 3.6-4.05 s; the sound meets the close",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "mechanical-switch-heavy",
+   "sync_at": 0.021,
+   "lp_hz": 4000,
+   "was": "audio/sfx/sfx_seam_click.flac (a small metallic tink, spectral centroid 7.9 kHz)"
   },
   {
    "id": "04.01-tannoy_muffled",
-   "t": 305.8,
+   "t": 290.092,
    "sound": "audio/sfx/sfx_tannoy_near.flac",
    "weight": "support",
    "align": "start",
@@ -2328,11 +5347,15 @@
    "offset_s": 0.8,
    "anchor": "the gate, held longer",
    "level_re_voice_db": -23,
-   "why": "The tannoy, muffled."
+   "why": "The tannoy, muffled.",
+   "edl": {
+    "shot": "04-01",
+    "offset_s": 0.8
+   }
   },
   {
    "id": "04.02-door_inspection_again",
-   "t": 312.8,
+   "t": 294.258,
    "sound": "audio/sfx/sfx_door_steel.flac",
    "weight": "hero",
    "align": "peak",
@@ -2341,11 +5364,71 @@
    "offset_s": 0.8,
    "anchor": "\"she is led into a room\"",
    "level_re_voice_db": -16,
-   "why": "Door."
+   "why": "Door.",
+   "edl": {
+    "shot": "04-02",
+    "offset_s": 0.8
+   }
+  },
+  {
+   "id": "04-04-marker_1",
+   "t": 298.708,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "04",
+   "edl": {
+    "shot": "04-04",
+    "offset_s": 1.0
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 1 of 1: S1 p. 1, the first \"yes\" (doc_yes; the second mark at 3.4 s falls after the cut); 0.55 s a line",
+   "rate": 0.85,
+   "group": "marker-04-04",
+   "center_in_s": 0.55
+  },
+  {
+   "id": "04-05-yes_hit_1",
+   "t": 300.208,
+   "sound": "audio/sfx/kit/impact-heavy-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "impact-heavy-soft",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 0.018,
+   "chapter": "04",
+   "edl": {
+    "shot": "04-05"
+   },
+   "level_re_voice_db": -21,
+   "why": "YES lands (gfx/type.html yes: land at t0, 0 s); tuned to D2 (73.4 Hz) by rate 1.028, low-passed so it is felt more than heard",
+   "rate": 1.028,
+   "lp_hz": 1200
+  },
+  {
+   "id": "04-06-yes_hit_2",
+   "t": 302.75,
+   "sound": "audio/sfx/kit/impact-heavy-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "impact-heavy-soft",
+   "weight": "hero",
+   "align": "sync",
+   "sync_at": 0.018,
+   "chapter": "04",
+   "edl": {
+    "shot": "04-06"
+   },
+   "level_re_voice_db": -18.5,
+   "why": "the second YES: a straight cut to the tighter frame at 3.0 s into the piece; a touch heavier (+2.5 dB, darker); tuned to D2 (73.4 Hz) by rate 1.028, low-passed so it is felt more than heard",
+   "rate": 1.028,
+   "lp_hz": 900
   },
   {
    "id": "04.08-door_far",
-   "t": 376.5,
+   "t": 351.318,
    "sound": "audio/sfx/sfx_door_far.flac",
    "weight": "hero",
    "align": "peak",
@@ -2354,11 +5437,60 @@
    "offset_s": 8.5,
    "anchor": "under \"The case was only beginning\", before the 1.5 s silence",
    "level_re_voice_db": -22,
-   "why": "A door closes far down the corridor."
+   "why": "A door closes far down the corridor.",
+   "edl": {
+    "voice": "04.11",
+    "word_s": 7.48
+   },
+   "edl_note": "on the corridor shot (04-19, where the EDL puts \"A door closes far down the corridor\"), right after \"arrested\""
+  },
+  {
+   "id": "04.08-door_far_lock",
+   "t": 351.668,
+   "sound": "audio/sfx/kit/mechanical-lock-heavy.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "mechanical-lock-heavy",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.331,
+   "chapter": "04",
+   "edl": {
+    "voice": "04.11",
+    "word_s": 7.48,
+    "offset_s": 0.35
+   },
+   "level_re_voice_db": -24,
+   "why": "the far cell door locks: a deadbolt's clunk 0.35 s after the far door's slam (sfx_door_far has a shut and a slam, no latch), low-passed at 1.4 kHz like the door, in a long room",
+   "lp_hz": 1400,
+   "edl_note": "with 04.08-door_far",
+   "room": {
+    "decay_s": 1.2,
+    "wet_db": -8
+   }
+  },
+  {
+   "id": "05-03-marker_1",
+   "t": 371.123,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "05",
+   "edl": {
+    "shot": "05-03",
+    "offset_s": 3.248
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 1 of 1: S1 p. 2, the emails line (doc_emails); 1.2 s a line",
+   "rate": 0.85,
+   "group": "marker-05-03",
+   "center_in_s": 1.2
   },
   {
    "id": "05.02-paper_envelope",
-   "t": 396.0,
+   "t": 382.133,
    "sound": "audio/sfx/sfx_paper_handle.flac",
    "weight": "support",
    "align": "peak",
@@ -2367,11 +5499,73 @@
    "offset_s": 4.0,
    "anchor": "\"gave them the emails\"",
    "level_re_voice_db": -19,
-   "why": "Paper."
+   "why": "Paper.",
+   "edl": {
+    "shot": "05-05",
+    "offset_s": 0.3
+   },
+   "edl_note": "on the envelope (\"It wasn't enough.\"); the statement page before it has its marker stroke"
+  },
+  {
+   "id": "05-10-year_2015",
+   "t": 411.617,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "05",
+   "edl": {
+    "shot": "05-10",
+    "offset_s": 1.7833
+   },
+   "level_re_voice_db": -25,
+   "why": "the calendar rolls 2014 -> 2015 at 1.7 s (gfx/type.html calendar)",
+   "lp_hz": 5000,
+   "group": "calendar-years"
+  },
+  {
+   "id": "05-10-year_2016",
+   "t": 413.317,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "05",
+   "edl": {
+    "shot": "05-10",
+    "offset_s": 3.4833
+   },
+   "level_re_voice_db": -25,
+   "why": "the calendar rolls 2015 -> 2016 at 3.4 s (gfx/type.html calendar)",
+   "lp_hz": 5000,
+   "group": "calendar-years"
+  },
+  {
+   "id": "05-10-year_2017",
+   "t": 415.017,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "05",
+   "edl": {
+    "shot": "05-10",
+    "offset_s": 5.1833
+   },
+   "level_re_voice_db": -25,
+   "why": "the calendar rolls 2016 -> 2017 at 5.1 s (gfx/type.html calendar)",
+   "lp_hz": 5000,
+   "group": "calendar-years"
   },
   {
    "id": "06.02-impact_sentence",
-   "t": 450.0,
+   "t": 424.917,
    "sound": "audio/sfx/sfx_impact_low.flac",
    "weight": "hero",
    "align": "peak",
@@ -2380,11 +5574,14 @@
    "offset_s": 0.0,
    "anchor": "\"A death sentence\": on the cut to void_stage dawn_close",
    "level_re_voice_db": -11,
-   "why": "One low impact (2 of 2). Nothing at \"life\"."
+   "why": "One low impact (2 of 2). Nothing at \"life\".",
+   "edl": {
+    "shot": "06-02"
+   }
   },
   {
    "id": "06.05-paper_ministry",
-   "t": 483.0,
+   "t": 441.0,
    "sound": "audio/sfx/sfx_paper_handle.flac",
    "weight": "support",
    "align": "peak",
@@ -2393,11 +5590,266 @@
    "offset_s": 1.0,
    "anchor": "the sheet",
    "level_re_voice_db": -20,
-   "why": "Paper."
+   "why": "Paper.",
+   "edl": {
+    "shot": "06-07",
+    "offset_s": 1.0
+   }
+  },
+  {
+   "id": "07-05-year_2015",
+   "t": 504.867,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 1.2833
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2014 -> 2015 at 1.200 s (gfx/type.html counter ticks[0])",
+   "rate": 0.998,
+   "lp_hz": 5000,
+   "gain_db": -0.84,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2016",
+   "t": 505.417,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 1.8333
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2015 -> 2016 at 1.750 s (gfx/type.html counter ticks[1])",
+   "rate": 1.009,
+   "lp_hz": 5000,
+   "gain_db": -0.7,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2017",
+   "t": 506.012,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 2.4283
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2016 -> 2017 at 2.345 s (gfx/type.html counter ticks[2])",
+   "rate": 1.008,
+   "lp_hz": 5000,
+   "gain_db": 0.82,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2018",
+   "t": 506.652,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 3.0683
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2017 -> 2018 at 2.985 s (gfx/type.html counter ticks[3])",
+   "rate": 0.978,
+   "lp_hz": 5000,
+   "gain_db": -0.6,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2019",
+   "t": 507.337,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 3.7533
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2018 -> 2019 at 3.670 s (gfx/type.html counter ticks[4])",
+   "rate": 1.021,
+   "lp_hz": 5000,
+   "gain_db": 0.73,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2020",
+   "t": 508.067,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 4.4833
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2019 -> 2020 at 4.400 s (gfx/type.html counter ticks[5])",
+   "lp_hz": 5000,
+   "gain_db": 0.85,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2021",
+   "t": 508.842,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 5.2583
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2020 -> 2021 at 5.175 s (gfx/type.html counter ticks[6])",
+   "rate": 0.977,
+   "lp_hz": 5000,
+   "gain_db": 0.7,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2022",
+   "t": 509.662,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 6.0783
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2021 -> 2022 at 5.995 s (gfx/type.html counter ticks[7])",
+   "rate": 1.027,
+   "lp_hz": 5000,
+   "gain_db": 0.87,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2023",
+   "t": 510.527,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 6.9433
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2022 -> 2023 at 6.860 s (gfx/type.html counter ticks[8])",
+   "rate": 0.997,
+   "lp_hz": 5000,
+   "gain_db": -0.96,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2024",
+   "t": 511.437,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 7.8533
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2023 -> 2024 at 7.770 s (gfx/type.html counter ticks[9])",
+   "rate": 0.997,
+   "lp_hz": 5000,
+   "gain_db": -0.99,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2025",
+   "t": 512.392,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 8.8083
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2024 -> 2025 at 8.725 s (gfx/type.html counter ticks[10])",
+   "rate": 1.003,
+   "lp_hz": 5000,
+   "gain_db": -0.8,
+   "group": "counter-years"
+  },
+  {
+   "id": "07-05-year_2026",
+   "t": 513.392,
+   "sound": "audio/sfx/kit/click-latch-soft.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "click-latch-soft",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0.011,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-05",
+    "offset_s": 9.8083
+   },
+   "level_re_voice_db": -24,
+   "why": "the counter rolls 2025 -> 2026 at 9.725 s (gfx/type.html counter ticks[11])",
+   "rate": 1.006,
+   "lp_hz": 5000,
+   "gain_db": 0.13,
+   "group": "counter-years"
   },
   {
    "id": "07.04-pen_letters",
-   "t": 571.0,
+   "t": 521.856,
    "sound": "audio/sfx/sfx_pen_paper.flac",
    "weight": "support",
    "align": "start",
@@ -2406,11 +5858,16 @@
    "offset_s": 1.0,
    "anchor": "\"Tim wrote to officials and to lawyers\"",
    "level_re_voice_db": -20,
-   "why": "Pen on paper."
+   "why": "Pen on paper.",
+   "edl": {
+    "voice": "07.03",
+    "word_s": 5.56
+   },
+   "edl_note": "\"Tim wrote to officials\", on tim_desk letters"
   },
   {
    "id": "07.06-paper_testimony",
-   "t": 589.0,
+   "t": 561.942,
    "sound": "audio/sfx/sfx_paper_handle.flac",
    "weight": "support",
    "align": "peak",
@@ -2419,7 +5876,33 @@
    "offset_s": 1.0,
    "anchor": "the page, before the marker wipe",
    "level_re_voice_db": -20,
-   "why": "Paper."
+   "why": "Paper.",
+   "edl": {
+    "shot": "07-15",
+    "offset_s": 0.4
+   },
+   "edl_note": "the page, 0.8 s before its marker stroke"
+  },
+  {
+   "id": "07-15-marker_1",
+   "t": 562.742,
+   "sound": "audio/sfx/kit/writing-highlighter.flac",
+   "source": "wyzowl/sfx-kit",
+   "kit_id": "writing-highlighter",
+   "weight": "support",
+   "align": "sync",
+   "sync_at": 0,
+   "chapter": "07",
+   "edl": {
+    "shot": "07-15",
+    "offset_s": 1.2
+   },
+   "level_re_voice_db": -24,
+   "why": "the marker stroke, line 1 of 1: S1 p. 2, \"not going to live long enough to see his daughter free\" (father); 0.8 s a line",
+   "rate": 0.85,
+   "group": "marker-07-15",
+   "center_in_s": 0.8
   }
- ]
+ ],
+ "kit_note": "Graphics moments use the CC0 sfx-kit (wyzowl/sfx-kit 1.0.0, copied to audio/sfx/kit/ as FLAC): placed at their moment minus sync.at (align \"sync\"), divided by rate where the rate changes; centre_in_s centres a shorter sound in a stroke. See audio/sfx/INDEX.md (sfx-kit) and provenance.json."
 }
