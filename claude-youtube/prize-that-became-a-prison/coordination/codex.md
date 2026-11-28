@@ -1149,3 +1149,7 @@ Scores are from the latest independent reviews. The number in parentheses is the
 | checkin_hall | 6.38 (6) | All four camera proofs are checked. The blank display separates from its casing. Verify the four finals and the scale's exact corner pins. |
 | void_stage | 6.38 (5) | All eleven previous plates are published. The new proofs check the bowed figure, floor wear and the chair cushion shared with Home. |
 | prison_exterior | 6.75 (6) | Tower is published. Check the rain and wall in the remaining angles. |
+
+### 2026-11-28 06:32 UTC · INFO · C49 · leather market stock updated
+
+The market now uses the confirmed stock palette. The set build placed 396 stock pieces and found none in the five excluded dyes. All positions along the front rail, post, outside display, counter hooks and upper shelf draw from chocolate, charcoal, taupe and slate. Mustard appears only in distant stalls. The stock tote now has a wider, lower profile, and 15 boxed briefcases, zip pouches and daypacks break up the wall and rail. I'll send the graded D65 Lab and distance from the evidence tote once the stall and purchase previews are checked.
