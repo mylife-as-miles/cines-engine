@@ -54,7 +54,7 @@
       { at: T.card, name: 'living, evening: the day card over the hero with his tea', in: { type: 'wipe', dir: 'right' }, push: 1.04,
         draw(c) { STAGE.heroSofa(c, EVE, { hold: 'mug' }); STAGE.dayCard(c, T.card + 0.05, T.mom - 0.05, 'WEDNESDAY'); } },
       { at: T.mom, name: 'call: Mom asks about Sunday lunch, "No."',
-        draw(c) { const t = c.t; call(c, { mum: { expr: t > T.no[1] ? 'surprised' : 'happy' }, hero: { expr: 'neutral', faceOver: STAGE.NO.faceOver } }); } },
+        draw(c) { const t = c.t; call(c, { mum: { expr: t > T.no[1] ? 'surprised' : 'happy' }, hero: { expr: 'firm' } }); } },
       { at: T.argue, name: 'call: she does not argue',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.says ? 'neutral' : 'surprised', faceOver: t > T.says ? { mouth: { k: 'flat', w: 0.2 } } : null, blinks: [T.notFine, T.notFine + 0.14, T.notFine + 0.28], tremble: t > T.notFine ? 1.5 : 0 }, hero: { expr: 'worried', talk: null } }); } },
       { at: T.says, name: 'close on Mom: "fine", a tight smile; "not fine", one eye twitches', in: 'pop', push: { from: 1, to: 1.06, x: 1000, y: 400 },

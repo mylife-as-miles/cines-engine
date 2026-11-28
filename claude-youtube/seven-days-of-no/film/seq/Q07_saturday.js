@@ -46,7 +46,7 @@
         } },
       { at: T.youSay, name: 'living: the hero types his reply, calm', push: { from: 1.1, to: 1.18, x: 900, y: 460 },
         draw(c) {
-          const t = c.t, h = STAGE.heroSofa(c, MORN, { pose: 'sit_front', hold: 'phone_front', expr: 'neutral', look: [0.3, 0.6], talk: [T.youSay, T.canSend] });
+          const t = c.t, h = STAGE.heroSofa(c, MORN, { pose: 'sit_front', hold: 'phone_front', expr: 'neutral', look: [0.8, 0.5], talk: [T.youSay, T.canSend] });
           const hd = ART.head('hero', h); STAGE.notify(c, hd.x + hd.r * 1.9, hd.y - hd.r * 1.1, T.youSay + 0.15, 'chat', { s: 2.0 });
         } },
       { at: T.canSend, name: 'phone: the reply, sent and whole, held until "He says"', in: 'pop',
