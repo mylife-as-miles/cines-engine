@@ -404,6 +404,18 @@ def recolour(mat, median_lum, gamma=0.65, spec=0.4, rough_add=0.15):
         rough.default_value = max(rough.default_value, 0.66)
 
 
+def stock_leather():
+    m, nt, b = _new("market stock leather")
+    tint = _out(_attr(nt, "lm_tint"), "Color")
+    obj = _obj(nt)
+    wear = _maprange(nt, _noise(nt, obj, 15, 3, 0.55), 0.2, 0.8, 0.79, 1.08)
+    _link(nt, _mix(nt, 1.0, tint, wear, blend="MULTIPLY"), b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.64
+    b.inputs["Specular IOR Level"].default_value = 0.21
+    _bump(nt, b, _noise(nt, obj, 430, 2, 0.56), 0.14, 0.0012)
+    return m
+
+
 def nylon(mat):
     """Give the existing black cloth a fine weave while preserving the model's normal map."""
     tune_prop(mat, spec=0.45)
@@ -411,7 +423,7 @@ def nylon(mat):
     b = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
     for link in list(b.inputs["Roughness"].links):
         nt.links.remove(link)
-    b.inputs["Roughness"].default_value = 0.38
+    b.inputs["Roughness"].default_value = 0.48
     tex = _obj(nt)
     weave = _noise(nt, tex, 1000, 2, 0.55, mapping=(1, 3.0, 1))
     bump = nt.nodes.new("ShaderNodeBump")

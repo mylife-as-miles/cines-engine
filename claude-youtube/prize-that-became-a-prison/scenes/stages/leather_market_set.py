@@ -401,16 +401,31 @@ def stall(side, y0, y1, state, k):
 
 
 # ---------------------------------------------------------------- handbags
-BAGS = {  # model: (size, axis, median luminance of its texture, base scale)
+BAGS = {  # model: (size in metres, median luminance of its texture)
     "handbag-tote": (0.35, 0.13),
     "handbag-satchel": (0.30, 0.0066),
     "handbag-shoulder": (0.32, 0.033),
 }
-# leathers (linear rgb, before the grade): cognac, tan, chocolate, oxblood, burgundy, black, charcoal, taupe, navy,
-# olive, bone, mustard, bottle green, dusty rose, slate
-LEATHER = [(0.30, 0.13, 0.05), (0.38, 0.24, 0.13), (0.09, 0.05, 0.03), (0.17, 0.035, 0.03), (0.2, 0.03, 0.05),
-           (0.018, 0.018, 0.02), (0.06, 0.06, 0.065), (0.14, 0.12, 0.10), (0.018, 0.025, 0.055), (0.12, 0.12, 0.06),
-           (0.22, 0.20, 0.17), (0.36, 0.25, 0.07), (0.018, 0.045, 0.03), (0.20, 0.09, 0.08), (0.07, 0.08, 0.09)]
+# Stock dyes in linear RGB. Keep the unused gift-colour slots out of every display.
+LEATHER = {
+    1: (0.280, 0.246, 0.192),  # tan
+    2: (0.086, 0.063, 0.053),  # chocolate
+    6: (0.059, 0.058, 0.061),  # charcoal
+    7: (0.133, 0.125, 0.114),  # taupe
+    8: (0.029, 0.040, 0.056),  # navy
+    9: (0.107, 0.113, 0.084),  # olive
+    10: (0.220, 0.207, 0.181),  # bone
+    11: (0.250, 0.207, 0.111),  # mustard, distant stalls only
+    12: (0.036, 0.053, 0.045),  # bottle green
+    14: (0.065, 0.078, 0.091),  # slate
+}
+STOCK_WEIGHTS = {1: 7, 2: 12, 6: 9, 7: 6, 8: 6, 9: 5, 10: 2, 12: 4, 14: 4}
+COUNTER_WEIGHTS = {c: STOCK_WEIGHTS[c] for c in (2, 6, 7, 14)}
+STOCK_FORMS = {
+    "box-briefcase": (0.32, 0.071, 0.206, 0.122),
+    "zip-pouch": (0.23, 0.052, 0.145, 0.062),
+    "daypack": (0.27, 0.131, 0.32, 0.081),
+}
 _SRC = {}
 
 
@@ -441,42 +456,94 @@ def load_bag_sources():
     return _SRC
 
 
+def make_stock_forms():
+    """Boxed briefcases, zip pouches and daypacks with real pockets, fasteners and hanging loops."""
+    leather = mt.stock_leather()
+    for name, (w, d, h, grip) in STOCK_FORMS.items():
+        bm = bmesh.new()
+
+        def panel(size, loc, radius, slot=0):
+            transform = Matrix.Translation(loc) @ Matrix.Diagonal((*size, 1))
+            verts = bmesh.ops.create_cube(bm, size=1.0, matrix=transform)["verts"]
+            edges = {edge for v in verts for edge in v.link_edges}
+            for face in {face for v in verts for face in v.link_faces}:
+                face.material_index = slot
+            bmesh.ops.bevel(bm, geom=list(edges), offset=radius, segments=3, affect="EDGES", material=slot)
+
+        panel((w, d, h), (0, 0, h/2), 0.012 if name == "daypack" else 0.009)
+        if name == "daypack":
+            panel((w*0.80, d*0.29, h*0.43), (0, -d*0.59, h*0.34), 0.010)
+            zip_y, zip_z, zip_w = -d*0.74, h*0.50, w*0.64
+        elif name == "zip-pouch":
+            zip_y, zip_z, zip_w = -d*0.50, h*0.81, w*0.87
+        else:
+            panel((w*0.94, 0.016, h*0.49), (0, -d*0.50, h*0.69), 0.006)
+            zip_y, zip_z, zip_w = -d*0.62, h*0.48, w*0.64
+        panel((zip_w, 0.004, 0.004), (0, zip_y, zip_z), 0.0012, slot=1)
+        panel((0.024, 0.008, 0.009), (zip_w*0.36, zip_y - 0.004, zip_z - 0.004), 0.002, slot=1)
+        # The loop's apex is the same physical attachment point the loaded bags use.
+        lift = 0.048 if name == "box-briefcase" else 0.035
+        pts = [(-grip/2, 0, h - 0.008), (-grip*0.43, 0, h + lift*0.72),
+               (-grip*0.27, 0, h + lift), (grip*0.27, 0, h + lift),
+               (grip*0.43, 0, h + lift*0.72), (grip/2, 0, h - 0.008)]
+        for a, b in zip(pts, pts[1:]):
+            tube_between(bm, a, b, 0.006)
+        mesh = bpy.data.meshes.new(name)
+        bm.to_mesh(mesh)
+        bm.free()
+        mesh.materials.append(leather)
+        mesh.materials.append(M["steel"])
+        lo = Vector([min(v.co[i] for v in mesh.vertices) for i in range(3)])
+        hi = Vector([max(v.co[i] for v in mesh.vertices) for i in range(3)])
+        _SRC[name] = dict(mesh=mesh, rel=Matrix.Identity(4), k=1.0, lo=lo, hi=hi, apex=Vector((0, 0, hi.z)))
+
+
 def place_bag(name, model, M4, colour):
-    """A linked copy of a handbag at placement M4 (applied to the model in metres), in leather `colour`
-    (index into LEATHER, or an explicit dict of lm_* values)."""
+    """A linked stock piece at placement M4, in the specified stock dye."""
     src = _SRC[model]
     ob = bpy.data.objects.new(name, src["mesh"])
     bpy.context.scene.collection.objects.link(ob)
-    ob.matrix_world = M4 @ Matrix.Scale(src["k"], 4) @ src["rel"]
-    if isinstance(colour, dict):
-        for kk, v in colour.items():
-            ob[kk] = v
-    else:
-        ob["lm_tint"] = (0.395, 0.120, 0.010) if model == "handbag-tote" and colour == 0 else LEATHER[colour]
-        ob["lm_tf"] = 1.0
-        ob["lm_hue"], ob["lm_sat"], ob["lm_val"] = 0.0, 1.0, 1.0
+    ob.matrix_world = M4 @ bag_scale(model) @ src["rel"]
+    ob["lm_tint"] = LEATHER[colour]
+    ob["lm_tf"] = 1.0
+    ob["lm_hue"], ob["lm_sat"], ob["lm_val"] = 0.0, 1.0, 1.0
     return ob
+
+
+def bag_scale(model, s=1.0):
+    k = _SRC[model]["k"] * s
+    if model == "handbag-tote":
+        return Matrix.Diagonal((1.24*k, k, 0.79*k, 1))
+    return Matrix.Scale(k, 4)
 
 
 def bag_dims(model, s=1.0):
     src = _SRC[model]
-    k = src["k"] * s
-    return (src["hi"] - src["lo"]) * k, src["apex"] * k
+    scale = bag_scale(model, s).to_3x3()
+    return scale @ (src["hi"] - src["lo"]), scale @ src["apex"]
 
 
 class Palette:
     """Colours and models for a wall so no two neighbours (left, right, above) match."""
 
-    def __init__(self, seed):
+    def __init__(self, seed, *, neutral=False, distant=False):
         self.r = random.Random(seed)
         self.rows = {}
+        self.weights = (COUNTER_WEIGHTS if neutral else STOCK_WEIGHTS).copy()
+        if distant:
+            self.weights[11] = 1
 
-    def pick(self, row, col):
+    def colour(self, other=None):
+        colours = [c for c in self.weights if c != other]
+        return self.r.choices(colours, [self.weights[c] for c in colours])[0]
+
+    def pick(self, row, col, models=BAGS):
+        models = tuple(models)
         prev = self.rows.get((row, col - 1))
         above = self.rows.get((row - 1, col)) or self.rows.get((row - 1, col + 1))
         for _ in range(50):
-            m = self.r.choice(list(BAGS))
-            c = self.r.choices(range(len(LEATHER)), weights=(9, 7, 12, 8, 4, 15, 9, 6, 6, 5, 1, 2, 4, 1, 3))[0]
+            m = self.r.choice(models)
+            c = self.colour()
             if prev and (c == prev[1] or m == prev[0]):
                 continue
             if m == "handbag-satchel" and any(v and v[0] == m for v in (prev, above)):
@@ -488,35 +555,38 @@ class Palette:
         return m, c
 
 
-def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
+def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True, *, neutral=False, distant=False):
     """Hang handbags on peg hooks along a wall: origin (world, wall surface at z = 0), u along the wall, n out of it.
     rows: hook heights. Bags face n (their broad side out), spaced by their width; each row starts half a bag in."""
     u, n = Vector(u).normalized(), Vector(n).normalized()
     yaw = math.atan2(n.y, n.x) + math.pi / 2          # the model's -Y face turned to look along n
     hyaw = math.atan2(n.y, n.x) - math.pi / 2         # the hook mesh's +Y turned to run along n
-    pal = Palette(seed)
+    pal = Palette(seed, neutral=neutral, distant=distant)
     rr = random.Random(seed + 1)
     out = []
     hme = hook_mesh()
     tme = tag_mesh() if tags else None
+    mixed_display = name in ("hero_back", "hero_front")
     for ri, z in enumerate(rows):
         s0 = 0.06 + (0.12 if ri % 2 else 0.0)
         ci = 0
         while True:
-            model, col = pal.pick(ri, ci)
+            stock_form = name == "hero_post" or (mixed_display and (ri + ci) % 2 == 1)
+            model, col = pal.pick(ri, ci, STOCK_FORMS if stock_form else BAGS)
             sc = rr.uniform(0.85, 1.14)
             d, apex = bag_dims(model, sc)
             w = d.x
             if s0 + w > length - 0.03:
                 break
-            c = Vector(origin) + u * (s0 + w / 2 + rr.uniform(-0.05, 0.05))
+            jitter = 0.012 if mixed_display else 0.05
+            c = Vector(origin) + u * (s0 + w / 2 + rr.uniform(-jitter, jitter))
             zh = z + rr.uniform(-0.06, 0.06)
             tip = c + n * (0.15 + 0.012 * (ci % 2)) + Vector((0, 0, zh))
             if hook:
                 ho = bpy.data.objects.new(f"{name}_hook{ri}_{ci}", hme)
                 bpy.context.scene.collection.objects.link(ho)
                 ho.matrix_world = Matrix.Translation(c + n * 0.025 + Vector((0, 0, zh))) @ Matrix.Rotation(hyaw, 4, "Z")
-            flip = math.pi if (model != "handbag-tote" and rr.random() < 0.4) else 0.0
+            flip = math.pi if (model in BAGS and rr.random() < 0.4) else 0.0
             if model == "handbag-tote":
                 flip = math.pi        # the tote's clean face out (its dented face to the wall)
             tilt = math.radians(rr.uniform(-2.5, 7.0))
@@ -527,9 +597,9 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
             M4 = Matrix.Translation(tip + Vector((0, 0, 0.004))) @ Rt @ Matrix.Translation(-off) @ R @ Matrix.Scale(sc, 4)
             ob = place_bag(f"{name}_bag{ri}_{ci}", model, M4, col)
             out.append(ob)
-            if hook and rr.random() < (0.45 if name == "hero_back" else 0.32):
+            if hook and not stock_form and rr.random() < (0.45 if name == "hero_back" else 0.32):
                 stacked = Matrix.Translation(n * 0.043 + Vector((0, 0, -0.022))) @ M4
-                extra = place_bag(f"{name}_stack{ri}_{ci}", model, stacked, (col + rr.randrange(1, len(LEATHER))) % len(LEATHER))
+                extra = place_bag(f"{name}_stack{ri}_{ci}", model, stacked, pal.colour(other=col))
                 out.append(extra)
             if tme is not None and rr.random() < tags:
                 t = bpy.data.objects.new(f"{name}_tag{ri}_{ci}", tme)
@@ -540,12 +610,12 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
                 st = bpy.data.objects.new(f"{name}_tagstring{ri}_{ci}", _TAG["string"])
                 bpy.context.scene.collection.objects.link(st)
                 st.matrix_world = t.matrix_world
-            s0 += w * rr.uniform(0.81, 0.92)
+            s0 += w + 0.025 if mixed_display else w * rr.uniform(0.81, 0.92)
             ci += 1
     return out
 
 
-def shelf_bags(name, origin, u, n, length, z, seed, depth=0.36):
+def shelf_bags(name, origin, u, n, length, z, seed, depth=0.36, *, neutral=False):
     """A plywood shelf on two brackets with bags standing on it, facing out."""
     u, n = Vector(u).normalized(), Vector(n).normalized()
     c = Vector(origin) + u * (length / 2) + n * (depth / 2 + 0.03) + Vector((0, 0, z - 0.012))
@@ -555,7 +625,7 @@ def shelf_bags(name, origin, u, n, length, z, seed, depth=0.36):
         p = Vector(origin) + u * t + n * (depth / 2 + 0.03) + Vector((0, 0, z - 0.06))
         box(f"{name}_bracket{t:.1f}", (0.02, depth, 0.07), tuple(p), M["steel"], rot=(0, 0, yaw_s))
     yaw = math.atan2(n.y, n.x) + math.pi / 2
-    pal = Palette(seed)
+    pal = Palette(seed, neutral=neutral)
     rr = random.Random(seed + 3)
     s0, ci = 0.05, 0
     if name == "hero_shelf_lo":
@@ -712,11 +782,11 @@ def hero_stall():
         hang_wall(f"hero_{nm}", o, u, n, L, rows, seed=11 + i * 7, tags=0.4)
     # the back wall's lower part: two shelves of standing bags
     o, u, n = walls[0][1], walls[0][2], walls[0][3]
-    shelf_bags("hero_shelf_hi", o, u, n, y1 - y0 - 0.12, 0.86, 41)
+    shelf_bags("hero_shelf_hi", o, u, n, y1 - y0 - 0.12, 0.86, 41, neutral=True)
     shelf_bags("hero_shelf_lo", o, u, n, y1 - y0 - 0.12, 0.42, 43)
     # the alley face of the near partition: an outside display
     hang_wall("hero_out", Vector((2.5, y0 - 0.04, 0)), Vector((1, 0, 0)), Vector((0, -1, 0)), xb - 2.5 - 0.1,
-              [2.55, 2.1, 1.65], seed=61, tags=0.5)
+              [2.55, 2.1, 1.65], seed=61, tags=0.5, neutral=True)
     grid_panel("hero_grid_out", Vector((2.5, y0 - 0.04, 0)), Vector((1, 0, 0)), Vector((0, -1, 0)), xb - 2.5 - 0.1, 1.2, 2.7)
     # the front rail over the counter: a steel pipe under the fascia with a row of bags facing the lane
     ry0, ry1 = COUNTER["y0"] + 0.05, HERO[1] - 0.12
@@ -725,10 +795,10 @@ def hero_stall():
     for yy in (ry0, ry1):   # hung from the awning brackets on two drop rods
         sk.cyl(f"hero_rail_drop{yy:.1f}", 0.007, 0.42, (RX, yy, RZ + 0.21), M["steel_bare"], verts=8)
     hang_wall("hero_front", Vector((RX + 0.15, ry0, 0)), Vector((0, 1, 0)), Vector((-1, 0, 0)), ry1 - ry0,
-              [RZ + 0.008], seed=71, tags=0.6, hook=False)
+              [RZ + 0.008], seed=71, tags=0.6, hook=False, neutral=True)
     # a column of bags on hooks on the far front post, facing down the lane
     hang_wall("hero_post", Vector((1.04, y1 - 0.05, 0)), Vector((1, 0, 0)), Vector((0, -1, 0)), 0.4, [1.98, 1.52],
-              seed=81, tags=0.5)
+              seed=81, tags=0.5, neutral=True)
     counter()
     # lights: two battens on the stall ceiling (over the counter and the stallholder; over the back wall), one under
     # the alley-side eave over the outside display
@@ -775,7 +845,7 @@ def counter():
     span_box("counter_top", x0 - 0.02, x1 + 0.02, y0 - 0.02, y1 + 0.02, top - 0.035, top, M["counter_top"], bevel=0.005)
     # a steel edge band along the lane face, scuffed by bags
     span_box("counter_band", x0 - 0.024, x0 - 0.018, y0, y1, top - 0.05, top - 0.004, M["steel_bare"])
-    for i, (yy, model, colour) in enumerate(((y0 + 0.19, "handbag-shoulder", 2), (y1 - 0.20, "handbag-tote", 5))):
+    for i, (yy, model, colour) in enumerate(((y0 + 0.19, "handbag-shoulder", 2), (y1 - 0.20, "handbag-tote", 14))):
         anchor = Vector((x0 - 0.062, yy, top - 0.082))
         curve(f"counter hook {i}", [(x0, yy, top - 0.026), (x0 - 0.045, yy, top - 0.026),
                                     (anchor.x + 0.012, yy, anchor.z - 0.006), anchor], 0.003, M["steel_bare"])
@@ -838,7 +908,7 @@ def dim_stall(side, y0, y1, warm, seed):
         walls.append((Vector((-LANE - 0.12, y1 - 0.04, 0)), Vector((-1, 0, 0)), Vector((0, -1, 0)), DEPTH - 0.2))
     for i, (o, u, n, L) in enumerate(walls):
         grid_panel(f"dim{seed}_grid{i}", o, u, n, L, 0.6, 2.72)
-        hang_wall(f"dim{seed}_w{i}", o, u, n, L, [2.6, 2.15, 1.7, 1.25], seed=seed + i, tags=0.0)
+        hang_wall(f"dim{seed}_w{i}", o, u, n, L, [2.6, 2.15, 1.7, 1.25], seed=seed + i, distant=True)
     if warm:
         bulb(f"dim{seed}_bulb", (side * (LANE + 1.1), (y0 + y1) / 2, 2.35), 15.0)
     else:
@@ -926,6 +996,7 @@ def build():
     _SRC.clear()
     rng.seed(7)
     load_bag_sources()
+    make_stock_forms()
     lane()
     roof()
     for side in (1, -1):

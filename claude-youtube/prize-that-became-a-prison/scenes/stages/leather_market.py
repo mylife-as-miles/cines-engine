@@ -93,6 +93,9 @@ def hero_bag():
     # The far bottom edge stays on the counter as the customer takes the near end.
     bpy.context.view_layer.update()
     meshes = [ob for ob in h.children_recursive if ob.type == "MESH"]
+    for ob in meshes:
+        for face in ob.data.polygons:
+            face.use_smooth = True
     rest_meshes = {ob: ob.data.copy() for ob in meshes}
     centre = Matrix.Translation(h.matrix_world.translation)
     _STATE["bag rest"] = centre @ Matrix.Rotation(math.radians(70), 4, "Z") @ centre.inverted() @ h.matrix_world
@@ -108,14 +111,15 @@ def hero_bag():
     _STATE["bag meshes"] = [(ob, rest_meshes[ob], ob.data) for ob in meshes]
     gx, gy = BX - 0.155, BY - 0.012
     tabs = [Vector((gx, y, bag_top(gx, y))) for y in (gy - 0.082, gy + 0.082)]
+    pull_radius = 0.22
     for ob in meshes:
         inv = ob.matrix_world.inverted().to_3x3()
         vertical = inv @ Vector((0, 0, 0.040))
         for vertex in ob.data.vertices:
             pos = ob.matrix_world @ vertex.co
             dist = min((pos - tab).length for tab in tabs)
-            if dist < 0.15:
-                vertex.co += vertical * (1 - dist / 0.15) ** 2
+            if dist < pull_radius:
+                vertex.co += vertical * (1 - dist / pull_radius) ** 2
         ob.data.update()
     bpy.context.view_layer.update()
     web = sk.mat("duffel grab webbing", (0.025, 0.025, 0.027), 0.74)
