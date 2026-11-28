@@ -40,14 +40,11 @@ EXPOSURE = -2.0   # the bench troffer is about two stops hot for the props
 WORLD = 0.02      # a breath of ambient so the far walls sit just above the grade's black, not a fill
 
 # Where things stand. The suitcase's front pocket looks along +X in its file and its top carry handle runs along the
-# file's Y; turned -75 the pocket faces Dawn. The tote's turn of 162 keeps its dented face from the camera.
-# Ch 00 is laid out for the wide and the end-of-bench two-shot together: the case on Dawn's side near the camera
-# end, the tote in the middle, the extra bag at the far end on the officers' side.
+# file's Y; turned -75 the pocket faces Dawn. Ch 00 has the closed case and duffel before discovery.
 CASE = (0.60, -0.20, TOP, -75.0)
-TOTE00 = (0.12, -0.05, TOP, 162.0)
 DUFFEL = (-0.56, 0.18, TOP, 4.0)
 LAYOUT = {
-    "ch00": {"dawn-suitcase": CASE, "extra-bag-closed": DUFFEL, "handbag-tote": TOTE00},
+    "ch00": {"dawn-suitcase": CASE, "extra-bag-closed": DUFFEL},
     "ch05": {"dawn-suitcase": (1.30, -0.22, 0.0, -82.0), "extra-bag-open": (-0.53, 0.02, TOP, 0.0),
              "handbag-tote": (0.06, 0.08, TOP, 92.0), "handbag-satchel": (0.40, -0.07, TOP, 84.0),
              "handbag-shoulder": (0.70, -0.05, TOP, 97.0)},
@@ -61,13 +58,10 @@ LAYOUT["three bags"] = {
     "handbag-tote": (0.065, 0.155, TOP - 0.001, 325.0),
 }
 LAYOUT["ch05"].update(LAYOUT["three bags"])
-LAYOUT["aftermath"] = {**LAYOUT["ch05"], "extra-bag-open": (-0.53, 0.11, TOP, 60.0),
-                       "handbag-tote": (-0.02, -0.10, TOP, 163.0),
-                       "handbag-satchel": (0.39, -0.035, TOP, 293.0),
-                       "handbag-shoulder": (0.72, 0.13, TOP, 20.0)}
 LAYOUT["match"] = {"dawn-suitcase": (0.32, -0.10, TOP, 122.0),
                    "extra-bag-closed": (-0.30, 0.18, TOP, 197.0)}
-st.GHOST = (TOTE00[0], TOTE00[1], 0.35, 0.16, TOTE00[3])   # the cleaner patch where the tote stood (Ch 11)
+tx, ty, _, turn = LAYOUT["three bags"]["handbag-tote"]
+st.GHOST = (tx, ty, 0.35, 0.16, turn)  # the cleaner patch where the discovery tote stood
 PROPS = {  # size, axis, grade
     # The bags' own textures are already dark (surface albedo about 0.03 for both soft bags); what made them read light
     # was the generated plastic specular sheen, so it is cut (FINISH). The black duffel takes the prop table's grade.
@@ -118,11 +112,9 @@ POSES = {
     "ch00": {
         # Dawn still, weight on one hip, hands loosely closed, answering him: her eyes on his
         "Dawn": {"chest": (2, 2), "l_arm": (5, 7, 14), "r_arm": (3, 6, 9), "fingers": 40, "look": "OfficerA"},
-        # the officer asking: eyes on her, his right hand open and palm up just over the extra bag ("this one?"),
-        # his left hand behind his back
-        "OfficerA": {"chest": (4, 0), "fingers": 42, "look": "Dawn", "reach_r": "duffel_hover", "palm": "up",
-                     "present_to_dawn": True,
-                     "behind_l": True},
+        # The officer indicates the extra bag, keeping his eyes on Dawn.
+        "OfficerA": {"chest": (7, -2), "fingers": 21, "look": "Dawn", "reach_r": "duffel_contact",
+                     "palm": "down", "behind_l": True},
         "OfficerB": {"chest": (-2, 0), "fingers": 52, "look": "Dawn", "behind": True},
     },
     "ch05": {
@@ -135,16 +127,13 @@ POSES = {
 }
 
 POSES["bag_insert"] = dict(POSES["ch05"], OfficerA={"chest": (5, 0), "behind": True, "look": "handbag-tote"})
-POSES["duffel_contact"] = dict(POSES["ch00"], OfficerA={
-    "chest": (7, -2), "fingers": 21, "look": "Dawn", "reach_r": "duffel_contact",
-    "palm": "down", "behind_l": True,
-})
 POSES["bag_touch"] = dict(POSES["ch05"], OfficerA={
     **POSES["ch05"]["OfficerA"],
-    "grip_fingers": {"f_index": (46, 58, 40, 11), "f_middle": (50, 64, 43, 3), "f_ring": (54, 67, 45, -4),
-                     "f_pinky": (58, 70, 46, -8), "thumb": (29, 28, 20)},
-    "thumb_bend": 38, "thumb_splay": -14,
-})
+    "chest": (20, 0), "roll_extra": -16,
+    "grip_fingers": {"f_index": (38, 49, 34, 11), "f_middle": (42, 55, 36, 3), "f_ring": (46, 59, 38, -4),
+                     "f_pinky": (51, 62, 40, -8), "thumb": (29, 28, 20)},
+    "thumb_bend": 38, "thumb_splay": 6,
+}, OfficerB={**POSES["ch05"]["OfficerB"], "look": "handbag-tote"})
 
 # The tag close-up is defined in the suitcase's own frame (so it follows the case): from the front, about 42 degrees
 # down onto the handle, the tag hanging from the grip toward the lens; the front zip and its pulls below the frame.
@@ -157,24 +146,29 @@ def _case_frame(c=CASE):
 
 _TL, _TA = (tuple(round(v, 4) for v in _case_frame() @ Vector(p)) for p in TAG_CAM_LOCAL)
 
+TOTE_HANDLING = dict(layout="three bags", pose="bag_touch", tote_lift=0.022,
+                     facing={"OfficerA": (0.18, 0.305)})
+TOTE_OFFICER = (-0.26, 0.53)
 FOCUS = {"fx_wide": (0.0, 0.1, 1.2), "fx_two": (-0.12, -0.1, 1.5), "fx_overhead": (0.0, 0.0, 1.0),
-         "fx_empty": (TOTE00[0], TOTE00[1], 0.95)}
+         "fx_empty": (tx, ty, 0.95)}
 CAMERAS = {
     # Ch 00: the establishing view, high in the front corner behind Dawn: the door and its corridor light on the
     # left, the bench and the three people in the middle, the scanner with its tunnel and conveyor on the right
-    "wide": dict(loc=(2.6, -2.9, 2.35), aim=(0.05, 0.6, 0.7), lens=24, focus="fx_wide", fstop=5.6, beat="ch00",
-                 wild=("wall_front", "cove_f", "rail_f")),
+    "wide_pre": dict(loc=(2.6, -2.9, 2.35), aim=(0.05, 0.6, 0.7), lens=24, focus="fx_wide", fstop=5.6,
+                     beat="ch00", wild=("wall_front", "cove_f", "rail_f")),
     # Ch 05: straight down on the bench through the ceiling, the bags laid out, the three figures round it. The bench
     # reflects the troffer's lens here, not the (much brighter) light that stands in for it
     "overhead": dict(loc=(0.05, -0.15, 5.3), aim=(0.05, -0.146, 0.86), lens=35, focus="fx_overhead", fstop=8.0, beat="ch05",
-                     above_ceiling=True, exposure=-3.9, lens_glow=60.0),
+                     above_ceiling=True, exposure=-3.9, lens_glow=60.0,
+                     cheat={"OfficerA": TOTE_OFFICER}, **TOTE_HANDLING),
     # Ch 00: the tag on the suitcase's handle, from Dawn's side; the officer by the scanner an out-of-focus mass beyond
     "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-4.3),
-    # Ch 00: from the end of the bench, a little low: Dawn and the questioning officer face each other over the bags,
-    # the door's vision panel behind them and the scanner officer set farther back
-    "two_shot": dict(loc=(2.60, 0.22, 1.41), aim=(-0.1, -0.12, 1.37), lens=31, focus="fx_two", fstop=4.0, beat="ch00", cheat={"OfficerB": (-0.02, 0.94)}),
-    # Ch 11: the two bags alone on the bench in the empty room, the cleaner steel where the tote stood near the centre
-    "empty": dict(loc=(2.5, -2.5, 1.5), aim=(0.25, 0.1, 0.92), lens=24, focus="fx_empty", fstop=4.5, beat="ch11", cast=False,
+    # Ch 04: after the close-up, the officer is still lifting the tote from the same mark.
+    "two_shot": dict(loc=(2.60, 0.22, 1.41), aim=(-0.1, -0.12, 1.30), lens=31, focus="fx_two", fstop=4.0,
+                      beat="ch05", cheat={"OfficerA": TOTE_OFFICER, "OfficerB": (-0.02, 0.94)}, **TOTE_HANDLING),
+    # Ch 04: the same three handbags stay on their marks after the people leave.
+    "empty": dict(loc=(2.5, -2.5, 1.5), aim=(0.25, 0.1, 0.92), lens=24, focus="fx_empty", fstop=4.5,
+                  beat="ch05", layout="three bags", cast=False,
                   wild=("wall_front", "cove_f", "rail_f")),
 }
 
@@ -183,11 +177,10 @@ CAMERAS.update({
                      focus="fx_handbags", fstop=4.0, beat="ch05", layout="three bags", pose="bag_insert",
                      insert_bench=True, exposure=-2.8, final_res=(2560, 1440),
                      cheat={"Dawn": (1.75, -1.10), "OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
-    "two_shot_pre": dict(CAMERAS["two_shot"], loc=(2.68, 0.75, 1.45), aim=(-0.14, -0.10, 1.27), lens=32,
-                         layout="ch11", pose="duffel_contact"),
-    "wide_pre": dict(CAMERAS["wide"], layout="ch11", pose="duffel_contact"),
+    "two_shot_pre": dict(loc=(2.68, 0.75, 1.45), aim=(-0.14, -0.10, 1.27), lens=32, focus="fx_two", fstop=4.0,
+                         beat="ch00", cheat={"OfficerB": (-0.02, 0.94)}),
     "dawn_close": dict(loc=(-0.96, 1.18, 1.64), aim=(0.38, -0.38, 1.46), lens=61,
-                       focus="fx_dawn_close", fstop=2.8, beat="ch00", layout="ch11", pose="case handle",
+                       focus="fx_dawn_close", fstop=2.8, beat="ch00", pose="case handle",
                        cheat={"Dawn": (0.46, -0.63), "OfficerA": (-0.645, 0.426)},
                        facing={"Dawn": (0.391, 0.400), "OfficerA": (0.16, -0.80)}),
     "match": dict(loc=(-0.12, 4.0, TOP + 0.55), aim=(0, 0.02, TOP + 0.33), lens=50,
@@ -195,18 +188,17 @@ CAMERAS.update({
                   final_res=(2560, 1440),
                   wild=("wall_back", "cove_b", "rail_b")),
     "empty_ch05": dict(CAMERAS["empty"], loc=(2.30, -2.65, 2.10), aim=(0.17, 0.04, 0.88),
-                      lens=26, beat="ch05", layout="aftermath"),
+                      lens=26),
     "enter": dict(loc=(-2.56, -0.24, 1.58), aim=(0.0, 0.043, 1.14), lens=31,
-                  focus="fx_match", fstop=4, beat="ch00", layout="ch11", pose="enter",
+                  focus="fx_match", fstop=4, beat="ch00", pose="enter",
                   cheat={"Dawn": (-1.90, 0.17), "OfficerB": (-1.05, -0.82)},
                   facing={"Dawn": CASE[:2], "OfficerB": (-1.38, 0.32)}),
     "across": dict(loc=(-0.94, -1.28, TOP + 0.48), aim=(0.13, 0.045, TOP + 0.27), lens=37,
                    focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
 # Ch 05 returns to the same front seam after the clean three-bag reveal.
-CAMERAS["handbags_touch"] = dict(CAMERAS["handbags"], pose="bag_touch", tote_lift=0.022,
-                                 cheat={**CAMERAS["handbags"]["cheat"], "OfficerA": (-0.32, 0.53)},
-                                 facing={"OfficerA": (0.18, 0.305)})
+CAMERAS["handbags_touch"] = dict(CAMERAS["handbags"],
+                                 cheat={**CAMERAS["handbags"]["cheat"], "OfficerA": TOTE_OFFICER}, **TOTE_HANDLING)
 FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.101, 0.173, TOP + 0.2505), "fx_match": (0, 0, TOP + 0.30),
               "fx_dawn_close": (0.53, -0.55, 1.54)})
 POSES["enter"] = {
@@ -707,14 +699,6 @@ def apply_pose(holder, p):
         _roll(holder, "forearm_fk.R", p["roll_r"])
     if p.get("carry_grip"):
         hold_carry_strap(holder)
-    if p.get("present_to_dawn"):
-        rig = rigged.rig_of(holder)
-        pointing = _STATE["holders"]["Dawn"].location - holder.location
-        pointing.z = 0
-        pointing.normalize()
-        rigged._aim(rig, "hand_fk.R", (rig.matrix_world.inverted().to_3x3() @ pointing).normalized())
-        palm, _ = palm_normal(holder, -1)
-        _roll(holder, "hand_fk.R", math.degrees(math.atan2(pointing.cross(palm).z, palm.z)))
 
 
 def _target(name, holders):
@@ -745,9 +729,6 @@ def _reach_point(kind):
             return point + Vector((0, 0, 0.030))
         lo, hi = _bbox(duffel)
         return Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, hi.z + 0.030))
-    if kind == "duffel_hover":       # the officer offers the bag to Dawn across the bench
-        lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
-        return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 - 0.10, hi.z + 0.05))
     if kind == "tote_handle":        # palm just over the tote's handles, fingers to close round them
         mesh = next(o for o in _STATE["props"]["handbag-tote"].children_recursive if o.type == "MESH")
         points = [mesh.matrix_world @ v.co for v in mesh.data.vertices]
@@ -762,7 +743,7 @@ def _reach_point(kind):
 def solve_pose(holder, spec, holders):
     """Turn a pose spec into a concrete pose for where the figure stands now: the right arm onto its reach target,
     the forearm rolled to turn the palm up or down, then the head onto its look target (iterated)."""
-    p = {k: v for k, v in spec.items() if k not in ("look", "reach_r", "palm")}
+    p = {k: v for k, v in spec.items() if k not in ("look", "reach_r", "palm", "roll_extra")}
     report = [holder.name]
     if spec.get("reach_r"):
         apply_pose(holder, p)                        # the trunk first: the shoulder moves with the chest
@@ -777,7 +758,7 @@ def solve_pose(holder, spec, holders):
             if n is not None:
                 c = a.cross(n)
                 phi = math.degrees(math.atan2(c.dot(want), n.dot(want) - a.dot(n) * a.dot(want)))
-                p["roll_r"] = max(-162.0, min(162.0, phi))
+                p["roll_r"] = max(-162.0, min(162.0, phi)) + spec.get("roll_extra", 0.0)
                 report.append(f"palm {spec['palm']}: roll {p['roll_r']:.0f}")
     if spec.get("look"):
         d, t = p.get("head", (0.0, 0.0))
@@ -921,18 +902,8 @@ def set_beat(beat):
             h.rotation_euler = (0, 0, math.radians(t))
         for o in [h] + list(h.children_recursive):
             o.hide_render = not on
-    if beat == "aftermath":
-        tote = _STATE["props"]["handbag-tote"]
-        tote.rotation_euler.x = math.radians(90)
-        if _STATE.get("aftermath_tote_rise") is None:
-            bpy.context.view_layer.update()
-            low = min((ob.matrix_world @ v.co).z for ob in props.meshes(tote) for v in ob.data.vertices)
-            _STATE["aftermath_tote_rise"] = TOP - low - 0.0005
-        tote.location.z += _STATE["aftermath_tote_rise"]
-    for item, original, handled in _STATE["bench_marks"]:
-        item.matrix_world = handled if beat == "aftermath" else original
-    for o in _STATE["dressing"]:     # both frontal returns leave only the original two bags on the bench
-        o.hide_render = beat in ("ch11", "match")
+    for o in _STATE["dressing"]:
+        o.hide_render = beat in ("ch00", "ch11", "match")
     bpy.context.view_layer.update()
 
 
@@ -994,6 +965,9 @@ def apply_camera(name):
     if _STATE.get("holders") and show_cast:
         block(beat, cfg.get("cheat"), cfg.get("facing"))
         pose_cast(beat, cfg)
+        hair = bpy.data.objects.get(_STATE["holders"]["Dawn"]["body"] + "_hair")
+        if hair is not None and (relax := hair.modifiers.get("relax temple")):
+            relax.iterations = 36 if name == "dawn_close" else 10
         if name == "dawn_close":
             bpy.data.objects["fx_dawn_close"].location = eye_centre(_STATE["holders"]["Dawn"])
     for o in st.CEILING:   # (the lights among them stay unseen by every camera: the lens is what the eye sees)
@@ -1032,6 +1006,7 @@ def apply_camera(name):
     for light, watts in zip(_STATE["bag_returns"], BAG_RETURNS.get(name, (0, 0, 0, 0))):
         light.hide_render = watts == 0
         light.data.energy = watts
+    _STATE["tote_panel_return"].hide_render = name != "handbags_touch"
     top = bpy.data.materials.get("bench top steel")
     if top and "ghost" in top.node_tree.nodes:  # the cleaner patch where the tote stood: only once it has gone
         top.node_tree.nodes["ghost"].outputs[0].default_value = 1.0 if beat == "ch11" else 0.0
@@ -1109,18 +1084,6 @@ def build(cast=True):
     st.bench(TOP)
     _STATE["dressing"] = st.dressing(TOP)
     bpy.context.view_layer.update()
-    _STATE["aftermath_tote_rise"] = None
-    _STATE["bench_marks"] = []
-    for name, angle, offset, parts in (
-        ("bench_gloves", -24, (0.035, 0.055, 0), ("bench_gloves", "bench_gloves_slot", "bench_gloves_tuft")),
-        ("bench_clipboard", 16, (-0.09, 0.023, 0), ("bench_clipboard",)),
-    ):
-        centre = bpy.data.objects[name].matrix_world.translation
-        turn = Matrix.Translation(centre + Vector(offset)) @ Matrix.Rotation(math.radians(angle), 4, "Z")
-        for part in parts:
-            item = bpy.data.objects[part]
-            rest = item.matrix_world.copy()
-            _STATE["bench_marks"].append((item, rest, turn @ Matrix.Translation(-centre) @ rest))
     _STATE["scanner"] = xr.build(sx, sy, sturn)
     floor_return = sk.area_light("overhead floor return", (-0.7, -1.0, 2.6), (2.0, 2.0), 9.0, (0.75, 0.84, 1.0))
     floor_only = bpy.data.collections.new("overhead tile")
@@ -1136,6 +1099,15 @@ def build(cast=True):
     flag.visible_diffuse = False
     flag.hide_render = True
     _STATE["props"] = load_props()
+    origin = Vector((0.55, 0.85, TOP + 0.30))
+    aim = Vector((tx, ty, TOP + 0.20))
+    tote = _STATE["props"]["handbag-tote"]
+    return_light = st.linked_light("tote panel shadow return", origin, (0.25, 0.15), 9.0,
+                                   (0.91, 0.94, 1.0), props.meshes(tote), spread_deg=72,
+                                   rot=(aim - origin).to_track_quat("-Z", "Y").to_euler())
+    return_light.visible_glossy = return_light.visible_camera = False
+    return_light.hide_render = True
+    _STATE["tote_panel_return"] = return_light
     # the tag is built on the suitcase where it stands in Ch 00 and then travels with it
     case = _STATE["props"]["dawn-suitcase"]
     x, y, z, t = CASE
