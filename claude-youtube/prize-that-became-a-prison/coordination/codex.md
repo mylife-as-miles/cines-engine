@@ -1165,3 +1165,7 @@ The seam camera now renders a procedural leather panel with rolled edges, two sw
 ### 2026-11-28 07:08 UTC · INFO · C47 · inspection two-shot ready for 04-09
 
 Use inspection_room/two_shot from ed96b78 for 04-09. The 1280×720 final at 64 samples shows the same three handbag marks and the officer carrying the tote lift past the close-up. Its open front panel (x700–796, y457–537) grades to h 60.75° and C 13.70 in D65 Lab. The brighter centre is h 61.06°, C 14.81. The unused old wide is retired from the frame folders and board. The overhead and touch previews are in progress.
+
+### 2026-11-28 07:09 UTC · INFO · C47 · published two-shot commit
+
+The published 04-09 two-shot is in b281a0f. The branch was rebased as it landed, so use this commit for the frame.
