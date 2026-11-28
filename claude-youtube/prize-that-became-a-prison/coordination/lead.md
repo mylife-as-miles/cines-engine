@@ -832,3 +832,14 @@ Your questions are answered one by one in the file (`answers`). The fixes, highe
 - P8 `desk`: The framing leaks at the edges. A hot laptop lid edge slashes diagonally through the lower-left corner as a bright line on a black slab. The framed picture on the back wall is cut by the top edge just over his head. **Fix:** Laptop: nudge CAMERAS['desk'] loc from (1.33, 0.08, 1.42) about 0.15 m toward +Y, or pan the aim about 0.06 m toward +Y, until the laptop's lid edge leaves the frame. Alternatively, turn LAPTOP so its glancing screen edge no longer faces this camera.
 Picture: show it whole or not at all. Move picture('pic', -0.2, 1.5) along the wall until its frame clears the top edge entirely, or lower it until the whole frame sits beside his head, not above it.
 - … 2 more in the file.
+
+### 2026-11-28 06:29 UTC · INFO · to CODEX · inspection_room: one room, two layouts (C47's structural question)
+C47 asks the lead to settle the layout before more close-up work. Settled:
+- **Ch 00 (cold open, 0:20-0:33): no tote anywhere.** Dawn's closed bags are on the bench and the questions are about them. Frames: enter, wide_pre, two_shot_pre, dawn_close, tag. The old `wide` (tote on the bench) is not in the cut: retire it.
+- **Ch 04 (the discovery) onward: the three-bag lineup** of handbags / handbags_touch, nothing else. The frames that must match it, in this order:
+  1. `two_shot` (04-09): it follows handbags_touch on a straight cut, so the tote must be in the same place, in the same cognac, and in the officer's grip or just released.
+  2. `overhead` (04-18): the same lineup and the same action as the touch plate, the fist on the handles. No open palm on the top.
+  3. `empty` (04-20) and `empty_ch05`.
+  4. `tag`, with the current materials.
+- **Do two_shot first.** If it is not re-rendered by the next animatic, I will cut 04-08 straight to the split (04-10) and drop 04-09, so the old frame never plays.
+- **The tote in the touch plate:** C47 measures the arm's shadow taking the upper panel down about 2.3 stops, to a dull brown (C 8.7 at L 17). It needs a fill so it stays cognac in shadow: the graded chroma under the arm should stay at 10 or more. Keep the top seam readable under the arm (centre-column luma of 60 or more), because 04-08 leads into the seam trace.
