@@ -1,22 +1,25 @@
-/* SEVEN DAYS OF NO — the art adapter (global ART). Sequences never call the kits directly: they call c.set / c.setFront /
-   c.fig / c.prop, which use the real art when it is loaded (SETS from kit/sets.js, POV.figure from kit/pov.js) and draw clean,
-   labelled placeholders when it is not (a box per set, a capsule per character), so the timeline always scrubs.
+/* FIRSTBORN IN AN AFRICAN HOME — the art adapter (global ART). Sequences never call the kits directly: they call c.set /
+   c.setFront / c.fig / c.prop, which use the real art when it is loaded (SETS from kit/sets.js, POV.figure from kit/pov.js) and
+   draw clean, labelled stand-ins when it is not, so the timeline always scrubs and the real art drops in without edits.
 
-   c.set(name, opts)   -> SETS[name](g, opts): office | living | street | plain | party | kitchen | boxes (placeholder until built).
-                          office: { view: 'desk'|'door', night, clock: '5:30' }; living: { tod: 'evening'|'morning'|'dusk', todTo,
-                          todK, bird, table }. The shot's camera (c.camera) is handed to the set as opts.cam, so a zoomed set is
-                          drawn at full resolution. Returns the set's result; its anchors are read with c.anchor(set, name).
-   c.setFront(name, o) -> SETS[name + 'Front'](g, o): what stands in front of the characters (the desk, the coffee table).
-   c.fig(who, opts)    -> POV.figure(g, who, ...). (x, y) is the ground point between the feet; s = 1 is 800 px tall.
-                          opts: x, y, s, face (1 right, -1 left), pose, expr, walk (strides; or phase in cycles), mouth, talk:
-                          [t0, t1] (mouth from the narration), blink, blinks: [times], nod, look, turn, hold (POV holding),
-                          mode (hold_phone: ear|show|out|front), seat, view (sit: side|front), tint, shadow, alpha, dx, dy,
-                          tremble (px), rot, marks, override. Returns the opts with A = the figure's anchors in world space
-                          (head, headR, headTop, mouth, handL, handR).
-                          poses: POV.POSES (stand walk think point wave shrug hands_clasped thumbs_up hand_mouth hold_phone
-                          hold_laptop hold_clipboard hold_box sit) plus the engine's: run, handup, stomach, peace, type.
-                          exprs: POV.EXPR (neutral happy surprised confused tired angry sad scared guilty tired_closed worried)
-                          plus beaming (= happy) and calm (= neutral). */
+   c.set(name, opts)   -> SETS[name](g, opts) when the kit has it; else ART.PH_SETS[name] (film/fb.js: a labelled placeholder room
+                          with the furniture the staging needs) or a kit set standing in (ART.SET_STANDIN, e.g. home -> living).
+                          The shot's camera (c.camera) is handed to the set as opts.cam. Its anchors: c.anchor(set, name).
+   c.setFront(name, o) -> SETS[name + 'Front'](g, o): what stands in front of the characters.
+   c.fig(role, opts)   -> POV.figure(g, id, ...). role: hero | mum | dad | sister | brother | auntie | auntie2 | auntie3 | uncle |
+                          uncle2 | cousin | cousin2 | neighbour, or any POV.CAST id. ART.ROLES maps a role to the kit's id (the first
+                          candidate POV.CAST has, or POV.ROLES[role] when the kit exports that map); until the kit has one, a
+                          stand-in of the same rig in the role's colours with a small name tag. opts.age: newborn | baby | toddler |
+                          kid | teen (adult when absent): passed to the kit when it draws ages (ART.kitAges), else a smaller figure
+                          (a swaddled bundle for newborn and baby). (x, y) is the ground point between the feet (the bundle's
+                          bottom for a baby); s = 1 is an 800 px tall adult. Any option the engine does not know is passed through to
+                          POV.figure unchanged (new kit options need no engine edit).
+                          opts: x, y, s, face (1 right, -1 left), pose, expr, walk, phase, mouth, talk: [t0, t1], blink, blinks, nod,
+                          look, turn (look/turn are relative to facing), hold, mode, seat, view, tint, shadow, alpha, dx, dy, tremble,
+                          rot, marks, override, age, tag (false hides a stand-in's name tag). Returns the opts with A = the figure's
+                          anchors in world space (head, headR, headTop, mouth, handL, handR).
+                          poses: POV.POSES plus the engine's run, handup, stomach, peace, type, no, finger_up, push_away, hold_card,
+                          sit_front/phone/laptop/stomach/handup, cheer, clap, carry, swoon, arms_up, load. */
 (function (global) {
   'use strict';
   const FILM = global.FILM, W = FILM.WIDTH, H = FILM.HEIGHT;
@@ -37,6 +40,18 @@
     party: { left: A(480, 985), center: A(800, 985), right: A(1560, 985), table: A(1310, 636), behindTable: A(1310, 930, 0.95), floor: A(960, 985) },
     mumKitchen: { center: A(960, 985), left: A(600, 985), right: A(1320, 985), counter: A(960, 620), window: A(1000, 285), island: A(960, 836), floor: A(960, 985) },
     friendFlat: { center: A(960, 985), left: A(640, 985), right: A(1300, 985), window: A(1510, 335), boxes: A(280, 600), floor: A(960, 985) },
+    // Firstborn's sets (the stand-ins' marks; a real set's own anchors win)
+    maternity: { cot: A(860, 652), cotFloor: A(860, 940), parentL: A(545, 975), parentR: A(1175, 975), left: A(520, 985), right: A(1400, 985), window: A(1450, 330), center: A(960, 985), floor: A(960, 985) },
+    home: { sofaL: A(820, 738), sofaM: A(935, 738), sofaR: A(1050, 738), armchair: A(280, 738), tv: A(1440, 598), tvFront: A(1440, 985), door: A(1730, 968, 0.98), doorway: A(1772, 900, 0.9),
+      table: A(935, 862), fan: A(532, 440), clock: A(935, 116), photos: A(935, 282), left: A(330, 990, 1.02), right: A(1500, 990, 1.02), center: A(960, 990, 1.02), floor: A(960, 990) },
+    kitchen: { center: A(960, 985), left: A(600, 985), right: A(1320, 985), counter: A(960, 620), table: A(960, 800), floor: A(960, 985) },
+    shop: { counter: A(1150, 700), seller: A(1150, 940, 0.95), left: A(500, 985), right: A(1500, 985), center: A(960, 985), floor: A(960, 985) },
+    school: { board: A(960, 380), stage: A(960, 760), left: A(480, 985), right: A(1440, 985), center: A(960, 985), floor: A(960, 985) },
+    lifePath: { start: A(260, 930, 0.5), end: A(1700, 420, 0.32), center: A(960, 700, 0.42), floor: A(960, 985) },
+    lab: { table: A(960, 720), left: A(460, 985), right: A(1460, 985), center: A(960, 985), floor: A(960, 985) },
+    courtroom: { bench: A(1380, 560), judge: A(1380, 700, 0.9), witness: A(560, 985), center: A(960, 985), left: A(420, 985), right: A(1500, 985), floor: A(960, 985) },
+    podium: { podium: A(960, 985), left: A(420, 985), right: A(1500, 985), center: A(960, 985), floor: A(960, 985) },
+    bankCounter: { teller: A(960, 900, 0.95), counter: A(960, 640), queue: A(1250, 985), left: A(420, 985), right: A(1500, 985), center: A(960, 985), floor: A(960, 985) },
   };
   // c.anchor(set, name) -> {x, y, s} in world px: the set's own anchors (as it last reported them) or the defaults above
   ART.anchor = function (set, name, fb, c) {
@@ -60,8 +75,24 @@
   ART.set = function (c, name, o) {
     o = Object.assign({ t: c.t }, o); const S = setsKit(), fn = S && typeof S[name] === 'function' ? S[name] : null;
     if (fn) { try { const r = callSet(c, fn, o); if (r) c.sets[name] = r; return r; } catch (e) { FILM.warn('SETS.' + name + ': ' + e.message); } }
-    ART.placeholders.set[name] = 1; placeholderSet(c, name, o); return null;
+    // a kit set standing in for a set the kit does not have yet (home -> living): drawn, then a small 'stand-in' tag
+    const sub = ART.SET_STANDIN[name], sf = sub && S && typeof S[sub.set] === 'function' ? S[sub.set] : null;
+    ART.placeholders.set[name] = 1;
+    if (sf) { try { const r = callSet(c, sf, Object.assign({}, sub.opts || {}, o)); if (r) c.sets[name] = r; standinTag(c, name + ' (stand-in: ' + sub.set + ')'); return r; } catch (e) { FILM.warn('SETS.' + sub.set + ' for ' + name + ': ' + e.message); } }
+    const ph = ART.PH_SETS[name];
+    if (ph) { try { const r = ph(c, o); if (r) c.sets[name] = r; return r; } catch (e) { FILM.warn('placeholder ' + name + ': ' + e.message); } }
+    placeholderSet(c, name, o); return null;
   };
+  // registries filled by film/fb.js: placeholder rooms, and kit sets standing in for missing ones
+  ART.PH_SETS = {};
+  ART.SET_STANDIN = {};
+  ART.hasSet = name => { const S = setsKit(); return !!(S && typeof S[name] === 'function'); };
+  // a small grey tag in the top-left corner naming a stand-in set (inside the 60 px margin's corner, out of the action)
+  function standinTag(c, text) {
+    const g = c.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.font = `800 22px ${FONT}`; const w = g.measureText(text).width + 24;
+    g.fillStyle = 'rgba(28,28,28,.42)'; g.beginPath(); g.roundRect(14, 12, w, 34, 17); g.fill(); g.fillStyle = '#fff'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(text, 26, 30); g.restore();
+  }
+  ART.standinTag = standinTag;
   ART.setFront = function (c, name, o) {
     o = Object.assign({ t: c.t }, o); const S = setsKit(), fn = S && typeof S[name + 'Front'] === 'function' ? S[name + 'Front'] : null;
     if (fn) { try { return callSet(c, fn, o); } catch (e) { FILM.warn('SETS.' + name + 'Front: ' + e.message); } }
@@ -118,8 +149,73 @@
   ART.clock = clockFace;
 
   // ---------------------------------------------------------------- characters
-  const SEED = { hero: 1, boss: 2, friend: 3, mum: 4, coworker: 5, stranger: 6 };
+  const SEED = { hero: 1, boss: 2, friend: 3, mum: 4, coworker: 5, stranger: 6, dad: 7, sister: 8, brother: 10, auntie: 11, auntie2: 12, auntie3: 13, uncle: 14, uncle2: 15, cousin: 16, cousin2: 17, neighbour: 18 };
   const EXPR_ALIAS = { beaming: 'happy', calm: 'neutral', honest: 'happy' };
+  // the roles the sequences use -> the kit's ids: POV.ROLES[role] when the kit exports that map, else the first candidate that
+  // POV.CAST has. 'mum' never resolves to POV.CAST.mum (that is Seven Days' mum, not this family's).
+  ART.ROLES = {
+    hero: ['hero'],
+    mum: ['fb_mum', 'mama', 'mother'], dad: ['fb_dad', 'dad', 'papa'],
+    sister: ['fb_sister', 'sister'], brother: ['fb_brother', 'brother'],
+    auntie: ['fb_auntie', 'auntie'], auntie2: ['fb_auntie2', 'auntie2'], auntie3: ['fb_auntie3', 'auntie3'],
+    uncle: ['fb_uncle1', 'uncle'], uncle2: ['fb_uncle2', 'uncle2'],
+    cousin: ['fb_cousin1', 'cousin'], cousin2: ['fb_cousin2', 'cousin2'],
+    neighbour: ['fb_okafor_son', 'okafor_son', 'neighbour'],
+  };
+  // roles the kit has no figure for yet, drawn as a recoloured variant of one it has (a second and third auntie for the wedding)
+  ART.VARIANTS = {
+    auntie2: { base: 'fb_auntie', top: ['#3F7FBF', '#356CA3'], bottom: ['#3F7FBF', '#356CA3'], hair: ['#3F7FBF', '#356CA3', '#5B98D4'], skin: 'fbSkinMum' },
+    auntie3: { base: 'fb_auntie', top: ['#4E9A5B', '#40814B'], bottom: ['#4E9A5B', '#40814B'], hair: ['#4E9A5B', '#40814B', '#6BB476'], skin: 'fbSkinU2' },
+  };
+  const castHas = id => { const P = pov(); return !!(P && P.CAST && P.CAST[id]); };
+  ART.resolve = function (role) {
+    const P = pov(); if (!P) return null;
+    const R = P.ROLES || P.FAMILY; if (R && R[role] && castHas(R[role])) return R[role];
+    const list = ART.ROLES[role]; if (!list) return castHas(role) && role !== 'mum' ? role : null;
+    for (const id of list) if (castHas(id)) return id;
+    return null;
+  };
+  const variantCache = {};
+  function variant(role) {
+    const P = pov(), v = ART.VARIANTS[role]; if (!P || !v || !castHas(v.base)) return null; if (variantCache[role]) return variantCache[role];
+    const b = P.CAST[v.base], o = Object.assign({}, b);
+    if (v.top) o.top = Object.assign({}, b.top, { c: v.top[0], sh: v.top[1] }); if (v.bottom) o.bottom = Object.assign({}, b.bottom, { c: v.bottom[0], sh: v.bottom[1] });
+    if (v.hair && b.hair) o.hair = Object.assign({}, b.hair, { c: v.hair[0], sh: v.hair[1], hi: v.hair[2] }); if (v.skin && P.C[v.skin]) o.skin = P.C[v.skin];
+    return (variantCache[role] = o);
+  }
+  // ages: the kit draws them when it has POV.buildWho (it maps baby/newborn/toddler/kid/teen/adult/grown itself) or says so per entry
+  ART.AGE_K = { newborn: 0.3, baby: 0.3, toddler: 0.5, kid: 0.62, child: 0.62, teen: 0.88, adult: 1, grown: 1 };
+  ART.kitAges = function (id, age) {
+    const P = pov(); if (!P || !age) return true; if (typeof P.buildWho === 'function') return true; if (age === 'adult' || age === 'grown') return true;
+    const A = P.AGES || P.ages; if (A && (Array.isArray(A) ? A.includes(age) : A[age])) return true;
+    const ch = P.CAST && P.CAST[id]; return !!(ch && ch.ages && (Array.isArray(ch.ages) ? ch.ages.includes(age) : ch.ages[age]));
+  };
+  // the stand-ins: this family in the kit's own rig (brown skin tones of the reference's range, everyday dress), with a name tag
+  const SK = { a: ['#8D5A3B', '#77492F'], b: ['#6E432B', '#5C3723'], c: ['#9F6B48', '#87583A'], d: ['#7E4E31', '#6A4028'], e: ['#B07A55', '#966545'] };
+  const hairBun = { k: 'bun', c: '#221B18', sh: '#151110' }, hairShort = { k: 'curly', c: '#1A1614', hi: '#2E2825' };
+  const SPEC = {
+    mum: { skin: SK.a, top: ['cardigan', '#E2A33B', '#C98C2E', '#FFF4E3'], bottom: ['skirt', '#2F6E8E', '#255A75'], shoes: ['flat', '#6E5340'], hair: hairBun, h: 0.965, label: 'MUM' },
+    dad: { skin: SK.b, top: ['buttonshirt', '#5C88A8', '#4B7593'], bottom: ['trousers', '#4F4A45', '#3F3B37'], shoes: ['dress', '#393939'], hair: null, h: 1.02, label: 'DAD' },
+    sister: { skin: SK.c, top: ['tee', '#E37F78', '#C9675F'], bottom: ['skirt', '#7B5EA7', '#664D8C'], shoes: ['flat', '#9A4E3E'], hair: hairBun, h: 0.95, label: 'SISTER' },
+    brother: { skin: SK.d, top: ['tee', '#F4BF54', '#DCA63E'], bottom: ['jeans', '#5D8FAE', '#4E7D9A'], shoes: ['trainer', '#E37F78'], hair: null, h: 0.98, label: 'BROTHER' },
+    auntie: { skin: SK.e, top: ['cardigan', '#B04F8C', '#963F76', '#F4BF54'], bottom: ['skirt', '#3E8A5A', '#327249'], shoes: ['flat', '#6E5340'], hair: hairBun, h: 0.97, label: 'AUNTIE' },
+    auntie2: { skin: SK.b, top: ['cardigan', '#4E8FC4', '#3F79AA', '#FFF4E3'], bottom: ['skirt', '#D9733B', '#BD5F2E'], shoes: ['flat', '#6E5340'], hair: hairBun, h: 0.96, label: 'AUNTIE' },
+    auntie3: { skin: SK.c, top: ['cardigan', '#5FAF6E', '#4C955A', '#FFF4E3'], bottom: ['skirt', '#8E3B5B', '#76304B'], shoes: ['flat', '#6E5340'], hair: hairBun, h: 0.96, label: 'AUNTIE' },
+    uncle: { skin: SK.d, top: ['shirt', '#E6D3A8', '#CDBA8F'], bottom: ['trousers', '#6B5A4A', '#5A4B3D'], shoes: ['dress', '#393939'], hair: null, h: 1.02, label: 'UNCLE' },
+    uncle2: { skin: SK.a, top: ['buttonshirt', '#8A6BB0', '#755998'], bottom: ['trousers', '#3F4A5A', '#333C49'], shoes: ['dress', '#393939'], hair: hairShort, h: 1.0, label: 'UNCLE' },
+    cousin: { skin: SK.e, top: ['tee', '#77CC81', '#5FB36A'], bottom: ['jeans', '#4E6F99', '#405D82'], shoes: ['trainer', '#3A3A3A'], hair: hairShort, h: 0.99, label: 'COUSIN' },
+    cousin2: { skin: SK.c, top: ['tee', '#7BAFE1', '#6497C8'], bottom: ['jeans', '#6B4E3D', '#593F31'], shoes: ['trainer', '#E5534B'], hair: null, h: 0.99, label: 'COUSIN' },
+    neighbour: { skin: SK.d, top: ['buttonshirt', '#FFFFFF', '#E6E6E6'], bottom: ['trousers', '#7A5A3C', '#664A31'], shoes: ['dress', '#4A3A2C'], hair: hairShort, glasses: 1, h: 0.98, label: "OKAFOR'S SON" },
+  };
+  function standIn(role) {
+    const d = SPEC[role]; if (!d) return null;
+    const o = { skin: d.skin[0], top: { k: d.top[0], c: d.top[1], sh: d.top[2], under: d.top[3] || '#FFFFFF', cuffC: d.top[1], inner: d.top[2] },
+      bottom: { k: d.bottom[0], c: d.bottom[1], sh: d.bottom[2], cuff: d.bottom[1], fly: d.bottom[0] === 'skirt' ? 0 : 1 },
+      shoes: { k: d.shoes[0], c: d.shoes[1], sole: d.shoes[0] === 'trainer' ? '#FFFFFF' : '#262626', toe: '#FFFFFF', laces: '#FFFFFF' }, hair: d.hair, brow: '#1c1c1c', h: d.h };
+    if (d.glasses) o.glasses = 1;
+    return o;
+  }
+  ART.standIn = standIn; ART.SPEC = SPEC;
   // the engine's poses beyond POV.POSES, built from the kit's own (pose functions take the figure opts)
   const EXTRA = {
     run: (P, o) => Object.assign(P.POSES.walk(Object.assign({}, o, { stride: o.stride || 0.72 })), { lean: 0.14 }),
@@ -132,7 +228,17 @@
     finger_up: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.25, e: 0.95, hand: 'point', flip: 1 } }),
     push_away: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 1.45, e: 0.15, hand: 'open', flip: 1 }, armL: { a: 1.3, e: 0.25, hand: 'open', flip: 1, z: 'back' } }),
     hold_card: (P, o) => Object.assign(P.POSES.hold_box(o), { prop: null }),
-    // seated on the sofa: POV's three-quarter sofa sit (refs 03, 07), with the props' arms from POV.HOLD
+    // both arms up (a champion, praise, "God will provide")
+    arms_up: (P, o) => Object.assign(P.POSES.stand(o), { head: { tilt: -0.06 }, armR: { a: 2.75, e: 0.25, hand: 'open', flip: 1 }, armL: { a: -2.75, e: -0.25, hand: 'open', flip: -1 } }),
+    cheer: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.6 + 0.12 * Math.sin((o.t || 0) * 9), e: 0.9, hand: 'fist', flip: 1 }, armL: { a: -2.6 - 0.12 * Math.sin((o.t || 0) * 9 + 1), e: -0.9, hand: 'fist', flip: -1 } }),
+    // clapping: the hands meet in front of the chest on a beat
+    clap: (P, o) => { const k = 0.5 + 0.5 * Math.sin((o.t || 0) * 14); return Object.assign(P.POSES.stand(o), { armR: { ik: [20 + 40 * k, -150], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 1.2 }, armL: { ik: [-20 - 40 * k, -150], bend: 1, ul: 0.9, hand: 'flat', flip: 1, hrot: -1.2 } }); },
+    // carrying something in both arms in front (a baby, a bag): the hands low and together
+    carry: (P, o) => Object.assign(P.POSES.stand(o), { armR: { ik: [50, -120], bend: -1, ul: 0.9, hand: 'hold', flip: -1, hrot: 1.1 }, armL: { ik: [-36, -110], bend: 1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.4 } }),
+    // a load on the back (the house): both hands up by the shoulders holding it behind the head, the head a little sunk
+    load: (P, o) => Object.assign(P.POSES.stand(o), { head: { tilt: 0.05, sink: 8 }, armR: { a: 2.45, e: 1.35, hand: 'open', flip: 1 }, armL: { a: -2.45, e: -1.35, hand: 'open', flip: -1 } }),
+    // the swoon: the back of a hand to the forehead, leaning back
+    swoon: (P, o) => Object.assign(P.POSES.stand(o), { lean: -0.12, head: { tilt: -0.12 }, armR: { ik: [40, -300], bend: 1, ul: 0.7, hand: 'flat', flip: -1, hrot: 2.2 }, armL: { a: -0.6, e: -0.4, hand: 'open', flip: -1 } }),
     sit_front: (P, o) => sofa(P, o),
     sit_phone: (P, o) => { const b = sofa(P, o); return Object.assign(b, P.HOLD.phone_ear ? P.HOLD.phone_ear(b, o) : {}); },
     sit_laptop: (P, o) => { const b = sofa(P, o); return Object.assign(b, P.HOLD.laptop ? P.HOLD.laptop(b, o) : {}); },
@@ -140,11 +246,38 @@
     sit_handup: (P, o) => Object.assign(sofa(P, o), { armR: { a: 1.0, e: 1.75, hand: 'open', flip: 1 } }),
   };
   const sofa = (P, o) => P.POSES.sit_sofa ? P.POSES.sit_sofa(o) : P.POSES.sit(Object.assign({}, o, { view: 'front' }));
+  // the options the engine itself reads; everything else goes to POV.figure as it is
+  const OWN = new Set(['x', 'y', 's', 'face', 'pose', 'expr', 'walk', 'phase', 'talk', 'blinks', 'blink', 'mouth', 'nod', 'look', 'turn', 'hold', 'mode', 'seat', 'view', 'tint', 'shadow', 'alpha', 'dx', 'dy',
+    'tremble', 'rot', 'marks', 'override', 'prop', 'drawProp', 'faceOver', 'breath', 'noBlink', 'A', 't', 'stride', 'lw', 'seatAt', 'thigh', 'q', 'tag', 'age', 'holdBaby', 'lie', 'upright', 'babyRot', 'young', 'who']);
   ART.fig = function (c, who, o) {
     const t = c.t, g = c.g; const op = Object.assign({}, o); op.t = t; op.s = op.s || 1; op.face = op.face === -1 ? -1 : 1;
     if (op.x == null) op.x = W / 2; if (op.y == null) op.y = 962;
     if (op.mouth == null) op.mouth = op.talk ? FILM.talk(t, op.talk) : 0;
     if (op.blink == null) op.blink = op.blinks ? FILM.blinkAt(t, op.blinks) : (op.noBlink ? 0 : FILM.blink(t, SEED[who] || 9));
+    const P = pov(); const vr = P ? variant(who) : null; const id = P ? (ART.resolve(who) || null) : null; const age = op.age || null;
+    const kitAge = (id || vr) ? ART.kitAges(id || (ART.VARIANTS[who] || {}).base, age) : false;
+    // a baby (age newborn | baby): lie: 1 | -1 lying with the head toward that side, (x, y) under the bundle's middle; upright: true
+    // (x, y) the bundle's bottom. s = 1 is a newborn beside a scale-1 adult (about 200 px long). The kit's newborn when it has one,
+    // else the engine's swaddled bundle (GFX.bundle).
+    if (age === 'newborn' || age === 'baby') {
+      const lie = op.upright ? 0 : (op.lie || op.face || 1);
+      if (kitAge && id) {
+        g.save(); if (op.alpha != null) g.globalAlpha *= FILM.clamp(op.alpha, 0, 1);
+        let out = null; const bx = op.x + (op.dx || 0) + (lie ? lie * 21 * op.s : 0), by = op.y + (op.dy || 0);
+        try { out = P.figure(g, id, { x: bx, y: by, scale: op.s, facing: lie || op.face, age, pose: lie ? 'lie' : 'held', rot: op.babyRot || (lie ? 0 : (op.rot || 0)), expr: EXPR_ALIAS[op.expr] || op.expr || 'neutral', blink: op.blink, look: op.look, mouth: op.mouth, fists: op.fists, tint: op.tint || null, shadow: op.shadow || null }); } catch (e) { FILM.warn('POV newborn(' + who + '): ' + e.message); }
+        g.restore();
+        if (out) { const toW = g.getTransform().inverse(), wp = p => { const q = toW.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; }; op.A = { head: wp(out.head), headTop: wp(out.headTop), headR: out.headR, mouth: wp(out.mouth), handL: wp(out.handL), handR: wp(out.handR), pelvis: wp(out.pelvis) }; return op; }
+      }
+      if (global.GFX && global.GFX.bundle) {
+        ART.placeholders.fig[who + ':' + age] = 1; const sb = 0.75 * op.s;
+        const bx = op.x + (op.dx || 0) - (lie ? lie * 133 * sb : 0), by = op.y + (op.dy || 0) - (lie ? 45 * sb : 0);
+        const r = global.GFX.bundle(g, bx, by, sb, { who, rot: lie ? lie * 1.45 : (op.rot || 0), expr: EXPR_ALIAS[op.expr] || op.expr, blink: op.blink, mouth: op.mouth, look: op.look, face: op.face, t, wrap: op.wrap, alpha: op.alpha, tag: op.tag !== false && who !== 'hero' ? (SPEC[who] ? SPEC[who].label : String(who).toUpperCase()) : null });
+        op.A = { head: r.head, headTop: [r.head[0], r.head[1] - r.headR], headR: r.headR, mouth: r.head, handL: r.head, handR: r.head, pelvis: [op.x, op.y] }; return op;
+      }
+    }
+    const sScale = age && !kitAge ? (ART.AGE_K[age] || 1) : 1;
+    if (op.rot && (age === 'newborn' || age === 'baby')) op.rot = 0;
+    const drawS = op.s * sScale;
     g.save();
     const toWorld = g.getTransform().inverse();
     if (op.alpha != null) g.globalAlpha *= FILM.clamp(op.alpha, 0, 1);
@@ -153,27 +286,45 @@
     if (dx || dy) g.translate(dx, dy);
     if (op.rot) { g.translate(op.x, op.y); g.rotate(op.rot); g.translate(-op.x, -op.y); }
     if (op.breath !== false) { const k = 1 + (op.breath || 0.006) * Math.sin((t + (SEED[who] || 0) * 0.83) * Math.PI * 2 * 0.27); g.translate(op.x, op.y); g.scale(1, k); g.translate(-op.x, -op.y); }
-    const P = pov(); let out = null;
+    let out = null, spec = null, tagged = false;
     if (P) {
+      spec = id || vr || standIn(who); tagged = !id && !vr && !!spec; if (vr) ART.placeholders.fig[who + ' (variant of ' + ART.VARIANTS[who].base + ')'] = 1;
+      if (!spec && castHas(who)) spec = who;
+    }
+    if (P && spec) {
       let pose = op.pose || 'stand';
       if (typeof pose === 'string' && !P.POSES[pose]) { const ex = EXTRA[pose] || EXTRA[{ running: 'run', typing: 'type' }[pose]]; pose = ex ? (oo => ex(P, oo)) : (P.POSES[POSE_ALIAS[pose]] ? POSE_ALIAS[pose] : 'stand'); }
-      const phase = op.phase != null ? op.phase : op.walk != null ? op.walk / 2 : (op.pose === 'wave' ? t * 1.4 : 0);
-      const po = { x: op.x, y: op.y, scale: op.s, facing: op.face, pose, phase, expr: EXPR_ALIAS[op.expr] || op.expr || 'neutral', look: op.look, blink: op.blink, mouth: op.mouth,
+      const phase = op.phase != null ? op.phase : op.walk != null ? op.walk / 2 : (op.pose === 'wave' ? t * 1.4 : op.pose === 'clap' ? t * 2.2 : (op.pose === 'swoon' || op.pose === 'sneeze') ? 1 : 0);
+      const po = { x: op.x, y: op.y, scale: drawS, facing: op.face, pose, phase, expr: EXPR_ALIAS[op.expr] || op.expr || 'neutral', look: op.look, blink: op.blink, mouth: op.mouth,
         turn: op.turn, nod: op.nod, holding: op.hold, tint: op.tint || null, shadow: op.shadow === false ? null : (op.shadow || (op.y < H + 40 ? 'rgba(140,70,20,0.18)' : null)),
         marks: op.marks, override: op.override, prop: op.prop, drawProp: op.drawProp, face: op.faceOver, mode: op.mode, seat: op.seat, view: op.view, stride: op.stride, lw: op.lw,
-        seatAt: op.seatAt, thigh: op.thigh, q: op.q };
-      try { out = P.figure(g, who, po); } catch (e) { FILM.warn('POV.figure(' + who + '): ' + e.message); out = null; }
+        seatAt: op.seatAt, thigh: op.thigh, q: op.q, t };
+      if (age && kitAge) po.age = age;
+      if (vr && age && kitAge && P.buildWho) { po.age = age; }
+      for (const k in op) if (!OWN.has(k) && !(k in po)) po[k] = op[k];
+      if (op.pose && typeof op.pose === 'string' && EXTRA[op.pose] === undefined && !P.POSES[op.pose] && !POSE_ALIAS[op.pose] && !ART._poseWarned[op.pose]) { ART._poseWarned[op.pose] = 1; ART.placeholders.pose = ART.placeholders.pose || {}; ART.placeholders.pose[op.pose] = 1; }
+      try { out = P.figure(g, spec, po); } catch (e) { FILM.warn('POV.figure(' + who + '): ' + e.message); out = null; }
     }
-    if (!out) { ART.placeholders.fig[who] = 1; placeholderFig(g, who, op); out = placeholderAnchors(op); }
+    if (!out) { ART.placeholders.fig[who] = 1; placeholderFig(g, who, Object.assign({}, op, { s: drawS })); out = placeholderAnchors(Object.assign({}, op, { s: drawS })); }
     else {
       // the kit reports device pixels: bring them back to the caller's world space
       const wp = p => { const q = toWorld.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
       const o2 = { head: wp(out.head), headTop: wp(out.headTop), mouth: wp(out.mouth), handL: wp(out.handL), handR: wp(out.handR), pelvis: wp(out.pelvis), headR: out.headR };
-      ['seat', 'lap', 'knee', 'feet'].forEach(k => { if (out[k]) o2[k] = wp(out[k]); }); out = o2;
+      ['seat', 'lap', 'knee', 'feet', 'elbowL', 'elbowR'].forEach(k => { if (out[k]) o2[k] = wp(out[k]); }); out = o2;
     }
     g.restore();
+    // the stand-in's name tag, under the feet (or above the head when the feet are off the frame)
+    if (tagged && op.tag !== false) { ART.placeholders.fig[who] = 1; nameTag(g, (SPEC[who] && SPEC[who].label) || String(who).toUpperCase(), op.x + (op.dx || 0), op.y + 26 * op.s, op.s, age, sScale); }
+    else if (age && !kitAge && who === 'hero') ART.placeholders.fig['hero:' + age] = 1;
     op.A = out; return op;
   };
+  ART._poseWarned = {};
+  function nameTag(g, label, x, y, s, age, k) {
+    const sz = Math.max(16, Math.round(24 * Math.min(1.4, Math.max(0.7, s))));
+    g.save(); g.font = `800 ${sz}px ${FONT}`; const text = label + (age ? ' · ' + age : ''); const w = g.measureText(text).width + sz;
+    g.globalAlpha *= 0.8; g.fillStyle = '#FFF4E3'; g.strokeStyle = INK; g.lineWidth = 2.5; g.beginPath(); g.roundRect(x - w / 2, y - sz * 0.75, w, sz * 1.5, sz * 0.75); g.fill(); g.stroke();
+    g.fillStyle = INK; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, x, y + 1); g.restore();
+  }
   const POSE_ALIAS = { standing: 'stand', walking: 'walk', thinking: 'think', pointing: 'point', waving: 'wave', clasped: 'hands_clasped', thumbsup: 'thumbs_up', handmouth: 'hand_mouth', phone: 'hold_phone', clipboard: 'hold_clipboard', laptop: 'hold_laptop', box: 'hold_box', sitting: 'sit', holding: 'stand' };
   // the head and hands of a drawn figure (world px): from its anchors when c.fig has drawn it, else from proportions
   ART.head = function (who, op) {

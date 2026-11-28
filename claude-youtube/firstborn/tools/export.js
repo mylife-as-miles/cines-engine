@@ -11,7 +11,7 @@ const { spawn, execFileSync } = require('child_process');
 const fs = require('fs'); const path = require('path');
 
 const argv = process.argv.slice(2); const opt = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
-const OUT = argv[0] && !argv[0].startsWith('--') ? argv[0] : 'out/seven_days_of_no.mp4';
+const OUT = argv[0] && !argv[0].startsWith('--') ? argv[0] : 'out/firstborn.mp4';
 const WORKERS = Math.max(1, +opt('workers', 3)), SCALE = +opt('scale', 1), CRF = opt('crf', null), ONLY = opt('only', null);
 const MAXRATE = opt('maxrate', null), CAP = MAXRATE ? ['-maxrate', MAXRATE, '-bufsize', String(parseFloat(MAXRATE) * 2) + MAXRATE.replace(/[0-9.]/g, '')] : [];
 const AUDIO = opt('audio', path.join(ROOT, 'out/vo/narration.wav'));

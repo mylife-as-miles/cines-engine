@@ -1,21 +1,25 @@
 """Build the captions and the chapter list from the narration's word times.
 
-  python3 tools/make_captions.py           -> publish/seven_days.en.srt, publish/seven_days.en.vtt,
+  python3 tools/make_captions.py           -> publish/firstborn.en.srt, publish/firstborn.en.vtt,
                                               publish/chapters.txt (and the chapter lines in publish/description.md)
   python3 tools/make_captions.py --check   -> the same checks, nothing written
 
 Text comes from publish/captions.txt (one caption per line, " / " for a line break); times come from
-audio/vo/words.json (the edited clock, written by tools/vo_edit.py), so after a re-cut run vo_edit.py, then this.
+audio/vo/words.json (the narration's clock, written by tools/vo_edit.py), so after any change run vo_edit.py,
+then this.
 
 Whisper's artefacts are cleaned before matching: a word repeated where its windows overlapped ("happiest
 happiest", "Not not", "that. that.": same word, starting before the previous one ends) is dropped, a split
-hyphenated word ("co -worker") is joined, and FIXES rewrites what it misheard or spelled oddly.
+hyphenated word ("water -carrying") is joined, FIXES rewrites single words it spelled oddly, and SPOKEN
+corrects what it misheard, dropped or split (each checked by ear: Whisper medium.en and large-v3-turbo on the
+spot, and the narration's own pauses). A SPOKEN entry whose heard words are no longer in words.json (because
+vo_edit.py was fixed) is skipped with a note; one found more than once stops the tool.
 
 Timing: a caption starts on its first word and ends on its last word's end (held END_HOLD longer where there
 is room), clipped to the next caption's start. Whisper's word starts drift by up to 0.3 s around pauses, so
 each start is checked against the narration itself: if the caption starts in a silence, it moves to LEAD before
 the voice that follows; if it starts inside the voice, it moves back to LEAD before where that stretch of voice
-began after a silence (never onto the previous word, never more than SNAP_MAX). A caption shorter than MIN_DUR
+began after a silence (never onto the previous word; at most SNAP_LATER later or SNAP_MAX earlier). A caption shorter than MIN_DUR
 then borrows time: first by starting the next caption a little later (never past its first word), then by
 starting a little earlier. The checks: no overlaps, every caption at least MIN_DUR, at most two lines of at
 most MAX_LINE characters; chapters start at 0:00 and last at least 10 s.
@@ -28,7 +32,7 @@ WORDS = os.path.join(ROOT, 'audio', 'vo', 'words.json')
 NARRATION = os.path.join(ROOT, 'out', 'vo', 'narration.wav')
 PUB = os.path.join(ROOT, 'publish')
 TEXT = os.path.join(PUB, 'captions.txt')
-BASE = os.path.join(PUB, 'seven_days.en')
+BASE = os.path.join(PUB, 'firstborn.en')
 
 MIN_DUR = 1.2          # s, shortest caption
 MAX_LINE = 42          # characters per line
@@ -37,25 +41,44 @@ MAX_SHIFT = 0.3        # s, most a caption may lend to a short neighbour
 END_SCREEN = 8.0       # s of end screen after the last word (the video is narration + 8 s)
 MIN_CHAPTER = 10.0     # s, YouTube's minimum
 LEAD = 0.10            # s, a caption appears this much before the voice
-SNAP_MAX = 0.45        # s, the most a start moves to meet the voice
+SNAP_MAX = 0.45        # s, the most a start moves earlier to meet the voice
+SNAP_LATER = 0.6       # s, the most it moves later (Whisper's starts run up to 0.5 s early after a pause)
 END_HOLD = 0.4         # s, a caption stays this long after its last word when the next one is not due
 SILENT_DB, VOICE_DB = -50.0, -45.0   # dBFS per 10 ms; the take's floor is about -62, speech -10 to -30
 
-FIXES = [(r'^Five-thirty', '5:30'),       # Whisper wrote the spoken time as words, split at the hyphen
-         (r'^([Cc])o-worker', r'\1oworker')]
+FIXES = [(r'^Kobo', 'kobo'),              # single words: the Nigerian currency is lower case,
+         (r'^apologiz', 'apologis'),      # and British (Nigerian) spelling, as in captions.txt
+         (r'^neighbor', 'neighbour')]
+
+# (what words.json has, what is said, times for the said words or None, how we know). With None, the times
+# carry over word for word when the counts match, else the heard span is shared out by length. The heard
+# words must occur exactly once.
+SPOKEN = [
+    ('first born.', 'firstborn.', None, 'one word; medium.en and large-v3-turbo write it so'),
+    ('1 .0,', '1.0,', None, 'Whisper split the number at the point'),
+    ('Middle Surname.', 'Middle name. Surname.', [(108.68, 108.78), (108.78, 109.66), (109.66, 110.38)],
+     'small.en dropped "name"; medium.en and large-v3-turbo both hear it (their times)'),
+    ('Go in by salt.', 'Go and buy salt.', None, 'medium.en and large-v3-turbo both hear "and buy"'),
+    ('In the careers,', 'And the careers?', None, 'medium.en, large-v3-turbo and small.en on a shorter clip: "And"'),
+    ("Here's", 'Here is', None, 'medium.en and large-v3-turbo; she says "here is" elsewhere too'),
+    ('know the look.', 'You know the look.', [(78.22, 78.46), (78.46, 78.58), (78.58, 78.74), (78.74, 79.42)],
+     'vo_edit.py dropped "You" as a duplicate of "you." before it; restored from voice_words_whisper.json'),
+    ('graduate.', 'You graduate.', [(196.30, 196.76), (196.76, 197.52)],
+     'vo_edit.py dropped "You" as a duplicate of "you." before it; restored from voice_words_whisper.json'),
+    ('bed at 7.', 'bed at seven.', None, 'style: numbers to ten in words'),
+]
 
 # (title, words the chapter starts on; searched after the previous chapter's start). First is always 0:00.
-CHAPTERS = [('The question', None),
-            ('Monday: the boss', 'Monday'),
-            ('Tuesday: a friend', 'Tuesday your friend'),
-            ('Wednesday: Mom', 'Wednesday your mom'),
-            ('Thursday: lunch', 'Thursday a coworker'),
-            ('Friday: a stranger', 'Friday a tourist'),
-            ('Saturday: the real answer', 'Saturday your boss texts'),
-            ('Sunday', 'Sunday so what happened'),
-            ('Why we say yes', "Here's what I noticed"),
-            ('Try this instead', 'So do not say no to everyone'),
-            ('So, what happens?', 'So what if you said no')]
+# Titles from design/SEQUENCES.md; each starts on the floor of its first word's second, so no word is missed.
+CHAPTERS = [('Born and hired', None),
+            ('Version 1.0', "So let's walk through your entire life"),
+            ('Promoted at six', 'Then a baby arrives'),
+            ('The teenage years', 'Now you are a teenager'),
+            ('The first salary', 'You graduate You get a job'),
+            ('Management at 30', 'By 30 your job title'),
+            ('The honest part', "Now let's be honest"),
+            ('One thing you can do', 'So here is something you can do'),
+            ('Call your elder sibling', 'So that is your whole life')]
 
 
 def norm(s):
@@ -81,9 +104,41 @@ def clean_words(words):
             new = re.sub(pat, rep, w['w'])
             if new != w['w']:
                 notes.append(f"fixed {w['w']!r} -> {new!r} at {w['t0']:.2f}"); w['w'] = new
+    apply_spoken(out, notes)
     for w in out:
         w['n'] = norm(w['w'])
     return [w for w in out if w['n']], notes
+
+
+def apply_spoken(out, notes):
+    """Rewrite the word list in place with SPOKEN: what Whisper heard -> what is said, with times."""
+    for heard, said, at, why in SPOKEN:
+        ht = [norm(t) for t in heard.split() if norm(t)]
+        nw = [norm(w['w']) for w in out]
+        hits = [i for i in range(len(out)) if nw[i:i + len(ht)] == ht]
+        if not hits:
+            notes.append(f"SPOKEN {heard!r}: not in words.json any more, skipped"); continue
+        if len(hits) > 1:
+            sys.exit(f"SPOKEN {heard!r} occurs {len(hits)} times; give it more words so it is unique")
+        i, said_w = hits[0], said.split()
+        ns = [norm(t) for t in said_w]
+        if at and len(ns) > len(ht) and ns[len(ns) - len(ht):] == ht:          # an insertion before the heard words
+            pre = ns[:len(ns) - len(ht)]
+            if i >= len(pre) and nw[i - len(pre):i] == pre and out[i - len(pre)]['t0'] >= at[0][0] - 0.15:
+                notes.append(f"SPOKEN {said!r}: already in words.json, skipped"); continue
+        old = out[i:i + len(ht)]
+        if at:
+            assert len(at) == len(said_w), f"SPOKEN {said!r}: {len(at)} times for {len(said_w)} words"
+            times = at
+        elif len(said_w) == len(old):
+            times = [(w['t0'], w['t1']) for w in old]
+        else:                                                                   # share the heard span by length
+            a, b, t, times = old[0]['t0'], old[-1]['t1'], old[0]['t0'], []
+            total = sum(len(s) for s in said_w)
+            for s in said_w:
+                d = (b - a) * len(s) / total; times.append((t, t + d)); t += d
+        out[i:i + len(ht)] = [{'w': s, 't0': round(t0, 3), 't1': round(t1, 3)} for s, (t0, t1) in zip(said_w, times)]
+        notes.append(f"heard {heard!r} -> said {said!r} at {times[0][0]:.2f} ({why})")
 
 
 def read_captions():
@@ -166,16 +221,16 @@ def narration_db():
 
 
 def voice_onset(db, t):
-    """Where the voice around t starts, or None. Silent at t: the first voiced frame within SNAP_MAX after it,
-    if 50 ms of silence come just before it. Voiced at t: walk back to the 80 ms silence that began this
+    """Where the voice around t starts, or None. Silent at t: the first voiced frame within SNAP_LATER after it,
+    if most of the 50 ms just before it is silent. Voiced at t: walk back to the 80 ms silence that began this
     stretch of voice, within SNAP_MAX; None if the voice runs further back than that."""
     k0 = int(round(t * 100))
     if k0 >= len(db):
         return None
     if db[k0] <= VOICE_DB:
-        k = next((k for k in range(k0, min(len(db), k0 + int(SNAP_MAX * 100))) if db[k] > VOICE_DB), None)
-        if k is None or not all(db[j] < SILENT_DB for j in range(max(0, k - 5), k)):
-            return None
+        k = next((k for k in range(k0, min(len(db), k0 + int(SNAP_LATER * 100))) if db[k] > VOICE_DB), None)
+        if k is None or sum(db[j] < SILENT_DB for j in range(max(0, k - 5), k)) < 3:   # 30 of the 50 ms silent
+            return None                                                                   # (the rise may sit between)
         return k / 100
     run = 0
     for j in range(k0, max(-1, k0 - int(SNAP_MAX * 100)), -1):
@@ -194,7 +249,7 @@ def time_captions(caps, video_end, db):
             continue
         s = o - LEAD
         if s > c['t0'] + 0.005:
-            s = min(s, c['t0'] + SNAP_MAX, c['w'][0]['t1'])
+            s = min(s, c['t0'] + SNAP_LATER, c['w'][0]['t1'])
             later.append(s - c['t0']); c['t0'] = s
         elif s < c['t0'] - 0.005 and i:
             prv = caps[i - 1]                    # never onto the previous word, and the previous caption keeps MIN_DUR

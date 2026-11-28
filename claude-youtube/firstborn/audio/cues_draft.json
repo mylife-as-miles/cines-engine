@@ -1,0 +1,1113 @@
+{
+ "about": "audio/cues_draft.json, written by tools/cues_draft.py from design/SEQUENCES.md until the Engine writes out/cuesheet.json",
+ "total": 409.472,
+ "narration_end": 401.46,
+ "seqs": [
+  {
+   "id": "Q01",
+   "title": "Born and hired",
+   "start": 0.0,
+   "end": 24.34
+  },
+  {
+   "id": "Q02",
+   "title": "Version 1.0",
+   "start": 24.34,
+   "end": 74.88
+  },
+  {
+   "id": "Q03",
+   "title": "Promoted at six",
+   "start": 74.88,
+   "end": 137.04
+  },
+  {
+   "id": "Q04",
+   "title": "The teenage years",
+   "start": 137.04,
+   "end": 196.76
+  },
+  {
+   "id": "Q05",
+   "title": "The first salary",
+   "start": 196.76,
+   "end": 258.14
+  },
+  {
+   "id": "Q06",
+   "title": "Management at 30",
+   "start": 258.14,
+   "end": 294.76
+  },
+  {
+   "id": "Q07",
+   "title": "The honest part",
+   "start": 294.76,
+   "end": 342.66
+  },
+  {
+   "id": "Q08",
+   "title": "One thing you can do",
+   "start": 342.66,
+   "end": 365.94
+  },
+  {
+   "id": "Q09",
+   "title": "Call your elder sibling",
+   "start": 365.94,
+   "end": 401.472
+  },
+  {
+   "id": "END",
+   "title": "End screen",
+   "start": 401.472,
+   "end": 409.472
+  }
+ ],
+ "beds": [
+  {
+   "seq": "Q01",
+   "name": "music",
+   "t0": 0.0,
+   "t1": 24.34,
+   "p": {}
+  },
+  {
+   "seq": "Q02",
+   "name": "music",
+   "t0": 24.34,
+   "t1": 74.88,
+   "p": {}
+  },
+  {
+   "seq": "Q03",
+   "name": "music",
+   "t0": 74.88,
+   "t1": 137.04,
+   "p": {}
+  },
+  {
+   "seq": "Q04",
+   "name": "music",
+   "t0": 137.04,
+   "t1": 196.76,
+   "p": {}
+  },
+  {
+   "seq": "Q05",
+   "name": "music",
+   "t0": 196.76,
+   "t1": 258.14,
+   "p": {}
+  },
+  {
+   "seq": "Q06",
+   "name": "music",
+   "t0": 258.14,
+   "t1": 294.76,
+   "p": {}
+  },
+  {
+   "seq": "Q07",
+   "name": "music",
+   "t0": 294.76,
+   "t1": 342.66,
+   "p": {}
+  },
+  {
+   "seq": "Q08",
+   "name": "music",
+   "t0": 342.66,
+   "t1": 365.94,
+   "p": {}
+  },
+  {
+   "seq": "Q09",
+   "name": "music",
+   "t0": 365.94,
+   "t1": 401.472,
+   "p": {}
+  },
+  {
+   "seq": "END",
+   "name": "music",
+   "t0": 401.472,
+   "t1": 409.472,
+   "p": {}
+  },
+  {
+   "seq": "Q06",
+   "name": "party_murmur",
+   "t0": 263.3,
+   "t1": 292.12,
+   "p": {}
+  }
+ ],
+ "cues": [
+  {
+   "t": 1.52,
+   "name": "baby_cry",
+   "seq": "Q01",
+   "x": 0.45,
+   "word": "born.",
+   "word_t": 1.22,
+   "p": {}
+  },
+  {
+   "t": 2.02,
+   "name": "pop",
+   "seq": "Q01",
+   "x": null,
+   "word": "Welcome.",
+   "word_t": 2.02,
+   "p": {}
+  },
+  {
+   "t": 8.24,
+   "name": "whoosh_2",
+   "seq": "Q01",
+   "x": null,
+   "word": "hired.",
+   "word_t": 8.24,
+   "p": {}
+  },
+  {
+   "t": 9.57,
+   "name": "stamp",
+   "seq": "Q01",
+   "x": null,
+   "word": "interview.",
+   "word_t": 9.42,
+   "p": {}
+  },
+  {
+   "t": 10.77,
+   "name": "stamp",
+   "seq": "Q01",
+   "x": null,
+   "word": "contract.",
+   "word_t": 10.62,
+   "p": {}
+  },
+  {
+   "t": 11.91,
+   "name": "stamp",
+   "seq": "Q01",
+   "x": null,
+   "word": "salary.",
+   "word_t": 11.76,
+   "p": {}
+  },
+  {
+   "t": 14.05,
+   "name": "stamp",
+   "seq": "Q01",
+   "x": null,
+   "word": "letter.",
+   "word_t": 13.9,
+   "p": {}
+  },
+  {
+   "t": 18.34,
+   "name": "pop",
+   "seq": "Q01",
+   "x": 0.5,
+   "word": "first",
+   "word_t": 18.34,
+   "p": {}
+  },
+  {
+   "t": 23.18,
+   "name": "grow",
+   "seq": "Q01",
+   "x": null,
+   "word": "career.",
+   "word_t": 23.18,
+   "p": {}
+  },
+  {
+   "t": 24.24,
+   "name": "whoosh",
+   "seq": "Q01",
+   "x": null,
+   "word": "So",
+   "word_t": 24.34,
+   "p": {}
+  },
+  {
+   "t": 25.36,
+   "name": "footsteps",
+   "seq": "Q02",
+   "x": 0.4,
+   "word": "walk",
+   "word_t": 25.36,
+   "p": {
+    "n": 3,
+    "gap": 0.42
+   }
+  },
+  {
+   "t": 34.12,
+   "name": "wobble",
+   "seq": "Q02",
+   "x": null,
+   "word": "no",
+   "word_t": 34.12,
+   "p": {}
+  },
+  {
+   "t": 39.24,
+   "name": "sneeze",
+   "seq": "Q02",
+   "x": 0.5,
+   "word": "once,",
+   "word_t": 39.24,
+   "p": {}
+  },
+  {
+   "t": 41.7,
+   "name": "run",
+   "seq": "Q02",
+   "x": 0.55,
+   "word": "They",
+   "word_t": 41.7,
+   "p": {}
+  },
+  {
+   "t": 48.14,
+   "name": "sneeze",
+   "seq": "Q02",
+   "x": 0.6,
+   "word": "sneeze.",
+   "word_t": 48.14,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 50.88,
+   "name": "notify",
+   "seq": "Q02",
+   "x": null,
+   "word": "version",
+   "word_t": 50.88,
+   "p": {}
+  },
+  {
+   "t": 52.14,
+   "name": "pop",
+   "seq": "Q02",
+   "x": null,
+   "word": "full",
+   "word_t": 52.14,
+   "p": {}
+  },
+  {
+   "t": 52.44,
+   "name": "pop",
+   "seq": "Q02",
+   "x": null,
+   "word": "of",
+   "word_t": 52.44,
+   "p": {}
+  },
+  {
+   "t": 53.86,
+   "name": "typing",
+   "seq": "Q02",
+   "x": null,
+   "word": "fixing",
+   "word_t": 53.86,
+   "p": {
+    "n": 10
+   }
+  },
+  {
+   "t": 57.9,
+   "name": "card_land",
+   "seq": "Q02",
+   "x": null,
+   "word": "Oh,",
+   "word_t": 57.9,
+   "p": {}
+  },
+  {
+   "t": 59.6,
+   "name": "pop",
+   "seq": "Q02",
+   "x": null,
+   "word": "No",
+   "word_t": 59.6,
+   "p": {}
+  },
+  {
+   "t": 60.7,
+   "name": "pop",
+   "seq": "Q02",
+   "x": null,
+   "word": "no",
+   "word_t": 60.7,
+   "p": {}
+  },
+  {
+   "t": 62.1,
+   "name": "pop",
+   "seq": "Q02",
+   "x": null,
+   "word": "bed",
+   "word_t": 62.1,
+   "p": {}
+  },
+  {
+   "t": 69.58,
+   "name": "bulb",
+   "seq": "Q02",
+   "x": null,
+   "word": "experiment.",
+   "word_t": 69.58,
+   "p": {}
+  },
+  {
+   "t": 73.22,
+   "name": "ding",
+   "seq": "Q02",
+   "x": null,
+   "word": "stable",
+   "word_t": 73.22,
+   "p": {}
+  },
+  {
+   "t": 74.78,
+   "name": "whoosh",
+   "seq": "Q02",
+   "x": null,
+   "word": "Then",
+   "word_t": 74.88,
+   "p": {}
+  },
+  {
+   "t": 75.98,
+   "name": "baby_cry",
+   "seq": "Q03",
+   "x": 0.4,
+   "word": "arrives.",
+   "word_t": 75.78,
+   "p": {}
+  },
+  {
+   "t": 78.46,
+   "name": "swell",
+   "seq": "Q03",
+   "x": null,
+   "word": "know",
+   "word_t": 78.46,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 81.82,
+   "name": "stamp_yes",
+   "seq": "Q03",
+   "x": null,
+   "word": "promoted.",
+   "word_t": 81.82,
+   "p": {}
+  },
+  {
+   "t": 82.88,
+   "name": "pop",
+   "seq": "Q03",
+   "x": null,
+   "word": "Carry",
+   "word_t": 82.88,
+   "p": {}
+  },
+  {
+   "t": 84.02,
+   "name": "pop",
+   "seq": "Q03",
+   "x": null,
+   "word": "Watch",
+   "word_t": 84.02,
+   "p": {}
+  },
+  {
+   "t": 85.1,
+   "name": "pop",
+   "seq": "Q03",
+   "x": null,
+   "word": "Don't",
+   "word_t": 85.1,
+   "p": {}
+  },
+  {
+   "t": 94.4,
+   "name": "baby_cry",
+   "seq": "Q03",
+   "x": 0.4,
+   "word": "cries,",
+   "word_t": 94.2,
+   "p": {}
+  },
+  {
+   "t": 103.66,
+   "name": "gavel",
+   "seq": "Q03",
+   "x": 0.5,
+   "word": "passed.",
+   "word_t": 103.46,
+   "p": {}
+  },
+  {
+   "t": 107.9,
+   "name": "meter",
+   "seq": "Q03",
+   "x": null,
+   "word": "name.",
+   "word_t": 107.8,
+   "p": {}
+  },
+  {
+   "t": 108.86,
+   "name": "meter",
+   "seq": "Q03",
+   "x": null,
+   "word": "Middle",
+   "word_t": 108.76,
+   "p": {}
+  },
+  {
+   "t": 109.84,
+   "name": "meter",
+   "seq": "Q03",
+   "x": null,
+   "word": "Surname.",
+   "word_t": 109.74,
+   "p": {}
+  },
+  {
+   "t": 116.98,
+   "name": "footsteps",
+   "seq": "Q03",
+   "x": 0.6,
+   "word": "You",
+   "word_t": 116.98,
+   "p": {
+    "n": 3,
+    "gap": 0.38
+   }
+  },
+  {
+   "t": 120.82,
+   "name": "coins",
+   "seq": "Q03",
+   "x": 0.55,
+   "word": "all",
+   "word_t": 120.82,
+   "p": {}
+  },
+  {
+   "t": 124.0,
+   "name": "calculator",
+   "seq": "Q03",
+   "x": 0.6,
+   "word": "audits.",
+   "word_t": 123.7,
+   "p": {
+    "n": 6
+   }
+  },
+  {
+   "t": 132.36,
+   "name": "card_land",
+   "seq": "Q03",
+   "x": null,
+   "word": "poster.",
+   "word_t": 132.36,
+   "p": {}
+  },
+  {
+   "t": 136.94,
+   "name": "whoosh",
+   "seq": "Q03",
+   "x": null,
+   "word": "Now",
+   "word_t": 137.04,
+   "p": {}
+  },
+  {
+   "t": 141.12,
+   "name": "whoosh_2",
+   "seq": "Q04",
+   "x": null,
+   "word": "They",
+   "word_t": 141.12,
+   "p": {}
+  },
+  {
+   "t": 141.82,
+   "name": "whoosh_2",
+   "seq": "Q04",
+   "x": null,
+   "word": "family.",
+   "word_t": 141.76,
+   "p": {}
+  },
+  {
+   "t": 146.3,
+   "name": "phone_ring",
+   "seq": "Q04",
+   "x": 0.3,
+   "word": "calls",
+   "word_t": 146.3,
+   "p": {}
+  },
+  {
+   "t": 155.88,
+   "name": "pop",
+   "seq": "Q04",
+   "x": null,
+   "word": "Doctor,",
+   "word_t": 155.88,
+   "p": {}
+  },
+  {
+   "t": 156.5,
+   "name": "pop",
+   "seq": "Q04",
+   "x": null,
+   "word": "lawyer,",
+   "word_t": 156.5,
+   "p": {}
+  },
+  {
+   "t": 157.18,
+   "name": "pop",
+   "seq": "Q04",
+   "x": null,
+   "word": "engineer.",
+   "word_t": 157.18,
+   "p": {}
+  },
+  {
+   "t": 161.74,
+   "name": "sting_1",
+   "seq": "Q04",
+   "x": null,
+   "word": "doctor.",
+   "word_t": 161.44,
+   "p": {}
+  },
+  {
+   "t": 164.48,
+   "name": "pop",
+   "seq": "Q04",
+   "x": 0.4,
+   "word": "creative.",
+   "word_t": 164.48,
+   "p": {}
+  },
+  {
+   "t": 168.0,
+   "name": "swoon",
+   "seq": "Q04",
+   "x": 0.55,
+   "word": "hold",
+   "word_t": 168.0,
+   "p": {}
+  },
+  {
+   "t": 180.4,
+   "name": "pop",
+   "seq": "Q04",
+   "x": 0.6,
+   "word": "Good",
+   "word_t": 180.4,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 185.06,
+   "name": "pop",
+   "seq": "Q04",
+   "x": 0.3,
+   "word": "watching.",
+   "word_t": 185.06,
+   "p": {}
+  },
+  {
+   "t": 195.16,
+   "name": "pop",
+   "seq": "Q04",
+   "x": 0.5,
+   "word": "you.",
+   "word_t": 195.16,
+   "p": {}
+  },
+  {
+   "t": 195.38,
+   "name": "pop",
+   "seq": "Q04",
+   "x": 0.6,
+   "word": "you.",
+   "word_t": 195.16,
+   "p": {}
+  },
+  {
+   "t": 196.66,
+   "name": "whoosh",
+   "seq": "Q04",
+   "x": null,
+   "word": "graduate.",
+   "word_t": 196.76,
+   "p": {}
+  },
+  {
+   "t": 197.52,
+   "name": "pop",
+   "seq": "Q05",
+   "x": null,
+   "word": "You",
+   "word_t": 197.52,
+   "p": {}
+  },
+  {
+   "t": 199.4,
+   "name": "credit_alert",
+   "seq": "Q05",
+   "x": 0.55,
+   "word": "alert.",
+   "word_t": 199.4,
+   "p": {}
+  },
+  {
+   "t": 200.92,
+   "name": "ka_ching",
+   "seq": "Q05",
+   "x": 0.55,
+   "word": "champion,",
+   "word_t": 200.92,
+   "p": {}
+  },
+  {
+   "t": 206.74,
+   "name": "phone_ring",
+   "seq": "Q05",
+   "x": 0.6,
+   "word": "start.",
+   "word_t": 206.74,
+   "p": {}
+  },
+  {
+   "t": 214.84,
+   "name": "card_land",
+   "seq": "Q05",
+   "x": null,
+   "word": "School",
+   "word_t": 214.74,
+   "p": {}
+  },
+  {
+   "t": 216.02,
+   "name": "card_land",
+   "seq": "Q05",
+   "x": null,
+   "word": "Rent.",
+   "word_t": 215.92,
+   "p": {}
+  },
+  {
+   "t": 216.64,
+   "name": "card_land",
+   "seq": "Q05",
+   "x": null,
+   "word": "hospital",
+   "word_t": 216.7,
+   "p": {}
+  },
+  {
+   "t": 217.78,
+   "name": "card_land",
+   "seq": "Q05",
+   "x": null,
+   "word": "a",
+   "word_t": 217.84,
+   "p": {}
+  },
+  {
+   "t": 223.8,
+   "name": "stamp",
+   "seq": "Q05",
+   "x": null,
+   "word": "real,",
+   "word_t": 223.7,
+   "p": {}
+  },
+  {
+   "t": 229.26,
+   "name": "ka_ching",
+   "seq": "Q05",
+   "x": 0.5,
+   "word": "bank.",
+   "word_t": 229.26,
+   "p": {}
+  },
+  {
+   "t": 230.2,
+   "name": "pop",
+   "seq": "Q05",
+   "x": null,
+   "word": "No",
+   "word_t": 230.2,
+   "p": {}
+  },
+  {
+   "t": 231.42,
+   "name": "pop",
+   "seq": "Q05",
+   "x": null,
+   "word": "no",
+   "word_t": 231.42,
+   "p": {}
+  },
+  {
+   "t": 232.62,
+   "name": "pop",
+   "seq": "Q05",
+   "x": null,
+   "word": "no",
+   "word_t": 232.62,
+   "p": {}
+  },
+  {
+   "t": 236.7,
+   "name": "card_land",
+   "seq": "Q05",
+   "x": null,
+   "word": "rent?",
+   "word_t": 236.7,
+   "p": {}
+  },
+  {
+   "t": 239.26,
+   "name": "bulb",
+   "seq": "Q05",
+   "x": null,
+   "word": "provide.",
+   "word_t": 239.06,
+   "p": {}
+  },
+  {
+   "t": 242.92,
+   "name": "notify",
+   "seq": "Q05",
+   "x": 0.6,
+   "word": "account.",
+   "word_t": 242.92,
+   "p": {}
+  },
+  {
+   "t": 258.04,
+   "name": "whoosh",
+   "seq": "Q05",
+   "x": null,
+   "word": "By",
+   "word_t": 258.14,
+   "p": {}
+  },
+  {
+   "t": 261.76,
+   "name": "stamp_yes",
+   "seq": "Q06",
+   "x": null,
+   "word": "management.",
+   "word_t": 261.76,
+   "p": {}
+  },
+  {
+   "t": 263.3,
+   "name": "whoosh_2",
+   "seq": "Q06",
+   "x": null,
+   "word": "At",
+   "word_t": 263.3,
+   "p": {}
+  },
+  {
+   "t": 272.04,
+   "name": "clang",
+   "seq": "Q06",
+   "x": 0.5,
+   "word": "rice?",
+   "word_t": 271.94,
+   "p": {}
+  },
+  {
+   "t": 275.14,
+   "name": "deflate",
+   "seq": "Q06",
+   "x": null,
+   "word": "attend.",
+   "word_t": 275.14,
+   "p": {}
+  },
+  {
+   "t": 279.08,
+   "name": "whoosh_2",
+   "seq": "Q06",
+   "x": 0.35,
+   "word": "only",
+   "word_t": 279.08,
+   "p": {}
+  },
+  {
+   "t": 279.68,
+   "name": "whoosh_2",
+   "seq": "Q06",
+   "x": 0.65,
+   "word": "through",
+   "word_t": 279.76,
+   "p": {}
+  },
+  {
+   "t": 283.52,
+   "name": "gavel",
+   "seq": "Q06",
+   "x": 0.5,
+   "word": "Nations.",
+   "word_t": 283.52,
+   "p": {}
+  },
+  {
+   "t": 289.74,
+   "name": "swell",
+   "seq": "Q06",
+   "x": null,
+   "word": "when",
+   "word_t": 289.74,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 293.3,
+   "name": "sting_2",
+   "seq": "Q06",
+   "x": null,
+   "word": "When.",
+   "word_t": 293.3,
+   "p": {}
+  },
+  {
+   "t": 294.66,
+   "name": "whoosh",
+   "seq": "Q06",
+   "x": null,
+   "word": "Now,",
+   "word_t": 294.76,
+   "p": {
+    "gain_db": -4
+   }
+  },
+  {
+   "t": 310.22,
+   "name": "button_click",
+   "seq": "Q07",
+   "x": null,
+   "word": "Position,",
+   "word_t": 310.22,
+   "p": {}
+  },
+  {
+   "t": 327.26,
+   "name": "grow",
+   "seq": "Q07",
+   "x": null,
+   "word": "softly.",
+   "word_t": 327.26,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 329.22,
+   "name": "whoosh_2",
+   "seq": "Q07",
+   "x": null,
+   "word": "often",
+   "word_t": 329.22,
+   "p": {
+    "gain_db": -3
+   }
+  },
+  {
+   "t": 332.88,
+   "name": "whoosh_2",
+   "seq": "Q07",
+   "x": null,
+   "word": "often",
+   "word_t": 332.88,
+   "p": {
+    "gain_db": -3
+   }
+  },
+  {
+   "t": 342.56,
+   "name": "whoosh",
+   "seq": "Q07",
+   "x": null,
+   "word": "So",
+   "word_t": 342.66,
+   "p": {
+    "gain_db": -4
+   }
+  },
+  {
+   "t": 346.5,
+   "name": "pop",
+   "seq": "Q08",
+   "x": null,
+   "word": "carry.",
+   "word_t": 346.5,
+   "p": {}
+  },
+  {
+   "t": 347.68,
+   "name": "pop",
+   "seq": "Q08",
+   "x": null,
+   "word": "One",
+   "word_t": 347.68,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 348.14,
+   "name": "pop",
+   "seq": "Q08",
+   "x": null,
+   "word": "one",
+   "word_t": 348.14,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 349.18,
+   "name": "pop",
+   "seq": "Q08",
+   "x": null,
+   "word": "one",
+   "word_t": 349.18,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 357.96,
+   "name": "card_land",
+   "seq": "Q08",
+   "x": null,
+   "word": "plan.",
+   "word_t": 357.96,
+   "p": {}
+  },
+  {
+   "t": 360.82,
+   "name": "card_land",
+   "seq": "Q08",
+   "x": null,
+   "word": "person.",
+   "word_t": 360.82,
+   "p": {}
+  },
+  {
+   "t": 364.44,
+   "name": "grow",
+   "seq": "Q08",
+   "x": null,
+   "word": "asked.",
+   "word_t": 364.44,
+   "p": {}
+  },
+  {
+   "t": 365.84,
+   "name": "whoosh",
+   "seq": "Q08",
+   "x": null,
+   "word": "So",
+   "word_t": 365.94,
+   "p": {}
+  },
+  {
+   "t": 368.54,
+   "name": "card_land",
+   "seq": "Q09",
+   "x": null,
+   "word": "Born,",
+   "word_t": 368.54,
+   "p": {}
+  },
+  {
+   "t": 369.28,
+   "name": "card_land",
+   "seq": "Q09",
+   "x": null,
+   "word": "hired,",
+   "word_t": 369.28,
+   "p": {}
+  },
+  {
+   "t": 370.12,
+   "name": "card_land",
+   "seq": "Q09",
+   "x": null,
+   "word": "promoted,",
+   "word_t": 370.12,
+   "p": {}
+  },
+  {
+   "t": 371.3,
+   "name": "card_land",
+   "seq": "Q09",
+   "x": null,
+   "word": "never",
+   "word_t": 371.3,
+   "p": {}
+  },
+  {
+   "t": 375.1,
+   "name": "notify",
+   "seq": "Q09",
+   "x": null,
+   "word": "comments.",
+   "word_t": 375.1,
+   "p": {}
+  },
+  {
+   "t": 391.9,
+   "name": "phone_ring",
+   "seq": "Q09",
+   "x": 0.4,
+   "word": "today.",
+   "word_t": 391.9,
+   "p": {
+    "gain_db": -2
+   }
+  },
+  {
+   "t": 400.32,
+   "name": "pop",
+   "seq": "Q09",
+   "x": 0.35,
+   "word": "See",
+   "word_t": 400.32,
+   "p": {}
+  }
+ ],
+ "silences": [],
+ "ducks": []
+}

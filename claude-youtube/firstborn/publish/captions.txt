@@ -1,0 +1,157 @@
+# Caption text for firstborn.en.srt and .vtt. Rebuild with: python3 tools/make_captions.py
+#
+# One caption per line, in spoken order; " / " forces the line break (otherwise lines over 42 characters
+# are broken automatically). The words must match the narration's words (audio/vo/words.json, after the
+# tool removes Whisper's duplicated words and applies SPOKEN, its list of corrections), ignoring case and
+# punctuation: the tool takes each caption's times from its words, so a re-timed narration re-times them.
+# Changed words stop the tool with the place to fix here.
+#
+# Style: one voice speaks everything, so there are no speaker names; the lines the narrator speaks for the
+# family, the neighbours and "you" are in quotation marks. Typographic quotes and apostrophes are applied on
+# output. British (Nigerian) spelling: neighbour, apologising. Numbers one to ten in words ("bed at seven").
+#
+# Corrected by ear (Whisper small.en heard otherwise; checked with medium.en and large-v3-turbo on
+# 28 Nov 2026): "Go and buy salt" (not "Go in by salt"), "Middle name. Surname." (it dropped "name"),
+# "And the careers?" (not "In the careers,"), "Here is" (not "Here's"), "You know the look" and
+# "You graduate" (the "You" was lost in clean-up), "firstborn", "version 1.0", "Okafor's", "kobo".
+
+You have just been born. Welcome.
+Before you even take a proper breath, / I need to tell you something.
+You have also just been hired.
+No interview. No contract. No salary.
+And no resignation letter.
+Because this job does not have one.
+You are the firstborn.
+And in an African family, / that is not a position.
+It is a career.
+So let's walk through your entire life.
+Stay with me, because by the end,
+somebody in your family might be / about to call you for something.
+Right now, your parents have no idea / what they are doing.
+Zero. But they are very serious about it.
+You sneeze once, and it is an emergency.
+They carry you to the hospital / with a bag like they are relocating.
+Three years later, your little brother / sneezes the same sneeze.
+"Give him water."
+You are version 1.0, full of bugs,
+and your parents are fixing you, / live, in production.
+And the rules. Oh, the rules.
+No sweets, no biscuits before dinner, / bed at seven.
+Your younger sibling will be eating / biscuits at midnight in front of the TV
+and nobody will say a word.
+You were the experiment. / They were the scientists.
+Your siblings get the stable release.
+Then a baby arrives.
+And your mother looks at you. / You know the look.
+You are six years old / and you have just been promoted.
+"Carry your sister. Watch your brother. / Don't let him touch that."
+You are six. / You can barely carry your own school bag.
+Now, here is the rule of the house. / It is very simple.
+If the small one cries, you did it.
+You say, "I didn't even touch him."
+They say, "Then why is he crying?"
+That is it. That is the whole case.
+No evidence. Judgment already passed.
+And when you are really in trouble, / listen for it.
+"First name. Middle name. Surname."
+By the time they reach the surname, / you are already apologising
+and you still do not know the crime.
+"Go and buy salt." You go. You come back.
+"Where is the change?"
+You give it, all of it, to the last kobo, / because this family audits.
+And when your younger one misbehaves,
+"Look at your big brother. / Did he do this?"
+You are standing right there. / You are now a poster.
+A moving, breathing, / water-carrying poster.
+Now you are a teenager, and your grades / do not belong to you anymore.
+They belong to the family.
+Your parents' friends know your results / before you do.
+An auntie calls from another state.
+"I heard you came first."
+How? You have not even told anyone.
+And the careers? / You have exactly three choices.
+Doctor, lawyer, engineer.
+Four, if the family / is feeling adventurous,
+and the fourth one is also doctor.
+You say, / "I would like to do something creative."
+The room goes silent.
+Somebody has to go and hold your mother.
+And of course, / there is the neighbour's child.
+You have never spoken to this child,
+but this child is somehow / in your house every single day.
+"Mrs. Okafor's son is already / reading in his sleep."
+Good for him.
+Here is the part nobody says out loud.
+Your younger siblings are watching.
+If you succeed, they have a path. / If you fail, they have a warning.
+So you cannot fail.
+You are not studying for yourself.
+You are studying for / the whole queue behind you.
+You graduate. You get a job.
+First salary alert.
+You feel like a champion, / you open your banking app,
+and for exactly four minutes, / you are happy.
+Then the calls start.
+"My dear, I don't want to disturb you."
+That is how it always starts.
+They do not want to disturb you, / then the disturbance arrives.
+School fees. Rent. A hospital bill. / "Just a small thing."
+Some people call it black tax.
+Whatever you call it, the invoice is real, / and nobody asked if you have a budget.
+Congratulations, / you are now the family bank.
+No interest, no collateral, / and no customer care.
+You say, "But who is paying my own rent?"
+And somebody says, "God will provide."
+And he does. / But somehow, he keeps using your account.
+And the funny thing is, you do it. / Because you love them.
+When your younger sister walks / across that graduation stage,
+the one you paid for, / you will cry harder than she does.
+Even if you are pretending / it is dust in your eye.
+By 30, your job title has changed again.
+You are now management.
+At every wedding, every funeral, / every naming ceremony,
+you are somehow in charge of something.
+Somebody turns to you and says, / "Who is handling the rice?"
+"Why do I know about rice? / I came here to attend."
+Uncles who have not spoken in five years / will only talk through you.
+Two cousins are fighting, / and you are the United Nations.
+And then there is the question / that has followed you since you were 25.
+"So, when are we eating your rice?"
+Not if. When.
+Now, let's be honest for a minute.
+All of this is funny, and it is,
+but if you are a firstborn, / you are also tired.
+And there is a reason this role exists.
+It is not that you are the strongest. / It is that you were first.
+That is all. Position, not talent.
+Your parents did not test you and decide / you were the most capable.
+They were scared. They were learning.
+And you were the one standing closest.
+Here is the part worth knowing.
+A lot of that pressure is love,
+said in a language that does not know / how to say it softly.
+"Be responsible" often means / "we are afraid."
+"Don't disappoint us" often means / "we are counting on you
+because we do not know / who else to count on."
+You can understand that and still say, / "This is too heavy."
+So here is something / you can do this month.
+Pick one thing you carry.
+One bill, one phone call, / one decision that always lands on you.
+Say it out loud to the family.
+"This is now shared." / Not as a fight, as a plan.
+Give it a name and give it a person.
+You would be surprised how many people / were waiting to be asked.
+So that is your whole life.
+Born, hired, promoted, never paid.
+If you are a firstborn, / tell me in the comments.
+What is the most responsible thing / you have ever been asked to do?
+I want to see who has been / carrying the whole house.
+And if you are the baby of the family / laughing right now and thinking,
+"I don't know what she is talking about,"
+I know. That is the problem.
+Call your elder sibling today.
+Don't ask for anything.
+Just say, "How are you?"
+And watch what happens.
+They might not even know what to say.
+See you in the next one.

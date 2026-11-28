@@ -1,0 +1,8 @@
+{
+ "id": "T5",
+ "role": "end",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental closing music for the end of a warm, funny narrated video about family, about 60 seconds. Light highlife and Afro-pop colour: a bright clean electric guitar picking a sweet pattern, kalimba and marimba, a round bass, a gentle shaker and a soft talking drum; no drum kit. Around 100 BPM, warm, smiling and grateful. It moves gently, then winds down and ends cleanly on a final held major chord that rings out and stops. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

@@ -1410,6 +1410,1734 @@
     g.restore();
   };
 
+  // ================================================================ FIRSTBORN IN AN AFRICAN HOME: shared helpers for the new sets
+  // The sets below follow the same contract as the ones above (result(), anchors, ...Front, cached static layers).
+  const SKIN = ['#A9714F', '#8E5B3E', '#C08A63', '#7A4B32'];   // brown skin tones for photo busts (blank faces)
+  const NIGHT = [[0, '#F2D2A6'], [0.22, '#B49AB0'], [0.6, '#7B7AA6'], [1, '#5C5F90']];
+  const EVE = [[0, '#FFF6EA'], [0.45, '#F6DCC6'], [1, '#DDB2A6']];
+  // radial multiply grade (night, evening), centred on the light source
+  function grade(g, lx, ly, r0, r1, stops) {
+    overlay(g, 'multiply', () => { const gr = g.createRadialGradient(lx, ly, r0, lx, ly, r1); stops.forEach(s => gr.addColorStop(s[0], s[1])); g.fillStyle = gr; g.fillRect(0, 0, W, H); });
+  }
+  // Tiled floor in one-point perspective from y0 down: rows deepen toward the front, joints run to (vpx, vpy).
+  // o: col, alt (checker colour), line, vpx, vpy, step (joint spacing at y0), h0 (first row), grow, lw
+  function tileFloor(g, y0, o) {
+    const vpx = o.vpx == null ? W / 2 : o.vpx, vpy = o.vpy == null ? y0 - 540 : o.vpy, step = o.step || 160;
+    rectP(g, 0, y0, W, H - y0 + 2); paint(g, o.col, 0);
+    const rows = []; let y = y0, h = o.h0 || 32; while (y < H) { rows.push(y); y += h; h *= (o.grow || 1.3); } rows.push(Math.max(y, H + 1));
+    const xAt = (x0, yy) => vpx + (x0 - vpx) * (yy - vpy) / (y0 - vpy);
+    const R = Math.max(vpx, W - vpx) + step, xs = [];
+    for (let x = vpx - Math.ceil(R / step) * step + (o.off || 0); x <= vpx + R; x += step) xs.push(x);
+    if (o.alt) {
+      g.fillStyle = o.alt;
+      for (let i = 0; i < rows.length - 1; i++) for (let j = 0; j < xs.length - 1; j++) if ((i + j) % 2) { const a = rows[i], b = rows[i + 1]; polyP(g, [xAt(xs[j], a), a, xAt(xs[j + 1], a), a, xAt(xs[j + 1], b), b, xAt(xs[j], b), b]); g.fill(); }
+    }
+    g.strokeStyle = o.line; g.lineWidth = o.lw || 2.5;
+    g.beginPath(); for (const r of rows) { g.moveTo(0, r); g.lineTo(W, r); } for (const x of xs) { g.moveTo(x, y0); g.lineTo(xAt(x, H + 20), H + 20); } g.stroke();
+  }
+  // Burglar-proof bars over a window's glass (the Nigerian window): uprights, two rails, a row of loops between them.
+  function burglarBars(g, x, y, w, h, col) {
+    col = col || '#5A504C';
+    const n = Math.max(3, Math.round(w / 52));
+    g.save(); rectP(g, x, y, w, h); g.clip();
+    g.lineCap = 'butt';
+    const bar = (x1, y1, x2, y2, wd) => { line(g, x1, y1, x2, y2, wd + 3, INK); line(g, x1, y1, x2, y2, wd, col); };
+    for (const fy of [0.36, 0.64]) bar(x - 10, y + h * fy, x + w + 10, y + h * fy, 6);
+    for (let i = 1; i < n; i++) bar(x + w * i / n, y - 10, x + w * i / n, y + h + 10, 6);
+    for (let i = 0; i < n; i++) { const cx = x + w * (i + 0.5) / n, cy = y + h * 0.5, rx = w / n * 0.36, ry = h * 0.1; ellP(g, cx, cy, rx, ry); g.lineWidth = 7; g.strokeStyle = INK; g.stroke(); g.lineWidth = 4; g.strokeStyle = col; g.stroke(); }
+    g.restore();
+  }
+  // Louvre window (glass blades over the sky), the West African classroom/kitchen window. o: sky, seed, frame, bars, ink
+  function louvreWindow(g, x, y, w, h, o) {
+    o = o || {};
+    const frame = o.frame || '#E8D3AE', sh = dark(frame, 0.86), ink = o.ink || X.inkSoft, t = o.t || 18;
+    const ix = x + t, iy = y + t, iw = w - 2 * t, ih = h - 2 * t, cols = o.cols || (iw > 330 ? 2 : 1), mull = 14, pw = (iw - mull * (cols - 1)) / cols;
+    rectP(g, x, y, w, h); paint(g, frame, 0);
+    for (let c = 0; c < cols; c++) {
+      const px = ix + c * (pw + mull);
+      clipDo(g, () => rectP(g, px, iy, pw, ih), () => {
+        sky(g, ix, iy, iw, ih, o.sky || 'day', o.seed || 9);
+        const n = Math.max(5, Math.round(ih / 40)), bh = ih / n;
+        for (let i = 0; i < n; i++) {
+          const by = iy + i * bh;
+          polyP(g, [px - 2, by + 3, px + pw + 2, by + 3, px + pw + 2, by + bh * 0.62, px - 2, by + bh * 0.62]); g.fillStyle = 'rgba(255,255,255,0.22)'; g.fill();
+          line(g, px - 2, by + bh * 0.62, px + pw + 2, by + bh * 0.62, 2, rgba(ink, 0.55));
+          line(g, px - 2, by + 3, px + pw + 2, by + 3, 1.6, 'rgba(255,255,255,0.7)');
+        }
+        // clips that hold the blades
+        for (const cx of [px + 6, px + pw - 6]) { rectP(g, cx - 4, iy, 8, ih); paint(g, mix(frame, '#9AA3AA', 0.5), 0); }
+      });
+      polyP(g, [px - 7, iy - 7, px + pw + 7, iy - 7, px + pw, iy, px, iy, px, iy + ih, px - 7, iy + ih + 7]); paint(g, sh, 0);
+      rectP(g, px, iy, pw, ih); paint(g, null, 2.6, ink);
+      if (o.bars) burglarBars(g, px, iy, pw, ih, o.barCol);
+    }
+    rectP(g, x, y, w, h); paint(g, null, 3, ink);
+    if (o.sill !== false) { const sy = y + h; shape(g, () => rectP(g, x - w * 0.03, sy, w * 1.06, 24), frame, 3, sh, () => rectP(g, x - w * 0.03, sy + 13, w * 1.06, 12), ink); }
+  }
+  // A bust in a photo: rounded shoulders, a blank round head, one hat or hairstyle. Faces stay blank (no real people).
+  function bust(g, cx, base, r, skin, cloth, hat, hatCol) {
+    const lw = Math.max(1.4, r * 0.09);
+    if (hat === 'puffs') for (const sx of [-1, 1]) { ellP(g, cx + sx * r * 0.85, base - r * 3.05, r * 0.42, r * 0.42); paint(g, hatCol, lw); }
+    if (hat === 'gele') { // a fanned headwrap rising above the head
+      g.beginPath(); g.moveTo(cx - r * 1.05, base - r * 2.35); g.quadraticCurveTo(cx - r * 1.75, base - r * 3.7, cx - r * 0.5, base - r * 4.05);
+      g.quadraticCurveTo(cx + r * 0.2, base - r * 3.5, cx + r * 0.65, base - r * 4.1); g.quadraticCurveTo(cx + r * 1.85, base - r * 3.75, cx + r * 1.05, base - r * 2.35); g.closePath(); paint(g, hatCol, lw);
+      line(g, cx - r * 0.25, base - r * 3.6, cx + r * 0.3, base - r * 2.9, lw * 0.8);
+    }
+    // shoulders
+    g.beginPath(); g.moveTo(cx - r * 1.95, base + 6); g.quadraticCurveTo(cx - r * 2.0, base - r * 1.45, cx, base - r * 1.5); g.quadraticCurveTo(cx + r * 2.0, base - r * 1.45, cx + r * 1.95, base + 6); g.closePath();
+    paint(g, hat === 'cap' ? '#33333D' : cloth, lw);
+    if (hat === 'cap') { polyP(g, [cx - r * 0.5, base - r * 1.42, cx + r * 0.5, base - r * 1.42, cx, base - r * 0.7]); paint(g, '#FFFFFF', lw * 0.8); }
+    else { g.beginPath(); g.moveTo(cx - r * 0.42, base - r * 1.48); g.quadraticCurveTo(cx, base - r * 0.95, cx + r * 0.42, base - r * 1.48); paint(g, null, lw * 0.8); }
+    // head (and neck under it)
+    rectP(g, cx - r * 0.32, base - r * 1.9, r * 0.64, r * 0.5); paint(g, skin, 0);
+    ellP(g, cx, base - r * 2.45, r, r * 1.06); paint(g, skin, lw);
+    if (hat === 'hair' || hat === 'puffs') { g.save(); ellP(g, cx, base - r * 2.45, r, r * 1.06); g.clip(); ellP(g, cx, base - r * 3.05, r * 1.15, r * 0.82); g.fillStyle = hatCol; g.fill(); g.restore(); ellP(g, cx, base - r * 2.45, r, r * 1.06); paint(g, null, lw); }
+    if (hat === 'gele') { g.beginPath(); g.ellipse(cx, base - r * 2.95, r * 1.08, r * 0.62, 0, Math.PI, TAU); g.closePath(); paint(g, hatCol, lw); }
+    if (hat === 'fila') { g.save(); g.translate(cx + r * 0.1, base - r * 3.25); g.rotate(-0.16); rrP(g, -r * 0.95, -r * 0.42, r * 1.9, r * 0.72, [r * 0.5, r * 0.6, 3, 3]); paint(g, hatCol, lw); g.restore(); }
+    if (hat === 'cap') {
+      polyP(g, [cx - r * 1.45, base - r * 3.25, cx, base - r * 3.75, cx + r * 1.45, base - r * 3.25, cx, base - r * 2.8]); paint(g, '#2E2E36', lw);
+      line(g, cx + r * 0.2, base - r * 3.3, cx + r * 1.15, base - r * 2.75, lw * 1.2, '#F4BF54');
+    }
+    if (hat === 'wrap') { g.beginPath(); g.moveTo(cx - r * 1.6, base + 6); g.quadraticCurveTo(cx - r * 1.5, base - r * 1.6, cx, base - r * 1.7); g.quadraticCurveTo(cx + r * 1.5, base - r * 1.6, cx + r * 1.6, base + 6); g.closePath(); paint(g, hatCol, lw); }
+  }
+  // [x 0..1, shoulder base 0..1, head radius (fraction of the photo width), skin index or colour, cloth, hat, hat colour]
+  const PHOTO_KINDS = {
+    family: [[0.28, 0.98, 0.12, 1, '#3A8594', 'fila', '#2F7280'], [0.7, 0.98, 0.115, 0, '#E37F78', 'gele', '#F4BF54'], [0.43, 1.06, 0.085, 2, '#F4BF54', 'puffs', '#2A1E18'], [0.58, 1.06, 0.085, 3, '#7BAFE1', 'hair', '#2A1E18']],
+    couple: [[0.32, 1.0, 0.16, 1, '#FBF6EF', 'fila', '#E9A73F'], [0.69, 1.0, 0.15, 0, '#E9A73F', 'gele', '#E9A73F']],
+    grad: [[0.5, 1.0, 0.2, 2, '#33333D', 'cap', '#2E2E36']],
+    baby: [[0.5, 1.0, 0.22, '#FCEBCB', '#3A8594', 'wrap', '#3A8594']],
+    elders: [[0.32, 1.0, 0.15, 3, '#8085A7', 'fila', '#6E5893'], [0.69, 1.0, 0.145, 1, '#77CC81', 'gele', '#3A8594']],
+  };
+  // A framed photo on the wall. kind: family | couple | grad | baby | elders. o: frame, bg (backdrop), wallSh
+  function photo(g, x, y, w, h, kind, o) {
+    o = o || {};
+    const fr = o.frame || '#C98A3E', frSh = dark(fr, 0.8), t = Math.max(9, Math.min(w, h) * 0.075);
+    rectP(g, x + 8, y + 10, w, h); paint(g, o.wallSh || 'rgba(120,60,30,0.16)', 0);
+    shape(g, () => rectP(g, x, y, w, h), fr, LW.small, frSh, () => polyP(g, [x + w, y, x + w, y + h, x, y + h, x + t, y + h - t, x + w - t, y + h - t, x + w - t, y + t]));
+    const ix = x + t, iy = y + t, iw = w - 2 * t, ih = h - 2 * t;
+    clipDo(g, () => rectP(g, ix, iy, iw, ih), () => {
+      g.fillStyle = o.bg || '#A9CFE0'; g.fillRect(ix, iy, iw, ih);
+      ellP(g, ix + iw / 2, iy + ih * 0.42, iw * 0.46, ih * 0.42); g.fillStyle = 'rgba(255,255,255,0.25)'; g.fill();
+      for (const p of (PHOTO_KINDS[kind] || PHOTO_KINDS.family)) bust(g, ix + iw * p[0], iy + ih * p[1], iw * p[2], typeof p[3] === 'number' ? SKIN[p[3]] : p[3], p[4], p[5], p[6]);
+      polyP(g, [ix + iw * 0.62, iy, ix + iw * 0.8, iy, ix + iw * 0.3, iy + ih, ix + iw * 0.12, iy + ih]); g.fillStyle = 'rgba(255,255,255,0.13)'; g.fill();
+    });
+    rectP(g, ix, iy, iw, ih); paint(g, null, LW.detail);
+  }
+  // A lace doily (the sofa-back cover): straight top, scalloped hem, a row of holes.
+  function doily(g, cx, y, w, h, col) {
+    const n = Math.max(4, Math.round(w / 26)), r = w / n / 2, x0 = cx - w / 2;
+    const path = () => { g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + w, y); g.lineTo(x0 + w, y + h); for (let i = n - 1; i >= 0; i--) g.arc(x0 + (i + 0.5) * w / n, y + h, r, 0, Math.PI, false); g.closePath(); };
+    path(); paint(g, col || '#FFF6E6', LW.detail);
+    g.fillStyle = dark(col || '#FFF6E6', 0.86);
+    for (let i = 0; i < n; i++) { ellP(g, x0 + (i + 0.5) * w / n, y + h + r * 0.15, r * 0.32, r * 0.32); g.fill(); }
+    for (let i = 0; i < n - 1; i++) { ellP(g, x0 + (i + 1) * w / n, y + h * 0.55, r * 0.26, r * 0.26); g.fill(); }
+  }
+  // A clock face with a rim colour of its own (C.clockRim is swapped for the call)
+  function clockFaceRim(g, x, y, r, rim, sh) { const k = C.clockRim; C.clockRim = rim || k; clockFace(g, x, y, r, sh); C.clockRim = k; }
+  // Standing fan: base, pole and the motor seen from the front (static). Blades and cage are live (fanFace).
+  function fanStatic(g, x, fy, s, P) {
+    const hy = fy - 500 * s;
+    floorShadow(g, x, fy + 4, 86 * s, 13 * s, P.floorSh, 4);
+    shape(g, () => { g.beginPath(); g.moveTo(x - 74 * s, fy); g.quadraticCurveTo(x - 70 * s, fy - 30 * s, x, fy - 32 * s); g.quadraticCurveTo(x + 70 * s, fy - 30 * s, x + 74 * s, fy); g.closePath(); }, P.fanBody, LW.small, P.fanBodySh, () => rectP(g, x + 12 * s, fy - 40 * s, 80 * s, 50 * s));
+    shape(g, () => rectP(g, x - 10 * s, fy - 260 * s, 20 * s, 230 * s), P.fanBody, LW.small, P.fanBodySh, () => rectP(g, x + 3 * s, fy - 270 * s, 8 * s, 250 * s));
+    shape(g, () => rrP(g, x - 16 * s, fy - 282 * s, 32 * s, 40 * s, 6 * s), P.fanBody, LW.small, P.fanBodySh, () => rectP(g, x + 4 * s, fy - 290 * s, 16 * s, 50 * s));
+    shape(g, () => rectP(g, x - 6 * s, hy, 12 * s, fy - 282 * s - hy), P.fanPole || '#C9CED3', LW.small);
+    shape(g, () => rrP(g, x - 34 * s, hy - 20 * s, 68 * s, 64 * s, 22 * s), P.fanBody, LW.small, P.fanBodySh, () => rectP(g, x + 8 * s, hy - 30 * s, 40 * s, 80 * s));
+    return { x, y: hy - 8 * s, r: 92 * s };
+  }
+  function fanFace(g, F, a, P) {
+    const { x, y, r } = F;
+    ellP(g, x, y, r, r); g.fillStyle = 'rgba(255,255,255,0.16)'; g.fill();
+    for (let i = 0; i < 3; i++) {
+      g.save(); g.translate(x, y); g.rotate(a + i * TAU / 3);
+      g.beginPath(); g.moveTo(r * 0.12, -r * 0.08); g.bezierCurveTo(r * 0.3, -r * 0.5, r * 0.86, -r * 0.42, r * 0.84, -r * 0.02); g.bezierCurveTo(r * 0.8, r * 0.24, r * 0.34, r * 0.22, r * 0.12, r * 0.08); g.closePath();
+      paint(g, P.blade, LW.detail);
+      g.beginPath(); g.moveTo(r * 0.2, -r * 0.03); g.bezierCurveTo(r * 0.4, -r * 0.3, r * 0.7, -r * 0.3, r * 0.78, -r * 0.08); g.lineTo(r * 0.76, r * 0.04); g.bezierCurveTo(r * 0.6, -r * 0.06, r * 0.4, -r * 0.04, r * 0.2, r * 0.03); g.closePath(); g.fillStyle = P.bladeSh; g.fill();
+      g.restore();
+    }
+    g.strokeStyle = rgba(INK, 0.75); g.lineWidth = 1.5; g.beginPath();
+    for (let i = 0; i < 18; i++) { const b = i / 18 * TAU; g.moveTo(x + Math.cos(b) * r * 0.2, y + Math.sin(b) * r * 0.2); g.lineTo(x + Math.cos(b) * r, y + Math.sin(b) * r); } g.stroke();
+    ellP(g, x, y, r * 0.6, r * 0.6); g.lineWidth = 1.5; g.stroke();
+    ellP(g, x, y, r, r); paint(g, null, LW.small + 1.5, INK); ellP(g, x, y, r - 3, r - 3); g.lineWidth = 2.5; g.strokeStyle = P.fanBody; g.stroke();
+    ellP(g, x, y, r * 0.2, r * 0.2); paint(g, P.fanBody, LW.small);
+    ellP(g, x, y, r * 0.09, r * 0.09); paint(g, P.blade, LW.detail);
+  }
+  // TV: bezel, little feet, and the glass (dark when off, pale glowing blue when on)
+  function tvBody(g, x, y, w, h) {
+    shape(g, () => polyP(g, [x + w * 0.3, y + h + 6, x + w * 0.36, y + h + 6, x + w * 0.33, y + h + 22, x + w * 0.24, y + h + 22]), '#2B2D33', LW.small);
+    shape(g, () => polyP(g, [x + w * 0.64, y + h + 6, x + w * 0.7, y + h + 6, x + w * 0.76, y + h + 22, x + w * 0.67, y + h + 22]), '#2B2D33', LW.small);
+    shape(g, () => rrP(g, x - 9, y - 9, w + 18, h + 18, 7), '#34363D', LW.small, '#26282E', () => rectP(g, x - 9, y + h, w + 18, 10));
+    ellP(g, x + w / 2, y + h + 4, 2.5, 2.5); g.fillStyle = '#E5534B'; g.fill();
+  }
+  function tvGlass(g, x, y, w, h, on, flick) {
+    if (on) {
+      const k = flick == null ? 0 : flick;
+      rectP(g, x, y, w, h); paint(g, mix('#CFEFF7', '#E8F2FF', k), 0);
+      ellP(g, x + w * 0.5, y + h * 0.5, w * 0.42, h * 0.38); g.fillStyle = 'rgba(255,255,255,0.55)'; g.fill();
+      rectP(g, x, y + h * (0.55 + 0.1 * k), w, h * 0.45); g.fillStyle = rgba('#9FD3E6', 0.35); g.fill();
+    } else {
+      rectP(g, x, y, w, h); paint(g, '#3A4150', 0);
+      polyP(g, [x + w * 0.55, y, x + w * 0.75, y, x + w * 0.4, y + h, x + w * 0.2, y + h]); g.fillStyle = 'rgba(255,255,255,0.08)'; g.fill();
+    }
+    rectP(g, x, y, w, h); paint(g, null, LW.detail);
+  }
+  // A pot of jollof rice: a wide aluminium pot (or an enamel one), orange rice heaped over the rim, a ladle. (cx, by) = pot bottom.
+  function ricePot(g, cx, by, s, o) {
+    o = o || {};
+    const w = 300 * s, h = 190 * s, top = by - h, pot = o.pot || '#C9CED3', potSh = o.potSh || '#A9B0B8', rice = o.rice || '#F08A3C', riceSh = o.riceSh || '#D9712E';
+    if (o.shadow !== false) floorShadow(g, cx, by + 4, w * 0.62, 16 * s, o.floorSh || 'rgba(120,60,30,0.3)', 5);
+    // handles
+    for (const sx of [-1, 1]) { g.beginPath(); g.ellipse(cx + sx * w * 0.53, top + h * 0.28, 26 * s, 18 * s, 0, 0, TAU); g.lineWidth = 11 * s + 2 * LW.small; g.strokeStyle = INK; g.stroke(); g.lineWidth = 11 * s; g.strokeStyle = potSh; g.stroke(); }
+    // rice heap (behind the front rim)
+    const heap = () => { g.beginPath(); g.moveTo(cx - w * 0.47, top + 6 * s); g.bezierCurveTo(cx - w * 0.42, top - h * 0.4, cx - w * 0.15, top - h * 0.62, cx + w * 0.02, top - h * 0.6); g.bezierCurveTo(cx + w * 0.22, top - h * 0.6, cx + w * 0.44, top - h * 0.38, cx + w * 0.47, top + 6 * s); g.closePath(); };
+    shape(g, heap, rice, LW.small, riceSh, () => { g.beginPath(); g.ellipse(cx + w * 0.32, top - h * 0.05, w * 0.3, h * 0.42, -0.4, 0, TAU); });
+    // grains and a few peas/peppers on top
+    const r = rng(o.seed || 17);
+    for (let i = 0; i < 26; i++) { const a = r() * Math.PI, rr = r(); const gx = cx + Math.cos(a) * w * 0.4 * rr, gy = top - Math.sin(a) * h * 0.52 * rr + 4 * s; ellP(g, gx, gy, 5 * s, 2.6 * s); g.fillStyle = r() < 0.15 ? '#77CC81' : r() < 0.2 ? '#E5534B' : rgba('#FFE2B0', 0.8); g.fill(); }
+    // the pot body: rim, body with one darker side
+    shape(g, () => { g.beginPath(); g.moveTo(cx - w / 2, top); g.lineTo(cx + w / 2, top); g.lineTo(cx + w * 0.47, by - 14 * s); g.quadraticCurveTo(cx + w * 0.46, by, cx + w * 0.38, by); g.lineTo(cx - w * 0.38, by); g.quadraticCurveTo(cx - w * 0.46, by, cx - w * 0.47, by - 14 * s); g.closePath(); }, pot, LW.big, potSh,
+      () => polyP(g, [cx + w * 0.18, top, cx + w * 0.6, top, cx + w * 0.6, by + 10, cx + w * 0.12, by + 10]));
+    shape(g, () => rrP(g, cx - w * 0.53, top - 10 * s, w * 1.06, 22 * s, 10 * s), pot, LW.small, potSh, () => rectP(g, cx - w * 0.6, top + 2 * s, w * 1.2, 20 * s));
+    line(g, cx - w * 0.36, top + h * 0.3, cx - w * 0.36, by - h * 0.18, 5 * s, 'rgba(255,255,255,0.55)');
+    if (o.ladle !== false) {
+      g.save(); g.translate(cx + w * 0.16, top - h * 0.45); g.rotate(0.5);
+      shape(g, () => rrP(g, -8 * s, -150 * s, 16 * s, 160 * s, 8 * s), '#B9772F', LW.small, '#9C6227', () => rectP(g, 1 * s, -160 * s, 10 * s, 180 * s));
+      g.restore();
+    }
+    if (o.heart) { // the aunties' rice: a little heart on the heap
+      const hx = cx - w * 0.06, hy = top - h * 0.34, hs = 26 * s;
+      g.beginPath(); g.moveTo(hx, hy + hs * 0.9); g.bezierCurveTo(hx - hs * 1.4, hy, hx - hs * 0.6, hy - hs * 1.0, hx, hy - hs * 0.35); g.bezierCurveTo(hx + hs * 0.6, hy - hs * 1.0, hx + hs * 1.4, hy, hx, hy + hs * 0.9); g.closePath(); paint(g, '#E5534B', LW.small);
+    }
+    return { x: cx, y: top - h * 0.3, top: top - h * 0.6 };
+  }
+  // A dining chair. view 'side' (in profile, facing +1 right or -1 left) or 'back' (seen from the front of the table: the back rises behind it)
+  function chair(g, x, fy, s, view, facing, col, colSh, cush) {
+    const seatY = fy - 205 * s, f = facing || 1;
+    if (view === 'back') {
+      for (const sx of [-1, 1]) shape(g, () => rectP(g, x + sx * 92 * s - 9 * s, seatY - 300 * s, 18 * s, 300 * s + 205 * s), col, LW.small, colSh, () => rectP(g, x + sx * 92 * s + 2 * s, seatY - 300 * s, 9 * s, 520 * s));
+      shape(g, () => rrP(g, x - 104 * s, seatY - 300 * s, 208 * s, 46 * s, 10 * s), col, LW.small, colSh, () => rectP(g, x - 110 * s, seatY - 272 * s, 220 * s, 22 * s));
+      for (const fx of [-0.4, 0, 0.4]) shape(g, () => rectP(g, x + fx * 92 * s - 6 * s, seatY - 254 * s, 12 * s, 200 * s), col, LW.detail);
+      shape(g, () => rectP(g, x - 100 * s, seatY - 60 * s, 200 * s, 26 * s), col, LW.small, colSh, () => rectP(g, x - 100 * s, seatY - 46 * s, 200 * s, 14 * s));
+      return { x, y: seatY };
+    }
+    const bx = x - f * 80 * s;
+    shape(g, () => polyP(g, [bx - 9 * s, seatY, bx + 9 * s, seatY, bx + 9 * s - f * 10 * s, seatY - 280 * s, bx - 9 * s - f * 10 * s, seatY - 280 * s]), col, LW.small, colSh, () => rectP(g, bx, seatY - 290 * s, 12 * s, 300 * s));
+    shape(g, () => rrP(g, bx - 14 * s - f * 12 * s, seatY - 300 * s, 28 * s, 140 * s, 10 * s), col, LW.small, colSh, () => rectP(g, bx - f * 12 * s, seatY - 310 * s, 18 * s, 160 * s));
+    for (const lx of [x - 74 * s, x + 74 * s]) shape(g, () => rectP(g, lx - 8 * s, seatY, 16 * s, 205 * s), col, LW.small, colSh, () => rectP(g, lx + 1 * s, seatY, 7 * s, 205 * s));
+    line(g, x - 70 * s, seatY + 120 * s, x + 70 * s, seatY + 120 * s, 8 * s + 2 * LW.detail); line(g, x - 70 * s, seatY + 120 * s, x + 70 * s, seatY + 120 * s, 8 * s, col);
+    shape(g, () => rrP(g, x - 92 * s, seatY - 10 * s, 184 * s, 24 * s, 6 * s), col, LW.small, colSh, () => rectP(g, x - 92 * s, seatY + 4 * s, 184 * s, 12 * s));
+    if (cush) shape(g, () => rrP(g, x - 82 * s, seatY - 26 * s, 164 * s, 20 * s, 8 * s), cush, LW.detail, dark(cush, 0.85), () => rectP(g, x - 82 * s, seatY - 14 * s, 164 * s, 10 * s));
+    return { x, y: seatY };
+  }
+  // money text: draws '₦' as an N with two bars (the kit font has no naira sign), otherwise fillText. align: left | center | right
+  function moneyText(g, text, x, y, align) {
+    text = String(text);
+    if (text.indexOf('₦') < 0) { g.textAlign = align || 'left'; g.fillText(text, x, y); return g.measureText(text).width; }
+    const parts = text.split('₦'), wN = g.measureText('N').width;
+    let tw = 0; parts.forEach((p, i) => { tw += g.measureText(p).width; if (i < parts.length - 1) tw += wN; });
+    let cx = align === 'center' ? x - tw / 2 : align === 'right' ? x - tw : x;
+    const m = /(\d+(?:\.\d+)?)px/.exec(g.font), px = m ? +m[1] : 40;
+    const base = g.textBaseline;
+    g.textAlign = 'left';
+    parts.forEach((p, i) => {
+      g.fillText(p, cx, y); cx += g.measureText(p).width;
+      if (i < parts.length - 1) {
+        g.fillText('N', cx, y);
+        // bar heights relative to the baseline (cap height ~0.7 em); middle baseline shifts them
+        const off = base === 'middle' ? px * 0.35 : base === 'top' ? px * 0.85 : 0;
+        for (const f of [0.3, 0.46]) { g.fillRect(cx - px * 0.07, y + off - px * f - px * 0.035, wN + px * 0.14, px * 0.07); }
+        cx += wN;
+      }
+    });
+    return tw;
+  }
+  // text that shrinks to fit a width (never under min px)
+  function fitFont(g, text, weight, px, maxW, min) { let p = px; g.font = font(weight, p); while (p > (min || 40) && g.measureText(String(text)).width > maxW) { p -= 2; g.font = font(weight, p); } return p; }
+
+  // ================================================================ MATERNITY (Q01 "born", Q02 the young parents): a bright hospital room
+  // SETS.maternity(g, o): o.sky ('morning' default | day | sunset | evening | night), o.bed (false hides the hospital bed), o.t (monitor pulse),
+  // o.clock. Anchors: cot (the mattress, where the newborn lies), cotFloor, parentL, parentR (standing either side of the cot),
+  // bed (sitting on the bed edge), bedHead (head on the pillow), left, center, right, window, monitor, clock.
+  // SETS.maternityFront: the clear front wall of the cot (draw it after the baby so the baby lies inside).
+  const MT = { FY: 830, wall: '#FBEFD6', wallSh: '#F0D6B4', wain: '#BFE3E0', wainSh: '#A8D3CE', rail: '#7FC4C9', floor: '#F5D9B2', floorAlt: '#F1CFA4', floorLine: '#E2BA8A', floorSh: '#D6A576',
+    metal: '#C9D3DC', metalSh: '#A9B6C2', plastic: '#B6CEE6', plasticSh: '#9DB8D4', sheet: '#FFFFFF', sheetSh: '#E3EBEF', blanket: '#F2A57E', blanketSh: '#DD8C66', curtain: '#9DCFC6', curtainSh: '#86BDB4',
+    cot: { cx: 860, top: 598, bot: 714, wt: 350, wb: 312, mat: 652 } };
+  function cotBack(g) {
+    const K = MT.cot, cx = K.cx;
+    floorShadow(g, cx, 942, 200, 15, MT.floorSh, 5);
+    // trolley: two posts, a cabinet with a drawer, a foot bar on castors
+    for (const sx of [-1, 1]) shape(g, () => rectP(g, cx + sx * 128 - 9, 730, 18, 196), MT.metal, LW.small, MT.metalSh, () => rectP(g, cx + sx * 128 + 1, 730, 8, 196));
+    shape(g, () => rrP(g, cx - 168, 906, 336, 18, 8), MT.metal, LW.small, MT.metalSh, () => rectP(g, cx - 170, 916, 340, 10));
+    for (const sx of [-1, 1]) { shape(g, () => rectP(g, cx + sx * 150 - 6, 922, 12, 12), MT.metalSh, LW.detail); ellP(g, cx + sx * 150, 940, 12, 12); paint(g, '#55575C', LW.small); }
+    shape(g, () => rrP(g, cx - 140, 770, 280, 104, 10), MT.plastic, LW.big, MT.plasticSh, () => rectP(g, cx - 140, 846, 280, 30));
+    line(g, cx - 140, 820, cx + 140, 820, LW.detail);
+    shape(g, () => rrP(g, cx - 40, 790, 80, 14, 7), '#FFFFFF', LW.detail);
+    // tray under the basin
+    shape(g, () => rrP(g, cx - K.wb / 2 - 14, K.bot, K.wb + 28, 22, 8), MT.metal, LW.small, MT.metalSh, () => rectP(g, cx - 200, K.bot + 12, 400, 12));
+    // the basin seen through its clear front: back wall tint, mattress, a sheet with little stars
+    const basin = () => polyP(g, [cx - K.wt / 2, K.top, cx + K.wt / 2, K.top, cx + K.wb / 2, K.bot, cx - K.wb / 2, K.bot]);
+    basin(); paint(g, 'rgba(222,242,246,0.9)', 0);
+    clipDo(g, basin, () => {
+      rectP(g, cx - 200, K.mat, 400, K.bot - K.mat); paint(g, '#FFFFFF', 0);
+      rectP(g, cx - 200, K.mat, 400, 12); paint(g, '#EAF1F4', 0);
+      line(g, cx - 200, K.mat, cx + 200, K.mat, LW.detail);
+      g.fillStyle = '#F4BF54'; for (let i = 0; i < 6; i++) { ellP(g, cx - 130 + i * 52, K.mat + 34 + (i % 2) * 14, 4.5, 4.5); g.fill(); }
+    });
+    line(g, cx - K.wt / 2 + 14, K.top + 10, cx + K.wt / 2 - 14, K.top + 10, LW.detail, rgba(INK, 0.4));
+  }
+  function cotFront(g) {
+    const K = MT.cot, cx = K.cx;
+    const basin = () => polyP(g, [cx - K.wt / 2, K.top, cx + K.wt / 2, K.top, cx + K.wb / 2, K.bot, cx - K.wb / 2, K.bot]);
+    basin(); g.fillStyle = 'rgba(214,238,242,0.26)'; g.fill();
+    clipDo(g, basin, () => {
+      g.fillStyle = 'rgba(255,255,255,0.5)';
+      polyP(g, [cx + 70, K.top, cx + 104, K.top, cx + 64, K.bot, cx + 30, K.bot]); g.fill();
+      polyP(g, [cx + 120, K.top, cx + 134, K.top, cx + 94, K.bot, cx + 80, K.bot]); g.fill();
+    });
+    basin(); paint(g, null, LW.small);
+    shape(g, () => rrP(g, cx - K.wt / 2 - 6, K.top - 8, K.wt + 12, 16, 8), '#E6F4F7', LW.small);
+    // a blank name card on the front
+    shape(g, () => rrP(g, cx - 150, K.bot - 52, 96, 40, 8), '#FFFFFF', LW.detail, '#E3EBEF', () => rectP(g, cx - 150, K.bot - 26, 96, 14));
+    g.fillStyle = MT.rail; polyP(g, [cx - 136, K.bot - 40, cx - 118, K.bot - 40, cx - 127, K.bot - 24]); g.fill();
+    line(g, cx - 108, K.bot - 38, cx - 66, K.bot - 38, 3, '#C9D3DC'); line(g, cx - 108, K.bot - 28, cx - 80, K.bot - 28, 3, '#C9D3DC');
+  }
+  function hospitalBed(g) {
+    floorShadow(g, 1590, 936, 330, 18, MT.floorSh, 6);
+    for (const lx of [1350, 1820]) { shape(g, () => rectP(g, lx - 8, 790, 16, 120), MT.metal, LW.small, MT.metalSh, () => rectP(g, lx + 1, 790, 7, 120)); ellP(g, lx, 922, 15, 15); paint(g, '#55575C', LW.small); }
+    shape(g, () => rrP(g, 1300, 776, 580, 26, 8), MT.metal, LW.small, MT.metalSh, () => rectP(g, 1300, 790, 580, 14));
+    // head board (right) and foot board (left)
+    shape(g, () => rrP(g, 1846, 492, 46, 330, 16), MT.plastic, LW.big, MT.plasticSh, () => rectP(g, 1874, 484, 30, 350));
+    shape(g, () => rrP(g, 1282, 590, 42, 232, 14), MT.plastic, LW.big, MT.plasticSh, () => rectP(g, 1308, 584, 30, 250));
+    // mattress, pillow, a blanket folded back near the pillow and hanging over the near side
+    shape(g, () => rrP(g, 1316, 668, 536, 60, 16), MT.sheet, LW.big, MT.sheetSh, () => rectP(g, 1310, 708, 550, 30));
+    shape(g, () => { g.beginPath(); g.moveTo(1690, 668); g.quadraticCurveTo(1680, 622, 1716, 616); g.quadraticCurveTo(1770, 610, 1830, 618); g.quadraticCurveTo(1852, 636, 1840, 668); g.closePath(); }, MT.sheet, LW.small, MT.sheetSh, () => rectP(g, 1690, 650, 170, 20));
+    const bl = () => { g.beginPath(); g.moveTo(1334, 662); g.quadraticCurveTo(1480, 652, 1640, 660); g.quadraticCurveTo(1652, 700, 1646, 752); g.quadraticCurveTo(1600, 766, 1560, 756); g.quadraticCurveTo(1500, 770, 1440, 756); g.quadraticCurveTo(1390, 768, 1344, 756); g.quadraticCurveTo(1326, 704, 1334, 662); g.closePath(); };
+    shape(g, bl, MT.blanket, LW.big, MT.blanketSh, () => { g.beginPath(); g.moveTo(1300, 728); g.quadraticCurveTo(1480, 716, 1670, 726); g.lineTo(1670, 800); g.lineTo(1300, 800); g.closePath(); });
+    shape(g, () => { g.beginPath(); g.moveTo(1600, 659); g.quadraticCurveTo(1622, 657, 1642, 660); g.quadraticCurveTo(1654, 704, 1648, 750); g.quadraticCurveTo(1620, 742, 1604, 748); g.quadraticCurveTo(1610, 700, 1600, 659); g.closePath(); }, MT.sheet, LW.small, MT.sheetSh, () => rectP(g, 1590, 720, 70, 40));
+    g.strokeStyle = INK; g.lineWidth = LW.detail; g.beginPath(); g.moveTo(1336, 690); g.quadraticCurveTo(1470, 682, 1600, 688); g.stroke();
+  }
+  function maternityStatic(g, o) {
+    const FY = MT.FY, skyK = o.sky || 'morning';
+    rectP(g, 0, 0, W, FY); paint(g, MT.wall, 0);
+    rectP(g, 0, 560, W, FY - 560); paint(g, MT.wain, 0);
+    tileFloor(g, FY, { col: MT.floor, alt: MT.floorAlt, line: MT.floorLine, vpx: 900, vpy: 300, step: 180, h0: 34 });
+    // window with a roller blind
+    windowBox(g, 230, 140, 480, 360, { sky: skyK, seed: 51, frame: '#F6E6C8', ink: X.inkSoft, t: 24, mull: 20 });
+    shape(g, () => rectP(g, 254, 164, 432, 84), '#FFF7E6', LW.detail, '#F0E3C6', () => rectP(g, 254, 228, 432, 20), X.inkSoft);
+    shape(g, () => rrP(g, 240, 150, 460, 22, 11), '#FFFFFF', LW.detail, null, null, X.inkSoft);
+    line(g, 640, 248, 640, 300, 2, X.inkSoft); ellP(g, 640, 306, 6, 6); paint(g, '#FFFFFF', 2, X.inkSoft);
+    // privacy curtain on its ceiling track (right)
+    line(g, 1560, 26, W + 10, 26, 6, '#B9C3CC'); line(g, 1560, 26, W + 10, 26, 2, INK);
+    curtain(g, 1716, 30, 220, 790, MT, true);
+    // the medical rail above the bed: outlets, a little light
+    shape(g, () => rrP(g, 1330, 438, 470, 56, 12), '#F4F7F8', LW.small, '#DCE4E8', () => rectP(g, 1330, 474, 470, 20));
+    for (const [ox, oc] of [[1380, '#77CC81'], [1440, '#7BAFE1'], [1500, '#F4F7F8'], [1560, '#F4F7F8']]) { ellP(g, ox, 462, 13, 13); paint(g, oc, LW.detail); ellP(g, ox, 462, 4, 4); paint(g, '#55575C', 0); }
+    shape(g, () => rrP(g, 1620, 452, 150, 22, 10), '#FFF4C9', LW.detail);
+    // the monitor on a wall arm (screen glows blank; the glow pulses live)
+    softFill(g, 34, 'rgba(180,240,232,0.55)', () => rrP(g, 1360, 200, 260, 200, 40), 'screen');
+    shape(g, () => rrP(g, 1636, 270, 30, 70, 8), '#E3E9ED', LW.small);
+    g.beginPath(); g.moveTo(1650, 305); g.lineTo(1600, 300); g.lineWidth = 16 + LW.small * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 16; g.strokeStyle = '#D5DCE1'; g.stroke();
+    shape(g, () => rrP(g, 1384, 222, 220, 160, 16), '#E3E9ED', LW.big, '#C9D3DA', () => rectP(g, 1384, 352, 220, 32));
+    rrP(g, 1402, 240, 184, 112, 8); paint(g, '#CFF6EF', LW.detail);
+    for (const [bx, bc] of [[1540, '#77CC81'], [1566, '#F4BF54']]) { ellP(g, bx, 367, 6, 6); paint(g, bc, 1.6); }
+    // sanitiser and a little picture (sun over hills)
+    shape(g, () => rrP(g, 770, 380, 58, 92, 10), '#FFFFFF', LW.small, '#E3EBEF', () => rectP(g, 802, 380, 30, 92));
+    shape(g, () => rrP(g, 790, 472, 18, 14, 3), '#B6CEE6', LW.detail);
+    shape(g, () => rectP(g, 1070, 214, 170, 132), '#F2A264', LW.small);
+    clipDo(g, () => rectP(g, 1082, 226, 146, 108), () => { g.fillStyle = '#FFF1D2'; g.fillRect(1082, 226, 146, 108); ellP(g, 1190, 262, 20, 20); g.fillStyle = '#F4BF54'; g.fill(); ellP(g, 1110, 360, 90, 50); g.fillStyle = '#9DCFC6'; g.fill(); ellP(g, 1210, 370, 80, 54); g.fillStyle = '#7FC4C9'; g.fill(); });
+    rectP(g, 1082, 226, 146, 108); paint(g, null, LW.detail);
+    // light: top band, window beams on wall and floor
+    wallBand(g, MT.wall, MT.wallSh, [0, 0, W, 560], [-20, 150, 620, 40, 1300, 40, W + 20, 160]);
+    clipDo(g, () => rectP(g, 0, 0, W, FY), () => softFill(g, 12, 'rgba(255,250,232,0.35)', () => polyP(g, [700, 160, 760, 160, 1100, FY + 10, 900, FY + 10]), 'screen'));
+    softFill(g, 16, 'rgba(255,248,226,0.4)', () => polyP(g, [250, FY + 6, 700, FY + 6, 980, H, 260, H]), 'screen');
+    // rail, skirting, floor line
+    shape(g, () => rectP(g, -10, 548, W + 20, 20), MT.rail, LW.small, dark(MT.rail, 0.88), () => rectP(g, -10, 560, W + 20, 8));
+    rectP(g, -10, FY - 16, W + 20, 16); paint(g, MT.wainSh, LW.detail);
+    line(g, 0, FY, W, FY, LW.arch);
+    clockFaceRim(g, 960, 172, 64, '#A3ADB8', mix(MT.wall, MT.wallSh, 0.85));
+    if (o.bed !== false) hospitalBed(g);
+    cotBack(g);
+  }
+  function maternityAnchors(o) {
+    return {
+      cot: { x: MT.cot.cx, y: MT.cot.mat, s: 1 }, cotFloor: { x: MT.cot.cx, y: 940, s: 1 },
+      parentL: { x: 545, y: 975, s: 1 }, parentR: { x: 1175, y: 975, s: 1 },
+      bed: o.bed === false ? undefined : { x: 1480, y: 672, s: 1 }, bedHead: o.bed === false ? undefined : { x: 1760, y: 630, s: 1 },
+      left: { x: 380, y: 985, s: 1.02 }, center: { x: 960, y: 985, s: 1.02 }, right: { x: 1520, y: 985, s: 1.02 },
+      window: { x: 470, y: 320, s: 1 }, monitor: { x: 1494, y: 296, s: 1 }, clock: { x: 960, y: 172, s: 1, r: 64 },
+    };
+  }
+  SETS.maternity = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('maternity|' + (o.sky || 'morning') + '|' + (o.bed === false ? 0 : 1), devRes(g, xf), (lg) => maternityStatic(lg, o)));
+    live(g, xf, (g2) => {
+      clockHands(g2, 960, 172, 64, o.clock != null ? o.clock : 8.25);
+      const p = 0.5 + 0.5 * Math.sin((o.t || 0) * TAU * 1.1);
+      rrP(g2, 1402, 240, 184, 112, 8); g2.fillStyle = 'rgba(255,255,255,' + (0.08 + 0.22 * p).toFixed(3) + ')'; g2.fill();
+      ellP(g2, 1514, 367, 6, 6); g2.fillStyle = 'rgba(229,83,75,' + (0.3 + 0.7 * p).toFixed(3) + ')'; g2.fill();
+    });
+    return result(xf, maternityAnchors(o), 985, MT.FY);
+  };
+  SETS.maternityFront = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    if (o.cot !== false) blit(g, xf, layer('maternityFront', devRes(g, xf), (lg) => cotFront(lg)), null, { x: 660, y: 580, w: 400, h: 150 });
+    return result(xf, maternityAnchors(o), 985, MT.FY);
+  };
+
+  // ================================================================ HOME (the family's living room in a Nigerian home)
+  // SETS.home(g, o): o.view 'lounge' (default: sofa set with lace covers, standing fan, TV on its cabinet, wall clock, family photos,
+  // the front door) | 'dining' (the dining table and chairs, the glass cabinet, a calendar, the kitchen doorway).
+  // o.tod 'day' | 'evening' | 'night' (todTo + todK crossfade as in living); o.tv (true: the screen glows; at night it lights the room);
+  // o.lamp (night: the tube light on; default on unless the TV is), o.fan (false stops the fan), o.doorOpen (lounge), o.table (false: no
+  // centre table), o.food (dining, false: bare table), o.clock, o.t.
+  // Anchors (lounge): sofaL, sofaM, sofaR, armchair (seats), tv (screen centre), tvFront, door (standing just inside), doorway (standing
+  // in the opening), table (centre table top), fan, clock, window, photos, left, center, right.
+  // Anchors (dining): seat1, seat2, seat3 (behind the table, facing out), seatL, seatR (table ends, in profile), table, standL, standR,
+  // doorway, clock, window, calendar, left, center, right.
+  // SETS.homeFront: lounge: the centre table (and the door frame when the door is open); dining: the table with its cloth and food.
+  const HM = { FY: 820, CX: 1600, wall: '#F6D3A2', wallSh: '#E8B884', side: '#EDC591', floor: '#E4AB77', floorAlt: '#DDA26E', floorLine: '#CB8F5F', floorSh: '#B9774E',
+    sofa: '#9E4A43', sofaMid: '#8A3F3A', sofaSh: '#74332F', lace: '#FFF6E6', cushA: '#E9A73F', cushASh: '#CF8E30', cushB: '#3A8594', cushBSh: '#2F7280',
+    curtain: '#E2A23E', curtainSh: '#C88A2E', rod: '#7E5A3E', winFrame: '#F3E2C4', wood: '#8E5634', woodSh: '#774629', woodLt: '#B0703F', woodLtSh: '#965E35',
+    door: '#8A5236', doorSh: '#764429', doorFrame: '#B07446', rug: '#B9473F', rugSh: '#A13D36', rugBorder: '#E9B04A',
+    fanBody: '#F3F0E8', fanBodySh: '#D9D3C6', blade: '#7BAFE1', bladeSh: '#6497C9', fanPole: '#C9CED3', cloth: '#FFF4E3', clothSh: '#EADCC6' };
+  const TVNIGHT = [[0, '#D6E2F4'], [0.18, '#A9B2D6'], [0.55, '#76769F'], [1, '#4F5285']];
+  const HOME_TOD = { day: { sky: 'day', tint: null }, evening: { sky: 'evening', tint: '#E9CDBE' }, night: { sky: 'night', tint: '#9C98C4' } };
+  function hmSideFloor(x) { return HM.FY + (x - HM.CX) * (66 / (W - HM.CX)); }
+  function hmDoorQuads() {
+    const q = (xl, xr, tl, tr) => [xl, tl, xr, tr, xr, hmSideFloor(xr), xl, hmSideFloor(xl)];
+    return { outer: q(1668, 1878, 150, 128), inner: q(1696, 1850, 176, 157) };
+  }
+  // sofa or armchair, frontal: back, seat, front, flared arms, lace covers, two cushions. Returns seat anchors.
+  function homeSofa(g, x0, x1, P, n) {
+    const aw = n > 1 ? 96 : 82, yb = n > 1 ? 506 : 532, ys = 716, yf = 762, yfb = 864, legY = 936, armTop = 640;
+    floorShadow(g, (x0 + x1) / 2, legY - 4, (x1 - x0) * 0.56, 22, P.floorSh, 7);
+    for (const [lx, ly, d] of [[x0 + 44, legY, 1], [x1 - 44, legY, -1], [x0 + aw + 40, legY - 34, 0], [x1 - aw - 40, legY - 34, 0]]) shape(g, () => polyP(g, [lx - 12, yfb, lx + 12, yfb, lx + 6 - d * 8, ly, lx - 6 - d * 8, ly]), '#4E3330', LW.small);
+    shape(g, () => rrP(g, x0 + 34, yb, x1 - x0 - 68, ys - yb + 50, [42, 42, 8, 8]), P.sofa, LW.big, P.sofaMid, () => rectP(g, x0, ys - 30, x1 - x0, 90));
+    const sx0 = x0 + aw - 6, sx1 = x1 - aw + 6, sw = (sx1 - sx0) / n;
+    for (let i = 1; i < n; i++) line(g, sx0 + sw * i, yb + 34, sx0 + sw * i, ys - 10, LW.small);
+    shape(g, () => polyP(g, [sx0, ys, sx1, ys, sx1 + 8, yf, sx0 - 8, yf]), P.sofa, LW.big, P.sofaMid, () => rectP(g, sx0 - 20, yf - 14, sx1 - sx0 + 40, 20));
+    shape(g, () => rrP(g, sx0 - 12, yf - 4, sx1 - sx0 + 24, yfb - yf + 4, 10), P.sofaMid, LW.big, P.sofaSh, () => rectP(g, sx0 - 20, yfb - 34, sx1 - sx0 + 40, 40));
+    for (let i = 1; i < n; i++) { line(g, sx0 + sw * i, ys + 2, sx0 + sw * i + (i - n / 2) * 4, yf, LW.small); line(g, sx0 + sw * i, yf, sx0 + sw * i, yfb - 2, LW.small); }
+    for (let i = 0; i < n; i++) doily(g, sx0 + sw * (i + 0.5), yb + 22, Math.min(150, sw * 0.62), 40, P.lace);
+    const arm = (X0, sx) => {
+      shape(g, () => { g.beginPath(); g.moveTo(X0 + sx * 14, yfb + 8); g.lineTo(X0 + sx * 4, armTop + 50); g.quadraticCurveTo(X0 - sx * 6, armTop + 4, X0 + sx * 36, armTop); g.lineTo(X0 + sx * (aw - 16), armTop + 4); g.quadraticCurveTo(X0 + sx * (aw + 6), armTop + 10, X0 + sx * (aw - 2), armTop + 56); g.lineTo(X0 + sx * (aw - 10), yfb + 8); g.closePath(); }, P.sofa, LW.big, P.sofaMid,
+        () => polyP(g, [X0 + sx * (aw - 32), armTop + 56, X0 + sx * (aw + 20), armTop + 46, X0 + sx * (aw + 20), yfb + 20, X0 + sx * (aw - 26), yfb + 20]));
+      doily(g, X0 + sx * aw * 0.46, armTop - 4, aw * 0.72, 22, P.lace);
+    };
+    arm(x0, 1); arm(x1, -1);
+    const pillow = (cx, cy, rot, col, sh, s) => {
+      g.save(); g.translate(cx, cy); g.rotate(rot); g.scale(s, s);
+      const path = () => { g.beginPath(); g.moveTo(-72, -62); g.quadraticCurveTo(0, -74, 72, -62); g.quadraticCurveTo(82, 0, 72, 62); g.quadraticCurveTo(0, 72, -72, 62); g.quadraticCurveTo(-82, 0, -72, -62); g.closePath(); };
+      shape(g, path, col, LW.big, sh, () => polyP(g, [-90, 18, 90, -36, 90, 90, -90, 90]));
+      g.restore();
+    };
+    const ps = n > 1 ? 1 : 0.8;
+    pillow(sx0 + 70 * ps, ys - 58 * ps, -0.14, P.cushA, P.cushASh, ps);
+    if (n > 1) pillow(sx1 - 70, ys - 58, 0.14, P.cushB, P.cushBSh, 1);
+    const seats = []; for (let i = 0; i < n; i++) seats.push({ x: sx0 + sw * (i + 0.5), y: ys + 22, s: 1 });
+    return seats;
+  }
+  function homeWindowGlass(g, x, y, w, h, t, m, skyK, barCol) {
+    const gw = w - 2 * t, pw = (gw - m) / 2;
+    for (const px of [x + t, x + t + pw + m]) { clipDo(g, () => rectP(g, px, y + t, pw, h - 2 * t), () => sky(g, x + t, y + t, gw, h - 2 * t, skyK, 61)); burglarBars(g, px, y + t, pw, h - 2 * t, barCol); rectP(g, px, y + t, pw, h - 2 * t); paint(g, null, 2.6, X.inkSoft); }
+  }
+  function homeWindow(g, x, y, w, h, skyK, P) {
+    const t = 20, m = 18;
+    windowBox(g, x, y, w, h, { sky: skyK, seed: 61, frame: P.winFrame, ink: X.inkSoft, t, mull: m });
+    homeWindowGlass(g, x, y, w, h, t, m, skyK, skyK === 'night' ? '#3B3437' : '#5A504C');
+    curtain(g, x - 96, y - 38, 106, h + 92, P, false); curtain(g, x + w - 10, y - 38, 106, h + 92, P, true);
+    shape(g, () => rrP(g, x - 118, y - 46, w + 236, 12, 6), P.rod, LW.detail);
+    for (const ex of [x - 118, x + w + 118]) { ellP(g, ex, y - 40, 11, 11); paint(g, P.rod, LW.detail); }
+  }
+  function tubeLight(g, x, y, w, on) {
+    if (on) softFill(g, 30, 'rgba(255,250,228,0.6)', () => ellP(g, x + w / 2, y + 10, w * 0.75, 70), 'screen');
+    shape(g, () => rrP(g, x, y, w, 22, 6), '#F4F1EA', LW.small, '#DCD6CA', () => rectP(g, x, y + 14, w, 8));
+    shape(g, () => rrP(g, x + 14, y + 22, w - 28, 16, 8), on ? '#FFFDF2' : '#E9ECEE', LW.detail);
+  }
+  function tvCabinet(g, x, y, w, P) {
+    const h = 172;
+    floorShadow(g, x + w / 2, y + h + 26, w * 0.56, 12, P.floorSh, 5);
+    for (const lx of [x + 22, x + w - 22]) shape(g, () => polyP(g, [lx - 9, y + h, lx + 9, y + h, lx + 6, y + h + 24, lx - 6, y + h + 24]), P.woodSh, LW.small);
+    shape(g, () => rectP(g, x, y + 18, w, h - 18), P.wood, LW.big, P.woodSh, () => rectP(g, x, y + h - 26, w, 26));
+    // two glass doors with things inside, an open middle shelf with a decoder
+    const dw = (w - 30) / 3;
+    for (const [dx, glass] of [[x + 10, 1], [x + 20 + dw * 2, 1]]) {
+      shape(g, () => rectP(g, dx, y + 32, dw, h - 66), '#6E4A3A', LW.small, '#5E3E31', () => rectP(g, dx, y + 32, dw, 18));
+      if (glass) { for (let i = 0; i < 5; i++) { rectP(g, dx + 10 + i * 13, y + 70, 10, 56); paint(g, ['#E37F78', '#F4BF54', '#7BAFE1', '#77CC81', '#FBF6EF'][i], 1.4); } polyP(g, [dx + dw * 0.55, y + 32, dx + dw * 0.8, y + 32, dx + dw * 0.4, y + h - 34, dx + dw * 0.15, y + h - 34]); g.fillStyle = 'rgba(255,255,255,0.14)'; g.fill(); }
+      ellP(g, dx + (dx < x + w / 2 ? dw - 10 : 10), y + h * 0.55, 4, 4); paint(g, '#E9B04A', 1.4);
+    }
+    shape(g, () => rectP(g, x + 15 + dw, y + 32, dw, h - 66), '#5E3E31', LW.small);
+    shape(g, () => rrP(g, x + 22 + dw, y + 72, dw - 14, 30, 4), '#2E2F34', LW.small, '#25262B', () => rectP(g, x + 22 + dw, y + 92, dw - 14, 10));
+    ellP(g, x + dw + dw * 0.75, y + 84, 3.5, 3.5); g.fillStyle = '#77CC81'; g.fill();
+    shape(g, () => rrP(g, x - 8, y, w + 16, 22, 4), P.woodLt, LW.big, P.woodLtSh, () => rectP(g, x - 8, y + 13, w + 16, 9));
+    doily(g, x + w / 2, y + 20, w * 0.5, 16, P.lace);
+  }
+  function plasticFlowers(g, x, y, s) {
+    for (const [a, l, c] of [[-1.9, 110, '#E37F78'], [-1.55, 130, '#F4BF54'], [-1.25, 104, '#FFFFFF'], [-1.7, 84, '#E37F78']]) {
+      const ex = x + Math.cos(a) * l * s, ey = y - 60 * s + Math.sin(a) * l * s;
+      line(g, x, y - 60 * s, ex, ey, 3, '#5F7357');
+      for (let i = 0; i < 5; i++) { const b = i / 5 * TAU; ellP(g, ex + Math.cos(b) * 9 * s, ey + Math.sin(b) * 9 * s, 7 * s, 7 * s); paint(g, c, 1.4); }
+      ellP(g, ex, ey, 5 * s, 5 * s); paint(g, '#F4BF54', 1.2);
+    }
+    leaf(g, x, y - 58 * s, -2.3, 46 * s, 8 * s, '#87A26A', '#6F8C57', 1.6); leaf(g, x, y - 58 * s, -0.8, 42 * s, 8 * s, '#87A26A', '#6F8C57', 1.6);
+    shape(g, () => { g.beginPath(); g.moveTo(x - 20 * s, y); g.quadraticCurveTo(x - 30 * s, y - 34 * s, x - 12 * s, y - 62 * s); g.lineTo(x + 12 * s, y - 62 * s); g.quadraticCurveTo(x + 30 * s, y - 34 * s, x + 20 * s, y); g.closePath(); }, '#7FC4C9', LW.small, '#5FA9AF', () => rectP(g, x + 2 * s, y - 70 * s, 30 * s, 80 * s));
+  }
+  function homeDoor(g, P, open) {
+    const D = hmDoorQuads(), o = D.outer, i = D.inner;
+    if (open) {
+      clipDo(g, () => polyP(g, i), () => {
+        g.fillStyle = '#FFF0CF'; g.fillRect(1600, 0, 320, H);
+        polyP(g, [1690, 600, 1860, 590, 1860, 940, 1690, 940]); paint(g, '#E9C27C', 0);
+        softFill(g, 10, 'rgba(255,255,255,0.5)', () => polyP(g, [1700, 160, 1760, 160, 1840, 940, 1720, 940]));
+      });
+      // the leaf swung into the room against the side wall, hinge on the far edge
+      shape(g, () => polyP(g, [i[0], i[1], i[0] - 66, i[1] - 30, i[6] - 66, i[7] + 34, i[6], i[7]]), P.door, LW.small, P.doorSh, () => polyP(g, [i[0] - 40, i[1] - 18, i[0] - 66, i[1] - 30, i[6] - 66, i[7] + 34, i[6] - 40, i[7] + 20]));
+    } else {
+      shape(g, () => polyP(g, i), P.door, LW.small, P.doorSh, () => polyP(g, [i[0], i[1], i[0] + 24, i[1] - 2, i[6] + 24, i[7] + 1, i[6], i[7]]));
+      // two raised panels per half, in perspective
+      const lerpQ = (u, v) => { const tx = i[0] + (i[2] - i[0]) * u, ty = i[1] + (i[3] - i[1]) * u, bx = i[6] + (i[4] - i[6]) * u, by = i[7] + (i[5] - i[7]) * u; return [tx + (bx - tx) * v, ty + (by - ty) * v]; };
+      for (const [u0, u1] of [[0.22, 0.48], [0.56, 0.84]]) for (const [v0, v1] of [[0.07, 0.43], [0.52, 0.92]]) {
+        const a = lerpQ(u0, v0), b = lerpQ(u1, v0), c = lerpQ(u1, v1), d = lerpQ(u0, v1);
+        polyP(g, [a[0], a[1], b[0], b[1], c[0], c[1], d[0], d[1]]); paint(g, P.doorSh, LW.detail);
+      }
+      const hd = lerpQ(0.9, 0.52);
+      shape(g, () => rrP(g, hd[0] - 8, hd[1] - 34, 16, 68, 5), '#C9A15A', LW.detail); shape(g, () => rrP(g, hd[0] - 34, hd[1] - 6, 36, 12, 6), '#D8B26A', LW.detail);
+      ellP(g, hd[0], hd[1] + 20, 3, 4); paint(g, '#3A2E30', 0);
+      for (const v of [0.18, 0.78]) { const hp = lerpQ(0.02, v); shape(g, () => rrP(g, hp[0] - 5, hp[1] - 16, 10, 32, 3), '#7A6266', LW.detail); }
+    }
+    // frame (evenodd ring)
+    g.save(); g.beginPath(); polyP(g, o); g.moveTo(i[0], i[1]); g.lineTo(i[6], i[7]); g.lineTo(i[4], i[5]); g.lineTo(i[2], i[3]); g.closePath(); g.fillStyle = P.doorFrame; g.fill('evenodd'); g.clip('evenodd');
+    polyP(g, [o[0], o[1], o[2], o[3], o[2], o[3] + 16, o[0], o[1] + 16]); g.fillStyle = dark(P.doorFrame, 0.88); g.fill(); g.restore();
+    polyP(g, o); paint(g, null, LW.small); polyP(g, i); paint(g, null, LW.small);
+  }
+  function homeDoorMat(g) {
+    const sf = hmSideFloor;
+    shape(g, () => polyP(g, [1676, sf(1676) + 12, 1866, sf(1866) + 12, 1812, sf(1812) + 70, 1600, sf(1600) + 62]), '#9C6A48', LW.small, '#865A3D', () => polyP(g, [1640, sf(1640) + 44, 1840, sf(1840) + 44, 1812, sf(1812) + 70, 1600, sf(1600) + 62]));
+    // a pair of flip-flops by the door
+    for (const [sx, sy, a, c] of [[1700, sf(1700) + 36, -0.25, '#3A8594'], [1748, sf(1748) + 40, -0.1, '#3A8594']]) {
+      g.save(); g.translate(sx, sy); g.rotate(a); ellP(g, 0, 0, 16, 34); paint(g, c, LW.detail); g.beginPath(); g.moveTo(-12, 4); g.lineTo(0, -16); g.lineTo(12, 4); g.lineWidth = 3; g.strokeStyle = '#F4BF54'; g.stroke(); g.restore();
+    }
+  }
+  function centreTable(g, P, noShadow) {
+    if (!noShadow) floorShadow(g, 935, 978, 270, 16, P.floorSh, 6);
+    const leg = (x1, y1, x2, y2) => shape(g, () => polyP(g, [x1 - 10, y1, x1 + 10, y1, x2 + 6, y2, x2 - 6, y2]), P.wood, LW.small, P.woodSh, () => polyP(g, [x1 + 1, y1, x1 + 10, y1, x2 + 6, y2, x2, y2]));
+    leg(780, 900, 768, 972); leg(1090, 900, 1102, 972); leg(830, 896, 836, 940); leg(1040, 896, 1034, 940);
+    shape(g, () => rectP(g, 790, 930, 290, 12), P.wood, LW.detail);
+    // glass top in a wooden frame, a bowl of fruit and a biscuit tin
+    shape(g, () => polyP(g, [776, 862, 1094, 862, 1124, 892, 746, 892]), 'rgba(196,226,232,0.9)', LW.big, 'rgba(160,200,210,0.9)', () => polyP(g, [960, 862, 1094, 862, 1124, 892, 1000, 892]));
+    polyP(g, [990, 864, 1020, 864, 950, 890, 920, 890]); g.fillStyle = 'rgba(255,255,255,0.5)'; g.fill();
+    shape(g, () => rrP(g, 746, 890, 378, 16, [0, 0, 6, 6]), P.wood, LW.small, P.woodSh, () => rectP(g, 746, 898, 378, 8));
+    for (const [fx, fy, fc] of [[836, 846, '#F4BF54'], [866, 840, '#77CC81'], [890, 848, '#E37F78']]) { ellP(g, fx, fy, 18, 18); paint(g, fc, LW.detail); }
+    shape(g, () => { g.beginPath(); g.moveTo(810, 852); g.lineTo(916, 852); g.quadraticCurveTo(910, 874, 880, 874); g.lineTo(846, 874); g.quadraticCurveTo(816, 874, 810, 852); g.closePath(); }, '#FBF6EF', LW.detail);
+    shape(g, () => rrP(g, 996, 826, 70, 44, 6), '#E5534B', LW.detail, '#C9443D', () => rectP(g, 1040, 820, 30, 54));
+    shape(g, () => rrP(g, 992, 820, 78, 12, 4), '#F4BF54', LW.detail);
+  }
+  function homeLounge(g, o, tod) {
+    const P = HM, FY = P.FY, CX = P.CX, T = HOME_TOD[tod];
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 860, vpy: 280, step: 200, h0: 36 });
+    rectP(g, 0, 0, CX, FY); paint(g, P.wall, 0);
+    polyP(g, [CX, 0, W, 0, W, hmSideFloor(W), CX, hmSideFloor(CX)]); paint(g, P.side, 0);
+    // skirting
+    rectP(g, -10, FY - 18, CX + 10, 18); paint(g, P.woodLt, LW.detail);
+    polyP(g, [CX, hmSideFloor(CX) - 18, W, hmSideFloor(W) - 18, W, hmSideFloor(W), CX, hmSideFloor(CX)]); paint(g, P.woodLt, LW.detail);
+    homeWindow(g, 120, 168, 330, 300, T.sky, P);
+    tubeLight(g, 1330, 150, 220, tod !== 'day');
+    // family wall: the clock and the photos
+    clockFaceRim(g, 935, 116, 52, '#C98A3E', mix(P.wall, P.wallSh, 0.9));
+    photo(g, 828, 196, 214, 172, 'family', { frame: '#C98A3E' });
+    photo(g, 690, 222, 112, 140, 'grad', { frame: '#9C6A48', bg: '#E7C9A0' });
+    photo(g, 1068, 222, 112, 140, 'baby', { frame: '#9C6A48', bg: '#F6D9E0' });
+    homeDoor(g, P, !!o.doorOpen);
+    // light: top band on both walls, the window's light
+    wallBand(g, P.wall, P.wallSh, [0, 0, CX, FY], [-20, 120, 600, 34, 1200, 30, CX + 20, 96]);
+    overlay(g, 'multiply', () => clipDo(g, () => polyP(g, [CX, 0, W, 0, W, H, CX, H]), () => softFill(g, 4, mulTo(P.side, P.wallSh), () => { g.beginPath(); g.moveTo(CX - 20, 84); g.bezierCurveTo(1700, 96, 1840, 150, W + 20, 260); g.lineTo(W + 20, -20); g.lineTo(CX - 20, -20); g.closePath(); })));
+    if (tod === 'day') {
+      clipDo(g, () => rectP(g, 0, 0, CX, FY), () => softFill(g, 12, 'rgba(255,248,226,0.3)', () => polyP(g, [450, 190, 500, 190, 760, FY, 600, FY]), 'screen'));
+      softFill(g, 16, 'rgba(255,246,220,0.35)', () => polyP(g, [130, FY + 4, 460, FY + 4, 780, H, 300, H]), 'screen');
+    }
+    line(g, CX, -5, CX, hmSideFloor(CX), LW.arch * 0.8, '#5E3A2A');
+    line(g, 0, FY, CX, FY, LW.arch); line(g, CX, hmSideFloor(CX), W, hmSideFloor(W), LW.arch);
+    homeDoorMat(g);
+    // rug
+    shape(g, () => polyP(g, [560, 880, 1320, 880, 1420, H + 10, 460, H + 10]), P.rugBorder, LW.small);
+    shape(g, () => polyP(g, [590, 892, 1290, 892, 1378, H + 10, 502, H + 10]), P.rug, LW.detail, P.rugSh, () => polyP(g, [590, 892, 1290, 892, 1296, 906, 586, 906]));
+    g.strokeStyle = P.rugBorder; g.lineWidth = 4; for (const [a, b] of [[940, 930], [940, 1010]]) { g.beginPath(); g.moveTo(a - 60, b); g.lineTo(a, b - 22); g.lineTo(a + 60, b); g.lineTo(a, b + 22); g.closePath(); g.stroke(); }
+    // furniture: TV on its cabinet, fan, armchair, sofa
+    tvCabinet(g, 1290, 690, 300, P);
+    tvBody(g, 1318, 530, 244, 136);
+    tvGlass(g, 1318, 530, 244, 136, !!o.tv);
+    if (o.tv) softFill(g, 30, 'rgba(200,236,255,0.5)', () => ellP(g, 1440, 598, 200, 130), 'screen');
+    plasticFlowers(g, 1300, 690, 0.8);
+    homeSofa(g, 110, 450, P, 1);
+    const F = fanStatic(g, 532, 902, 0.92, P);
+    homeSofa(g, 612, 1258, P, 2);
+    if (o.table !== false) centreTable(g, P);
+    homeLoungeLight(g, o, tod);
+    return F;
+  }
+  function homeLoungeLight(g, o, tod) {
+    // evening and night: grade the room toward its light, then relight the glass, the tube and the screen
+    if (tod === 'day') return;
+    const T = HOME_TOD[tod], tvLit = !!o.tv, lampOn = o.lamp != null ? !!o.lamp : (tod === 'evening' || !tvLit);
+    if (tod === 'night') { if (tvLit && !lampOn) grade(g, 1440, 600, 40, 1400, TVNIGHT); else grade(g, 1440, 170, 60, 1600, NIGHT); }
+    else grade(g, 1440, 170, 80, 1500, EVE);
+    homeWindowGlass(g, 120, 168, 330, 300, 20, 18, T.sky, tod === 'night' ? '#3B3437' : '#5A504C');
+    if (lampOn) { tubeLight(g, 1330, 150, 220, true); softFill(g, 40, 'rgba(255,236,190,0.28)', () => ellP(g, 1440, 220, 420, 220), 'screen'); }
+    if (tvLit) { softFill(g, 36, 'rgba(170,210,255,0.3)', () => ellP(g, 1440, 600, 230, 150), 'screen'); softFill(g, 30, 'rgba(170,210,255,0.12)', () => polyP(g, [1318, 680, 1562, 680, 1480, H, 820, H]), 'screen'); }
+  }
+  // keep only the pixels the piece drew before a lighting pass (the grade would paint the empty parts of a front layer)
+  function maskedPass(lg, pass) {
+    const c = lg.canvas, m = mkCanvas(c.width, c.height); m.getContext('2d').drawImage(c, 0, 0);
+    pass(lg);
+    lg.save(); lg.setTransform(1, 0, 0, 1, 0, 0); lg.globalCompositeOperation = 'destination-in'; lg.drawImage(m, 0, 0); lg.restore();
+  }
+  function homeLoungeAnchors(o) {
+    const sf = hmSideFloor;
+    return {
+      sofaL: { x: 820, y: 738, s: 1 }, sofaM: { x: 935, y: 738, s: 1 }, sofaR: { x: 1050, y: 738, s: 1 }, armchair: { x: 280, y: 738, s: 1 },
+      tv: { x: 1440, y: 598, s: 1, w: 244, h: 136 }, tvFront: { x: 1440, y: 985, s: 1 },
+      door: { x: 1730, y: 968, s: 0.98 }, doorway: { x: 1772, y: sf(1772) + 6, s: 0.9 }, table: { x: 935, y: 862, s: 1 },
+      fan: { x: 532, y: 440, s: 1 }, clock: { x: 935, y: 116, s: 1, r: 52 }, window: { x: 285, y: 318, s: 1 }, photos: { x: 935, y: 282, s: 1 },
+      left: { x: 330, y: 990, s: 1.02 }, center: { x: 960, y: 990, s: 1.02 }, right: { x: 1500, y: 990, s: 1.02 },
+    };
+  }
+  // ---------------------------------------------------------------- dining view
+  function calendar(g, x, y, w, h) {
+    line(g, x + w / 2, y - 40, x + w * 0.2, y, 2); line(g, x + w / 2, y - 40, x + w * 0.8, y, 2); ellP(g, x + w / 2, y - 42, 5, 5); paint(g, '#6A5A4A', 0);
+    shape(g, () => rectP(g, x, y, w, h), '#FFFDF6', LW.small, '#EFE6D6', () => rectP(g, x + w * 0.8, y, w * 0.2, h));
+    clipDo(g, () => rectP(g, x + 10, y + 10, w - 20, h * 0.42), () => { g.fillStyle = '#9FCFE0'; g.fillRect(x, y, w, h); ellP(g, x + w * 0.3, y + h * 0.42, w * 0.5, h * 0.16); g.fillStyle = '#87A26A'; g.fill(); ellP(g, x + w * 0.75, y + h * 0.12, 14, 14); g.fillStyle = '#F4BF54'; g.fill(); });
+    rectP(g, x + 10, y + 10, w - 20, h * 0.42); paint(g, null, LW.detail);
+    rectP(g, x + 10, y + h * 0.46, w - 20, 16); paint(g, '#E5534B', 0);
+    const gx = x + 12, gy = y + h * 0.46 + 24, cw = (w - 24) / 7, chh = (h * 0.5 - 30) / 5;
+    g.fillStyle = '#D8CFC2';
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 7; c++) { rectP(g, gx + c * cw + 3, gy + r * chh + 3, cw - 6, chh - 6); g.fill(); }
+    ellP(g, gx + 4.5 * cw, gy + 2.5 * chh, cw * 0.55, chh * 0.6); g.lineWidth = 3; g.strokeStyle = '#E5534B'; g.stroke();
+  }
+  function glassCabinet(g, x, y, w, h, P) {
+    floorShadow(g, x + w / 2, y + h + 8, w * 0.6, 12, P.floorSh, 5);
+    shape(g, () => rectP(g, x, y, w, h), P.wood, LW.big, P.woodSh, () => rectP(g, x + w - 26, y, 26, h));
+    const gy = y + 24, gh = h * 0.56, iw = (w - 44) / 2;
+    for (const gx of [x + 16, x + 28 + iw]) {
+      shape(g, () => rectP(g, gx, gy, iw, gh), '#F3E6D2', LW.small);
+      for (const sy of [gy + gh * 0.36, gy + gh * 0.7]) line(g, gx, sy, gx + iw, sy, LW.detail);
+      // plates standing, cups, a gold-rimmed dish
+      for (let i = 0; i < 2; i++) { ellP(g, gx + iw * (0.3 + i * 0.4), gy + gh * 0.2, iw * 0.17, iw * 0.17); paint(g, '#FFFFFF', LW.detail); ellP(g, gx + iw * (0.3 + i * 0.4), gy + gh * 0.2, iw * 0.1, iw * 0.1); paint(g, null, 1.5, '#E9B04A'); }
+      for (let i = 0; i < 3; i++) shape(g, () => rrP(g, gx + 12 + i * iw * 0.3, gy + gh * 0.52, iw * 0.2, gh * 0.16, 4), ['#7BAFE1', '#E37F78', '#F4BF54'][i], LW.detail);
+      shape(g, () => { g.beginPath(); g.ellipse(gx + iw / 2, gy + gh * 0.84, iw * 0.34, gh * 0.08, 0, 0, Math.PI); g.closePath(); }, '#FFFFFF', LW.detail);
+      polyP(g, [gx + iw * 0.6, gy, gx + iw * 0.8, gy, gx + iw * 0.35, gy + gh, gx + iw * 0.15, gy + gh]); g.fillStyle = 'rgba(255,255,255,0.22)'; g.fill();
+      rectP(g, gx, gy, iw, gh); paint(g, null, LW.small);
+      const dy = gy + gh + 16;
+      shape(g, () => rectP(g, gx, dy, iw, h - (dy - y) - 20), P.woodLt, LW.small, P.woodLtSh, () => rectP(g, gx, dy, iw, 14));
+      ellP(g, gx + (gx < x + w / 2 ? iw - 12 : 12), dy + 40, 5, 5); paint(g, '#E9B04A', 1.4);
+    }
+    shape(g, () => rectP(g, x - 10, y - 18, w + 20, 22), P.woodLt, LW.big, P.woodLtSh, () => rectP(g, x - 10, y - 6, w + 20, 10));
+  }
+  function kitchenDoorway(g, x, y, w, P) {
+    const FY = P.FY;
+    shape(g, () => rectP(g, x - 18, y - 18, w + 36, FY - y + 18), P.doorFrame, LW.small);
+    rectP(g, x, y, w, FY - y); paint(g, '#F8DFA6', LW.small);
+    softFill(g, 12, 'rgba(255,255,255,0.4)', () => polyP(g, [x + 30, y, x + 90, y, x + 140, FY, x + 40, FY]));
+    // a patterned curtain hanging in the doorway, slightly parted
+    const cur = (cx, cw, flip) => {
+      const path = () => { g.beginPath(); g.moveTo(cx, y - 4); g.lineTo(cx + cw, y - 4); g.quadraticCurveTo(cx + cw + (flip ? 8 : -20), (y + FY) / 2, cx + cw + (flip ? 4 : -34), FY - 30); g.lineTo(cx + (flip ? 30 : 0), FY - 30); g.quadraticCurveTo(cx + (flip ? 14 : 0), (y + FY) / 2, cx, y - 4); g.closePath(); };
+      shape(g, path, '#3A8594', LW.small, '#2F7280', () => { g.beginPath(); for (const fx of [cx + cw * 0.25, cx + cw * 0.65]) g.rect(fx, y - 10, cw * 0.14, FY); });
+      clipDo(g, path, () => { g.fillStyle = '#F4BF54'; for (let r = 0; r < 9; r++) for (let c = 0; c < 3; c++) { ellP(g, cx + cw * (0.2 + c * 0.32) + (r % 2) * 14, y + 30 + r * 66, 9, 9); g.fill(); } });
+      path(); paint(g, null, LW.small);
+    };
+    cur(x + 4, w * 0.52, false); cur(x + w * 0.5, w * 0.48, true);
+    shape(g, () => rrP(g, x - 24, y - 16, w + 48, 12, 6), P.rod, LW.detail);
+  }
+  function diningTable(g, P, o, noShadow) {
+    if (!noShadow) floorShadow(g, 960, 932, 520, 20, P.floorSh, 7);
+    for (const lx of [500, 1420]) shape(g, () => rectP(g, lx - 13, 700, 26, 226), P.wood, LW.small, P.woodSh, () => rectP(g, lx + 2, 700, 11, 226));
+    shape(g, () => polyP(g, [488, 572, 1432, 572, 1452, 612, 468, 612]), P.cloth, LW.big, P.clothSh, () => polyP(g, [468, 600, 1452, 600, 1452, 612, 468, 612]));
+    // the cloth hangs over the front edge with a lace hem
+    shape(g, () => { g.beginPath(); g.moveTo(468, 612); g.lineTo(1452, 612); g.lineTo(1456, 690); const n = 22; for (let i = n - 1; i >= 0; i--) { const x = 464 + (i + 0.5) * 992 / n; g.arc(x, 690, 992 / n / 2, 0, Math.PI, false); } g.closePath(); }, P.cloth, LW.big, P.clothSh,
+      () => { g.beginPath(); g.rect(460, 612, 1000, 16); });
+    g.fillStyle = P.clothSh; for (let i = 0; i < 22; i++) { ellP(g, 464 + (i + 0.5) * 992 / 22, 694, 5, 5); g.fill(); }
+    if (o.food !== false) {
+      // a food flask (cooler), a bowl of stew, a plate stack, a water jug and cups
+      shape(g, () => rrP(g, 700, 512, 130, 82, 18), '#E37F78', LW.small, '#C9665F', () => rectP(g, 780, 500, 60, 110));
+      shape(g, () => { g.beginPath(); g.ellipse(765, 512, 66, 14, 0, 0, TAU); }, '#F4BF54', LW.small);
+      shape(g, () => rrP(g, 748, 486, 34, 20, 6), '#F4BF54', LW.detail);
+      shape(g, () => { g.beginPath(); g.moveTo(880, 556); g.lineTo(1040, 556); g.quadraticCurveTo(1030, 596, 960, 598); g.quadraticCurveTo(890, 596, 880, 556); g.closePath(); }, '#FBF6EF', LW.small, '#E9E0D2', () => rectP(g, 980, 550, 70, 50));
+      shape(g, () => { g.beginPath(); g.ellipse(960, 556, 80, 12, 0, 0, TAU); }, '#C9443D', LW.detail);
+      for (let i = 0; i < 4; i++) shape(g, () => { g.beginPath(); g.ellipse(1120, 590 - i * 9, 60, 11, 0, 0, TAU); }, '#FFFFFF', LW.detail);
+      shape(g, () => { g.beginPath(); g.moveTo(1222, 594); g.lineTo(1276, 594); g.lineTo(1284, 520); g.lineTo(1214, 520); g.closePath(); }, 'rgba(220,240,246,0.95)', LW.small);
+      rectP(g, 1219, 548, 61, 44); g.fillStyle = 'rgba(123,175,225,0.55)'; g.fill();
+      g.beginPath(); g.moveTo(1282, 532); g.quadraticCurveTo(1310, 540, 1282, 576); g.lineWidth = LW.small; g.strokeStyle = INK; g.stroke();
+      for (const cx of [580, 1350]) shape(g, () => { g.beginPath(); g.moveTo(cx - 20, 596); g.lineTo(cx + 20, 596); g.lineTo(cx + 24, 556); g.lineTo(cx - 24, 556); g.closePath(); }, 'rgba(220,240,246,0.95)', LW.small);
+    }
+  }
+  function homeDining(g, o, tod) {
+    const P = HM, FY = P.FY, T = HOME_TOD[tod];
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 960, vpy: 280, step: 200, h0: 36 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    rectP(g, -10, FY - 18, W + 20, 18); paint(g, P.woodLt, LW.detail);
+    homeWindow(g, 795, 160, 330, 290, T.sky, P);
+    clockFaceRim(g, 1430, 190, 58, '#C98A3E', mix(P.wall, P.wallSh, 0.9));
+    calendar(g, 1440, 320, 150, 210);
+    photo(g, 150, 150, 170, 140, 'elders', { frame: '#C98A3E', bg: '#E7C9A0' });
+    photo(g, 470, 220, 150, 120, 'couple', { frame: '#9C6A48', bg: '#A9CFE0' });
+    kitchenDoorway(g, 1690, 190, 200, P);
+    // the pendant lamp over the table
+    line(g, 960, -10, 960, 70, 3);
+    shape(g, () => polyP(g, [930, 70, 990, 70, 1030, 118, 890, 118]), '#F4BF54', LW.small, '#E0A43E', () => polyP(g, [972, 70, 990, 70, 1030, 118, 990, 118]));
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, FY], [-20, 140, 600, 40, 1300, 40, W + 20, 140]);
+    if (tod === 'day') { softFill(g, 16, 'rgba(255,246,220,0.35)', () => polyP(g, [790, FY + 4, 1130, FY + 4, 1300, H, 640, H]), 'screen'); }
+    line(g, 0, FY, W, FY, LW.arch);
+    glassCabinet(g, 60, 340, 320, 548, P);
+    for (const cx of [640, 960, 1280]) chair(g, cx, 880, 0.92, 'back', 1, P.wood, P.woodSh);
+    chair(g, 368, 905, 0.95, 'side', 1, P.wood, P.woodSh, '#E9A73F');
+    chair(g, 1552, 905, 0.95, 'side', -1, P.wood, P.woodSh, '#E9A73F');
+    diningTable(g, P, o);
+    homeDiningLight(g, o, tod);
+  }
+  function homeDiningLight(g, o, tod) {
+    if (tod === 'day') return;
+    const T = HOME_TOD[tod];
+    if (tod === 'night') grade(g, 960, 130, 60, 1500, NIGHT); else grade(g, 960, 130, 80, 1500, EVE);
+    homeWindowGlass(g, 795, 160, 330, 290, 20, 18, T.sky, tod === 'night' ? '#3B3437' : '#5A504C');
+    polyP(g, [890, 118, 1030, 118, 1020, 126, 900, 126]); paint(g, '#FFF4D0', LW.detail);
+    softFill(g, 40, 'rgba(255,230,170,0.4)', () => polyP(g, [890, 120, 1030, 120, 1460, 620, 460, 620]), 'screen');
+  }
+  function homeDiningAnchors() {
+    return {
+      seat1: { x: 640, y: 691, s: 0.92 }, seat2: { x: 960, y: 691, s: 0.92 }, seat3: { x: 1280, y: 691, s: 0.92 },
+      seatL: { x: 368, y: 710, s: 0.95, facing: 1 }, seatR: { x: 1552, y: 710, s: 0.95, facing: -1 },
+      table: { x: 960, y: 590, s: 1 }, standL: { x: 220, y: 985, s: 1.02 }, standR: { x: 1720, y: 985, s: 1.02 }, doorway: { x: 1790, y: 905, s: 0.9 },
+      clock: { x: 1430, y: 190, s: 1, r: 58 }, window: { x: 960, y: 305, s: 1 }, calendar: { x: 1515, y: 425, s: 1 },
+      left: { x: 330, y: 990, s: 1.02 }, center: { x: 960, y: 990, s: 1.02 }, right: { x: 1560, y: 990, s: 1.02 },
+    };
+  }
+  function homeKey(o, tod) { const v = o.view === 'dining' ? 'dining' : 'lounge'; return 'home|' + v + '|' + tod + '|' + (o.tv ? 1 : 0) + (o.lamp == null ? 'a' : o.lamp ? 1 : 0) + (o.doorOpen ? 1 : 0) + (o.table === false ? 0 : 1) + (o.food === false ? 0 : 1); }
+  SETS.home = function (g, o) {
+    o = o || {};
+    const tod = HOME_TOD[o.tod] ? o.tod : 'day', dining = o.view === 'dining', xf = camXf(o.cam);
+    let F = null;
+    const draw = (t) => (lg) => { if (dining) homeDining(lg, o, t); else F = homeLounge(lg, o, t); };
+    blit(g, xf, layer(homeKey(o, tod), devRes(g, xf), draw(tod)));
+    if (o.todTo && HOME_TOD[o.todTo] && o.todK > 0) blit(g, xf, layer(homeKey(o, o.todTo), devRes(g, xf), draw(o.todTo)), Math.min(1, o.todK));
+    const t = o.t || 0, todNow = o.todTo && o.todK >= 0.5 ? o.todTo : tod;
+    live(g, xf, (g2) => {
+      if (dining) { clockHands(g2, 1430, 190, 58, o.clock != null ? o.clock : 19); return; }
+      clockHands(g2, 935, 116, 52, o.clock != null ? o.clock : (todNow === 'night' ? 0.1 : 17.2));
+      const fanP = todNow === 'night' ? Object.assign({}, HM, { blade: '#6C7FA8', bladeSh: '#5A6B92', fanBody: '#B9B4C8' }) : todNow === 'evening' ? Object.assign({}, HM, { blade: '#7A9FD0', bladeSh: '#6688BC', fanBody: '#EAD9D0' }) : HM;
+      fanFace(g2, { x: 532, y: 902 - 500 * 0.92 - 8 * 0.92, r: 92 * 0.92 }, o.fan === false ? 0.4 : t * TAU * 1.6, fanP);
+      if (o.tv) { const r = rng(1 + Math.floor(t * 2.5)); r(); tvGlass(g2, 1318, 530, 244, 136, true, 0.5 + 0.5 * Math.sin(t * 9) * r()); }
+    });
+    const T = HOME_TOD[todNow];
+    return result(xf, dining ? homeDiningAnchors() : homeLoungeAnchors(o), 990, HM.FY, { tint: o.tv && todNow === 'night' ? '#A3ABCF' : T.tint });
+  };
+  SETS.homeFront = function (g, o) {
+    o = o || {};
+    const tod = HOME_TOD[o.tod] ? o.tod : 'day', dining = o.view === 'dining', xf = camXf(o.cam);
+    const piece = (t) => (lg) => {
+      if (dining) diningTable(lg, HM, o, true); else centreTable(lg, HM, true);
+      if (t !== 'day') maskedPass(lg, (g2) => dining ? homeDiningLight(g2, o, t) : homeLoungeLight(g2, o, t));
+    };
+    if (dining || o.table !== false) {
+      const bb = dining ? { x: 450, y: 470, w: 1020, h: 470 } : { x: 740, y: 820, w: 390, h: 170 };
+      const key = (t) => 'homeFront|' + homeKey(o, t);
+      blit(g, xf, layer(key(tod), devRes(g, xf), piece(tod)), null, bb);
+      if (o.todTo && HOME_TOD[o.todTo] && o.todK > 0) blit(g, xf, layer(key(o.todTo), devRes(g, xf), piece(o.todTo)), Math.min(1, o.todK), bb);
+    }
+    return result(xf, dining ? homeDiningAnchors() : homeLoungeAnchors(o), 990, HM.FY);
+  };
+
+  // ================================================================ KITCHEN (a homely Nigerian kitchen corner; mumKitchen above is the fitted one)
+  // SETS.kitchen(g, o): o.sky ('day' default | morning | sunset | evening | night), o.steam (false: no steam), o.t.
+  // Anchors: cook (standing at the cooker), pot (the pot on the burner), counter, sink (standing at the sink), freezer (its lid),
+  // mortar, window, left, center, right. SETS.kitchenFront draws nothing (it returns the anchors).
+  const KT = { FY: 840, wall: '#F7DCA4', wallSh: '#EAC287', tile: '#FFF7E6', tileLine: '#E6D2AE', floor: '#D9915F', floorAlt: '#D0885A', floorLine: '#B8774A', floorSh: '#A86A43',
+    top: '#E8DCC8', topSh: '#D3C4AA', cab: '#B0703F', cabSh: '#965E35', freezer: '#F4F1EA', freezerSh: '#DCD6CA', shelf: '#9C6A48', shelfSh: '#86593C', steel: '#C9CED3', steelSh: '#A9B0B8' };
+  function enamelPot(g, cx, by, w, h, col, lid) {
+    const sh = dark(col, 0.85);
+    for (const sx of [-1, 1]) shape(g, () => rrP(g, cx + sx * (w / 2 + 2) - (sx < 0 ? 22 : 0), by - h * 0.78, 22, 12, 6), col, LW.detail);
+    shape(g, () => { g.beginPath(); g.moveTo(cx - w / 2, by - h); g.lineTo(cx + w / 2, by - h); g.lineTo(cx + w * 0.46, by - 8); g.quadraticCurveTo(cx + w * 0.45, by, cx + w * 0.38, by); g.lineTo(cx - w * 0.38, by); g.quadraticCurveTo(cx - w * 0.45, by, cx - w * 0.46, by - 8); g.closePath(); }, col, LW.small, sh, () => rectP(g, cx + w * 0.16, by - h - 4, w * 0.4, h + 8));
+    shape(g, () => rrP(g, cx - w / 2 - 4, by - h - 6, w + 8, 12, 6), '#FFFFFF', LW.detail);
+    if (lid) { shape(g, () => { g.beginPath(); g.ellipse(cx, by - h - 6, w * 0.47, h * 0.24, 0, Math.PI, TAU); g.closePath(); }, col, LW.small, sh, () => rectP(g, cx + w * 0.1, by - h - 40, w * 0.4, 40)); shape(g, () => rrP(g, cx - 14, by - h - h * 0.24 - 18, 28, 14, 6), '#FFFFFF', LW.detail); }
+  }
+  function steamWisps(g, x, y, s, k) {
+    g.save(); g.lineWidth = 6 * s; g.strokeStyle = 'rgba(255,255,255,0.75)'; g.lineCap = 'round';
+    for (let i = 0; i < 3; i++) { const ph = (k + i / 3) % 1, yy = y - ph * 90 * s, a = Math.sin(ph * Math.PI); g.globalAlpha = a * 0.9; g.beginPath(); const xx = x + (i - 1) * 24 * s; g.moveTo(xx, yy); g.bezierCurveTo(xx - 14 * s, yy - 18 * s, xx + 14 * s, yy - 30 * s, xx, yy - 48 * s); g.stroke(); }
+    g.restore();
+  }
+  function kitchenCornerStatic(g, o) {
+    const P = KT, FY = P.FY;
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 980, vpy: 300, step: 190, h0: 34 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    // splashback tiles behind the counter
+    rectP(g, 470, 420, 1330, 172); paint(g, P.tile, 0);
+    g.strokeStyle = P.tileLine; g.lineWidth = 2.5; g.beginPath();
+    for (let y = 420; y <= 592; y += 43) { g.moveTo(470, y); g.lineTo(1800, y); } for (let x = 470; x <= 1800; x += 58) { g.moveTo(x, 420); g.lineTo(x, 592); } g.stroke();
+    rectP(g, 470, 420, 1330, 172); paint(g, null, LW.detail);
+    // louvre window with bars over the sink, a little valance
+    louvreWindow(g, 1340, 120, 360, 290, { sky: o.sky || 'day', seed: 71, frame: '#F3E2C4', bars: true });
+    shape(g, () => { g.beginPath(); g.moveTo(1324, 104); g.lineTo(1716, 104); g.lineTo(1716, 150); for (let i = 6; i >= 0; i--) g.arc(1324 + (i + 0.5) * 56, 150, 28, 0, Math.PI, false); g.closePath(); }, '#E5534B', LW.small, '#C9443D', () => rectP(g, 1324, 104, 392, 16));
+    g.fillStyle = '#FFF4E3'; for (let i = 0; i < 7; i++) for (let j = 0; j < 2; j++) { rectP(g, 1334 + i * 56 + j * 28, 122 + j * 14, 14, 14); g.fill(); }
+    // shelves with enamel bowls, cups on hooks, jars, a stack of plates, a radio
+    for (const sy of [214, 336]) { shape(g, () => rectP(g, 510, sy, 680, 20), P.shelf, LW.small, P.shelfSh, () => rectP(g, 510, sy + 12, 680, 8)); for (const bx of [540, 1160]) shape(g, () => polyP(g, [bx - 8, sy + 20, bx + 8, sy + 20, bx + 8, sy + 60, bx - 8, sy + 44]), P.shelf, LW.detail); }
+    [['#E5534B', 120], ['#3A8594', 100], ['#F4BF54', 80]].forEach(([c, w], i) => { const by = 214 - i * 26; shape(g, () => { g.beginPath(); g.moveTo(600 - w / 2, by - 26); g.lineTo(600 + w / 2, by - 26); g.quadraticCurveTo(600 + w * 0.42, by, 600, by); g.quadraticCurveTo(600 - w * 0.42, by, 600 - w / 2, by - 26); g.closePath(); }, c, LW.detail, dark(c, 0.86), () => rectP(g, 610, by - 30, w, 34)); line(g, 600 - w / 2, by - 26, 600 + w / 2, by - 26, 4, '#FFFFFF'); });
+    for (let i = 0; i < 4; i++) shape(g, () => rrP(g, 720 + i * 46, 166, 34, 48, 6), ['#FBF6EF', '#F4BF54', '#E5534B', '#FBF6EF'][i], LW.detail, null, null);
+    for (let i = 0; i < 4; i++) shape(g, () => rrP(g, 718 + i * 46, 160, 38, 12, 4), '#9C6A48', LW.detail);
+    shape(g, () => rrP(g, 940, 132, 150, 82, 14), '#3A8594', LW.small, '#2F7280', () => rectP(g, 1040, 128, 60, 90));
+    ellP(g, 978, 173, 24, 24); paint(g, '#2E3038', LW.detail); for (let i = 0; i < 3; i++) line(g, 1018, 158 + i * 14, 1070, 158 + i * 14, 3, '#BFE3E0');
+    line(g, 1060, 132, 1086, 96, 3); ellP(g, 1087, 94, 4, 4); paint(g, INK, 0);
+    for (let i = 0; i < 5; i++) shape(g, () => { g.beginPath(); g.ellipse(640, 336 - i * 9, 66, 10, 0, 0, TAU); }, '#FFFFFF', LW.detail);
+    for (let i = 0; i < 5; i++) { const jx = 770 + i * 70; shape(g, () => rrP(g, jx, 270, 46, 66, 8), 'rgba(236,246,248,0.95)', LW.detail); rectP(g, jx + 4, 296, 38, 36); paint(g, ['#E5534B', '#F4BF54', '#9C6A48', '#77CC81', '#E98A3C'][i], 0); shape(g, () => rrP(g, jx - 2, 262, 50, 12, 4), '#E5534B', LW.detail); }
+    for (const [hx, c] of [[1070, '#FFFFFF'], [1120, '#7BAFE1']]) { line(g, hx, 356, hx, 372, 3); shape(g, () => rrP(g, hx - 18, 372, 36, 40, 6), c, LW.detail); g.beginPath(); g.arc(hx + 20, 390, 10, -1.3, 1.3); g.lineWidth = 3; g.strokeStyle = INK; g.stroke(); }
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, FY], [-20, 110, 600, 30, 1300, 30, W + 20, 120]);
+    clipDo(g, () => rectP(g, 0, 0, W, FY), () => softFill(g, 12, 'rgba(255,248,226,0.35)', () => polyP(g, [1350, 420, 1690, 420, 1500, FY, 1060, FY]), 'screen'));
+    line(g, 0, FY, W, FY, LW.arch);
+    // chest freezer with things on top
+    floorShadow(g, 250, 908, 220, 14, P.floorSh, 5);
+    shape(g, () => rrP(g, 60, 626, 380, 274, 14), P.freezer, LW.big, P.freezerSh, () => rectP(g, 380, 620, 70, 290));
+    line(g, 64, 662, 436, 662, LW.small);
+    shape(g, () => rrP(g, 190, 670, 120, 16, 8), '#C9CED3', LW.detail);
+    shape(g, () => rrP(g, 52, 600, 396, 30, 10), P.freezer, LW.big, P.freezerSh, () => rectP(g, 52, 618, 396, 12));
+    ellP(g, 408, 640, 6, 6); paint(g, '#77CC81', 1.5);
+    shape(g, () => { g.beginPath(); g.moveTo(100, 600); g.lineTo(250, 600); g.lineTo(236, 548); g.lineTo(114, 548); g.closePath(); }, '#C98A55', LW.small, '#A8703F', () => rectP(g, 200, 540, 60, 70));
+    g.strokeStyle = INK; g.lineWidth = 2; for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(108 + i * 34, 552); g.lineTo(104 + i * 36, 598); g.stroke(); }
+    for (const [tx, ty, tc] of [[138, 540, '#E5534B'], [172, 532, '#E5534B'], [206, 542, '#E98A3C'], [156, 516, '#77CC81']]) { ellP(g, tx, ty, 20, 18); paint(g, tc, LW.detail); }
+    shape(g, () => rrP(g, 300, 470, 80, 130, 18), '#E5534B', LW.small, '#C9443D', () => rectP(g, 350, 460, 40, 150));
+    shape(g, () => rrP(g, 306, 458, 68, 22, 8), '#FFFFFF', LW.detail);
+    // counter: cabinets, an open bay with the gas cylinder, the worktop
+    shape(g, () => rectP(g, 470, 618, 1330, 214), P.cab, LW.big, P.cabSh, () => rectP(g, 470, 618, 1330, 20));
+    shape(g, () => rectP(g, 500, 650, 230, 170), '#6E4A3A', LW.small);
+    for (let x = 760; x < 1800; x += 208) { shape(g, () => rectP(g, x, 650, 190, 170), P.cab, LW.small, P.cabSh, () => rectP(g, x, 650, 190, 12)); ellP(g, x + (x % 416 < 208 ? 170 : 20), 700, 6, 6); paint(g, '#E9B04A', LW.detail); }
+    shape(g, () => rectP(g, 470, 828, 1330, 14), '#6E4A3A', LW.detail);
+    // gas cylinder in the bay, hose up to the cooker
+    shape(g, () => rrP(g, 548, 690, 128, 132, 34), '#3A8594', LW.small, '#2F7280', () => rectP(g, 630, 680, 60, 150));
+    shape(g, () => rrP(g, 590, 668, 44, 26, 6), '#C9CED3', LW.detail);
+    rectP(g, 552, 740, 120, 18); paint(g, '#F4BF54', LW.detail);
+    g.beginPath(); g.moveTo(612, 668); g.bezierCurveTo(600, 630, 690, 640, 700, 600); g.lineWidth = 7 + LW.detail * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 7; g.strokeStyle = '#E98A3C'; g.stroke();
+    shape(g, () => rrP(g, 456, 586, 1358, 36, 6), P.top, LW.big, P.topSh, () => rectP(g, 456, 606, 1358, 16));
+    // sink under the window, with a tap
+    shape(g, () => polyP(g, [1390, 592, 1650, 592, 1640, 604, 1400, 604]), '#9AA3AA', LW.detail);
+    g.beginPath(); g.moveTo(1520, 590); g.lineTo(1520, 530); g.quadraticCurveTo(1520, 504, 1546, 504); g.quadraticCurveTo(1570, 504, 1572, 528); g.lineWidth = 9 + LW.small * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 9; g.strokeStyle = P.steel; g.stroke();
+    shape(g, () => rrP(g, 1496, 556, 20, 12, 4), P.steel, LW.detail); shape(g, () => rrP(g, 1524, 556, 20, 12, 4), P.steel, LW.detail);
+    // the cooker: a tabletop two-burner on the worktop, a pot of soup steaming, a frying pan
+    shape(g, () => rrP(g, 520, 540, 340, 50, 8), P.steel, LW.big, P.steelSh, () => rectP(g, 520, 568, 340, 22));
+    for (const kx of [560, 600, 780, 820]) { ellP(g, kx, 576, 9, 9); paint(g, '#2E3038', LW.detail); }
+    for (const bx of [620, 770]) { g.beginPath(); g.ellipse(bx, 540, 56, 8, 0, 0, TAU); paint(g, '#2E3038', LW.detail); }
+    enamelPot(g, 624, 536, 160, 112, '#E5534B', true);
+    shape(g, () => { g.beginPath(); g.ellipse(776, 528, 64, 12, 0, 0, TAU); }, '#3A3C42', LW.small);
+    shape(g, () => rrP(g, 834, 520, 90, 12, 6), '#3A3C42', LW.small);
+    // chopping board with plantain and a knife, a bowl of tomatoes and peppers, a kettle
+    shape(g, () => rrP(g, 930, 568, 230, 22, 8), '#D9A86A', LW.small, '#C08E52', () => rectP(g, 930, 580, 230, 10));
+    for (const [px, py, a] of [[990, 556, -0.08], [1080, 552, 0.06]]) { g.save(); g.translate(px, py); g.rotate(a); g.beginPath(); g.moveTo(-58, 6); g.quadraticCurveTo(0, -22, 58, 2); g.quadraticCurveTo(0, -4, -58, 14); g.closePath(); paint(g, '#F4BF54', LW.detail); g.restore(); }
+    shape(g, () => polyP(g, [1120, 560, 1190, 548, 1194, 556, 1124, 568]), '#D8DDE2', LW.detail);
+    shape(g, () => { g.beginPath(); g.moveTo(1190, 568); g.lineTo(1330, 568); g.quadraticCurveTo(1320, 590, 1290, 590); g.lineTo(1230, 590); g.quadraticCurveTo(1200, 590, 1190, 568); g.closePath(); }, '#7BAFE1', LW.small, '#6497C9', () => rectP(g, 1270, 560, 70, 34));
+    for (const [tx, ty, tc] of [[1222, 552, '#E5534B'], [1256, 546, '#E5534B'], [1292, 552, '#E98A3C'], [1240, 528, '#C9443D'], [1276, 530, '#77CC81']]) { ellP(g, tx, ty, 18, 16); paint(g, tc, LW.detail); }
+    // mortar and pestle on the floor, a water drum at the right
+    floorShadow(g, 1236, 932, 70, 10, P.floorSh, 4);
+    shape(g, () => { g.beginPath(); g.moveTo(1180, 790); g.lineTo(1292, 790); g.quadraticCurveTo(1262, 860, 1276, 930); g.lineTo(1196, 930); g.quadraticCurveTo(1210, 860, 1180, 790); g.closePath(); }, '#B0703F', LW.small, '#965E35', () => rectP(g, 1240, 780, 60, 160));
+    shape(g, () => { g.beginPath(); g.ellipse(1236, 790, 56, 10, 0, 0, TAU); }, '#7A4B32', LW.detail);
+    g.save(); g.translate(1262, 776); g.rotate(0.32); shape(g, () => rrP(g, -9, -220, 18, 240, 9), '#C98A55', LW.small, '#A8703F', () => rectP(g, 1, -230, 10, 260)); g.restore();
+    floorShadow(g, 1860, 936, 90, 12, P.floorSh, 4);
+    shape(g, () => rrP(g, 1790, 700, 150, 232, 22), '#3E7FB8', LW.big, '#336CA0', () => rectP(g, 1890, 690, 60, 250));
+    for (const ry of [760, 860]) line(g, 1792, ry, 1938, ry, LW.small);
+    shape(g, () => rrP(g, 1782, 684, 166, 26, 10), '#3E7FB8', LW.small, '#336CA0', () => rectP(g, 1782, 700, 166, 10));
+    // the steam is drawn live
+  }
+  function kitchenCornerAnchors() {
+    return { cook: { x: 700, y: 975, s: 1 }, pot: { x: 624, y: 410, s: 1 }, counter: { x: 1040, y: 588, s: 1 }, sink: { x: 1520, y: 975, s: 1 }, freezer: { x: 250, y: 600, s: 1 },
+      mortar: { x: 1236, y: 930, s: 1 }, window: { x: 1520, y: 265, s: 1 }, left: { x: 300, y: 985, s: 1.02 }, center: { x: 960, y: 985, s: 1.02 }, right: { x: 1560, y: 985, s: 1.02 } };
+  }
+  SETS.kitchen = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('kitchenCorner|' + (o.sky || 'day'), devRes(g, xf), (lg) => kitchenCornerStatic(lg, o)));
+    if (o.steam !== false) live(g, xf, (g2) => steamWisps(g2, 624, 380, 1, ((o.t || 0) * 0.45) % 1));
+    return result(xf, kitchenCornerAnchors(), 985, KT.FY);
+  };
+  SETS.kitchenFront = function (g, o) { o = o || {}; return result(camXf(o.cam), kitchenCornerAnchors(), 985, KT.FY); };
+
+  // ================================================================ SHOP (the corner kiosk for the salt errand)
+  // SETS.shop(g, o): o.sky ('day' default | morning | sunset). Anchors: customer (standing at the counter), seller (seated behind the
+  // counter: the seat point; give the figure sellerFloor.y as its floor so the feet stay behind the panel), sellerFloor, counter (counter top centre), coins (the coin tray), left, center, right.
+  // SETS.shopFront: the counter ledge, its jars and bread, and the front panel (draw it after the seller).
+  const SP = { sky: '#FCE9A7', wall: '#EDB872', wallSh: '#DDA05C', ground: '#EBCB92', groundSh: '#D9B47A', kiosk: '#3A8594', kioskSh: '#2F7280', trim: '#F4BF54', trimSh: '#DCA640',
+    inside: '#7A4E36', insideSh: '#68402C', shelf: '#C98A55', shelfSh: '#A8703F', zinc: '#B9C3CC', zincSh: '#9AA6B2' };
+  function goods(g, x0, x1, y, h, seed) {
+    const r = rng(seed), cols = ['#E5534B', '#F4BF54', '#7BAFE1', '#77CC81', '#E98A3C', '#FBF6EF', '#3A8594', '#B07BD0'];
+    let x = x0 + 6;
+    while (x < x1 - 30) {
+      const k = r(), c = cols[Math.floor(r() * cols.length)];
+      if (k < 0.4) { // a box with a blank label
+        const w = 46 + r() * 26, bh = h * (0.7 + r() * 0.28); if (x + w > x1 - 4) break;
+        shape(g, () => rectP(g, x, y - bh, w, bh), c, LW.detail, dark(c, 0.85), () => rectP(g, x + w * 0.72, y - bh, w * 0.28, bh));
+        rrP(g, x + 7, y - bh * 0.66, w * 0.56, bh * 0.3, 4); paint(g, '#FFFFFF', 1.4); x += w + 6;
+      } else if (k < 0.72) { // tins
+        for (let i = 0; i < 2 && x < x1 - 40; i++) { const w = 34, bh = h * 0.52; shape(g, () => rrP(g, x, y - bh, w, bh, 4), '#D8DDE2', LW.detail, '#B9C0C8', () => rectP(g, x + 24, y - bh, 10, bh)); rectP(g, x, y - bh * 0.7, w, bh * 0.4); paint(g, c, 1.4); x += w + 4; } x += 6;
+      } else { // bottles
+        for (let i = 0; i < 2 && x < x1 - 30; i++) { const w = 24, bh = h * 0.82; shape(g, () => { g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - bh * 0.6); g.quadraticCurveTo(x + 2, y - bh * 0.72, x + 8, y - bh * 0.78); g.lineTo(x + 8, y - bh); g.lineTo(x + 16, y - bh); g.lineTo(x + 16, y - bh * 0.78); g.quadraticCurveTo(x + 22, y - bh * 0.72, x + w, y - bh * 0.6); g.lineTo(x + w, y); g.closePath(); }, c === '#FBF6EF' ? '#9C5A3C' : c, LW.detail); rectP(g, x + 2, y - bh * 0.45, w - 4, bh * 0.18); paint(g, '#FFFFFF', 1.2); x += w + 5; } x += 6;
+      }
+    }
+  }
+  function sachetStrip(g, x, y, n, c1, c2) {
+    line(g, x, y - 14, x, y + 2, 2);
+    for (let i = 0; i < n; i++) { const c = i % 2 ? c2 : c1, yy = y + i * 31; shape(g, () => rectP(g, x - 14, yy, 28, 29), c, 1.6, dark(c, 0.86), () => rectP(g, x - 14, yy + 20, 28, 9)); rectP(g, x - 7, yy + 7, 14, 8); paint(g, '#FFFFFF', 0); }
+  }
+  function shopCounter(g) {
+    const P = SP;
+    shape(g, () => rectP(g, 540, 664, 880, 236), P.kiosk, LW.big, P.kioskSh, () => rectP(g, 540, 664, 880, 24));
+    for (const px of [580, 1000]) shape(g, () => rectP(g, px, 708, 380, 160), mix(P.kiosk, '#FFFFFF', 0.12), LW.small, P.kioskSh, () => rectP(g, px, 708, 380, 14));
+    for (const px of [580, 1000]) { rectP(g, px + 20, 730, 340, 10); paint(g, P.trim, LW.detail); }
+    shape(g, () => rrP(g, 520, 636, 920, 32, 6), P.shelf, LW.big, P.shelfSh, () => rectP(g, 520, 654, 920, 14));
+    // sweet jars, the coin tray, bread in its bag
+    for (const [jx, c] of [[600, '#E5534B'], [690, '#F4BF54'], [780, '#77CC81']]) {
+      shape(g, () => rrP(g, jx - 34, 552, 68, 86, 14), 'rgba(236,246,248,0.9)', LW.small);
+      const r = rng(jx); for (let i = 0; i < 9; i++) { ellP(g, jx - 20 + r() * 40, 600 + r() * 30, 9, 9); paint(g, i % 3 ? c : '#FFFFFF', 1.2); }
+      shape(g, () => rrP(g, jx - 30, 540, 60, 16, 5), '#E5534B', LW.detail);
+      polyP(g, [jx + 8, 560, jx + 18, 560, jx + 10, 630, jx, 630]); g.fillStyle = 'rgba(255,255,255,0.6)'; g.fill();
+    }
+    shape(g, () => { g.beginPath(); g.ellipse(900, 632, 54, 10, 0, 0, TAU); }, '#C9CED3', LW.small);
+    for (const [bx, by] of [[1220, 636], [1300, 636]]) shape(g, () => rrP(g, bx - 46, by - 64, 92, 64, 24), '#E6A15C', LW.small, '#CE8A47', () => rectP(g, bx - 46, by - 22, 92, 22));
+    for (const [bx, by] of [[1220, 636], [1300, 636]]) { rrP(g, bx - 50, by - 68, 100, 70, 26); g.fillStyle = 'rgba(255,255,255,0.28)'; g.fill(); line(g, bx - 30, by - 50, bx + 30, by - 50, 3, 'rgba(255,255,255,0.7)'); }
+  }
+  function shopStatic(g, o) {
+    const P = SP, GY = 760;
+    rectP(g, 0, 0, W, GY); paint(g, o.sky === 'sunset' ? '#FDD3A6' : P.sky, 0);
+    // a cloud, a compound wall and a house behind, an electric pole and wires
+    for (const [cx, cy, s] of [[1500, 90, 1.2], [300, 70, 0.9]]) { g.beginPath(); g.moveTo(cx - 70 * s, cy); g.arc(cx - 40 * s, cy - 8 * s, 26 * s, Math.PI, TAU * 0.9); g.arc(cx + 4 * s, cy - 22 * s, 34 * s, Math.PI * 1.05, TAU * 0.98); g.arc(cx + 46 * s, cy - 6 * s, 22 * s, Math.PI * 1.25, TAU); g.lineTo(cx + 70 * s, cy); g.closePath(); g.fillStyle = '#FFF6DE'; g.fill(); }
+    shape(g, () => polyP(g, [1540, 330, 1720, 230, 1960, 330, 1960, 760, 1540, 760]), '#F2C38A', LW.small, '#E1AE74', () => rectP(g, 1540, 330, 70, 440));
+    shape(g, () => polyP(g, [1520, 336, 1720, 222, 1960, 336, 1960, 350, 1720, 238, 1520, 350]), '#B5714A', LW.small);
+    louvreWindow(g, 1700, 420, 170, 190, { sky: 'day', seed: 3, frame: '#FFF4E3', bars: true, sill: false });
+    shape(g, () => rectP(g, -10, 470, W + 20, 290), P.wall, LW.small, P.wallSh, () => rectP(g, -10, 470, W + 20, 30));
+    for (let x = -10; x < W; x += 160) line(g, x, 500, x, 760, LW.detail, rgba(INK, 0.35));
+    shape(g, () => rectP(g, -10, 456, W + 20, 22), '#F6D3A2', LW.small);
+    shape(g, () => rectP(g, 1846, -20, 28, 800), '#C9C2B5', LW.small, '#B0A99C', () => rectP(g, 1862, -20, 12, 800));
+    shape(g, () => rectP(g, 1800, 60, 120, 14), '#9C9488', LW.small);
+    g.strokeStyle = INK; g.lineWidth = 2.4; for (const [y0, sag] of [[66, 60], [74, 90]]) { g.beginPath(); g.moveTo(1800, y0); g.quadraticCurveTo(900, y0 + sag * 2, -20, y0 + 20); g.stroke(); }
+    // a tree at the left
+    shape(g, () => { g.beginPath(); g.moveTo(150, 770); g.lineTo(162, 520); g.lineTo(120, 430); g.lineTo(140, 422); g.lineTo(176, 488); g.lineTo(196, 400); g.lineTo(214, 404); g.lineTo(196, 540); g.lineTo(202, 770); g.closePath(); }, C.stTrunk, LW.small, dark(C.stTrunk, 0.85), () => rectP(g, 186, 390, 30, 390));
+    const pts = [[170, 170, 90], [80, 250, 80], [270, 240, 86], [60, 360, 74], [300, 350, 76], [180, 300, 120], [170, 410, 70]];
+    const blob = () => { g.beginPath(); for (const [x, y, r] of pts) { g.moveTo(x + r, y); g.arc(x, y, r, 0, TAU); } };
+    g.lineWidth = LW.small * 2; g.strokeStyle = INK; blob(); g.stroke(); blob(); g.fillStyle = C.stTree; g.fill();
+    g.save(); blob(); g.clip(); g.beginPath(); g.ellipse(290, 410, 170, 130, -0.5, 0, TAU); g.fillStyle = C.stTreeSh; g.fill(); g.restore();
+    // ground: a sandy street with a few pebbles and a long soft light band
+    rectP(g, 0, GY, W, H - GY); paint(g, P.ground, 0);
+    line(g, 0, GY, W, GY, LW.small);
+    softFill(g, 20, 'rgba(255,248,214,0.35)', () => polyP(g, [0, 900, 1920, 820, 1920, 900, 0, 1000]));
+    const r = rng(83); g.fillStyle = P.groundSh; for (let i = 0; i < 40; i++) { ellP(g, r() * W, GY + 30 + r() * 300, 4 + r() * 6, 2 + r() * 3); g.fill(); }
+    // the kiosk: zinc roof, awning, the open front with stocked shelves, sachet strips
+    floorShadow(g, 980, 906, 560, 22, P.groundSh, 8);
+    shape(g, () => rectP(g, 520, 240, 920, 664), P.kiosk, LW.big, P.kioskSh, () => rectP(g, 1380, 240, 60, 664));
+    shape(g, () => rectP(g, 560, 300, 840, 340), P.inside, LW.small, P.insideSh, () => rectP(g, 560, 300, 840, 40));
+    for (const [sy, h] of [[400, 80], [500, 80], [600, 80]]) { goods(g, 566, 1394, sy, h, sy); shape(g, () => rectP(g, 560, sy, 840, 14), P.shelf, LW.small, P.shelfSh, () => rectP(g, 560, sy + 8, 840, 6)); }
+    for (const [sx, n, a, b] of [[596, 4, '#F4BF54', '#E5534B'], [636, 3, '#7BAFE1', '#FBF6EF'], [1324, 3, '#77CC81', '#F4BF54'], [1364, 4, '#E5534B', '#FBF6EF']]) sachetStrip(g, sx, 324, n, a, b);
+    shape(g, () => polyP(g, [470, 244, 1490, 244, 1470, 196, 490, 196]), P.zinc, LW.big, P.zincSh, () => polyP(g, [470, 230, 1490, 230, 1490, 244, 470, 244]));
+    g.strokeStyle = P.zincSh; g.lineWidth = 3; g.beginPath(); for (let x = 520; x < 1460; x += 34) { g.moveTo(x, 198); g.lineTo(x - 6, 242); } g.stroke();
+    shape(g, () => { g.beginPath(); g.moveTo(500, 244); g.lineTo(1460, 244); g.lineTo(1476, 300); for (let i = 15; i >= 0; i--) g.arc(484 + (i + 0.5) * 62, 300, 31, 0, Math.PI, false); g.closePath(); }, '#FFF4E3', LW.small);
+    clipDo(g, () => { g.beginPath(); g.moveTo(500, 244); g.lineTo(1460, 244); g.lineTo(1476, 300); for (let i = 15; i >= 0; i--) g.arc(484 + (i + 0.5) * 62, 300, 31, 0, Math.PI, false); g.closePath(); }, () => {
+      g.fillStyle = '#E5534B'; for (let i = 0; i < 16; i += 2) { polyP(g, [500 + i * 60, 244, 560 + i * 60, 244, 578 + i * 62, 340, 484 + i * 62, 340]); g.fill(); }
+      rectP(g, 480, 244, 1010, 14); g.fillStyle = 'rgba(120,40,30,0.25)'; g.fill();
+    });
+    g.beginPath(); g.moveTo(500, 244); g.lineTo(1460, 244); g.lineTo(1476, 300); for (let i = 15; i >= 0; i--) g.arc(484 + (i + 0.5) * 62, 300, 31, 0, Math.PI, false); g.closePath(); paint(g, null, LW.small);
+    // crates of bottles at the right, a wooden bench at the left
+    for (const [cx, cy] of [[1560, 904], [1560, 820]]) {
+      shape(g, () => rectP(g, cx - 90, cy - 84, 180, 84), '#F4BF54', LW.small, '#DCA640', () => rectP(g, cx + 50, cy - 84, 40, 84));
+      for (let i = 0; i < 4; i++) { rectP(g, cx - 76 + i * 40, cy - 64, 30, 18); paint(g, '#DCA640', LW.detail); }
+      if (cy === 820) for (let i = 0; i < 5; i++) { ellP(g, cx - 72 + i * 36, cy - 92, 13, 7); paint(g, ['#E5534B', '#77CC81', '#E5534B', '#7BAFE1', '#E5534B'][i], 1.6); }
+    }
+    floorShadow(g, 360, 908, 150, 10, P.groundSh, 4);
+    for (const lx of [260, 460]) shape(g, () => rectP(g, lx - 8, 820, 16, 86), '#9C6A48', LW.small);
+    shape(g, () => rrP(g, 230, 806, 260, 22, 6), '#B0703F', LW.small, '#965E35', () => rectP(g, 230, 818, 260, 10));
+    shopCounter(g);
+  }
+  function shopAnchors() {
+    return { customer: { x: 800, y: 985, s: 1 }, seller: { x: 1110, y: 800, s: 0.92 }, sellerFloor: { x: 1110, y: 890, s: 0.92 }, counter: { x: 980, y: 636, s: 1 }, coins: { x: 900, y: 630, s: 1 },
+      bench: { x: 360, y: 806, s: 0.95 }, left: { x: 340, y: 985, s: 1.02 }, center: { x: 960, y: 985, s: 1.02 }, right: { x: 1600, y: 985, s: 1.02 } };
+  }
+  SETS.shop = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('shop|' + (o.sky || 'day'), devRes(g, xf), (lg) => shopStatic(lg, o)));
+    return result(xf, shopAnchors(), 985, 760);
+  };
+  SETS.shopFront = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('shopFront', devRes(g, xf), (lg) => shopCounter(lg)), null, { x: 510, y: 530, w: 940, h: 380 });
+    return result(xf, shopAnchors(), 985, 760);
+  };
+
+  // ================================================================ SCHOOL (a classroom, or the results noticeboard)
+  // SETS.school(g, o): o.view 'class' (default: the blackboard with chalk marks and no legible writing, louvre windows, the teacher's
+  // table, two wooden desks in profile facing the board) | 'board' (the corridor noticeboard of results sheets; o.highlight = index of
+  // the sheet to light, 0-7, o.highlightK 0..1). o.sky, o.clock.
+  // Anchors (class): teacher (standing at the board), board, desk1, desk2 (desk seats, sitters face left), table (teacher's table top),
+  // left, center, right. Anchors (board): board, sheet0..sheet7 (sheet centres), left, center, right.
+  // SETS.schoolFront: class: the near desk (desk2) over its sitter.
+  const SC = { FY: 840, wall: '#FBE7C0', wallSh: '#EFCFA0', lower: '#8FC2B0', lowerSh: '#7DAF9D', board: '#2F5E57', boardSh: '#294F4A', frame: '#B0703F', frameSh: '#965E35',
+    floor: '#D9B08A', floorAlt: '#D3A881', floorLine: '#BF9269', floorSh: '#AE7F58', desk: '#C98A55', deskSh: '#A8703F', cork: '#D79F6E', corkFrame: '#B0703F' };
+  function schoolDesk(g, x0, fy, s, noShadow) {
+    // a two-seater wooden desk in profile, the sitter facing left: slanted top on the left, bench on the right, a back rest
+    const P = SC, top = fy - 350 * s;
+    if (!noShadow) floorShadow(g, x0 + 220 * s, fy + 4, 250 * s, 14 * s, P.floorSh, 5);
+    for (const lx of [x0 + 24 * s, x0 + 204 * s, x0 + 270 * s, x0 + 420 * s]) shape(g, () => rectP(g, lx - 9 * s, lx > x0 + 250 * s ? fy - 205 * s : top, 18 * s, lx > x0 + 250 * s ? 205 * s : fy - top), P.desk, LW.small, P.deskSh, () => rectP(g, lx + 2 * s, top, 7 * s, fy));
+    shape(g, () => rectP(g, x0 + 16 * s, fy - 54 * s, 412 * s, 16 * s), P.desk, LW.small, P.deskSh, () => rectP(g, x0 + 16 * s, fy - 46 * s, 412 * s, 8 * s));
+    shape(g, () => rectP(g, x0 + 438 * s - 9 * s, fy - 470 * s, 18 * s, 470 * s), P.desk, LW.small, P.deskSh, () => rectP(g, x0 + 438 * s, fy - 480 * s, 9 * s, 480 * s));
+    shape(g, () => rrP(g, x0 + 412 * s, fy - 470 * s, 40 * s, 150 * s, 6 * s), P.desk, LW.small, P.deskSh, () => rectP(g, x0 + 434 * s, fy - 480 * s, 20 * s, 170 * s));
+    shape(g, () => rectP(g, x0 + 20 * s, top + 16 * s, 190 * s, 74 * s), P.deskSh, LW.small);
+    for (let i = 0; i < 3; i++) shape(g, () => rectP(g, x0 + 34 * s + i * 30 * s, top + 40 * s, 24 * s, 50 * s), ['#7BAFE1', '#E5534B', '#F4BF54'][i], LW.detail);
+    shape(g, () => polyP(g, [x0 + 4 * s, top + 6 * s, x0 + 230 * s, top - 18 * s, x0 + 232 * s, top - 2 * s, x0 + 6 * s, top + 22 * s]), P.desk, LW.small, P.deskSh, () => polyP(g, [x0, top + 14 * s, x0 + 236 * s, top - 10 * s, x0 + 236 * s, top, x0, top + 26 * s]));
+    shape(g, () => rrP(g, x0 + 250 * s, fy - 214 * s, 196 * s, 20 * s, 5 * s), P.desk, LW.small, P.deskSh, () => rectP(g, x0 + 250 * s, fy - 204 * s, 196 * s, 10 * s));
+    return { x: x0 + 340 * s, y: fy - 214 * s, s: s * 0.98, facing: -1 };
+  }
+  const DESK1 = [1210, 900, 0.86], DESK2 = [1420, 1020, 1.06];
+  function chalkMarks(g, x, y, w, h) {
+    g.save(); g.strokeStyle = 'rgba(250,250,240,0.85)'; g.lineWidth = 4; g.lineCap = 'round';
+    const r = rng(29);
+    for (let row = 0; row < 4; row++) {
+      let cx = x + 50 + (row === 0 ? 80 : 0); const cy = y + 70 + row * 64, end = x + w * (0.45 + r() * 0.15);
+      while (cx < end) { const len = 30 + r() * 70; g.beginPath(); g.moveTo(cx, cy); for (let t = 0; t <= 1.001; t += 0.1) g.lineTo(cx + len * t, cy + Math.sin(t * Math.PI * (3 + r() * 2)) * 9); g.stroke(); cx += len + 22; }
+    }
+    // geometry on the right: a triangle, a circle, a little arrow, an underline
+    g.beginPath(); g.moveTo(x + w * 0.66, y + h * 0.7); g.lineTo(x + w * 0.8, y + h * 0.28); g.lineTo(x + w * 0.92, y + h * 0.7); g.closePath(); g.stroke();
+    ellP(g, x + w * 0.79, y + h * 0.56, 34, 34); g.stroke();
+    g.beginPath(); g.moveTo(x + 60, y + h * 0.84); g.lineTo(x + w * 0.42, y + h * 0.84); g.stroke();
+    g.restore();
+  }
+  function classStatic(g, o) {
+    const P = SC, FY = P.FY;
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 860, vpy: 300, step: 200, h0: 34 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    rectP(g, 0, 580, W, FY - 580); paint(g, P.lower, 0);
+    shape(g, () => rectP(g, -10, 572, W + 20, 14), P.frame, LW.small);
+    // blackboard with a wooden frame and a chalk tray
+    shape(g, () => rectP(g, 190, 140, 1000, 396), P.frame, LW.big, P.frameSh, () => rectP(g, 190, 516, 1000, 20));
+    shape(g, () => rectP(g, 212, 160, 956, 356), P.board, LW.small, P.boardSh, () => polyP(g, [212, 160, 1168, 160, 1168, 180, 232, 180, 232, 516, 212, 516]));
+    chalkMarks(g, 212, 160, 956, 356);
+    softFill(g, 20, 'rgba(255,255,255,0.08)', () => polyP(g, [700, 160, 820, 160, 640, 516, 520, 516]));
+    shape(g, () => rectP(g, 180, 536, 1020, 18), P.frame, LW.small, P.frameSh, () => rectP(g, 180, 546, 1020, 8));
+    for (const [cx, c] of [[300, '#FFFFFF'], [330, '#F4BF54'], [360, '#FFFFFF']]) shape(g, () => rrP(g, cx, 526, 22, 9, 4), c, 1.6);
+    shape(g, () => rrP(g, 1020, 514, 80, 24, 5), '#6E4A3A', LW.detail); shape(g, () => rectP(g, 1024, 532, 72, 8), '#F2EDE4', 1.4);
+    clockFaceRim(g, 690, 80, 46, '#A3ADB8', mix(P.wall, P.wallSh, 0.9));
+    // a chart beside the board: coloured blocks, no letters
+    shape(g, () => rectP(g, 1230, 200, 160, 220), '#FFFDF6', LW.small, '#EFE6D6', () => rectP(g, 1360, 200, 30, 220));
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) { rrP(g, 1248 + c * 44, 220 + r * 48, 34, 36, 6); paint(g, ['#E5534B', '#F4BF54', '#7BAFE1', '#77CC81'][(r + c) % 4], 1.4); }
+    louvreWindow(g, 1460, 150, 380, 330, { sky: o.sky || 'day', seed: 91, frame: '#F3E2C4', cols: 2 });
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, 572], [-20, 110, 600, 20, 1300, 20, W + 20, 110]);
+    clipDo(g, () => rectP(g, 0, 0, W, FY), () => softFill(g, 12, 'rgba(255,248,226,0.3)', () => polyP(g, [1470, 480, 1830, 480, 1500, FY, 1020, FY]), 'screen'));
+    softFill(g, 16, 'rgba(255,246,220,0.3)', () => polyP(g, [1020, FY + 4, 1500, FY + 4, 1260, H, 600, H]), 'screen');
+    line(g, 0, FY, W, FY, LW.arch);
+    // teacher's table: books, a register, the hand bell
+    floorShadow(g, 330, 896, 230, 14, P.floorSh, 5);
+    shape(g, () => rectP(g, 130, 664, 400, 224), P.desk, LW.big, P.deskSh, () => rectP(g, 130, 664, 400, 24));
+    shape(g, () => rectP(g, 170, 708, 320, 150), mix(P.desk, '#FFFFFF', 0.08), LW.small, P.deskSh, () => rectP(g, 170, 708, 320, 12));
+    shape(g, () => rrP(g, 116, 642, 428, 26, 6), P.desk, LW.big, P.deskSh, () => rectP(g, 116, 656, 428, 12));
+    for (let i = 0; i < 5; i++) shape(g, () => rectP(g, 170 + i * 3, 624 - i * 14, 150, 14), ['#7BAFE1', '#E5534B', '#77CC81', '#F4BF54', '#7BAFE1'][i], LW.detail);
+    shape(g, () => rectP(g, 350, 630, 110, 14), '#3A8594', LW.detail);
+    shape(g, () => { g.beginPath(); g.moveTo(466, 640); g.lineTo(506, 640); g.quadraticCurveTo(502, 600, 486, 596); g.quadraticCurveTo(470, 600, 466, 640); g.closePath(); }, '#E9B04A', LW.small, '#CF9530', () => rectP(g, 488, 590, 30, 60));
+    shape(g, () => rrP(g, 480, 562, 12, 36, 5), '#6E4A3A', LW.detail);
+    schoolDesk(g, DESK1[0], DESK1[1], DESK1[2]);
+    schoolDesk(g, DESK2[0], DESK2[1], DESK2[2]);
+  }
+  function classAnchors() {
+    const d1 = { x: DESK1[0] + 340 * DESK1[2], y: DESK1[1] - 214 * DESK1[2], s: DESK1[2] * 0.98, facing: -1 }, d2 = { x: DESK2[0] + 340 * DESK2[2], y: DESK2[1] - 214 * DESK2[2], s: DESK2[2] * 0.98, facing: -1 };
+    return { teacher: { x: 700, y: 975, s: 1 }, board: { x: 690, y: 338, s: 1 }, desk1: d1, desk2: d2, table: { x: 330, y: 642, s: 1 },
+      left: { x: 360, y: 985, s: 1.02 }, center: { x: 900, y: 985, s: 1.02 }, right: { x: 1300, y: 985, s: 1.02 }, clock: { x: 690, y: 80, s: 1, r: 46 } };
+  }
+  const SHEETS = [[400, 190, 210, 270, -0.02], [640, 176, 210, 280, 0.015], [880, 196, 210, 270, -0.01], [1120, 180, 210, 280, 0.02], [1360, 192, 190, 260, -0.015], [460, 420, 230, 200, 0.01], [760, 430, 230, 190, -0.02], [1180, 424, 260, 196, 0.012]];
+  function sheet(g, x, y, w, h, rot, seed) {
+    g.save(); g.translate(x + w / 2, y + h / 2); g.rotate(rot);
+    rectP(g, -w / 2 + 6, -h / 2 + 8, w, h); paint(g, 'rgba(110,60,30,0.2)', 0);
+    shape(g, () => rectP(g, -w / 2, -h / 2, w, h), '#FFFFFF', LW.detail, '#EEF0F2', () => polyP(g, [w / 2, -h / 2, w / 2, h / 2, w * 0.25, h / 2]));
+    rectP(g, -w / 2 + 16, -h / 2 + 18, w * 0.6, 12); paint(g, '#9AA3AA', 0);
+    const r = rng(seed), rows = Math.floor((h - 60) / 22);
+    for (let i = 0; i < rows; i++) { const ry = -h / 2 + 48 + i * 22; rectP(g, -w / 2 + 16, ry, w * (0.25 + r() * 0.2), 7); paint(g, '#C9CED3', 0); rectP(g, w * 0.18, ry, w * 0.16, 7); paint(g, '#C9CED3', 0); }
+    line(g, w * 0.12, -h / 2 + 42, w * 0.12, h / 2 - 12, 1.4, '#C9CED3');
+    ellP(g, 0, -h / 2 + 10, 7, 7); paint(g, '#E26B5B', 1.6);
+    g.restore();
+  }
+  function boardStatic(g, o) {
+    const P = SC, FY = P.FY;
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 960, vpy: 300, step: 200, h0: 34 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    rectP(g, 0, 640, W, FY - 640); paint(g, P.lower, 0);
+    shape(g, () => rectP(g, -10, 632, W + 20, 14), P.frame, LW.small);
+    shape(g, () => rectP(g, 330, 120, 1240, 520), P.corkFrame, LW.big, P.frameSh, () => rectP(g, 330, 616, 1240, 24));
+    shape(g, () => rectP(g, 352, 142, 1196, 476), P.cork, LW.small, dark(P.cork, 0.92), () => polyP(g, [352, 142, 1548, 142, 1548, 160, 370, 160, 370, 618, 352, 618]));
+    const r = rng(5); g.fillStyle = dark(P.cork, 0.88); for (let i = 0; i < 90; i++) { ellP(g, 360 + r() * 1180, 150 + r() * 460, 2.5, 2.5); g.fill(); }
+    SHEETS.forEach((s, i) => sheet(g, s[0], s[1], s[2], s[3], s[4], i + 3));
+    louvreWindow(g, 1650, 170, 220, 330, { sky: o.sky || 'day', seed: 93, frame: '#F3E2C4', cols: 1 });
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, 632], [-20, 90, 600, 20, 1300, 20, W + 20, 90]);
+    softFill(g, 16, 'rgba(255,246,220,0.3)', () => polyP(g, [1650, FY + 4, 1880, FY + 4, 1700, H, 1300, H]), 'screen');
+    line(g, 0, FY, W, FY, LW.arch);
+    // a long bench under the board
+    floorShadow(g, 960, 902, 460, 14, P.floorSh, 5);
+    for (const lx of [560, 1360]) shape(g, () => rectP(g, lx - 10, 790, 20, 110), P.desk, LW.small, P.deskSh, () => rectP(g, lx + 2, 790, 8, 110));
+    shape(g, () => rrP(g, 500, 772, 920, 24, 6), P.desk, LW.small, P.deskSh, () => rectP(g, 500, 786, 920, 10));
+  }
+  function boardAnchors() {
+    const a = { board: { x: 950, y: 380, s: 1 }, left: { x: 420, y: 985, s: 1.02 }, center: { x: 960, y: 985, s: 1.02 }, right: { x: 1500, y: 985, s: 1.02 }, bench: { x: 960, y: 776, s: 0.95 } };
+    SHEETS.forEach((s, i) => { a['sheet' + i] = { x: s[0] + s[2] / 2, y: s[1] + s[3] / 2, s: 1, w: s[2], h: s[3] }; });
+    return a;
+  }
+  SETS.school = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam), board = o.view === 'board';
+    blit(g, xf, layer('school|' + (board ? 'board' : 'class') + '|' + (o.sky || 'day'), devRes(g, xf), (lg) => board ? boardStatic(lg, o) : classStatic(lg, o)));
+    live(g, xf, (g2) => {
+      if (!board) { clockHands(g2, 690, 80, 46, o.clock != null ? o.clock : 10.4); return; }
+      if (o.highlight != null && SHEETS[o.highlight]) {
+        const s = SHEETS[o.highlight], k = o.highlightK == null ? 1 : clamp(o.highlightK);
+        if (k > 0) {
+          g2.save(); g2.translate(s[0] + s[2] / 2, s[1] + s[3] / 2); g2.rotate(s[4]);
+          const ry = -s[3] / 2 + 48 + 22 * 3;
+          rectP(g2, -s[2] / 2 + 10, ry - 7, (s[2] - 20) * easeOutCubic(k), 20); g2.fillStyle = 'rgba(244,224,84,0.75)'; g2.fill();
+          rrP(g2, -s[2] / 2 - 10, -s[3] / 2 - 10, s[2] + 20, s[3] + 20, 10); g2.globalAlpha = k; g2.lineWidth = 6; g2.strokeStyle = '#F4BF54'; g2.stroke();
+          g2.restore();
+        }
+      }
+    });
+    return result(xf, board ? boardAnchors() : classAnchors(), 985, SC.FY);
+  };
+  SETS.schoolFront = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam), board = o.view === 'board';
+    if (!board && o.desk !== false) blit(g, xf, layer('schoolFront', devRes(g, xf), (lg) => schoolDesk(lg, DESK2[0], DESK2[1], DESK2[2], true)), null, { x: 1400, y: 500, w: 520, h: 540 });
+    return result(xf, board ? boardAnchors() : classAnchors(), 985, SC.FY);
+  };
+
+  // ================================================================ PARTY HALL (weddings, naming ceremonies: Q06)
+  // SETS.partyHall(g, o) (also SETS.party(g, { hall: true, ... })): o.theme 'wedding' (default: gold, cream, teal, coral) | 'naming'
+  // (sky blue, cream, yellow, green); o.heart (a heart on the rice); o.t.
+  // Draped ceiling swags and side drapes, a backdrop with flower pillars, a stage with the high table and two throne chairs, balloon
+  // columns, rows of covered guest chairs (left), a serving table with food warmers and the giant pot of jollof rice (right).
+  // Anchors: highSeat1, highSeat2 (the couple's seats behind the high table, s ~0.48), stage (standing on the stage), rice (top of the
+  // heap), riceSide (standing beside the pot), serve (serving table top), aisle, left, center, right.
+  // SETS.partyHallFront: the high table (over the seated couple).
+  const PT = { FY: 800, wall: '#F7D9B5', wallSh: '#E9BF94', floor: '#D9A06E', floorAlt: '#D29766', floorLine: '#BE8556', floorSh: '#AE7448', stage: '#B0703F', stageSh: '#965E35', steel: '#D8DDE2', steelSh: '#B9C0C8' };
+  const PARTY_THEMES = {
+    wedding: { a: '#F4BF54', aSh: '#DCA640', b: '#FFF4E3', bSh: '#EBDCC6', c: '#3A8594', cSh: '#2F7280', d: '#E37F78', dSh: '#C9665F' },
+    naming: { a: '#7BAFE1', aSh: '#6497C9', b: '#FFF4E3', bSh: '#EBDCC6', c: '#F4BF54', cSh: '#DCA640', d: '#77CC81', dSh: '#62B26C' },
+  };
+  function flowerBall(g, x, y, r, T, seed) {
+    const rr = rng(seed || 1), cols = [T.d, T.b, T.a, T.d];
+    for (let i = 0; i < 4; i++) leaf(g, x, y, i * 1.6 + 0.3, r * 1.25, r * 0.22, '#87A26A', '#6F8C57', 1.6);
+    for (let i = 0; i < 7; i++) { const a = i / 7 * TAU + rr(), d = i ? r * 0.55 : 0; const fx = x + Math.cos(a) * d, fy = y + Math.sin(a) * d * 0.8, fr = r * (0.36 + rr() * 0.1), c = cols[i % 4];
+      for (let p = 0; p < 5; p++) { const b = p / 5 * TAU; ellP(g, fx + Math.cos(b) * fr * 0.55, fy + Math.sin(b) * fr * 0.55, fr * 0.5, fr * 0.5); paint(g, c, 1.4); }
+      ellP(g, fx, fy, fr * 0.3, fr * 0.3); paint(g, T.a === c ? T.d : T.a, 1.2); }
+  }
+  function balloonColumn(g, x, fy, top, T) {
+    const cols = [T.a, T.b, T.c, T.d];
+    shape(g, () => rrP(g, x - 34, fy - 30, 68, 30, 6), T.c, LW.small, T.cSh, () => rectP(g, x, fy - 30, 34, 30));
+    let i = 0;
+    for (let y = fy - 60; y > top + 40; y -= 62, i++) {
+      for (const [dx, dy, ci] of [[-30, 0, 0], [30, 0, 1], [0, 14, 2]]) {
+        const c = cols[(i + ci) % 4], bx = x + dx, by = y + dy;
+        ellP(g, bx, by, 31, 33); paint(g, c, LW.small);
+        g.save(); ellP(g, bx, by, 31, 33); g.clip(); ellP(g, bx + 14, by + 12, 26, 30); g.fillStyle = dark(c, 0.88); g.fill(); g.restore();
+        ellP(g, bx, by, 31, 33); paint(g, null, LW.small);
+        ellP(g, bx - 11, by - 13, 5, 9); g.fillStyle = 'rgba(255,255,255,0.65)'; g.fill();
+      }
+    }
+    balloon(g, x, top, 46, T.a, x, top + 120);
+  }
+  function eventChair(g, x, fy, s, T, sashC) {
+    const back = fy - 380 * s, seat = fy - 200 * s;
+    shape(g, () => { g.beginPath(); g.moveTo(x - 76 * s, fy); g.lineTo(x - 70 * s, seat); g.lineTo(x + 70 * s, seat); g.lineTo(x + 76 * s, fy); g.closePath(); }, '#FFFFFF', LW.small, '#E9E4DA', () => rectP(g, x + 30 * s, seat, 60 * s, 220 * s));
+    g.strokeStyle = rgba(INK, 0.5); g.lineWidth = 1.6; g.beginPath(); for (const fx of [-36, 0, 36]) { g.moveTo(x + fx * s, seat + 20 * s); g.lineTo(x + fx * 1.06 * s, fy - 6); } g.stroke();
+    shape(g, () => rrP(g, x - 66 * s, back, 132 * s, seat - back + 6, [40 * s, 40 * s, 4, 4]), '#FFFFFF', LW.small, '#E9E4DA', () => rectP(g, x + 28 * s, back, 50 * s, seat - back + 10));
+    const by = back + (seat - back) * 0.55;
+    shape(g, () => rectP(g, x - 66 * s, by - 16 * s, 132 * s, 32 * s), sashC, LW.detail, dark(sashC, 0.86), () => rectP(g, x - 66 * s, by + 4 * s, 132 * s, 12 * s));
+    for (const sx of [-1, 1]) shape(g, () => { g.beginPath(); g.moveTo(x, by); g.quadraticCurveTo(x + sx * 40 * s, by - 34 * s, x + sx * 44 * s, by); g.quadraticCurveTo(x + sx * 40 * s, by + 30 * s, x, by); g.closePath(); }, sashC, LW.detail);
+    for (const sx of [-1, 1]) shape(g, () => polyP(g, [x - 5 * s, by, x + 5 * s, by, x + sx * 26 * s + 6 * s, by + 70 * s, x + sx * 26 * s - 6 * s, by + 70 * s]), sashC, LW.detail);
+    ellP(g, x, by, 9 * s, 9 * s); paint(g, dark(sashC, 0.9), LW.detail);
+  }
+  function chafingDish(g, cx, by, w, T) {
+    for (const sx of [-1, 1]) shape(g, () => rectP(g, cx + sx * w * 0.38 - 4, by - 30, 8, 30), PT.steelSh, LW.detail);
+    shape(g, () => rrP(g, cx - w / 2, by - 64, w, 36, 8), PT.steel, LW.small, PT.steelSh, () => rectP(g, cx + w * 0.2, by - 70, w * 0.3, 44));
+    shape(g, () => { g.beginPath(); g.ellipse(cx, by - 64, w * 0.5, w * 0.26, 0, Math.PI, TAU); g.closePath(); }, PT.steel, LW.small, PT.steelSh, () => rectP(g, cx + w * 0.12, by - 64 - w * 0.3, w * 0.4, w * 0.3));
+    shape(g, () => rrP(g, cx - 14, by - 64 - w * 0.26 - 12, 28, 14, 6), T.a, LW.detail);
+    line(g, cx - w * 0.3, by - 76, cx - w * 0.12, by - 64 - w * 0.2, 4, 'rgba(255,255,255,0.7)');
+  }
+  function highTable(g, T, noShadow) {
+    // table on the stage: cloth top, teal skirt with gold swags and bows, a flower centrepiece, two goblets
+    shape(g, () => polyP(g, [618, 528, 1302, 528, 1314, 546, 606, 546]), T.b, LW.small, T.bSh, () => rectP(g, 600, 540, 720, 8));
+    shape(g, () => { g.beginPath(); g.moveTo(606, 546); g.lineTo(1314, 546); g.lineTo(1320, 700); g.lineTo(600, 700); g.closePath(); }, T.c, LW.small, T.cSh, () => { g.beginPath(); for (let i = 0; i < 6; i++) g.rect(640 + i * 120, 546, 20, 160); });
+    for (let i = 0; i < 6; i++) { const x0 = 606 + i * 118; g.beginPath(); g.moveTo(x0, 552); g.quadraticCurveTo(x0 + 59, 620, x0 + 118, 552); g.lineWidth = 14 + 2 * LW.detail; g.strokeStyle = INK; g.stroke(); g.lineWidth = 14; g.strokeStyle = T.a; g.stroke(); }
+    for (let i = 0; i <= 6; i++) { const bx = 606 + i * 118; ellP(g, bx, 556, 12, 12); paint(g, T.d, LW.detail); }
+    flowerBall(g, 960, 494, 40, T, 7);
+    shape(g, () => { g.beginPath(); g.moveTo(940, 528); g.lineTo(980, 528); g.lineTo(972, 500); g.lineTo(948, 500); g.closePath(); }, T.a, LW.detail);
+    for (const gx of [840, 1080]) { shape(g, () => { g.beginPath(); g.moveTo(gx - 14, 470); g.lineTo(gx + 14, 470); g.quadraticCurveTo(gx + 14, 498, gx, 500); g.quadraticCurveTo(gx - 14, 498, gx - 14, 470); g.closePath(); }, 'rgba(236,246,248,0.95)', LW.detail); line(g, gx, 500, gx, 522, 3); line(g, gx - 10, 526, gx + 10, 526, 3); line(g, gx - 14, 472, gx + 14, 472, 3, T.a); }
+  }
+  function partyHallStatic(g, o) {
+    const T = PARTY_THEMES[o.theme] || PARTY_THEMES.wedding, FY = PT.FY;
+    tileFloor(g, FY, { col: PT.floor, alt: PT.floorAlt, line: PT.floorLine, vpx: 960, vpy: 260, step: 200, h0: 34 });
+    rectP(g, 0, 0, W, FY); paint(g, PT.wall, 0);
+    // backdrop: pleated cream with a scalloped valance and two flower pillars
+    shape(g, () => rectP(g, 470, 140, 980, 560), T.b, LW.small);
+    clipDo(g, () => rectP(g, 470, 140, 980, 560), () => { g.fillStyle = T.bSh; for (let x = 470; x < 1450; x += 70) { polyP(g, [x + 40, 140, x + 70, 140, x + 66, 700, x + 44, 700]); g.fill(); } });
+    g.strokeStyle = rgba(INK, 0.35); g.lineWidth = 2; g.beginPath(); for (let x = 510; x < 1450; x += 70) { g.moveTo(x, 150); g.lineTo(x - 2, 696); } g.stroke();
+    shape(g, () => { g.beginPath(); g.moveTo(460, 128); g.lineTo(1460, 128); g.lineTo(1460, 190); for (let i = 9; i >= 0; i--) g.arc(460 + (i + 0.5) * 100, 190, 50, 0, Math.PI, false); g.closePath(); }, T.c, LW.small, T.cSh, () => rectP(g, 460, 128, 1000, 22));
+    for (let i = 0; i <= 10; i++) { ellP(g, 460 + i * 100, 192, 11, 11); paint(g, T.a, LW.detail); }
+    for (const px of [500, 1420]) for (let y = 250; y < 700; y += 70) flowerBall(g, px, y, 34, T, px + y);
+    flowerBall(g, 960, 140, 52, T, 3);
+    // the stage
+    shape(g, () => polyP(g, [430, 690, 1490, 690, 1520, 730, 400, 730]), '#C9443D', LW.small, '#A8392F', () => polyP(g, [400, 720, 1520, 720, 1520, 730, 400, 730]));
+    shape(g, () => rectP(g, 400, 730, 1120, 112), PT.stage, LW.big, PT.stageSh, () => rectP(g, 400, 730, 1120, 20));
+    shape(g, () => { g.beginPath(); g.moveTo(400, 730); g.lineTo(1520, 730); g.lineTo(1520, 790); for (let i = 13; i >= 0; i--) g.arc(400 + (i + 0.5) * 80, 790, 40, 0, Math.PI, false); g.closePath(); }, T.a, LW.small, T.aSh, () => rectP(g, 400, 730, 1120, 18));
+    shape(g, () => rectP(g, 860, 842, 200, 22), PT.stage, LW.small, PT.stageSh, () => rectP(g, 860, 856, 200, 8));
+    // throne chairs behind the table
+    for (const cx of [830, 1090]) {
+      shape(g, () => { g.beginPath(); g.moveTo(cx - 74, 610); g.lineTo(cx - 74, 430); g.quadraticCurveTo(cx - 76, 366, cx - 30, 360); g.quadraticCurveTo(cx, 330, cx + 30, 360); g.quadraticCurveTo(cx + 76, 366, cx + 74, 430); g.lineTo(cx + 74, 610); g.closePath(); }, T.a, LW.small, T.aSh, () => rectP(g, cx + 40, 330, 50, 290));
+      shape(g, () => { g.beginPath(); g.moveTo(cx - 54, 600); g.lineTo(cx - 54, 438); g.quadraticCurveTo(cx - 54, 388, cx - 20, 384); g.quadraticCurveTo(cx, 362, cx + 20, 384); g.quadraticCurveTo(cx + 54, 388, cx + 54, 438); g.lineTo(cx + 54, 600); g.closePath(); }, T.b, LW.detail, T.bSh, () => rectP(g, cx + 24, 360, 40, 250));
+      ellP(g, cx, 340, 12, 12); paint(g, T.a, LW.detail);
+    }
+    highTable(g, T);
+    // ceiling swags and their tails, side drapes
+    const n = 7, step = 2000 / n;
+    for (let i = 0; i < n; i++) {
+      const x0 = -40 + i * step, x1 = x0 + step, c = i % 2 ? T.b : T.a, cs = i % 2 ? T.bSh : T.aSh;
+      const sw = () => { g.beginPath(); g.moveTo(x0, -10); g.quadraticCurveTo((x0 + x1) / 2, 70, x1, -10); g.lineTo(x1, 10); g.quadraticCurveTo((x0 + x1) / 2, 190, x0, 10); g.closePath(); };
+      shape(g, sw, c, LW.small, cs, () => { g.beginPath(); g.moveTo(x0, 40); g.quadraticCurveTo((x0 + x1) / 2, 150, x1, 40); g.lineTo(x1, 200); g.lineTo(x0, 200); g.closePath(); });
+      g.strokeStyle = rgba(INK, 0.4); g.lineWidth = 2; g.beginPath(); g.moveTo(x0 + 20, 6); g.quadraticCurveTo((x0 + x1) / 2, 120, x1 - 20, 6); g.stroke();
+    }
+    for (let i = 0; i <= n; i++) {
+      const x = -40 + i * step, c = i % 2 ? T.c : T.d;
+      shape(g, () => { g.beginPath(); g.moveTo(x - 16, 14); g.quadraticCurveTo(x - 24, 140, x - 12, 250); g.lineTo(x + 12, 262); g.quadraticCurveTo(x + 22, 140, x + 16, 14); g.closePath(); }, c, LW.small, dark(c, 0.86), () => rectP(g, x + 2, 10, 20, 260));
+      ellP(g, x, 16, 26, 22); paint(g, c, LW.small); ellP(g, x, 16, 10, 9); paint(g, T.a, LW.detail);
+    }
+    for (const [x, flip] of [[-20, false], [1790, true]]) {
+      const cx = flip ? x + 40 : x + 110;
+      shape(g, () => { g.beginPath(); g.moveTo(x, -10); g.lineTo(x + 150, -10); g.quadraticCurveTo(flip ? x + 110 : x + 150, 380, cx, 520); g.quadraticCurveTo(flip ? x + 10 : x + 160, 700, flip ? x - 20 : x + 170, FY + 30); g.lineTo(flip ? x + 150 : x, FY + 30); g.lineTo(flip ? x + 150 : x, -10); g.closePath(); }, T.a, LW.small, T.aSh, () => { g.beginPath(); for (const fx of [x + 30, x + 80]) g.rect(fx, -10, 22, FY + 40); });
+      shape(g, () => rrP(g, cx - 30, 506, 60, 28, 12), T.c, LW.small);
+    }
+    wallBand(g, PT.wall, PT.wallSh, [0, 0, W, FY], [-20, 180, 600, 60, 1300, 60, W + 20, 180]);
+    softFill(g, 60, 'rgba(255,236,196,0.4)', () => ellP(g, 960, 420, 520, 300), 'screen');
+    for (const lx of [400, 1500]) softFill(g, 26, 'rgba(255,240,210,0.3)', () => ellP(g, lx, 930, 260, 60), 'screen');
+    line(g, 0, FY, 400, FY, LW.arch); line(g, 1520, FY, W, FY, LW.arch);
+    // balloon columns beside the stage
+    balloonColumn(g, 300, 830, 250, T); balloonColumn(g, 1610, 830, 250, T);
+    // guests' chairs (left), serving table and the rice (right)
+    for (const [fy, s, xs] of [[850, 0.66, [100, 240, 380, 520, 660]], [925, 0.78, [70, 236, 402, 568]]]) xs.forEach((x, i) => eventChair(g, x, fy, s, T, i % 2 ? T.c : T.d));
+    floorShadow(g, 1660, 912, 260, 14, PT.floorSh, 6);
+    for (const lx of [1440, 1880]) shape(g, () => rectP(g, lx - 9, 680, 18, 228), '#8E5634', LW.small);
+    shape(g, () => polyP(g, [1430, 640, 1900, 640, 1910, 660, 1420, 660]), T.b, LW.small);
+    shape(g, () => { g.beginPath(); g.moveTo(1420, 660); g.lineTo(1910, 660); g.lineTo(1914, 760); for (let i = 7; i >= 0; i--) g.arc(1416 + (i + 0.5) * 62.25, 760, 31, 0, Math.PI, false); g.closePath(); }, T.b, LW.small, T.bSh, () => rectP(g, 1410, 660, 520, 14));
+    chafingDish(g, 1520, 642, 130, T); chafingDish(g, 1680, 642, 130, T);
+    for (let i = 0; i < 6; i++) shape(g, () => { g.beginPath(); g.ellipse(1830, 638 - i * 8, 50, 10, 0, 0, TAU); }, '#FFFFFF', LW.detail);
+    ricePot(g, 1300, 958, 1.0, { floorSh: rgba(PT.floorSh, 0.8), heart: !!o.heart, seed: 23 });
+  }
+  function partyHallAnchors() {
+    return { highSeat1: { x: 830, y: 607, s: 0.48 }, highSeat2: { x: 1090, y: 607, s: 0.48 }, stage: { x: 960, y: 708, s: 0.48 },
+      rice: { x: 1300, y: 700, s: 1 }, riceSide: { x: 1080, y: 985, s: 1 }, serve: { x: 1660, y: 640, s: 1 }, aisle: { x: 900, y: 940, s: 0.95 },
+      left: { x: 420, y: 990, s: 1.02 }, center: { x: 900, y: 990, s: 1.02 }, right: { x: 1640, y: 990, s: 1.02 } };
+  }
+  SETS.partyHall = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam), th = PARTY_THEMES[o.theme] ? o.theme : 'wedding';
+    blit(g, xf, layer('partyHall|' + th + '|' + (o.heart ? 1 : 0), devRes(g, xf), (lg) => partyHallStatic(lg, Object.assign({}, o, { theme: th }))));
+    return result(xf, partyHallAnchors(), 990, PT.FY);
+  };
+  SETS.partyHallFront = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam), th = PARTY_THEMES[o.theme] ? o.theme : 'wedding';
+    if (o.table !== false) blit(g, xf, layer('partyHallFront|' + th, devRes(g, xf), (lg) => highTable(lg, PARTY_THEMES[th])), null, { x: 590, y: 440, w: 740, h: 270 });
+    return result(xf, partyHallAnchors(), 990, PT.FY);
+  };
+  // SETS.party keeps the first video's birthday room; { hall: true } (or theme: 'wedding' | 'naming') gives the hall
+  { const birthday = SETS.party, birthdayFront = SETS.partyFront;
+    SETS.party = function (g, o) { return o && (o.hall || PARTY_THEMES[o.theme]) ? SETS.partyHall(g, o) : birthday(g, o); };
+    SETS.partyFront = function (g, o) { return o && (o.hall || PARTY_THEMES[o.theme]) ? SETS.partyHallFront(g, o) : birthdayFront(g, o); }; }
+
+  // ================================================================ GRAPHIC STAGES
+  // ---------------------------------------------------------------- milestone icons (drawn in a unit circle of radius r at x, y)
+  // kinds: cot, bag (school bag), cap (graduation cap), office (briefcase), rice (pot of rice), ring, heart, house, baby, money
+  function milestoneIcon(g, kind, x, y, r) {
+    g.save(); g.translate(x, y); const s = r / 50, lw = Math.max(1.6, 3 * s);
+    g.lineJoin = 'round'; g.lineCap = 'round';
+    const P = (fn, fill, sh, shFn) => shape(g, fn, fill, lw, sh, shFn);
+    if (kind === 'cot') {
+      P(() => rrP(g, -34 * s, -6 * s, 68 * s, 30 * s, 4 * s), '#7BAFE1', '#6497C9', () => rectP(g, -34 * s, 14 * s, 68 * s, 12 * s));
+      for (let i = 0; i < 5; i++) line(g, -26 * s + i * 13 * s, -26 * s, -26 * s + i * 13 * s, -6 * s, lw);
+      line(g, -36 * s, -26 * s, 36 * s, -26 * s, lw); for (const sx of [-1, 1]) line(g, sx * 36 * s, -32 * s, sx * 36 * s, 34 * s, lw * 1.3);
+      ellP(g, -10 * s, -10 * s, 10 * s, 10 * s); paint(g, '#FCEBCB', lw);
+    } else if (kind === 'bag') {
+      g.beginPath(); g.arc(0, -22 * s, 14 * s, Math.PI, 0); g.lineWidth = lw * 1.6; g.strokeStyle = INK; g.stroke();
+      P(() => rrP(g, -28 * s, -22 * s, 56 * s, 56 * s, 14 * s), '#E5534B', '#C9443D', () => rectP(g, 10 * s, -24 * s, 20 * s, 60 * s));
+      P(() => rrP(g, -18 * s, 4 * s, 36 * s, 22 * s, 6 * s), '#F4BF54', null);
+      line(g, -28 * s, -6 * s, 28 * s, -6 * s, lw);
+    } else if (kind === 'cap') {
+      P(() => { g.beginPath(); g.moveTo(-24 * s, 0); g.lineTo(-24 * s, 20 * s); g.quadraticCurveTo(0, 32 * s, 24 * s, 20 * s); g.lineTo(24 * s, 0); g.closePath(); }, '#33333D', null);
+      P(() => polyP(g, [-44 * s, -6 * s, 0, -26 * s, 44 * s, -6 * s, 0, 14 * s]), '#3F3F4A', '#2E2E36', () => polyP(g, [0, -26 * s, 44 * s, -6 * s, 0, 14 * s]));
+      line(g, 0, -6 * s, 30 * s, 6 * s, lw, '#F4BF54'); line(g, 30 * s, 6 * s, 30 * s, 26 * s, lw * 1.2, '#F4BF54');
+    } else if (kind === 'office') {
+      P(() => rrP(g, -14 * s, -30 * s, 28 * s, 14 * s, 4 * s), null, null);
+      P(() => rrP(g, -38 * s, -18 * s, 76 * s, 52 * s, 8 * s), '#9C6A48', '#86593C', () => rectP(g, -38 * s, 10 * s, 76 * s, 24 * s));
+      line(g, -38 * s, 4 * s, 38 * s, 4 * s, lw); P(() => rrP(g, -7 * s, -2 * s, 14 * s, 12 * s, 3 * s), '#F4BF54', null);
+    } else if (kind === 'rice') {
+      g.beginPath(); g.moveTo(-34 * s, -8 * s); g.bezierCurveTo(-30 * s, -36 * s, 30 * s, -36 * s, 34 * s, -8 * s); g.closePath(); paint(g, '#F08A3C', lw);
+      P(() => { g.beginPath(); g.moveTo(-36 * s, -8 * s); g.lineTo(36 * s, -8 * s); g.lineTo(32 * s, 28 * s); g.lineTo(-32 * s, 28 * s); g.closePath(); }, '#C9CED3', '#A9B0B8', () => rectP(g, 14 * s, -10 * s, 24 * s, 40 * s));
+      for (const sx of [-1, 1]) { ellP(g, sx * 42 * s, 2 * s, 7 * s, 5 * s); paint(g, null, lw); }
+    } else if (kind === 'ring') {
+      ellP(g, 0, 10 * s, 26 * s, 26 * s); g.lineWidth = 10 * s + lw * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 10 * s; g.strokeStyle = '#F4BF54'; g.stroke();
+      P(() => polyP(g, [-12 * s, -18 * s, 12 * s, -18 * s, 18 * s, -28 * s, 0, -42 * s, -18 * s, -28 * s]), '#BFE3F2', null);
+    } else if (kind === 'heart') {
+      g.beginPath(); g.moveTo(0, 30 * s); g.bezierCurveTo(-56 * s, -4 * s, -24 * s, -44 * s, 0, -16 * s); g.bezierCurveTo(24 * s, -44 * s, 56 * s, -4 * s, 0, 30 * s); g.closePath(); paint(g, '#E5534B', lw);
+    } else if (kind === 'house') {
+      P(() => rectP(g, -28 * s, -6 * s, 56 * s, 40 * s), '#F2A264', '#D9874D', () => rectP(g, 10 * s, -6 * s, 18 * s, 40 * s));
+      P(() => polyP(g, [-38 * s, -4 * s, 0, -36 * s, 38 * s, -4 * s]), '#B9473F', null);
+      P(() => rectP(g, -8 * s, 12 * s, 16 * s, 22 * s), '#8A5236', null);
+    } else if (kind === 'baby') {
+      P(() => { g.beginPath(); g.ellipse(4 * s, 12 * s, 30 * s, 20 * s, 0, 0, TAU); }, '#3A8594', '#2F7280', () => rectP(g, 10 * s, 0, 30 * s, 40 * s));
+      ellP(g, -18 * s, -8 * s, 18 * s, 18 * s); paint(g, '#FCEBCB', lw);
+    } else if (kind === 'money') {
+      P(() => rrP(g, -38 * s, -22 * s, 76 * s, 44 * s, 6 * s), '#77CC81', '#62B26C', () => rectP(g, -38 * s, 6 * s, 76 * s, 16 * s));
+      ellP(g, 0, 0, 12 * s, 12 * s); paint(g, '#FFFFFF', lw);
+    }
+    g.restore();
+  }
+  SETS.icon = (g, kind, x, y, r) => { refresh(); g.save(); milestoneIcon(g, kind, x, y, r || 50); g.restore(); };
+
+  // ---------------------------------------------------------------- LIFE PATH (Q02 "walk through your entire life", Q04 the queue)
+  // SETS.lifePath(g, o): o.milestones (icon kinds, default ['cot', 'bag', 'cap', 'office', 'rice']), o.progress 0..1 (the road draws
+  // itself to there; a milestone pops as the road reaches it; default 1), o.t.
+  // The result adds at(u) -> {x, y, s, a} (screen space): the road centre at u (0 = the near end, 1 = the far end), the suggested figure
+  // scale there and the road's direction (radians). Anchors: start, end, m0..mN (on the road at each milestone), sign0..signN.
+  // The path lies on the ground plane: world (X, Z), Z = depth, projected by proj(); its edges are offset in world space so the bends
+  // stay clean in perspective. u runs by screen length (so milestones spread over the frame); a figure at depth Z has scale 0.85 / Z.
+  const LP = (() => {
+    const HZ = 292, F = 600, HW = 0.25;   // horizon, px per world unit at Z = 1, half the path's width
+    const proj = (X, Z) => [960 + X * F / Z, HZ + 700 / Z];
+    const pts = [[-1.6, 0.86], [-0.2, 1.02], [0.9, 1.12], [1.3, 1.38], [0.9, 1.66], [-0.6, 1.8], [-1.9, 2.05], [-2.2, 2.55], [-1.4, 2.95], [1.0, 3.2], [2.6, 3.7], [2.6, 4.6], [1.4, 5.6], [0.6, 7.0]];
+    const N = 420, Wd = [];
+    const cr = (p0, p1, p2, p3, t) => { const t2 = t * t, t3 = t2 * t; return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3); };
+    for (let i = 0; i <= N; i++) {
+      const f = i / N * (pts.length - 1), k = Math.min(pts.length - 2, Math.floor(f)), t = f - k, q = (j) => pts[Math.max(0, Math.min(pts.length - 1, j))];
+      Wd.push([0, 1].map(c => cr(q(k - 1)[c], q(k)[c], q(k + 1)[c], q(k + 2)[c], t)));
+    }
+    const S = [], L = [], R = [], Lg = [], Rg = [];
+    for (let i = 0; i <= N; i++) {
+      const a = Wd[Math.max(0, i - 1)], b = Wd[Math.min(N, i + 1)], dx = b[0] - a[0], dz = b[1] - a[1], d = Math.hypot(dx, dz) || 1, nx = -dz / d, nz = dx / d, [X, Z] = Wd[i];
+      const c = proj(X, Z); S.push([c[0], c[1], 2 * HW * F / Z]);
+      L.push(proj(X + nx * HW, Z + nz * HW)); R.push(proj(X - nx * HW, Z - nz * HW));
+      Lg.push(proj(X + nx * HW * 1.16, Z + nz * HW * 1.16)); Rg.push(proj(X - nx * HW * 1.16, Z - nz * HW * 1.16));
+    }
+    // u by screen length, starting where the path enters the frame
+    const U = [0]; for (let i = 1; i <= N; i++) U.push(U[i - 1] + (S[i][1] > H + 40 || S[i][0] < -40 ? 0 : Math.hypot(S[i][0] - S[i - 1][0], S[i][1] - S[i - 1][1])));
+    const tot = U[N]; for (let i = 0; i <= N; i++) U[i] /= tot;
+    const at = (u) => { u = clamp(u); let i = 0; while (i < N - 1 && U[i + 1] < u) i++; const t = (u - U[i]) / ((U[i + 1] - U[i]) || 1); const p = S[i], q = S[i + 1], wp = Wd[i], wq = Wd[i + 1];
+      const X = wp[0] + (wq[0] - wp[0]) * t, Z = wp[1] + (wq[1] - wp[1]) * t, c = proj(X, Z);
+      return { x: c[0], y: c[1], w: 2 * HW * F / Z, Z, X, a: Math.atan2(q[1] - p[1], q[0] - p[0]), dX: wq[0] - wp[0], dZ: wq[1] - wp[1], i }; };
+    // the bends (screen x turns back), where a sign can stand on the open outside of the curve
+    const bends = []; for (let i = 2; i < N - 1; i++) { const d0 = S[i][0] - S[i - 1][0], d1 = S[i + 1][0] - S[i][0]; if (d0 * d1 < 0 && U[i] > 0.02 && U[i] < 0.97) bends.push({ u: U[i], dir: d0 > 0 ? 1 : -1 }); }
+    return { S, U, L, R, Lg, Rg, N, at, proj, Wd, HW, bends };
+  })();
+  function lifeBg(g) {
+    const gr = g.createLinearGradient(0, 0, 0, 330); gr.addColorStop(0, '#FCE3B8'); gr.addColorStop(1, '#FDF1D2'); g.fillStyle = gr; g.fillRect(0, 0, W, 340);
+    softFill(g, 30, 'rgba(255,240,190,0.9)', () => ellP(g, 1500, 240, 120, 90));
+    ellP(g, 1500, 236, 56, 56); paint(g, '#FFE08A', 0);
+    for (const [cx, cy, s] of [[380, 110, 1.2], [1160, 80, 0.9], [1780, 140, 0.8]]) { g.beginPath(); g.moveTo(cx - 70 * s, cy); g.arc(cx - 40 * s, cy - 8 * s, 26 * s, Math.PI, TAU * 0.9); g.arc(cx + 4 * s, cy - 22 * s, 34 * s, Math.PI * 1.05, TAU * 0.98); g.arc(cx + 46 * s, cy - 6 * s, 22 * s, Math.PI * 1.25, TAU); g.lineTo(cx + 70 * s, cy); g.closePath(); g.fillStyle = '#FFF8E6'; g.fill(); }
+    const hill = (base, amp, col, sh, seed) => { const r = rng(seed); g.beginPath(); g.moveTo(-10, H); g.lineTo(-10, base); for (let x = 0; x <= W + 200; x += 240) g.quadraticCurveTo(x + 120, base - amp * (0.6 + r() * 0.6), x + 240, base - amp * 0.2 * r()); g.lineTo(W + 10, H); g.closePath(); g.fillStyle = col; g.fill(); g.lineWidth = LW.small; g.strokeStyle = INK; g.stroke(); if (sh) { g.save(); g.clip(); g.translate(0, amp * 0.5); g.fillStyle = sh; g.fill(); g.restore(); } };
+    hill(320, 60, '#C9D6A6', '#BCCB97', 4); hill(380, 70, '#B5CB8A', '#A9C07E', 9); hill(470, 80, '#A3C27A', null, 13);
+    rectP(g, 0, 520, W, H - 520); g.fillStyle = '#A3C27A'; g.fill();
+    // little trees and bushes along the way (scaled by depth)
+    const r = rng(41);
+    for (let i = 0; i < 26; i++) {
+      const y = 360 + Math.pow(r(), 1.4) * 680, s = 0.25 + (y - 360) / 680 * 1.1, x = r() * W;
+      let onRoad = false; for (let k = 0; k <= LP.N; k += 6) { const p = LP.S[k]; if (Math.abs(p[1] - y) < 60 && Math.abs(p[0] - x) < p[2] * 0.75 + 60 * s) onRoad = true; } if (onRoad) continue;
+      if (r() < 0.5) { shape(g, () => rectP(g, x - 6 * s, y - 50 * s, 12 * s, 50 * s), '#9D6B3B', LW.detail); ellP(g, x, y - 80 * s, 46 * s, 50 * s); paint(g, '#7FA24E', LW.detail); g.save(); ellP(g, x, y - 80 * s, 46 * s, 50 * s); g.clip(); ellP(g, x + 24 * s, y - 60 * s, 40 * s, 40 * s); g.fillStyle = '#6C8E42'; g.fill(); g.restore(); ellP(g, x, y - 80 * s, 46 * s, 50 * s); paint(g, null, LW.detail); }
+      else { for (const [dx, rr] of [[-22, 20], [0, 28], [22, 20]]) { ellP(g, x + dx * s, y - rr * s, rr * s, rr * s); paint(g, '#8DB45A', LW.detail); } }
+    }
+  }
+  function lifeRoad(g) {
+    const { L, R, Lg, Rg, S, U, N } = LP;
+    const poly = (k0, k1, A, B) => { g.beginPath(); for (let i = k0; i <= k1; i++) i === k0 ? g.moveTo(A[i][0], A[i][1]) : g.lineTo(A[i][0], A[i][1]); for (let i = k1; i >= k0; i--) g.lineTo(B[i][0], B[i][1]); g.closePath(); };
+    const segs = 28, M = []; for (let i = 0; i <= N; i++) M.push([(S[i][0] * 0.4 + R[i][0] * 0.6), (S[i][1] * 0.4 + R[i][1] * 0.6)]);
+    for (let sgi = segs - 1; sgi >= 0; sgi--) {
+      const k0 = Math.floor(N * sgi / segs), k1 = Math.min(N, Math.floor(N * (sgi + 1) / segs) + 1);
+      poly(k0, k1, Lg, Rg); paint(g, '#E2B878', 0);
+      poly(k0, k1, L, R); paint(g, '#F7DCA6', 0);
+      // one flat shadow shape: the right-hand half of the path
+      poly(k0, k1, M, R); paint(g, '#EFCD92', 0);
+      g.lineWidth = LW.small; g.strokeStyle = INK;
+      for (const E of [Lg, Rg]) { g.beginPath(); for (let i = k0; i <= k1; i++) i === k0 ? g.moveTo(E[i][0], E[i][1]) : g.lineTo(E[i][0], E[i][1]); g.stroke(); }
+      for (let i = k0; i < k1; i++) if (Math.floor(i / 7) % 2 === 0) line(g, S[i][0], S[i][1], S[i + 1][0], S[i + 1][1], Math.max(1.5, S[i][2] * 0.035), '#FFFFFF');
+    }
+  }
+  function lifeSign(g, x, y, s, kind, k) {
+    if (k <= 0) return;
+    const e = easeOutBack(k), r = 54 * s, post = 150 * s;
+    g.save(); g.translate(x, y); g.scale(0.4 + 0.6 * e, 0.4 + 0.6 * e); g.globalAlpha *= clamp(k * 3);
+    ellP(g, 0, 0, 34 * s, 9 * s); g.fillStyle = 'rgba(70,90,40,0.35)'; g.fill();
+    shape(g, () => rectP(g, -6 * s, -post, 12 * s, post), '#9C6A48', LW.small, '#86593C', () => rectP(g, 1 * s, -post, 5 * s, post));
+    ellP(g, 0, -post - r + 6 * s, r + 7 * s, r + 7 * s); paint(g, '#F4BF54', LW.small);
+    ellP(g, 0, -post - r + 6 * s, r, r); paint(g, '#FFF8EC', LW.detail);
+    milestoneIcon(g, kind, 0, -post - r + 6 * s, r * 0.82);
+    g.restore();
+  }
+  function lifeLayout(o) {
+    const ms = o.milestones || ['cot', 'bag', 'cap', 'office', 'rice'], n = ms.length;
+    // slots: each bend (the sign on the open outside of the curve) and the far end; extra milestones go between slots
+    let slots = LP.bends.concat([{ u: 0.985, dir: 0 }]);
+    while (slots.length < n) { let bi = 0, bg = 0; for (let i = 0; i < slots.length - 1; i++) if (slots[i + 1].u - slots[i].u > bg) { bg = slots[i + 1].u - slots[i].u; bi = i; } slots.splice(bi + 1, 0, { u: (slots[bi].u + slots[bi + 1].u) / 2, dir: 0 }); }
+    const pick = n === slots.length ? slots : Array.from({ length: n }, (_, i) => slots[Math.round(i * (slots.length - 1) / Math.max(1, n - 1))]);
+    return ms.map((kind, i) => { const sl = pick[i], p = LP.at(sl.u), sc = Math.max(0.45, Math.min(0.95, 0.9 / p.Z)), off = p.w * 0.5 * 1.25 + 40 * sc;
+      let sx = p.x, sy = p.y;
+      if (sl.dir) { sx += sl.dir * off; sy += 6; } else { const nx = -Math.sin(p.a), ny = Math.cos(p.a), f = ny > 0 ? -1 : 1; sx += nx * off * f; sy += ny * off * f; }
+      return { kind, u: sl.u, p, sx, sy, s: sc }; });
+  }
+  SETS.lifePath = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam), prog = o.progress == null ? 1 : clamp(o.progress);
+    blit(g, xf, layer('lifePath|bg', devRes(g, xf), (lg) => lifeBg(lg)));
+    const road = layer('lifePath|road', devRes(g, xf), (lg) => lifeRoad(lg));
+    const M = lifeLayout(o);
+    live(g, xf, (g2) => {
+      if (prog >= 0.999) blit(g2, { z: 1, ox: 0, oy: 0 }, road);
+      else if (prog > 0) {
+        const { S, U, N } = LP; let k1 = 0; while (k1 < N && U[k1] < prog) k1++;
+        g2.save(); g2.beginPath();
+        // reveal mask: a fat stroke along the centreline up to the progress point
+        for (let i = 0; i < k1; i++) { g2.moveTo(S[i][0] + S[i][2] * 0.75, S[i][1]); g2.arc(S[i][0], S[i][1], S[i][2] * 0.75, 0, TAU); }
+        g2.clip(); blit(g2, { z: 1, ox: 0, oy: 0 }, road); g2.restore();
+      }
+      // far milestones first
+      M.slice().sort((a, b) => a.sy - b.sy).forEach(m => lifeSign(g2, m.sx, m.sy, m.s, m.kind, clamp((prog - m.u + 0.02) / 0.08)));
+    });
+    const pa = (u) => { const p = LP.at(u); return { x: p.x, y: p.y, s: 0.85 / p.Z }; };
+    const A = { start: pa(0.04), end: pa(0.98) };
+    M.forEach((m, i) => { A['m' + i] = pa(m.u); A['sign' + i] = { x: m.sx, y: m.sy - (150 + 54) * m.s, s: m.s }; });
+    return result(xf, A, A.start.y, 520, { at: (u) => { const p = LP.at(u); return { x: p.x * xf.z + xf.ox, y: p.y * xf.z + xf.oy, s: 0.85 / p.Z * xf.z, a: p.a }; }, milestones: M.map(m => ({ kind: m.kind, u: m.u })) });
+  };
+
+  // ---------------------------------------------------------------- LAB (Q02 "experiment / scientists")
+  // SETS.lab(g, o): o.t (bubbles). Anchors: scientistL, scientistR, subject (centre), bench (worktop centre), board, beaker, left, center, right.
+  const LB = { FY: 820, wall: '#E3F0E8', wallSh: '#CBE0D4', tile: '#F7FBF8', tileLine: '#D3E3DA', floor: '#DCCFBF', floorAlt: '#D4C6B5', floorLine: '#BDAE9C', floorSh: '#A99A88', cab: '#B6CEE6', cabSh: '#9DB8D4', top: '#4A4E58', topSh: '#3C4049' };
+  function flask(g, x, by, w, h, liq, kind) {
+    const neck = w * 0.26;
+    const R = w / 2, cy = by - R, dl = Math.asin(Math.min(0.95, neck / w));
+    const path = kind === 'round' ? () => { g.beginPath(); g.moveTo(x - neck / 2, by - h); g.lineTo(x - neck / 2, cy - R * Math.cos(dl)); g.arc(x, cy, R, -Math.PI / 2 - dl, -Math.PI / 2 + dl, true); g.lineTo(x + neck / 2, by - h); g.closePath(); }
+      : kind === 'beaker' ? () => { g.beginPath(); g.moveTo(x - w / 2, by - h); g.lineTo(x - w / 2, by - 6); g.quadraticCurveTo(x - w / 2, by, x - w / 2 + 6, by); g.lineTo(x + w / 2 - 6, by); g.quadraticCurveTo(x + w / 2, by, x + w / 2, by - 6); g.lineTo(x + w / 2, by - h); g.closePath(); }
+      : () => { g.beginPath(); g.moveTo(x - neck / 2, by - h); g.lineTo(x - neck / 2, by - h * 0.6); g.lineTo(x - w / 2, by - 8); g.quadraticCurveTo(x - w / 2, by, x - w / 2 + 8, by); g.lineTo(x + w / 2 - 8, by); g.quadraticCurveTo(x + w / 2, by, x + w / 2, by - 8); g.lineTo(x + neck / 2, by - h * 0.6); g.lineTo(x + neck / 2, by - h); g.closePath(); };
+    path(); paint(g, 'rgba(236,246,248,0.85)', 0);
+    clipDo(g, path, () => { rectP(g, x - w, by - h * 0.42, w * 2, h); paint(g, liq, 0); rectP(g, x - w, by - h * 0.42, w * 2, 6); paint(g, 'rgba(255,255,255,0.45)', 0); polyP(g, [x + w * 0.1, by - h, x + w * 0.24, by - h, x + w * 0.06, by, x - w * 0.08, by]); g.fillStyle = 'rgba(255,255,255,0.45)'; g.fill(); });
+    path(); paint(g, null, LW.small);
+  }
+  function labStatic(g, o) {
+    const P = LB, FY = P.FY;
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 960, vpy: 280, step: 200, h0: 36 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    rectP(g, 0, 440, W, 166); paint(g, P.tile, 0);
+    g.strokeStyle = P.tileLine; g.lineWidth = 2.5; g.beginPath(); for (let y = 440; y <= 606; y += 42) { g.moveTo(0, y); g.lineTo(W, y); } for (let x = 0; x <= W; x += 56) { g.moveTo(x, 440); g.lineTo(x, 606); } g.stroke();
+    line(g, 0, 440, W, 440, LW.detail);
+    // shelves with bottles and jars (blank labels)
+    for (const sy of [210, 330]) { shape(g, () => rectP(g, 110, sy, 820, 18), '#F4F1EA', LW.small, '#DCD6CA', () => rectP(g, 110, sy + 10, 820, 8)); }
+    const r = rng(11);
+    for (const sy of [210, 330]) { let x = 130; while (x < 900) { const w = 40 + r() * 30, h = 50 + r() * 50, c = ['#9C5A3C', '#7BAFE1', '#F4F1EA', '#77CC81', '#E98A3C', '#B07BD0'][Math.floor(r() * 6)]; shape(g, () => rrP(g, x, sy - h, w, h, 6), c, LW.detail, dark(c, 0.86), () => rectP(g, x + w * 0.7, sy - h, w * 0.3, h)); rrP(g, x + 6, sy - h * 0.62, w - 12, h * 0.3, 3); paint(g, '#FFFFFF', 1.4); shape(g, () => rrP(g, x + w * 0.2, sy - h - 10, w * 0.6, 12, 3), '#4A4E58', LW.detail); x += w + 14; } }
+    // whiteboard with diagrams (no text)
+    shape(g, () => rectP(g, 1130, 130, 660, 300), '#FFFFFF', LW.big, '#EEF2F4', () => polyP(g, [1130, 400, 1790, 400, 1790, 430, 1130, 430]));
+    rectP(g, 1130, 130, 660, 300); paint(g, null, LW.big);
+    shape(g, () => rectP(g, 1110, 430, 700, 14), '#C9CED3', LW.small);
+    g.lineWidth = 4; g.strokeStyle = '#3E7FB8';
+    const mol = [[1230, 230], [1300, 190], [1370, 230], [1370, 310], [1300, 350], [1230, 310]];
+    g.beginPath(); mol.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); g.stroke();
+    g.beginPath(); g.moveTo(1370, 230); g.lineTo(1430, 196); g.moveTo(1230, 310); g.lineTo(1180, 340); g.stroke();
+    for (const [mx, my, c] of [[1430, 196, '#E5534B'], [1180, 340, '#E5534B'], [1300, 190, '#3E7FB8']]) { ellP(g, mx, my, 14, 14); paint(g, c, 2.5); }
+    g.strokeStyle = '#2E3038'; g.beginPath(); g.moveTo(1500, 180); g.lineTo(1500, 380); g.lineTo(1740, 380); g.stroke();
+    g.strokeStyle = '#E5534B'; g.beginPath(); g.moveTo(1510, 360); g.bezierCurveTo(1580, 350, 1600, 220, 1720, 200); g.stroke();
+    g.strokeStyle = '#77CC81'; g.beginPath(); g.moveTo(1510, 370); g.lineTo(1720, 300); g.stroke();
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, 440], [-20, 120, 600, 30, 1300, 30, W + 20, 120]);
+    softFill(g, 40, 'rgba(255,240,206,0.35)', () => ellP(g, 960, 300, 700, 260), 'screen');
+    line(g, 0, FY, W, FY, LW.arch);
+    // the bench: cabinets, a dark worktop, glassware, a microscope, a rack of test tubes
+    floorShadow(g, 960, 830, 960, 12, P.floorSh, 5);
+    shape(g, () => rectP(g, 40, 622, 1840, 196), P.cab, LW.big, P.cabSh, () => rectP(g, 40, 622, 1840, 20));
+    for (let x = 60; x < 1860; x += 230) { shape(g, () => rectP(g, x, 652, 210, 150), P.cab, LW.small, P.cabSh, () => rectP(g, x, 652, 210, 10)); shape(g, () => rrP(g, x + 70, 664, 70, 12, 6), '#F4F7F8', LW.detail); }
+    shape(g, () => rrP(g, 24, 600, 1872, 26, 5), P.top, LW.big, P.topSh, () => rectP(g, 24, 614, 1872, 12));
+    // microscope
+    shape(g, () => rrP(g, 240, 584, 130, 18, 6), '#F4F7F8', LW.small, '#DCE3E8', () => rectP(g, 240, 594, 130, 8));
+    g.beginPath(); g.moveTo(336, 588); g.quadraticCurveTo(370, 520, 330, 450); g.lineWidth = 26 + LW.small * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 26; g.strokeStyle = '#F4F7F8'; g.stroke();
+    shape(g, () => rectP(g, 250, 530, 90, 12), '#C9CED3', LW.detail);
+    g.save(); g.translate(300, 470); g.rotate(-0.5); shape(g, () => rrP(g, -16, -70, 32, 110, 10), '#3A8594', LW.small, '#2F7280', () => rectP(g, 4, -80, 16, 130)); shape(g, () => rrP(g, -12, -92, 24, 24, 5), '#2E3038', LW.detail); g.restore();
+    // rack of test tubes
+    shape(g, () => rectP(g, 470, 560, 200, 16), '#F4F1EA', LW.small); shape(g, () => rectP(g, 470, 590, 200, 10), '#F4F1EA', LW.small);
+    for (const lx of [478, 654]) shape(g, () => rectP(g, lx, 560, 8, 40), '#F4F1EA', LW.detail);
+    ['#E5534B', '#F4BF54', '#77CC81', '#7BAFE1', '#B07BD0'].forEach((c, i) => { const tx = 500 + i * 34; rrP(g, tx - 10, 500, 20, 96, 10); paint(g, 'rgba(236,246,248,0.9)', 0); clipDo(g, () => rrP(g, tx - 10, 500, 20, 96, 10), () => { rectP(g, tx - 12, 540 + i * 4, 24, 70); paint(g, c, 0); }); rrP(g, tx - 10, 500, 20, 96, 10); paint(g, null, LW.detail); });
+    shape(g, () => rectP(g, 470, 560, 200, 16), '#F4F1EA', LW.small);
+    flask(g, 790, 600, 120, 160, '#5FB0B5', 'conical');
+    flask(g, 920, 600, 90, 120, '#F4BF54', 'conical');
+    flask(g, 1060, 600, 110, 130, '#E37F78', 'beaker');
+    // a round flask on a ring stand over a little burner
+    shape(g, () => rrP(g, 1220, 590, 150, 12, 4), '#5A5E66', LW.small);
+    shape(g, () => rectP(g, 1350, 360, 10, 232), '#8A8F96', LW.small);
+    line(g, 1355, 470, 1300, 470, 5); ellP(g, 1280, 470, 34, 8); paint(g, null, 3);
+    flask(g, 1280, 470, 96, 150, '#77CC81', 'round');
+    shape(g, () => rrP(g, 1262, 540, 36, 50, 6), '#3A8594', LW.small);
+    shape(g, () => { g.beginPath(); g.moveTo(1280, 540); g.quadraticCurveTo(1262, 516, 1280, 492); g.quadraticCurveTo(1298, 516, 1280, 540); g.closePath(); }, '#7BAFE1', LW.detail);
+    // a clipboard hanging and a little plant on the right end
+    plant(g, 1700, 600, 0.8, { kind: 'small', pot: X.terracotta, potSh: X.terracottaSh });
+    shape(g, () => rrP(g, 1520, 500, 80, 100, 6), '#876245', LW.small); shape(g, () => rectP(g, 1530, 512, 60, 80), '#FFFFFF', LW.detail); shape(g, () => rrP(g, 1544, 494, 32, 14, 4), '#A9ADB2', LW.detail);
+    for (let i = 0; i < 4; i++) rectP(g, 1538, 530 + i * 14, 40 - (i % 2) * 12, 5), paint(g, '#C9CED3', 0);
+  }
+  function labAnchors() {
+    return { scientistL: { x: 540, y: 985, s: 1 }, scientistR: { x: 1390, y: 985, s: 1 }, subject: { x: 960, y: 985, s: 1 }, bench: { x: 960, y: 600, s: 1 }, board: { x: 1460, y: 280, s: 1 }, beaker: { x: 1060, y: 540, s: 1 },
+      left: { x: 360, y: 990, s: 1.02 }, center: { x: 960, y: 990, s: 1.02 }, right: { x: 1560, y: 990, s: 1.02 } };
+  }
+  SETS.lab = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('lab', devRes(g, xf), (lg) => labStatic(lg, o)));
+    live(g, xf, (g2) => {
+      const t = o.t || 0, r = rng(5);
+      for (let i = 0; i < 7; i++) { const ph = (t * (0.5 + r() * 0.5) + r()) % 1, bx = 1020 + r() * 80, by = 596 - ph * 50; ellP(g2, bx + Math.sin(ph * 9 + i) * 4, by, 4 + r() * 4, 4 + r() * 4); g2.fillStyle = 'rgba(255,255,255,' + (0.85 * Math.sin(ph * Math.PI)).toFixed(2) + ')'; g2.fill(); }
+      for (let i = 0; i < 4; i++) { const ph = (t * 0.6 + i / 4) % 1; ellP(g2, 1280 + Math.sin(ph * 7 + i) * 10, 420 - ph * 60, 6 * (1 - ph * 0.5), 6 * (1 - ph * 0.5)); g2.fillStyle = 'rgba(255,255,255,' + (0.8 * Math.sin(ph * Math.PI)).toFixed(2) + ')'; g2.fill(); }
+    });
+    return result(xf, labAnchors(), 990, LB.FY);
+  };
+  SETS.labFront = function (g, o) { o = o || {}; return result(camXf(o.cam), labAnchors(), 990, LB.FY); };
+
+  // ---------------------------------------------------------------- COURTROOM (Q03 "if the small one cries, you did it")
+  // A living-room corner turned court: Mum's bench (a raised desk with a cloth, a sound block for the wooden spoon, case files), Dad's
+  // high-back chair behind it, a little dock for the accused (left), the sofa as the jury box (right). Home palette; o.tod as home.
+  // Anchors: judge (standing behind the bench; the bench hides the legs), judgeSeat (sitting in the chair), gavel (the sound block),
+  // accused (standing in the dock), juryL, juryR (sofa seats), left, center, right. SETS.courtroomFront: the bench and the dock.
+  function courtBench(g, P) {
+    shape(g, () => rectP(g, 690, 556, 540, 344), P.wood, LW.big, P.woodSh, () => rectP(g, 1170, 556, 60, 344));
+    for (const [px, pw] of [[724, 220], [976, 220]]) { shape(g, () => rectP(g, px, 640, pw, 220), P.woodLt, LW.small, P.woodLtSh, () => rectP(g, px, 640, pw, 14)); rectP(g, px + 20, 664, pw - 40, 172); paint(g, null, LW.detail); }
+    shape(g, () => rrP(g, 670, 532, 580, 28, 6), P.woodLt, LW.big, P.woodLtSh, () => rectP(g, 670, 548, 580, 12));
+    shape(g, () => { g.beginPath(); g.moveTo(760, 556); g.lineTo(1160, 556); g.lineTo(1160, 610); for (let i = 7; i >= 0; i--) g.arc(760 + (i + 0.5) * 50, 610, 25, 0, Math.PI, false); g.closePath(); }, '#3A8594', LW.small, '#2F7280', () => rectP(g, 760, 556, 400, 14));
+    shape(g, () => { g.beginPath(); g.ellipse(960, 640, 34, 34, 0, 0, TAU); }, '#F4BF54', LW.small, '#DCA640', () => rectP(g, 960, 600, 40, 80));
+    ellP(g, 960, 640, 18, 18); paint(g, '#FFF4E3', LW.detail);
+    // case files, a glass of water, the sound block
+    for (let i = 0; i < 4; i++) shape(g, () => rectP(g, 730 + i * 3, 516 - i * 10, 150, 12), ['#F4F1EA', '#F4BF54', '#FFFFFF', '#7BAFE1'][i], LW.detail);
+    shape(g, () => { g.beginPath(); g.moveTo(900, 532); g.lineTo(930, 532); g.lineTo(934, 488); g.lineTo(896, 488); g.closePath(); }, 'rgba(220,240,246,0.95)', LW.detail);
+    rectP(g, 898, 506, 34, 24); g.fillStyle = 'rgba(123,175,225,0.5)'; g.fill();
+    shape(g, () => rrP(g, 1080, 512, 90, 22, 5), '#7A4B32', LW.small, '#66402B', () => rectP(g, 1080, 524, 90, 10));
+  }
+  function courtDock(g, P) {
+    shape(g, () => rectP(g, 230, 760, 330, 160), P.woodLt, LW.big, P.woodLtSh, () => rectP(g, 520, 760, 40, 160));
+    for (let x = 262; x < 540; x += 46) shape(g, () => rectP(g, x, 790, 22, 110), P.wood, LW.detail);
+    shape(g, () => rrP(g, 214, 740, 362, 26, 8), P.wood, LW.big, P.woodSh, () => rectP(g, 214, 754, 362, 12));
+  }
+  function courtStatic(g, o, tod) {
+    const P = HM, FY = P.FY, T = HOME_TOD[tod];
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 960, vpy: 280, step: 200, h0: 36 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    rectP(g, -10, FY - 18, W + 20, 18); paint(g, P.woodLt, LW.detail);
+    homeWindow(g, 1480, 170, 300, 280, T.sky, P);
+    clockFaceRim(g, 960, 130, 60, '#C98A3E', mix(P.wall, P.wallSh, 0.9));
+    photo(g, 380, 190, 180, 150, 'family', { frame: '#C98A3E' });
+    photo(g, 600, 230, 100, 120, 'grad', { frame: '#9C6A48', bg: '#E7C9A0' });
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, FY], [-20, 130, 600, 40, 1300, 40, W + 20, 130]);
+    line(g, 0, FY, W, FY, LW.arch);
+    shape(g, () => polyP(g, [560, 880, 1360, 880, 1460, H + 10, 460, H + 10]), P.rugBorder, LW.small);
+    shape(g, () => polyP(g, [590, 892, 1330, 892, 1418, H + 10, 502, H + 10]), P.rug, LW.detail, P.rugSh, () => polyP(g, [590, 892, 1330, 892, 1336, 906, 586, 906]));
+    // Dad's high-back chair behind the bench
+    shape(g, () => { g.beginPath(); g.moveTo(820, 620); g.lineTo(820, 380); g.quadraticCurveTo(820, 300, 960, 296); g.quadraticCurveTo(1100, 300, 1100, 380); g.lineTo(1100, 620); g.closePath(); }, P.sofa, LW.big, P.sofaMid, () => rectP(g, 1050, 290, 60, 340));
+    for (const bx of [880, 960, 1040]) for (const by of [380, 450]) { ellP(g, bx, by, 6, 6); paint(g, P.sofaSh, LW.detail); }
+    doily(g, 960, 318, 140, 40, P.lace);
+    homeSofa(g, 1360, 2020, P, 2);
+    courtBench(g, P);
+    courtDock(g, P);
+    if (tod !== 'day') { if (tod === 'night') grade(g, 960, 200, 60, 1500, NIGHT); else grade(g, 960, 200, 80, 1500, EVE); homeWindowGlass(g, 1480, 170, 300, 280, 20, 18, T.sky, tod === 'night' ? '#3B3437' : '#5A504C'); }
+  }
+  function courtAnchors() {
+    return { judge: { x: 960, y: 905, s: 1 }, judgeSeat: { x: 960, y: 640, s: 1 }, gavel: { x: 1125, y: 512, s: 1 }, accused: { x: 395, y: 985, s: 1 },
+      juryL: { x: 1570, y: 738, s: 1 }, juryR: { x: 1810, y: 738, s: 1 }, left: { x: 330, y: 990, s: 1.02 }, center: { x: 960, y: 990, s: 1.02 }, right: { x: 1560, y: 990, s: 1.02 } };
+  }
+  SETS.courtroom = function (g, o) {
+    o = o || {}; const tod = HOME_TOD[o.tod] ? o.tod : 'day', xf = camXf(o.cam);
+    blit(g, xf, layer('courtroom|' + tod, devRes(g, xf), (lg) => courtStatic(lg, o, tod)));
+    live(g, xf, (g2) => clockHands(g2, 960, 130, 60, o.clock != null ? o.clock : 18.6));
+    return result(xf, courtAnchors(), 990, HM.FY, { tint: HOME_TOD[tod].tint });
+  };
+  SETS.courtroomFront = function (g, o) {
+    o = o || {}; const tod = HOME_TOD[o.tod] ? o.tod : 'day', xf = camXf(o.cam);
+    const parts = o.parts || ['bench', 'dock'];
+    blit(g, xf, layer('courtroomFront|' + tod + '|' + parts.join(','), devRes(g, xf), (lg) => {
+      if (parts.includes('bench')) courtBench(lg, HM); if (parts.includes('dock')) courtDock(lg, HM);
+      if (tod !== 'day') maskedPass(lg, (g2) => { if (tod === 'night') grade(g2, 960, 200, 60, 1500, NIGHT); else grade(g2, 960, 200, 80, 1500, EVE); });
+    }), null, { x: 200, y: 480, w: 1060, h: 450 });
+    return result(xf, courtAnchors(), 990, HM.FY);
+  };
+
+  // ---------------------------------------------------------------- PODIUM (Q06 "you are the United Nations")
+  // A lectern on a carpeted stage with plain coloured flags (no real flags), a medallion of plain rings. o.t waves the flags.
+  // Anchors: speaker (standing behind the lectern; legs hidden), lectern (its top), mic, left, right (the two sides), center.
+  // SETS.podiumFront: the lectern.
+  const PD = { FY: 800, wall: '#C9DDEA', wallSh: '#B3CDDF', carpet: '#4F86A6', carpetSh: '#43748F', wood: '#9C6A48', woodSh: '#86593C', gold: '#F4BF54', goldSh: '#DCA640' };
+  const FLAGS = [['#3A8594', 240], ['#F4BF54', 420], ['#E37F78', 600], ['#7BAFE1', 1320], ['#77CC81', 1500], ['#B07BD0', 1680]];
+  function lectern(g) {
+    const P = PD;
+    shape(g, () => polyP(g, [870, 600, 1050, 600, 1080, 910, 840, 910]), P.wood, LW.big, P.woodSh, () => polyP(g, [1010, 600, 1050, 600, 1080, 910, 1036, 910]));
+    ellP(g, 960, 720, 46, 46); paint(g, P.gold, LW.small); ellP(g, 960, 720, 30, 30); paint(g, '#FFF4E3', LW.detail); ellP(g, 960, 720, 14, 14); paint(g, P.gold, LW.detail);
+    shape(g, () => polyP(g, [826, 560, 1094, 560, 1110, 604, 810, 604]), mix(P.wood, '#FFFFFF', 0.12), LW.big, P.woodSh, () => polyP(g, [810, 594, 1110, 594, 1110, 604, 810, 604]));
+    g.beginPath(); g.moveTo(1040, 562); g.quadraticCurveTo(1060, 500, 1010, 470); g.lineWidth = 5 + LW.detail * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 5; g.strokeStyle = '#5A5E66'; g.stroke();
+    g.save(); g.translate(1006, 466); g.rotate(-0.8); shape(g, () => rrP(g, -12, -22, 24, 40, 12), '#2E3038', LW.detail); g.restore();
+    shape(g, () => { g.beginPath(); g.moveTo(860, 560); g.lineTo(886, 560); g.lineTo(890, 526); g.lineTo(856, 526); g.closePath(); }, 'rgba(220,240,246,0.95)', LW.detail);
+  }
+  function podiumStatic(g) {
+    const P = PD, FY = P.FY;
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    g.strokeStyle = rgba(INK, 0.22); g.lineWidth = 2.5; g.beginPath(); for (let x = 120; x < W; x += 240) { g.moveTo(x, 0); g.lineTo(x, FY); } g.stroke();
+    // a medallion of plain rings
+    ellP(g, 960, 270, 170, 170); paint(g, P.gold, LW.big); ellP(g, 960, 270, 140, 140); paint(g, '#FFF4E3', LW.small);
+    for (const rr of [110, 80]) { ellP(g, 960, 270, rr, rr); g.lineWidth = 4; g.strokeStyle = P.goldSh; g.stroke(); }
+    ellP(g, 960, 270, 44, 44); paint(g, PD.gold, LW.small);
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, FY], [-20, 140, 600, 40, 1300, 40, W + 20, 140]);
+    softFill(g, 60, 'rgba(255,244,214,0.45)', () => ellP(g, 960, 420, 520, 320), 'screen');
+    // stage and carpet
+    rectP(g, 0, FY, W, H - FY); paint(g, P.carpet, 0);
+    softFill(g, 30, 'rgba(255,244,214,0.18)', () => ellP(g, 960, 930, 620, 110), 'screen');
+    rectP(g, 0, FY, W, 18); paint(g, P.carpetSh, 0);
+    line(g, 0, FY, W, FY, LW.arch);
+    for (const [, x] of FLAGS) { floorShadow(g, x, 832, 44, 8, P.carpetSh, 3); shape(g, () => rrP(g, x - 26, 812, 52, 18, 6), P.gold, LW.small); shape(g, () => rectP(g, x - 5, 160, 10, 656), '#C9CED3', LW.small, '#A9B0B8', () => rectP(g, x + 1, 160, 4, 656)); ellP(g, x, 152, 12, 12); paint(g, P.gold, LW.small); }
+    floorShadow(g, 960, 915, 170, 14, P.carpetSh, 5);
+  }
+  function flagCloth(g, x, col, t, i) {
+    const w = 150, h = 112, y = 172, ph = t * 2.2 + i * 1.3, wv = (u) => Math.sin(ph + u * 3.2) * 9 * u;
+    const path = () => { g.beginPath(); g.moveTo(x + 5, y); for (let k = 1; k <= 6; k++) { const u = k / 6; g.lineTo(x + 5 + w * u, y + wv(u)); } g.lineTo(x + 5 + w, y + h + wv(1)); for (let k = 5; k >= 0; k--) { const u = k / 6; g.lineTo(x + 5 + w * u, y + h + wv(u) + u * 6); } g.closePath(); };
+    path(); paint(g, col, 0);
+    clipDo(g, path, () => { g.fillStyle = dark(col, 0.88); g.beginPath(); g.moveTo(x, y + h * 0.62); for (let k = 0; k <= 6; k++) { const u = k / 6; g.lineTo(x + 5 + w * u, y + h * 0.62 + wv(u) + Math.sin(ph * 0.7 + u * 4) * 8); } g.lineTo(x + w + 20, y + h + 40); g.lineTo(x, y + h + 40); g.closePath(); g.fill(); });
+    path(); paint(g, null, LW.small);
+  }
+  function podiumAnchors() { return { speaker: { x: 960, y: 905, s: 1 }, lectern: { x: 960, y: 560, s: 1 }, mic: { x: 1006, y: 466, s: 1 }, left: { x: 470, y: 990, s: 1.02 }, right: { x: 1450, y: 990, s: 1.02 }, center: { x: 960, y: 990, s: 1.02 } }; }
+  SETS.podium = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('podium', devRes(g, xf), (lg) => podiumStatic(lg)));
+    live(g, xf, (g2) => FLAGS.forEach(([c, x], i) => flagCloth(g2, x, c, o.t || 0, i)));
+    return result(xf, podiumAnchors(), 990, PD.FY);
+  };
+  SETS.podiumFront = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('podiumFront', devRes(g, xf), (lg) => lectern(lg)), null, { x: 790, y: 440, w: 340, h: 480 });
+    return result(xf, podiumAnchors(), 990, PD.FY);
+  };
+
+  // ---------------------------------------------------------------- BANK COUNTER (Q05 "you are now the family bank")
+  // SETS.bankCounter(g, o): the teller's counter with a glass screen (right), the queue rope behind the queue (left), a bank clock, a
+  // savings poster (coins, no text). Anchors: teller (standing behind the counter; legs hidden), window (the opening in the glass),
+  // counter (counter top at the window), q1..q5 (queue places, q1 at the window; queuers face right), left, center, right.
+  // SETS.bankCounterFront(g, o): the counter front and the glass screen, then the signs: o.signs = [{text, k}] (up to 3 plaques hung
+  // on the glass right of the window, k 0..1 pops each in) and/or o.sign = 'text' (a desk sign on the counter, o.signK). Text is 44 px.
+  const BK = { FY: 820, wall: '#F3E4C8', wallSh: '#E3CDA8', band: '#3A8594', floor: '#E9D9BF', floorAlt: '#E1CFB2', floorLine: '#CDB894', floorSh: '#BBA37E', counter: '#3A8594', counterSh: '#2F7280', top: '#F3EEE6', topSh: '#DCD3C6', glass: 'rgba(200,232,240,0.32)' };
+  function bankCounterPiece(g) {
+    const P = BK;
+    shape(g, () => rectP(g, 990, 636, 940, 270), P.counter, LW.big, P.counterSh, () => rectP(g, 990, 636, 940, 24));
+    for (let x = 1020; x < 1920; x += 230) { shape(g, () => rectP(g, x, 680, 200, 196), mix(P.counter, '#FFFFFF', 0.1), LW.small, P.counterSh, () => rectP(g, x, 680, 200, 14)); rectP(g, x + 16, 700, 168, 8); paint(g, '#F4BF54', LW.detail); }
+    shape(g, () => rrP(g, 970, 606, 970, 34, 6), P.top, LW.big, P.topSh, () => rectP(g, 970, 624, 970, 16));
+    // the glass screen with an arched window and a slot
+    const gl = () => { g.beginPath(); g.rect(1000, 230, 920, 376); g.moveTo(1180, 606); g.lineTo(1180, 400); g.arc(1300, 400, 120, Math.PI, 0); g.lineTo(1420, 606); g.closePath(); };
+    gl(); g.fillStyle = P.glass; g.fill('evenodd');
+    clipDo(g, gl, () => { g.fillStyle = 'rgba(255,255,255,0.4)'; for (const [a, w] of [[1060, 30], [1110, 12], [1520, 36], [1580, 14]]) { polyP(g, [a, 230, a + w, 230, a + w - 140, 606, a - 140, 606]); g.fill(); } }, true);
+    g.beginPath(); g.moveTo(1000, 606); g.lineTo(1000, 230); g.lineTo(1920, 230); g.moveTo(1180, 606); g.lineTo(1180, 400); g.arc(1300, 400, 120, Math.PI, 0); g.lineTo(1420, 606); g.lineWidth = LW.small; g.strokeStyle = INK; g.stroke();
+    for (const x of [1000, 1640]) shape(g, () => rectP(g, x - 8, 222, 16, 386), '#C9CED3', LW.small);
+    shape(g, () => rectP(g, 990, 214, 940, 18), '#C9CED3', LW.small);
+    shape(g, () => rrP(g, 1230, 590, 140, 16, 6), '#9AA3AA', LW.detail);
+  }
+  function bankStatic(g) {
+    const P = BK, FY = P.FY;
+    tileFloor(g, FY, { col: P.floor, alt: P.floorAlt, line: P.floorLine, vpx: 960, vpy: 280, step: 200, h0: 36 });
+    rectP(g, 0, 0, W, FY); paint(g, P.wall, 0);
+    shape(g, () => rectP(g, -10, 580, W + 20, 40), P.band, LW.small, dark(P.band, 0.88), () => rectP(g, -10, 606, W + 20, 14));
+    rectP(g, -10, FY - 18, W + 20, 18); paint(g, '#D9C29C', LW.detail);
+    clockFaceRim(g, 1460, 130, 56, '#A3ADB8', mix(P.wall, P.wallSh, 0.9));
+    // savings poster: a stack of coins and a plant, no text
+    shape(g, () => rectP(g, 280, 150, 260, 320), '#FFFDF6', LW.small, '#EFE6D6', () => rectP(g, 510, 150, 30, 320));
+    clipDo(g, () => rectP(g, 298, 168, 224, 284), () => { g.fillStyle = '#BFE3E0'; g.fillRect(298, 168, 224, 284); ellP(g, 410, 470, 170, 80); g.fillStyle = '#9DCFC6'; g.fill(); });
+    for (let i = 0; i < 6; i++) shape(g, () => { g.beginPath(); g.ellipse(380, 400 - i * 22, 52, 14, 0, 0, TAU); }, '#F4BF54', LW.detail, '#DCA640', () => rectP(g, 380, 400 - i * 22, 60, 20));
+    leaf(g, 450, 400, -1.4, 80, 14, '#87A26A', '#6F8C57', 2); leaf(g, 450, 360, -0.6, 60, 12, '#87A26A', '#6F8C57', 2);
+    rectP(g, 298, 168, 224, 284); paint(g, null, LW.detail);
+    wallBand(g, P.wall, P.wallSh, [0, 0, W, 580], [-20, 120, 600, 30, 1300, 30, W + 20, 120]);
+    softFill(g, 30, 'rgba(255,248,226,0.3)', () => ellP(g, 700, 420, 520, 260), 'screen');
+    line(g, 0, FY, W, FY, LW.arch);
+    plant(g, 880, 876, 0.85, { pot: '#B6D0EA', potSh: '#9DB8D4' }); floorShadow(g, 880, 880, 80, 10, P.floorSh, 4);
+    // queue rope on its posts (behind the queue)
+    const posts = [110, 370, 630];
+    posts.forEach(x => { floorShadow(g, x, 884, 40, 8, P.floorSh, 3); shape(g, () => { g.beginPath(); g.ellipse(x, 876, 36, 10, 0, 0, TAU); }, '#C9CED3', LW.small); shape(g, () => rectP(g, x - 6, 520, 12, 356), '#D8DDE2', LW.small, '#B9C0C8', () => rectP(g, x + 1, 520, 5, 356)); ellP(g, x, 516, 12, 12); paint(g, '#D8DDE2', LW.small); });
+    for (let i = 0; i < posts.length - 1; i++) { const a = posts[i], b = posts[i + 1]; g.beginPath(); g.moveTo(a, 530); g.quadraticCurveTo((a + b) / 2, 600, b, 530); g.lineWidth = 12 + LW.small * 2; g.strokeStyle = INK; g.stroke(); g.lineWidth = 12; g.strokeStyle = '#B9473F'; g.stroke(); }
+    bankCounterPiece(g);
+  }
+  function bankAnchors() {
+    return { teller: { x: 1300, y: 905, s: 1 }, window: { x: 1300, y: 470, s: 1 }, counter: { x: 1300, y: 606, s: 1 },
+      q1: { x: 1060, y: 985, s: 1 }, q2: { x: 820, y: 985, s: 1 }, q3: { x: 590, y: 985, s: 1 }, q4: { x: 360, y: 985, s: 1 }, q5: { x: 130, y: 985, s: 1 },
+      sign0: { x: 1680, y: 300, s: 1 }, sign1: { x: 1680, y: 400, s: 1 }, sign2: { x: 1680, y: 500, s: 1 }, signDesk: { x: 1560, y: 606, s: 1 },
+      left: { x: 360, y: 990, s: 1.02 }, center: { x: 900, y: 990, s: 1.02 }, right: { x: 1560, y: 990, s: 1.02 } };
+  }
+  // a desk sign on a little stand (standing on y), or a plaque hung on the glass (centred on y)
+  function signHolder(g, x, y, text, k, hung) {
+    if (!(k > 0)) return;
+    const e = easeOutBack(k);
+    g.save(); g.translate(x, y); g.scale(e, e); g.globalAlpha *= clamp(k * 3);
+    g.font = font(900, 44); const tw = g.measureText(text).width, w = tw + 48, h = 74, top = hung ? -h / 2 : -h - 14;
+    if (hung) { line(g, -w * 0.3, top, 0, top - 30, 2.5); line(g, w * 0.3, top, 0, top - 30, 2.5); ellP(g, 0, top - 32, 5, 5); paint(g, '#C9CED3', 1.6); }
+    else shape(g, () => polyP(g, [-30, 0, 30, 0, 18, -16, -18, -16]), '#C9CED3', LW.detail);
+    rrP(g, -w / 2 + 6, top + 8, w, h, 12); g.fillStyle = 'rgba(70,32,16,0.2)'; g.fill();
+    shape(g, () => rrP(g, -w / 2, top, w, h, 12), '#FFFDF6', LW.small, '#EFE6D6', () => rectP(g, -w / 2, top + h - 12, w, 12));
+    g.fillStyle = '#1c1c1c'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, 0, top + h / 2 - 2);
+    g.restore();
+  }
+  SETS.bankCounter = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('bankCounter', devRes(g, xf), (lg) => bankStatic(lg)));
+    live(g, xf, (g2) => clockHands(g2, 1460, 130, 56, o.clock != null ? o.clock : 9.1));
+    return result(xf, bankAnchors(), 990, BK.FY);
+  };
+  SETS.bankCounterFront = function (g, o) {
+    o = o || {}; const xf = camXf(o.cam);
+    blit(g, xf, layer('bankCounterFront', devRes(g, xf), (lg) => bankCounterPiece(lg)), null, { x: 960, y: 200, w: 960, h: 720 });
+    const A = bankAnchors(), at = [A.sign0, A.sign1, A.sign2];
+    live(g, xf, (g2) => {
+      if (o.sign) signHolder(g2, A.signDesk.x, A.signDesk.y, String(o.sign), o.signK == null ? 1 : o.signK, false);
+      (o.signs || []).slice(0, 3).forEach((s, i) => signHolder(g2, at[i].x, at[i].y, String(s.text || ''), s.k == null ? 1 : s.k, true));
+    });
+    return result(xf, A, 990, BK.FY);
+  };
+
+  // ---------------------------------------------------------------- DOORS (Q04 "Doctor, lawyer, engineer ... the fourth one is also doctor")
+  // SETS.doorTrio(g, o): o.labels (default ['Doctor', 'Lawyer', 'Engineer']; four for the gag), o.n (doors shown: a float, each pops in
+  // as n passes its index; default all), o.open {i, k} (door i swings open to light), o.glow (index lit), o.bg (false: doors only, on
+  // whatever is under them), o.t. A door's colour and icon follow its label, so a second 'Doctor' matches the first. Plate text >= 44 px.
+  // Anchors: door0..door3 (standing in front of each door), center.
+  const DOOR_COLS = ['#3A8594', '#E37F78', '#7BAFE1', '#77CC81', '#B07BD0', '#F2A264'];
+  function doorGeom(n) { const dw = n >= 4 ? 300 : 340, gap = n >= 4 ? 120 : 190, tot = n * dw + (n - 1) * gap, x0 = 960 - tot / 2; return Array.from({ length: n }, (_, i) => ({ x: x0 + i * (dw + gap), w: dw, top: 270, bot: 850 })); }
+  function doorIcon(g, label, x, y, r) {
+    const l = String(label).toLowerCase();
+    g.save(); g.translate(x, y);
+    ellP(g, 0, 0, r, r); paint(g, '#FFF8EC', LW.small);
+    if (/doc|nurse|med/.test(l)) { rectP(g, -r * 0.18, -r * 0.6, r * 0.36, r * 1.2); paint(g, '#E5534B', LW.detail); rectP(g, -r * 0.6, -r * 0.18, r * 1.2, r * 0.36); paint(g, '#E5534B', 0); line(g, -r * 0.18, -r * 0.18, -r * 0.6, -r * 0.18, LW.detail); }
+    else if (/law/.test(l)) { line(g, 0, -r * 0.62, 0, r * 0.5, 4); line(g, -r * 0.6, -r * 0.4, r * 0.6, -r * 0.4, 4); for (const sx of [-1, 1]) { line(g, sx * r * 0.6, -r * 0.4, sx * r * 0.42, r * 0.06, 2); line(g, sx * r * 0.6, -r * 0.4, sx * r * 0.78, r * 0.06, 2); g.beginPath(); g.arc(sx * r * 0.6, r * 0.06, r * 0.2, 0, Math.PI); g.closePath(); paint(g, '#F4BF54', 2); } line(g, -r * 0.3, r * 0.52, r * 0.3, r * 0.52, 4); }
+    else if (/eng/.test(l)) { g.beginPath(); for (let i = 0; i < 16; i++) { const a = i / 16 * TAU, rr = i % 2 ? r * 0.5 : r * 0.68; g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } g.closePath(); paint(g, '#9AA3AA', LW.detail); ellP(g, 0, 0, r * 0.2, r * 0.2); paint(g, '#FFF8EC', LW.detail); }
+    g.restore();
+  }
+  function oneDoor(g, d, label, col, k, openK, glow, t) {
+    if (k <= 0) return;
+    const e = easeOutBack(k), cx = d.x + d.w / 2;
+    g.save(); g.translate(cx, d.bot); g.scale(0.5 + 0.5 * e, 0.5 + 0.5 * e); g.translate(-cx, -d.bot); g.globalAlpha *= clamp(k * 3);
+    if (glow) softFill(g, 30, 'rgba(255,226,120,' + (0.7 * glow).toFixed(2) + ')', () => rrP(g, d.x - 40, d.top - 140, d.w + 80, d.bot - d.top + 180, 40));
+    floorShadow(g, cx, d.bot + 6, d.w * 0.62, 14, 'rgba(110,50,20,0.25)', 6);
+    shape(g, () => rectP(g, d.x - 22, d.top - 22, d.w + 44, d.bot - d.top + 22), '#B07446', LW.big, '#965E35', () => rectP(g, d.x - 22, d.top - 22, d.w + 44, 18));
+    rectP(g, d.x, d.top, d.w, d.bot - d.top); paint(g, '#FFF4D0', 0);
+    if (openK > 0) softFill(g, 20, 'rgba(255,255,255,0.8)', () => rectP(g, d.x + 20, d.top + 20, d.w - 40, d.bot - d.top - 20));
+    // the leaf: shrinks toward its hinge as it opens
+    const lw2 = d.w * (1 - 0.82 * clamp(openK || 0)), sk = 30 * clamp(openK || 0);
+    shape(g, () => polyP(g, [d.x, d.top, d.x + lw2, d.top - sk, d.x + lw2, d.bot + sk * 0.3, d.x, d.bot]), col, LW.big, dark(col, 0.86), () => polyP(g, [d.x + lw2 * 0.8, d.top, d.x + lw2, d.top - sk, d.x + lw2, d.bot + sk * 0.3, d.x + lw2 * 0.8, d.bot]));
+    if (lw2 > d.w * 0.5) {
+      for (const [py, ph] of [[d.top + 40, 200], [d.top + 290, 220]]) { rectP(g, d.x + 34, py, lw2 - 68, ph); paint(g, null, LW.detail); }
+      doorIcon(g, label, d.x + lw2 / 2, d.top + 140, 54);
+      ellP(g, d.x + lw2 - 34, d.top + (d.bot - d.top) * 0.55, 13, 13); paint(g, '#F4BF54', LW.small);
+    }
+    // nameplate over the door
+    const fs = fitFont(g, label, 900, 58, d.w + 40, 44); const tw = g.measureText(label).width, pw = Math.max(d.w * 0.8, tw + 50), ph = fs * 1.5;
+    rrP(g, cx - pw / 2 + 6, d.top - 52 - ph + 8, pw, ph, 14); g.fillStyle = 'rgba(70,32,16,0.22)'; g.fill();
+    shape(g, () => rrP(g, cx - pw / 2, d.top - 52 - ph, pw, ph, 14), '#FFF8EC', LW.small, '#EFE2CC', () => rectP(g, cx - pw / 2, d.top - 52 - ph * 0.25, pw, ph * 0.25));
+    g.fillStyle = '#1c1c1c'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(label, cx, d.top - 52 - ph / 2 + 2);
+    g.restore();
+  }
+  SETS.doorTrio = function (g, o) {
+    o = o || {}; refresh();
+    const labels = o.labels || ['Doctor', 'Lawyer', 'Engineer'], n = labels.length, D = doorGeom(n), xf = camXf(o.cam);
+    if (o.bg !== false) blit(g, xf, layer('doorTrio|bg', devRes(g, xf), (lg) => {
+      lg.fillStyle = '#F6D3A2'; lg.fillRect(0, 0, W, 850); tileFloor(lg, 850, { col: '#E4AB77', alt: '#DDA26E', line: '#CB8F5F', vpx: 960, vpy: 300, step: 220, h0: 36 });
+      wallBand(lg, '#F6D3A2', '#E8B884', [0, 0, W, 850], [-20, 130, 600, 30, 1300, 30, W + 20, 130]);
+      softFill(lg, 60, 'rgba(255,244,214,0.4)', () => ellP(lg, 960, 520, 800, 360), 'screen');
+      line(lg, 0, 850, W, 850, LW.arch);
+    }));
+    const colOf = {}; let ci = 0; labels.forEach(l => { const k = String(l).toLowerCase(); if (colOf[k] == null) colOf[k] = DOOR_COLS[ci++ % DOOR_COLS.length]; });
+    const shown = o.n == null ? n : o.n;
+    live(g, xf, (g2) => D.forEach((d, i) => oneDoor(g2, d, labels[i], colOf[String(labels[i]).toLowerCase()], clamp(shown - i), o.open && o.open.i === i ? o.open.k : 0, o.glow === i ? 1 : 0, o.t || 0)));
+    const A = { center: { x: 960, y: 990, s: 1.02 } }; D.forEach((d, i) => { A['door' + i] = { x: d.x + d.w / 2, y: 985, s: 1 }; });
+    return result(xf, A, 990, 850);
+  };
+
   // ================================================================ exports
   SETS.W = W; SETS.H = H;
   SETS.ready = ready;

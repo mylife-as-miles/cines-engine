@@ -41,6 +41,27 @@ CHECKS = {
     'click': ('a button click', ['a gunshot', 'a door knock', 'a water drop', 'a bell']),
     'dim': ('a descending blip', ['a rising blip', 'a doorbell', 'a gunshot', 'a bird chirping']),
     'plate_slide': ('something sliding across a table', ['a door closing', 'footsteps', 'paper tearing', 'a whoosh']),
+    'pile_topple': ('a stack of papers falling over', ['an explosion', 'applause', 'a door closing', 'rain']),
+    'stamp_yes': ('a rubber stamp', ['a gunshot', 'a kick drum', 'a bell', 'a door knock']),
+    'card_land_1': ('a playing card slapped on a table', ['a gunshot', 'a hand clap', 'a door knock', 'a whip']),
+    'shout_no': ('a cartoon boing', ['an explosion', 'a gunshot', 'a car horn', 'a dog barking']),
+    # new for Firstborn
+    'baby_cry': ('a baby crying', ['a cat meowing', 'a baby laughing', 'a person screaming', 'a squeaky toy']),
+    'baby_cry_2': ('a baby crying', ['a cat meowing', 'a baby laughing', 'a person screaming', 'a squeaky toy']),
+    'sneeze': ('a person sneezing', ['a cough', 'a gunshot', 'a dog barking', 'a laugh']),
+    'phone_ring': ('a phone ringing', ['an alarm clock', 'a doorbell', 'a bicycle bell', 'a bird chirping']),
+    'ka_ching': ('a cash register ka-ching', ['a doorbell', 'a bicycle bell', 'a phone ringing', 'glass breaking']),
+    'credit_alert': ('a payment received notification chime', ['a doorbell', 'a phone ringing', 'an error sound', 'a gong']),
+    'gavel': ('a wooden gavel tapped on a table', ['a gunshot', 'a door knock', 'a hand clap', 'a drum hit']),
+    'gavel_1': ('a wooden gavel tapped on a table', ['a gunshot', 'a door knock', 'a hand clap', 'a drum hit']),
+    'coins': ('coins jingling', ['keys jingling', 'glass breaking', 'a bell', 'rain']),
+    'party_murmur': ('a crowd of people murmuring softly in a hall', ['people chanting', 'applause', 'rain', 'a crowd cheering', 'wind']),
+    'swoon': ('a dreamy descending harp glissando', ['a doorbell', 'a wind chime', 'glass breaking', 'an error sound']),
+    'sting_1': ('a short comedic musical sting', ['a doorbell', 'an error sound', 'a phone ringing', 'a success chime']),
+    'sting_2': ('a short comedic musical sting', ['a doorbell', 'an error sound', 'a phone ringing', 'a success chime']),
+    'meter_1': ('a plucked string note', ['a doorbell', 'a phone ringing', 'a gunshot', 'a car horn']),
+    'meter_2': ('a plucked string note', ['a doorbell', 'a phone ringing', 'a gunshot', 'a car horn']),
+    'meter_3': ('a plucked string note', ['a doorbell', 'a phone ringing', 'a gunshot', 'a car horn']),
 }
 
 
@@ -48,7 +69,7 @@ def main():
     jobs = [{'key': k, 'op': 'match', 'path': os.path.join(ROOT, 'audio', 'sfx', k + '.flac'), 'query': q, 'alts': a}
             for k, (q, a) in CHECKS.items() if os.path.exists(os.path.join(ROOT, 'audio', 'sfx', k + '.flac'))]
     jf = tempfile.mktemp(suffix='.json'); rf = jf + '.out'; json.dump(jobs, open(jf, 'w'))
-    subprocess.run([EARSHOT_PY, os.path.join(ROOT, 'tools', 'ears.py'), jf, rf, '--threads', '4'], check=True, capture_output=True)
+    subprocess.run([EARSHOT_PY, os.path.join(ROOT, 'tools', 'ears.py'), jf, rf, '--threads', os.environ.get('EARSHOT_THREADS', '3')], check=True, capture_output=True)
     res = json.load(open(rf)); os.remove(jf); os.remove(rf); out = {}
     for k, r in res.items():
         s = r.get('summary', ''); q, alts = CHECKS[k]

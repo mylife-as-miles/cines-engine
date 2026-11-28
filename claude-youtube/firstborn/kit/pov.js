@@ -23,7 +23,19 @@
    Returns world anchors {head, headTop, headR, mouth, handL, handR, elbowL, elbowR, pelvis, knee, kneeL, kneeR, feet, seat, lap, scale}.
    Props (world space): POV.phone, phoneFlat, laptop, laptopSide, clipboard, box, mug, notif (kind mail|chat|bell|call|missed),
    chatBubble, bell, buzz, thought (plate icon), plateIcon, bulb (rays, glow, sparkle), clock, flash, shadow.
-   In a tinted set (living-room evening) pass the set's tint to figure() so skin and clothes take the same multiply. */
+   In a tinted set (living-room evening) pass the set's tint to figure() so skin and clothes take the same multiply.
+
+   FIRSTBORN additions (all backward compatible; the old ids, poses and props draw pixel-identically; see src/SHEET_family.html):
+   who: fb_mum fb_dad fb_sister fb_brother fb_auntie fb_uncle1 fb_uncle2 fb_cousin1 fb_cousin2 fb_okafor_son (alias okafor_son).
+     Dot tokens pick an age, an outfit or the school bag: 'hero.newborn' 'hero.kid' 'hero.teen' 'fb_sister.baby|kid|grown'
+     'fb_brother.toddler|kid' 'fb_sister.grown.gown' 'fb_dad.labcoat' 'hero.party' 'hero.kid.bag'; or opts.age / opts.outfit / opts.bag.
+     Ages: newborn (swaddled bundle: pose 'lie' default, or 'held'; opts fists, rot) | toddler | kid | teen | adult. Outfits: gown, labcoat, party.
+   holding: baby (opts.baby = who, babyExpr/babyBlink/babyLook/babyMouth) baby_hero baby_sister baby_brother schoolbag holdall spoon calculator
+     bucket bucket_head report report_out paintbrush cup cup_out book books coins akimbo pray wipe_eye.
+   poses: cradle gavel (phase 0 raised..1 struck) praise pray akimbo wipe_eye sneeze (phase <0.5 'ah', >=0.5 'choo') clap (phase) swoon (phase)
+     catch house house_small (phase given = trudging). POV.swoonPair(g, {x, y, scale, facing, t, mum, dad, tint, shadow}) draws Mum fainting into Dad.
+   expr: happy_cry sneeze_pre sneeze faint serene stern sweet proud. Props: spoon calculator receipt bucket glass reportCard paintbrush palette
+     schoolbag house sneezeBurst book books holdall coins baby. Anchors add bodyScale (a child's body scale). */
 (function (global) {
   'use strict';
   const W = 1920, H = 1080, TAU = Math.PI * 2, PI = Math.PI;
@@ -223,6 +235,8 @@
   function eye(g, ex, ey, s, e, R, look, blink, skin, white, lw, kx) {
     const er = 0.2 * R * (e.r || 1), ew = er * (kx || 1);
     if (e.k === 'happy') { polyline(g, quadPts([ex - ew * 0.95, ey + er * 0.25], [ex, ey - er * 1.25], [ex + ew * 0.95, ey + er * 0.25], 10), lw * 1.15); return; }
+    if (e.k === 'squeeze') { polyline(g, [[ex + s * ew * 0.85, ey - er * 0.75], [ex - s * ew * 0.75, ey], [ex + s * ew * 0.85, ey + er * 0.75]], lw * 1.15); return; }
+    if (e.k === 'closed') { polyline(g, quadPts([ex - ew * 0.95, ey], [ex, ey + er * 0.85], [ex + ew * 0.95, ey], 10), lw * 1.1); if (e.lashes) [0.62, 0.95].forEach(t => { const px = ex + s * ew * t, py = ey + er * 0.85 * (1 - t * t) * 0.9; polyline(g, [[px, py], [px + s * er * 0.32, py + er * 0.22]], lw * 0.7); }); return; }
     if (blink >= 0.92) { polyline(g, quadPts([ex - ew * 0.95, ey + er * 0.05], [ex, ey + er * 0.6], [ex + ew * 0.95, ey + er * 0.05], 10), lw * 1.05); return; }
     const pr = 0.084 * R * (e.pupil || 1), lid = Math.max(e.lid || 0, blink || 0), lt = (e.lidTilt || 0) * er;
     const ball = ell(ex, ey, ew, er);
@@ -330,7 +344,12 @@
     { const nx = G.noseX + G.noseDir * 0.025 * R, ny = eyeY + 0.25 * R, r = 0.052 * R; g.save(); g.translate(nx, ny); g.scale(G.noseDir, 1); const p = new Path2D(); p.arc(0, 0, r, -PI / 2 - 0.5, PI / 2 - 0.15, true); strokeP(g, p, lw * 0.75); g.restore(); }
     g.save(); g.translate(G.mouthX, 0); g.scale(G.mouthK, 1); mouthDraw(g, 0, eyeY + 0.47 * R + nod * 0.03 * R, E, R, o.mouth || 0, lw / G.mouthK, white); g.restore();
     if (E.cheeks) [-1, 1].forEach(s => { const bx = fx + s * (ES + 0.25 * R), by = eyeY + 0.02 * R; [-1, 0, 1].forEach(k => polyline(g, [[bx, by + k * 0.055 * R], [bx + s * 0.065 * R, by + k * 0.075 * R]], lw * 0.55)); });
-    if (E.tears) {
+    if (E.tears === 2) [-1, 1].forEach(s => {   // tears of joy: a stream from each (closed) eye
+      const er = 0.175 * R, x0 = fx + s * (ES + er * 0.55), y0 = eyeY + er * 0.35, p = new Path2D();
+      p.moveTo(x0 - s * 0.03 * R, y0); p.bezierCurveTo(x0 - s * 0.035 * R, y0 + 0.12 * R, x0 - s * 0.02 * R, y0 + 0.2 * R, x0 - s * 0.05 * R, y0 + 0.28 * R); if (s > 0) p.arc(x0 - s * 0.005 * R, y0 + 0.29 * R, 0.048 * R, PI, 0, true); else p.arc(x0 - s * 0.005 * R, y0 + 0.29 * R, 0.048 * R, 0, PI, false); p.bezierCurveTo(x0 + s * 0.05 * R, y0 + 0.18 * R, x0 + s * 0.04 * R, y0 + 0.1 * R, x0 + s * 0.04 * R, y0); p.closePath();
+      fs(g, p, C.tear, lw * 0.5);
+    });
+    else if (E.tears) {
       const er = 0.175 * R;
       drop(g, fx - ES + er * 0.7, eyeY + er * 0.95, 0.045 * R, C.tear, lw * 0.5, 0.25);
       const x0 = fx + ES + er * 0.25, y0 = eyeY + er * 0.75, p = new Path2D();
@@ -344,6 +363,7 @@
   // ================================================================ hair and hats (authored at R = 100, head centre origin)
   function hair(g, ch, F, back) {
     const hr = ch.hair; if (!hr) return;
+    if (HAIR2[hr.k]) return HAIR2[hr.k](g, hr, F, back);   // the kinds added for the family (short, side, puffs, braids, headwrap, gele, curl)
     const lw = F.lw, ld = F.ld, c = F.c;
     if (hr.k === 'bun') {
       if (back) { const b = circ(4, -112, 30); fs(g, b, c(hr.c), lw); polyline(g, quadPts([-18, -118], [4, -96], [26, -116], 6), ld); return; }
@@ -402,8 +422,12 @@
     const E = resolveExpr(o.expr, o.face), G = faceGeo(100, o.turn, o.nod);
     hair(g, ch, F, true);
     fs(g, circ(0, 0, 100), F.skinC, F.lw);
+    if (ch.beard) beardJaw(g, ch, F, G);
     face(g, 100, o, F, E, G);
+    if (ch.beard || ch.moustache) moustache(g, ch.moustache || ch.beard, F, G, !!ch.beard);
     hair(g, ch, F, false);
+    if (ch.hat) hat(g, ch, F);
+    if (ch.earrings) earrings(g, ch.earrings, F);
     brows(g, 100, o, F, E, G);
     if (ch.glasses) glasses(g, F, G);
   }
@@ -433,7 +457,7 @@
   // 'thumb' is drawn upright in body space whatever the forearm does: a fist with the knuckles toward the viewer, the curled
   // fingers stacked on the outer side, the thumb pointing straight up off the top (ref 04). Facing -1 mirrors it, up stays up.
   function drawThumbsUp(F, Wr, a, s) {
-    const g = F.g, lw = F.lw * 0.9, k = (s || 1) * HAND_K * 1.3, d = dir(a), sx = d[0] >= 0 ? 1 : -1;   // drawn big, as the ref does
+    const g = F.g, lw = F.lw * 0.9 * (F.hlk || 1), k = (s || 1) * HAND_K * 1.3, d = dir(a), sx = d[0] >= 0 ? 1 : -1;   // drawn big, as the ref does
     g.save(); g.translate(Wr[0] + d[0] * 15 * k, Wr[1] + d[1] * 15 * k); g.scale(sx * k, k);
     const fist = new Path2D();   // outer (+x) edge scalloped by the four curled fingers
     fist.moveTo(-16, -16); fist.quadraticCurveTo(-21, -15, -21, -6); fist.lineTo(-20, 12); fist.quadraticCurveTo(-19, 21, -9, 21);
@@ -450,7 +474,7 @@
   }
   // 'stop': a flat hand held upright at the end of the arm, fingers together and up, thumb to the inner side: a polite no
   function drawStopHand(F, Wr, a, s) {
-    const g = F.g, lw = F.lw * 0.9, k = (s || 1) * HAND_K * 1.12, d = dir(a), sx = d[0] >= 0 ? 1 : -1;
+    const g = F.g, lw = F.lw * 0.9 * (F.hlk || 1), k = (s || 1) * HAND_K * 1.12, d = dir(a), sx = d[0] >= 0 ? 1 : -1;
     g.save(); g.translate(Wr[0] + d[0] * 9 * k, Wr[1] + d[1] * 9 * k); g.scale(sx * k, k);
     const palm = rrect(-15, -34, 33, 38, 10);
     const fingers = [[-8, -30, -8.5, -56], [0, -32, 0.5, -61], [8, -32, 9, -59], [15, -28, 16.5, -50]].map(([x0, y0, x1, y1]) => [[x0, y0], [x1, y1]]);
@@ -467,7 +491,8 @@
     if (!shape || shape === 'pocket' || shape === 'none') return;
     if (shape === 'thumb') return drawThumbsUp(F, Wr, a, s);
     if (shape === 'stop') return drawStopHand(F, Wr, a, s);
-    const g = F.g, pr = handParts(shape), lw = F.lw * 0.9;
+    if (shape === 'pray') return drawPrayHands(F, Wr, s);
+    const g = F.g, pr = handParts(shape), lw = F.lw * 0.9 * (F.hlk || 1);
     const k = (s || 1) * HAND_K;
     g.save(); g.translate(Wr[0], Wr[1]); g.rotate(-a); g.scale((flip || 1) * k, k);
     const palm = ell(0, 21, 19, 21);
@@ -497,7 +522,8 @@
     const g = F.g, sp = F.ch.shoes, k = sp.k || 'trainer', lw = F.lw;
     if (typeof SHOE[k] === 'string') SHOE[k] = new Path2D(SHOE[k]);
     const p = SHOE[k];
-    g.save(); g.translate(A[0], A[1]); g.rotate(sgn * (footA || 0)); g.scale(sgn * (stance === 'front' ? 0.96 : 1), stance === 'front' ? 0.94 : 1);
+    const sk = F.shoeK || 1;
+    g.save(); g.translate(A[0], A[1]); g.rotate(sgn * (footA || 0)); g.scale(sgn * (stance === 'front' ? 0.96 : 1) * sk, (stance === 'front' ? 0.94 : 1) * sk);
     fs(g, p, F.c(sp.c), 0);
     g.save(); g.clip(p);
     if (k === 'trainer') {
@@ -507,7 +533,7 @@
       if (sp.laces) [[18, 2, 30, 8], [27, 9, 38, 13], [36, 13, 46, 16]].forEach(([x0, y0, x1, y1]) => tube(g, [[x0, y0], [x1, y1]], 3.4, F.c(sp.laces), F.ld * 0.45));
     } else if (k === 'dress') { g.fillStyle = F.c(sp.sole || INK); g.fillRect(-40, 45, 130, 12); g.fillStyle = 'rgba(255,255,255,0.18)'; g.fill(ell(44, 30, 18, 6, -0.3)); }
     g.restore();
-    strokeP(g, p, lw);
+    strokeP(g, p, lw / sk);
     g.restore();
   }
 
@@ -552,6 +578,7 @@
       const u = new Path2D(); u.moveTo(-23, -300); u.lineTo(-23, -255); u.quadraticCurveTo(0, -234, 23, -255); u.lineTo(23, -300); u.closePath(); g.fillStyle = F.skinC; g.fill(u);
       polyline(g, [[-21, -282], [-21, -254]], lw * 0.8); polyline(g, [[21, -282], [21, -254]], lw * 0.8);
       polyline(g, quadPts([-24, -255], [0, -233], [24, -255], 8), lw * 0.8); polyline(g, quadPts([-36, -257], [0, -224], [36, -257], 8), ld);
+      if (t.collar) [-1, 1].forEach(s => fs(g, spl([[s * 3, -236], [s * 26, -256], [s * 42, -244], [s * 34, -224], [s * 12, -224]], true), c(t.collar), lw * 0.75));   // a little round collar
     } else if (t.k === 'cardigan') {
       neck(F, 17, -246);
       const v = new Path2D(); v.moveTo(-30, -256); v.quadraticCurveTo(0, -246, 30, -256); v.quadraticCurveTo(14, -190, 0, -142); v.quadraticCurveTo(-14, -190, -30, -256); v.closePath();
@@ -560,7 +587,7 @@
       polyline(g, [[0, -142], [0, t.hem]], ld);
       g.save(); g.clip(F.torsoP); polyline(g, [[-t.hw - 5, t.hem - 16], [t.hw + 5, t.hem - 16]], ld); g.restore();
       [-122, -94, -66, -40].forEach(y => fs(g, circ(-1, y, 4.6), c(t.sh), ld * 0.75));
-    } else if (t.k === 'buttonshirt') {
+    } else if (t.k === 'buttonshirt' || t.k === 'schoolshirt') {
       const v = new Path2D(); v.moveTo(-19, -300); v.lineTo(-19, -255); v.lineTo(0, -226); v.lineTo(19, -255); v.lineTo(19, -300); v.closePath(); g.fillStyle = F.skinC; g.fill(v);
       polyline(g, [[-19, -282], [-19, -255]], lw * 0.8); polyline(g, [[19, -282], [19, -255]], lw * 0.8);
       polyline(g, [[0, -228], [0, t.hem]], ld);
@@ -581,6 +608,43 @@
       g.save(); g.clip(F.torsoP); polyline(g, [[-t.hw - 5, t.hem - 18], [-22, t.hem - 18]], ld); polyline(g, [[24, t.hem - 18], [t.hw + 5, t.hem - 18]], ld); g.restore();
       [-1, 1].forEach(s => polyline(g, [[s * 64, -84], [s * 54, -54]], ld));
       [-1, 1].forEach(s => fs(g, P([[s * 54, -256], [s * 31, -266], [s * 24, -212], [s * 38, -224]]), c(t.c), lw * 0.8));
+    } else if (t.k === 'buba') {   // the loose blouse: round neck with a trim band, a sparse print, coral beads if worn
+      if (t.motif) { g.save(); g.clip(body); motif(g, c(t.motif), -t.hw - 10, -250, 2 * t.hw + 20, 280, 'dot', 36); g.restore(); }
+      const u = new Path2D(); u.moveTo(-26, -300); u.lineTo(-26, -254); u.quadraticCurveTo(0, -228, 26, -254); u.lineTo(26, -300); u.closePath(); g.fillStyle = F.skinC; g.fill(u);
+      polyline(g, [[-21, -282], [-21, -254]], lw * 0.8); polyline(g, [[21, -282], [21, -254]], lw * 0.8);
+      const band = new Path2D(); band.moveTo(-30, -258); band.quadraticCurveTo(0, -222, 30, -258); band.lineTo(46, -258); band.quadraticCurveTo(0, -200, -46, -258); band.closePath();
+      fs(g, band, c(t.trim || t.sh), lw * 0.8);
+      if (ch.beads) quadPts([-27, -252], [0, -212], [27, -252], 9).forEach(q => fs(g, circ(q[0], q[1] + 4, 6), c(ch.beads), ld * 0.65));
+      g.save(); g.clip(body); polyline(g, [[-t.hw - 5, t.hem - 16], [t.hw + 5, t.hem - 16]], ld); g.restore();
+      [[-48, -130, -56, -44], [52, -120, 60, -36]].forEach(([x0, y0, x1, y1]) => polyline(g, [[x0, y0], [x1, y1]], ld * 0.75));
+    } else if (t.k === 'kaftan') {   // round neck, a short placket, embroidery in thread
+      const u = new Path2D(); u.moveTo(-22, -300); u.lineTo(-22, -255); u.quadraticCurveTo(0, -238, 22, -255); u.lineTo(22, -300); u.closePath(); g.fillStyle = F.skinC; g.fill(u);
+      polyline(g, [[-20, -282], [-20, -254]], lw * 0.8); polyline(g, [[20, -282], [20, -254]], lw * 0.8);
+      if (t.thread) { const th = c(t.thread); tubeFill(g, quadPts([-34, -259], [0, -222], [34, -259], 10), 5, th); [-9, 9].forEach(x => tubeFill(g, [[x, -232], [x, -176]], 4, th)); tubeFill(g, quadPts([-9, -176], [0, -164], [9, -176], 5), 4, th); [-150, -136].forEach(y => { g.fillStyle = th; g.fill(circ(0, y, 3.2)); }); }
+      polyline(g, quadPts([-24, -256], [0, -236], [24, -256], 8), lw * 0.8);
+      polyline(g, [[0, -238], [0, -186]], ld);
+      [[-50, -140, -56, -40], [52, -130, 58, -30]].forEach(([x0, y0, x1, y1]) => polyline(g, [[x0, y0], [x1, y1]], ld * 0.75));
+    } else if (t.k === 'gown') {   // graduation gown: a V neck and the stole
+      const v = new Path2D(); v.moveTo(-20, -300); v.lineTo(-20, -255); v.lineTo(0, -224); v.lineTo(20, -255); v.lineTo(20, -300); v.closePath(); g.fillStyle = F.skinC; g.fill(v);
+      polyline(g, [[-20, -282], [-20, -255]], lw * 0.8); polyline(g, [[20, -282], [20, -255]], lw * 0.8);
+      fs(g, P([[-20, -255], [0, -224], [20, -255], [13, -262], [0, -240], [-13, -262]]), c(C.white), lw * 0.7);
+      [-1, 1].forEach(s => fs(g, P([[s * 22, -264], [s * 48, -254], [s * 40, t.hem + 8], [s * 16, t.hem + 8], [s * 13, -232]]), c(t.stole || C.gold), lw * 0.75));
+      polyline(g, [[0, -224], [0, t.hem]], ld * 0.8);
+    } else if (t.k === 'labcoat') {   // open lab coat: lapels, what is worn underneath in the V, a pen in the pocket
+      const v = new Path2D(); v.moveTo(-32, -260); v.lineTo(32, -260); v.lineTo(0, -150); v.closePath(); g.fillStyle = c(t.under || C.white); g.fill(v);
+      g.fillStyle = F.skinC; g.fill(P([[-20, -300], [-20, -252], [0, -238], [20, -252], [20, -300]]));
+      polyline(g, [[-20, -282], [-20, -252]], lw * 0.8); polyline(g, [[20, -282], [20, -252]], lw * 0.8); polyline(g, quadPts([-22, -253], [0, -234], [22, -253], 6), lw * 0.8);
+      [-1, 1].forEach(s => fs(g, P([[s * 36, -264], [s * 8, -170], [s * 1, -150], [s * 30, -194], [s * 54, -212], [s * 42, -236]]), c(t.c), lw * 0.8));
+      polyline(g, [[0, -150], [0, t.hem]], lw * 0.8);
+      [-118, -78, -38].forEach(y => fs(g, circ(12, y, 4), c(t.sh), ld * 0.7));
+      fs(g, P([[-64, -168], [-30, -168], [-30, -136], [-64, -136]]), c(t.c), ld); tube(g, [[-40, -184], [-40, -164]], 6, c('#4F7FB0'), ld * 0.6);
+    } else if (t.k === 'dashiki') {   // the embroidered V panel at the neck
+      const pn = new Path2D(); pn.moveTo(-52, -262); pn.quadraticCurveTo(0, -250, 52, -262); pn.lineTo(42, -228); pn.lineTo(0, -136); pn.lineTo(-42, -228); pn.closePath();
+      fs(g, pn, c(t.panel || INK), lw * 0.8);
+      if (t.motif) { g.save(); g.clip(pn); [0, 1].forEach(k => polyline(g, [[-46 + k * 9, -244], [0, -150 + k * 22], [46 - k * 9, -244]], 3.2, c(t.motif))); for (let i = -2; i <= 2; i++) { g.fillStyle = c(t.motif); g.fill(circ(i * 15, -232 + Math.abs(i) * 4, 3)); } g.restore(); }
+      const u = new Path2D(); u.moveTo(-23, -300); u.lineTo(-23, -255); u.quadraticCurveTo(0, -236, 23, -255); u.lineTo(23, -300); u.closePath(); g.fillStyle = F.skinC; g.fill(u);
+      polyline(g, [[-21, -282], [-21, -254]], lw * 0.8); polyline(g, [[21, -282], [21, -254]], lw * 0.8); polyline(g, quadPts([-24, -256], [0, -235], [24, -256], 8), lw * 0.8);
+      [-1, 1].forEach(s => fs(g, P([[s * 50, -90], [s * 74, -90], [s * 72, -56], [s * 52, -56]]), c(t.c), ld));
     }
   }
   function sleeveShort(S, E, t) { // tee sleeve polygon over the upper arm
@@ -862,13 +926,14 @@
     const g = F.g; let at = pr.at;
     if (pr.hand) { const arm = pr.hand === 'L' ? J.armL : J.armR, d = dir(arm.ha), off = pr.off || [0, 0], k = pr.along != null ? pr.along : 30; at = [arm.Wr[0] + d[0] * k + off[0], arm.Wr[1] + d[1] * k + off[1]]; }
     if (!at) return;
+    if (pr.k === 'baby') return drawBabyProp(F, pr, at);
     const o = Object.assign({ lw: F.lw * 0.9 }, pr, { s: pr.s || 1, tint: F.tint });
     o.lw = F.lw * 0.9 * (pr.s || 1);
-    if (pr.k === 'phone') PROPS.phone(g, at[0], at[1], o);
-    else if (pr.k === 'laptop') PROPS.laptop(g, at[0], at[1], o);
-    else if (pr.k === 'clipboard') PROPS.clipboard(g, at[0], at[1], o);
-    else if (pr.k === 'box') PROPS.box(g, at[0], at[1], o);
-    else if (pr.k === 'mug') PROPS.mug(g, at[0], at[1], o);
+    if (pr.align && pr.hand) o.a = (pr.a || 0) + PI - (pr.hand === 'L' ? J.armL : J.armR).ha;   // a stick prop (bowl/bristles toward -y) along the forearm
+    const fn = PROPS[pr.k]; if (!fn) return;
+    const m = g.getTransform();
+    if (fn.unmirror && m.a * m.d - m.b * m.c < 0) { g.save(); g.translate(at[0], at[1]); g.scale(-1, 1); fn(g, 0, 0, Object.assign(o, { a: -(o.a || 0) })); g.restore(); }   // keep its print readable when facing -1
+    else fn(g, at[0], at[1], o);
   }
 
   // ================================================================ the figure
@@ -880,95 +945,124 @@
     if (opts.override) for (const k in opts.override) pose[k] = Object.assign({}, pose[k], opts.override[k]);
     return pose;
   }
+  // An age draws the same design smaller: the body (everything below the neck) in its own scale kb, the head in kh (bigger
+  // relative to the body), the torso a little wider (wk), limbs, hands and shoes a little chunkier. Poses stay authored for the
+  // adult: arm targets and props above the shoulders are carried over to the bigger head, props in the hands grow (AG.prop).
   function figure(g, who, opts) {
     opts = opts || {};
-    const ch = typeof who === 'string' ? (CAST[who] || CAST.hero) : who;
+    const BW = buildWho(who, opts), ch = BW.ch, AG = BW.AG;
+    if (BW.newborn) return newbornFigure(g, ch, opts, BW);
+    const kb = AG ? AG.kb : 1, hr = AG ? AG.kh / AG.kb : 1, WK = (AG ? AG.wk : 1) * (ch.wk || 1), LK = AG ? AG.limb : 1, shoeK = AG ? AG.shoe : 1;
     if (opts.seatAt) {   // sit so the seat contact lands on a set anchor; y (the floor under the feet) defaults to 224 px below it
       const sa = Array.isArray(opts.seatAt) ? opts.seatAt : [opts.seatAt.x, opts.seatAt.y], s0 = (opts.scale || 1) * (ch.h || 1), fy = opts.y != null ? opts.y : sa[1] + 224 * s0;
-      opts = Object.assign({}, opts, { x: sa[0], y: fy, seat: (fy - sa[1]) / s0, pose: opts.pose || 'sit_sofa' });
+      opts = Object.assign({}, opts, { x: sa[0], y: fy, seat: (fy - sa[1]) / (s0 * kb), pose: opts.pose || 'sit_sofa' });
     }
     const t = Object.assign({ k: ch.top.k }, TOPS[ch.top.k], ch.top);
-    const pose = resolvePose(opts), facing = opts.facing === -1 ? -1 : 1, sc = (opts.scale || 1) * (ch.h || 1);
+    if (LK !== 1) { t.arm *= LK; if (t.sleeveW) t.sleeveW *= LK; }
+    let pose = resolvePose(AG ? Object.assign({}, opts, { ankleH: 54 * shoeK }) : opts);
+    const bagKind = pose.bag || BW.bag;
+    if (bagKind) pose = Object.assign(pose, bagParts(pose, bagKind, AG));
+    if (AG) pose = ageRemap(pose, AG, hr);
+    const facing = opts.facing === -1 ? -1 : 1, sc = (opts.scale || 1) * (ch.h || 1);
     const tint = opts.tint || null, cache = {};
     const c = tint ? (h => cache[h] || (cache[h] = mul(h, tint))) : (h => h);
-    const lw = (opts.lw || LW.figure) / sc * (opts.scale || 1) / (opts.scale || 1) * 1, F = { g, ch, c, lw: lw, ld: lw * LW.detail / LW.figure, skinC: c(ch.skin), browC: c(ch.brow || INK) };
-    F.lw = (opts.lw ? opts.lw / sc : LW.figure / (ch.h || 1)); F.ld = F.lw * LW.detail / LW.figure; F.tint = tint;
+    const F = { g, ch, c, skinC: c(ch.skin), browC: c(ch.brow || INK), tint };
+    F.lw = (opts.lw ? opts.lw / sc : LW.figure / (ch.h || 1)) / kb; F.ld = F.lw * LW.detail / LW.figure;
+    if (AG) { F.hlk = 1 / AG.hand; F.shoeK = shoeK; }
     const light = (opts.light == null ? 1 : opts.light) * facing;   // screen side the light comes from, in body space
-    const B = ch.bottom, isSkirt = B.k === 'skirt', stance = pose.stance || 'front';
+    const B = ch.bottom, isSkirt = B.k === 'skirt', isShorts = B.k === 'shorts', stance = pose.stance || 'front';
     g.save();
-    g.translate(opts.x || 0, opts.y || 0); g.scale(sc * facing, sc); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.translate(opts.x || 0, opts.y || 0); g.scale(sc * facing * kb, sc * kb); g.lineCap = 'round'; g.lineJoin = 'round';
     // ---- skeleton (body space: pelvis origin)
-    let pel = [0, RIG.pelvisY]; if (pose.pelvis) { if (pose.pelvis.y != null) pel = [pose.pelvis.x || 0, pose.pelvis.y]; else pel = [pel[0] + (pose.pelvis[0] || 0), pel[1] + (pose.pelvis[1] || 0)]; }
-    const hipX = stance === 'side' ? RIG.hipXside : RIG.hipX, legW = isSkirt ? RIG.skinLegW : (ch.bottom.w || RIG.legW), shinL = RIG.shin + (ch.shoes.k === 'flat' ? 26 : 0);
+    let pel = [0, RIG.pelvisY - 54 * (shoeK - 1)]; if (pose.pelvis) { if (pose.pelvis.y != null) pel = [pose.pelvis.x || 0, pose.pelvis.y]; else pel = [pel[0] + (pose.pelvis[0] || 0), pel[1] + (pose.pelvis[1] || 0)]; }
+    const hipX = (stance === 'side' ? RIG.hipXside : RIG.hipX) * WK, legW = (isSkirt ? RIG.skinLegW : isShorts ? RIG.skinLegW * 1.2 : (B.w || RIG.legW)) * LK, shinL = RIG.shin + (ch.shoes.k === 'flat' ? 26 : 0);
     const legs = {};
     ['L', 'R'].forEach((side, i) => {
       const sp = pose['leg' + side] || { a: 0, k: 0 }, sg = i ? 1 : -1;
       let Hp, K, A;
-      if (sp.pts) [Hp, K, A] = sp.pts;
+      if (sp.pts) { [Hp, K, A] = sp.pts; if (AG) { const d = dist(K, A), mx = shinL * 1.02; if (d > mx) A = lerp2(K, A, mx / d); } }   // a child's feet dangle
       else { Hp = [sg * hipX, RIG.hipY]; K = along(Hp, sp.a || 0, RIG.thigh); A = along(K, (sp.a || 0) - (sp.k || 0), shinL); }
       legs[side] = { H: Hp, K, A, z: sp.z, foot: sp.foot || 0, sg };
     });
     if (pose.ground) { const lowest = Math.max(legs.L.A[1], legs.R.A[1]); pel[1] += (RIG.hipY + RIG.thigh + shinL) - lowest - (pose.lift || 0); }
     // ground shadow (in feet space, before moving to the pelvis)
-    if (opts.shadow && pose.ground !== false) { g.fillStyle = opts.shadow; g.fill(ell(pel[0] + (legs.L.A[0] + legs.R.A[0]) / 2 + 12 * (stance === 'side' ? 1 : 0), 0, stance === 'side' ? 120 + Math.abs(legs.L.A[0] - legs.R.A[0]) * 0.45 : 104, 15)); }
+    if (opts.shadow && pose.ground !== false) { g.fillStyle = opts.shadow; g.fill(ell(pel[0] + (legs.L.A[0] + legs.R.A[0]) / 2 + 12 * (stance === 'side' ? 1 : 0), 0, (stance === 'side' ? 120 + Math.abs(legs.L.A[0] - legs.R.A[0]) * 0.45 : 104) * WK, 15 / Math.sqrt(kb))); }
     g.translate(pel[0], pel[1]);
     const lean = pose.lean || 0, hd = pose.head || {}, shR = pose.shoulders || 0, q3 = clamp(pose.torso3q || 0, 0, 1);
     // three-quarter torso: the silhouette narrows a little and shifts toward the facing side, its details (zip, hood, pocket) shift further
-    const TX = { dx: q3 * 6, k: 1 - 0.12 * q3 }, DX = { dx: q3 * 16, k: (1 - 0.22 * q3) / (1 - 0.12 * q3) }, headDX = q3 * 18;
+    const TX = { dx: q3 * 6, k: (1 - 0.12 * q3) * WK }, DX = { dx: q3 * 16, k: (1 - 0.22 * q3) / (1 - 0.12 * q3) }, headDX = q3 * 18;
     const torsoXf = () => { g.rotate(lean); g.translate(TX.dx, 0); g.scale(TX.k, 1); };
     const T = p => rot([p[0] * TX.k + TX.dx, p[1]], lean);
-    const arms = {};
+    const arms = {}, HK = AG ? AG.hand : 1;
     ['L', 'R'].forEach((side, i) => {
       const sp = pose['arm' + side] || (i ? STAND_ARMR : STAND_ARML), sg = i ? 1 : -1;
       const S = T([sg * RIG.sh[0], RIG.sh[1] - shR]), L1 = RIG.upper * (sp.ul || 1), L2 = RIG.fore * (sp.fl || 1);
       let E, Wr;
       if (sp.ik) [E, Wr] = ik2(S, sp.ik, L1, L2, sp.bend || 1, false);
       else { E = along(S, (sp.a || 0) + lean * 0, L1); Wr = along(E, (sp.a || 0) + (sp.e || 0), L2); }
-      arms[side] = { S, E, Wr, z: sp.z, hand: sp.hand || 'relax', flip: sp.flip || -sg, hrot: sp.hrot || 0, hs: sp.hs || 1, sg, ha: angOf(E, Wr) + (sp.hrot || 0) };
+      arms[side] = { S, E, Wr, z: sp.z, hand: sp.hand || 'relax', flip: sp.flip || -sg, hrot: sp.hrot || 0, hs: (sp.hs || 1) * HK, sg, ha: angOf(E, Wr) + (sp.hrot || 0) };
     });
     const J = { armL: arms.L, armR: arms.R, legL: legs.L, legR: legs.R };
     const front = o => o.z !== 'back';
+    // ---- what is carried on the back (school bag, the house, a holdall): behind everything
+    if (pose.back) pose.back.forEach(pr => drawBackProp(F, pr, lean, T));
     // ---- legs
     const legPts = L => [L.H, L.K, along(L.A, angOf(L.K, L.A) + PI, legW / 2)];
     const thighW = pose.sit ? legW * 1.22 : legW;   // seated thighs read as thick as the refs' (foreshortened)
     const legInk = L => { const p = legPts(L); tubeInk(g, p, legW, F.lw); if (thighW !== legW) tubeInk(g, [p[0], p[1]], thighW, F.lw); };
     const legFill = L => { const p = legPts(L); tubeFill(g, p, legW, legC); if (thighW !== legW) tubeFill(g, [p[0], p[1]], thighW, legC); };
-    const legC = isSkirt ? F.skinC : c(B.c);
+    const legC = (isSkirt || isShorts) ? F.skinC : c(B.c);
     const pelvisPath = () => {
       if (isSkirt) return null;
-      if (pose.sit === 'side') return ell(0, 4, 70, 30);
-      if (stance === 'side') return rrect(-56, -20, 112, 46, 20);
-      return P([[-58, -20], [58, -20], [59, 26], [0, 40], [-59, 26]]);
+      if (pose.sit === 'side') return ell(0, 4, 70 * WK, 30);
+      if (stance === 'side') return rrect(-56 * WK, -20, 112 * WK, 46, 20);
+      return P([[-58 * WK, -20], [58 * WK, -20], [59 * WK, 26], [0, 40], [-59 * WK, 26]]);
     };
     const legEnd = L => {
       const a = angOf(L.K, L.A);
-      if (isSkirt) return;
+      if (isSkirt || isShorts) return;
       if (B.cuff) fs(g, P(bandPts(L.K, L.A, 18, 1, legW / 2 + 2)), c(B.cuff), F.lw * 0.85);
       else { const b = bandPts(L.K, L.A, 10, 0, legW / 2); g.fillStyle = legC; g.fill(P(b)); polyline(g, [b[0], b[1], b[2], b[3]], F.lw); }
     };
+    // shorts: a wide fabric tube over the top of the (bare) leg; socks: a band above the shoe
+    const shortsPts = L => { const d = dist(L.H, L.K) || 1, u = [(L.K[0] - L.H[0]) / d, (L.K[1] - L.H[1]) / d]; return [[L.H[0] - u[0] * 8, L.H[1] - u[1] * 8], lerp2(L.H, L.K, B.len || 0.8)]; };
+    const shortsInk = L => { if (isShorts) tubeInk(g, shortsPts(L), legW * 1.62, F.lw); };
+    const shortsFill = L => { if (!isShorts) return; const p = shortsPts(L); tubeFill(g, p, legW * 1.62, c(B.c)); const b = bandPts(p[0], p[1], 4, 0, legW * 0.81); polyline(g, [b[1], b[2]], F.ld); };
+    const socks = L => { if (!B.socks) return; const p0 = lerp2(L.K, L.A, 0.5); tube(g, [p0, along(L.A, angOf(L.K, L.A), 4)], legW + 4, c(B.socks), F.lw * 0.85); };
     const shoeFor = L => drawShoe(F, along(L.A, angOf(L.K, L.A), isSkirt ? 0 : 2), stance === 'front' ? L.sg : 1, stance, L.foot);
-    ['L', 'R'].forEach(s => { const L = legs[s]; if (L.z === 'back') { shoeFor(L); legInk(L); legFill(L); legEnd(L); } });
+    ['L', 'R'].forEach(s => { const L = legs[s]; if (L.z === 'back') { shoeFor(L); legInk(L); legFill(L); socks(L); shortsInk(L); shortsFill(L); legEnd(L); } });
     const fl = ['L', 'R'].map(s => legs[s]).filter(front);
     fl.forEach(shoeFor);
     const pp = pelvisPath();
     g.strokeStyle = INK; if (pp) { g.lineWidth = F.lw * 2; g.stroke(pp); } fl.forEach(legInk);
-    if (pp) { g.fillStyle = legC; g.fill(pp); } fl.forEach(legFill);
-    if (!isSkirt) {
+    if (pp) { g.fillStyle = isShorts ? c(B.c) : legC; g.fill(pp); } fl.forEach(legFill);
+    fl.forEach(socks);
+    if (isShorts) { fl.forEach(shortsInk); if (pp) { g.fillStyle = c(B.c); g.fill(pp); } fl.forEach(shortsFill); }
+    if (!isSkirt && !isShorts) {
       fl.forEach(L => { const sh = offsetLine([L.H, L.K, L.A], light * (legW / 2 - 6), 0.12, 0.9); tubeFill(g, sh, 9, c(B.sh)); });
       if (B.crease) fl.forEach(L => polyline(g, offsetLine([L.H, L.K, L.A], 0, 0.3, 0.92), F.ld * 0.7));
       if (B.fly && stance === 'front' && !pose.sit) polyline(g, quadPts([2, -4], [3, 22], [-8, 32], 6), F.ld);
     }
     ['L', 'R'].forEach(s => { if (front(legs[s])) legEnd(legs[s]); });
+    const SL = B.len || 214, SF = B.flare || 86;   // skirt length and hem half-width (the last video's Mom: 214, 86)
     if (isSkirt && pose.sit) {   // seated: the skirt drapes from the waist over the thighs to the knees
       const K = (stance === 'side' ? legs.L : legs.R).K, sk = new Path2D();
       if (stance === 'side') { sk.moveTo(-62, -28); sk.lineTo(54, -28); sk.quadraticCurveTo(K[0] * 0.6, K[1] - 36, K[0] + 12, K[1] - 30); sk.quadraticCurveTo(K[0] + 26, K[1], K[0] + 16, K[1] + 32); sk.quadraticCurveTo(K[0] * 0.5, K[1] + 44, -40, 42); sk.quadraticCurveTo(-66, 20, -62, -28); }
       else { sk.moveTo(-60, -28); sk.lineTo(60, -28); sk.lineTo(80, 60); sk.quadraticCurveTo(0, 72, -80, 60); sk.closePath(); }
       sk.closePath(); fs(g, sk, c(B.c), F.lw); polyline(g, quadPts([10, 10], [K[0] * 0.45, K[1] - 4], [K[0] - 10, K[1] + 4], 6), F.ld);
+      if (B.motif) { g.save(); g.clip(sk); motif(g, c(B.motif), -120, -40, 360, 140, 'dots'); g.restore(); strokeP(g, sk, F.lw); }
+      if (SL > 230) sitHang(F, legs, stance, c(B.c), c(B.sh), B.motif ? c(B.motif) : null, SL - 150);
     } else if (isSkirt) {
-      const sw = (legs.R.A[0] + legs.L.A[0]) * 0.25;
-      const sk = new Path2D(); sk.moveTo(-60, -28); sk.lineTo(60, -28); sk.quadraticCurveTo(76, 90, 86 + sw, 214); sk.quadraticCurveTo(sw, 226, -86 + sw, 214); sk.quadraticCurveTo(-76, 90, -60, -28); sk.closePath();
-      fs(g, sk, c(B.c), 0); g.save(); g.clip(sk); g.fillStyle = c(B.sh); g.fill(P([[light > 0 ? -90 : 90, -30], [light > 0 ? -50 : 50, -30], [light > 0 ? -60 + sw : 60 + sw, 230], [light > 0 ? -100 : 100, 230]])); g.restore();
-      strokeP(g, sk, F.lw); polyline(g, quadPts([-20, 60], [-26, 140], [-30, 210], 6), F.ld); polyline(g, quadPts([30, 80], [36, 150], [40, 214], 6), F.ld);
+      const sw = (legs.R.A[0] + legs.L.A[0]) * 0.25, L = SL;
+      const sk = new Path2D(); sk.moveTo(-60, -28); sk.lineTo(60, -28); sk.quadraticCurveTo(76, 90 * L / 214, SF + sw, L); sk.quadraticCurveTo(sw, L + 12, -SF + sw, L); sk.quadraticCurveTo(-76, 90 * L / 214, -60, -28); sk.closePath();
+      fs(g, sk, c(B.c), 0); g.save(); g.clip(sk); g.fillStyle = c(B.sh); g.fill(P([[light > 0 ? -90 : 90, -30], [light > 0 ? -50 : 50, -30], [light > 0 ? -60 + sw : 60 + sw, L + 16], [light > 0 ? -100 : 100, L + 16]]));
+      if (B.motif) motif(g, c(B.motif), -110, -30, 220, L + 20, 'dots');
+      g.restore();
+      strokeP(g, sk, F.lw);
+      if (B.wrap) {   // a wrapper: the overlapping front edge and the tuck at the waist
+        polyline(g, quadPts([38, -24], [30, L * 0.5], [22 + sw, L + 6], 10), F.lw * 0.8);
+        fs(g, ell(42, -16, 13, 9, 0.5), c(B.c), F.ld); polyline(g, quadPts([40, -10], [50, 14], [44, 36], 5), F.ld);
+      } else { polyline(g, quadPts([-20, 60 * L / 214], [-26, 140 * L / 214], [-30, 210 * L / 214], 6), F.ld); polyline(g, quadPts([30, 80 * L / 214], [36, 150 * L / 214], [40, L], 6), F.ld); }
     }
     // ---- arms behind the torso
     const sleeveEnd = A => along(A.Wr, angOf(A.E, A.Wr) + PI, t.arm / 2 + 2);
@@ -984,7 +1078,8 @@
         const pts = armTube(A);
         if (clipped) { g.save(); g.clip(clipped, 'evenodd'); tubeInk(g, pts, t.arm, F.lw); g.restore(); } else tubeInk(g, pts, t.arm, F.lw);
         tubeFill(g, pts, t.arm, c(t.c));
-        fs(g, P(bandPts(A.E, A.Wr, t.cuff, 1, t.arm / 2 + 1)), c(t.cuffC || t.c), F.lw * 0.85);
+        if (t.bell) { const b = bandPts(A.E, A.Wr, 30, 1, t.arm / 2 + 1), e = bandPts(A.E, A.Wr, 4, 1, t.arm / 2 + 9); fs(g, P([b[0], e[1], e[2], b[3]]), c(t.c), F.lw * 0.85); polyline(g, [lerp2(b[0], e[1], 0.3), lerp2(b[3], e[2], 0.3)], F.ld * 0.7); }
+        else fs(g, P(bandPts(A.E, A.Wr, t.cuff, 1, t.arm / 2 + 1)), c(t.cuffC || t.c), F.lw * 0.85);
       }
       drawHand(F, A.Wr, A.ha, A.hand, A.flip, A.hs);
     };
@@ -996,48 +1091,684 @@
     fa.forEach(A => { if (t.sleeve === 'short') strokeP(g, sleeveShort(A.S, A.E, t).p, F.lw * 2); else tubeInk(g, armTube(A), t.arm, F.lw); });
     g.save(); torsoXf(); g.fillStyle = c(t.c); g.fill(F.torsoP); g.restore();
     fa.forEach(A => { if (t.sleeve === 'short') { g.fillStyle = c(t.c); g.fill(sleeveShort(A.S, A.E, t).p); } else tubeFill(g, armTube(A), t.arm, c(t.c)); });
+    // a long garment (kaftan, gown, lab coat) continues below the hem; the front arms are redrawn over it after the head
+    if (t.long) drawRobe(F, t, legs, pose, stance, light, torsoXf, TX);
     g.save(); g.rotate(lean);
     g.save(); g.translate(TX.dx, 0); g.scale(TX.k, 1);
     g.save(); g.clip(F.torsoP); g.fillStyle = c(t.sh); g.fill(P([[light > 0 ? -t.hw - 10 : t.hw + 10, -150], [light > 0 ? -t.hw + 16 : t.hw - 16, -150], [light > 0 ? -t.hw + 18 : t.hw - 18, t.hem + 10], [light > 0 ? -t.hw - 10 : t.hw + 10, t.hem + 10]])); g.restore();
-    g.save(); g.translate(DX.dx, 0); g.scale(DX.k, 1); torsoDetails(F, t); g.restore();
+    g.save(); g.translate(DX.dx, 0); g.scale(DX.k, 1); torsoDetails(F, t); if (pose.straps) drawStraps(F, t, pose.straps, stance, LK); g.restore();
     g.restore();
-    // ---- head
-    g.save(); g.translate(headDX, RIG.neckY); g.rotate(hd.tilt || 0); g.translate(0, RIG.headDy - RIG.neckY + (hd.sink || 0));
+    // ---- head (a child's is bigger than its body scale: drawn at hr, sitting on the same neck)
+    g.save(); g.translate(headDX, RIG.neckY); g.rotate(hd.tilt || 0);
+    const headCY = hr === 1 ? RIG.headDy : RIG.neckY - (8 + 100 * hr);
+    g.translate(0, headCY - RIG.neckY + (hd.sink || 0)); if (hr !== 1) g.scale(hr, hr);
     let turn = opts.turn != null ? opts.turn : (hd.turn || 0), look = normLook(opts.look);
     if (opts.lookAt) {   // a point in the caller's space (same as x, y): turn the face and the eyes toward it
-      const tp = normLook(opts.lookAt), hb = rot([headDX, RIG.headDy], lean), hx = (opts.x || 0) + facing * sc * (pel[0] + hb[0]), hy = (opts.y || 0) + sc * (pel[1] + hb[1]);
+      const tp = normLook(opts.lookAt), hb = rot([headDX, headCY], lean), hx = (opts.x || 0) + facing * sc * kb * (pel[0] + hb[0]), hy = (opts.y || 0) + sc * kb * (pel[1] + hb[1]);
       const dxb = (tp[0] - hx) * facing, dy = tp[1] - hy, dd = Math.hypot(dxb, dy) || 1;
       if (opts.turn == null) turn = clamp(dxb / (240 * sc), -1, 1) * 0.62;
       if (opts.look == null) look = [dxb / dd, dy / dd];
     }
+    const lw0 = F.lw, ld0 = F.ld; if (hr !== 1) { F.lw /= hr; F.ld /= hr; }
     drawHead(g, ch, F, { expr: opts.expr || pose.expr || 'neutral', face: opts.face || pose.face, look, blink: opts.blink, mouth: opts.mouth, turn, nod: opts.nod != null ? opts.nod : (hd.nod || 0), marks: opts.marks });
+    F.lw = lw0; F.ld = ld0;
     J.head = g.getTransform();
     g.restore();
     g.restore();   // un-lean
-    // ---- held prop, then the front arms over it
+    // ---- held props, then the front arms over them
     const shoulderClip = A => { const cl = new Path2D(); cl.rect(-3000, -3000, 6000, 6000); cl.arc(A.S[0], A.S[1], t.arm * 0.62, 0, TAU); return cl; };
-    const under = (pose.prop && pose.prop.under) || '';
+    const allProps = [pose.prop, pose.prop2].filter(Boolean), props = opts.prop === false ? [] : allProps;
+    const under = allProps.map(p => p.under || '').join('');
     fa.forEach(A => { if (under.includes(A.sg < 0 ? 'L' : 'R')) drawArm(A, shoulderClip(A)); });
-    const over = pose.prop && pose.prop.over;
-    if (pose.prop && opts.prop !== false && !over) drawProp(F, pose.prop, J);
+    props.forEach(pr => { if (!pr.over) drawProp(F, pr, J); });
     if (opts.drawProp) opts.drawProp(g, J, F);
     fa.forEach(A => { if (under.includes(A.sg < 0 ? 'L' : 'R')) drawHand(F, A.Wr, A.ha, A.hand, A.flip, A.hs); else drawArm(A, shoulderClip(A)); });
-    if (pose.prop && opts.prop !== false && over) drawProp(F, pose.prop, J);
+    props.forEach(pr => { if (pr.over) drawProp(F, pr, J); });
     // ---- world-space anchors for the caller (bubbles, props)
     const M = g.getTransform(), wp = p => { const q = M.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
     const hm = J.head, hw = p => { const q = hm.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
     const near = stance === 'side' ? legs.L : legs.R, thW = (pose.sit ? legW * 1.22 : legW) / 2;
-    const out = { head: hw([0, 0]), headTop: hw([0, -100]), headR: 100 * sc, mouth: hw([0, 50]), handL: wp(arms.L.Wr), handR: wp(arms.R.Wr), elbowL: wp(arms.L.E), elbowR: wp(arms.R.E), pelvis: wp([0, 0]), scale: sc,
-      knee: wp(near.K), kneeL: wp(legs.L.K), kneeR: wp(legs.R.K), feet: wp([(legs.L.A[0] + legs.R.A[0]) / 2, Math.max(legs.L.A[1], legs.R.A[1]) + 54]),
+    const out = { head: hw([0, 0]), headTop: hw([0, -100]), headR: 100 * sc * (AG ? AG.kh : 1), mouth: hw([0, 50]), handL: wp(arms.L.Wr), handR: wp(arms.R.Wr), elbowL: wp(arms.L.E), elbowR: wp(arms.R.E), pelvis: wp([0, 0]), scale: sc, bodyScale: sc * kb,
+      knee: wp(near.K), kneeL: wp(legs.L.K), kneeR: wp(legs.R.K), feet: wp([(legs.L.A[0] + legs.R.A[0]) / 2, Math.max(legs.L.A[1], legs.R.A[1]) + 54 * shoeK]),
       seat: pose.sit ? wp([0, pose.seatH != null ? -pel[1] - pose.seatH : RIG.hipY + thW]) : null, lap: pose.sit ? wp([(near.H[0] + near.K[0]) / 2, (near.H[1] + near.K[1]) / 2 - thW]) : null };
     g.restore();
     return out;
   }
 
+  // ================================================================ FIRSTBORN additions (2026-11): ages, the family, outfits, props, poses.
+  // Everything above keeps its meaning: the old ids, poses, expressions and props draw exactly as before.
+  Object.assign(C, {
+    fbBlack: '#231D1B', fbBlackHi: '#4A403C', fbGrey: '#A7A19B', fbGreyHi: '#CBC6C0', gold: '#E6B54A', goldSh: '#C99A35',
+    // skin, in the range of the reference's coworker (#CBA17C)
+    fbSkinMum: '#BC8E66', fbSkinDad: '#AD7F59', fbSkinSis: '#C69A74', fbSkinBro: '#C19169', fbSkinAunt: '#AF7D55', fbSkinU1: '#A87852',
+    fbSkinU2: '#B88A62', fbSkinC1: '#C79E78', fbSkinC2: '#B98962', fbSkinOk: '#B0815B',
+    mumBuba: '#EBA845', mumBubaSh: '#D49233', mumWrap: '#8E3B5E', mumWrapSh: '#77304F',
+    dadKaftan: '#4069A0', dadKaftanSh: '#36598A', dadThread: '#E8C35C',
+    sisCoral: '#E8776A', sisCoralSh: '#D06357', sisBlanket: '#EE9A8C', sisBlanketSh: '#DC8475',
+    broTee: '#F2BE4A', broTeeSh: '#DCA738', broShorts: '#4F7FB0', broShortsSh: '#436D99', broBlanket: '#F3C65E', broBlanketSh: '#DDAE45',
+    auntie: '#C2477E', auntieSh: '#A63A6B', auntieHi: '#D86B9A', coral: '#E2553F',
+    u1Kaftan: '#8C3D45', u1KaftanSh: '#76323A', u2Dashiki: '#E07B39', u2DashikiSh: '#C96A2D', u2Panel: '#2E2926', u2Trousers: '#5E4636', u2TrousersSh: '#4E3A2C',
+    c1Tee: '#7DB356', c1TeeSh: '#6A9C47', c1Jeans: '#56789B', c1JeansSh: '#4A6886', c2Top: '#9B7FC4', c2TopSh: '#8669AF',
+    okShorts: '#3C4F7A', okShortsSh: '#33436A',
+    gown: '#353A4C', gownSh: '#292D3C', labcoat: '#FFFFFF', labcoatSh: '#E3E6EA',
+    bag: '#E06A4E', bagSh: '#C75A41', bagStrap: '#B44F39', wood: '#D9A86C', woodSh: '#BF8C55', bucketBlue: '#4F95C9', bucketBlueSh: '#3F80B2',
+    water: '#9FD6EE', waterHi: '#D3EEF8', glass: '#E8F6FB', glassSh: '#CBE6F0', calc: '#4F5866', calcSh: '#424A56', calcKey: '#DADDE2', calcScreen: '#CFE5C8',
+    reportPaper: '#FFFDF6', reportBand: '#5E9A55', gradeRed: '#D9463E', houseWall: '#F4D9A8', houseWallSh: '#E4C28C', houseRoof: '#C65A3E', houseRoofSh: '#A84A33',
+    houseDoor: '#8B5A3C', holdall: '#5F7FA5', holdallSh: '#4F6D90', bookRed: '#C8574A', bookBlue: '#4F7FB0', bookGreen: '#5E9A55', bookYellow: '#E8B04B',
+    paintRed: '#E5534B', paintBlue: '#4F95C9', paintYellow: '#F4BF54', paintGreen: '#6FA35A',
+  });
+  Object.assign(TOPS, {
+    buba: { sw: 74, hw: 88, hem: 16, arm: 50, cuff: 22, sleeve: 'long' },                       // the loose blouse worn with a wrapper
+    kaftan: { sw: 77, hw: 80, hem: 12, arm: 47, cuff: 16, sleeve: 'long', long: 172 },          // the tunic to the knee
+    gown: { sw: 80, hw: 88, hem: 12, arm: 60, cuff: 0, sleeve: 'long', long: 236, bell: 1 },     // graduation gown, bell sleeves
+    labcoat: { sw: 78, hw: 84, hem: 12, arm: 47, cuff: 14, sleeve: 'long', long: 118 },
+    dashiki: { sw: 78, hw: 90, hem: 18, arm: 28, sleeveW: 62, sleeve: 'short' },
+    schoolshirt: { sw: 76, hw: 78, hem: 8, arm: 28, sleeveW: 52, sleeve: 'short' },
+  });
+  // ---- the family (ids prefixed fb_; the last video's 'mum' stays the last video's Mom)
+  Object.assign(CAST, {
+    fb_mum: { skin: C.fbSkinMum, top: { k: 'buba', c: C.mumBuba, sh: C.mumBubaSh, trim: C.mumWrap }, bottom: { k: 'skirt', c: C.mumWrap, sh: C.mumWrapSh, len: 266, flare: 76, wrap: 1, motif: C.mumBuba },
+      shoes: { k: 'flat', c: '#6E4A36' }, hair: { k: 'headwrap', c: C.mumWrap, sh: C.mumWrapSh, motif: C.mumBuba }, earrings: C.gold, brow: '#2A1E18', h: 0.95, wk: 1.04 },
+    fb_dad: { skin: C.fbSkinDad, top: { k: 'kaftan', c: C.dadKaftan, sh: C.dadKaftanSh, thread: C.dadThread }, bottom: { k: 'trousers', c: C.dadKaftan, sh: C.dadKaftanSh },
+      shoes: { k: 'dress', c: '#4A3426', sole: '#2E2018' }, hair: { k: 'short', c: C.fbBlack, hi: C.fbBlackHi, temples: C.fbGrey }, glasses: 1, moustache: C.fbBlack, brow: INK, h: 1.02, wk: 1.06 },
+    fb_sister: { skin: C.fbSkinSis, age: 'kid', top: { k: 'tee', c: C.sisCoral, sh: C.sisCoralSh, collar: '#FFFFFF' }, bottom: { k: 'skirt', c: C.sisCoral, sh: C.sisCoralSh, len: 150, flare: 94 },
+      shoes: { k: 'flat', c: '#8E4A3A' }, hair: { k: 'puffs', c: C.fbBlack, hi: C.fbBlackHi, ties: C.paintYellow }, brow: INK, h: 1,
+      ages: { baby: { kind: 'newborn', blanket: C.sisBlanket, blanketSh: C.sisBlanketSh, hair: { k: 'curl', c: C.fbBlack } }, kid: {},
+        grown: { kind: 'adult', h: 0.94, top: { k: 'tee', c: C.sisCoral, sh: C.sisCoralSh }, bottom: { k: 'jeans', c: C.jeans, sh: C.jeansSh, cuff: C.jeansCuff, fly: 1 },
+          shoes: { k: 'trainer', c: C.sisCoral, sole: '#FFFFFF', toe: '#FFFFFF', laces: '#FFFFFF' }, hair: { k: 'braids', c: C.fbBlack, hi: C.fbBlackHi, style: 'down' }, earrings: C.gold } } },
+    fb_brother: { skin: C.fbSkinBro, age: 'kid', top: { k: 'tee', c: C.broTee, sh: C.broTeeSh }, bottom: { k: 'shorts', c: C.broShorts, sh: C.broShortsSh, len: 0.78 },
+      shoes: { k: 'trainer', c: '#E5534B', sole: '#FFFFFF', toe: '#FFFFFF', laces: '#FFFFFF' }, hair: { k: 'short', c: C.fbBlack, hi: C.fbBlackHi, low: 1 }, brow: INK, h: 1,
+      ages: { baby: { kind: 'newborn', blanket: C.broBlanket, blanketSh: C.broBlanketSh, hair: null }, toddler: { kind: 'toddler' }, kid: {} } },
+    fb_auntie: { skin: C.fbSkinAunt, top: { k: 'buba', c: C.auntie, sh: C.auntieSh, trim: C.gold }, bottom: { k: 'skirt', c: C.auntie, sh: C.auntieSh, len: 270, flare: 80, wrap: 1, motif: C.gold },
+      shoes: { k: 'flat', c: C.goldSh }, hair: { k: 'gele', c: C.auntie, sh: C.auntieSh, hi: C.auntieHi, motif: C.gold }, earrings: C.gold, beads: C.coral, brow: '#2A1E18', h: 0.97, wk: 1.12 },
+    fb_uncle1: { skin: C.fbSkinU1, top: { k: 'kaftan', c: C.u1Kaftan, sh: C.u1KaftanSh, thread: C.gold, long: 196 }, bottom: { k: 'trousers', c: C.u1Kaftan, sh: C.u1KaftanSh },
+      shoes: { k: 'dress', c: '#3A2A20', sole: '#241A14' }, hair: { k: 'short', c: C.fbBlack, hi: C.fbBlackHi }, hat: { k: 'fila', c: C.u1Kaftan, sh: C.u1KaftanSh, band: C.gold }, brow: INK, h: 1.04, wk: 1.08 },
+    fb_uncle2: { skin: C.fbSkinU2, top: { k: 'dashiki', c: C.u2Dashiki, sh: C.u2DashikiSh, panel: C.u2Panel, motif: C.gold, hw: 98 }, bottom: { k: 'trousers', c: C.u2Trousers, sh: C.u2TrousersSh, w: 50 },
+      shoes: { k: 'dress', c: '#3A2A20', sole: '#241A14' }, hair: { k: 'side', c: C.fbGrey, hi: C.fbGreyHi }, beard: C.fbGrey, brow: '#77716B', h: 0.97, wk: 1.14 },
+    fb_cousin1: { skin: C.fbSkinC1, top: { k: 'tee', c: C.c1Tee, sh: C.c1TeeSh }, bottom: { k: 'jeans', c: C.c1Jeans, sh: C.c1JeansSh, cuff: '#6A8BAD', fly: 1 },
+      shoes: { k: 'trainer', c: '#303030', sole: '#FFFFFF', toe: '#FFFFFF', laces: '#FFFFFF' }, hair: { k: 'short', top: 'high', c: C.fbBlack, hi: C.fbBlackHi }, brow: INK, h: 0.99 },
+    fb_cousin2: { skin: C.fbSkinC2, top: { k: 'tee', c: C.c2Top, sh: C.c2TopSh }, bottom: { k: 'skirt', c: C.jeans, sh: C.jeansSh, len: 196, flare: 84 },
+      shoes: { k: 'flat', c: '#5A3E5E' }, hair: { k: 'braids', c: C.fbBlack, hi: C.fbBlackHi, style: 'down' }, earrings: C.gold, brow: INK, h: 0.95 },
+    fb_okafor_son: { skin: C.fbSkinOk, age: 'kid', top: { k: 'schoolshirt', c: '#FFFFFF', sh: '#E4E4E4' }, bottom: { k: 'shorts', c: C.okShorts, sh: C.okShortsSh, len: 0.86, socks: '#FFFFFF' },
+      shoes: { k: 'dress', c: '#2E2E2E', sole: '#1E1E1E' }, hair: { k: 'short', c: C.fbBlack, hi: C.fbBlackHi, part: 1 }, glasses: 1, brow: INK, h: 1.03 },
+  });
+  CAST.hero.ages = { newborn: { kind: 'newborn', blanket: C.hoodie, blanketSh: C.hoodieSh }, kid: { kind: 'kid' }, teen: { kind: 'teen' } };
+  // ---- ages: proportion kinds. kb body scale, kh head scale, wk torso width, limb/hand/shoe chunkiness, prop (held props), bag (school bag)
+  const AGES = {
+    adult: null,
+    teen: { kb: 0.85, kh: 0.94, wk: 1.03, limb: 1.05, hand: 1.03, shoe: 1.03, prop: 1.06, bag: 1.15 },
+    kid: { kb: 0.56, kh: 0.8, wk: 1.14, limb: 1.28, hand: 1.18, shoe: 1.22, prop: 1.3, bag: 1.75 },
+    toddler: { kb: 0.42, kh: 0.72, wk: 1.24, limb: 1.45, hand: 1.3, shoe: 1.32, prop: 1.5, bag: 1.9 },
+    newborn: { newborn: 1, kh: 0.42 },
+  };
+  const AGE_KIND = { newborn: 'newborn', baby: 'newborn', infant: 'newborn', toddler: 'toddler', kid: 'kid', child: 'kid', six: 'kid', teen: 'teen', teenager: 'teen', adult: 'adult', grown: 'adult' };
+  const AGE_SYN = { newborn: ['newborn', 'baby', 'infant'], toddler: ['toddler'], kid: ['kid', 'child', 'six'], teen: ['teen', 'teenager'], adult: ['adult', 'grown'] };
+  // outfits put on over a character, keeping the face, skin, hair and shoes
+  const OUTFITS = {
+    gown: ch => Object.assign({}, ch, { top: { k: 'gown', c: C.gown, sh: C.gownSh, stole: C.gold }, hat: { k: 'mortar', c: C.gown, sh: C.gownSh, tassel: C.gold },
+      hair: ch.hair && ch.hair.k === 'braids' ? Object.assign({}, ch.hair, { style: 'bun' }) : ch.hair }),
+    labcoat: ch => Object.assign({}, ch, { top: { k: 'labcoat', c: C.labcoat, sh: C.labcoatSh, under: ch.top.c, underSh: ch.top.sh } }),
+    party: ch => Object.assign({}, ch, { top: { k: 'kaftan', c: ch.top.c, sh: ch.top.sh, thread: C.gold }, hat: ch.hat || { k: 'fila', c: ch.top.c, sh: ch.top.sh, band: C.gold } }),
+  };
+  const WHO_ALIAS = { okafor_son: 'fb_okafor_son', fb_okafor: 'fb_okafor_son', fb_mom: 'fb_mum', fb_aunt: 'fb_auntie' };
+  // who: 'hero' | 'fb_mum' | ... optionally with dot tokens for age, outfit and bag: 'hero.kid', 'hero.newborn', 'fb_sister.grown.gown',
+  // 'fb_dad.labcoat', 'hero.kid.bag'. opts.age / opts.outfit / opts.bag win over the tokens.
+  function buildWho(who, opts) {
+    if (typeof who !== 'string') return { ch: who || CAST.hero, AG: null };
+    const parts = who.split('.'), base = CAST[WHO_ALIAS[parts[0]] || parts[0]] || CAST.hero;
+    let age = null, outfit = null, bag = null;
+    parts.slice(1).forEach(tk => { if (AGE_KIND[tk] || (base.ages && base.ages[tk])) age = tk; else if (OUTFITS[tk]) outfit = tk; else if (tk === 'bag' || tk === 'schoolbag') bag = 'school'; });
+    age = opts.age || age || base.age || 'adult'; outfit = opts.outfit || outfit; bag = opts.bag || bag;
+    let entry = base.ages && base.ages[age], kind = entry && entry.kind;
+    if (!entry && base.ages) { const syn = AGE_SYN[AGE_KIND[age]] || []; for (const k of syn) if (base.ages[k]) { entry = base.ages[k]; break; } }
+    kind = (entry && entry.kind) || AGE_KIND[age] || 'adult';
+    let ch = base;
+    if (entry && Object.keys(entry).some(k => k !== 'kind')) { ch = Object.assign({}, base, entry); delete ch.kind; }
+    if (outfit && OUTFITS[outfit]) ch = OUTFITS[outfit](ch);
+    const AG = AGES[kind] || null;
+    return { ch, AG: AG && !AG.newborn ? AG : null, newborn: AG && AG.newborn ? AG : null, age, kind, outfit, bag };
+  }
+  function ageRemap(pose, AG, hr) {   // carry adult-authored targets near the head over to the child's bigger head; grow held props
+    const H0 = RIG.headDy, Hk = RIG.neckY - (8 + 100 * hr);
+    const map = p => { const w = clamp((-200 - p[1]) / 62, 0, 1); if (!w) return p; return [lerp(p[0], p[0] * hr, w), lerp(p[1], Hk + (p[1] - H0) * hr, w)]; };
+    const o = Object.assign({}, pose);
+    ['armL', 'armR'].forEach(k => { if (o[k] && o[k].ik) o[k] = Object.assign({}, o[k], { ik: map(o[k].ik) }); });
+    ['prop', 'prop2'].forEach(k => {
+      const pr = o[k]; if (!pr) return; const q = Object.assign({}, pr);
+      if (q.at) q.at = map(q.at); q.s = (q.s || 1) * AG.prop;
+      if (q.hand) { if (q.off) q.off = [q.off[0] * AG.prop, q.off[1] * AG.prop]; q.along = (q.along != null ? q.along : 30) * AG.prop; }
+      o[k] = q;
+    });
+    return o;
+  }
+
+  // ---- the newborn: the same bald round head and face, the body swaddled in a blanket (the hero's is teal)
+  // baby space: head centre at the origin, R = 100, the bundle below it to y = 326
+  function bundleDraw(g, ch, o, lw, c) {
+    const F = { g, ch, c, lw, ld: lw * LW.detail / LW.figure, skinC: c(ch.skin), browC: c(ch.brow || INK) };
+    const raw = ch.blanket || C.hoodie, bc = c(raw), bsh = c(ch.blanketSh || C.hoodieSh), bin = c(mix(raw, '#FFFFFF', 0.42));
+    const body = spl([[-94, 76], [-112, 140], [-106, 224], [-82, 290], [-44, 320], [0, 326], [44, 320], [82, 290], [106, 224], [112, 140], [94, 76], [48, 58], [0, 54], [-48, 58]], true);
+    fs(g, body, bc, 0);
+    const flap = quadPts([114, 104], [6, 168], [-112, 274], 12);
+    g.save(); g.clip(body);
+    g.fillStyle = bsh; g.fill(P([[74, 40], [140, 40], [140, 390], [58, 390]]));
+    tubeFill(g, offsetLine(flap, -8, 0.0, 1.0), 12, bsh);
+    g.restore();
+    strokeP(g, body, lw);
+    polyline(g, flap, lw * 0.8);
+    polyline(g, quadPts([-62, 296], [0, 280], [62, 296], 8), F.ld);
+    g.save(); if (o.headRot) g.rotate(o.headRot);
+    drawHead(g, ch, F, { expr: o.expr || 'neutral', face: o.face, look: normLook(o.look), blink: o.blink, mouth: o.mouth, turn: o.turn || 0, nod: o.nod || 0 });
+    g.restore();
+    const col = new Path2D(); col.moveTo(-104, 62); col.quadraticCurveTo(0, 112, 104, 62); col.quadraticCurveTo(118, 82, 108, 100); col.quadraticCurveTo(0, 150, -108, 100); col.quadraticCurveTo(-118, 82, -104, 62); col.closePath();
+    fs(g, col, bin, lw);
+    if (o.fists) [-1, 1].forEach(s => { const fx = s * 48, fy = 82; fs(g, ell(fx, fy, 19, 17), F.skinC, lw * 0.9); [-5, 4].forEach(dx => polyline(g, [[fx + dx, fy - 12], [fx + dx, fy - 3]], F.ld * 0.7)); });
+  }
+  // a newborn as a figure: pose 'lie' (default: lying, head toward the facing side, (x, y) = where the bundle rests) or 'held' / 'upright'
+  // ((x, y) = the bottom of the bundle). opts: scale (1 = a newborn beside a scale-1 adult), facing, expr, blink, look, mouth, rot, fists, tint, shadow.
+  function newbornFigure(g, ch, opts, BW) {
+    const s = (opts.scale || 1) * (ch.h || 1) * BW.newborn.kh, facing = opts.facing === -1 ? -1 : 1;
+    const pose = typeof opts.pose === 'string' ? opts.pose : 'lie', upright = /held|stand|upright|sit|cradle/.test(pose);
+    const tint = opts.tint || null, cache = {}, c = tint ? (h => cache[h] || (cache[h] = mul(h, tint))) : (h => h);
+    const lw = (opts.lw || LW.figure * 0.85 * (opts.scale || 1)) / s;
+    g.save(); g.translate(opts.x || 0, opts.y || 0); g.scale(facing, 1); g.lineCap = 'round'; g.lineJoin = 'round';
+    if (opts.shadow) { g.fillStyle = opts.shadow; g.fill(ell(0, 0, (upright ? 90 : 210) * s, 12)); }
+    let headRot;
+    if (upright) { g.rotate(opts.rot != null ? opts.rot : 0.08); g.scale(s, s); g.translate(0, -326); headRot = 0; }
+    else { g.translate(0, -112 * s); g.rotate(PI / 2 + (opts.rot || 0)); g.scale(s, s); g.translate(0, -113); headRot = -(PI / 2 + (opts.rot || 0)) * 0.72; }
+    if (opts.headRot != null) headRot = opts.headRot;
+    bundleDraw(g, ch, Object.assign({}, opts, { headRot }), lw, c);
+    const M = g.getTransform(), wp = p => { const q = M.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; }, wh = p => wp(rot(p, headRot));
+    const out = { head: wp([0, 0]), headTop: wh([0, -100]), headR: 100 * s, mouth: wh([0, 50]), handL: wp([-48, 84]), handR: wp([48, 84]), elbowL: wp([-96, 150]), elbowR: wp([96, 150]),
+      pelvis: wp([0, 200]), scale: s, bodyScale: s, knee: wp([0, 270]), kneeL: wp([0, 270]), kneeR: wp([0, 270]), feet: [opts.x || 0, opts.y || 0], seat: null, lap: null };
+    g.restore();
+    return out;
+  }
+  // the newborn in someone's arms (pose prop k: 'baby'): at = the middle of the bundle, a = its rotation (0 = head up), s = size
+  function drawBabyProp(F, pr, at) {
+    const g = F.g, bw = buildWho(pr.who || 'hero', { age: 'newborn' }), k = AGES.newborn.kh * (pr.s || 1);
+    g.save(); g.translate(at[0], at[1]); g.rotate(pr.a || 0); g.scale(k, k); g.translate(0, -113);
+    bundleDraw(g, bw.ch, { expr: pr.expr, blink: pr.blink, look: pr.look, mouth: pr.mouth, headRot: pr.headRot || 0, fists: pr.fists }, F.lw * 0.85 / k, F.c);
+    g.restore();
+  }
+  PROPS.baby = function (g, x, y, o) {   // world space: a newborn bundle centred at x, y; o.who, o.s, o.a, o.expr, o.blink, o.look, o.mouth, o.fists
+    o = o || {}; const s = o.s || 1, F = { g, c: o.tint ? (h => mul(h, o.tint)) : (h => h), lw: (o.lw || LW.figure) / s };
+    drawBabyProp(F, Object.assign({}, o, { s }), [x, y]);
+  };
+
+  // ---- things carried on the back, straps, long garments, prints
+  function bagParts(pose, kind, AG) {
+    const k = AG ? AG.bag : 1, side = pose.stance === 'side', hold = kind === 'holdall';
+    const pr = hold ? { k: 'holdall', at: side ? [-70, -20] : [-96, -24], s: 1.15, torso: false }
+      : { k: 'schoolbag', at: side ? [-66 - 34 * k, -146] : [0, -150 + 12 * (k - 1)], s: (side ? 1.0 : 1.08) * k, sx: side ? 0.66 : 1, torso: true };
+    return { back: (pose.back || []).concat([pr]), straps: { c: hold ? C.holdallSh : C.bagStrap, side, diag: hold } };
+  }
+  function drawBackProp(F, pr, lean, T) {   // pr.at in torso space (pr.torso) or pelvis space; pr.torsoAt: a torso point, the prop upright-ish (pr.a) in pelvis space
+    const g = F.g, fn = PROPS[pr.k]; if (!fn) return;
+    g.save();
+    if (pr.torsoAt) { const q = T(pr.torsoAt), off = pr.off || [0, 0]; g.translate(q[0] + off[0], q[1] + off[1]); }
+    else { if (pr.torso) g.rotate(lean); g.translate(pr.at[0], pr.at[1]); }
+    if (pr.sx) g.scale(pr.sx, 1);
+    fn(g, 0, 0, Object.assign({}, pr, { s: pr.s || 1, lw: F.lw * 0.9 * (pr.s || 1), tint: F.tint }));
+    g.restore();
+  }
+  function drawStraps(F, t, st, stance, LK) {   // torso detail space
+    const g = F.g, w = 15 * (LK || 1), col = F.c(st.c || C.bagStrap);
+    if (st.diag) { tube(g, quadPts([52, -250], [10, -140], [-70, -14], 8), w, col, F.ld); return; }
+    if (st.side) { tube(g, quadPts([4, -266], [22, -200], [30, -116], 8), w, col, F.ld); return; }
+    [-1, 1].forEach(s => tube(g, quadPts([s * 44, -264], [s * 56, -200], [s * 66, -110], 8), w, col, F.ld));
+  }
+  function motif(g, col, x0, y0, w, h, kind, step) {   // a sparse print (dots, rings, or the two alternating)
+    step = step || 30; g.fillStyle = col; g.strokeStyle = col; g.lineWidth = 2.4;
+    for (let j = 0, y = y0; y < y0 + h; y += step * 0.86, j++) for (let i = 0, x = x0 + (j % 2) * step / 2; x < x0 + w; x += step, i++) {
+      const k = kind === 'mix' ? ((i + j) % 2 ? 'ring' : 'dot') : kind;
+      if (k === 'ring') g.stroke(circ(x, y, 5.2)); else if (k === 'diamond') g.fill(P([[x, y - 6], [x + 5, y], [x, y + 6], [x - 5, y]])); else g.fill(circ(x, y, 3.6));
+    }
+  }
+  function sitHang(F, legs, stance, col, sh, motifC, len) {   // a long skirt or robe falling from the knee toward the floor when seated
+    const g = F.g, p = new Path2D();
+    if (stance === 'side') { const K = legs.L.K, A = legs.L.A, y1 = Math.min(K[1] + len, A[1] - 2); p.moveTo(K[0] - 44, K[1] + 14); p.lineTo(K[0] + 24, K[1] + 6); p.quadraticCurveTo(K[0] + 34, (K[1] + y1) / 2, K[0] + 38, y1); p.quadraticCurveTo(K[0] - 6, y1 + 6, K[0] - 48, y1); p.closePath(); }
+    else { p.moveTo(-82, 56); p.lineTo(82, 56); p.lineTo(88, 56 + len); p.quadraticCurveTo(0, 64 + len, -88, 56 + len); p.closePath(); }
+    fs(g, p, col, F.lw);
+    if (motifC) { g.save(); g.clip(p); motif(g, motifC, -200, 0, 500, 400, 'dot'); g.restore(); strokeP(g, p, F.lw); }
+  }
+  function drawRobe(F, t, legs, pose, stance, light, torsoXf, TX) {
+    const g = F.g, c = F.c, L = t.long, hw = t.hw;
+    if (pose.sit) {
+      const K = (pose.sit === 'front' ? legs.R : legs.L).K, sk = new Path2D();
+      if (pose.sit === 'front') { sk.moveTo(-hw, -20); sk.lineTo(hw, -20); sk.lineTo(hw + 10, 60); sk.quadraticCurveTo(0, 70, -hw - 10, 60); sk.closePath(); }
+      else { sk.moveTo(-hw * 0.8, -20); sk.lineTo(hw * 0.7, -20); sk.quadraticCurveTo(K[0] * 0.6, K[1] - 40, K[0] + 14, K[1] - 32); sk.quadraticCurveTo(K[0] + 28, K[1], K[0] + 18, K[1] + 34); sk.quadraticCurveTo(K[0] * 0.5, K[1] + 46, -40, 44); sk.quadraticCurveTo(-hw * 0.9, 24, -hw * 0.8, -20); sk.closePath(); }
+      fs(g, sk, c(t.c), F.lw);
+      if (L > 150) sitHang(F, legs, pose.sit === 'front' ? 'front' : 'side', c(t.c), c(t.sh), null, Math.min(L - 120, 150));
+      return;
+    }
+    const ax = legs.L.A[0], bx = legs.R.A[0], mid = (ax + bx) * 0.25 / TX.k, half = Math.max(hw + 6, Math.abs(ax - bx) / 2 / TX.k + 44);
+    g.save(); torsoXf();
+    const top = t.hem - 30, path = sd => { const p = new Path2D(); p.moveTo(-hw, top); p.lineTo(-hw, t.hem - 4); p.quadraticCurveTo(-hw - 3, L * 0.45, mid - half, L); p.quadraticCurveTo(mid, L + 10, mid + half, L); p.quadraticCurveTo(hw + 3, L * 0.45, hw, t.hem - 4); p.lineTo(hw, top); if (sd) p.closePath(); return p; };
+    const fill = path(true); g.fillStyle = c(t.c); g.fill(fill);
+    g.save(); g.clip(fill);
+    const sx = light > 0 ? -1 : 1; g.fillStyle = c(t.sh); g.fill(P([[sx * (hw + 30), top], [sx * (hw - 18), top], [mid + sx * (half - 22), L + 20], [mid + sx * (half + 40), L + 20]]));
+    if (t.k === 'labcoat') {
+      polyline(g, [[0, top], [mid * 0.9, L + 8]], F.lw * 0.8);
+      [-1, 1].forEach(s => { const px = s * hw * 0.52 + mid * 0.4, py = L * 0.3; fs(g, P([[px - 22, py], [px + 22, py], [px + 21, py + 36], [px - 21, py + 36]]), c(t.c), F.ld); });
+    } else if (t.k === 'kaftan') {
+      [-1, 1].forEach(s => polyline(g, [[mid + s * (half - 6), L - 2], [mid + s * (half - 10), L - 58]], F.ld));
+      if (t.thread) tube(g, [[mid - half - 10, L - 12], [mid + half + 10, L - 12]], 4, c(t.thread), 0);
+    } else if (t.k === 'gown') {
+      [[-34, 40, -44], [8, 48, 10], [48, 40, 60]].forEach(([x0, y0, x1]) => polyline(g, quadPts([x0, y0], [x0 + (x1 - x0) * 0.4, L * 0.55], [mid + x1, L - 6], 6), F.ld * 0.85));
+      [-1, 1].forEach(s => fs(g, P([[s * 16, top], [s * 40, top], [s * 40 + mid * 0.3, L * 0.5], [s * 28 + mid * 0.3, L * 0.5 + 12], [s * 16 + mid * 0.3, L * 0.5]]), c(t.stole), F.ld));
+    }
+    g.restore();
+    strokeP(g, path(false), F.lw);
+    g.restore();
+  }
+
+  // ---- hair, headwraps, hats, facial hair, jewellery (head space, R = 100)
+  const HAIR2 = {};
+  function hairCap(g, F, hr, outer, line, part) {
+    const p = spl(outer.concat(line), true, 0.9);
+    fs(g, p, F.c(hr.c), F.lw);
+    g.save(); g.clip(p);
+    if (hr.temples) { g.fillStyle = F.c(hr.temples); [-1, 1].forEach(s => g.fill(P([[s * 120, -60], [s * 84, -50], [s * 80, 10], [s * 120, 10]]))); }
+    if (hr.hi) { g.strokeStyle = F.c(hr.hi); g.lineWidth = F.ld * 0.9; [[[-50, -88], [-22, -98], [6, -98]], [[34, -90], [58, -80]]].forEach(q => g.stroke(spl(q, false))); }
+    g.restore(); strokeP(g, p, F.lw);
+    if (part) polyline(g, quadPts([-34, -62], [-40, -84], [-46, -104], 5), F.ld);
+    return p;
+  }
+  HAIR2.short = function (g, hr, F, back) {   // close-cropped (low: a lower cut; top 'high': a high-top)
+    if (back) return;
+    const outer = hr.top === 'high'
+      ? [[-100, 4, 1], [-104, -40], [-102, -92], [-92, -128], [-56, -140], [0, -143], [56, -140], [92, -128], [102, -92], [104, -40], [100, 4, 1]]
+      : [[-100, 4, 1], [-104, -40], [-92, -82], [-56, -106], [0, -114], [56, -106], [92, -82], [104, -40], [100, 4, 1]];
+    const line = hr.low ? [[94, 2, 1], [92, -36], [82, -64], [50, -76], [0, -80], [-50, -76], [-82, -64], [-92, -36], [-94, 2, 1]]
+      : [[93, 2, 1], [91, -30], [82, -54], [52, -62], [0, -66], [-52, -62], [-82, -54], [-91, -30], [-93, 2, 1]];
+    hairCap(g, F, hr, outer, line, hr.part);
+    if (hr.top === 'high') { g.save(); g.strokeStyle = F.c(hr.hi || hr.c); g.lineWidth = F.ld * 0.85; [[-62, -122], [-22, -130], [20, -130], [60, -122]].forEach(([x, y]) => { const q = new Path2D(); q.arc(x, y + 8, 9, PI * 1.1, PI * 1.9); g.stroke(q); }); g.restore(); }
+  };
+  HAIR2.side = function (g, hr, F, back) {   // bald on top, short at the sides
+    if (back) return;
+    [-1, 1].forEach(s => { const p = spl([[s * 100, 8, 1], [s * 105, -26], [s * 100, -54], [s * 90, -68], [s * 86, -50], [s * 90, -26], [s * 92, 8, 1]], true, 0.9); fs(g, p, F.c(hr.c), F.lw); });
+  };
+  function puff(g, F, cx, cy, r, col, hi, seed) {   // a scalloped round puff of hair
+    const q = rng(seed), cs = [[cx, cy, r * 0.82]];
+    for (let i = 0; i < 11; i++) { const a = TAU * i / 11; cs.push([cx + Math.cos(a) * r * 0.78, cy + Math.sin(a) * r * 0.78, r * (0.3 + q() * 0.06)]); }
+    g.strokeStyle = INK; g.lineWidth = F.lw * 2; cs.forEach(k => g.stroke(circ(k[0], k[1], k[2])));
+    g.fillStyle = col; cs.forEach(k => g.fill(circ(k[0], k[1], k[2])));
+    g.strokeStyle = hi; g.lineWidth = F.ld * 0.9; [0.6, 2.2, 3.9].forEach(a => { const p = new Path2D(); p.arc(cx + Math.cos(a) * r * 0.35, cy + Math.sin(a) * r * 0.35, r * 0.3, a - 0.9, a + 0.6); g.stroke(p); });
+  }
+  HAIR2.puffs = function (g, hr, F, back) {   // two puffs with bobbles
+    if (back) { [-1, 1].forEach(s => puff(g, F, s * 82, -84, 42, F.c(hr.c), F.c(hr.hi || hr.c), 'puff' + s)); return; }
+    hairCap(g, F, hr, [[-100, 2, 1], [-104, -40], [-92, -82], [-56, -106], [0, -114], [56, -106], [92, -82], [104, -40], [100, 2, 1]],
+      [[93, 0, 1], [90, -32], [80, -56], [50, -64], [0, -66], [-50, -64], [-80, -56], [-90, -32], [-93, 0, 1]]);
+    polyline(g, [[0, -66], [0, -112]], F.ld);
+    [-1, 1].forEach(s => { fs(g, circ(s * 66, -74, 11), F.c(hr.ties || C.paintYellow), F.lw * 0.8); fs(g, circ(s * 80, -66, 9), F.c(hr.ties || C.paintYellow), F.lw * 0.8); });
+  };
+  HAIR2.braids = function (g, hr, F, back) {   // box braids: 'down' (falling over the shoulders) or 'bun'
+    const col = F.c(hr.c), hi = F.c(hr.hi || hr.c);
+    if (back) {
+      if (hr.style === 'bun') { const b = circ(0, -120, 38); fs(g, b, col, F.lw); g.save(); g.strokeStyle = hi; g.lineWidth = F.ld * 0.9; [16, 27].forEach(r => { const p = new Path2D(); p.arc(0, -120, r, 0.4, 5.6); g.stroke(p); }); g.restore(); return; }
+      const strands = []; [-1, 1].forEach(s => { for (let i = 0; i < 4; i++) strands.push(quadPts([s * (66 + i * 10), -20], [s * (96 + i * 8), 70], [s * (80 + i * 13), 196 - i * 8], 10)); });
+      g.strokeStyle = INK; g.lineWidth = 15 + F.lw * 2; strands.forEach(p => g.stroke(P(p, false)));
+      g.strokeStyle = col; g.lineWidth = 15; strands.forEach(p => g.stroke(P(p, false)));
+      g.strokeStyle = hi; g.lineWidth = F.ld * 0.7; strands.forEach(p => { for (let k = 4; k < p.length - 1; k += 1) { const a = p[k], b = p[k + 1], d = [(b[0] - a[0]), (b[1] - a[1])], l = Math.hypot(d[0], d[1]) || 1; g.stroke(P([[a[0] - d[1] / l * 5, a[1] + d[0] / l * 5 - 4], [a[0] + d[1] / l * 5, a[1] - d[0] / l * 5 + 4]], false)); } });
+      return;
+    }
+    hairCap(g, F, hr, [[-100, 4, 1], [-104, -40], [-92, -84], [-56, -108], [0, -116], [56, -108], [92, -84], [104, -40], [100, 4, 1]],
+      [[93, 2, 1], [90, -30], [80, -54], [50, -62], [10, -66], [-50, -62], [-80, -54], [-90, -30], [-93, 2, 1]]);
+    g.save(); g.strokeStyle = hi; g.lineWidth = F.ld * 0.85; [[-70, -56], [-36, -63], [0, -66], [36, -63], [70, -56]].forEach(([x, y]) => g.stroke(spl([[x, y], [x * 0.7, (y - 108) / 2], [x * 0.25, -110]], false))); g.restore();
+  };
+  HAIR2.headwrap = function (g, hr, F, back) {   // Mum's everyday headwrap: a dome over the head, a knot at the front
+    if (back) return;
+    const p = spl([[-103, -16, 1], [-113, -72], [-98, -130], [-58, -166], [0, -178], [58, -166], [98, -130], [113, -72], [103, -16, 1], [64, -52], [0, -61], [-64, -52]], true, 0.9);
+    fs(g, p, F.c(hr.c), 0);
+    g.save(); g.clip(p);
+    g.fillStyle = F.c(hr.sh); g.fill(spl([[60, -170], [118, -110], [118, 0], [90, -20], [88, -90]], true));
+    if (hr.motif) motif(g, F.c(hr.motif), -120, -180, 240, 170, 'dot', 34);
+    g.restore(); strokeP(g, p, F.lw);
+    [[[-100, -40], [-46, -112], [34, -152]], [[-84, -30], [-6, -90], [88, -120]], [[-34, -56], [40, -82], [104, -76]]].forEach(q => strokeP(g, spl(q, false), F.ld));
+    const kn = [ell(14, -160, 27, 15, -0.55), ell(58, -160, 25, 14, 0.5)];
+    kn.forEach(k => { fs(g, k, F.c(hr.c), F.lw * 0.9); g.save(); g.clip(k); if (hr.motif) motif(g, F.c(hr.motif), -20, -190, 120, 60, 'dot', 26); g.restore(); strokeP(g, k, F.lw * 0.9); });
+    fs(g, ell(36, -150, 13, 11), F.c(hr.sh), F.lw * 0.9);
+  };
+  HAIR2.gele = function (g, hr, F, back) {   // the auntie's big occasion headwrap: a pleated fan above a wrapped band
+    if (back) {
+      const cx = 14, cy = -92, rx = 186, ry = 176, n = 10, a0 = -PI * 0.93, a1 = -PI * 0.07;
+      const pt = (a, k) => [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
+      const outline = new Path2D(); outline.moveTo(cx, cy);
+      for (let i = 0; i <= n; i++) { const a = lerp(a0, a1, i / n); if (!i) outline.lineTo(...pt(a, 1)); else { const am = lerp(a0, a1, (i - 0.5) / n); const cp = pt(am, 1.07); outline.quadraticCurveTo(cp[0], cp[1], ...pt(a, 1)); } }
+      outline.closePath();
+      g.lineWidth = F.lw * 2; g.strokeStyle = INK; g.stroke(outline);
+      for (let i = 0; i < n; i++) {
+        const aa = lerp(a0, a1, i / n), ab = lerp(a0, a1, (i + 1) / n), am = (aa + ab) / 2, w = new Path2D();
+        w.moveTo(cx, cy); w.lineTo(...pt(aa, 1)); const cp = pt(am, 1.07); w.quadraticCurveTo(cp[0], cp[1], ...pt(ab, 1)); w.closePath();
+        g.fillStyle = F.c(i % 2 ? hr.c : (hr.hi || hr.c)); g.fill(w);
+        g.save(); g.clip(w); g.fillStyle = F.c(hr.sh); g.fill(P([[cx, cy], pt(aa + (ab - aa) * 0.62, 1.2), pt(ab, 1.2)])); g.restore();
+        if (i) polyline(g, [lerp2([cx, cy], pt(aa, 1), 0.3), pt(aa, 0.995)], F.ld);
+      }
+      if (hr.motif) { g.save(); g.clip(outline); g.fillStyle = F.c(hr.motif); for (let i = 0; i <= n; i++) { const a = lerp(a0, a1, (i + 0.5) / n); g.fill(circ(...pt(a, 0.86), 4.5)); } g.restore(); }
+      return;
+    }
+    const p = spl([[-104, -16, 1], [-114, -68], [-100, -114], [-54, -138], [0, -144], [56, -138], [100, -114], [114, -68], [104, -16, 1], [64, -52], [0, -61], [-64, -52]], true, 0.9);
+    fs(g, p, F.c(hr.c), 0);
+    g.save(); g.clip(p); g.fillStyle = F.c(hr.sh); g.fill(spl([[64, -140], [120, -90], [118, 0], [92, -24], [90, -90]], true));
+    if (hr.motif) motif(g, F.c(hr.motif), -120, -150, 240, 140, 'dot', 30);
+    g.restore(); strokeP(g, p, F.lw);
+    [[[-102, -40], [-30, -96], [60, -128]], [[-70, -40], [10, -80], [104, -96]]].forEach(q => strokeP(g, spl(q, false), F.ld));
+    fs(g, spl([[-8, -136], [22, -152], [52, -138], [40, -112], [8, -112]], true), F.c(hr.hi || hr.c), F.lw * 0.85);
+  };
+  HAIR2.curl = function (g, hr, F, back) {   // a baby's single curl
+    if (back) return;
+    const p = new Path2D(); p.moveTo(-4, -97); p.bezierCurveTo(-24, -132, 28, -146, 22, -116); p.bezierCurveTo(18, -100, -2, -106, 6, -120);
+    strokeP(g, p, F.lw * 1.9, INK); strokeP(g, p, F.lw * 0.9, F.c(hr.c));
+  };
+  function hat(g, ch, F) {
+    const h = ch.hat, c = F.c, lw = F.lw, ld = F.ld;
+    if (h.k === 'fila') {   // the soft cap, its crown folded over to one side
+      const p = spl([[-100, -38, 1], [-101, -86], [-90, -128], [-50, -152], [10, -158], [72, -150], [118, -132], [128, -108, 1], [104, -98], [101, -70], [100, -38, 1], [50, -56], [0, -60], [-50, -56]], true, 0.9);
+      fs(g, p, c(h.c), 0);
+      g.save(); g.clip(p); g.fillStyle = c(h.sh); g.fill(spl([[30, -160], [130, -140], [130, -96], [96, -90], [70, -130]], true));
+      if (h.band) { g.fillStyle = c(h.band); g.fill(spl([[-104, -34, 1], [-104, -50], [0, -72], [104, -50], [104, -34, 1], [0, -56]], true)); polyline(g, quadPts([-104, -50], [0, -94], [104, -50], 10), ld); }
+      g.restore(); strokeP(g, p, lw);
+      strokeP(g, spl([[18, -156], [70, -128], [104, -98]], false), ld);
+    } else if (h.k === 'mortar') {   // the graduation cap: skull cap, flat board, tassel
+      fs(g, spl([[-99, -28, 1], [-99, -70], [-72, -100], [0, -110], [72, -100], [99, -70], [99, -28, 1], [0, -48]], true, 0.9), c(h.c), lw);
+      fs(g, P([[-150, -104], [0, -68], [150, -104], [150, -95], [0, -58], [-150, -95]]), c(h.sh), lw);
+      fs(g, P([[-150, -104], [0, -140], [150, -104], [0, -68]]), c(h.c), lw);
+      fs(g, circ(0, -104, 7), c(h.c), ld);
+      tube(g, [[0, -104], [96, -92], [112, -84]], 4.5, c(h.tassel || C.gold), ld * 0.6); tube(g, [[112, -84], [114, -30]], 4.5, c(h.tassel || C.gold), ld * 0.6);
+      fs(g, P([[109, -34], [119, -34], [124, -2], [104, -2]]), c(h.tassel || C.gold), ld * 0.8);
+    }
+  }
+  function beardJaw(g, ch, F, G) {   // a short full beard below the mouth, round the jaw
+    const mx = G.mouthX, p = spl([[97, 10, 1], [98, 40], [84, 78], [48, 104], [mx, 114], [-48, 104], [-84, 78], [-98, 40], [-97, 10, 1], [-88, 12, 1], [-82, 44], [-56, 74], [mx, 84], [56, 74], [82, 44], [88, 12, 1]], true, 0.9);
+    fs(g, p, F.c(ch.beard), F.lw);
+  }
+  function moustache(g, col, F, G, small) {
+    const mx = G.mouthX, y = G.eyeY + 0.37 * 100 - (small ? 2 : 0), w = (small ? 22 : 27) * G.mouthK, p = new Path2D();
+    p.moveTo(mx - 3, y - 6); p.quadraticCurveTo(mx - w * 0.7, y - 9, mx - w, y + 7); p.quadraticCurveTo(mx - w * 0.5, y + 4, mx, y + 2); p.quadraticCurveTo(mx + w * 0.5, y + 4, mx + w, y + 7); p.quadraticCurveTo(mx + w * 0.7, y - 9, mx + 3, y - 6); p.closePath();
+    fs(g, p, F.c(col), F.lw * 0.75);
+  }
+  function earrings(g, col, F) { [-1, 1].forEach(s => { fs(g, circ(s * 99, 30, 6.5), F.c(col), F.lw * 0.6); fs(g, circ(s * 100, 45, 5.5), F.c(col), F.lw * 0.6); }); }
+
+  // ---- expressions added
+  Object.assign(EXPR, {
+    happy_cry: { brows: { lift: 0.07, tilt: 0.13, arch: 0.18 }, eyes: { k: 'happy' }, mouth: { k: 'grin', w: 0.28 }, tears: 2 },   // tears of joy
+    sneeze_pre: { brows: { lift: 0.13, tilt: 0.1, arch: 0.3 }, eyes: { lid: 0.6, lidTilt: -0.1, pupil: 0.9 }, look: [0, -0.85], mouth: { k: 'o', w: 0.1, h: 0.13 } },   // 'ah...'
+    sneeze: { brows: { lift: -0.03, tilt: 0.16, arch: 0.05, thick: 1.2 }, eyes: { k: 'squeeze' }, mouth: { k: 'o', w: 0.17, h: 0.15 }, crease: 1 },   // '...choo'
+    faint: { brows: { lift: 0.07, tilt: 0.14, arch: 0.1 }, eyes: { k: 'closed', lashes: 1 }, mouth: { k: 'o', w: 0.07, h: 0.08 } },
+    serene: { brows: { lift: 0.08, tilt: 0.06, arch: 0.3 }, eyes: { k: 'closed' }, mouth: { k: 'smile', w: 0.25, c: 0.11 } },   // praise, prayer
+    stern: { browL: { lift: 0.07, tilt: -0.02, arch: 0.2 }, browR: { lift: -0.05, tilt: -0.09, arch: 0.04, thick: 1.15 }, eyes: { lid: 0.36, lidTilt: -0.12, pupil: 1 }, look: [0.6, 0.05], mouth: { k: 'flat', w: 0.13 } },   // 'the look'
+    sweet: { brows: { lift: 0.08, tilt: 0.05, arch: 0.32 }, eyes: { k: 'happy' }, mouth: { k: 'smile', w: 0.22, c: 0.12 }, cheeks: 1 },
+    proud: { brows: { lift: 0.06, tilt: 0.09, arch: 0.26 }, eyes: { r: 1, pupil: 1.3, gloss: 1, pool: 1, lower: 0.1 }, mouth: { k: 'smile', w: 0.28, c: 0.12 } },   // moved, eyes wet
+  });
+
+  // ---- props added (world space, s = scale, a = rotation; o.tint like the others)
+  PROPS.spoon = function (g, x, y, o) {   // the wooden spoon (Mum's gavel), bowl toward -y; x, y = the grip
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const hd = new Path2D(); hd.moveTo(-6.5, 48); hd.quadraticCurveTo(-7, -20, -5, -70); hd.lineTo(5, -70); hd.quadraticCurveTo(7, -20, 6.5, 48); hd.quadraticCurveTo(0, 55, -6.5, 48); hd.closePath();
+    fs(g, hd, tc(o, C.wood), lw);
+    const bowl = ell(0, -104, 22, 36); fs(g, bowl, tc(o, C.wood), 0); g.save(); g.clip(bowl); g.fillStyle = tc(o, C.woodSh); g.fill(ell(7, -100, 14, 28)); g.restore(); strokeP(g, bowl, lw);
+    g.restore();
+  };
+  PROPS.calculator = function (g, x, y, o) {   // o.text: the display (default '0')
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const b = rrect(-36, -52, 72, 104, 9); fs(g, b, tc(o, C.calc), 0); g.save(); g.clip(b); g.fillStyle = tc(o, C.calcSh); g.fillRect(22, -60, 20, 120); g.restore(); strokeP(g, b, lw);
+    const sc = rrect(-27, -43, 54, 22, 4); fs(g, sc, tc(o, C.calcScreen), lw * 0.6);
+    g.fillStyle = '#2E3A2C'; g.font = '700 15px "Inter", "Helvetica Neue", Arial, sans-serif'; g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillText(o.text || '0', 22, -31.5);
+    for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) fs(g, rrect(-26 + k * 14, -13 + r * 15, 10, 10, 2.5), tc(o, r === 3 && k === 3 ? '#F0A04B' : C.calcKey), lw * 0.45);
+    g.restore();
+  };
+  PROPS.calculator.unmirror = true;
+  PROPS.receipt = function (g, x, y, o) {   // a long till receipt hanging down from x, y (o.len)
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.8) / s, L = o.len || 160, w = 23;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const p = new Path2D(); p.moveTo(-w, 0); p.lineTo(w, 0); p.bezierCurveTo(w + 4, L * 0.35, w - 8, L * 0.7, w + 6, L);
+    for (let i = 0; i <= 8; i++) p.lineTo(w + 6 - (i / 8) * (2 * w), L + (i % 2 ? 7 : 0));
+    p.bezierCurveTo(-w - 8, L * 0.7, -w + 4, L * 0.35, -w, 0); p.closePath();
+    fs(g, p, tc(o, '#FFFFFF'), lw);
+    g.save(); g.clip(p); for (let i = 0; i < Math.floor(L / 16); i++) { const yy = 14 + i * 16; polyline(g, [[-w + 8, yy], [w - 12 - (i % 3) * 6, yy]], 2.2 / s, '#A4ABB2'); } polyline(g, [[-w + 8, L - 12], [w - 4, L - 12]], 3 / s, '#6D747B'); g.restore();
+    g.restore();
+  };
+  PROPS.bucket = function (g, x, y, o) {   // a plastic bucket of water; x, y = the grip on its handle (o.anchor 'base': the bottom centre)
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s); if (o.anchor === 'base') g.translate(0, -122);
+    const col = tc(o, o.c || C.bucketBlue), sh = tc(o, o.sh || C.bucketBlueSh);
+    const hdl = new Path2D(); hdl.moveTo(-46, 42); hdl.quadraticCurveTo(-44, -10, 0, -6); hdl.quadraticCurveTo(44, -10, 46, 42); strokeP(g, hdl, 5 + 2 * lw); strokeP(g, hdl, 5, tc(o, '#9AA3AB'));
+    const b = new Path2D(); b.moveTo(-50, 42); b.lineTo(50, 42); b.lineTo(38, 122); b.quadraticCurveTo(0, 130, -38, 122); b.closePath();
+    fs(g, b, col, 0); g.save(); g.clip(b); g.fillStyle = sh; g.fill(P([[24, 30], [60, 30], [50, 140], [16, 140]])); [62, 98].forEach(yy => polyline(g, [[-60, yy], [60, yy]], LW.detail * 0.7 / s)); g.restore(); strokeP(g, b, lw);
+    const rim = ell(0, 42, 51, 11); fs(g, rim, col, lw);
+    if (o.water !== false) { const wtr = ell(0, 43, 43, 7.5); fs(g, wtr, tc(o, C.water), lw * 0.5); g.fillStyle = tc(o, C.waterHi); g.fill(ell(-14, 41.5, 12, 2.6)); }
+    g.restore();
+  };
+  PROPS.glass = function (g, x, y, o) {   // a glass of water; x, y = its centre
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const b = new Path2D(); b.moveTo(-23, -34); b.lineTo(23, -34); b.lineTo(18, 32); b.quadraticCurveTo(0, 36, -18, 32); b.closePath();
+    fs(g, b, tc(o, C.glass), 0);
+    g.save(); g.clip(b); g.fillStyle = tc(o, C.water); g.fillRect(-30, -12, 60, 50); g.fillStyle = tc(o, C.waterHi); g.fill(ell(0, -12, 22, 4)); g.fillStyle = 'rgba(255,255,255,0.75)'; g.fill(P([[-15, -30], [-9, -30], [-11, 26], [-15, 26]])); g.restore();
+    strokeP(g, b, lw); strokeP(g, ell(0, -34, 23, 4.5), lw * 0.7);
+    g.restore();
+  };
+  PROPS.reportCard = function (g, x, y, o) {   // o.grade (default 'A'), o.back: the plain back
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const b = rrect(-56, -72, 112, 144, 5); fs(g, b, tc(o, C.reportPaper), lw);
+    if (!o.back) {
+      g.save(); g.clip(b); g.fillStyle = tc(o, C.reportBand); g.fillRect(-60, -76, 120, 30); g.restore(); strokeP(g, b, lw); polyline(g, [[-56, -46], [56, -46]], LW.detail * 0.8 / s);
+      fs(g, circ(-36, -60, 8), tc(o, '#FFFFFF'), LW.detail * 0.7 / s); polyline(g, [[-20, -62], [30, -62]], 3 / s, '#FFFFFF');
+      for (let i = 0; i < 5; i++) { const yy = -30 + i * 15; polyline(g, [[-44, yy], [6 - (i % 2) * 10, yy]], 2.4 / s, '#A4ABB2'); polyline(g, [[18, yy], [30, yy]], 2.4 / s, '#A4ABB2'); }
+      g.fillStyle = tc(o, C.gradeRed); g.font = '800 40px "Inter", "Helvetica Neue", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(o.grade || 'A', 30, 50);
+      strokeP(g, ell(30, 50, 22, 20, -0.2), 3 / s, tc(o, C.gradeRed));
+    }
+    g.restore();
+  };
+  PROPS.reportCard.unmirror = true;
+  PROPS.paintbrush = function (g, x, y, o) {   // bristles toward -y; x, y = the grip; o.paint
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const hd = new Path2D(); hd.moveTo(-5, 62); hd.quadraticCurveTo(-7, 10, -6, -22); hd.lineTo(6, -22); hd.quadraticCurveTo(7, 10, 5, 62); hd.quadraticCurveTo(0, 68, -5, 62); hd.closePath(); fs(g, hd, tc(o, '#C9503F'), lw);
+    fs(g, P([[-7, -22], [7, -22], [8, -40], [-8, -40]]), tc(o, '#B9BEC4'), lw);
+    const br = new Path2D(); br.moveTo(-8, -40); br.lineTo(8, -40); br.quadraticCurveTo(10, -60, 0, -76); br.quadraticCurveTo(-10, -60, -8, -40); br.closePath(); fs(g, br, tc(o, '#8A6A4A'), 0);
+    g.save(); g.clip(br); g.fillStyle = tc(o, o.paint || C.paintBlue); g.fillRect(-12, -80, 24, 22); g.restore(); strokeP(g, br, lw);
+    g.restore();
+  };
+  PROPS.palette = function (g, x, y, o) {   // a painter's palette with dabs of colour; x, y = its centre
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const p = spl([[-60, -10], [-40, -40], [10, -46], [56, -26], [62, 12], [36, 40], [-6, 42], [-14, 20], [-36, 24], [-58, 14]], true);
+    fs(g, p, tc(o, C.wood), 0); g.save(); g.clip(p); g.fillStyle = tc(o, C.woodSh); g.fill(ell(26, 34, 50, 20)); g.restore(); strokeP(g, p, lw);
+    fs(g, ell(-34, 8, 9, 7), tc(o, C.woodSh), lw * 0.8);
+    [[-30, -22, C.paintRed], [0, -30, C.paintYellow], [30, -18, C.paintBlue], [38, 10, C.paintGreen]].forEach(([dx, dy, col]) => fs(g, spl([[dx - 10, dy], [dx, dy - 8], [dx + 10, dy - 1], [dx + 4, dy + 8], [dx - 7, dy + 6]], true), tc(o, col), lw * 0.6));
+    g.restore();
+  };
+  PROPS.schoolbag = function (g, x, y, o) {   // a backpack seen from the back; x, y = its centre
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s, col = tc(o, o.c || C.bag), sh = tc(o, o.sh || C.bagSh);
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const hdl = new Path2D(); hdl.moveTo(-18, -96); hdl.quadraticCurveTo(0, -126, 18, -96); strokeP(g, hdl, 7 + 2 * lw); strokeP(g, hdl, 7, sh);
+    const b = rrect(-76, -100, 152, 196, 34); fs(g, b, col, 0); g.save(); g.clip(b); g.fillStyle = sh; g.fillRect(48, -110, 40, 220); g.restore(); strokeP(g, b, lw);
+    const pk = rrect(-52, 6, 104, 74, 16); fs(g, pk, col, lw * 0.9); polyline(g, quadPts([-44, 22], [0, 14], [44, 22], 6), LW.detail / s); fs(g, rrect(30, 16, 8, 16, 3), tc(o, C.paintYellow), LW.detail * 0.7 / s);
+    polyline(g, quadPts([-64, -66], [0, -84], [64, -66], 8), LW.detail / s);
+    g.restore();
+  };
+  PROPS.house = function (g, x, y, o) {   // a small house; x, y = the bottom centre of its walls
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.9) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    fs(g, P([[68, -260], [96, -260], [96, -196], [68, -176]]), tc(o, C.houseRoofSh), lw);   // chimney
+    const wall = P([[-118, 0], [-118, -150], [118, -150], [118, 0]]); fs(g, wall, tc(o, C.houseWall), 0);
+    g.save(); g.clip(wall); g.fillStyle = tc(o, C.houseWallSh); g.fillRect(80, -160, 50, 170); g.restore(); strokeP(g, wall, lw);
+    const roof = P([[-144, -140], [0, -258], [144, -140]]); fs(g, roof, tc(o, C.houseRoof), 0); g.save(); g.clip(roof); g.fillStyle = tc(o, C.houseRoofSh); g.fill(P([[0, -258], [150, -136], [70, -136]])); g.restore(); strokeP(g, roof, lw);
+    fs(g, rrect(-26, -86, 52, 86, 4), tc(o, C.houseDoor), lw); fs(g, circ(14, -42, 4), tc(o, '#E6B54A'), lw * 0.5);
+    [-1, 1].forEach(sd => { const wx = sd * 72; fs(g, rrect(wx - 22, -116, 44, 40, 3), tc(o, C.phoneScreen), lw * 0.85); polyline(g, [[wx, -116], [wx, -76]], LW.detail / s); polyline(g, [[wx - 22, -96], [wx + 22, -96]], LW.detail / s); });
+    fs(g, circ(0, -186, 15), tc(o, C.phoneScreen), lw * 0.8);
+    g.restore();
+  };
+  PROPS.sneezeBurst = function (g, x, y, o) {   // the spray of a sneeze from the mouth at x, y toward o.dir (1 = +x)
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.8) / s, d = o.dir || 1;
+    g.save(); g.translate(x, y); g.scale(s * d, s);
+    [[-0.5, 46, 84], [-0.18, 52, 100], [0.14, 50, 96], [0.45, 44, 80]].forEach(([a, r0, r1]) => polyline(g, [[Math.cos(a) * r0, Math.sin(a) * r0], [Math.cos(a) * r1, Math.sin(a) * r1]], lw * 0.8));
+    [[70, -22, 6], [92, 10, 7.5], [64, 28, 5.5], [108, -12, 5], [84, 42, 5], [116, 24, 4.5]].forEach(([dx, dy, r]) => drop(g, dx, dy, r, C.sweat, lw * 0.5, -1.2 - dy * 0.01));
+    const puffs = [[24, -4, 13], [40, -16, 12], [44, 8, 11], [58, -4, 9]]; g.strokeStyle = INK; g.lineWidth = lw * 1.6; puffs.forEach(q => g.stroke(circ(q[0], q[1], q[2]))); g.fillStyle = '#FFFFFF'; puffs.forEach(q => g.fill(circ(q[0], q[1], q[2])));
+    g.restore();
+  };
+  PROPS.book = function (g, x, y, o) {   // a book: o.open (covers seen from the front, held open) or closed; o.c cover colour
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s, col = tc(o, o.c || C.bookBlue);
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    if (o.open !== false) { [-1, 1].forEach(sd => fs(g, P([[0, -54], [sd * 78, -60], [sd * 82, 50], [0, 56]]), col, lw)); fs(g, P([[-6, -56], [6, -56], [6, 56], [-6, 56]]), tc(o, mix(o.c || C.bookBlue, '#000000', 0.18)), lw * 0.8); polyline(g, [[-62, -64], [62, -64]], LW.detail * 0.8 / s, '#FFFFFF'); }
+    else { fs(g, rrect(-44, -58, 88, 116, 4), col, lw); fs(g, rrect(-44, -58, 14, 116, 3), tc(o, mix(o.c || C.bookBlue, '#000000', 0.18)), lw * 0.8); fs(g, rrect(-18, -36, 48, 16, 2), tc(o, '#FFFFFF'), LW.detail * 0.6 / s); }
+    g.restore();
+  };
+  PROPS.books = function (g, x, y, o) {   // a stack of three books seen from the side; x, y = the stack's centre
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    [[C.bookGreen, -34, 0.04, 92], [C.bookRed, -6, -0.03, 100], [C.bookYellow, 22, 0.02, 88]].forEach(([col, yy, a, w]) => { g.save(); g.translate(0, yy); g.rotate(a); fs(g, rrect(-w / 2, -13, w, 26, 4), tc(o, col), lw); fs(g, P([[-w / 2 + 8, -8], [w / 2 - 4, -8], [w / 2 - 4, 8], [-w / 2 + 8, 8]]), tc(o, '#FFFDF6'), LW.detail * 0.6 / s); g.restore(); });
+    g.restore();
+  };
+  PROPS.holdall = function (g, x, y, o) {   // a big travel bag (the hospital bag); x, y = its centre
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s, col = tc(o, o.c || C.holdall), sh = tc(o, o.sh || C.holdallSh);
+    g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
+    const b = rrect(-110, -62, 220, 124, 54); fs(g, b, col, 0); g.save(); g.clip(b); g.fillStyle = sh; g.fillRect(-120, 26, 240, 50); g.restore(); strokeP(g, b, lw);
+    polyline(g, quadPts([-80, -50], [0, -64], [80, -50], 8), LW.detail / s); fs(g, rrect(54, -60, 10, 18, 3), tc(o, '#C9CED3'), LW.detail * 0.6 / s);
+    [-1, 1].forEach(sd => fs(g, rrect(sd * 98 - 10, -24, 20, 48, 6), sh, lw * 0.8));
+    g.restore();
+  };
+  PROPS.coins = function (g, x, y, o) {   // a few coins on an open palm's height; x, y = the centre
+    o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.7) / s;
+    g.save(); g.translate(x, y); g.scale(s, s);
+    [[-16, 4], [10, 6], [-2, -6], [20, -6]].forEach(([dx, dy]) => { fs(g, ell(dx, dy, 13, 6), tc(o, '#C9CED3'), lw); fs(g, ell(dx, dy - 3, 13, 6), tc(o, '#E3E6E9'), lw); });
+    g.restore();
+  };
+
+  // ---- hand shapes added: 'pray' (both palms pressed together, drawn at the wrist of the arm that carries it)
+  function drawPrayHands(F, Wr, s) {
+    const g = F.g, lw = F.lw * 0.9 * (F.hlk || 1), k = (s || 1) * HAND_K * 1.1;
+    g.save(); g.translate(Wr[0], Wr[1] + 4 * k); g.scale(k, k);
+    const p = new Path2D(); p.moveTo(-17, 6); p.quadraticCurveTo(-20, -30, -4, -64); p.quadraticCurveTo(0, -70, 4, -64); p.quadraticCurveTo(20, -30, 17, 6); p.quadraticCurveTo(0, 14, -17, 6); p.closePath();
+    fs(g, p, F.skinC, lw * 1.0 / k * 1.1);
+    g.lineWidth = F.ld * 0.8 / k; g.strokeStyle = INK; g.stroke(P([[0, -62], [0, 4]], false));
+    [-1, 1].forEach(sd => g.stroke(P([[sd * 6, -8], [sd * 13, -22]], false)));
+    g.restore();
+  }
+
+  // ---- poses and holdings added (adult body space; children get them through ageRemap)
+  const HOLD2 = {
+    // the baby in the arms: head toward the facing side, in the crook of the near arm; o.baby = who (default the hero), babyExpr/Blink/Look/Mouth
+    baby: (p, o) => ({ head: Object.assign({}, p.head, { nod: 0.35, tilt: 0.05 }),
+      armR: { ik: [-46, -112], bend: -1, ul: 1, fl: 1, hand: 'flat', flip: -1, hrot: 0.2 },
+      armL: { ik: [52, -128], bend: 1, ul: 1, fl: 1, hand: 'flat', flip: 1, hrot: -0.2 },
+      prop: { k: 'baby', at: [10, -168], a: PI / 2 - 0.26, headRot: -(PI / 2 - 0.26) * 0.85, s: 1.2, over: true, who: o.baby || 'hero', expr: o.babyExpr, blink: o.babyBlink, look: o.babyLook, mouth: o.babyMouth, fists: o.babyFists } }),
+    baby_hero: (p, o) => HOLD2.baby(p, Object.assign({}, o, { baby: 'hero' })),
+    baby_sister: (p, o) => HOLD2.baby(p, Object.assign({}, o, { baby: 'fb_sister' })),
+    baby_brother: (p, o) => HOLD2.baby(p, Object.assign({}, o, { baby: 'fb_brother' })),
+    // the school bag worn on the back; standing, the thumbs hook the straps
+    schoolbag: p => Object.assign({ bag: 'school' }, p.stance === 'side' || p.sit ? {} : { armL: { ik: [-64, -186], bend: 1, fl: 0.75, hand: 'fist', flip: 1, hrot: 0.6 }, armR: { ik: [64, -186], bend: -1, fl: 0.75, hand: 'fist', flip: -1, hrot: -0.6 } }),
+    holdall: p => ({ bag: 'holdall', armR: { ik: [52, -196], bend: -1, fl: 0.62, hand: 'fist', flip: -1, hrot: 0.5 } }),
+    // the wooden spoon raised in front like a sceptre (pose 'gavel' brings it down)
+    spoon: p => ({ armR: { ik: [104, -230], bend: 1, ul: 0.92, fl: 0.9, hand: 'fist', flip: 1, hrot: 0 }, prop: { k: 'spoon', hand: 'R', along: 18, align: true, a: 0, s: 1 } }),
+    calculator: p => ({ head: Object.assign({}, p.head, { nod: 0.5 }),
+      armR: { ik: [42, -136], bend: -1, fl: 0.62, hand: 'hold', flip: -1, hrot: 0.35 }, prop: { k: 'calculator', hand: 'R', along: 48, a: -0.12, s: 0.95, text: '0.00' },
+      armL: { ik: [-84, -92], bend: 1, fl: 0.82, hand: 'hold', flip: 1, hrot: -0.2 }, prop2: { k: 'receipt', hand: 'L', along: 16, off: [0, 2], len: 176, s: 1, a: 0.06 } }),
+    bucket: p => ({ lean: (p.lean || 0) - 0.04, armR: { a: 0.22, e: -0.03, hand: 'fist', flip: -1, hrot: 0 }, prop: { k: 'bucket', hand: 'R', along: 20, s: 1 } }),
+    // balanced on the head, hands on the hips (this rig's arms are too short to reach above the head)
+    bucket_head: p => ({ head: Object.assign({}, p.head, { nod: -0.05 }), armL: { ik: [-80, -30], bend: 1, fl: 0.82, hand: 'fist', flip: 1, hrot: -0.9 }, armR: { ik: [80, -30], bend: -1, fl: 0.82, hand: 'fist', flip: -1, hrot: 0.9 },
+      prop: { k: 'bucket', at: [0, -470], anchor: 'base', s: 1.05 } }),
+    report: p => ({ head: Object.assign({}, p.head, { nod: 0.25 }), armL: { ik: [-70, -150], bend: 1, fl: 0.62, hand: 'hold', flip: -1, hrot: -1.1 }, armR: { ik: [70, -150], bend: -1, fl: 0.62, hand: 'hold', flip: 1, hrot: 1.1 },
+      prop: { k: 'reportCard', at: [0, -178], s: 1.28 } }),
+    report_out: p => ({ armR: { ik: [176, -176], bend: 1, ul: 0.95, hand: 'hold', flip: 1, hrot: -0.35 }, prop: { k: 'reportCard', hand: 'R', along: 34, off: [18, -34], a: 0.1, s: 0.85 } }),
+    paintbrush: p => ({ armR: { ik: [176, -262], bend: 1, ul: 1, hand: 'fist', flip: 1, hrot: 0 }, prop: { k: 'paintbrush', hand: 'R', along: 16, align: true, a: 0.35, s: 1.15 },
+      armL: { ik: [-64, -112], bend: 1, fl: 0.64, hand: 'hold', flip: -1, hrot: -1.1 }, prop2: { k: 'palette', at: [-34, -126], a: 0.2, s: 0.9, under: 'L' } }),
+    cup: p => ({ armR: { ik: [44, -138], bend: -1, fl: 0.62, hand: 'hold', flip: -1, hrot: 0.35 }, prop: { k: 'glass', hand: 'R', along: 30, off: [2, -10], s: 0.95 } }),
+    cup_out: p => ({ armR: { ik: [178, -176], bend: 1, ul: 0.95, hand: 'hold', flip: 1, hrot: -0.4 }, prop: { k: 'glass', hand: 'R', along: 28, off: [6, -12], s: 0.95 } }),
+    book: p => ({ head: Object.assign({}, p.head, { nod: 0.55 }), armL: { ik: [-64, -150], bend: 1, fl: 0.6, hand: 'hold', flip: -1, hrot: -1.2 }, armR: { ik: [64, -150], bend: -1, fl: 0.6, hand: 'hold', flip: 1, hrot: 1.2 },
+      prop: { k: 'book', at: [0, -168], s: 1, c: C.bookBlue } }),
+    books: p => ({ armL: { ik: [-46, -128], bend: 1, fl: 0.7, hand: 'flat', flip: -1, hrot: -0.4 }, armR: { ik: [50, -150], bend: -1, fl: 0.7, hand: 'flat', flip: 1, hrot: 0.4 }, prop: { k: 'books', at: [0, -150], a: -0.06, s: 1.1, under: 'LR' } }),
+    coins: p => ({ armR: { ik: [150, -140], bend: 1, fl: 0.9, hand: 'flat', flip: 1, hrot: -1.45 }, prop: { k: 'coins', hand: 'R', along: 22, off: [0, -18], s: 0.9, over: true } }),
+    akimbo: p => ({ armL: { ik: [-80, -30], bend: 1, fl: 0.82, hand: 'fist', flip: 1, hrot: -0.9 }, armR: { ik: [80, -30], bend: -1, fl: 0.82, hand: 'fist', flip: -1, hrot: 0.9 } }),
+    pray: p => ({ armL: { ik: [-3, -172], bend: 1, fl: 0.95, hand: 'pray' }, armR: { ik: [3, -172], bend: -1, fl: 0.95, hand: 'none' } }),
+    wipe_eye: p => ({ armR: { ik: [52, -320], bend: 1, ul: 0.95, hand: 'fist', flip: 1, hrot: 0.25 }, head: Object.assign({}, p.head, { tilt: 0.05 }) }),
+  };
+  Object.assign(HOLD, HOLD2);
+  Object.assign(POSES, {
+    cradle: o => Object.assign(POSES.stand(o), HOLD2.baby({ stance: 'front' }, o)),
+    // Mum's gavel: phase 0 the spoon raised, 1 struck down
+    gavel: o => {
+      const k = clamp(o.phase == null ? 0 : o.phase, 0, 1), e = k * k * (3 - 2 * k);
+      return Object.assign({ stance: 'front', expr: 'stern', head: { tilt: 0.03 * e, nod: 0.1 + 0.25 * e }, armL: STAND_ARML,
+        armR: { a: lerp(2.75, 0.55, e), e: lerp(0.35, -2.12, e), hand: 'fist', flip: 1, hrot: 0 }, prop: { k: 'spoon', hand: 'R', along: 14, align: true, a: -lerp(0, PI / 2, e), s: 1.05 } }, STAND_LEGS);
+    },
+    praise: o => Object.assign({ stance: 'front', expr: 'serene', head: { nod: -0.32 }, armL: { a: -2.6, e: -0.12, hand: 'open', flip: -1, hrot: 0.1 }, armR: { a: 2.6, e: 0.12, hand: 'open', flip: 1, hrot: -0.1 } }, STAND_LEGS),
+    pray: o => Object.assign({ stance: 'front', expr: 'serene', head: { nod: 0.15 } }, STAND_LEGS, HOLD2.pray({})),
+    akimbo: o => Object.assign({ stance: 'front', expr: 'stern' }, STAND_LEGS, HOLD2.akimbo({})),   // hands on hips
+    wipe_eye: o => Object.assign({ stance: 'front', expr: 'happy_cry', armL: STAND_ARML }, STAND_LEGS, HOLD2.wipe_eye({ head: {} })),
+    // a sneeze: phase 0..0.5 'ah' (head back, eyes half shut), 0.5..1 'choo' (head forward, eyes squeezed, the spray)
+    sneeze: o => {
+      const k = clamp(o.phase == null ? 1 : o.phase, 0, 1), choo = k >= 0.5;
+      return Object.assign({ stance: 'front', expr: choo ? 'sneeze' : 'sneeze_pre', shoulders: choo ? 4 : 12, lean: choo ? 0.06 : -0.03,
+        head: choo ? { tilt: 0.12, nod: 0.2, turn: 0.4 } : { tilt: -0.08, nod: -0.4 },
+        armL: choo ? { ik: [-46, -146], bend: 1, fl: 0.7, hand: 'fist', flip: 1, hrot: 0.3 } : { a: -0.16, e: 0.5, hand: 'relax', hs: 1.1 },
+        armR: choo ? { ik: [60, -140], bend: -1, fl: 0.7, hand: 'fist', flip: -1, hrot: -0.3 } : { a: 0.16, e: -0.5, hand: 'relax', hs: 1.1 },
+        prop: choo ? { k: 'sneezeBurst', at: [96, -314], s: 1 } : null }, STAND_LEGS);
+    },
+    clap: o => {
+      const k = 0.5 - 0.5 * cosA(TAU * (o.phase || 0)), gap = 4 + 54 * (1 - k);
+      return Object.assign({ stance: 'front', expr: 'happy', armL: { ik: [-gap, -170], bend: 1, fl: 0.9, hand: 'stop' }, armR: { ik: [gap, -170], bend: -1, fl: 0.9, hand: 'stop' } }, STAND_LEGS);
+    },
+    // swoon: phase 0 upright and startled .. 1 fainting back, the back of the hand to the forehead (POV.swoonPair adds the catch)
+    swoon: o => {
+      const k = clamp(o.phase == null ? 1 : o.phase, 0, 1), e = k * k * (3 - 2 * k);
+      return { stance: 'front', ground: true, expr: e > 0.35 ? 'faint' : 'surprised', lean: -0.1 * e, shoulders: 6 * e, head: { tilt: -0.28 * e, nod: -0.15 * e },
+        armR: { ik: lerp2([96, 26], [44, -404], e), bend: 1, ul: 1, hand: 'flat', flip: 1, hrot: lerp(0, -0.6, e) },
+        armL: { a: lerp(-0.1, -0.62, e), e: lerp(0.03, 0.35, e), hand: 'relax', flip: 1 },
+        legL: { a: lerp(-0.02, 0.08, e), k: lerp(0, 0.2, e) }, legR: { a: lerp(0.02, 0.2, e), k: lerp(0, 0.32, e) } };
+    },
+    catch: o => Object.assign({ stance: 'front', expr: 'scared', lean: 0.1, armL: { ik: [130, -220], bend: 1, hand: 'flat', flip: -1 }, armR: { ik: [160, -250], bend: -1, hand: 'flat', flip: -1 } }, { legL: { a: -0.12, k: 0.08 }, legR: { a: 0.08, k: 0.1 } }),
+    // carrying the whole house on his back, bent over; phase given = trudging (a slow walk)
+    house: o => housePose(o, 1),
+    house_small: o => housePose(o, 0.55),
+  });
+  function housePose(o, hs) {
+    const walking = o.phase != null, big = hs >= 1, lean = big ? 0.78 : 0.42;
+    const base = walking ? POSES.walk(Object.assign({}, o, { stride: 0.24 })) : { legL: { a: big ? 0.42 : 0.2, k: big ? 0.72 : 0.36, foot: 0.1 }, legR: { a: big ? 0.2 : 0.06, k: big ? 0.55 : 0.26, foot: 0.06, z: 'back' } };
+    return Object.assign({}, base, { stance: 'side', ground: true, lean, head: { tilt: -lean * 0.72, turn: 0.35 }, expr: 'tired', face: { mouth: { k: 'grit', w: 0.17, h: 0.09 }, sweat: big ? 1 : 0, circles: 0 },
+      armL: big ? { ik: [86, 58], bend: 1, fl: 0.95, hand: 'flat', flip: -1, hrot: 0.9 } : { ik: [70, -150], bend: -1, fl: 0.7, hand: 'fist', flip: -1, hrot: 0.3 },
+      armR: big ? { ik: [54, 64], bend: 1, fl: 0.95, hand: 'flat', flip: -1, hrot: 0.9, z: 'back' } : { ik: [46, -150], bend: -1, fl: 0.7, hand: 'fist', flip: -1, z: 'back' },
+      back: [{ k: 'house', torsoAt: [-84, -160], off: big ? [-34, -40] : [-24, -34], a: big ? 0.3 : 0.16, s: 1.08 * hs }] });
+  }
+
+  // ---- Mum swoons into Dad's arms: one call draws the pair. t: 0 (upright, startled) .. 1 (fainted back, caught).
+  // o: x, y (Mum's feet), scale, facing (the way Mum faces; Dad stands behind her), mum, dad (ids), tint, shadow, blink, dadExpr.
+  function swoonPair(g, o) {
+    o = o || {};
+    const k = clamp(o.t == null ? 1 : o.t, 0, 1), e = k * k * (3 - 2 * k), f = o.facing === -1 ? -1 : 1, s = o.scale || 1;
+    const x = o.x == null ? 960 : o.x, y = o.y == null ? 960 : o.y, mumId = o.mum || 'fb_mum', dadId = o.dad || 'fb_dad';
+    const mumH = (CAST[mumId] && CAST[mumId].h) || 1, dadH = (CAST[dadId] && CAST[dadId].h) || 1;
+    const th = -f * 0.46 * e, dadX = x - f * 232 * s, ms = s * mumH, ds = s * dadH;
+    const mumPt = p => { const q = rot([f * p[0] * ms, (p[1] - 330) * ms], th); return [x + q[0], y + q[1]]; };   // Mum's body space -> world
+    const toDad = w => [(w[0] - dadX) * f / ds, (w[1] - y) / ds + 330];
+    const rest = { R: [92, 27], L: [-92, 27] };
+    const tR = lerp2(rest.R, toDad(mumPt([-74, -176])), e), tL = lerp2(rest.L, toDad(mumPt([-70, -80])), e);
+    const dadOpts = { x: dadX, y, scale: s, facing: f, pose: 'stand', expr: o.dadExpr || (e > 0.2 ? 'scared' : 'surprised'), look: [0.9, -0.1 + 0.3 * e], tint: o.tint, shadow: o.shadow, blink: o.blink,
+      override: { armR: { ik: tR, bend: -1, ul: 1, fl: 1, hand: 'flat', flip: -1, hrot: 0.3 }, armL: { ik: tL, bend: 1, hand: 'flat', flip: -1, hrot: -0.2 }, head: { tilt: 0.06 * e } } };
+    const dadOut = figure(g, dadId, dadOpts);
+    if (o.shadow) { g.fillStyle = o.shadow; g.fill(ell(x - f * 40 * s * e, y, 100 * s, 15 * s)); }
+    g.save(); g.translate(x, y); g.rotate(th);
+    const mumOut = figure(g, mumId, { x: 0, y: 0, scale: s, facing: f, pose: 'swoon', phase: e, tint: o.tint, blink: o.blink, mouth: o.mouth });
+    g.restore();
+    if (e > 0.05) {   // his near hand on her shoulder, over her
+      const dch = buildWho(dadId, {}).ch, toB = w => [(w[0] - dadX) * f / ds, (w[1] - y) / ds + 330], Wb = toB(dadOut.handR), Eb = toB(dadOut.elbowR);
+      const Fh = { g, c: o.tint ? (h2 => mul(h2, o.tint)) : (h2 => h2), lw: LW.figure / dadH }; Fh.skinC = Fh.c(dch.skin); Fh.ld = Fh.lw * LW.detail / LW.figure;
+      g.save(); g.translate(dadX, y); g.scale(f * ds, ds); g.translate(0, -330); g.lineCap = 'round'; g.lineJoin = 'round';
+      drawHand(Fh, Wb, angOf(Eb, Wb) + 0.3, 'flat', -1, 1.1); g.restore();
+    }
+    return { mum: mumOut, dad: dadOut };
+  }
+
   // ================================================================ export
   const POV = global.POV || {};
   Object.assign(POV, { W, H, C, LW, INK, rng, hashStr, lerp, clamp, mix, mul, rgba, P, spl, ell, circ, rrect, fs, polyline, tube, stage,
-    CAST, TOPS, RIG, EXPR, POSES, HOLD, HANDS, PROPS, figure, drawHand, drawShoe, face, resolveExpr });
+    CAST, TOPS, RIG, EXPR, POSES, HOLD, HANDS, PROPS, figure, drawHand, drawShoe, face, resolveExpr,
+    AGES, OUTFITS, buildWho, swoonPair, baby: PROPS.baby, motif });
   Object.assign(POV, PROPS);   // POV.phone, POV.clock, POV.notif, ... for convenience
   global.POV = POV;
 })(typeof window !== 'undefined' ? window : globalThis);

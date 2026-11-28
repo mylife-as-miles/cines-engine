@@ -1,0 +1,8 @@
+{
+ "id": "T3",
+ "role": "party",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for a family celebration scene in a narrated video, about 90 seconds. A light, festive highlife feel: two clean electric guitars interlocking in sweet bright patterns, a round bass, a shaker, a soft bell pattern, a talking drum played lightly, a little kalimba. Around 108 BPM, joyful and celebratory but kept light, soft and in the background, leaving room for a voice speaking over it; no drum kit, no big build. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[E4]]"
+}

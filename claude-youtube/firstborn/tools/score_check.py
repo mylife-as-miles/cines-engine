@@ -2,9 +2,9 @@
 
   /home/user/leonxlnx/earshot/.venv/bin/python tools/score_check.py [T1 T3 ...]     -> audio/score/check.json
 
-Adapted from claude-film/long-distance/tools/score_check.py. Per take (audio/score/T*.mp3): duration; tuning offset from
+Adapted from claude-film/long-distance/tools/score_check.py (and Seven Days of No's, with its tuning fix). Per take (audio/score/T*.mp3): duration; tuning offset from
 A440 in cents (librosa; tools/build_mix.py removes it via the bed's tune_cents); the strongest pitch class and a
-Krumhansl key estimate (the beds must share C major / A minor to crossfade cleanly); tempo; earshot's description and
+Krumhansl key estimate (the beds are moved into one key centre, C major / A minor, to crossfade cleanly); tempo; earshot's description and
 AudioSet tags (singing, speech, a choir or a drum kit would rule a take out); a forced choice against what the take's
 role must be and must not be; the loudness envelope in 5 s steps (where it breathes, where it ends) and, for the
 closing take, where its final chord dies away.
@@ -18,13 +18,13 @@ D = os.path.join(ROOT, 'audio', 'score')
 PLAN = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
 ROLE = {t['id']: t.get('role', 'main') for t in PLAN['takes']}
 WANT = {
-    'main': 'light, cozy, playful background music with plucked ukulele, music box and glockenspiel, for an explainer video',
-    'hush': 'soft, gentle, slightly melancholic fingerpicked guitar and music box, quiet and reflective',
-    'lift': 'bright, happy, uplifting playful music with ukulele, pizzicato and glockenspiel',
-    'end': 'light, cozy, playful music with ukulele and music box that ends on a final chord',
+    'main': 'warm, playful African highlife background music with a bright clean guitar, kalimba, marimba and a shaker',
+    'party': 'light, festive African highlife music with bright interlocking guitars and soft percussion',
+    'sincere': 'gentle, warm, tender fingerpicked acoustic guitar and kalimba, soft and hopeful',
+    'end': 'warm, playful African highlife music with guitar and kalimba that ends on a final chord',
 }
-NOT = ['a pop song with vocals', 'a heavy drum beat', 'a choir singing', 'an epic orchestral piece', 'dark, tense suspense music',
-       'electronic dance music']
+NOT = ['a pop song with vocals', 'a person singing', 'people chanting', 'a heavy drum beat', 'a choir singing',
+       'an epic orchestral piece', 'dark, tense suspense music', 'electronic dance music']
 MAJ = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
 MIN = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17])
 PCS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']

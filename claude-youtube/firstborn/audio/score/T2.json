@@ -1,0 +1,8 @@
+{
+ "id": "T2",
+ "role": "main",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for a light, cheeky narrated video about growing up as the eldest child, about 90 seconds. A marimba playing a light, bouncy repeating figure, a bright clean electric guitar adding little highlife licks between its phrases, kalimba sparkles, a soft round bass, a shaker and soft hand percussion (a talking drum played lightly, a small hand drum); no drum kit. Around 104 BPM, playful and warm, gently comic. Steady and uncluttered, leaving room for a voice speaking over it: no lead melody that competes, no big build. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[C4]]\n[[E5]]"
+}

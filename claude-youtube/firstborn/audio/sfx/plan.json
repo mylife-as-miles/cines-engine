@@ -8,25 +8,25 @@
  "notify": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "two soft glass notes rising a fifth, C6 then G6, 60 ms apart",
+  "how": "two soft glass notes rising a fifth, E-flat6 then B-flat6, 60 ms apart",
   "dur_s": 0.5
  },
  "pop": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a sine gliding 330->880 Hz in 35 ms, decaying in 90 ms",
+  "how": "a sine gliding 392->1047 Hz in 35 ms, decaying in 90 ms",
   "dur_s": 0.09
  },
  "pop_2": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a sine gliding 392->1047 Hz in 35 ms, decaying in 90 ms",
+  "how": "a sine gliding 466->1245 Hz in 35 ms, decaying in 90 ms",
   "dur_s": 0.09
  },
  "pop_3": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a sine gliding 294->784 Hz in 35 ms, decaying in 90 ms",
+  "how": "a sine gliding 350->932 Hz in 35 ms, decaying in 90 ms",
   "dur_s": 0.09
  },
  "stamp": {
@@ -38,25 +38,25 @@
  "send": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a sine gliding up to C6 in 60 ms, with its octave, 0.16 s",
+  "how": "a sine gliding up to E-flat6 in 60 ms, with its octave, 0.16 s",
   "dur_s": 0.16
  },
  "receive": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "two soft glass notes falling a third, E6 then C6, 90 ms apart",
+  "how": "two soft glass notes falling a third, G6 then E-flat6, 90 ms apart",
   "dur_s": 0.75
  },
  "ding": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a glockenspiel-like note on C7 (partials 1, 2.76, 5.40, 8.93), 1.0 s",
+  "how": "a glockenspiel-like note on E-flat7 (partials 1, 2.76, 5.40, 8.93), 1.0 s",
   "dur_s": 1.0
  },
  "bulb": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "five high bell notes rising C6-E6-G6-C7-E7, 45 ms apart, over a faint 6-14 kHz shimmer",
+  "how": "five high bell notes rising E-flat6-G6-B-flat6-E-flat7-G7, 45 ms apart, over a faint 6-14 kHz shimmer",
   "dur_s": 1.4
  },
  "cloud": {
@@ -194,7 +194,7 @@
  "grow": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "three round plucks rising C5-E5-G5, 80 ms apart, each with a little upward glide",
+  "how": "three round plucks rising E-flat5-G5-B-flat5, 80 ms apart, each with a little upward glide",
   "dur_s": 0.6
  },
  "click": {
@@ -206,7 +206,7 @@
  "dim": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a round blip falling A5 -> D5 in 80 ms",
+  "how": "a round blip falling C6 -> F5 in 80 ms",
   "dur_s": 0.16
  },
  "card_land_1": {
@@ -238,5 +238,101 @@
   "licence": "made for this video (no licence needed)",
   "how": "a 0.22 s whoosh outward (700 Hz-3.4 kHz), a low thud at 0.15 s and a 240 Hz cartoon boing (9 Hz spring wobble) over it, 0.58 s",
   "dur_s": 0.58
+ },
+ "baby_cry": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot baby/cry (seed 11, take 3), 0.25-1.25 s, low-passed at 6 kHz, 0.2 s fade",
+  "dur_s": 1.0
+ },
+ "baby_cry_2": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot baby/cry (seed 11, take 2), 0.9-1.9 s, low-passed at 6 kHz, 0.2 s fade",
+  "dur_s": 1.0
+ },
+ "sneeze": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot sneeze/person (seed 11, take 1), raised 4 semitones by varispeed (smaller, a child), 0.95 s",
+  "dur_s": 0.947
+ },
+ "phone_ring": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two 0.55 s electronic trills (B-flat5/D6 alternating 16 times a second, odd harmonics), 0.3 s apart",
+  "dur_s": 1.45
+ },
+ "ka_ching": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot cash_register/open (seed 11, take 3), the first 1.3 s (strike and bell), 0.3 s fade",
+  "dur_s": 1.3
+ },
+ "credit_alert": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "four rising notes E-flat5 G5 B-flat5 E-flat6, 70 ms apart, on earshot's real marimba (VCSL, CC0)",
+  "dur_s": 2.238
+ },
+ "gavel": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "two of earshot knock/hollow (seed 11, takes 1, 2), 0.17 s apart, the second -2 dB",
+  "dur_s": 0.55
+ },
+ "gavel_1": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot knock/hollow (seed 11, take 1): one tap",
+  "dur_s": 0.301
+ },
+ "coins": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot coins/floor (seed 11, take 2)",
+  "dur_s": 0.828
+ },
+ "party_murmur": {
+  "source": "otm/beds/walla: \"restaurant ambience.wav\" by sarahmariealice, https://freesound.org/people/sarahmariealice/sounds/265870/",
+  "licence": "CC0",
+  "how": "One Too Many's beds/walla (40 s), low-passed at 1.5 kHz (4th order)",
+  "dur_s": 40.0
+ },
+ "swoon": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "a harp glissando B-flat6 down to E-flat5 (11 notes, 35 ms apart) on earshot's real harp (VCSL, CC0), a soft swish falling 2.6 kHz -> 450 Hz under it at -7 dB",
+  "dur_s": 1.6
+ },
+ "sting_1": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "a deadpan sting: pizzicato G4, E-flat4, B-flat3 falling, 0.2 s apart (earshot's real pizzicato, VSCO-2 CE / VCSL, CC0)",
+  "dur_s": 2.379
+ },
+ "sting_2": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "a cheeky sting: pizzicato E-flat4 G4 B-flat4 rising, landing on E-flat in octaves (earshot's real pizzicato)",
+  "dur_s": 2.417
+ },
+ "meter_1": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "one low pizzicato note, E-flat3 (earshot's real pizzicato), the first step of the meter",
+  "dur_s": 1.998
+ },
+ "meter_2": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "one low pizzicato note, G3 (earshot's real pizzicato), the second step of the meter",
+  "dur_s": 1.541
+ },
+ "meter_3": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "one low pizzicato note, B-flat3 (earshot's real pizzicato), the third step of the meter",
+  "dur_s": 1.997
  }
 }

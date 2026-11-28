@@ -1,0 +1,8 @@
+{
+ "id": "T4",
+ "role": "sincere",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for the sincere, tender part of a narrated video about family, about 90 seconds. A gentle fingerpicked acoustic guitar with a warm West African lilt, a soft kalimba playing a simple tender melody, a few soft marimba notes, warm low bass notes, and only a very soft shaker. Slow, around 78 BPM. Warm, honest, hopeful and loving, not sad, not dramatic. Soft and steady, leaving room for a voice speaking over it. Purely instrumental: no vocals, no singing, no humming, no choir, no drum kit. In C major, in tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]\n[[D4]]"
+}

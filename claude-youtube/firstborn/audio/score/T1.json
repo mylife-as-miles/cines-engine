@@ -1,0 +1,8 @@
+{
+ "id": "T1",
+ "role": "main",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental background music for a warm, funny narrated video about family life, about 90 seconds. Light West African highlife and Afro-pop colour: a bright clean electric guitar playing a sweet, bouncy picked highlife pattern, a kalimba answering in short phrases, soft marimba, a round warm bass, a gentle shaker and a soft talking drum tapping lightly; no drum kit. Mid-tempo, around 100 BPM, relaxed and playful, sunny and affectionate. Steady and uncluttered, leaving room for a voice speaking over it: no lead melody that competes, no big build, no drops. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[B3]]\n[[C4]]\n[[D5]]"
+}

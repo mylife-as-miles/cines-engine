@@ -1,11 +1,11 @@
-/* SEVEN DAYS OF NO — film engine (ported from Long Distance's, itself from Autopilot's and One Too Many's).
+/* FIRSTBORN IN AN AFRICAN HOME — film engine (the "Seven Days of No" engine, ported from Long Distance's, itself from Autopilot's and One Too Many's).
    A deterministic, time-driven video: FILM.renderAt(t) draws any instant on the narration clock, so the player can scrub and
    the exporter can step frames at 24 fps. The narration is the clock: every shot and sound cue is anchored to a spoken word
    (FILM.W / FILM.Wend over audio/vo/words.json, served to the page as film/words.js). Flat cartoon: no paper finish, no grain.
    Sequences register with FILM.seq({...}); see film/FILM.md for the contract. Never use Math.random or Date in a sequence. */
 (function (global) {
   'use strict';
-  const W = 1920, H = 1080, FPS = 24, TOTAL = 225.5;
+  const W = 1920, H = 1080, FPS = 24, TOTAL = 409.5;   // the 401.5 s narration and the 8 s end screen
   const FILM = global.FILM = { WIDTH: W, HEIGHT: H, FPS, TOTAL, total: TOTAL, seqs: [], lib: {}, shots: [], _cache: new Map(), _warned: {}, warnings: [] };
 
   // ---------------------------------------------------------------- maths

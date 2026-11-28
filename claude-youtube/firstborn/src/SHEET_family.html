@@ -1,0 +1,144 @@
+<!doctype html><meta charset="utf-8"><title>Family sheet · Firstborn</title>
+<script src="../kit/pov.js"></script>
+<script>
+/* FIRSTBORN · FAMILY SHEET (reference, not part of the video; labels allowed). 1920 x 4920.
+   Band 1: the family line-up (ref 12's layout), the hero at the end for scale.
+   Band 2: the hero at every age; the sister and brother at theirs; Mrs. Okafor's son.
+   Band 3-4: the new poses and holdings.  Band 5: the new expressions.  Band 6: the new props.
+   Rendered with: node tools/shoot.js src/SHEET_family.html frames/SHEET_family.png 1920 4920 600 */
+window.addEventListener('load', () => {
+  const W = 1920, H = 4920;
+  document.documentElement.style.cssText = 'margin:0;background:#222'; document.body.style.cssText = 'margin:0;background:#222';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.style.cssText = 'display:block;width:100vw'; document.body.appendChild(cv);
+  const g = cv.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
+  const label = (txt, x, y, size, sub) => { g.fillStyle = '#1c1c1c'; g.font = `800 ${size || 30}px "Inter", "Helvetica Neue", Arial, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillText(txt, x, y);
+    if (sub) { g.fillStyle = '#6B6B6B'; g.font = `600 ${Math.round((size || 30) * 0.62)}px "Inter", "Helvetica Neue", Arial, sans-serif`; g.fillText(sub, x, y + (size || 30) * 0.85); } };
+  const band = (y0, h, col, title) => { g.fillStyle = col; g.fillRect(0, y0, W, h); if (title) { g.fillStyle = 'rgba(28,28,28,0.55)'; g.font = '800 22px "Inter", Arial, sans-serif'; g.textAlign = 'left'; g.fillText(title, 28, y0 + 40); } };
+  const SH = '#E6E1D8';
+
+  // ---- band 1: the family
+  band(0, 820, '#FFFFFF', 'THE FAMILY');
+  const fam = [['fb_mum', 'MUM', 'fb_mum', {}], ['fb_dad', 'DAD', 'fb_dad', {}], ['fb_auntie', 'AUNTIE', 'fb_auntie', {}], ['fb_uncle1', 'UNCLE 1', 'fb_uncle1', {}],
+    ['fb_uncle2', 'UNCLE 2', 'fb_uncle2', {}], ['fb_cousin1', 'COUSIN 1', 'fb_cousin1', {}], ['fb_cousin2', 'COUSIN 2', 'fb_cousin2', {}], ['hero', 'HERO', 'hero', {}]];
+  fam.forEach(([who, name, id, o], i) => {
+    const cx = 130 + i * 237;
+    POV.figure(g, who, Object.assign({ x: cx, y: 730, scale: 0.6, shadow: SH }, o));
+    label(name, cx, 778, 28, id);
+  });
+
+  // ---- band 2: ages
+  band(820, 1220, '#F4EFE6', 'AGES  (who: "hero.newborn" | "hero.kid" | "hero.teen" ... or opts.age)');
+  const row1 = 1360, row2 = 1950;
+  // hero
+  g.fillStyle = '#E3D2BC'; g.strokeStyle = '#1c1c1c'; g.lineWidth = 3; g.beginPath(); g.roundRect(60, row1 - 16, 250, 30, 8); g.fill(); g.stroke();
+  POV.figure(g, 'hero.newborn', { x: 185, y: row1 - 16, scale: 0.9, pose: 'lie', expr: 'neutral', blink: 1 });
+  label('NEWBORN, ASLEEP', 185, row1 + 52, 22, "hero.newborn  pose 'lie'");
+  POV.figure(g, 'hero.newborn', { x: 420, y: row1, scale: 0.9, pose: 'held', expr: 'happy', shadow: SH, fists: true });
+  label('NEWBORN, UPRIGHT', 420, row1 + 52, 22, "pose 'held', fists: true");
+  POV.figure(g, 'hero.kid', { x: 640, y: row1, scale: 0.6, shadow: SH });
+  label('KID (SIX)', 640, row1 + 52, 22, 'hero.kid');
+  POV.figure(g, 'hero.kid.bag', { x: 860, y: row1, scale: 0.6, holding: 'schoolbag', shadow: SH, expr: 'worried' });
+  label('KID + SCHOOL BAG', 860, row1 + 52, 22, "hero.kid.bag  holding 'schoolbag'");
+  POV.figure(g, 'hero.kid.bag', { x: 1080, y: row1, scale: 0.6, pose: 'walk', phase: 0.2, shadow: SH, expr: 'tired' });
+  label('KID WALKING', 1080, row1 + 52, 22, 'hero.kid.bag  walk');
+  POV.figure(g, 'hero.teen', { x: 1310, y: row1, scale: 0.6, shadow: SH });
+  label('TEEN', 1310, row1 + 52, 22, 'hero.teen');
+  POV.figure(g, 'hero', { x: 1540, y: row1, scale: 0.6, shadow: SH });
+  label('ADULT', 1540, row1 + 52, 22, 'hero');
+  POV.figure(g, 'hero.kid', { x: 1760, y: row1, scale: 0.6, pose: 'run', phase: 0.3, shadow: SH, expr: 'happy' });
+  label('KID RUNNING', 1760, row1 + 52, 22, 'hero.kid  run');
+  // siblings
+  POV.figure(g, 'fb_sister.baby', { x: 150, y: row2, scale: 0.9, pose: 'held', expr: 'happy', shadow: SH });
+  label('SISTER, BABY', 150, row2 + 52, 22, 'fb_sister.baby');
+  POV.figure(g, 'fb_sister', { x: 360, y: row2, scale: 0.6, shadow: SH, expr: 'happy' });
+  label('SISTER, KID', 360, row2 + 52, 22, 'fb_sister (.kid)');
+  POV.figure(g, 'fb_sister.grown', { x: 580, y: row2, scale: 0.6, shadow: SH });
+  label('SISTER, GROWN', 580, row2 + 52, 22, 'fb_sister.grown');
+  POV.figure(g, 'fb_sister.grown.gown', { x: 810, y: row2, scale: 0.6, shadow: SH, expr: 'happy' });
+  label('SISTER, GRADUATE', 800, row2 + 52, 22, 'fb_sister.grown.gown');
+  POV.figure(g, 'fb_brother.toddler', { x: 1040, y: row2, scale: 0.6, shadow: SH, expr: 'happy' });
+  label('TODDLER', 1040, row2 + 52, 22, 'fb_brother.toddler');
+  POV.figure(g, 'fb_brother', { x: 1240, y: row2, scale: 0.6, shadow: SH });
+  label('BROTHER, KID', 1240, row2 + 52, 22, 'fb_brother (.kid)');
+  POV.figure(g, 'fb_okafor_son', { x: 1460, y: row2, scale: 0.6, holding: 'books', shadow: SH });
+  label("MRS. OKAFOR'S SON", 1460, row2 + 52, 22, "fb_okafor_son  holding 'books'");
+  POV.figure(g, 'fb_okafor_son', { x: 1720, y: row2, scale: 0.6, holding: 'book', shadow: SH, expr: 'neutral', look: [0, 0.8] });
+  label('READING', 1720, row2 + 52, 22, "holding 'book'");
+
+  // ---- band 3/4: poses
+  band(2040, 1300, '#FFFFFF', 'POSES AND HOLDINGS');
+  const P1 = 2570, P2 = 3150, s = 0.56;
+  const cell = (i, row) => [130 + i * 237, row];
+  const items1 = [
+    ['fb_mum', { holding: 'baby', babyExpr: 'happy' }, 'HOLDING A BABY', "holding 'baby'"],
+    ['hero.kid', { holding: 'baby_sister', expr: 'worried', babyExpr: 'sad' }, 'CARRY YOUR SISTER', "hero.kid  'baby_sister'"],
+    ['fb_mum', { pose: 'gavel', phase: 0 }, 'WOODEN SPOON', "pose 'gavel' phase 0"],
+    ['fb_mum', { pose: 'gavel', phase: 1 }, 'THE GAVEL LANDS', "pose 'gavel' phase 1"],
+    ['fb_dad', { holding: 'calculator', expr: 'firm' }, 'THE AUDIT', "holding 'calculator'"],
+    ['hero.kid', { holding: 'bucket', expr: 'firm' }, 'BUCKET', "holding 'bucket'"],
+    ['hero.kid', { holding: 'bucket_head', expr: 'happy' }, 'BUCKET ON HEAD', "holding 'bucket_head'"],
+    ['hero.teen', { holding: 'report', expr: 'happy' }, 'REPORT CARD', "holding 'report'"],
+  ];
+  const items2 = [
+    ['hero.teen', { holding: 'paintbrush', expr: 'happy' }, 'PAINTBRUSH', "holding 'paintbrush'"],
+    ['fb_mum', { holding: 'cup_out', expr: 'neutral', look: [0.6, 0.8] }, 'CUP OF WATER', "holding 'cup_out'"],
+    ['fb_mum.labcoat', { holding: 'clipboard', expr: 'firm' }, 'LAB COAT', "fb_mum.labcoat"],
+    ['fb_dad.labcoat', { holding: 'clipboard', expr: 'neutral' }, 'LAB COAT', 'fb_dad.labcoat'],
+    ['fb_mum', { holding: 'phone_ear', expr: 'sweet', mouth: 0.4 }, 'PHONE TO EAR', "holding 'phone_ear'"],
+    ['hero', { pose: 'wipe_eye' }, 'HAPPY TEARS', "pose 'wipe_eye'"],
+    ['fb_mum', { pose: 'praise' }, 'GOD WILL PROVIDE', "pose 'praise'"],
+    ['fb_mum', { pose: 'pray' }, 'PRAYER', "pose 'pray'"],
+  ];
+  items1.forEach(([who, o, name, sub], i) => { const [x, y] = cell(i, P1); POV.figure(g, who, Object.assign({ x, y, scale: s, shadow: SH }, o)); label(name, x, y + 46, 22, sub); });
+  items2.forEach(([who, o, name, sub], i) => { const [x, y] = cell(i, P2); POV.figure(g, who, Object.assign({ x, y, scale: s, shadow: SH }, o)); label(name, x, y + 46, 22, sub); });
+
+  band(3340, 660, '#F4EFE6', '');
+  const P3 = 3880;
+  POV.figure(g, 'hero', { x: 150, y: P3, scale: s, pose: 'house', shadow: SH });
+  label('HOUSE ON HIS BACK', 140, P3 + 46, 22, "pose 'house'");
+  POV.figure(g, 'hero', { x: 385, y: P3, scale: s, pose: 'house_small', phase: 0.3, shadow: SH });
+  label('SMALLER NOW', 385, P3 + 46, 22, "'house_small' (+phase)");
+  POV.swoonPair(g, { x: 800, y: P3, scale: s, t: 1, shadow: SH });
+  label('THE SWOON', 740, P3 + 46, 22, 'POV.swoonPair({t: 1})');
+  POV.figure(g, 'fb_mum', { x: 1030, y: P3, scale: s, pose: 'akimbo', shadow: SH });
+  label('HANDS ON HIPS', 1030, P3 + 46, 22, "pose 'akimbo'");
+  POV.figure(g, 'hero', { x: 1225, y: P3, scale: s, pose: 'sneeze', phase: 0.2, shadow: SH });
+  label('AH...', 1225, P3 + 46, 22, "pose 'sneeze' phase 0.2");
+  POV.figure(g, 'hero', { x: 1415, y: P3, scale: s, pose: 'sneeze', phase: 1, shadow: SH });
+  label('...CHOO', 1415, P3 + 46, 22, "phase 1");
+  POV.figure(g, 'hero', { x: 1605, y: P3, scale: s, pose: 'clap', phase: 0.5, shadow: SH });
+  label('CLAP', 1605, P3 + 46, 22, "pose 'clap'");
+  POV.figure(g, 'hero.party', { x: 1800, y: P3, scale: s, shadow: SH, expr: 'confused' });
+  label('PARTY CLOTHES', 1800, P3 + 46, 22, 'hero.party');
+
+  // ---- band 5: expressions added (busts)
+  band(4000, 470, '#D6D6D6', 'EXPRESSIONS ADDED');
+  const ex = [['hero', 'happy_cry', 'HAPPY_CRY'], ['hero', 'sneeze_pre', 'SNEEZE_PRE'], ['hero', 'sneeze', 'SNEEZE'], ['fb_mum', 'faint', 'FAINT'],
+    ['fb_mum', 'serene', 'SERENE'], ['fb_mum', 'stern', 'STERN'], ['fb_mum', 'sweet', 'SWEET'], ['fb_dad', 'proud', 'PROUD']];
+  ex.forEach(([who, e, name], i) => {
+    const cx = 120 + i * 240, top = 4070, sc = 0.92, feetY = top + 860 * sc;
+    g.save(); g.beginPath(); g.rect(cx - 120, top - 10, 240, (860 - 520) * sc + 10); g.clip();
+    POV.figure(g, who, { x: cx, y: feetY, scale: sc, expr: e });
+    g.restore();
+    label(name, cx, top + 370, 26, "expr: '" + e + "'");
+  });
+
+  // ---- band 6: props
+  band(4470, 450, '#FFFFFF', 'NEW PROPS (POV.<name>(g, x, y, {s, a, ...}))');
+  const py = 4680, pl = (t, x) => label(t, x, py + 190, 18);
+  POV.spoon(g, 80, py + 10, { s: 1.1, a: 0.3 }); pl('spoon', 80);
+  POV.calculator(g, 200, py, { s: 1.2, text: '1,250' }); pl('calculator', 200);
+  POV.receipt(g, 310, py - 80, { s: 1, len: 170 }); pl('receipt', 310);
+  POV.bucket(g, 430, py - 70, { s: 1.05 }); pl('bucket', 430);
+  POV.reportCard(g, 570, py, { s: 1.1 }); pl('reportCard', 570);
+  POV.paintbrush(g, 680, py + 10, { s: 1.2, a: 0.4 }); POV.palette(g, 770, py + 30, { s: 0.9 }); pl('paintbrush · palette', 730);
+  POV.glass(g, 880, py + 10, { s: 1.3 }); pl('glass', 880);
+  POV.schoolbag(g, 1000, py, { s: 0.72 }); pl('schoolbag', 1000);
+  POV.house(g, 1170, py + 100, { s: 0.68 }); pl('house', 1170);
+  POV.baby(g, 1350, py + 10, { s: 0.85, a: Math.PI / 2, headRot: -Math.PI / 2 * 0.8, who: 'fb_sister', expr: 'happy' }); pl("baby {who}", 1350);
+  POV.holdall(g, 1530, py + 10, { s: 0.62 }); pl('holdall', 1530);
+  POV.books(g, 1670, py - 20, { s: 0.85 }); POV.book(g, 1670, py + 90, { s: 0.55, open: false, c: POV.C.bookRed }); pl('books · book', 1660);
+  POV.sneezeBurst(g, 1760, py - 10, { s: 1 }); POV.coins(g, 1850, py + 60, { s: 1.2 }); pl('sneeze · coins', 1830);
+  window.FRAME_READY = true;
+});
+</script>

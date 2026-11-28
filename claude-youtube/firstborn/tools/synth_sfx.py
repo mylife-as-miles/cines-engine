@@ -2,24 +2,28 @@
 # requires-python = ">=3.10"
 # dependencies = ["numpy", "scipy", "soundfile"]
 # ///
-"""Seven Days of No's effects: cartoon-clean, soft and friendly. The UI and cartoon sounds are synthesised here (pure
-partials and smooth filtered air, no room, no grit, pitched in C major at A = 440 so they sit with the music); the
-physical ones are assembled from One Too Many's committed CC0 recordings (claude-film/one-too-many/audio/sfx/); the door
-is a Stable Audio 3.0 Small take (tools/sfx_gen.py -> audio/gen/, finished here if present).
+"""Firstborn's effects (Seven Days of No's 40, re-pitched, plus the new ones this story needs): cartoon-clean, soft and
+friendly. The UI and cartoon sounds are synthesised here (pure partials and smooth filtered air, no room, no grit,
+pitched in E-flat major at A = 440, the music's key centre: KEY moves Seven Days of No's C-major sketches up three
+semitones); the physical ones are assembled from One Too Many's committed CC0 recordings
+(claude-film/one-too-many/audio/sfx/); the door, run, typing, shutter, plate and paper pile are Stable Audio 3.0 Small
+takes from the last video (kept as committed FLAC: their raw takes are not in this production). The new ones are
+rendered with earshot (`earshot make`, deterministic by seed: its sounds are learned from public-domain recordings and
+belong to whoever renders them) or played on earshot's real marimba, harp and pizzicato notes (public-domain recordings).
 
-  python3 tools/synth_sfx.py        (any python with numpy, scipy, soundfile; or uv run tools/synth_sfx.py)
+  /home/user/leonxlnx/earshot/.venv/bin/python tools/synth_sfx.py      (needs earshot for the new effects)
       -> audio/sfx/<name>.flac (48 kHz mono, 24-bit, peak -1 dBFS) and audio/sfx/plan.json (source of each)
 
 phone_buzz      the phone vibrating on the coffee table: two motor pulses (175 Hz and its odd harmonics), a clean rattle
-notify          a soft UI ping: two quick glass notes rising a fifth (C6, G6)
+notify          a soft UI ping: two quick glass notes rising a fifth (E-flat6, B-flat6)
 pop, pop_2/3    a bubble or icon appearing: a short round "bloop" (a sine gliding up), three pitches to cycle through
 stamp           a friendly thud: One Too Many's rubber stamp (CC0) over a soft low thump (the NO stamp)
 camera_shutter  a Stable Audio take of a small camera's shutter (click, clack), trimmed
 typing          a Stable Audio take of a thumb typing on a phone, 1.8 s, its hiss gated
-send            the message leaving: a quick round upward glide ending on C6
-receive         the reply arriving: two soft glass notes falling a third (E6, C6)
-ding            a bright glockenspiel note (C7): the right answer lighting up
-bulb            a bright twinkle: a quick rising sparkle of five high bell notes (C6 E6 G6 C7 E7) over soft shimmer
+send            the message leaving: a quick round upward glide ending on E-flat6
+receive         the reply arriving: two soft glass notes falling a third (G6, E-flat6)
+ding            a bright glockenspiel note (E-flat7): the right answer lighting up
+bulb            a bright twinkle: a quick rising sparkle of five high bell notes (E-flat6 G6 B-flat6 E-flat7 G7) over soft shimmer
 cloud           a soft low puff: warm air falling from 1.2 kHz to 300 Hz with a faint low body (the grey cloud arriving)
 whoosh, _2      a soft airy swish for wipes and cards sliding in (0.45 s and a quicker 0.3 s)
 footsteps       four calm steps on a wooden office floor (One Too Many's step1-4, CC0), 0.5 s apart
@@ -34,7 +38,7 @@ bird            four quick trilled chirps (falling sweeps with a fast flutter), 
 battery_low     three electronic beeps, the last one lower (C6, C6, F5): the phone's battery giving up
 swell           soft air rising for 0.8 s into the swelling thought bubble
 rain            1.8 s of a little soft rain: pink-noise patter with soft low drips
-grow            a sprout growing: three quick round plucks rising (C5, E5, G5) with a little upward glide
+grow            a sprout growing: three quick round plucks rising (E-flat5, G5, B-flat5) with a little upward glide
 click           a soft button click: a small clean tick with a low body
 dim             a light going down: a soft round blip falling a fifth (A5 -> D5)
 plate_slide     a Stable Audio take of a plate pushed across a table
@@ -43,6 +47,20 @@ stamp_yes       the YES stamp, brighter and friendlier than the red NO: the shor
 shout_no        the red "NO!" bursting out of the hero: a tight comic hit, 0.55 s: a whoosh outward, a thud at 0.15 s and a
                 cartoon boing ringing over it (build_mix.py starts it where the narrator's "no" ends, in the pause)
 pile_topple     a Stable Audio take of a stack of papers toppling onto a desk
+
+New for Firstborn:
+baby_cry, _2    a newborn's brief soft cry, a one-second window of earshot's baby/cry (two windows to alternate)
+sneeze          a small "ah-choo": earshot's sneeze/person raised four semitones (smaller, a child's)
+phone_ring      a phone ringing: two short electronic trills (B-flat5 / D6 at 16 Hz), "brrrip brrrip"
+ka_ching        an old cash register's ka-ching: earshot's cash_register/open, the strike and the bell, 1.3 s
+credit_alert    the bank app's credit alert: four quick rising marimba notes (E-flat5 G5 B-flat5 E-flat6), real marimba
+gavel, gavel_1  Mum's wooden spoon on the table as a gavel: two hollow wooden knocks ("tok-tok"), or one
+coins           a handful of coins dropped into a hand: earshot's coins/floor
+party_murmur    a party hall's soft murmur, no words: One Too Many's walla (CC0 restaurant ambience) low-passed at 1.5 kHz
+swoon           Mum swooning: a harp glissando falling an octave and a half through E-flat major, with a soft falling swish
+sting_1         a deadpan comic sting: three pizzicato notes falling (G4 E-flat4 B-flat3)
+sting_2         a cheeky comic sting: pizzicato rising E-flat4 G4 B-flat4, landing on E-flat in octaves
+meter_1..3      the meter rising with each name (first name, middle name, surname): low pizzicato E-flat3, G3, B-flat3
 
 Every pick was ranked with earshot against its description and alternatives (audio/sfx/check.json; the variants that
 lost are listed in audio/README.md). The chosen Stable Audio takes (tools/sfx_gen.py, audio/gen_plan.json) are kept
@@ -55,6 +73,8 @@ import soundfile as sf
 from scipy import signal
 
 SR = 48000
+KEY = 2 ** (3 / 12)      # Seven Days of No's sketches were in C major; Firstborn's music is in E-flat major
+EARSHOT = os.environ.get('EARSHOT', '/home/user/leonxlnx/earshot/.venv/bin/earshot')
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 OUT = os.path.join(ROOT, 'audio', 'sfx')
 OTM = os.path.normpath(os.path.join(ROOT, '..', '..', 'claude-film', 'one-too-many', 'audio', 'sfx'))
@@ -63,8 +83,8 @@ T = lambda d: np.arange(int(d * SR)) / SR
 TAKES = {'door': ('door_b', 1.15, 3.0, False), 'run': ('run_a', 0.0, 1.6, False), 'typing': ('typing_sa', 0.25, 2.1, True),
          'camera_shutter': ('shutter_sa', 0.47, 1.3, True), 'plate_slide': ('plate_sa', 0.2, 1.3, False),
          'pile_topple': ('pile_sa', 0.3, 2.4, False)}   # name: (audio/gen take, from s, to s, gate its hiss)
-NOTE = {'C5': 523.25, 'E5': 659.26, 'G5': 783.99, 'A5': 880.0, 'C6': 1046.50, 'D6': 1174.66, 'E6': 1318.51, 'G6': 1567.98,
-        'C7': 2093.00, 'E7': 2637.02}
+NOTE = {k: v * KEY for k, v in {'C5': 523.25, 'E5': 659.26, 'G5': 783.99, 'A5': 880.0, 'C6': 1046.50, 'D6': 1174.66,
+                                 'E6': 1318.51, 'G6': 1567.98, 'C7': 2093.00, 'E7': 2637.02}.items()}   # named in C, sound in E-flat
 
 
 def norm(x, peak_db=-1.0): return x / (np.max(np.abs(x)) + 1e-12) * 10 ** (peak_db / 20)
@@ -175,13 +195,14 @@ def main():
 
     # notify: C6 -> G6, soft (ranked over G5 -> C6, a single E6 and a marimba pair: 79 % 'notification' vs a doorbell)
     n = np.zeros(int(0.5 * SR)); place(n, glass(NOTE['C6'], 0.4, 13), 0.0, 0.8); place(n, glass(NOTE['G6'], 0.4, 12), 0.06)
-    W('notify', lp(n, 9000), 'two soft glass notes rising a fifth, C6 then G6, 60 ms apart')
+    W('notify', lp(n, 9000), 'two soft glass notes rising a fifth, E-flat6 then B-flat6, 60 ms apart')
 
     # pops: a round bloop, three pitches
     for i, (f0, f1) in enumerate([(330, 880), (392, 1047), (294, 784)]):
+        f0, f1 = f0 * KEY, f1 * KEY
         x, ph = glide(f0, f1, 0.09, 0.035, 38)
         x = x + 0.18 * np.sin(2 * ph) * np.exp(-60 * T(0.09))
-        W('pop' if i == 0 else f'pop_{i + 1}', fade(x, 0.001, 0.02), f'a sine gliding {f0}->{f1} Hz in 35 ms, decaying in 90 ms')
+        W('pop' if i == 0 else f'pop_{i + 1}', fade(x, 0.001, 0.02), f'a sine gliding {f0:.0f}->{f1:.0f} Hz in 35 ms, decaying in 90 ms')
 
     # stamp: a friendly thud. One Too Many's rubber stamp over a soft thump (a synthetic thump alone read as a kick drum,
     # which would fight the music's own kick; this reads as an impact, a thud)
@@ -195,22 +216,22 @@ def main():
 
     # send: a round upward glide to C6 (the airy swish read as a snare; without it, 98 % 'a message sent')
     x, ph = glide(NOTE['G5'] * 0.75, NOTE['C6'], 0.16, 0.06, 22); x = x + 0.2 * np.sin(2 * ph) * np.exp(-40 * T(0.16))
-    W('send', fade(x, 0.002, 0.04), 'a sine gliding up to C6 in 60 ms, with its octave, 0.16 s')
+    W('send', fade(x, 0.002, 0.04), 'a sine gliding up to E-flat6 in 60 ms, with its octave, 0.16 s')
 
     # receive: E6 -> C6
     r = np.zeros(int(0.75 * SR)); place(r, glass(NOTE['E6'], 0.6, 9), 0.0); place(r, glass(NOTE['C6'], 0.65, 7), 0.09, 0.85)
-    W('receive', lp(r, 8000), 'two soft glass notes falling a third, E6 then C6, 90 ms apart')
+    W('receive', lp(r, 8000), 'two soft glass notes falling a third, G6 then E-flat6, 90 ms apart')
 
     # ding: a glockenspiel note on C7 (a lower bell on C6 read as a gong)
     W('ding', bell(NOTE['C7'], 1.0, 3.5, ((1, 1, 1), (2.76, 0.35, 2.2), (5.40, 0.12, 3.5), (8.93, 0.04, 5.0)), 0.0008),
-      'a glockenspiel-like note on C7 (partials 1, 2.76, 5.40, 8.93), 1.0 s')
+      'a glockenspiel-like note on E-flat7 (partials 1, 2.76, 5.40, 8.93), 1.0 s')
 
     # bulb: a quick rising sparkle
     x = np.zeros(int(1.4 * SR))
     for i, k in enumerate(['C6', 'E6', 'G6', 'C7', 'E7']):
         place(x, bell(NOTE[k], 0.9, 6.0, ((1, 1, 1), (2.0, 0.15, 2.0), (3.0, 0.05, 3.0))), 0.045 * i, 0.55 + 0.1 * i)
     x += 0.1 * air(1.4, 6000, 14000, 13, 0.8) * np.exp(-2.5 * T(1.4))
-    W('bulb', fade(x, 0.002, 0.2), 'five high bell notes rising C6-E6-G6-C7-E7, 45 ms apart, over a faint 6-14 kHz shimmer')
+    W('bulb', fade(x, 0.002, 0.2), 'five high bell notes rising E-flat6-G6-B-flat6-E-flat7-G7, 45 ms apart, over a faint 6-14 kHz shimmer')
 
     # cloud: a soft low puff, falling (a static puff with a low body read as a drum hit or an explosion)
     t = T(0.6)
@@ -263,6 +284,7 @@ def main():
         t = T(d); x = sum(np.sin(2 * np.pi * f * k * t) / k for k in odd)
         return x * np.minimum(1, t / att) * np.minimum(1, (d - t) / rel)
     # wrong: two buzzy notes falling (a chime-like pair read as a success chime)
+    # (its notes are already in E-flat major; raised to D-flat4/B-flat3 it read as a success chime, 20 % 'an error sound')
     x = np.zeros(int(0.45 * SR)); place(x, sq(233.08, 0.14), 0.0); place(x, sq(196.0, 0.22), 0.17)
     W('wrong', lp(x, 2500), 'two square-ish notes falling, B-flat3 (0.14 s) then G3 (0.22 s), low-passed at 2.5 kHz')
     # clang: a pan (faster decays and a brighter strike than a bell, or it reads as a church bell)
@@ -286,6 +308,7 @@ def main():
     for i, (a, b) in enumerate([(5800, 3600), (6000, 3800), (5600, 3400), (6200, 4200)]): place(x, syl(a, b, 0.055), 0.08 * i, [1, .8, .9, .7][i])
     W('bird', x, 'four 55 ms chirps falling from ~6 to ~3.6 kHz with a 38 Hz flutter, 80 ms apart')
     # battery_low: electronic beeps (soft struck notes read as a success chime)
+    # (C6 and F5 are in E-flat major already; raised a minor third the beeps read as a success chime)
     x = np.zeros(int(0.7 * SR)); place(x, sq(1046.5, 0.09, (1, 3, 5)), 0.0); place(x, sq(1046.5, 0.09, (1, 3, 5)), 0.16)
     place(x, sq(698.5, 0.2, (1, 3, 5)), 0.32)
     W('battery_low', lp(x, 6000), 'three square-ish beeps, C6, C6 and a longer F5 below')
@@ -301,14 +324,14 @@ def main():
     W('rain', fade(x, 0.2, 0.3), 'pink noise band-passed 400 Hz-7 kHz with 60 soft 0.7-1.6 kHz drips, 1.8 s')
     # grow: three rising plucks
     x = np.zeros(int(0.6 * SR))
-    for i, f in enumerate((523.25, 659.26, 783.99)):
+    for i, f in enumerate((523.25 * KEY, 659.26 * KEY, 783.99 * KEY)):
         y, _ = glide(f * 0.94, f, 0.3, 0.03, 12); place(x, fade(y, 0.001, 0.05), 0.08 * i, 0.8 + 0.1 * i)
-    W('grow', x, 'three round plucks rising C5-E5-G5, 80 ms apart, each with a little upward glide')
+    W('grow', x, 'three round plucks rising E-flat5-G5-B-flat5, 80 ms apart, each with a little upward glide')
     # click: a soft button click
     t = T(0.04); x = np.sin(2 * np.pi * 2400 * t) * np.exp(-t / 0.003) + 0.6 * np.sin(2 * np.pi * 260 * t) * np.exp(-t / 0.01)
     W('click', fade(x, 0.0003, 0.005), 'a 2.4 kHz tick over a 260 Hz body, 40 ms')
     # dim: a falling blip
-    y, _ = glide(880, 587.33, 0.16, 0.08, 14); W('dim', fade(y, 0.002, 0.04), 'a round blip falling A5 -> D5 in 80 ms')
+    y, _ = glide(880 * KEY, 587.33 * KEY, 0.16, 0.08, 14); W('dim', fade(y, 0.002, 0.04), 'a round blip falling C6 -> F5 in 80 ms')
 
 
     # ---- fix round 2: the request cards, the YES stamp, the shouted NO ----
@@ -321,7 +344,7 @@ def main():
     # stamp_yes (ranked over a woodblock-tok version: this one reads more as a stamp, less as a bell)
     t = T(0.45); s2 = otm('stamp2'); s2 = s2 / np.max(np.abs(s2))
     th = np.sin(2 * np.pi * np.cumsum(150 + 80 * np.exp(-t / 0.01)) / SR) * np.exp(-30 * t) * 0.4
-    x = np.zeros(int(0.45 * SR)); place(x, hp(s2, 200), 0.0); place(x, th, 0.003); place(x, glass(NOTE['C7'], 0.35, 10) * 0.18, 0.012)
+    x = np.zeros(int(0.45 * SR)); place(x, hp(s2, 200), 0.0); place(x, th, 0.003); place(x, glass(2093.0, 0.35, 10) * 0.18, 0.012)   # C7: in E-flat major already, kept as it was
     W('stamp_yes', fade(x, 0.0005, 0.06), "One Too Many's stamp2 (high-passed at 200 Hz), a light 230->150 Hz thump and a small C7 glass ping",
       'otm/stamp2: "Stamp" by kermite607, https://freesound.org/people/kermite607/sounds/362624/', 'CC0')
     # shout_no: a tight comic hit that fits the 0.65 s pause after the narrator's "no": whoosh out, thud, boing
@@ -335,8 +358,106 @@ def main():
     place(x, thud * 1.1, 0.15); place(x, boing(240, 0.43), 0.15, 0.75)
     W('shout_no', fade(x, 0.002, 0.08), 'a 0.22 s whoosh outward (700 Hz-3.4 kHz), a low thud at 0.15 s and a 240 Hz cartoon boing (9 Hz spring wobble) over it, 0.58 s')
 
+    # ---- new for Firstborn (each picked with earshot over its alternatives; audio/README.md lists the losers) ----
+    firstborn(W, onset_trim)
+
     json.dump(plan, open(os.path.join(OUT, 'plan.json'), 'w'), indent=1)
     print('wrote', ', '.join(f"{k} ({v['dur_s']} s)" for k, v in plan.items()))
+
+
+ES_SRC = 'earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings'
+ES_LIC = 'free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)'
+
+
+def es(sound, take=1, n=3, seed=11, pitch=None, voice=None):
+    """earshot's rendering of a catalogue sound (deterministic by seed): take k of n, mono, 48 kHz"""
+    import tempfile
+    d = tempfile.mkdtemp(); out = os.path.join(d, 'x.wav')
+    cmd = [EARSHOT, 'make', '--sound', sound, '--n', str(n), '--seed', str(seed), '-o', out]
+    if pitch: cmd += ['--pitch', pitch]
+    if voice: cmd += ['--voice', voice]
+    import subprocess; subprocess.run(cmd, check=True, capture_output=True)
+    x, sr = sf.read(os.path.join(d, f'x_{take}.wav') if n > 1 else out, dtype='float64')
+    x = x.mean(axis=1) if x.ndim > 1 else x
+    return x if sr == SR else signal.resample_poly(x, SR, sr)
+
+
+def played(voice, notes_, vel=0.6, seed=7):
+    """notes [(t, note name, velocity share)] on one of earshot's voices (marimba, harp and pizzicato are real
+    instruments learned note by note from public-domain recordings), mono"""
+    from earshot.synth import phrase
+    from earshot.forge import knobs
+    y = phrase.play([(t, knobs.hz(nm), v) for t, nm, v in notes_], voice, np.random.default_rng(seed), vel=vel)
+    return y.mean(axis=1)
+
+
+def varispeed(x, semis):
+    """pitch and length together (a tape sped up): +4 semitones is 26 % shorter"""
+    return signal.resample(x, int(len(x) / 2 ** (semis / 12)))
+
+
+def firstborn(W, onset_trim):
+    # baby_cry: a newborn's brief soft cry. Windows of earshot's baby/cry (a synthesised formant coo and shorter
+    # 0.5 s fragments read as a squeaky toy or a cat; a one-second window reads 98 % 'a baby crying')
+    b3 = es('baby/cry', 3)
+    W('baby_cry', fade(lp(b3[int(0.25 * SR):int(1.25 * SR)], 6000), 0.005, 0.2),
+      "earshot baby/cry (seed 11, take 3), 0.25-1.25 s, low-passed at 6 kHz, 0.2 s fade", ES_SRC, ES_LIC)
+    b2 = es('baby/cry', 2)
+    W('baby_cry_2', fade(lp(b2[int(0.9 * SR):int(1.9 * SR)], 6000), 0.005, 0.2),
+      "earshot baby/cry (seed 11, take 2), 0.9-1.9 s, low-passed at 6 kHz, 0.2 s fade", ES_SRC, ES_LIC)
+    # sneeze: as recorded it read as a cough (84 %); four semitones up it is a small sneeze (70 % against 30 %)
+    W('sneeze', fade(varispeed(es('sneeze/person', 1), 4), 0.002, 0.08),
+      'earshot sneeze/person (seed 11, take 1), raised 4 semitones by varispeed (smaller, a child), 0.95 s', ES_SRC, ES_LIC)
+    # phone_ring: two electronic trills a major third apart in the key (B-flat5 / D6), 16 alternations a second
+    def trill(dur, f1, f2, rate=16):
+        t = T(dur); f = np.where(np.floor(t * rate * 2) % 2 > 0, f2, f1); ph = 2 * np.pi * np.cumsum(f) / SR
+        return (np.sin(ph) + 0.3 * np.sin(3 * ph) + 0.12 * np.sin(5 * ph)) * np.minimum(1, t / 0.01) * np.minimum(1, (dur - t) / 0.02)
+    x = np.zeros(int(1.45 * SR))
+    for t0 in (0.0, 0.85): place(x, trill(0.55, 932.33, 1174.66), t0)          # B-flat5, D6
+    W('phone_ring', lp(x, 6000), 'two 0.55 s electronic trills (B-flat5/D6 alternating 16 times a second, odd harmonics), 0.3 s apart')
+    # ka_ching: earshot's cash register, the strike and the bell, cut at 1.3 s
+    W('ka_ching', fade(es('cash_register/open', 3)[: int(1.3 * SR)], 0.002, 0.3),
+      'earshot cash_register/open (seed 11, take 3), the first 1.3 s (strike and bell), 0.3 s fade', ES_SRC, ES_LIC)
+    # credit_alert: four quick rising marimba notes, the music's own instrument (78 % 'a payment received chime')
+    W('credit_alert', played('marimba', [(0, 'Eb5', 0.8), (0.07, 'G5', 0.85), (0.14, 'Bb5', 0.9), (0.21, 'Eb6', 1.0)]),
+      "four rising notes E-flat5 G5 B-flat5 E-flat6, 70 ms apart, on earshot's real marimba (VCSL, CC0)", ES_SRC, ES_LIC)
+    # gavel: a wooden spoon on the table, two hollow knocks (a woodblock and a table tap read as a drum hit)
+    k1, k2 = es('knock/hollow', 1), es('knock/hollow', 2)
+    x = np.zeros(int(0.55 * SR)); place(x, norm(k1), 0.0); place(x, norm(k2) * 0.8, 0.17)
+    W('gavel', fade(x, 0.0005, 0.05), 'two of earshot knock/hollow (seed 11, takes 1, 2), 0.17 s apart, the second -2 dB', ES_SRC, ES_LIC)
+    W('gavel_1', fade(k1, 0.0005, 0.03), 'earshot knock/hollow (seed 11, take 1): one tap', ES_SRC, ES_LIC)
+    # coins: a handful dropped into a hand (coins/handful and coin/cup read as glass)
+    W('coins', fade(es('coins/floor', 2), 0.001, 0.05), 'earshot coins/floor (seed 11, take 2)', ES_SRC, ES_LIC)
+    # party_murmur: a soft hall murmur with no words: One Too Many's walla, low-passed so no word is clear
+    # (earshot's cafe/busy reads 66 % against 28 % 'wind'; this reads 78 % 'people murmuring', 14 % 'chanting')
+    wl = otm_bed('walla')
+    W('party_murmur', fade(lp(wl, 1500, 4), 0.5, 0.5), "One Too Many's beds/walla (40 s), low-passed at 1.5 kHz (4th order)",
+      'otm/beds/walla: "restaurant ambience.wav" by sarahmariealice, https://freesound.org/people/sarahmariealice/sounds/265870/', 'CC0')
+    # swoon: a harp glissando falling through E-flat major with a soft falling swish under it
+    gl = played('harp', [(0.035 * i, n_, 0.9 - 0.04 * i) for i, n_ in
+                         enumerate(['Bb6', 'G6', 'F6', 'Eb6', 'D6', 'C6', 'Bb5', 'Ab5', 'G5', 'F5', 'Eb5'])], vel=0.5)[: int(1.6 * SR)]
+    sw = swept_air(0.75, [2600, 1800, 900, 450], 1.6, 31, 0.3)
+    x = np.zeros(int(1.6 * SR)); place(x, norm(gl), 0.0); place(x, norm(sw) * 0.45, 0.05)
+    W('swoon', fade(x, 0.002, 0.4), "a harp glissando B-flat6 down to E-flat5 (11 notes, 35 ms apart) on earshot's real harp "
+      '(VCSL, CC0), a soft swish falling 2.6 kHz -> 450 Hz under it at -7 dB', ES_SRC, ES_LIC)
+    # comic stings on pizzicato (marimba and kalimba versions read as a success chime)
+    W('sting_1', played('pizzicato', [(0, 'G4', 0.8), (0.2, 'Eb4', 0.9), (0.4, 'Bb3', 1.0)], vel=0.65),
+      "a deadpan sting: pizzicato G4, E-flat4, B-flat3 falling, 0.2 s apart (earshot's real pizzicato, VSCO-2 CE / VCSL, CC0)", ES_SRC, ES_LIC)
+    W('sting_2', played('pizzicato', [(0, 'Eb4', 0.8), (0.12, 'G4', 0.85), (0.24, 'Bb4', 0.9), (0.42, 'Eb4', 1.0), (0.42, 'Eb3', 0.8)], vel=0.65),
+      "a cheeky sting: pizzicato E-flat4 G4 B-flat4 rising, landing on E-flat in octaves (earshot's real pizzicato)", ES_SRC, ES_LIC)
+    # meter_1..3: the meter rising with each name (first name, middle name, surname): a comic "dun, dun, DUN" on low
+    # pizzicato climbing the E-flat triad, each note harder. (Alarm beeps read as a success chime and a bell alarm as a
+    # phone ringing, which this scene has none of.)
+    for i, nm in enumerate(['Eb3', 'G3', 'Bb3']):
+        W(f'meter_{i + 1}', played('pizzicato', [(0, nm, 0.7 + 0.15 * i)], vel=0.6 + 0.1 * i),
+          f"one low pizzicato note, {nm.replace('b', '-flat')} (earshot's real pizzicato), the {['first', 'second', 'third'][i]} step of the meter", ES_SRC, ES_LIC)
+
+
+def otm_bed(name):
+    import subprocess
+    p = os.path.join(os.path.dirname(OTM), 'beds', name + '.ogg')
+    raw = subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, np.float32).astype(np.float64)
 
 
 if __name__ == '__main__':

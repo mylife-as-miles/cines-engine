@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>SETS · Lab</title>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* FIRSTBORN IN AN AFRICAN HOME · Sets kit test page: Lab.
+   node tools/shoot.js src/SETS_lab.html frames/SET_lab.png 1920 1080 300
+   Query: ?o={...} set options (JSON) · &fig=1 stand the hero at the anchors (scale check) · &anchors=1 mark the anchors · &bench=1 time 48 frames */
+function draw(g, o, q) {
+  const fig = (a, extra) => { if (!a) return; try { POV.figure(g, 'hero', Object.assign({ x: a.x, y: a.y, scale: a.s }, extra || {})); } catch (e) { console.log(e.message); } };
+  const sit = (a, extra) => { if (!a) return; try { POV.figure(g, 'hero', Object.assign({ seatAt: { x: a.x, y: a.y }, scale: a.s, pose: 'sit_sofa' }, extra || {})); } catch (e) { console.log(e.message); } };
+  const S = SETS.lab(g, o), A = S.anchors;
+  if (q.get('fig')) { fig(A.scientistL); fig(A.subject, { scale: 0.6 }); fig(A.scientistR, { facing: -1 }); }
+  SETS.labFront(g, o);
+  return S;
+}
+window.addEventListener('load', async () => {
+  const q = new URLSearchParams(location.search);
+  const g = POV.stage('#000'); await SETS.ready();
+  const o = Object.assign({ t: 0.3 }, JSON.parse(q.get('o') || '{}'));
+  if (q.get('bench')) {
+    const t0 = performance.now(); draw(g, o, q); const first = performance.now() - t0; const ms = [];
+    for (let i = 0; i < 48; i++) { g.setTransform(1, 0, 0, 1, 0, 0); const a = performance.now(); draw(g, Object.assign({}, o, { t: i / 24, k: 1 }), q); ms.push(performance.now() - a); }
+    g.getImageData(0, 0, 1, 1);
+    window.BENCH = { first: +first.toFixed(1), mean: +(ms.reduce((s, v) => s + v, 0) / ms.length).toFixed(2), max: +Math.max(...ms).toFixed(2) };
+    return;
+  }
+  const S = draw(g, o, q);
+  if (S && S.anchors && q.get('anchors')) for (const k in S.anchors) { const a = S.anchors[k]; g.save(); g.fillStyle = '#E5534B'; g.beginPath(); g.arc(a.x, a.y, 8, 0, 6.283); g.fill(); g.font = '700 22px sans-serif'; g.fillStyle = '#1c1c1c'; g.fillText(k, a.x + 12, a.y - 6); g.restore(); }
+  window.FRAME_READY = true;
+});
+</script>

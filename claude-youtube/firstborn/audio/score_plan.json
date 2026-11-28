@@ -1,0 +1,123 @@
+{
+ "note": "Firstborn's music: a warm, playful bed with Afro-pop colour (a bright clean highlife guitar, kalimba and marimba, a shaker and a soft talking drum, no drum kit, no vocals), a gentler sincere variation for the honest part and the advice (Q07-Q08), and a closing bed that ends on its own chord on the end screen. Five Lyria 3.5 takes (tools/lyria.py; 5 of 8 requests used, audio/score/requests.json), listened to with tools/score_check.py (audio/score/check.json). Lyria ignored the key asked for (C major): the takes came back in F, C, G, D-flat and F-sharp major, so every bed is moved into one key centre, E-flat major, the centre that needs the smallest shifts (at most 4 semitones; C major would have needed a tritone for the closing take). Shifts use rubberband (tempo kept: all the Afro-pop takes stay at 103 BPM, the sincere one at 76) with each take's measured tuning removed too. The tonal effects in audio/sfx/ are pitched in E-flat major to match (tools/synth_sfx.py KEY). Beds: take, pitch_cents (key move plus tuning), windows (take seconds where each fresh span starts), loop (the take's full section, for spans longer than what is left), level_db (the bed's loudness re the narration where nobody speaks), under_voice_db (the ducker's target under the voice where someone speaks: 12.5 dB against the speech region's integrated loudness and the music's louder 1 s reading, which measures about 15 dB under in 3 s windows; out/mix/report.json gives it per bed). Which bed plays when is the music timeline in audio/sound_map.json (beds.music.timeline), anchored to spoken words.",
+ "budget_requests": 8,
+ "key_centre": "E-flat major (C minor) at A = 440",
+ "takes": [
+  {
+   "id": "T1",
+   "role": "main",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a warm, funny narrated video about family life, about 90 seconds. Light West African highlife and Afro-pop colour: a bright clean electric guitar playing a sweet, bouncy picked highlife pattern, a kalimba answering in short phrases, soft marimba, a round warm bass, a gentle shaker and a soft talking drum tapping lightly; no drum kit. Mid-tempo, around 100 BPM, relaxed and playful, sunny and affectionate. Steady and uncluttered, leaving room for a voice speaking over it: no lead melody that competes, no big build, no drops. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+   "why": "the main bed: Q01-Q06 under the comedy of recognition"
+  },
+  {
+   "id": "T2",
+   "role": "main",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a light, cheeky narrated video about growing up as the eldest child, about 90 seconds. A marimba playing a light, bouncy repeating figure, a bright clean electric guitar adding little highlife licks between its phrases, kalimba sparkles, a soft round bass, a shaker and soft hand percussion (a talking drum played lightly, a small hand drum); no drum kit. Around 104 BPM, playful and warm, gently comic. Steady and uncluttered, leaving room for a voice speaking over it: no lead melody that competes, no big build. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+   "why": "a second main bed in the same palette, so five minutes of comedy do not loop one take; chapters alternate"
+  },
+  {
+   "id": "T3",
+   "role": "party",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for a family celebration scene in a narrated video, about 90 seconds. A light, festive highlife feel: two clean electric guitars interlocking in sweet bright patterns, a round bass, a shaker, a soft bell pattern, a talking drum played lightly, a little kalimba. Around 108 BPM, joyful and celebratory but kept light, soft and in the background, leaving room for a voice speaking over it; no drum kit, no big build. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+   "why": "Q06, management at 30: the weddings, funerals and naming ceremonies, a party-hall lift under the same voice"
+  },
+  {
+   "id": "T4",
+   "role": "sincere",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental background music for the sincere, tender part of a narrated video about family, about 90 seconds. A gentle fingerpicked acoustic guitar with a warm West African lilt, a soft kalimba playing a simple tender melody, a few soft marimba notes, warm low bass notes, and only a very soft shaker. Slow, around 78 BPM. Warm, honest, hopeful and loving, not sad, not dramatic. Soft and steady, leaving room for a voice speaking over it. Purely instrumental: no vocals, no singing, no humming, no choir, no drum kit. In C major, in tune at A = 440.",
+   "why": "Q07-Q08, the honest part and the advice (294.8-365.9 s): gentler, sincere, the same colour"
+  },
+  {
+   "id": "T5",
+   "role": "end",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental closing music for the end of a warm, funny narrated video about family, about 60 seconds. Light highlife and Afro-pop colour: a bright clean electric guitar picking a sweet pattern, kalimba and marimba, a round bass, a gentle shaker and a soft talking drum; no drum kit. Around 100 BPM, warm, smiling and grateful. It moves gently, then winds down and ends cleanly on a final held major chord that rings out and stops. Purely instrumental: no vocals, no singing, no chanting, no choir. In C major, in tune at A = 440.",
+   "why": "Q09, the wrap, into the 8 s end screen: ends on its own final chord at 409.5 s"
+  }
+ ],
+ "beds": {
+  "main_a": {
+   "take": "T1",
+   "pitch_cents": -201.0,
+   "method": "rubberband",
+   "windows": [
+    0.0,
+    30.0
+   ],
+   "loop": [
+    9.0,
+    84.5
+   ],
+   "level_db": -11.0,
+   "under_voice_db": 12.5,
+   "why": "F major down 2 semitones (and its +1 c). Q01-Q02 from the take start (its soft intro grows under \"You have just been born\"); Q04 from 30 s, looping inside the full section"
+  },
+  "main_b": {
+   "take": "T2",
+   "pitch_cents": 300.0,
+   "method": "rubberband",
+   "windows": [
+    9.5,
+    30.0
+   ],
+   "loop": [
+    9.5,
+    90.0
+   ],
+   "level_db": -11.0,
+   "under_voice_db": 12.5,
+   "why": "C major up 3 semitones. Q03 and Q05 alternate with main_a so five minutes of comedy do not loop one take"
+  },
+  "party": {
+   "take": "T3",
+   "pitch_cents": -402.7,
+   "method": "rubberband",
+   "windows": [
+    14.0
+   ],
+   "loop": [
+    14.0,
+    68.0
+   ],
+   "level_db": -11.0,
+   "under_voice_db": 12.5,
+   "why": "G major down 4 semitones (and its +2.7 c). Q06, the weddings, funerals and naming ceremonies"
+  },
+  "sincere": {
+   "take": "T4",
+   "pitch_cents": 199.0,
+   "method": "rubberband",
+   "windows": [
+    0.8
+   ],
+   "loop": [
+    12.0,
+    86.0
+   ],
+   "level_db": -12.0,
+   "under_voice_db": 12.5,
+   "why": "D-flat major up 2 semitones (and its +1 c). Q07-Q08 from its quiet intro: the comedy stops, the sincere part grows"
+  },
+  "end": {
+   "take": "T5",
+   "pitch_cents": -301.3,
+   "method": "rubberband",
+   "align": "end",
+   "end_s": 59.72,
+   "level_db": 0.0,
+   "under_voice_db": 12.5,
+   "why": "F-sharp major down 3 semitones (and its +1.3 c). Q09 into the end screen, aligned so its final chord (55.22 s in the take) lands at 405.0 s and rings out to the last frame (409.5 s); on the end screen it plays at its own level, about 4 LU under the speech (level_db 0: the take is quiet as it ends)"
+  }
+ },
+ "takes_heard": {
+  "T1": "main: F major, 103 BPM, +1.0 c; soft 9 s intro, full from 9 to 85 s, outro to 88.4 s. earshot: >99 % the Afro-pop description, no singing",
+  "T2": "main: C major, 103 BPM, +0.0 c; intro to 9 s, full 9-90 s, outro to 101 s. earshot: >99 %, no singing",
+  "T3": "party: G major (sections on D), 103 BPM, +2.7 c; intro to 14 s, full 14-68 s, then thins and fades by 88 s. earshot: >99 % festive highlife, no singing",
+  "T4": "sincere: D-flat major (B-flat minor passages), 76 BPM, +1.0 c; quiet 12 s intro, then full to 88 s. earshot: >99 % gentle fingerpicked guitar and kalimba, no singing",
+  "T5": "end: F-sharp major, 103 BPM, +1.3 c; groove to 55.2 s, final chord at 55.22 s ringing out to 62 s (-30 dB at 59 s). earshot: >99 %, no singing"
+ }
+}
