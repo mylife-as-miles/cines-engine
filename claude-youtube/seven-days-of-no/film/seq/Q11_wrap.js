@@ -19,9 +19,9 @@
     id: 'Q11', title: 'So, what happens?', chapter: 'So, what happens?', from: T.start,
     sound(S) {
       S.bed('music', T.start, T.last, { mood: 'warm recap, then playful' });
-      S.cue('whoosh', T.start - 0.1); POP7.forEach(t => S.cue('pop', t)); S.cue('pop', T.tired); S.cue('pop', T.guilty); S.cue('pop', T.honest);
+      S.cue('whoosh', T.start - 0.1); S.cue('pop', T.tired);
       S.cue('whoosh', T.now - 0.05); S.cue('pop', T.now + 0.15); S.cue('typing', T.comments, { n: 10 });
-      S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food); S.cue('pop', T.see);
+      S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food);
     },
     shots: [
       { at: T.start, name: 'plain: the seven day cards again, each with its face', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06 },

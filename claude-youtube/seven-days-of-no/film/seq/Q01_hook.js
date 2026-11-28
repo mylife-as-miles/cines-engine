@@ -25,9 +25,9 @@
     id: 'Q01', title: 'The question', chapter: 'The question', from: 0,
     sound(S) {
       S.bed('music', 0, T.end, { mood: 'cozy, bouncy, light' });
-      S.cue('pop', 0.05); S.cue('whoosh', T.staying - 0.08); S.cue('typing', T.staying + 0.1, { n: 8 }); S.cue('whoosh', T.lending - 0.08); S.cue('pop', T.money);
+      S.cue('whoosh', T.staying - 0.08); S.cue('typing', T.staying + 0.1, { n: 8 }); S.cue('whoosh', T.lending - 0.08);
       S.cue('whoosh', T.going - 0.08); S.bed('party_murmur', T.going, T.yy[0]);
-      T.yy.forEach(t => S.cue('pop', t)); S.cue('wobble', T.even + 0.2);
+      S.cue('wobble', T.even + 0.2);
       S.cue('bulb', T.question); S.cue('whoosh', T.forSeven); STAMPS.forEach(t => S.cue('stamp', t));
       S.cue('pop', T.rude); S.cue('wrong', T.not2); S.cue('pop', T.angry); S.cue('wrong', T.just - 0.25); S.cue('ding', T.justNo[0]);
       S.cue('footsteps', T.see, { n: 4, gap: 0.32 }); S.cue('whoosh', T.end - 0.12);

@@ -23,8 +23,8 @@
     id: 'Q09', title: 'Why we say yes', chapter: 'Why we say yes', from: T.start,
     sound(S) {
       S.bed('music', T.start, T.end, { mood: 'reflective, soft' });
-      S.cue('pop', T.start + 0.2); S.cue('bulb', T.noticed); S.cue('pop', T.most + 0.1); S.cue('whoosh', T.fear - 0.1); S.cue('scared', T.fear + 0.1);
-      CAST.forEach((p, i) => S.cue('pop', T.fearThat + 0.1 + i * 0.22)); S.cue('cloud', T.guilty + 0.2); S.cue('rain', T.changing); S.cue('grow', T.habit);
+      S.cue('bulb', T.noticed); S.cue('pop', T.most + 0.1); S.cue('whoosh', T.fear - 0.1); S.cue('scared', T.fear + 0.1);
+      S.cue('pop', T.fearThat + 0.1); /* the cast's portraits, one pop for the group */ S.cue('cloud', T.guilty + 0.2); S.cue('rain', T.changing); S.cue('grow', T.habit);
     },
     shots: [
       { at: T.start, name: 'plain: the bulb lights', in: { type: 'wipe', dir: 'right', color: '#3A8594' }, push: { from: 1.04, to: 1.1, x: 960, y: 320 },

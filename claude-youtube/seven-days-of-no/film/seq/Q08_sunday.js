@@ -32,7 +32,7 @@
     id: 'Q08', title: 'Sunday', chapter: 'Sunday', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'warm, settled' }); S.bed('living_room_evening', T.card, T.end);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); P.forEach(p => S.cue('pop', p.t0)); S.cue('deflate', T.quiet + 0.1);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('pop', P[0].t0); S.cue('pop', P[2].t0); /* the annoyed pair, then the respectful pair */ S.cue('deflate', T.quiet + 0.1);
       S.cue('whoosh', T.nobody + 0.1); S.cue('sip', T.life + 0.2);
     },
     shots: [

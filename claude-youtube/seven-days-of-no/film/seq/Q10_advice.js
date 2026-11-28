@@ -40,9 +40,9 @@
     id: 'Q10', title: 'Try this instead', chapter: 'Try this instead', from: T.start,
     sound(S) {
       S.bed('music', T.start, T.gives + 0.6, { mood: 'upbeat, practical' }); S.silence(T.pause - 0.05, T.choose - 0.1); S.bed('music', T.choose - 0.1, T.end, { mood: 'upbeat, resolving' });
-      S.cue('whoosh', T.start - 0.1); S.cue('pop', T.try); S.cue('whoosh', T.forWeek - 0.05); S.bed('office_room', T.forWeek, T.choose);
-      S.cue('pop', T.letMe[0]); S.cue('freeze', T.pause); S.cue('pop', T.pause + 0.05);
-      BUTTONS.forEach(b => S.cue('pop', b[1])); S.cue('button_click', T.purpose); S.cue('ding', T.purpose + 0.15);
+      S.cue('whoosh', T.start - 0.1); S.cue('whoosh', T.forWeek - 0.05); S.bed('office_room', T.forWeek, T.choose);
+      S.cue('pop', T.letMe[0]); S.cue('freeze', T.pause);
+      S.cue('pop', BUTTONS[0][1]); S.cue('pop', BUTTONS[2][1]); /* the first button and the third (the answer) */ S.cue('button_click', T.purpose); S.cue('ding', T.purpose + 0.15);
     },
     shots: [
       { at: T.start, name: 'plain: do not say no to everyone: pointing at the viewer (ref 02)', in: { type: 'wipe', dir: 'right', color: '#3A8594' }, push: { from: 1, to: 1.06 },

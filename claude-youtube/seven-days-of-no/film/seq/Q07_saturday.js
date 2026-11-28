@@ -26,9 +26,9 @@
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'calm, confident' }); S.bed('living_room_morning', T.card, T.texts);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1); S.cue('receive', T.need);
-      S.cue('pop', T.doNot + 0.1); S.cue('pop', T.doNot + 0.35); S.cue('dim', T.no + 0.1); S.cue('dim', T.either - 0.1);
+      S.cue('pop', T.doNot + 0.1); S.cue('dim', T.no + 0.1); S.cue('dim', T.either - 0.1);
       S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12) }); S.cue('send', T.replyEnd + 0.1); S.cue('receive', T.perfect); S.cue('ding', Math.min(T.perfectEnd + 0.2, T.works - 0.55));
-      S.cue('pop', T.works + 0.1); S.cue('pop', T.works + 0.4); S.cue('pop', T.works + 0.7); S.cue('ding', T.real);
+      S.cue('pop', T.works + 0.1); S.cue('ding', T.real);
     },
     shots: [
       { at: T.card, name: 'living, morning: the day card over the hero with his laptop', in: { type: 'wipe', dir: 'right' }, push: 1.04,

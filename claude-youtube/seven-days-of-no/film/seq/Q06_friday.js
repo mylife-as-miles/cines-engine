@@ -10,7 +10,7 @@
   const { span, seg, pop, walk, flash, ease } = FILM;
   const T = {
     card: W('Friday'), tourist: W('a tourist'), ask: span('sorry', 'photo', FILM.W('Friday')), no: span('no', null, FILM.W('Friday')),
-    hurt: W('they look hurt'), feel: W('and you feel'), terrible: W('terrible'), run: W('so you run'), take: W('you take the photo'), photo: W('photo', { after: FILM.W('you take') }),
+    hurt: W('they look hurt'), feel: W('and you feel'), terrible: W('terrible'), run: W('so you run'), take: W('you take the photo'), photo: W('photo', { after: W('you take the photo') }),
     happiest: W('happiest'), why: W('why'), because: W('because'), chose: W('chose'), same: W('same yes'), different: W('different'), notFear: W('not fear'), fear: W('fear', { after: FILM.W('not fear') }), choice: W('choice'),
     end: FILM.W('saturday your boss'),
   };
@@ -29,8 +29,8 @@
       S.bed('music', T.card, T.end, { mood: 'bright, a dip, then a lift' }); S.bed('street_ambience', T.card, T.why);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('footsteps', T.tourist, { n: 4, gap: 0.36 });
       S.cue('footsteps', T.hurt + 0.4, { n: 3, gap: 0.5, level: -6 }); S.cue('run', T.run + 0.1); S.cue('camera_shutter', T.photo); S.cue('flash', T.photo + 0.02);
-      S.cue('ding', T.happiest); S.cue('whoosh', T.why - 0.05); S.cue('pop', T.why + 0.05); S.cue('bulb', T.chose);
-      S.cue('pop', T.same); S.cue('pop', T.different); S.cue('whoosh', T.fear); S.cue('ding', T.choice);
+      S.cue('ding', T.happiest); S.cue('whoosh', T.why - 0.05); S.cue('bulb', T.chose);
+      S.cue('pop', T.same); S.cue('whoosh', T.fear); S.cue('ding', T.choice);
     },
     shots: [
       { at: T.card, name: 'street: the day card', in: { type: 'wipe', dir: 'right' }, push: 1.04,
