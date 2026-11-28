@@ -14,6 +14,7 @@ film's red. --still writes the frame as the film shows it: graded, and after --c
 """
 import argparse
 import os
+import shutil
 import subprocess
 import tempfile
 
@@ -153,15 +154,26 @@ def main():
                            input=frame(t).tobytes(), capture_output=True, check=True).stdout
         out = np.frombuffer(g, np.uint8).reshape(H, W, 3).copy()
         if t >= a.cut:
-            png = os.path.join(tempfile.mkdtemp(prefix="split-"), "cut.png")
-            subprocess.run(["node", os.path.join(HERE, "type_render.js"), "still", "cutaway_half", f"{t - a.cut:.4f}", png,
-                            "--page", os.path.join(HERE, "seam.html")], check=True, env=env, capture_output=True)
-            out[:, x1:] = cv2.cvtColor(cv2.imread(png, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)[:, x1:]
+            tmp = tempfile.mkdtemp(prefix="split-")                     # removed after (the disk is tight)
+            try:
+                png = os.path.join(tmp, "cut.png")
+                subprocess.run(["node", os.path.join(HERE, "type_render.js"), "still", "cutaway_half", f"{t - a.cut:.4f}", png,
+                                "--page", os.path.join(HERE, "seam.html")], check=True, env=env, capture_output=True)
+                out[:, x1:] = cv2.cvtColor(cv2.imread(png, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)[:, x1:]
+            finally:
+                shutil.rmtree(tmp, ignore_errors=True)
         out[:, HW:x1] = (0x0a, 0x0c, 0x0f)
         cv2.imwrite(a.still[1], cv2.cvtColor(out, cv2.COLOR_RGB2BGR)); print("still", a.still[1]); return
 
     n = int(round(a.len * a.fps))
-    tmp = tempfile.mkdtemp(prefix="split-")
+    tmp = tempfile.mkdtemp(prefix="split-")                             # the graded plates and the cut-away; removed after
+    try:
+        render_clip(a, n, tmp, frame, env, x1)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def render_clip(a, n, tmp, frame, env, x1):
     graded, cut = os.path.join(tmp, "plates.mp4"), os.path.join(tmp, "cut.mp4")
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(a.fps),
                            "-i", "-", "-vf", grade_filter(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", graded],
