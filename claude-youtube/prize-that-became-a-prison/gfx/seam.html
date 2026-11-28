@@ -47,27 +47,73 @@ function grain(ctx, t) {                 // per-frame grain (sigma about 1 luma)
   for (let i = 0; i < d.length; i += 4) { const n = (r() + r() + r() - 1.5) * 2.4; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
   ctx.putImageData(img, 0, 0);
 }
-// Material patterns, made once: a pebble grain (soft cells of light and dark) and a fine twill for the lining
-let _peb = null, _twl = null;
-function PEBBLE() {
-  if (_peb) return _peb; const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d'), r = rng(31);
-  for (let i = 0; i < 1100; i++) { const x = r() * 160, y = r() * 160, rad = 0.8 + r() * 1.6, d = r() < 0.5;
-    const gr = g.createRadialGradient(x - rad * 0.3, y - rad * 0.3, 0, x, y, rad);
-    gr.addColorStop(0, d ? 'rgba(0,0,0,0.0)' : 'rgba(255,236,210,0.10)'); gr.addColorStop(1, d ? 'rgba(0,0,0,0.13)' : 'rgba(255,236,210,0)');
-    for (const [ox, oy] of [[0, 0], [160, 0], [-160, 0], [0, 160], [0, -160]]) { g.fillStyle = gr; g.save(); g.translate(ox, oy); g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); g.restore(); } }
-  return (_peb = c);
+// The cut-away's grain, fresh each frame: a fine monochrome grain (a 3 x 3 binomial blur of white noise, sd 2.2 code values)
+// with a little independent colour noise in each channel (sd 0.9), as the film grade's own noise has. The plates' grain is
+// per-pixel noise that rides through three encodes; a finer or weaker grain here is wiped out by x264 (the reel 8 cut-away
+// kept a quarter of it). Measured through this piece's encode (CRF 14) and the reel's (CRF 19), this lands at the plates'
+// level: about 1 code value of fine grain at luma 15. (The trace and flash keep grain() above: their plate carries its own.)
+let _gm = null, _gt = null;
+function grainCut(ctx, t) {
+  const f = Math.round(t * 24), img = ctx.getImageData(0, 0, W, H), d = img.data, n = W * H;
+  if (!_gm) { _gm = new Float32Array(n); _gt = new Float32Array(n); }
+  const m = _gm, b = _gt;
+  let s = (Math.imul(f + 7, 0x9e3779b1) ^ 0x5bd1e995) | 0 || 1;          // xorshift32, seeded by the frame
+  const r = () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) * 2.3283064365386963e-10; };
+  for (let i = 0; i < n; i++) m[i] = r() + r() + r() - 1.5;               // sd 0.5
+  for (let y = 0; y < H; y++) { const o = y * W; b[o] = m[o]; b[o + W - 1] = m[o + W - 1];
+    for (let x = 1; x < W - 1; x++) b[o + x] = 0.25 * m[o + x - 1] + 0.5 * m[o + x] + 0.25 * m[o + x + 1]; }
+  for (let x = 0; x < W; x++) { m[x] = b[x]; m[n - W + x] = b[n - W + x]; }
+  for (let i = W; i < n - W; i++) m[i] = 0.25 * b[i - W] + 0.5 * b[i] + 0.25 * b[i + W];   // sd 0.5 x 0.375
+  const G = 2.2 / 0.1875, C = 0.9 * Math.sqrt(12);
+  for (let i = 0, j = 0; i < n; i++, j += 4) {
+    const g = m[i] * G; d[j] += g + (r() - 0.5) * C; d[j + 1] += g + (r() - 0.5) * C; d[j + 2] += g + (r() - 0.5) * C;
+  }
+  ctx.putImageData(img, 0, 0);
 }
-function TWILL() {
-  if (_twl) return _twl; const c = document.createElement('canvas'); c.width = c.height = 12; const g = c.getContext('2d');
-  g.strokeStyle = 'rgba(255,255,255,0.07)'; g.lineWidth = 1.2; for (let i = -12; i <= 24; i += 4) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 12, 12); g.stroke(); }
-  g.strokeStyle = 'rgba(0,0,0,0.18)'; g.lineWidth = 1; for (let i = -10; i <= 26; i += 4) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 12, 12); g.stroke(); }
-  return (_twl = c);
+// Material textures, made once and seeded (grey about 0.5, laid on with 'overlay', so each scales its material's own colour):
+// the leather's pebble grain, the fibres of its cut section, and the lining's 2/1 twill.
+function tex(w, h, fn) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'), im = g.createImageData(w, h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const v = Math.max(0, Math.min(255, Math.round(255 * fn(x, y)))), i = 4 * (y * w + x);
+    im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255;
+  }
+  g.putImageData(im, 0, 0); return c;
+}
+let _peb = null, _fib = null, _twl = null;
+function PEBBLE() {          // domed cells split by dark creases (the distance to the nearest cell centre against the next)
+  if (_peb) return _peb; const N = 48, S = 256 / N, r = rng(31), P = [];
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) P.push([(i + 0.15 + 0.7 * r()) * S, (j + 0.15 + 0.7 * r()) * S, r()]);
+  return (_peb = tex(256, 256, (x, y) => {
+    const ci = Math.floor(x / S), cj = Math.floor(y / S); let f1 = 1e9, f2 = 1e9, tone = 0.5;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      const a = ci + di, b = cj + dj, p = P[((b + N) % N) * N + (a + N) % N];
+      const px = p[0] + (a < 0 ? -256 : a >= N ? 256 : 0), py = p[1] + (b < 0 ? -256 : b >= N ? 256 : 0), dd = Math.hypot(x - px, y - py);
+      if (dd < f1) { f2 = f1; f1 = dd; tone = p[2]; } else if (dd < f2) f2 = dd;
+    }
+    const crease = Math.min(1, (f2 - f1) / 1.6), dome = 1 - Math.min(1, f1 / S);
+    return 0.5 + 0.1 * (crease - 0.78) + 0.05 * (dome - 0.45) + 0.03 * (tone - 0.5) + 0.03 * (r() - 0.5);
+  }));
+}
+function FIBRE() {           // the cut leather: short, fine fibres (a felted look, not a wood grain)
+  if (_fib) return _fib; const w = 256, h = 64, K = 32, r = rng(57), rows = Array.from({ length: h }, () => Array.from({ length: K }, r));
+  const v = (y, x) => { const a = rows[(y + h) % h], u = x / w * K, i = Math.floor(u), s = (1 - Math.cos(Math.PI * (u - i))) / 2;
+    return a[i % K] * (1 - s) + a[(i + 1) % K] * s; };
+  return (_fib = tex(w, h, (x, y) => 0.5 + 0.1 * ((v(y - 1, x) + 2 * v(y, x) + v(y + 1, x)) / 4 - 0.5) + 0.06 * (r() - 0.5)));
+}
+function TWILL() {           // a 2/1 twill of 3-unit threads: the warp floats over two wefts, so the ribs run on the diagonal
+  if (_twl) return _twl; const T = 3, w = 72, r = rng(77), warp = Array.from({ length: w / T }, r), weft = Array.from({ length: w / T }, r);
+  return (_twl = tex(w, w, (x, y) => {
+    const i = Math.floor(x / T), j = Math.floor(y / T), up = (i + j) % 3 < 2, fx = (x % T + 0.5) / T, fy = (y % T + 0.5) / T;
+    const bump = Math.sin(Math.PI * (up ? fx : fy));
+    return 0.5 + 0.16 * (bump - 0.66) + 0.06 * ((up ? warp[i] : weft[j]) - 0.5) + (up ? 0.025 : -0.035) + 0.03 * (r() - 0.5);
+  }));
 }
 // The section, in its own units (output px at the full frame's resting view). The leather is a 42-unit sheet and the lining
-// 18 (their earlier 92 : 40); D is how far the top face recedes (an oblique view). The left end is the tote's top edge, where
-// the leather's cut edge is bevelled round (radii RT, RB) and the lining stops just short of it (LI). The lining folds down
-// about its top face at HX, right of the four stitches that hold the two layers, by up to ANG.
-const SEC = { X0: 330, X1: 1560, Y: 524, D: [170, -136], LEA: 42, LIN: 18, RT: 13, RB: 8, LI: 4, HX: 450, ANG: 0.12 };
+// 24 (thick enough to read as a second layer on a phone); D is how far the top face recedes (an oblique view). The left end is
+// the tote's top edge, where the leather's cut edge is bevelled round (radii RT, RB) and the lining stops just short of it
+// (LI). The lining folds down about its top face at HX, right of the four stitches that hold the two layers, by up to ANG.
+const SEC = { X0: 330, X1: 1560, Y: 524, D: [170, -136], LEA: 42, LIN: 24, RT: 13, RB: 8, LI: 4, HX: 450, ANG: 0.13 };
 const rotAbout = a => { const hx = SEC.HX, hy = SEC.Y + SEC.LEA, c = Math.cos(a), s = Math.sin(a);
   return ([x, y]) => [hx + (x - hx) * c - (y - hy) * s, hy + (x - hx) * s + (y - hy) * c]; };
 function leatherProfile() {          // the cut face, clockwise: the rounded top edge, the top, the end, the bottom, the round
@@ -101,8 +147,8 @@ function cutaway(ctx, t, half) {
   // A section through the bag wall at the top seam, an extruded sheet in an oblique view: the cut face shows the leather
   // over the lining; the top face recedes. It opens on a straight match cut from the tote: on frame 1 its red stitch row
   // lies on the tote's seam as the trace shot leaves it (slope and push included), then the view eases back to the whole
-  // section (1.2 s). The lining swings down about its fold to open an empty space between it and the leather (drawn in the
-  // ground's dark, a faint dashed edge, nothing inside it), holds, then closes over 0.45 s (the split holds it open).
+  // section (1.2 s). The lining swings down about its fold to open an empty space between it and the leather (dark, lit
+  // only from its open end, nothing inside it), holds, then closes over 0.45 s (the split holds it open).
   const CX = half ? 1441 : W * 0.5;                                     // the centre of the view: the frame, or the right half
   const vg = ctx.createRadialGradient(CX, H * 0.5, 120 * (half ? 0.6 : 1), CX, H * 0.5, W * (half ? 0.36 : 0.62));
   vg.addColorStop(0, 'rgba(26,32,42,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
@@ -124,67 +170,120 @@ function cutaway(ctx, t, half) {
   const e = sm(t / 1.2), k0 = Math.hypot(tB[0] - tA[0], tB[1] - tA[1]) / (sB[0] - sA[0]), r0 = Math.atan2(tB[1] - tA[1], tB[0] - tA[0]);
   const k = k0 + (kf - k0) * e, rot0 = r0 * (1 - e), T = [tA[0] + (kf * sA[0] + of[0] - tA[0]) * e, tA[1] + (kf * sA[1] + of[1] - tA[1]) * e];
   const drift = 1 + 0.02 * sm(t / 5);
-  const open = sm((t - 1.3) / 0.8) * (half ? 1 : 1 - sm((t - 3.6) / 0.45));   // opens, holds 1.5 s, closes (the split holds it open)
+  // opens 1.1-1.9 s as the view settles, holds 1.7 s, closes 3.6-4.05 s on the click (the split holds it open)
+  const open = sm((t - 1.1) / 0.8) * (half ? 1 : 1 - sm((t - 3.6) / 0.45));
   ctx.save(); ctx.translate(CX, H / 2); ctx.scale(drift, drift); ctx.translate(-CX, -H / 2);
   ctx.translate(T[0], T[1]); ctx.rotate(rot0); ctx.scale(k, k); ctx.translate(-sA[0], -sA[1]);
-  const ang = SEC.ANG * open, rot = rotAbout(ang);
+  const ang = SEC.ANG * open, rot = rotAbout(ang), top = Y + LEA, bot = top + LIN, RA = [HX, top];   // RA: the fold's hinge
   const add = (p, s = 1) => [p[0] + D[0] * s, p[1] + D[1] * s];
   const poly = (pts) => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
-  const edge = (pts, a = 0.15) => { poly(pts); ctx.strokeStyle = `rgba(214,208,198,${a})`; ctx.lineWidth = 1.2 / k; ctx.stroke(); };
   const lin = (a, b, stops) => { const g = ctx.createLinearGradient(...a, ...b); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; };
-  // The materials carry the tote's own: cognac leather with a fine pebble grain, lit by a key from the upper left (a sheen
-  // along the top face's near edge and on the rounded edge, the cut face darker), and a twill-woven lining. Edges are
-  // faint (15 %), not drawn.
-  const face = (pts, base, light, pat, pa) => {
-    poly(pts); ctx.fillStyle = base; ctx.fill(); ctx.save(); poly(pts); ctx.clip();
-    if (light) { ctx.fillStyle = light; ctx.fill(); }
-    if (pat) { ctx.globalAlpha = pa; ctx.fillStyle = ctx.createPattern(pat, 'repeat'); poly(pts); ctx.fill(); }
+  const grey = v => `rgb(${v | 0},${v | 0},${v | 0})`, warm = a => `rgba(255,224,188,${a})`, pale = a => `rgba(252,244,228,${a})`;
+  const pat = (img, m) => { const p = ctx.createPattern(img, 'repeat'); p.setTransform(new DOMMatrix(m)); return p; };
+  const U = 1 / (k * drift), DL = Math.hypot(...D), dz = [D[0] / (2 * DL), D[1] / (2 * DL)];   // U: one output px; dz: a unit into depth
+  const BIG = [X0 - 600, Y - 600, X1 - X0 + 1400, 1400];
+  // paint: clip to a face, fill its material, then lay its texture and its light. A layer is [composite, style, alpha] over
+  // the whole face, or a function that draws its own shape (clipped to the face).
+  const paint = (pts, base, layers) => {
+    ctx.save(); poly(pts); ctx.clip(); ctx.fillStyle = base; ctx.fillRect(...BIG);
+    for (const L of layers) {
+      ctx.save();
+      if (typeof L === 'function') L(); else { ctx.globalCompositeOperation = L[0]; ctx.globalAlpha = L[2] ?? 1; ctx.fillStyle = L[1]; ctx.fillRect(...BIG); }
+      ctx.restore();
+    }
     ctx.restore();
   };
-  const shade = (hex, f) => { const n = parseInt(hex.slice(1), 16); return '#' + [16, 8, 0].map(b => Math.round(((n >> b) & 255) * f).toString(16).padStart(2, '0')).join(''); };
   const sides = P => P.map((p, i) => [p, P[(i + 1) % P.length]])           // the side faces the view sees (outward normal . D > 0)
     .map(([p, q]) => { const n = [q[1] - p[1], p[0] - q[0]], l = Math.hypot(...n) || 1; return { p, q, n: [n[0] / l, n[1] / l] }; })
     .filter(s => s.n[0] * D[0] + s.n[1] * D[1] > 1e-6);
+  // The light is the plates' soft top key: a broad pool from above, brightest a little left of centre and nearest the viewer,
+  // falling off toward both ends and into depth. Faces that look up take most of it; the cut faces take less and darken
+  // downward. Materials: the tote's cognac (warm red-brown) with a pebble grain, its cut section fibrous with the denser grain
+  // layer at the top and a lit arris; the lining a pale greige twill. No outlines: every edge is a change of light.
+  const KX = lin([X0, 0], [X1 + D[0], 0], [[0, grey(212)], [0.3, grey(255)], [0.55, grey(248)], [1, grey(160)]]);
   // a soft contact shadow under the whole section
-  { ctx.save(); const cy = Y + LEA + LIN + 40, g = ctx.createRadialGradient((X0 + X1) / 2 + 60, cy, 40, (X0 + X1) / 2 + 60, cy, (X1 - X0) * 0.6);
+  { ctx.save(); const cy = bot + 40, g = ctx.createRadialGradient((X0 + X1) / 2 + 60, cy, 40, (X0 + X1) / 2 + 60, cy, (X1 - X0) * 0.6);
     g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.scale(1, 0.18);
-    ctx.fillRect(X0 - 200, (Y + LEA + LIN - 80) / 0.18, X1 - X0 + 520, 600); ctx.restore(); }
-  // the lining: a thin twill sheet, its front (cut) face and its far end; its top face lies under the leather or the space
-  const LP = liningProfile(ang), LF = '#23262b';
-  for (const s of sides(LP)) {
-    const Q = [s.p, s.q, add(s.q), add(s.p)], end = s.n[0] > 0.7;
-    face(Q, end ? shade(LF, 0.62) : '#2c3036', null, TWILL(), 0.35); edge(Q);
+    ctx.fillRect(X0 - 200, (bot - 80) / 0.18, X1 - X0 + 520, 600); ctx.restore(); }
+  // The cavity: when the lining swings down, the space between the layers is empty air. What shows through its open cut is
+  // the lining's own inner face, in shadow under the leather: light reaches it only from the open end (right) and the cut
+  // plane (front), so it is darkest in the fold and deep under the leather. No fill, no hatching, no shapes: one surface in
+  // shadow, so the gap reads as a hollow, darker than both layers but not the ground's colour.
+  if (open > 0.005) {
+    const f0 = RA, f1 = rot([X1, top]);
+    paint([f0, f1, add(f1), add(f0)], '#4e4942', [
+      ['multiply', lin(f0, f1, [[0, grey(20)], [0.22, grey(70)], [0.6, grey(118)], [1, grey(160)]])],
+      ['multiply', lin(f0, add(f0), [[0, grey(255)], [0.1, grey(205)], [0.5, grey(128)], [1, grey(150)]])],
+      ['multiply', grey(255 * (0.3 + 0.7 * open))],
+    ]);
   }
-  face(LP, LF, lin([X0, Y + LEA], [X0, Y + LEA + LIN], [[0, 'rgba(255,255,255,0.05)'], [1, 'rgba(0,0,0,0.25)']]), TWILL(), 0.35); edge(LP);
-  // the space the lining opens: empty, the ground itself seen through it, its edge a faint 1 px dash; nothing is drawn in it
-  if (open > 0.01) {
-    const C = hull(sweep([[HX, Y + LEA], [X1, Y + LEA], rot([X1, Y + LEA])]));
-    ctx.save(); poly(C); ctx.clip(); ctx.setTransform(1, 0, 0, 1, 0, 0); ground(); ctx.restore();
-    ctx.save(); ctx.setLineDash([4 / k, 4 / k]); poly(C); ctx.strokeStyle = `rgba(214,208,198,${0.16 * cl(open * 3)})`;
-    ctx.lineWidth = 1 / k; ctx.stroke(); ctx.restore();
+  // the lining: a pale twill sheet; its cut face (flat to the fold, then turned down with the fold) and its far end
+  const LIN_C = '#827c70', TW = TWILL();
+  const liningFace = (x0, x1, lit) => paint([[x0, top], [x1, top], [x1, bot], [x0, bot]], LIN_C, [
+    ['overlay', pat(TW, [1, 0, 0, 1, X0, top])],
+    ['multiply', lin([0, top], [0, bot], [[0, grey(255)], [0.5, grey(232)], [1, grey(192)]])],
+    ['multiply', KX],
+    ['screen', lin([0, top], [0, top + 7], [[0, pale(0.14 * lit)], [1, pale(0)]])],
+  ]);
+  {
+    const e0 = rot([X1, top]), e1 = rot([X1, bot]), sn = Math.sin(ang), cs = Math.cos(ang);
+    paint([e0, e1, add(e1), add(e0)], '#5e5a52', [                    // the far end, turned away from the key
+      ['overlay', pat(TW, [dz[0], dz[1], -sn, cs, ...e0])],
+      ['multiply', lin(e0, e1, [[0, grey(255)], [1, grey(196)]])],
+      ['multiply', lin(e0, add(e0), [[0, grey(255)], [1, grey(205)]])],
+    ]);
+    liningFace(X0 + SEC.LI, HX, 0);
+    ctx.save(); ctx.translate(...RA); ctx.rotate(ang); ctx.translate(-RA[0], -RA[1]);
+    liningFace(HX, X1, open);
+    // the rim light: the key catches the lining's top edge where the gap uncovers it (2 px), with a soft glow under it; where
+    // the layers still touch, a dark contact line instead
+    ctx.save(); ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = lin([HX, 0], [X1, 0], [[0, pale(0)], [0.07, pale(0.9 * open)], [1, pale(0.9 * open)]]); ctx.fillRect(HX, top, X1 - HX, 2 * U);
+    ctx.fillStyle = lin([0, top + 2 * U], [0, top + 8 * U], [[0, pale(0.2 * open)], [1, pale(0)]]); ctx.fillRect(HX + 60, top + 2 * U, X1 - HX - 60, 6 * U);
+    ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 1 - open; ctx.fillStyle = grey(70); ctx.fillRect(HX, top, X1 - HX, 1.3 * U); ctx.restore();
+    ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = grey(70); ctx.fillRect(X0 + SEC.LI, top, HX - X0 - SEC.LI, 1.3 * U); ctx.restore();
+    ctx.save(); ctx.strokeStyle = pale(0.45 * open); ctx.lineWidth = 1.5 * U; ctx.beginPath(); ctx.moveTo(...e0); ctx.lineTo(...add(e0, 0.97)); ctx.stroke(); ctx.restore();
   }
   // the leather: a 42-unit sheet of the tote's cognac with a bevelled, rounded edge at the bag's top (the left end)
-  const P = leatherProfile(), TOP = '#7a5235', CUT = '#4e3322', SIL = hull(sweep(P));
-  poly(SIL); ctx.fillStyle = TOP; ctx.fill();                          // under the faces, so no seam shows between them
+  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#93512f', CUT = '#6c3a21', PB = PEBBLE(), FB = FIBRE();
+  poly(SIL); ctx.fillStyle = '#4a2817'; ctx.fill();                   // under the faces, so no light seam shows between them
+  const depthKey = (p) => lin(p, add(p), [[0, grey(255)], [0.5, grey(222)], [1, grey(168)]]);
   for (const s of sides(P)) {
     const Q = [s.p, s.q, add(s.q), add(s.p)];
-    if (s.n[0] > 0.7) { face(Q, shade(CUT, 0.62), null, PEBBLE(), 0.3); edge(Q); continue; }        // the far end
-    if (s.p[0] < X0 + SEC.RT - 0.01) {                                  // the rounded edge: lit by the key where it faces it
-      const f = cl((-0.55 * s.n[0] - 0.83 * s.n[1] - 0.82) / 0.18), hl = a => `rgba(255,226,190,${a})`;
-      face(Q, TOP, lin(s.p, add(s.p, 0.9), [[0, hl(0.34 + 0.12 * f)], [0.12, hl(0.12 + 0.12 * f)], [0.5, hl(0.05 * f)], [1, 'rgba(0,0,0,0.22)']]), null);
+    if (s.n[0] > 0.7) {                                                 // the far end: a cut face turned away from the viewer
+      paint(Q, '#4c2918', [['overlay', pat(FB, [dz[0], dz[1], 0, 1, X1, Y])], ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [1, grey(186)]])],
+        ['multiply', depthKey(s.p)]]);
       continue;
     }
-    // the top face: the key's sheen along its near edge, falling off into it and along it, and the fine grain
-    face(Q, TOP, lin(s.p, add(s.p, 0.9), [[0, 'rgba(255,226,190,0.34)'], [0.12, 'rgba(255,226,190,0.12)'], [0.5, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.22)']]), PEBBLE(), 0.3);
-    face(Q, 'rgba(0,0,0,0)', lin(s.p, s.q, [[0, 'rgba(255,240,220,0.06)'], [1, 'rgba(0,0,0,0.22)']]), null);
+    const up = cl(-s.n[1]), toward = cl(-0.5 * s.n[0] - 0.85 * s.n[1]);  // how much it faces the key (from above, a little front-left)
+    paint(Q, TOP, [
+      ['overlay', pat(PB, [1, 0, dz[0], dz[1], X0, Y])],
+      ['multiply', depthKey(s.p)],
+      ['multiply', KX],
+      ['multiply', grey(255 * (0.5 + 0.5 * up))],
+      ['screen', lin(s.p, add(s.p, 0.035), [[0, warm(0.3 + 0.25 * toward)], [1, warm(0)]])],   // the lit arris along the near edge
+      () => {                                                           // the leather's soft sheen: a broad highlight from the key
+        if (up < 0.9) return; ctx.globalCompositeOperation = 'screen';
+        const cx = X0 + 0.36 * (X1 - X0) + 0.25 * D[0], cy = Y + 0.25 * D[1];
+        ctx.translate(cx, cy); ctx.scale(1, 0.13); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 600);
+        g.addColorStop(0, warm(0.2)); g.addColorStop(0.5, warm(0.07)); g.addColorStop(1, warm(0)); ctx.fillStyle = g; ctx.fillRect(-900, -900, 1800, 1800);
+      },
+    ]);
   }
-  // the cut face: darker, a lit bevel along its top edge and around the rounded end, the grain fainter
-  face(P, CUT, lin([X0, Y], [X0, Y + LEA], [[0, 'rgba(255,230,200,0.10)'], [1, 'rgba(0,0,0,0.25)']]), PEBBLE(), 0.2);
-  ctx.save(); poly(P); ctx.clip();
-  ctx.fillStyle = lin([0, Y], [0, Y + 4.5], [[0, 'rgba(255,226,190,0.22)'], [1, 'rgba(255,226,190,0)']]); ctx.fillRect(X0, Y, X1 - X0, 4.5);
-  ctx.fillStyle = lin([X0, 0], [X0 + 10, 0], [[0, 'rgba(255,226,190,0.12)'], [1, 'rgba(255,226,190,0)']]); ctx.fillRect(X0, Y, 10, LEA);
-  ctx.restore();
-  edge(P); edge(SIL);
+  // the cut face: the cut through the leather, fibrous, darker than the top and darkening downward, its denser grain layer
+  // a thin darker band under a lit arris, the rounded end catching a little key; a faint bounce from the pale lining on its
+  // lower edge where the gap is open
+  paint(P, CUT, [
+    ['overlay', pat(FB, [1, 0, 0, 1, X0, Y])],
+    ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [0.05, grey(255)], [0.07, grey(208)], [0.15, grey(214)], [0.19, grey(255)], [1, grey(176)]])],
+    ['multiply', KX],
+    ['screen', lin([0, Y], [0, Y + 4], [[0, warm(0.5)], [1, warm(0)]])],
+    ['screen', lin([X0, 0], [X0 + 12, 0], [[0, warm(0.16)], [1, warm(0)]])],
+    () => { ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = lin([0, top], [0, top - 4], [[0, pale(0.2 * open)], [1, pale(0)]]);
+      poly([[HX + 40, top], [X1, top], [X1, top - 4], [HX + 260, top - 4]]); ctx.fill(); },
+  ]);
   // the seam, in the film's red and the only red: a running stitch along the cut face (the row that lands on the tote's seam
   // on the cut), the same stitch along the top face's near-left edge into depth, and four stitches through both layers at
   // the fold. The thread runs hole to hole and sinks into small dark awl holes at every stitch end.
@@ -205,7 +304,7 @@ function cutaway(ctx, t, half) {
     ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.1 * px; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
   }
   ctx.restore(); ctx.restore();
-  grain(ctx, t);
+  grainCut(ctx, t);
 }
 window.draw = (mode, t) => {
   const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);

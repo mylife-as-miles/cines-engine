@@ -1,5 +1,5 @@
 {
-  "about": "Chapter 7 into 8: Tim's 2024 statement (S1, page 2), the line about his father lit as the voice reaches it. The medical lines higher on the page stay soft.",
+  "about": "Chapter 7 into 8: Tim's 2024 statement (S1, page 2), the line about his father lit as the voice reaches it. The medical lines higher on the page stay soft. Framed as tight as the whole lit phrase allows (about 1.65x the first cut, x-height about 30 px): at 40 px the phrase is wider than the frame, and a crop would read 'live long enough to see his daughter free', the opposite of what it says.",
   "plate": "frames/raw/evidence_table/page.png",
   "corners": "frames/raw/evidence_table/page.corners.json",
   "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
@@ -9,7 +9,8 @@
     {
       "phrase": "not going to live long enough to see his daughter free,",
       "t": 1.2,
-      "dur": 0.8
+      "dur": 0.8,
+      "pad_em": [0.25, 0.0104]
     }
   ],
   "focus": "not going to live long enough to see his daughter free,",
@@ -21,10 +22,11 @@
     "very pale. She told me that she still has to work in the prison despite her illness but that she can’t",
     "lift heavy objects because her fibroids might rupture and she would start bleeding."
   ],
-  "zoom": [3.85, 4.1],
-  "end_offset": [55, -10],
+  "zoom": [6.35, 6.75],
+  "start_center": [1336.3, 753.7],
+  "end_offset": [6.8, -0.1],
   "roll_deg": -9,
-  "focus_band": {"sharp_lines": 1.8, "ramp_lines": 3.5, "blur_px": 3.6},
+  "focus_band": {"sharp_lines": 1.8, "ramp_lines": 3.5, "blur_px": 5.9},
   "duration": 6.0,
   "length": 7.0
 }

@@ -1,5 +1,5 @@
 {
-  "about": "Cold open and chapter 4: Tim's 2024 statement (S1, page 1), the two 'yes' lines lit in turn as the voice says them.",
+  "about": "Cold open and chapter 4: Tim's 2024 statement (S1, page 1), the two 'yes' lines lit in turn as the voice says them. Framed tight (about 2.1x the first cut) so the lit lines read at 40 px x-height on a phone: the lines are longer than the frame at that size, so the hold keeps both 'yes' endings in frame and lets the lines' starts run off the left edge; each stroke ends about 4 px past its last character (pad_em measured at the hold).",
   "plate": "frames/raw/evidence_table/page.png",
   "corners": "frames/raw/evidence_table/page.corners.json",
   "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
@@ -12,7 +12,7 @@
       "dur": 0.55,
       "pad_em": [
         0.25,
-        0.05
+        -0.0244
       ]
     },
     {
@@ -21,7 +21,7 @@
       "dur": 0.55,
       "pad_em": [
         0.25,
-        0.55
+        -0.0081
       ]
     }
   ],
@@ -32,18 +32,22 @@
     "I am currently busy helping my father through cancer treatment but I am"
   ],
   "zoom": [
-    3.85,
-    4.1
+    8.2,
+    8.75
+  ],
+  "start_center": [
+    1117.6,
+    860.8
   ],
   "end_offset": [
-    55,
-    -10
+    62.3,
+    26.3
   ],
   "roll_deg": -9,
   "focus_band": {
     "sharp_lines": 1.8,
     "ramp_lines": 3.5,
-    "blur_px": 3.6
+    "blur_px": 7.7
   },
   "duration": 6.0,
   "length": 7.0
