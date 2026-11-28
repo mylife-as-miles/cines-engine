@@ -135,7 +135,12 @@ POSES = {
 }
 
 POSES["bag_insert"] = dict(POSES["ch05"], OfficerA={"chest": (5, 0), "behind": True, "look": "handbag-tote"})
-POSES["bag_touch"] = dict(POSES["ch05"], OfficerA={**POSES["ch05"]["OfficerA"], "index_grip": (55, 60, 40, 28)})
+POSES["bag_touch"] = dict(POSES["ch05"], OfficerA={
+    **POSES["ch05"]["OfficerA"],
+    "grip_fingers": {"f_index": (46, 58, 40, 11), "f_middle": (50, 64, 43, 3), "f_ring": (54, 67, 45, -4),
+                     "f_pinky": (58, 70, 46, -8), "thumb": (29, 28, 20)},
+    "thumb_bend": 38, "thumb_splay": -14,
+})
 
 # The tag close-up is defined in the suitcase's own frame (so it follows the case): from the front, about 42 degrees
 # down onto the handle, the tag hanging from the grip toward the lens; the front zip and its pulls below the frame.
@@ -194,7 +199,7 @@ CAMERAS.update({
                    focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
 # Ch 05 returns to the same front seam after the clean three-bag reveal.
-CAMERAS["handbags_touch"] = dict(CAMERAS["handbags"], pose="bag_touch",
+CAMERAS["handbags_touch"] = dict(CAMERAS["handbags"], pose="bag_touch", tote_lift=0.022,
                                  cheat={**CAMERAS["handbags"]["cheat"], "OfficerA": (-0.32, 0.53)},
                                  facing={"OfficerA": (0.18, 0.305)})
 FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.101, 0.173, TOP + 0.2505), "fx_match": (0, 0, TOP + 0.30),
@@ -685,12 +690,13 @@ def apply_pose(holder, p):
         _behind(holder, 1)
     if p.get("close_thumb"):
         rig = rigged.rig_of(holder)
-        rigged.articulate_hand(holder, "R", {"f_index": p.get("index_grip", (44, 62, 39)), "f_middle": (50, 67, 42),
-                                             "f_ring": (54, 69, 44), "f_pinky": (58, 70, 46), "thumb": (26, 28, 21)})
+        grip = p.get("grip_fingers", {"f_index": (44, 62, 39), "f_middle": (50, 67, 42), "f_ring": (54, 69, 44),
+                                     "f_pinky": (58, 70, 46), "thumb": (26, 28, 21)})
+        rigged.articulate_hand(holder, "R", grip)
         thumb = rig.pose.bones["thumb.01_master.R"]
         thumb.rotation_mode = "XYZ"
-        thumb.rotation_euler.x = math.radians(40)
-        thumb.rotation_euler.z = math.radians(-18)
+        thumb.rotation_euler.x = math.radians(p.get("thumb_bend", 40))
+        thumb.rotation_euler.z = math.radians(p.get("thumb_splay", -18))
         bpy.context.view_layer.update()
     if p.get("roll_r"):
         _roll(holder, "forearm_fk.R", p["roll_r"])
@@ -966,6 +972,9 @@ def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "ch00")
     set_beat(cfg.get("layout", beat))
+    if lift := cfg.get("tote_lift"):
+        _STATE["props"]["handbag-tote"].location.z += lift
+        bpy.context.view_layer.update()
     show_cast = cfg.get("cast", True)
     for o in _STATE["cast"]:
         o.hide_render = not show_cast
