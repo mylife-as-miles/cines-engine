@@ -295,8 +295,8 @@ def build(base=None, frames=None):
                 pb[f"toe_ik.{k}"].matrix = inv @ toeQ @ feet[k].toe_rest
         # left arm carries the duffel: a little out from the body, a small swing
         fl = 4.0 - 4.0 * math.cos(w - 0.4)
-        rg._aim(rig, "upper_arm_fk.L", rg._dir(0, fl, 1, 17.0))
-        rg._aim(rig, "forearm_fk.L", rg._dir(0, fl + 7.0, 1, 12.0))
+        rg._aim(rig, "upper_arm_fk.L", rg._dir(0, fl, 1, LEFT_OUT[0]))
+        rg._aim(rig, "forearm_fk.L", rg._dir(0, fl + 7.0, 1, LEFT_OUT[1]))
         # right arm pulls the case, back and a little out
         pull = -23.0 + 2.0 * math.sin(w)
         rg._aim(rig, "upper_arm_fk.R", rg._dir(0, pull, -1, 12.0))
@@ -314,8 +314,11 @@ def build(base=None, frames=None):
             th.rotation_mode = "XYZ"
             th.rotation_euler = (math.radians(30), 0.0, math.radians(-10))
         bpy.context.view_layer.update()
-        grips_r.append(grip_frame(rig, "R"))
-        grips_l.append(grip_frame(rig, "L"))
+        if fi == 0:
+            for k in ("L", "R"):
+                d[f"grip_{k}"] = list(fist_hollow(rig, d, k))
+        grips_r.append(grip_frame(rig, "R", Vector(d["grip_R"])))
+        grips_l.append(grip_frame(rig, "L", Vector(d["grip_L"])))
         for b in pb:
             if not b.name.startswith(("DEF-", "ORG-", "MCH-")):
                 record.setdefault(b.name, []).append(b.matrix_basis.copy())
@@ -356,6 +359,8 @@ def build(base=None, frames=None):
 
 
 CAM_X, CAM_Z, AIM_Z = 3.45, 1.02, 0.84
+LEFT_OUT = (27.0, 30.0)            # the duffel arm: upper arm and forearm out from the side (deg), so the bag clears
+                                   # the leg and skirt (at 17/12 its inner face reached the middle of the thigh)
 LENS, FSTOP = 32.0, 4.0
 
 
@@ -379,17 +384,60 @@ def grip_hand(rig, inv, side, bar, knuckles):
     bpy.context.view_layer.update()
 
 
-def grip_frame(rig, side):
-    """The point a bar passes through in the closed hand (between the knuckles and the curled middle phalanges)
-    and the bar's direction (index knuckle toward pinky knuckle), world space."""
-    pb = rig.pose.bones
-    M = rig.matrix_world
-    k_i = M @ pb[f"DEF-f_index.01.{side}"].head
-    k_p = M @ pb[f"DEF-f_pinky.01.{side}"].head
-    mids = [M @ pb[f"DEF-f_{f}.02.{side}"].head for f in ("index", "middle", "ring")]
-    knuck = (k_i + k_p) / 2
-    mid = sum(mids, Vector()) / 3
-    return (knuck * 0.45 + mid * 0.55), (k_p - k_i).normalized()
+def fist_hollow(rig, holder, side, bar_r=0.0125):
+    """Where a bar of radius bar_r fits inside the closed hand: the centre of the largest empty circle among the
+    hand's vertices (fingers, thumb, palm; armature deformation only), in the plane across the bar, in the hand
+    bone's frame. Measured once (the fist does not change during the walk)."""
+    body = bpy.data.objects[holder["body"]]
+    saved = [(m, m.show_viewport) for m in body.modifiers]
+    for m, _ in saved:
+        m.show_viewport = m.type == "ARMATURE"
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = body.evaluated_get(dg)
+    me = ev.to_mesh()
+    names = {g.index: g.name for g in body.vertex_groups}
+    H = rig.matrix_world @ rig.pose.bones[f"hand_fk.{side}"].matrix
+    Hi = H.inverted()
+    pts = []
+    for v, vo in zip(me.vertices, body.data.vertices):
+        gs = [g for g in vo.groups if g.group in names and g.weight > 0.3 and names[g.group].endswith("." + side)
+              and names[g.group].startswith(("DEF-f_", "DEF-thumb", "DEF-palm", "DEF-hand"))]
+        if gs:
+            pts.append(Hi @ (ev.matrix_world @ v.co))
+    ev.to_mesh_clear()
+    for m, sv in saved:
+        m.show_viewport = sv
+    bpy.context.view_layer.update()
+    # the bar runs along the hand frame's z (grip_hand); look at the slice the fingers wrap
+    zs = sorted(p.z for p in pts)
+    zc = 0.5 * (zs[len(zs) // 10] + zs[9 * len(zs) // 10])
+    band = [p for p in pts if abs(p.z - zc) < 0.035]
+    xs, ys = [p.x for p in band], [p.y for p in band]
+    best = (-1.0, None)
+    steps = 40
+    for i in range(steps + 1):
+        x = min(xs) + (max(xs) - min(xs)) * i / steps
+        for j in range(steps + 1):
+            y = min(ys) + (max(ys) - min(ys)) * j / steps
+            # inside the fist only: hand on both sides of the point along x and along y (narrow strips)
+            sx = [p.x for p in band if abs(p.y - y) < 0.008]
+            sy = [p.y for p in band if abs(p.x - x) < 0.008]
+            if not (sx and sy and min(sx) < x < max(sx) and min(sy) < y < max(sy)):
+                continue
+            dmin = min((p.x - x) ** 2 + (p.y - y) ** 2 for p in band) ** 0.5
+            if dmin > best[0]:
+                best = (dmin, Vector((x, y, zc)))
+    print(f"ANIM grip {side}: the fist's hollow has room for a bar of radius {1000 * best[0]:.1f} mm "
+          f"(handle about {1000 * bar_r:.1f} mm)", flush=True)
+    return best[1]
+
+
+def grip_frame(rig, side, hollow):
+    """The point the bar passes through in the closed hand (its hollow, calibrated in the hand's frame) and the
+    bar's direction, world space."""
+    H = rig.matrix_world @ rig.pose.bones[f"hand_fk.{side}"].matrix
+    return H @ hollow, (H.to_3x3() @ Vector((0, 0, 1))).normalized()
 
 
 def bake_pose(rig, frames, record):
@@ -523,7 +571,7 @@ def duffel_follow(frames, grips):
             ph += vph * h
         prev, vel_prev = g.copy(), vel
         R = Matrix.Rotation(th, 4, "X") @ Matrix.Rotation(ph, 4, "Y") @ Matrix.Rotation(math.radians(90), 4, "Z")
-        M = Matrix.Translation(g - Vector((0, 0, 0.028))) @ R @ Matrix.Translation(-top) @ Matrix.Diagonal((k, k, k, 1.0))
+        M = Matrix.Translation(g - Vector((0, 0, 0.040))) @ R @ Matrix.Translation(-top) @ Matrix.Diagonal((k, k, k, 1.0))
         mats.append(M)
         swing.append(math.degrees(max(abs(th), abs(ph))))
     duffel.parent = None
