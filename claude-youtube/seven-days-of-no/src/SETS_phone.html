@@ -5,18 +5,18 @@
 <script src="../kit/pov.js"></script>
 <script src="../kit/sets.js"></script>
 <script>
-// ?mode=lock|chat  &both=1 (lock and chat side by side at 0.9 scale)
+// ?mode=lock|chat  &typing=1  &draft=text  &both=1 (lock and chat side by side at 0.92 scale; the Q04 lock and the Q07 chat)
 const q = new URLSearchParams(location.search);
 const g = document.getElementById('c').getContext('2d');
-const LOCK = { mode: 'lock', time: '9:14', date: 'Wednesday, 12 March', battery: 0.12,
-  notes: [{ icon: 'call', title: 'Mum', body: '9 missed calls', time: 'now', count: 9 }, { icon: 'msg', title: 'Mum', body: 'Are you alive?', time: '2m ago' }] };
-const CHAT = { mode: 'chat', contact: 'Boss', avatarColor: '#9A9A9A', time: '6:12', t: 0.4,
+const LOCK = { mode: 'lock', time: '8:47', date: 'Wednesday', battery: 0.12,
+  notes: [{ icon: 'call', title: 'Mom', body: '9 missed calls', time: '8:41', count: 9 }, { icon: 'msg', title: 'Mom', body: 'Are you alive?', time: 'now' }] };
+const CHAT = { mode: 'chat', contact: 'Boss', avatarColor: '#A6A6A6', time: '10:14', t: 0.4,
   messages: [{ from: 'them', text: 'Need that report tonight.' }, { from: 'me', text: "I can't tonight. I can send it first thing tomorrow." }, { from: 'them', text: 'Perfect 👍' }] };
 SETS.ready().then(() => {
   if (q.get('both') === '1') {
     SETS.phoneScreen(g, Object.assign({}, LOCK, { x: 560, scale: 0.92 }));
     SETS.phoneScreen(g, Object.assign({}, CHAT, { x: 1360, scale: 0.92, bg: false, typing: null }));
-  } else SETS.phoneScreen(g, q.get('mode') === 'chat' ? CHAT : LOCK);
+  } else SETS.phoneScreen(g, q.get('mode') === 'chat' ? Object.assign({}, CHAT, { typing: q.get('typing') === '1' ? 'them' : null, draft: q.get('draft') || '' }) : LOCK);
   window.FRAME_READY = true;
 });
 </script></body></html>

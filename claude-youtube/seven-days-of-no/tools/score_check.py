@@ -47,10 +47,12 @@ for f in files:
     if ids and tid not in ids: continue
     role = ROLE.get(tid, 'main')
     y, sr = librosa.load(f, sr=22050, mono=True)
-    tune = float(librosa.estimate_tuning(y=y, sr=sr, bins_per_octave=36)) * 100
+    # librosa returns the deviation in fractions of a bin; at 36 bins per octave a bin is 1/3 semitone (33.3 cents).
+    # (claude-film/long-distance/tools/score_check.py multiplied by 100, reading three times too large.)
+    tune = float(librosa.estimate_tuning(y=y, sr=sr, bins_per_octave=36)) * 1200 / 36
     rms = librosa.feature.rms(y=y, frame_length=sr * 5, hop_length=sr * 5)[0]
     env5 = [round(float(20 * np.log10(max(r, 1e-6))), 1) for r in rms]
-    chroma = librosa.feature.chroma_cqt(y=y, sr=sr, tuning=tune / 100).mean(axis=1)
+    chroma = librosa.feature.chroma_cqt(y=y, sr=sr, tuning=tune / 100).mean(axis=1)    # chroma_cqt takes tuning in semitones
     key, kr = key_of(chroma)
     tempo = float(np.atleast_1d(librosa.beat.beat_track(y=y, sr=sr)[0])[0])
     # where it ends: the last moment the 50 ms RMS is within 30 dB of the take's loud level, and where it falls 50 dB down

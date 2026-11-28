@@ -1,12 +1,13 @@
-// Contact sheet of a sequence: node tools/strip.js Q02 [stepSeconds=1] [out.png] [cols=6]
+// Contact sheet of a sequence: node tools/strip.js Q02 [stepSeconds=1] [out.png|out.jpg] [cols=6] [--placeholders]
 //   (or ALL for the whole video, or a global range "120-140"). Frames are every step seconds through the sequence's span on the
 //   narration clock; each tile is labelled with its global time, sequence-local time and shot name. Prints ms per frame,
 //   the placeholders still in use and any warnings (missing anchors, shots outside their sequence, draw errors).
 const { open } = require('./film');
 (async () => {
-  const [id = 'Q01', step = '1', out, cols = '6'] = process.argv.slice(2);
+  const [id = 'Q01', step = '1', out, cols = '6'] = process.argv.slice(2).filter(a => !a.startsWith('--'));
+  const jpg = out && /\.jpe?g$/i.test(out);
   const { browser, page, errs } = await open();
-  const res = await page.evaluate(async ({ id, step, cols }) => {
+  const res = await page.evaluate(async ({ id, step, cols, jpg }) => {
     let a, b, title, seq = null;
     if (/^\d+(\.\d+)?-\d+(\.\d+)?$/.test(id)) { [a, b] = id.split('-').map(Number); title = 'range ' + id; }
     else if (id.toUpperCase() === 'ALL') { a = 0; b = FILM.total; title = 'all'; }
@@ -24,8 +25,8 @@ const { open } = require('./film');
       g.fillStyle = '#9ad'; g.fillText((sh.name || '').slice(0, 52), x + 6, y + th + 36);
     }
     const shots = seq ? seq.shots.map(s => [+s.at.toFixed(2), s.name, s.in ? (s.in.type || s.in) : 'cut']) : [];
-    return { url: sheet.toDataURL('image/png'), ms, times, a, b, title, shots, placeholders: ART.report(), warnings: FILM.warnings || [] };
-  }, { id, step: +step, cols: +cols });
+    return { url: jpg ? sheet.toDataURL('image/jpeg', 0.86) : sheet.toDataURL('image/png'), ms, times, a, b, title, shots, placeholders: ART.report(), warnings: FILM.warnings || [] };
+  }, { id, step: +step, cols: +cols, jpg });
   if (res.error) { console.log(res.error); errs.forEach(e => console.log(e)); await browser.close(); process.exit(2); }
   const fs = require('fs'); const file = out || `out/strip_${id}.png`;
   fs.writeFileSync(file, Buffer.from(res.url.split(',')[1], 'base64'));

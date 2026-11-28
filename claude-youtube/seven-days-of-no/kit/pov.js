@@ -181,6 +181,9 @@
     guilty: { brows: { lift: 0.0, tilt: 0.13, arch: 0.06 }, eyes: { lid: 0.42, lidTilt: 0.3, pupil: 1 }, mouth: { k: 'frown', w: 0.13, c: 0.06 }, look: [0.45, 0.75] },
     tired_closed: { brows: { lift: 0.02, tilt: 0.11, arch: 0.1 }, eyes: { lid: 0.62, lidTilt: 0.1, lower: 0.12 }, circles: 1, mouth: { k: 'frown', w: 0.12, c: 0.05 } },
     worried: { brows: { lift: 0.03, tilt: 0.12, arch: 0.08 }, eyes: { r: 1.04, pupil: 0.95 }, mouth: { k: 'flat', w: 0.12 } },
+    // cheeky, cartoon-rude: half-lidded side-eye, one brow up, tongue out (rude) or a lopsided smirk (smug)
+    rude: { browL: { lift: 0.1, tilt: 0, arch: 0.34 }, browR: { lift: -0.04, tilt: -0.07, arch: 0.08 }, eyes: { lid: 0.44, lidTilt: -0.05, pupil: 1 }, look: [0.75, -0.2], mouth: { k: 'tongue', w: 0.17 } },
+    smug: { browL: { lift: 0.1, tilt: 0, arch: 0.34 }, browR: { lift: -0.04, tilt: -0.07, arch: 0.08 }, eyes: { lid: 0.44, lidTilt: -0.05, pupil: 1 }, look: [0.75, -0.2], mouth: { k: 'smirk', w: 0.17 } },
   };
   function resolveExpr(e, over) {
     const base = typeof e === 'object' && e ? e : (EXPR[e] || EXPR.neutral);
@@ -240,7 +243,15 @@
       return;
     }
     const w = (m.w || 0.2) * R;
-    if (m.k === 'smile' || m.k === 'frown') {
+    if (m.k === 'tongue' || m.k === 'smirk') {   // lopsided closed smirk; 'tongue' adds a tongue poking out
+      const p = new Path2D(); p.moveTo(mx - w, my + 0.01 * R); p.quadraticCurveTo(mx - w * 0.1, my + 0.06 * R, mx + w, my - 0.06 * R); 
+      if (m.k === 'tongue') {
+        const tx = mx + w * 0.12, tw = 0.075 * R, ty = my + 0.03 * R, tg = new Path2D();
+        tg.moveTo(tx - tw, ty - 0.01 * R); tg.lineTo(tx - tw, ty + 0.07 * R); tg.arc(tx, ty + 0.07 * R, tw, PI, 0, true); tg.lineTo(tx + tw, ty - 0.02 * R); tg.closePath();
+        fs(g, tg, C.tongue, lw * 0.8); polyline(g, [[tx, ty + 0.015 * R], [tx, ty + 0.09 * R]], lw * 0.5);
+      }
+      strokeP(g, p, lw * 0.85); polyline(g, [[mx + w, my - 0.06 * R], [mx + w * 1.12, my - 0.1 * R]], lw * 0.6);
+    } else if (m.k === 'smile' || m.k === 'frown') {
       const c = (m.c || 0.08) * R * (m.k === 'smile' ? 1 : -1);
       polyline(g, quadPts([mx - w, my - c * 0.25], [mx, my + c * 1.5], [mx + w, my - c * 0.25], 12), lw * 0.85);
       if (m.k === 'frown') { [-1, 1].forEach(s => polyline(g, [[mx + s * w * 1.0, my - c * 0.25], [mx + s * w * 1.12, my - c * 0.25 + 0.035 * R]], lw * 0.6)); }
@@ -381,6 +392,7 @@
     chin: { f: [[10.5, 0.45, 28, 1.05], [3.5, 0.1, 17, 1.7], [-3.6, 0.1, 16, 1.7], [-10.6, 0.1, 14, 1.6]], t: [15, 10, 1.25, 22, 0.1] },
     thumb: { f: [[10.5, 0.1, 17, 1.7], [3.5, 0.1, 18, 1.7], [-3.6, 0.1, 17, 1.7], [-10.6, 0.1, 15, 1.6]], t: [12, 8, 2.75, 24, 0] },
     clasp: { f: [[10.5, 0.3, 24, 1.1], [3.5, 0.25, 26, 1.1], [-3.6, 0.2, 25, 1.1], [-10.6, 0.15, 22, 1.05]], t: [15, 9, -0.55, 21, 0.2] },
+    peace: { f: [[10.5, 0.3, 32, 0], [3.5, -0.16, 33, 0], [-3.6, 0.12, 15, 1.7], [-10.6, 0.12, 13, 1.6]], t: [14, 13, -0.35, 17, 0.75] },
   };
   const FW = 11.8, TW = 12.6, HAND_K = 0.9, handCache = {};   // HAND_K: overall hand size (refs: a hand is ~0.3 of the head)
   function handParts(name) {
@@ -541,12 +553,26 @@
       armL: { ik: [-6, 22], bend: 1, hand: 'flat', flip: 1, hrot: 0.2 }, armR: { ik: [8, 30], bend: -1, hand: 'clasp', flip: -1, hrot: -0.5 } }, { legL: { a: -0.005, k: 0 }, legR: { a: 0.005, k: 0 } }),
     thumbs_up: o => Object.assign({ stance: 'front', armL: STAND_ARML, armR: { a: 0.55, e: 2.15, hand: 'thumb', flip: -1 } }, STAND_LEGS),
     hand_mouth: o => Object.assign({ stance: 'front', armL: { ik: [-2, -268], bend: 1, ul: 0.6, hand: 'flat', flip: -1, hrot: 0.15 }, armR: STAND_ARMR }, STAND_LEGS),
-    hold_phone: o => {
-      const mode = o.mode || 'ear', base = Object.assign({ stance: 'front', armL: STAND_ARML }, STAND_LEGS);
-      if (mode === 'ear') return Object.assign(base, { head: { tilt: 0.07 }, armR: { ik: [70, -322], bend: 1, ul: 0.85, hand: 'hold', flip: -1, hrot: 0.2 }, prop: { k: 'phone', at: [80, -362], a: 0.25, s: 0.9 } });
-      if (mode === 'show') return Object.assign(base, { armL: { a: -0.14, e: -2.72, hand: 'hold', flip: 1, hrot: 0.1 }, armR: STAND_ARMR, prop: { k: 'phone', hand: 'L', along: 40, off: [-6, 0], a: -0.22, s: 1.05, screen: 1, over: true } });
-      if (mode === 'out') return Object.assign(base, { armR: { ik: [168, -180], bend: 1, ul: 0.95, hand: 'hold', flip: 1, hrot: -0.35 }, prop: { k: 'phone', hand: 'R', along: 40, off: [4, 0], a: 0.28, s: 1, screen: 1 } });
-      return Object.assign(base, { head: { nod: 0.6 }, armR: { ik: [40, -132], bend: -1, fl: 0.62, hand: 'hold', flip: -1, hrot: 0.35 }, prop: { k: 'phone', hand: 'R', along: 54, off: [0, 0], a: -0.1, s: 0.95, screen: 1 } });
+    hold_phone: o => Object.assign({ stance: 'front', armL: STAND_ARML }, STAND_LEGS, phoneArms(o.mode || 'ear')),
+    // a run: long strides, a flight phase, arms pumping with bent elbows, leaning in (the reference animatic's 0:26)
+    run: o => {
+      const p = o.phase || 0, s = sinA(TAU * p), c = cosA(TAU * p), A = o.stride || 0.62;
+      const leg = (a, k) => ({ a, k, foot: 0.5 * k + 0.4 * Math.max(0, -a / A) - 0.2 * Math.max(0, a / A) });
+      const sw = 0.5 - 0.5 * s;
+      return { stance: 'side', ground: true, lift: 16 * Math.max(0, Math.abs(c) - 0.35) / 0.65, lean: 0.13, head: { turn: 0.35, tilt: 0.04 },
+        legL: leg(-A * s, 0.3 + 1.35 * Math.pow(Math.max(0, -c), 1.2)), legR: Object.assign(leg(A * s, 0.3 + 1.35 * Math.pow(Math.max(0, c), 1.2)), { z: 'back' }),
+        armR: { a: -0.25 + 0.95 * sw, e: 1.55 - 0.25 * sw, fl: 0.92, hand: 'fist', flip: -1, hrot: 0.2 },
+        armL: { a: 0.2 - 0.9 * (1 - sw), e: 1.25 + 0.2 * (1 - sw), fl: 0.92, hand: 'fist', flip: 1, hrot: 0.1 } };
+    },
+    peace: o => Object.assign({ stance: 'front', armL: STAND_ARML, head: { tilt: 0.06 } }, STAND_LEGS, HOLD_ARMS.peace()),
+    // seated deep in a sofa, three-quarter: thighs forward along the seat, shins down, feet on the floor (refs 03, 07, 10)
+    sit_sofa: o => {
+      const seat = o.seat == null ? 224 : o.seat, py = -(seat + 28), floorY = -54 - py, th = o.thigh || 150;
+      return { stance: 'side', ground: false, pelvis: { y: py }, lean: -0.06, sit: 'sofa', torso3q: o.q == null ? 1 : o.q, head: { turn: 0.35 },
+        legR: { pts: [[14, -6], [14 + th, -14], [th + 34, floorY]], z: 'back', foot: 0.04 },
+        legL: { pts: [[-8, 4], [-8 + th, 2], [th - 4, floorY]], foot: 0 },
+        armL: { ik: [96, -12], bend: 1, ul: 0.95, hand: 'flat', flip: -1, hrot: 0.75 },
+        armR: { ik: [th + 6, -40], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.5 } };
     },
     hold_laptop: o => Object.assign({ stance: 'front', armL: { ik: [62, -84], bend: 1, fl: 0.75, hand: 'flat', flip: -1, hrot: -0.55 }, armR: { ik: [236, -74], bend: -1, fl: 1, hand: 'hold', flip: -1, hrot: 0.9 },
       prop: { k: 'laptop', at: [150, -122], a: -0.05, s: 1.3, under: 'R' } }, STAND_LEGS),
@@ -555,6 +581,7 @@
     hold_box: o => Object.assign({ stance: 'front', armL: { ik: [-62, -118], bend: 1, fl: 0.6, hand: 'flat', flip: -1, hrot: 0.4 }, armR: { ik: [76, -100], bend: -1, fl: 0.6, hand: 'hold', flip: -1, hrot: 1.2 },
       prop: { k: 'box', at: [10, -150], s: 1 } }, STAND_LEGS),
     sit: o => {
+      if (o.view === 'sofa' || (o.view == null && (o.turn || 0) >= 0.45)) return POSES.sit_sofa(o);
       const seat = o.seat == null ? 200 : o.seat, view = o.view || 'side', py = -(seat + 24), floorY = -54 - py;
       const pose = { stance: view === 'side' ? 'side' : 'front', ground: false, pelvis: { y: py }, lean: -0.03, sit: view };
       if (view === 'side') {
@@ -570,18 +597,31 @@
       return pose;
     },
   };
-  // the arms a held prop takes over (merged after the pose, so `holding` works with walk, stand, sit...)
+  // phone arms by mode: ear (calls), front (reading it), show (held up beside the shoulder), out (held toward someone)
+  function phoneArms(mode) {
+    if (mode === 'ear') return { head: { tilt: 0.07 }, armR: { ik: [70, -322], bend: 1, ul: 0.85, hand: 'hold', flip: -1, hrot: 0.2 }, prop: { k: 'phone', at: [80, -362], a: 0.25, s: 0.9 } };
+    if (mode === 'show') return { armL: { a: -0.14, e: -2.72, hand: 'hold', flip: 1, hrot: 0.1 }, armR: STAND_ARMR, prop: { k: 'phone', hand: 'L', along: 40, off: [-6, 0], a: -0.22, s: 1.05, screen: 1, over: true } };
+    if (mode === 'out') return { armR: { ik: [168, -180], bend: 1, ul: 0.95, hand: 'hold', flip: 1, hrot: -0.35 }, prop: { k: 'phone', hand: 'R', along: 40, off: [4, 0], a: 0.28, s: 1, screen: 1 } };
+    return { head: { nod: 0.6 }, armR: { ik: [40, -132], bend: -1, fl: 0.62, hand: 'hold', flip: -1, hrot: 0.35 }, prop: { k: 'phone', hand: 'R', along: 54, off: [0, 0], a: -0.1, s: 0.95, screen: 1 } };
+  }
+  const HOLD_ARMS = {
+    peace: () => ({ armR: { a: 2.05, e: 0.85, hand: 'peace', flip: 1, hrot: -0.1, hs: 1.05 } }),   // V sign raised beside the head, palm out
+  };
+  const armsOnly = p => { const o = {}; ['armL', 'armR', 'prop', 'head'].forEach(k => { if (p[k]) o[k] = p[k]; }); return o; };
+  // the arms a held prop takes over (merged after the pose, so `holding` works with walk, run, stand, sit, sit_sofa...)
   const HOLD = {
     clipboard: p => p.stance === 'side'
       ? { armR: { ik: [34, -112], bend: -1, fl: 0.5, hand: 'hold', flip: -1, hrot: 0.3 }, prop: { k: 'clipboard', at: [10, -150], a: -0.32, s: 0.92 } }
       : { armL: { ik: [-50, -106], bend: 1, fl: 0.5, hand: 'hold', flip: -1, hrot: -0.9 }, prop: { k: 'clipboard', at: [-78, -122], a: 0.06, s: 0.92 } },
-    phone: p => p.prop && p.prop.k === 'phone' ? {} : POSES.hold_phone({ mode: 'front' }),
+    phone: (p, o) => p.prop && p.prop.k === 'phone' ? {} : phoneArms((o && (o.phoneMode || (o.pose !== 'hold_phone' && o.mode))) || 'front'),
+    phone_ear: p => phoneArms('ear'), phone_front: p => phoneArms('front'), phone_show: p => phoneArms('show'), phone_out: p => phoneArms('out'),
+    peace: p => HOLD_ARMS.peace(),
     // the cup held in front of the chest by the near hand, handle toward the hand, the cup itself clear of the fingers (ref 03)
     mug: p => ({ armL: { ik: [-18, -100], bend: 1, fl: 0.58, hand: 'fist', flip: -1, hrot: -0.25, hs: 0.95 }, prop: { k: 'mug', hand: 'L', along: 0, off: [48, -26], s: 1.25, steam: 0.15, handle: -1, over: true } }),
     // raised to the mouth by the far hand, elbow out to the side, forearm up (ref 07)
     sip: p => ({ armR: { ik: [60, -292], bend: 1, ul: 0.2, hand: 'fist', flip: 1, hrot: 0.2, hs: 0.95 }, prop: { k: 'mug', hand: 'R', along: 0, off: [-44, -22], s: 1.2, steam: 0.15, handle: 1, over: true }, head: Object.assign({}, p.head, { tilt: -0.05 }) }),
-    laptop: p => POSES.hold_laptop({}),
-    box: p => POSES.hold_box({}),
+    laptop: p => armsOnly(POSES.hold_laptop({})),
+    box: p => armsOnly(POSES.hold_box({})),
   };
 
   // ================================================================ props (world space; s = scale, a = rotation)
@@ -767,13 +807,17 @@
     let pose = opts.pose || 'stand';
     pose = typeof pose === 'function' ? pose(opts) : typeof pose === 'string' ? (POSES[pose] || POSES.stand)(opts) : pose;
     pose = Object.assign({}, pose);
-    if (opts.holding && HOLD[opts.holding]) { const h = HOLD[opts.holding](pose); for (const k in h) pose[k] = h[k]; }
+    if (opts.holding && HOLD[opts.holding]) { const h = HOLD[opts.holding](pose, opts); for (const k in h) pose[k] = k === 'head' ? Object.assign({}, pose.head, h.head) : h[k]; }
     if (opts.override) for (const k in opts.override) pose[k] = Object.assign({}, pose[k], opts.override[k]);
     return pose;
   }
   function figure(g, who, opts) {
     opts = opts || {};
     const ch = typeof who === 'string' ? (CAST[who] || CAST.hero) : who;
+    if (opts.seatAt) {   // sit so the seat contact lands on a set anchor; y (the floor under the feet) defaults to 224 px below it
+      const sa = Array.isArray(opts.seatAt) ? opts.seatAt : [opts.seatAt.x, opts.seatAt.y], s0 = (opts.scale || 1) * (ch.h || 1), fy = opts.y != null ? opts.y : sa[1] + 224 * s0;
+      opts = Object.assign({}, opts, { x: sa[0], y: fy, seat: (fy - sa[1]) / s0, pose: opts.pose || 'sit_sofa' });
+    }
     const t = Object.assign({ k: ch.top.k }, TOPS[ch.top.k], ch.top);
     const pose = resolvePose(opts), facing = opts.facing === -1 ? -1 : 1, sc = (opts.scale || 1) * (ch.h || 1);
     const tint = opts.tint || null, cache = {};
@@ -795,12 +839,15 @@
       else { Hp = [sg * hipX, RIG.hipY]; K = along(Hp, sp.a || 0, RIG.thigh); A = along(K, (sp.a || 0) - (sp.k || 0), shinL); }
       legs[side] = { H: Hp, K, A, z: sp.z, foot: sp.foot || 0, sg };
     });
-    if (pose.ground) { const lowest = Math.max(legs.L.A[1], legs.R.A[1]); pel[1] += (RIG.hipY + RIG.thigh + shinL) - lowest; }
+    if (pose.ground) { const lowest = Math.max(legs.L.A[1], legs.R.A[1]); pel[1] += (RIG.hipY + RIG.thigh + shinL) - lowest - (pose.lift || 0); }
     // ground shadow (in feet space, before moving to the pelvis)
     if (opts.shadow && pose.ground !== false) { g.fillStyle = opts.shadow; g.fill(ell(pel[0] + (legs.L.A[0] + legs.R.A[0]) / 2 + 12 * (stance === 'side' ? 1 : 0), 0, stance === 'side' ? 120 + Math.abs(legs.L.A[0] - legs.R.A[0]) * 0.45 : 104, 15)); }
     g.translate(pel[0], pel[1]);
-    const lean = pose.lean || 0, hd = pose.head || {}, shR = pose.shoulders || 0;
-    const T = p => rot(p, lean);
+    const lean = pose.lean || 0, hd = pose.head || {}, shR = pose.shoulders || 0, q3 = clamp(pose.torso3q || 0, 0, 1);
+    // three-quarter torso: the silhouette narrows a little and shifts toward the facing side, its details (zip, hood, pocket) shift further
+    const TX = { dx: q3 * 6, k: 1 - 0.12 * q3 }, DX = { dx: q3 * 16, k: (1 - 0.22 * q3) / (1 - 0.12 * q3) }, headDX = q3 * 18;
+    const torsoXf = () => { g.rotate(lean); g.translate(TX.dx, 0); g.scale(TX.k, 1); };
+    const T = p => rot([p[0] * TX.k + TX.dx, p[1]], lean);
     const arms = {};
     ['L', 'R'].forEach((side, i) => {
       const sp = pose['arm' + side] || (i ? STAND_ARMR : STAND_ARML), sg = i ? 1 : -1;
@@ -871,15 +918,17 @@
     // ---- torso (union with the front sleeves, so shoulders have no seam)
     const fa = ['L', 'R'].map(s => arms[s]).filter(front);
     F.torsoP = torsoPath(t);
-    g.save(); g.rotate(lean); g.lineWidth = F.lw * 2; g.strokeStyle = INK; g.stroke(F.torsoP); g.restore();
+    g.save(); torsoXf(); g.lineWidth = F.lw * 2 / TX.k; g.strokeStyle = INK; g.stroke(F.torsoP); g.restore();
     fa.forEach(A => { if (t.sleeve === 'short') strokeP(g, sleeveShort(A.S, A.E, t).p, F.lw * 2); else tubeInk(g, armTube(A), t.arm, F.lw); });
-    g.save(); g.rotate(lean); g.fillStyle = c(t.c); g.fill(F.torsoP); g.restore();
+    g.save(); torsoXf(); g.fillStyle = c(t.c); g.fill(F.torsoP); g.restore();
     fa.forEach(A => { if (t.sleeve === 'short') { g.fillStyle = c(t.c); g.fill(sleeveShort(A.S, A.E, t).p); } else tubeFill(g, armTube(A), t.arm, c(t.c)); });
     g.save(); g.rotate(lean);
+    g.save(); g.translate(TX.dx, 0); g.scale(TX.k, 1);
     g.save(); g.clip(F.torsoP); g.fillStyle = c(t.sh); g.fill(P([[light > 0 ? -t.hw - 10 : t.hw + 10, -150], [light > 0 ? -t.hw + 16 : t.hw - 16, -150], [light > 0 ? -t.hw + 18 : t.hw - 18, t.hem + 10], [light > 0 ? -t.hw - 10 : t.hw + 10, t.hem + 10]])); g.restore();
-    torsoDetails(F, t);
+    g.save(); g.translate(DX.dx, 0); g.scale(DX.k, 1); torsoDetails(F, t); g.restore();
+    g.restore();
     // ---- head
-    g.save(); g.translate(0, RIG.neckY); g.rotate(hd.tilt || 0); g.translate(0, RIG.headDy - RIG.neckY + (hd.sink || 0));
+    g.save(); g.translate(headDX, RIG.neckY); g.rotate(hd.tilt || 0); g.translate(0, RIG.headDy - RIG.neckY + (hd.sink || 0));
     drawHead(g, ch, F, { expr: opts.expr || 'neutral', face: opts.face, look: opts.look, blink: opts.blink, mouth: opts.mouth, turn: opts.turn != null ? opts.turn : (hd.turn || 0), nod: opts.nod != null ? opts.nod : (hd.nod || 0), marks: opts.marks });
     J.head = g.getTransform();
     g.restore();
@@ -896,7 +945,10 @@
     // ---- world-space anchors for the caller (bubbles, props)
     const M = g.getTransform(), wp = p => { const q = M.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
     const hm = J.head, hw = p => { const q = hm.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
-    const out = { head: hw([0, 0]), headTop: hw([0, -100]), headR: 100 * sc, mouth: hw([0, 50]), handL: wp(arms.L.Wr), handR: wp(arms.R.Wr), elbowL: wp(arms.L.E), elbowR: wp(arms.R.E), pelvis: wp([0, 0]), scale: sc };
+    const near = stance === 'side' ? legs.L : legs.R, thW = (pose.sit ? legW * 1.22 : legW) / 2;
+    const out = { head: hw([0, 0]), headTop: hw([0, -100]), headR: 100 * sc, mouth: hw([0, 50]), handL: wp(arms.L.Wr), handR: wp(arms.R.Wr), elbowL: wp(arms.L.E), elbowR: wp(arms.R.E), pelvis: wp([0, 0]), scale: sc,
+      knee: wp(near.K), kneeL: wp(legs.L.K), kneeR: wp(legs.R.K), feet: wp([(legs.L.A[0] + legs.R.A[0]) / 2, Math.max(legs.L.A[1], legs.R.A[1]) + 54]),
+      seat: pose.sit ? wp([0, RIG.hipY + thW]) : null, lap: pose.sit ? wp([(near.H[0] + near.K[0]) / 2, (near.H[1] + near.K[1]) / 2 - thW]) : null };
     g.restore();
     return out;
   }

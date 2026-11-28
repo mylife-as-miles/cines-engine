@@ -43,7 +43,7 @@ async function open(opts) {
   const errs = [];
   page.on('pageerror', e => errs.push('pageerror: ' + e.message));
   page.on('console', m => { if ((m.type() === 'error' || m.type() === 'warning') && !/willReadFrequently/.test(m.text())) errs.push(m.type() + ': ' + m.text()); });
-  await page.goto('file://' + path.join(ROOT, 'film/headless.html'));
+  await page.goto('file://' + path.join(ROOT, 'film/headless.html') + (opts.placeholders || process.argv.includes('--placeholders') ? '?placeholders=1' : ''));
   await page.waitForFunction(() => window.FILM_READY === true, null, { timeout: 60000 });
   return { browser, page, errs };
 }

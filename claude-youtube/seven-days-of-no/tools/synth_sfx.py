@@ -41,8 +41,8 @@ dim             a light going down: a soft round blip falling a fifth (A5 -> D5)
 plate_slide     One Too Many's sliding paper (CC0), low-passed: the plate pushed away
 
 Every pick was ranked with earshot against its description and alternatives (audio/sfx/check.json; the variants that
-lost are listed in audio/README.md). The Stable Audio takes (tools/sfx_gen.py, audio/gen_plan.json) are raw in
-audio/gen/ (not committed); TAKES says which take and window each finished sound is. Without the raw take, the
+lost are listed in audio/README.md). The chosen Stable Audio takes (tools/sfx_gen.py, audio/gen_plan.json) are kept
+raw as FLAC in audio/gen/ (fresh .wav takes are gitignored); TAKES says which take and window each finished sound is. Without the raw take, the
 committed audio/sfx/<name>.flac is kept as it is.
 """
 import json, os
@@ -97,13 +97,6 @@ def glide(f0, f1, dur, glide_s, decay):
     return np.sin(ph) * np.exp(-decay * t), ph
 
 
-def tick(f_hi, f_lo, dur=0.03, hi_decay=200, lo_decay=95, lo_gain=0.55):
-    """A clean tap on glass: a short high tick over a soft low pad, both damped sines (no noise)."""
-    t = T(dur)
-    x = np.sin(2 * np.pi * f_hi * t) * np.exp(-hi_decay * t) + lo_gain * np.sin(2 * np.pi * f_lo * t) * np.exp(-lo_decay * t)
-    return fade(x, 0.0007, 0.004)
-
-
 def buzz_pulse(dur, f=175.0, seed=0):
     """The vibration motor: a 175 Hz tone and its odd harmonics, spinning up and down with a smooth gate, plus a clean
     sub 'rattle' against the table (a half-frequency tone amplitude-modulated at 31 Hz)."""
@@ -143,11 +136,6 @@ def swept_air(dur, f_path, bw, seed, peak_at=0.45):
 def otm(name):
     x, sr = sf.read(os.path.join(OTM, name + '.flac'), dtype='float64')
     return x if x.ndim == 1 else x.mean(axis=1)
-
-
-def resample(x, ratio):
-    """Play x at `ratio` times its speed (pitch up for ratio > 1)."""
-    n = int(round(len(x) / ratio)); return signal.resample(x, n) if n > 8 else x
 
 
 def finish_take(x, sr, gate=True):
@@ -241,8 +229,8 @@ def main():
     gp = os.path.join(ROOT, 'audio', 'gen_plan.json'); gplan = json.load(open(gp)) if os.path.exists(gp) else {}
     old = json.load(open(os.path.join(OUT, 'plan.json'))) if os.path.exists(os.path.join(OUT, 'plan.json')) else {}
     for name, (take, a, b, gate) in TAKES.items():
-        g = os.path.join(GEN, take + '.wav')
-        if not os.path.exists(g):
+        g = next((os.path.join(GEN, take + e) for e in ('.flac', '.wav') if os.path.exists(os.path.join(GEN, take + e))), '')
+        if not g:
             if os.path.exists(os.path.join(OUT, name + '.flac')) and name in old:
                 plan[name] = old[name]; print(f'{name}: raw take {take} not here, kept the committed flac'); continue
             raise SystemExit(f'{name}: need audio/gen/{take}.wav (python3 tools/sfx_gen.py --only {take})')

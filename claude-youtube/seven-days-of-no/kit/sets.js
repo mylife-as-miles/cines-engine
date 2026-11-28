@@ -1185,116 +1185,135 @@
   };
 
   // ================================================================ PHONE SCREEN
-  const PH = { w: 520, h: 1000, r: 74, sx: -240, sy: -480, sw: 480, sh: 960, sr: 54 };
+  // Phone body 620x1050 (fills the frame height at scale 1); screen text sized to read on a phone watching the video:
+  // bubbles 46 px, card titles 46 px, card bodies 42 px. All text comes from opts (no contact or date defaults).
+  const PH = { w: 620, h: 1050, r: 84, sx: -288, sy: -503, sw: 576, sh: 1006, sr: 60 };
+  const PHT = { bubble: 46, bubbleLine: 58, title: 46, body: 42, small: 30, status: 32, name: 46, input: 38 };
   function phoneBody(g) {
-    // side buttons
-    for (const [y, h] of [[-250, 70], [-160, 110]]) { rrP(g, -PH.w / 2 - 9, y, 14, h, 5); paint(g, '#2E3038', 3); }
-    rrP(g, PH.w / 2 - 5, -200, 14, 130, 5); paint(g, '#2E3038', 3);
+    for (const [y, h] of [[-270, 80], [-170, 120]]) { rrP(g, -PH.w / 2 - 10, y, 16, h, 6); paint(g, '#2E3038', 3); }
+    rrP(g, PH.w / 2 - 6, -220, 16, 140, 6); paint(g, '#2E3038', 3);
     rrP(g, -PH.w / 2, -PH.h / 2, PH.w, PH.h, PH.r); paint(g, C.phone, 0);
-    g.save(); rrP(g, -PH.w / 2, -PH.h / 2, PH.w, PH.h, PH.r); g.clip(); polyP(g, [PH.w / 2 - 26, -PH.h / 2, PH.w / 2, -PH.h / 2, PH.w / 2, PH.h / 2, PH.w / 2 - 26, PH.h / 2]); g.fillStyle = '#2C2E35'; g.fill(); g.restore();
+    g.save(); rrP(g, -PH.w / 2, -PH.h / 2, PH.w, PH.h, PH.r); g.clip(); polyP(g, [PH.w / 2 - 28, -PH.h / 2, PH.w / 2, -PH.h / 2, PH.w / 2, PH.h / 2, PH.w / 2 - 28, PH.h / 2]); g.fillStyle = '#2C2E35'; g.fill(); g.restore();
     rrP(g, -PH.w / 2, -PH.h / 2, PH.w, PH.h, PH.r); paint(g, null, LW.frame);
   }
   function statusBar(g, o, light) {
-    const col = light ? '#FFFFFF' : '#1c1c1c';
-    rrP(g, -62, -466, 124, 36, 18); g.fillStyle = '#121216'; g.fill();
-    g.fillStyle = col; g.font = font(800, 24); g.textBaseline = 'middle'; g.textAlign = 'left';
-    if (o.mode === 'chat') g.fillText(o.time || '9:41', -200, -447);
-    for (let i = 0; i < 4; i++) { rrP(g, 118 + i * 9, -440 - i * 5, 6, 8 + i * 5, 2); g.fill(); }
+    const col = light ? '#FFFFFF' : '#1c1c1c', y = PH.sy + 40, R = PH.sx + PH.sw;
+    rrP(g, -72, PH.sy + 18, 144, 42, 21); g.fillStyle = '#121216'; g.fill();
+    g.fillStyle = col; g.font = font(800, PHT.status); g.textBaseline = 'middle'; g.textAlign = 'left';
+    if (o.mode === 'chat' && o.time) g.fillText(o.time, PH.sx + 44, y);
+    for (let i = 0; i < 4; i++) { rrP(g, R - 148 + i * 11, y + 9 - (10 + i * 6), 7, 10 + i * 6, 2); g.fill(); }
     const b = o.battery == null ? 0.8 : clamp(o.battery);
-    rrP(g, 160, -458, 46, 23, 6); g.lineWidth = 2.5; g.strokeStyle = col; g.stroke();
-    rrP(g, 207, -451, 4, 9, 2); g.fill();
-    rrP(g, 164, -454, Math.max(3, 38 * b), 15, 3); g.fillStyle = b < 0.2 ? C.badgeRed : col; g.fill();
+    rrP(g, R - 92, y - 14, 54, 28, 7); g.lineWidth = 3; g.strokeStyle = col; g.stroke();
+    rrP(g, R - 37, y - 6, 5, 12, 2); g.fill();
+    rrP(g, R - 88, y - 10, Math.max(4, 46 * b), 20, 4); g.fillStyle = b < 0.2 ? C.badgeRed : col; g.fill();
   }
   function lockScreen(g, o) {
-    const gr = g.createLinearGradient(0, PH.sy, 0, PH.sy + PH.sh); gr.addColorStop(0, '#2C6E7B'); gr.addColorStop(1, '#86C7C8');
-    g.fillStyle = gr; g.fillRect(PH.sx, PH.sy, PH.sw, PH.sh);
-    ellP(g, 90, -120, 210, 210); g.fillStyle = 'rgba(214,240,232,0.22)'; g.fill();
-    g.beginPath(); g.moveTo(PH.sx, 300); g.quadraticCurveTo(-60, 200, 80, 280); g.quadraticCurveTo(180, 330, 240, 260); g.lineTo(240, 480); g.lineTo(PH.sx, 480); g.closePath(); g.fillStyle = '#3F8C98'; g.fill();
-    g.beginPath(); g.moveTo(PH.sx, 380); g.quadraticCurveTo(0, 320, 240, 400); g.lineTo(240, 480); g.lineTo(PH.sx, 480); g.closePath(); g.fillStyle = '#2F7280'; g.fill();
+    const sx = PH.sx, sy = PH.sy, sw = PH.sw, sh = PH.sh, L = sx + 18, cw = sw - 36;
+    const gr = g.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#2C6E7B'); gr.addColorStop(1, '#86C7C8');
+    g.fillStyle = gr; g.fillRect(sx, sy, sw, sh);
+    ellP(g, 110, -120, 250, 250); g.fillStyle = 'rgba(214,240,232,0.22)'; g.fill();
+    g.beginPath(); g.moveTo(sx, 320); g.quadraticCurveTo(-70, 210, 90, 300); g.quadraticCurveTo(210, 350, sx + sw, 270); g.lineTo(sx + sw, sy + sh); g.lineTo(sx, sy + sh); g.closePath(); g.fillStyle = '#3F8C98'; g.fill();
+    g.beginPath(); g.moveTo(sx, 410); g.quadraticCurveTo(0, 340, sx + sw, 420); g.lineTo(sx + sw, sy + sh); g.lineTo(sx, sy + sh); g.closePath(); g.fillStyle = '#2F7280'; g.fill();
     statusBar(g, o, true);
     // padlock
-    g.save(); g.translate(0, -378); g.strokeStyle = '#FFFFFF'; g.lineWidth = 5; g.beginPath(); g.arc(0, -6, 11, Math.PI, 0); g.stroke(); rrP(g, -16, -6, 32, 24, 5); g.fillStyle = '#FFFFFF'; g.fill(); g.restore();
+    g.save(); g.translate(0, sy + 122); g.strokeStyle = '#FFFFFF'; g.lineWidth = 6; g.beginPath(); g.arc(0, -8, 13, Math.PI, 0); g.stroke(); rrP(g, -19, -8, 38, 29, 6); g.fillStyle = '#FFFFFF'; g.fill(); g.restore();
     g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = '#FFFFFF';
-    g.font = font(700, 30); g.fillText(o.date || 'Wednesday, 12 March', 0, -300);
-    g.font = font(900, 150); g.fillText(o.time || '9:41', 0, -150);
+    if (o.date) { g.font = font(800, 40); g.fillText(o.date, 0, sy + 212); }
+    g.font = font(900, 184); g.fillText(o.time || '9:41', 0, sy + 380);
     const notes = o.notes || [];
-    let y = -60;
+    let y = sy + 420;
     const shown = o.notesK == null ? notes.length : o.notesK;
     notes.forEach((n, i) => {
       const k = clamp(shown - i); if (k <= 0) return;
-      const e = easeOutBack(k), hgt = 132;
+      const e = easeOutBack(k);
+      g.font = font(700, PHT.body);
+      const body = wrap(g, n.body || '', cw - 170), hgt = 120 + body.length * 50;
       g.save(); g.globalAlpha *= clamp(k * 3); g.translate(0, y + hgt / 2); g.scale(0.85 + 0.15 * e, 0.85 + 0.15 * e); g.translate(0, (1 - e) * 30);
       const extra = Math.min(2, Math.max(0, (n.count || 1) - 1));
-      for (let j = extra; j >= 1; j--) { rrP(g, -220 + j * 16, -hgt / 2 + j * 14, 440 - j * 32, hgt, 30); paint(g, j === 1 ? '#EDE6DA' : '#DCD3C6', 3); }
-      rrP(g, -220, -hgt / 2, 440, hgt, 30); paint(g, 'rgba(255,252,246,0.97)', 3.2);
-      const icol = n.icon === 'call' ? C.bubGreen : n.icon === 'mail' ? C.bubRed : C.bubBlue;
-      ellP(g, -160, 0, 36, 36); paint(g, icol, 3);
-      if (n.icon === 'call') handset(g, -158, 0, 0.8, '#FFFFFF'); else msgGlyph(g, -160, -2, 0.9, '#FFFFFF');
-      g.textAlign = 'left'; g.fillStyle = '#1c1c1c'; g.font = font(900, 29); g.fillText(n.title || '', -108, -14);
-      g.font = font(700, 27); g.fillStyle = '#3a3a3a';
-      const body = wrap(g, n.body || '', 290); g.fillText(body[0] || '', -108, 26); if (body[1]) { g.fillText(body[1], -108, 58); }
-      g.textAlign = 'right'; g.font = font(700, 21); g.fillStyle = '#8a8580'; g.fillText(n.time || 'now', 200, -14);
+      for (let j = extra; j >= 1; j--) { rrP(g, L + j * 18, -hgt / 2 + j * 16, cw - j * 36, hgt, 34); paint(g, j === 1 ? '#EDE6DA' : '#DCD3C6', 3.5); }
+      rrP(g, L, -hgt / 2, cw, hgt, 34); paint(g, 'rgba(255,252,246,0.97)', 3.5);
+      const icol = n.icon === 'call' ? C.bubGreen : n.icon === 'mail' ? C.bubRed : C.bubBlue, ix = L + 64, iy = -hgt / 2 + 64;
+      ellP(g, ix, iy, 44, 44); paint(g, icol, 3.5);
+      if (n.icon === 'call') handset(g, ix + 2, iy, 1.0, '#FFFFFF'); else msgGlyph(g, ix, iy - 2, 1.12, '#FFFFFF');
+      const tx = L + 130;
+      g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillStyle = '#1c1c1c'; g.font = font(900, PHT.title); g.fillText(n.title || '', tx, -hgt / 2 + 76);
+      g.font = font(700, PHT.body); g.fillStyle = '#333333';
+      body.forEach((l, j) => g.fillText(l, tx, -hgt / 2 + 130 + j * 50));
+      if (n.time) { g.textAlign = 'right'; g.font = font(700, PHT.small); g.fillStyle = '#8a8580'; g.fillText(n.time, L + cw - 26, -hgt / 2 + 66); }
       g.restore();
-      y += (hgt + 22 + extra * 14) * easeOutCubic(k);
+      y += (hgt + 26 + extra * 16) * easeOutCubic(k);
     });
   }
   function chatScreen(g, o) {
-    g.fillStyle = '#FBF3E7'; g.fillRect(PH.sx, PH.sy, PH.sw, PH.sh);
+    const sx = PH.sx, sy = PH.sy, sw = PH.sw, sh = PH.sh, R = sx + sw, headH = 196, inTop = sy + sh - 136;
+    g.fillStyle = '#FBF3E7'; g.fillRect(sx, sy, sw, sh);
     // header
-    rectP(g, PH.sx, PH.sy, PH.sw, 160); paint(g, '#FFFFFF', 0); line(g, PH.sx, PH.sy + 160, PH.sx + PH.sw, PH.sy + 160, 3);
+    rectP(g, sx, sy, sw, headH); paint(g, '#FFFFFF', 0); line(g, sx, sy + headH, R, sy + headH, 3.5);
     statusBar(g, o, false);
-    g.strokeStyle = X.teal; g.lineWidth = 6; g.beginPath(); g.moveTo(-196, -394); g.lineTo(-212, -374); g.lineTo(-196, -354); g.stroke();
-    ellP(g, -144, -374, 36, 36); paint(g, o.avatarColor || '#A6A6A6', 3);
-    g.fillStyle = '#FFFFFF'; g.font = font(900, 34); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText((o.contact || '?').charAt(0).toUpperCase(), -144, -372);
-    g.textAlign = 'left'; g.fillStyle = '#1c1c1c'; g.font = font(900, 32); g.fillText(o.contact || '', -92, -388);
-    g.fillStyle = '#7d8f8a'; g.font = font(700, 22); g.fillText(o.status == null ? 'online' : o.status, -92, -354);
+    const hy = sy + 132;
+    g.strokeStyle = X.teal; g.lineWidth = 7; g.beginPath(); g.moveTo(sx + 50, hy - 24); g.lineTo(sx + 30, hy); g.lineTo(sx + 50, hy + 24); g.stroke();
+    if (o.contact) {
+      ellP(g, sx + 118, hy, 46, 46); paint(g, o.avatarColor || '#A6A6A6', 3.5);
+      g.fillStyle = '#FFFFFF'; g.font = font(900, 44); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(o.contact).charAt(0).toUpperCase(), sx + 118, hy + 2);
+      g.textAlign = 'left'; g.fillStyle = '#1c1c1c'; g.font = font(900, PHT.name); g.fillText(o.contact, sx + 184, hy - 16);
+      if (o.status !== '') { g.fillStyle = '#6f827d'; g.font = font(700, PHT.small); g.fillText(o.status == null ? 'online' : o.status, sx + 184, hy + 28); }
+    }
     // input bar
-    rectP(g, PH.sx, 370, PH.sw, 110); paint(g, '#FFFFFF', 0); line(g, PH.sx, 370, PH.sx + PH.sw, 370, 2.5);
-    rrP(g, -214, 390, 352, 64, 32); paint(g, '#F6F1EA', 3);
-    g.font = font(700, 26); g.textBaseline = 'middle';
+    rectP(g, sx, inTop, sw, sy + sh - inTop); paint(g, '#FFFFFF', 0); line(g, sx, inTop, R, inTop, 3);
+    const fx = sx + 22, fy = inTop + 22, fw = sw - 140, fh = 80;
+    rrP(g, fx, fy, fw, fh, 40); paint(g, '#F6F1EA', 3.5);
+    g.font = font(700, PHT.input); g.textBaseline = 'middle';
     const draft = o.draft || '';
     if (draft) {
-      g.save(); rrP(g, -200, 392, 326, 60, 30); g.clip();
-      const tw = g.measureText(draft).width, x0 = Math.min(-192, 120 - tw);
-      g.fillStyle = '#1c1c1c'; g.fillText(draft, x0, 423);
-      if (Math.floor((o.t || 0) * 2.4) % 2 === 0) rectP(g, x0 + tw + 3, 405, 3, 36), paint(g, X.teal, 0);
+      g.save(); rrP(g, fx + 4, fy + 2, fw - 8, fh - 4, 38); g.clip();
+      const tw = g.measureText(draft).width, x0 = Math.min(fx + 28, fx + fw - 30 - tw);
+      g.fillStyle = '#1c1c1c'; g.fillText(draft, x0, fy + fh / 2 + 2);
+      if (Math.floor((o.t || 0) * 2.4) % 2 === 0) { rectP(g, x0 + tw + 4, fy + 18, 4, fh - 36); paint(g, X.teal, 0); }
       g.restore();
-    } else { g.fillStyle = '#A9A29A'; g.fillText(o.placeholder || 'Message', -190, 423); }
-    ellP(g, 180, 422, 34, 34); paint(g, X.teal, 3);
-    g.fillStyle = '#FFFFFF'; polyP(g, [166, 406, 200, 422, 166, 438, 172, 422]); g.fill();
+    } else if (o.placeholder !== '') { g.fillStyle = '#A9A29A'; g.fillText(o.placeholder || 'Message', fx + 28, fy + fh / 2 + 2); }
+    const bx = R - 62, by = fy + fh / 2;
+    ellP(g, bx, by, 42, 42); paint(g, X.teal, 3.5);
+    g.fillStyle = '#FFFFFF'; polyP(g, [bx - 18, by - 20, bx + 24, by, bx - 18, by + 20, bx - 10, by]); g.fill();
     // messages, laid out from the bottom up
-    g.save(); rectP(g, PH.sx, PH.sy + 162, PH.sw, 370 - (PH.sy + 162)); g.clip();
+    g.save(); rectP(g, sx, sy + headH + 2, sw, inTop - (sy + headH + 2)); g.clip();
     const msgs = (o.messages || []).slice();
     if (o.typing) msgs.push({ from: o.typing, typing: true, k: o.typingK == null ? 1 : o.typingK });
-    g.font = font(700, 29);
+    g.font = font(700, PHT.bubble);
+    const maxW = Math.round(sw * 0.72), padX = 30, padY = 24;
     const lay = msgs.map(m => {
       const k = m.k == null ? 1 : clamp(m.k);
-      if (m.typing) return { m, k, lines: [], w: 112, h: 62 };
-      const lines = wrap(g, m.text || '', 300); const w = Math.max(...lines.map(l => g.measureText(l).width)) + 46;
-      return { m, k, lines, w, h: lines.length * 38 + 30 };
+      if (m.typing) return { m, k, lines: [], w: 150, h: 84 };
+      const lines = wrap(g, m.text || '', maxW); const w = Math.max(...lines.map(l => g.measureText(l).width)) + padX * 2;
+      return { m, k, lines, w, h: lines.length * PHT.bubbleLine + padY * 2 - 8 };
     });
-    let y = 350;
+    let y = inTop - 26;
+    const lx = sx + 26, rx = R - 26;
     for (let i = lay.length - 1; i >= 0; i--) {
       const L = lay[i]; if (L.k <= 0) continue;
       const e = easeOutBack(L.k), me = L.m.from === 'me';
-      const bx = me ? 214 - L.w : -214, by = y - L.h;
+      const bx2 = me ? rx - L.w : lx, by2 = y - L.h;
       g.save(); g.globalAlpha *= clamp(L.k * 3);
-      const ox = me ? bx + L.w : bx, oy = by + L.h;
+      const ox = me ? bx2 + L.w : bx2, oy = by2 + L.h;
       g.translate(ox, oy); g.scale(0.5 + 0.5 * e, 0.5 + 0.5 * e); g.translate(-ox, -oy);
       const fill = me ? X.teal : '#FFFFFF';
-      g.beginPath(); rrP(g, bx, by, L.w, L.h, 28); paint(g, fill, 3);
-      // tail
-      g.beginPath(); if (me) { g.moveTo(bx + L.w - 26, by + L.h - 1.5); g.quadraticCurveTo(bx + L.w + 4, by + L.h + 2, bx + L.w + 14, by + L.h + 12); g.quadraticCurveTo(bx + L.w + 2, by + L.h - 6, bx + L.w - 4, by + L.h - 22); }
-      else { g.moveTo(bx + 26, by + L.h - 1.5); g.quadraticCurveTo(bx - 4, by + L.h + 2, bx - 14, by + L.h + 12); g.quadraticCurveTo(bx - 2, by + L.h - 6, bx + 4, by + L.h - 22); }
-      g.fillStyle = fill; g.fill(); g.lineWidth = 3; g.strokeStyle = INK; g.stroke();
+      // tail first, then the bubble over its root, so the outline reads as one shape
+      g.beginPath();
+      if (me) { g.moveTo(bx2 + L.w - 40, by2 + L.h - 2); g.quadraticCurveTo(bx2 + L.w + 2, by2 + L.h + 4, bx2 + L.w + 18, by2 + L.h + 14); g.quadraticCurveTo(bx2 + L.w + 2, by2 + L.h - 10, bx2 + L.w - 2, by2 + L.h - 34); }
+      else { g.moveTo(bx2 + 40, by2 + L.h - 2); g.quadraticCurveTo(bx2 - 2, by2 + L.h + 4, bx2 - 18, by2 + L.h + 14); g.quadraticCurveTo(bx2 - 2, by2 + L.h - 10, bx2 + 2, by2 + L.h - 34); }
+      g.closePath(); paint(g, fill, 3.5);
+      rrP(g, bx2, by2, L.w, L.h, 34); paint(g, fill, 0);
+      g.save(); rrP(g, bx2, by2, L.w, L.h, 34); g.lineWidth = 3.5; g.strokeStyle = INK; g.stroke(); g.restore();
+      // re-cover the outline where the tail joins
+      g.beginPath(); if (me) { g.moveTo(bx2 + L.w - 38, by2 + L.h - 6); g.lineTo(bx2 + L.w - 4, by2 + L.h - 30); g.lineTo(bx2 + L.w - 4, by2 + L.h - 6); } else { g.moveTo(bx2 + 38, by2 + L.h - 6); g.lineTo(bx2 + 4, by2 + L.h - 30); g.lineTo(bx2 + 4, by2 + L.h - 6); }
+      g.closePath(); g.fillStyle = fill; g.fill();
       if (L.m.typing) {
-        for (let d = 0; d < 3; d++) { const b = Math.sin(((o.t || 0) * 2.2 - d * 0.18) * TAU) * 0.5 + 0.5; ellP(g, bx + 32 + d * 24, by + L.h / 2 - b * 7, 8, 8); g.fillStyle = me ? '#FFFFFF' : '#9C958C'; g.fill(); }
+        for (let d = 0; d < 3; d++) { const bb = Math.sin(((o.t || 0) * 2.2 - d * 0.18) * TAU) * 0.5 + 0.5; ellP(g, bx2 + 42 + d * 33, by2 + L.h / 2 - bb * 9, 11, 11); g.fillStyle = me ? '#FFFFFF' : '#9C958C'; g.fill(); }
       } else {
-        g.fillStyle = me ? '#FFFFFF' : '#1c1c1c'; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.font = font(700, 29);
-        L.lines.forEach((l, j) => g.fillText(l, bx + 23, by + 44 + j * 38));
+        g.fillStyle = me ? '#FFFFFF' : '#1c1c1c'; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.font = font(700, PHT.bubble);
+        L.lines.forEach((l, j) => g.fillText(l, bx2 + padX, by2 + padY + 38 + j * PHT.bubbleLine));
       }
       g.restore();
-      y -= (L.h + 22) * easeOutCubic(L.k);
+      y -= (L.h + 26) * easeOutCubic(L.k);
     }
     g.restore();
   }
@@ -1304,24 +1323,24 @@
       const bg = o.bg || '#F2B587';
       blit(g, camXf(null), layer('phonebg|' + bg, 1, (lg) => {
         lg.fillStyle = bg; lg.fillRect(0, 0, W, H);
-        softFill(lg, 60, 'rgba(255,236,200,0.45)', () => ellP(lg, 960, 540, 560, 520));
-        softFill(lg, 14, 'rgba(255,236,200,0.3)', () => polyP(lg, [260, -20, 520, -20, 120, H + 20, -140, H + 20]));
-        softFill(lg, 14, 'rgba(255,236,200,0.25)', () => polyP(lg, [1500, -20, 1640, -20, 1240, H + 20, 1100, H + 20]));
+        softFill(lg, 60, 'rgba(255,236,200,0.45)', () => ellP(lg, 960, 540, 600, 520));
+        softFill(lg, 14, 'rgba(255,236,200,0.3)', () => polyP(lg, [240, -20, 500, -20, 100, H + 20, -160, H + 20]));
+        softFill(lg, 14, 'rgba(255,236,200,0.25)', () => polyP(lg, [1520, -20, 1660, -20, 1260, H + 20, 1120, H + 20]));
       }));
     }
-    const buzz = o.buzz || 0, t = o.t || 0;
+    const buzz = o.buzz || 0, t = o.t || 0, sc = o.scale || 1, cx = o.x == null ? 960 : o.x, cy = o.y == null ? 540 : o.y;
     const jx = buzz ? Math.sin(t * TAU * 22) * 7 * buzz : 0, jr = buzz ? Math.sin(t * TAU * 17) * 0.012 * buzz : 0;
     g.save(); g.lineJoin = 'round'; g.lineCap = 'round';
-    g.translate((o.x == null ? 960 : o.x) + jx, o.y == null ? 540 : o.y); g.rotate((o.rot || 0) + jr); const sc = o.scale || 1; g.scale(sc, sc);
-    rrP(g, -PH.w / 2 + 16, -PH.h / 2 + 22, PH.w, PH.h, PH.r); g.fillStyle = 'rgba(100,48,22,0.22)'; g.fill();
+    g.translate(cx + jx, cy); g.rotate((o.rot || 0) + jr); g.scale(sc, sc);
+    rrP(g, -PH.w / 2 + 18, -PH.h / 2 + 24, PH.w, PH.h, PH.r); g.fillStyle = 'rgba(100,48,22,0.22)'; g.fill();
     phoneBody(g);
     g.save(); rrP(g, PH.sx, PH.sy, PH.sw, PH.sh, PH.sr); g.clip();
     if (o.mode === 'chat') chatScreen(g, o); else lockScreen(g, o);
     g.restore();
-    rrP(g, PH.sx, PH.sy, PH.sw, PH.sh, PH.sr); paint(g, null, 3);
-    if (buzz > 0.05) { g.strokeStyle = INK; g.lineWidth = 5; for (const sx of [-1, 1]) for (const dy of [-60, 0, 60]) { g.beginPath(); g.moveTo(sx * (PH.w / 2 + 34), dy - 18); g.quadraticCurveTo(sx * (PH.w / 2 + 50), dy, sx * (PH.w / 2 + 34), dy + 18); g.globalAlpha = buzz; g.stroke(); g.globalAlpha = 1; } }
+    rrP(g, PH.sx, PH.sy, PH.sw, PH.sh, PH.sr); paint(g, null, 3.5);
+    if (buzz > 0.05) { g.strokeStyle = INK; g.lineWidth = 6; g.globalAlpha = buzz; for (const sxn of [-1, 1]) for (const dy of [-70, 0, 70]) { g.beginPath(); g.moveTo(sxn * (PH.w / 2 + 36), dy - 22); g.quadraticCurveTo(sxn * (PH.w / 2 + 56), dy, sxn * (PH.w / 2 + 36), dy + 22); g.stroke(); } g.globalAlpha = 1; }
     g.restore();
-    return { screen: { x: (o.x == null ? 960 : o.x) + PH.sx * (o.scale || 1), y: (o.y == null ? 540 : o.y) + PH.sy * (o.scale || 1), w: PH.sw * (o.scale || 1), h: PH.sh * (o.scale || 1) } };
+    return { screen: { x: cx + PH.sx * sc, y: cy + PH.sy * sc, w: PH.sw * sc, h: PH.sh * sc } };
   };
 
   // ================================================================ DAY CARD, PILL, STAMP

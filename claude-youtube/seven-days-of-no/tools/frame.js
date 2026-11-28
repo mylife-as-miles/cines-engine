@@ -3,7 +3,7 @@
 //                            node tools/frame.js ALL w:blinks out/f.png (at a word anchor: w:<word>[#n][+offset], e.g. w:no#3+0.5)
 const { open } = require('./film');
 (async () => {
-  const [id, t, out = 'out/frame.png'] = process.argv.slice(2);
+  const [id, t, out = 'out/frame.png'] = process.argv.slice(2).filter(a => !a.startsWith('--'));
   if (!id || t == null) { console.log('usage: node tools/frame.js <Q02|ALL> <seconds|w:word[#n][+off]> [out.png]'); process.exit(1); }
   const { browser, page, errs } = await open();
   const r = await page.evaluate(({ id, t }) => {

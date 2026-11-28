@@ -29,6 +29,19 @@ CHECKS = {
     'footsteps': ('footsteps', ['a door knock', 'a clock ticking', 'a heartbeat', 'clapping']),
     'run': ('a person running', ['a person walking', 'a horse galloping', 'a drum roll', 'clapping']),
     'door': ('a door closing', ['a door knock', 'a gunshot', 'a drum hit', 'footsteps']),
+    'wrong': ('an error sound', ['a doorbell', 'a success chime', 'a car horn', 'a dog barking']),
+    'clang': ('a metal pan clang', ['a church bell', 'glass breaking', 'a gunshot', 'a door knock']),
+    'stomach_drop': ('a descending slide whistle', ['a rising tone', 'a car horn', 'a siren', 'a bird chirping']),
+    'wobble': ('a wobbly cartoon sound', ['a car engine', 'a siren', 'a dog growling', 'a phone ringing']),
+    'bird': ('a bird chirping', ['a phone ringing', 'a whistle', 'a squeaky door', 'a mouse squeaking']),
+    'battery_low': ('a low battery warning beep', ['a doorbell', 'a success chime', 'a car horn', 'a microwave beep']),
+    'swell': ('a rising whoosh', ['a falling whoosh', 'an explosion', 'wind blowing', 'a car passing']),
+    'rain': ('light rain', ['frying bacon', 'applause', 'a stream of water', 'static noise']),
+    'grow': ('a happy ascending chime', ['a descending tone', 'an error sound', 'a doorbell', 'a gong']),
+    'freeze': ('a tape slowing down to a stop', ['a rising tone', 'an explosion', 'a door closing', 'a car engine']),
+    'click': ('a button click', ['a gunshot', 'a door knock', 'a water drop', 'a bell']),
+    'dim': ('a descending blip', ['a rising blip', 'a doorbell', 'a gunshot', 'a bird chirping']),
+    'plate_slide': ('something sliding across a table', ['a door closing', 'footsteps', 'paper tearing', 'a whoosh']),
 }
 
 

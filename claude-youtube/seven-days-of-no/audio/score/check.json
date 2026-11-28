@@ -2,7 +2,7 @@
  "T1": {
   "role": "main",
   "dur_s": 89.97,
-  "tune_cents": 10.0,
+  "tune_cents": 3.3,
   "strongest_pitch_class": "E",
   "key": "E major",
   "key_r": 0.96,
@@ -38,7 +38,7 @@
  "T2": {
   "role": "main",
   "dur_s": 91.01,
-  "tune_cents": 1.0,
+  "tune_cents": 0.3,
   "strongest_pitch_class": "C",
   "key": "C major",
   "key_r": 0.84,
@@ -75,7 +75,7 @@
  "T3": {
   "role": "hush",
   "dur_s": 69.51,
-  "tune_cents": 8.0,
+  "tune_cents": 2.7,
   "strongest_pitch_class": "A",
   "key": "A major",
   "key_r": 0.94,
@@ -107,10 +107,10 @@
  "T4": {
   "role": "lift",
   "dur_s": 75.99,
-  "tune_cents": 9.0,
+  "tune_cents": 3.0,
   "strongest_pitch_class": "F#",
   "key": "F# major",
-  "key_r": 0.71,
+  "key_r": 0.72,
   "tempo_bpm": 103.4,
   "vocal_or_drumkit_tag": false,
   "last_loud_s": 73.15,
@@ -141,7 +141,7 @@
  "T5": {
   "role": "end",
   "dur_s": 61.68,
-  "tune_cents": 1.0,
+  "tune_cents": 0.3,
   "strongest_pitch_class": "C",
   "key": "C major",
   "key_r": 0.67,

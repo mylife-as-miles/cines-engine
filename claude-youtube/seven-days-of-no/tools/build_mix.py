@@ -19,14 +19,14 @@ music bed is); audio/sound_map.json (which file and level each cue is, and the m
 3. Ducking: speech regions from the narration's own envelope (pauses under 1.2 s merged, so the music does not pump
    between sentences). In each region the music is held 12 dB under the voice's level there (its 3 s loudness, ridden
    down only, never up), with a 0.35 s attack before the words and a 0.9 s release after. Where no one speaks (the
-   stop-down, the end screen) the bed plays at its own level. The cue sheet's own silences mute music and effects;
-   its ducks (level factors) apply to the music.
+   stop-down, the end screen) the bed plays at its own level. The cue sheet's silences mute the music (Q10's freeze;
+   a cue placed inside one, like the freeze itself, still plays); its ducks (level factors) apply to the music.
 4. Effects: each cue's sound at rel_db re Lv (its loudest 100 ms, K-weighted), peak- or start-aligned, panned.
 5. Master: gain to -14 LUFS integrated, then a look-ahead true-peak limiter (4x oversampled detection) at -1.5 dBTP,
    twice (the limiter costs a little loudness). The limiter's gain is applied to every stem too, so the stems sum to
    the mix exactly. Sample peaks therefore sit at or under -1.5 dBFS before any AAC encode.
 """
-import json, os, subprocess, sys
+import json, os, re, subprocess, sys
 import numpy as np
 import soundfile as sf
 from scipy import signal
@@ -161,11 +161,77 @@ def speech_regions(v, merge_s, thr_db=-45.0):
     return [(round(a, 2), round(b, 2)) for a, b in merged if b - a > 0.15]
 
 
+def normalise(cs):
+    """The engine's cue sheet (tools/cuesheet.js: beds t0/t1, cues t, in global seconds) or the claude-film shape
+    (t0g/t1g, tg; audio/cues_draft.json) as one shape: beds {name, seq, t0, t1, p}, cues {name, seq, t, p}, global."""
+    g = lambda d, a, b: d[a] if a in d else d[b]
+    return {'total': float(cs['total']), 'seqs': cs['seqs'],
+            'beds': [{'name': b['name'], 'seq': b['seq'], 't0': float(g(b, 't0g', 't0')), 't1': float(g(b, 't1g', 't1')), 'p': b.get('p') or {}} for b in cs['beds']],
+            'cues': [{'name': c['name'], 'seq': c['seq'], 't': float(g(c, 'tg', 't')), 'p': c.get('p') or {}} for c in cs['cues']],
+            'silences': [{'t0': float(g(x, 't0g', 't0')), 't1': float(g(x, 't1g', 't1'))} for x in cs.get('silences', [])],
+            'ducks': [{'t0': float(g(x, 't0g', 't0')), 't1': float(g(x, 't1g', 't1')), 'level': x['level']} for x in cs.get('ducks', [])]}
+
+
+_W = None
+
+
+def word_t(phrase, lo, hi):
+    """t0 of the first occurrence of `phrase` (audio/vo/words.json, punctuation ignored) starting within [lo, hi]."""
+    global _W
+    if _W is None:
+        w = json.load(open(os.path.join(ROOT, 'audio', 'vo', 'words.json')))['words']
+        _W = (w, [re.sub(r"[^a-z0-9']", '', x['w'].lower()) for x in w])
+    w, nm = _W; p = [re.sub(r"[^a-z0-9']", '', x.lower()) for x in phrase.split()]
+    for i in range(len(w) - len(p) + 1):
+        if nm[i:i + len(p)] == p and lo - 0.5 <= w[i]['t0'] <= hi + 0.5: return float(w[i]['t0'])
+    raise SystemExit(f'sound_map: phrase {phrase!r} not spoken between {lo:.2f} and {hi:.2f} s')
+
+
+def music_spans(cs, M, T, missing, report):
+    """The music on the clock: each music bed of the cue sheet mapped (sound_map beds, sequence by sequence, split at
+    spoken words) to a variation of audio/score_plan.json; adjacent pieces of one variation joined; a variation that
+    comes back after a short gap (a freeze) resumes where it stopped. Fades: a crossfade centred on the turn where one
+    variation meets another, inside the span at a gap (a stop-down or a freeze), none at the video's end (the closing
+    take ends on its own chord)."""
+    MX = M['mix']; xf = MX['crossfade_s']; segs = []; ignored = []
+    for b in sorted(cs['beds'], key=lambda b: b['t0']):
+        m = M['beds'].get(b['name'], 'missing')
+        if m == 'missing': missing.add('bed ' + b['name']); continue
+        if m is None: continue
+        spec = m if isinstance(m, str) else m['by_seq'].get(b['seq'], m.get('default'))
+        parts = [{'var': spec}] if (spec is None or isinstance(spec, str)) else spec
+        if b['p'].get('fadeOut'): ignored.append(f"{b['name']}@{b['seq']} fadeOut {b['p']['fadeOut']} (the closing take ends on its own chord)")
+        for part in parts:
+            a = word_t(part['from'], b['t0'], b['t1']) if 'from' in part else b['t0']
+            z = word_t(part['until'], b['t0'], b['t1']) if 'until' in part else b['t1']
+            a, z = max(a, b['t0']), min(z, b['t1'])
+            if part.get('var') and z > a:
+                segs.append({'var': part['var'], 't0': a, 't1': z, 'fi': part.get('fi', b['p'].get('fi')), 'fo': part.get('fo', b['p'].get('fo')), 'gain_db': b['p'].get('gain_db', 0)})
+    spans = []
+    for sg in sorted(segs, key=lambda x: x['t0']):
+        if spans and spans[-1]['var'] == sg['var'] and abs(spans[-1]['t1'] - sg['t0']) < 0.1:
+            spans[-1]['t1'] = sg['t1']; spans[-1]['fo'] = sg['fo']
+        else: spans.append(dict(sg))
+    for i, sp in enumerate(spans):
+        prev = spans[i - 1] if i else None; nxt = spans[i + 1] if i + 1 < len(spans) else None
+        meets_prev = prev is not None and abs(prev['t1'] - sp['t0']) < 0.1
+        meets_next = nxt is not None and abs(nxt['t0'] - sp['t1']) < 0.1
+        if prev is not None and not meets_prev and prev['var'] == sp['var'] and sp['t0'] - prev['t1'] <= MX['resume_gap_s']:
+            sp['resume'] = i - 1
+        if sp['fi'] is None: sp['fi'] = 0.3 if sp['t0'] <= 0.01 else (0.15 if sp.get('resume') is not None else xf)
+        if sp['fo'] is None:
+            sp['fo'] = 0.0 if sp['t1'] >= T - 0.01 else (0.08 if (nxt is not None and nxt['var'] == sp['var'] and not meets_next) else xf)
+        sp['a'] = max(0.0, sp['t0'] - (sp['fi'] / 2 if meets_prev else 0))
+        sp['b'] = min(T, sp['t1'] + (sp['fo'] / 2 if meets_next else 0))
+    report['music_ignored'] = ignored
+    return spans
+
+
 def main():
     cs_path = os.path.join(ROOT, 'out', 'cuesheet.json')
     draft = not os.path.exists(cs_path)
     if draft: cs_path = os.path.join(ROOT, 'audio', 'cues_draft.json')
-    cs = json.load(open(cs_path)); plan = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
+    cs = normalise(json.load(open(cs_path))); plan = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
     M = json.load(open(os.path.join(ROOT, 'audio', 'sound_map.json'))); MX = M['mix']
     T = float(cs['total']); N = int(round(T * SR)); missing = set(); report = {'cuesheet': os.path.relpath(cs_path, ROOT), 'draft': draft}
     os.makedirs(os.path.join(OUT, 'stems'), exist_ok=True)
@@ -181,18 +247,12 @@ def main():
     report['voice'] = {'raw_lufs': round(raw_lufs, 2), 'treated_lufs': round(Lv, 2), 'comp_max_gr_db': round(max_gr, 1)}
 
     # ---------------- 2. music beds ----------------
-    beds = sorted(cs['beds'], key=lambda b: b['t0g'])
-    spans = []
-    for b in beds:                                      # join adjacent spans of one bed (an engine may cut beds per sequence)
-        if spans and spans[-1]['name'] == b['name'] and abs(spans[-1]['t1g'] - b['t0g']) < 0.1:
-            spans[-1]['t1g'] = b['t1g']; spans[-1]['p'] = dict(spans[-1]['p'], fo=b.get('p', {}).get('fo', spans[-1]['p'].get('fo')))
-        else: spans.append({'name': b['name'], 't0g': b['t0g'], 't1g': b['t1g'], 'p': dict(b.get('p', {}))})
-    music = np.zeros((N, 2)); cache = {}; occ = {}; placed = []
-    for sp in spans:
-        e = plan.get('beds', {}).get(sp['name'], 'missing')
-        if e == 'missing': missing.add('bed ' + sp['name']); continue
-        if e is None: continue
-        k = occ[sp['name']] = occ.get(sp['name'], -1) + 1
+    music = np.zeros((N, 2)); cache = {}; placed = []
+    spans = music_spans(cs, M, T, missing, report)
+    fresh = {}
+    for i, sp in enumerate(spans):
+        e = plan.get('beds', {}).get(sp['var'])
+        if not e: missing.add('score bed ' + sp['var']); continue
         path = take_path(e['take'])
         if not path: missing.add('take ' + e['take']); continue
         cents = float(e.get('pitch_cents', 0)); ratio = 2 ** (cents / 1200); meth = e.get('method', 'resample')
@@ -203,23 +263,26 @@ def main():
             else: af = f'asetrate={in_rate(path) * ratio:.3f}'
             x = load(path, 2, af); cache[ck] = x * undb(Lv + e['level_db'] - lufs(x))
         x = cache[ck]; tscale = 1 / ratio if (meth == 'resample' and abs(cents) >= 0.5) else 1.0   # take seconds -> shifted seconds
-        p = sp['p']; fi = float(p.get('fi', 1.0) or 0); fo = float(p.get('fo', 1.0) or 0)
-        a = sp['t0g'] - (fi / 2 if sp['t0g'] > 0.01 else 0); b2 = sp['t1g'] + (fo / 2 if sp['t1g'] < T - 0.01 else 0)
-        a = max(0.0, a); b2 = min(T, b2); n = int(round((b2 - a) * SR))
-        if e.get('align') == 'end':
-            src0 = int(round((e['end_s'] * tscale - (b2 - a)) * SR))
+        a, b2 = sp['a'], sp['b']; n = int(round((b2 - a) * SR))
+        if n <= 0: continue
+        if e.get('align') == 'end' and b2 >= T - 0.01:
+            src0 = int(round(e['end_s'] * tscale * SR)) - n
+        elif sp.get('resume') is not None and spans[sp['resume']].get('src_end') is not None:
+            src0 = spans[sp['resume']]['src_end']                # the music paused (a freeze) and picks up where it stopped
         else:
+            k = fresh[sp['var']] = fresh.get(sp['var'], -1) + 1
             w = e.get('windows', [0.0]); src0 = int(round(w[min(k, len(w) - 1)] * tscale * SR))
         lp = e.get('loop'); lp = (int(lp[0] * tscale * SR), int(lp[1] * tscale * SR)) if lp else None
-        seg = loop_window(x, max(0, src0), n, lp) if src0 >= 0 else np.vstack([np.zeros((-src0, 2)), x[: n + src0]])[:n]
-        env = np.ones(n); nfi = int(fi * SR) if sp['t0g'] > 0.01 else int(min(fi, 0.5) * SR); nfo = int(fo * SR)
+        seg = loop_window(x, src0, n, lp) if src0 >= 0 else np.vstack([np.zeros((-src0, 2)), x[: n + src0]])[:n]
+        sp['src_end'] = src0 + n
+        env = np.ones(n); nfi, nfo = min(n // 2, int(sp['fi'] * SR)), min(n // 2, int(sp['fo'] * SR))
         if nfi: env[:nfi] *= raised(nfi)
-        if nfo and sp['t1g'] < T - 0.01: env[-nfo:] *= raised(nfo, False)
-        seg = seg * env[:, None] * undb(float(p.get('gain_db', 0) or 0))
+        if nfo: env[-nfo:] *= raised(nfo, False)
+        seg = seg * env[:, None] * undb(float(sp.get('gain_db', 0) or 0))
         i0 = int(round(a * SR)); i1 = min(N, i0 + len(seg)); music[i0:i1] += seg[: i1 - i0]
-        placed.append({'bed': sp['name'], 'take': e['take'], 't0g': round(sp['t0g'], 2), 't1g': round(sp['t1g'], 2),
-                       'from_take_s': round(src0 / SR / tscale, 2), 'level_db': e['level_db']})
-    report['beds'] = placed
+        placed.append({'var': sp['var'], 'take': e['take'], 't0': round(sp['t0'], 2), 't1': round(sp['t1'], 2), 'fi': sp['fi'], 'fo': sp['fo'],
+                       'from_take_s': round(src0 / SR / tscale, 2), 'resume': sp.get('resume') is not None, 'level_db': e['level_db']})
+    report['music'] = placed
 
     # ---------------- 3. ducking ----------------
     rate = 100; nc = int(T * rate) + 1; tt = np.arange(nc) / rate
@@ -246,9 +309,9 @@ def main():
     duck = uniform_filter1d(duck, size=int(0.5 * rate))         # gentle: no step faster than half a second
     ctrl = undb(duck)
     for x in cs.get('ducks', []):
-        c0 = np.interp(tt, [x['t0g'] - 0.3, x['t0g'], x['t1g'], x['t1g'] + 0.3], [1, float(x['level']), float(x['level']), 1])
+        c0 = np.interp(tt, [x['t0'] - 0.3, x['t0'], x['t1'], x['t1'] + 0.3], [1, float(x['level']), float(x['level']), 1])
         ctrl = np.minimum(ctrl, c0)
-    sil = [(x['t0g'], x['t1g']) for x in cs.get('silences', [])]; mute = np.ones(nc)
+    sil = [(x['t0'], x['t1']) for x in cs.get('silences', [])]; mute = np.ones(nc)
     for a, b2 in sil: mute = np.minimum(mute, np.interp(tt, [a - 0.05, a, b2, b2 + 0.3], [1, 0, 0, 1]))
     music *= np.interp(np.arange(N) / SR, tt, ctrl * mute)[:, None]
     # a faint air floor under the music bus, so no moment is digitally dead (the cue sheet's silences take it too)
@@ -257,28 +320,49 @@ def main():
     report['ducking'] = {'speech_regions': len(regs), 'regions': regs, 'max_duck_db': round(float(duck.min()), 1)}
 
     # ---------------- 4. effects ----------------
-    fx = np.zeros((N, 2)); occ = {}; fxlog = []; fcache = {}
-    for c in sorted(cs['cues'], key=lambda c: c['tg']):
+    fx = np.zeros((N, 2)); occ = {}; fxlog = []; fcache = {}; last = {}; dropped = []
+
+    def snd(fname):
+        if fname not in fcache:
+            fp = os.path.join(ROOT, 'audio', 'sfx', fname + '.flac')
+            if not os.path.exists(fp): missing.add('file ' + fname); fcache[fname] = None
+            else: y = load(fp, 1)[:, 0]; fcache[fname] = (y, loud_max(y[:, None], 0.1))
+        return fcache[fname]
+
+    for c in sorted(cs['cues'], key=lambda c: c['t']):
         name = M['aliases'].get(c['name'], c['name']); e = M['cues'].get(name, 'missing')
         if e == 'missing': missing.add('cue ' + c['name']); continue
         if e is None: continue
-        if any(a - 0.02 <= c['tg'] < b2 for a, b2 in sil): continue
-        k = occ[name] = occ.get(name, -1) + 1
-        fname = e['cycle'][k % len(e['cycle'])] if 'cycle' in e else e['file']
-        fpath = os.path.join(ROOT, 'audio', 'sfx', fname + '.flac')
-        if not os.path.exists(fpath): missing.add('file ' + fname); continue
-        if fname not in fcache:
-            y = load(fpath, 1)[:, 0]; fcache[fname] = (y, loud_max(y[:, None], 0.1))
-        y, ly = fcache[fname]; p = c.get('p', {}) or {}
-        g = undb(Lv + e['rel_db'] + float(p.get('gain_db', 0) or 0) - ly)
-        m = np.sqrt(uniform_filter1d(y ** 2, size=int(0.002 * SR))); pk = int(np.argmax(m))
-        s = int(round(c['tg'] * SR)) - (pk if e.get('align', 'start') == 'peak' else 0)
+        if c['t'] - last.get(name, -9) < MX['same_cue_min_gap_s']: dropped.append([c['name'], c['t']]); continue
+        last[name] = c['t']; k = occ[name] = occ.get(name, -1) + 1; p = c.get('p', {}) or {}
+        if 'steps' in e:                                                        # n steps at the cue's own gap
+            nst, gap = int(p.get('n', e['n'])), float(p.get('gap', e['gap'])); parts = []
+            for j in range(nst):
+                r = snd(e['steps'][j % len(e['steps'])])
+                if r: parts.append((j * gap, r[0] * (1.0 if j % 2 else 0.85)))
+            if not parts: continue
+            y = np.zeros(int((parts[-1][0] + 0.3) * SR))
+            for t0, z in parts: y[int(t0 * SR):int(t0 * SR) + len(z)] += z[: len(y) - int(t0 * SR)]
+            ly = loud_max(y[:, None], 0.1); fname = '+'.join(e['steps'])
+        else:
+            fname = e['cycle'][k % len(e['cycle'])] if 'cycle' in e else e['file']
+            r = snd(fname)
+            if not r: continue
+            y, ly = r
+            if 'per_n_s' in e and p.get('n'):                                   # typing: the cue's n taps long
+                want = int(int(p['n']) * e['per_n_s'] * SR); xf = int(0.08 * SR)
+                if want > len(y): y = loop_window(y[:, None], 0, want, (int(0.15 * SR), len(y)), xf)[:, 0]
+                y = y[:want].copy(); f = min(len(y) // 3, int(0.08 * SR)); y[-f:] *= raised(f, False)
+        g = undb(Lv + e['rel_db'] + float(p.get('gain_db', 0) or 0) + float(p.get('level', 0) or 0) - ly)
+        m = uniform_filter1d(y ** 2, size=int(0.002 * SR)); pk = int(np.argmax(m))
+        s = int(round(c['t'] * SR)) - (pk if e.get('align', 'start') == 'peak' else 0)
         pan = float(np.clip(p.get('pan', e.get('pan', 0.0)) or 0.0, -0.8, 0.8)); th = (pan + 1) * np.pi / 4
         a0, a1 = max(0, s), min(N, s + len(y))
         if a1 <= a0: continue
         fx[a0:a1, 0] += y[a0 - s:a1 - s] * g * np.cos(th) * np.sqrt(2); fx[a0:a1, 1] += y[a0 - s:a1 - s] * g * np.sin(th) * np.sqrt(2)
-        fxlog.append({'cue': c['name'], 'file': fname, 't': round(c['tg'], 3), 'rel_db': e['rel_db'] + float(p.get('gain_db', 0) or 0)})
-    report['effects'] = {'placed': len(fxlog), 'cues': fxlog}
+        fxlog.append({'cue': c['name'], 'file': fname, 't': round(c['t'], 3),
+                      'rel_db': e['rel_db'] + float(p.get('gain_db', 0) or 0) + float(p.get('level', 0) or 0)})
+    report['effects'] = {'placed': len(fxlog), 'dropped_same_cue_within_150ms': dropped, 'cues': fxlog}
 
     # ---------------- 5. master ----------------
     stems = {'voice': np.repeat(voice[:, None], 2, axis=1), 'music': music, 'fx': fx}
@@ -307,7 +391,7 @@ def main():
     for r0, r1 in regs: inside[int(r0 * rate) + 100:max(int(r0 * rate) + 100, int(r1 * rate) - 100)] = True   # inner parts, past the ramps
     diff = 10 * np.log10(ms_[inside] + 1e-12) - 10 * np.log10(vs[inside] + 1e-12)
     meas['music_minus_voice_in_speech_db'] = {'median': round(float(np.median(diff)), 1), 'p95': round(float(np.percentile(diff, 95)), 1)}
-    es = int(float(cs['seqs'][-1]['start']) * SR) if cs['seqs'][-1]['id'] == 'END' else int((T - 8) * SR)
+    es = int(round((T - 8.0) * SR))                                       # the 8 s end screen
     meas['end_screen_music_lufs'] = round(lufs(final[es:]), 1)
     meas['voice_lufs_in_mix'] = round(lufs(stems['voice']), 1)
     report['master'] = meas; report['missing'] = sorted(missing)

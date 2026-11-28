@@ -36,18 +36,18 @@
       { at: T.card, name: 'street: the day card', in: { type: 'wipe', dir: 'right' }, push: 1.04,
         draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand' }); STAGE.dayCard(c, T.card + 0.05, T.tourist - 0.05, 'FRIDAY'); } },
       { at: T.tourist, name: 'street: the stranger asks for a photo, "No."',
-        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: c.t > T.no[0] - 0.15 ? 'handup' : 'stand', expr: 'neutral', talk: T.no }); stranger(c); c.setFront('street', {}); } },
+        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: c.t > T.no[0] - 0.15 ? 'handup' : 'stand', expr: 'neutral', talk: T.no }); c.setFront('street', {}); stranger(c); } },
       { at: T.hurt, name: 'street: they look hurt and turn away',
-        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand', expr: 'surprised' }); stranger(c); c.setFront('street', {}); } },
+        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand', expr: 'surprised' }); c.setFront('street', {}); stranger(c); } },
       { at: T.feel, name: 'the hero, hands clasped, sad (ref 05)', push: { from: 1, to: 1.05 },
         draw(c) { c.camera({ x: L + 120, y: 420, zoom: 1.75 }); c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'hands_clasped', expr: c.t > T.terrible ? 'sad' : 'guilty' }); stranger(c); } },
       { at: T.run, name: 'street: the hero runs after them',
-        draw(c) { c.set('street', {}); const wk = walk(c.t, T.run, T.take, -200, R - 380, { stride: 220, acc: 0.05 }); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: 'stand', expr: 'surprised' }); c.fig('hero', { x: wk.x, y: FLOOR, face: 1, pose: 'run', walk: wk.walk, expr: 'happy' }); c.setFront('street', {}); } },
+        draw(c) { c.set('street', {}); const wk = walk(c.t, T.run, T.take, -200, R - 380, { stride: 220, acc: 0.05 }); c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: 'stand', expr: 'surprised' }); c.fig('hero', { x: wk.x, y: FLOOR, face: 1, pose: 'run', walk: wk.walk, expr: 'happy' }); } },
       { at: T.take, name: 'street: the photo, a flash; the happiest all week',
         draw(c) {
           const t = c.t, happy = t >= T.happiest - 0.1; c.set('street', {});
           const h = c.fig('hero', { x: L + 40, y: FLOOR, face: 1, pose: happy ? 'peace' : 'hold_phone', mode: 'out', expr: happy ? 'beaming' : 'happy' });
-          c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: happy ? 'thumbs_up' : 'stand', expr: happy ? 'happy' : 'happy' }); c.setFront('street', {});
+          c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: happy ? 'thumbs_up' : 'stand', expr: 'happy' });
           if (!happy) { const hn = ART.hand('hero', h, 'front'); const st = pop(t, T.photo, 0.15); if (t < T.photo + 0.5) GFX.at(c.g, hn.x + 30, hn.y - 30, { s: st.s * (1 - seg(t, T.photo + 0.25, T.photo + 0.5)) }, q => c.prop('flash', { x: 0, y: 0, r: 70 })); }
           c.flash(0.9 * flash(t, T.photo, 0.4));
         } },
