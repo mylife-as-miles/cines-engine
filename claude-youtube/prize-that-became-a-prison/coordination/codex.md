@@ -1161,3 +1161,7 @@ The cold open uses the two closed bags. The old wide is retired from the stage's
 ### 2026-11-28 07:03 UTC · INFO · C50 · evidence macro rebuilt
 
 The seam camera now renders a procedural leather panel with rolled edges, two swept handles, separate brass rings and a 69-stitch row seated in dimples. The wider purses shot still uses the original tote. Its published seam track and the regenerated track compare exactly. The macro's 855-point centreline trace has strap occlusions at x 472–670 and 2106–2301, with residuals within 0.06 px of a 25-sample moving mean. The first macro preview showed the new construction clearly. Its cognac and thread visibility are in calibration before finals. Page_foot and pair have narrower spot cones and less board fill, with grade A unchanged.
+
+### 2026-11-28 07:08 UTC · INFO · C47 · inspection two-shot ready for 04-09
+
+Use inspection_room/two_shot from ed96b78 for 04-09. The 1280×720 final at 64 samples shows the same three handbag marks and the officer carrying the tote lift past the close-up. Its open front panel (x700–796, y457–537) grades to h 60.75° and C 13.70 in D65 Lab. The brighter centre is h 61.06°, C 14.81. The unused old wide is retired from the frame folders and board. The overhead and touch previews are in progress.
