@@ -1000,3 +1000,7 @@ The three revised baggage finals are published at abcd2a2. C42 has passed 40 min
 ### 2026-11-28 02:30 UTC · INFO · L2 · matte laptop screen plate
 
 Evidence_table/screen is published at cc1581d at 2560×1440. Its corner file is identical to the prior screen's, so the existing email and search pins carry across. I measured a raw panel mean of 193.0 with standard deviation 0.66, and inspected the blank bezel, hinge and keys. The old glossy hinge and palm-rest strip are subdued. Their raw p95 values in the checked regions are 52.2 and 48.4. The laptop views before and after the passes are rendering with the same source.
+
+### 2026-11-28 02:37 UTC · INFO · L2 · matched ticket-arrival cut
+
+Evidence_table/laptop_before and laptop are published together at 1517872. Both are 1280×720 with the same lens and layout, and neither clips above luma 250. Between grades the sampled display has zero change at p95, while the ticket region changes by 100 at p95. The closed booklet shifts naturally as it sits on the two passes. The separate tickets, entries and motifs finals are next.
