@@ -370,8 +370,8 @@ def blanket(name, x_wall, x_edge, y0, y1, z_top, drop, mat, sag=0.014, fold=0.24
         cr = sum(a * math.sin(f * (y * math.cos(k) + x * math.sin(k)) + p) for f, p, k, a in waves)
         z += cr * top * min(1.0, w * 6.0) * (0.4 if layer > rf else 1.0)
         if hang > 0:
-            phase = math.tau * (3.5 * u + 0.06 * math.sin(5.4 * u))
-            x += 0.022 * hang * (0.5 + 0.5 * math.sin(phase)) + 0.008 * hang * hang
+            phase = math.tau * (1.5 * u + 0.06 * math.sin(5.4 * u))
+            x += 0.008 * hang * (0.5 + 0.5 * math.sin(phase)) + 0.008 * hang * hang
             z += 0.002 * hang * math.sin(phase + 0.4)
         return (x, y, z)
 
@@ -504,8 +504,8 @@ def furnish(ox, oy, unit_xy):
     objs.append(soft_box("fold_sheet_up", (xin + 0.15, yF + POST + 0.09, m_top_u + 0.066),
                          (xin + 0.53, yF + POST + 0.36, m_top_u + 0.095), M["pillow cotton"], round_=0.012,
                          cuts=6, seed=8, wobble=0.002))
-    # a towel hung over the upper guard rail, near the foot
-    objs.append(towel_over_rail("towel", xR - RAIL_W / 2, yF + 0.30, yF + 0.62, z0 + TOP + 0.004, 0.026,
+    # Keep the towel at the foot of the guard rail, clear of the seated figure.
+    objs.append(towel_over_rail("towel", xR - RAIL_W / 2, yF + 0.10, yF + 0.42, z0 + TOP + 0.004, 0.026,
                                 M["towel terry"], hang_in=0.16, hang_out=0.34))
     # the wall desk and stool in front of the bunk's foot; on the desk a stack of plain books, a little askew
     objs += desk(ox, oy)

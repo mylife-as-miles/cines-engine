@@ -201,12 +201,15 @@ def stage_floor(cell=None, bags=None, dawn=None, chair=None):
         distance = _vmath(nt, "DISTANCE", pos, (*bags, 0.0))
         wear = _maprange(nt, distance, 1.6, 2.15, 0.0, 1.0)
     dk = _math(nt, "MULTIPLY", dk, _math(nt, "MULTIPLY", patch, wear))
+    wear_inside_pools = _math(nt, "ADD", 0.3, _math(nt, "MULTIPLY", board_detail, 0.7))
+    dk = _math(nt, "MULTIPLY", dk, wear_inside_pools)
     base = _mix(nt, _math(nt, "MULTIPLY", dk, 0.55), base, (0.04, 0.04, 0.042))
     # fine pale scratches (the paint scraped toward the board), sparse
     sp = _maprange(nt, _noise(nt, _vmath(nt, "ADD", o, (7.3, 2.2, 0.0)), 0.9, 2.0, 0.5), 0.52, 0.66, 0.0, 1.0)
     sc = _math(nt, "MAXIMUM", _ridge(nt, o, 11.0, (1.0, 18.0, 1.0), 0.975, 0.996, 2.0),
                _ridge(nt, _vmath(nt, "ADD", o, (1.9, 5.3, 0.0)), 11.0, (18.0, 1.0, 1.0), 0.975, 0.996, 2.0))
     sc = _math(nt, "MULTIPLY", sc, _math(nt, "MULTIPLY", sp, wear))
+    sc = _math(nt, "MULTIPLY", sc, wear_inside_pools)
     base = _mix(nt, _math(nt, "MULTIPLY", sc, 0.5), base, (0.16, 0.158, 0.155))
     # old spike tape: per Voronoi cell, maybe a strip (or a cross) 32 x 4.8 cm, ragged, partly peeled
     vor = _n(nt, "ShaderNodeTexVoronoi", feature="F1", distance="EUCLIDEAN")
@@ -344,10 +347,10 @@ def cell_floor(cell=(0.0, 0.0)):
     base = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.3), (0.2, 0.208, 0.2), (0.188, 0.196, 0.19))
     base = _mix(nt, _math(nt, "MULTIPLY", worn, 0.8), base, (0.25, 0.243, 0.228))
     # shoe scuffs: thin dark streaks, mostly on the paths
-    sc = _math(nt, "MAXIMUM", _ridge(nt, o, 4.0, (1.0, 6.0, 1.0), 0.965, 0.995),
-               _ridge(nt, _vmath(nt, "ADD", o, (2.3, 0.7, 0.0)), 4.0, (6.0, 1.0, 1.0), 0.965, 0.995))
-    sc = _math(nt, "MULTIPLY", sc, _math(nt, "ADD", _math(nt, "MULTIPLY", path, 0.8), 0.15))
-    base = _mix(nt, _math(nt, "MULTIPLY", sc, 0.6), base, (0.09, 0.09, 0.088))
+    sc = _math(nt, "MAXIMUM", _ridge(nt, o, 4.0, (1.0, 14.0, 1.0), 0.965, 0.995),
+               _ridge(nt, _vmath(nt, "ADD", o, (2.3, 0.7, 0.0)), 4.0, (14.0, 1.0, 1.0), 0.965, 0.995))
+    sc = _math(nt, "MULTIPLY", sc, _math(nt, "MULTIPLY", path, 0.8))
+    base = _mix(nt, _math(nt, "MULTIPLY", sc, 0.25), base, (0.09, 0.09, 0.088))
     ao = _ao(nt, 0.3)
     base = _mix(nt, _maprange(nt, ao, 0.4, 1.0, 0.6, 0.0), base, (0.03, 0.03, 0.028))
     nt.links.new(base, b.inputs["Base Color"])

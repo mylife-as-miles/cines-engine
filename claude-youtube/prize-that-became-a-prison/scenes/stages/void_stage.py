@@ -60,14 +60,14 @@ SPOTS = {
     # behind her as a curtain, round 2); watts by inverse square from 18.5 kW at 9.5 m, less the hotter centre. A
     # little behind her (fwd < 0): the front of the suit falls dark, shoulders, crown and legs take a rim off the
     # black, and the bowed face stays in shadow (in front light the nose tip alone caught the lamp)
-    "dawn": dict(h=5.2, fwd=-0.3, pool=1.2, watts=6400.0, blend=0.34, hot=(0.5, 0.9)),
+    "dawn": dict(h=5.2, fwd=-0.3, pool=1.2, watts=6400.0, blend=0.34, hot=(0.87, 0.97)),
     # the cell's lamp, its cone an ellipse that lands just inside the walls: the floor and the wall bases lit, the walls
     # falling off upward into the dark. Weaker than round 2 (13.5 kW) and its centre a little toward the open side, so
     # the window's shaft and barred patch lead after the floor (round 2: the patch 1.2:1 over a floor as bright as
     # the shaft). Pushed 0.35 forward with a short cone (preview 3) its edge crossed the close shot's floor as a
     # bright arc in front and the patch still sat in the bright half; now the edge lies at the slab's front and back
     "cell": dict(h=7.6, fwd=0.15, pool=(1.76, 1.78), watts=7695.0, blend=0.73),
-    "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=7600.0, blend=0.34, hot=(0.5, 0.9)),
+    "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=7600.0, blend=0.34, hot=(0.5, 1.3)),
 }
 # faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab. The dawn
 # and bags haze fills only a frustum round the cone, drifting a little in density
@@ -146,7 +146,7 @@ CAMERAS.update({
     "pool": dict(CAMERAS["dawn"], cast=False, final_res=(2560, 1440)),
     "chair": dict(dining.HEAD_SHOT, loc=chair_point(dining.HEAD_SHOT["loc"]),
                   aim=chair_point(dining.HEAD_SHOT["aim"]), beat="chair", focus="fx_chair"),
-    "cell_dawn": dict(loc=_p(C, 1.94, -4.16, 1.35), aim=_p(C, -0.23, 0.43, 0.95),
+    "cell_dawn": dict(loc=_p(C, 1.60, -4.16, 1.35), aim=_p(C, -0.23, 0.43, 0.95),
                       lens=29, fstop=4, focus="fx_bunk", beat="cell", seated=True, final_res=(2560, 1440)),
     "dawn_close": dict(loc=_p(D, -1.31, -1.71, 1.51), aim=_p(D, -0.13, 0.07, 1.41), lens=85,
                        fstop=3.2, focus="fx_bowed", beat="dawn", shift=(0.040, 0.014)),
@@ -574,7 +574,7 @@ def ground(holder, floor_z=0.0):
 
 def dawn():
     h = people.dawn_prison(uniform=True) if UNIFORM else people.dawn_prison()
-    castkit.relax_sculpted_hair(h)
+    castkit.relax_sculpted_hair(h, hairline_inset=0.0015)
     prison_suit(h)
     stone_finish(h)
     hands_stone(h)
@@ -734,6 +734,10 @@ def build_bags_island():
                        watts, (0.88, 0.92, 1.0), spread_deg=58)
         edge.visible_glossy = True
         returns.append(edge)
+    grip = st.area("grip rim", (hx, hy + 0.45, 0.95), (hx - 0.045, hy + 0.07, 0.61),
+                   (0.25, 0.08), 0.05, (0.88, 0.92, 1.0), spread_deg=30)
+    grip.visible_glossy = True
+    returns.append(grip)
     # Soften the overhead light on the pocket without changing the floor pool
     # or the duffel. In the divided wide the original two cones light both bags.
     case_meshes = _meshes(pair[0])
@@ -770,16 +774,20 @@ def build_seated_dawn():
     from visiting_room import seat_solve, seat_place
     from hearing_room import lap_hands
     h = people.dawn_prison(uniform=True)
+    castkit.relax_sculpted_hair(h, hairline_inset=0.0015)
     prison_suit(h)
     hands_stone(h)
     stone_finish(h)
-    upper = {"chest": (8, 0), "neck": (6, 0), "head": (17, 3), "fingers": 10}
+    upper = {"chest": (41, 0), "neck": (14, 0), "head": (45, 3), "fingers": 10}
     _, _, dz = seat_solve(h, upper, vc.LOW_DECK + 0.10, "bunk")
     lap_hands(h)
     for side in ("L", "R"):
         rigged.articulate_hand(h, side, {"f_index": (9, 12, 7), "f_middle": (11, 14, 9),
                                         "f_ring": (15, 17, 11, 5), "f_pinky": (17, 19, 12, 8)})
     fit.rest_seated_palms(h, GARMENT)
+    suit_fit(h)
+    fit.loosen_suit(h, GARMENT, hem_lift=0.018, seated=True)
+    fit.clearance(h, GARMENT)
     seat_place(h, 140.0, (C[0] - st.CX + 0.03 + vc.BUNK_W - 0.12, C[1] + 0.51), dz + st.SLAB)
     fill = st.area("bunk_floor_return", _p(C, 0.58, -0.56, 0.61), _p(C, -0.52, 0.5, 1.03),
                    (0.7, 0.5), 14.0, (0.76, 0.80, 0.88), spread_deg=85)
