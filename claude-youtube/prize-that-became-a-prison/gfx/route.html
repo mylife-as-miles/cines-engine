@@ -28,10 +28,12 @@ const PU = (lat, lon) => P(lat, U(lon));
 const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], departA: [26.3, 110.6], departQ: [27.0, 104.5], ausAim: [-11.2, 130.3], australia: [-25.57, 134.36], qingdao: [36.07, 120.38] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
-// Land, and the cream a lit region lays over it: LIT of INK over LAND_C puts the lit mainland at HSL lightness about
-// 0.37 against the land's 0.13 (0.12 once FOCUS dims the other land as the mainland lights). Australia, the claimed
-// destination, is lit to AUS_LIT of that. The lit mainland has a cream outline, OUTLINE px at 60 %.
-const INK = '#ece8e1', LAND_C = '#161d25', LIT = 0.34, FOCUS = 0.12, AUS_LIT = 0.42, OUTLINE = 2;
+// Land, and the cream a lit region lays over it (HSL lightness, medians measured on the rendered frame, relief in): the
+// land keeps its tone (about 0.18) for the Pacific crossing; as the mainland lights to LIT of INK over LAND_C (about
+// 0.38), FOCUS of near black dims all the other land to about 0.12, so the lit mainland stands about 3.2:1 over it.
+// Australia, the claimed destination, is lit to AUS_LIT of the mainland's fill (about 0.23). The lit mainland has a
+// cream outline, OUTLINE px at 60 %.
+const INK = '#ece8e1', LAND_C = '#1f2833', LIT = 0.32, FOCUS = 0.40, AUS_LIT = 0.42, OUTLINE = 2;
 const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
 const LIT_C = (() => { const a = rgb(LAND_C), b = rgb(INK); return `rgb(${a.map((v, i) => Math.round(v + LIT * (b[i] - v))).join(',')})`; })();
 function gc(a, b, n = 200) {
@@ -128,15 +130,23 @@ function buildPaths() {
 }
 // The sea's light: one radial gradient in map space, the same for the sea and (as a falloff) for the land.
 const seaLight = (ctx, c0, c1) => { const g = ctx.createRadialGradient(W * 0.55, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.75); g.addColorStop(0, c0); g.addColorStop(1, c1); return g; };
-// The land's relief is light only, never invented ground. The land stands a little above the sea (a soft shadow
-// SHADOW px down from every coast); its own shape, blurred LIFT_R px and laid over it in cream, lifts the land's middle
-// so every coast and lake shore falls off softly into it while a small island keeps the plain land tone; the sea's own
-// light lifts the middle of the map and lets its edges fall away; and a fine print grain fixed to the map gives the land
-// a surface. All monochrome; sizes are screen px.
-const SHADOW = 3, LIFT = 0.05, LIFT_R = 9, GRAIN_A = 0.10, GRAIN_S = 0.6;
-function relief(ctx) {
+// The land's relief invents no ground. Its slopes are the real ones: design/gfx/relief_pacific.jpg is the hillshade
+// alone (lit from the north-west) of Natural Earth I shaded relief by Tom Patterson (public domain), its colour tints
+// taken out, over RELIEF_WIN (lon0, lon1, lat0, lat1 in the land's wrap), plate carree, grey 128 neutral; it is laid
+// over the land in soft-light at RELIEF_A, so mountains take a fine grey light and shade and plains stay plain, in
+// proportion to the land's own tone (so the lit mainland carries it as well as the dark land). The land stands a little
+// above the sea (a soft shadow SHADOW px down from every coast); its own shape, blurred LIFT_R px and laid over it in
+// cream, lifts the land's middle so every coast and lake shore falls off softly into it; the sea's own light lifts the
+// middle of the map and lets its edges fall away; and a fine print grain fixed to the map gives the land a surface.
+// All monochrome; sizes are screen px.
+const SHADOW = 3, LIFT = 0.05, LIFT_R = 9, GRAIN_A = 0.08, GRAIN_S = 0.6, RELIEF_A = 0.8, RELIEF_WIN = [36, 300, -40, 84];
+let RELIEF = null;
+function relief(ctx, dim = 0) {   // dim: the share FOCUS takes off the land, taken off the lift too
   ctx.save(); ctx.clip(SHOREP, 'evenodd');                 // the land without its lakes
-  ctx.filter = `blur(${LIFT_R}px)`; ctx.fillStyle = `rgba(236,232,225,${LIFT})`; ctx.fill(SHOREP, 'evenodd'); ctx.filter = 'none';
+  const [x0, y0] = P(RELIEF_WIN[3], RELIEF_WIN[0]), [x1, y1] = P(RELIEF_WIN[2], RELIEF_WIN[1]);
+  ctx.globalCompositeOperation = 'soft-light'; ctx.globalAlpha = RELIEF_A; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(RELIEF, x0, y0, x1 - x0, y1 - y0); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  ctx.filter = `blur(${LIFT_R}px)`; ctx.fillStyle = `rgba(236,232,225,${LIFT * (1 - dim)})`; ctx.fill(SHOREP, 'evenodd'); ctx.filter = 'none';
   ctx.fillStyle = seaLight(ctx, 'rgba(0,0,0,0)', 'rgba(0,0,0,0.15)'); ctx.fill(LANDP);
   const pat = ctx.createPattern(GRAIN, 'repeat'); pat.setTransform(new DOMMatrix().scale(GRAIN_S)); ctx.fillStyle = pat; ctx.fill(LANDP);
   ctx.restore(); }
@@ -152,7 +162,7 @@ function base(ctx, lit = {}) {
   const chn = lit.CHN || 0;
   if (chn > 0) { ctx.fillStyle = `rgba(4,6,10,${FOCUS * chn})`; ctx.fill(LANDP); }
   for (const k in lit) if (lit[k] > 0) { ctx.save(); ctx.clip(LANDP); ctx.globalAlpha = lit[k]; ctx.fillStyle = LIT_C; ctx.fill(REGP[k].fill); ctx.restore(); }
-  relief(ctx);
+  relief(ctx, FOCUS * chn);
   ctx.fillStyle = sea; ctx.fill(LAKEP, 'evenodd');
   if (GROUND) return;
   ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(236,232,225,0.60)'; ctx.lineWidth = 1.1 / ZOOM; ctx.stroke(LANDP);
@@ -317,6 +327,7 @@ window.draw = (mode, t) => {
   drawLabels(ctx); ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t);
 };
 fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/lakes_pacific.json'); }).then(r => r.json()).then(d => { window.LAKES_SRC = d.lakes; return fetch('../design/gfx/regions.json'); })
-  .then(r => r.json()).then(d => { window.REG = d.regions; buildPaths(); return document.fonts.load('500 26px "Cormorant"'); })
+  .then(r => r.json()).then(d => { window.REG = d.regions; buildPaths(); return fetch('../design/gfx/relief_pacific.jpg'); })
+  .then(r => r.blob()).then(b => createImageBitmap(b)).then(b => { RELIEF = b; return document.fonts.load('500 26px "Cormorant"'); })
   .then(() => document.fonts.load('400 26px "Cormorant"')).then(() => { window.READY = true; });
 </script></body></html>

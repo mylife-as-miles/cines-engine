@@ -24,9 +24,12 @@ lands somewhere new (the search). A mark (`t`, `dur` a line) ends at t + dur x l
 stroke is a hand's stroke (ramped speed) that spends `swipe_frames` (20) crossing the screen, with a dry, fixed-seed
 edge feathered 2-3 px on screen.
 Options a shot may set, all off by default: `tex_bleed_px` (a screen texture's edge pixels carried that many plate px
-past the pins, over a plate whose lit face bleeds past them: the scale), `glow` ({"sigma_px", "gain"}: the lit face's
-light spilling onto the bezel around it, sigma in plate px) and `focus_band.zoom_scaled` (the band's blur grows with the
-push, reaching `blur_px` at the end zoom, as a lens's blur does when it moves in: the email).
+past the pins, over a plate whose lit face bleeds past them: the scale), `tex_gain` (a screen's own backlight: a linear
+gain on its lit face, pins plus bleed, with the page's hue-keeping shoulder, so the panel is the brightest thing in a dark
+frame, not a lit card: the scale), `glow` ({"sigma_px", "gain"}: the lit face's light spilling onto the bezel around it,
+sigma in plate px; with "bloom_sigma_px", "bloom_gain" also a wide, faint halo, the lens's veiling glare around a bright
+panel) and `focus_band.zoom_scaled` (the band's blur grows with the push, reaching `blur_px` at the end zoom, as a lens's
+blur does when it moves in: the email).
 """
 import argparse
 import json
@@ -308,7 +311,8 @@ def main():
     yellow = np.float32(shot.get("marker_rgb", MARKER_RGB))   # display-referred reflectance, linearised below
     yellow_lin = srgb_to_lin(yellow)
     feather = shot.get("marker_feather_px", MARKER_FEATHER_PX)
-    gain = 1.0 if tex else shot.get("page_gain", PAGE_GAIN)   # the page's own exposure: a screen keeps its glow
+    # the page's own exposure; a screen keeps its glow unless the shot gives it a backlight (tex_gain, off by default)
+    gain = shot.get("tex_gain", 1.0) if tex else shot.get("page_gain", PAGE_GAIN)
 
     # framing: the crop centre and zoom follow a log-space push toward `focus` (a phrase, in plate pixels)
     if tex:                                   # a screen: focus is a point given as fractions of the texture
@@ -418,7 +422,7 @@ def main():
     def frame(t):
         A, Ht = view(t)
         base = cv2.warpAffine(plate, A[:2], (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
-        fm = quad_mask(to_screen(A, face_q)) if (bleed > 0 or glow) else None
+        fm = quad_mask(to_screen(A, face_q)) if (bleed > 0 or glow or (tex and gain != 1.0)) else None
         if tex:                               # an emissive screen: the UI scales the blank display's own glow
             alb = srgb_to_lin(tex.get(t)).astype(np.float32)
         else:                                 # page albedo for this frame (marker under the ink)
@@ -455,10 +459,13 @@ def main():
         alb_w = cv2.GaussianBlur(alb_w, (0, 0), tb)
         lit = srgb_to_lin(base) * alb_w
         if gain != 1.0:                       # the page's own exposure: the sheet under the page quad only, in linear light
-            q = cv2.perspectiveTransform(src[None].astype(np.float64), Ht)[0]
-            pm = np.zeros((H, W), np.uint8)
-            cv2.fillConvexPoly(pm, np.int32(np.round(np.clip(q, -1e5, 1e5) * 16)), 255, lineType=cv2.LINE_AA, shift=4)
-            pm = cv2.GaussianBlur(pm.astype(np.float32) / 255.0, (0, 0), 1.0)
+            if fm is not None:                # a screen: its whole lit face (pins plus bleed), so no ring is left unlit
+                pm = cv2.GaussianBlur(fm, (0, 0), 1.0)
+            else:
+                q = cv2.perspectiveTransform(src[None].astype(np.float64), Ht)[0]
+                pm = np.zeros((H, W), np.uint8)
+                cv2.fillConvexPoly(pm, np.int32(np.round(np.clip(q, -1e5, 1e5) * 16)), 255, lineType=cv2.LINE_AA, shift=4)
+                pm = cv2.GaussianBlur(pm.astype(np.float32) / 255.0, (0, 0), 1.0)
             lit *= (1.0 + (gain - 1.0) * pm)[..., None]
             # a shoulder on the brightest channel, hue kept (the lamp-warm sheet's red would clip first): above KNEE
             # the largest channel rolls off toward 1.0 and the other two follow it in proportion
@@ -469,9 +476,12 @@ def main():
                 lit = np.where(over, lit * soft / np.maximum(mx, 1e-6), lit)
         if glow:                              # the lit face's light spilling onto the bezel: linear light, outside the pins
             kz = np.sqrt(abs(np.linalg.det(A[:2, :2])))       # plate px -> screen px, so the glow scales with the push
-            spill = cv2.GaussianBlur(lit * fm[..., None], (0, 0), glow["sigma_px"] * kz)
+            src_l = lit * fm[..., None]
+            spill = cv2.GaussianBlur(src_l, (0, 0), glow["sigma_px"] * kz)
             fp = quad_mask(to_screen(A, np.float64(dst)))     # the pins (the bleed ring takes the glow too: no dark ring)
             lit = lit + glow.get("gain", 0.1) * spill * (1.0 - fp)[..., None]
+            if glow.get("bloom_gain"):                         # the lens's veiling glare: wide and faint, over everything
+                lit = lit + glow["bloom_gain"] * cv2.GaussianBlur(src_l, (0, 0), glow.get("bloom_sigma_px", 16.0) * kz)
         out = lin_to_srgb(lit)
         # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels, or a
         # continuous depth of field with "continuous": true)

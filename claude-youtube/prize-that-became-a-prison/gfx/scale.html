@@ -39,17 +39,22 @@ function bezel(ctx) {                                         // the face sits b
   g = ctx.createLinearGradient(0, 0, 20, 0); g.addColorStop(0, 'rgba(10,12,16,0.40)'); g.addColorStop(1, 'rgba(10,12,16,0)');
   ctx.fillStyle = g; ctx.fillRect(0, 0, 20, H);
 }
-// review 10 (fault 11): still a printed card at its on-screen size. The glass over the panel: a soft diagonal reflection
-// of the hall's lights, screened over everything (segments too, as a reflection lies over the ink), brightest across the
-// upper left and gone by the middle. It is faint (at most 13 % of the way to white); the composite carries the texture's
-// edge over the plate's bright bleed (no keyline) and adds the face's glow onto the bezel (scale_overweight.json).
+// review 10 (fault 11): still a printed card at its on-screen size. The glass over the panel: the reflection of a strip
+// of the hall's ceiling light, a soft diagonal band across the upper left with a fainter second one beside it, plus a
+// sheen fading down the glass, all screened over everything (segments too, as a reflection lies over the ink). On the lit
+// face it is nearly invisible, as a reflection on a bright panel is; it shows where it crosses the dark segments and
+// letters, lifting them toward grey along the band (at most 22 % of the way to white). The composite carries the
+// texture's edge over the plate's bright bleed (no keyline), gives the face its backlight and spills it onto the bezel
+// (scale_overweight.json).
 function glass(ctx) {
   ctx.save(); ctx.globalCompositeOperation = 'screen';
-  const g = ctx.createLinearGradient(0, 0, W * 0.62, H * 1.45);      // the axis runs down-right: the band lies across it
-  g.addColorStop(0.00, 'rgba(255,255,255,0.035)'); g.addColorStop(0.16, 'rgba(255,255,255,0.13)');
-  g.addColorStop(0.30, 'rgba(255,255,255,0.07)'); g.addColorStop(0.36, 'rgba(255,255,255,0.09)');
-  g.addColorStop(0.55, 'rgba(255,255,255,0.0)'); g.addColorStop(1.00, 'rgba(255,255,255,0.0)');
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore();
+  const g = ctx.createLinearGradient(0, 0, W * 0.62, H * 1.45);      // the axis runs down-right: the bands lie across it
+  for (const [p, a] of [[0.00, 0.05], [0.10, 0.12], [0.17, 0.22], [0.24, 0.10], [0.30, 0.06], [0.36, 0.13], [0.43, 0.04], [0.58, 0.0], [1.0, 0.0]])
+    g.addColorStop(p, `rgba(255,255,255,${a})`);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const v = ctx.createLinearGradient(0, 0, 0, H);                     // the glass catches the ceiling: brighter at the top
+  v.addColorStop(0, 'rgba(255,255,255,0.07)'); v.addColorStop(0.6, 'rgba(255,255,255,0)');
+  ctx.fillStyle = v; ctx.fillRect(0, 0, W, H); ctx.restore();
 }
 // every inked element is drawn twice: a soft shadow on the backplane (3 px down-right), then the segment itself
 function ink(ctx, fn) {

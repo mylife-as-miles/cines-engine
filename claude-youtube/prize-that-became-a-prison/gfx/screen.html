@@ -97,16 +97,19 @@ function email(ctx, t) {
   // as a quotation (review 10, fault 13: on a phone it could be read). The supporting lines are set in a softer grey
   // (BODY: about 60 % of the ink's contrast) and the composite's depth of field falls off steeply above and below the
   // prize line (screen_email.json): together they leave rows of text, not words.
+  // The prize line also stands as its own paragraph: about 2.4 lines of text clear of the lines above and below (was
+  // 1.7 and 2.1), so the depth of field can fall off more gently (no hard slot around the sharp line) and still leave
+  // its neighbours fully soft. The prize line itself stays at y 448, so the camera's path is unchanged.
   const BODY = '#646a74';
-  txt(ctx, 'Dear winner,', BX, 330, 28, BODY);
-  txt(ctx, 'We are delighted to tell you that your entry has been selected.', BX, 392, 28, BODY);
+  txt(ctx, 'Dear winner,', BX, 318, 28, BODY);
+  txt(ctx, 'We are delighted to tell you that your entry has been selected.', BX, 368, 28, BODY);
   prizeLine(ctx, t, BX, 448);
   const body = ['Our team will be in touch shortly to arrange the details of your prize.',
                 'Please reply to this message to confirm your entry and your contact details.',
                 'All arrangements will be made for you, at no cost to you.',
                 'We look forward to hearing from you.', '', 'With warm regards,', 'The prize team'];
-  body.forEach((line, i) => txt(ctx, line, BX, 520 + i * 44, 26, i > 4 ? '#8a9099' : BODY));
-  rr(ctx, BX, 860, 200, 52, 26, C.accent); txt(ctx, 'Reply', BX + 65, 894, 22, '#ffffff', 600);
+  body.forEach((line, i) => txt(ctx, line, BX, 532 + i * 42, 26, i > 4 ? '#8a9099' : BODY));
+  rr(ctx, BX, 852, 200, 52, 26, C.accent); txt(ctx, 'Reply', BX + 65, 886, 22, '#ffffff', 600);
 }
 // The search, in two pages like a real one. The home page: the field in the upper middle of the screen, typed like a
 // person (2-6 frames a letter in an irregular rhythm, a pause after each space), the suggestion list dropping under it.
@@ -186,17 +189,17 @@ function search(ctx, t) {
       txt(ctx, snip, 120, y + 84, 20, C.soft);
       txt(ctx, meta, 120, y + 107, 17, DIM);                                 // its metadata, where the second bar was
     });
-    // a side column: a generic topic panel, dim text only
-    rr(ctx, 1000, 262, 400, 560, 18, '#f6f7f9');
-    txt(ctx, 'Prize contests', 1030, 322, 26, '#4a5059', 600);
-    txt(ctx, 'Topic', 1030, 350, 17, DIM);
-    ['A contest or prize draw gives prizes to', 'entrants chosen at random or by judges.', 'Organizers publish rules that set out',
-     'eligibility and the prize details.'].forEach((s, i) => txt(ctx, s, 1030, 392 + i * 26, 17, '#8d939b'));
-    txt(ctx, 'Common questions', 1030, 524, 19, '#7a8089', 600);
-    ['How are winners chosen?', 'How are winners notified?', 'What do official rules cover?', 'How long does a claim take?',
-     'Can a prize be transferred?', 'Where are results posted?'].forEach((s, i) => {
-      ctx.strokeStyle = '#e6e9ee'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(1030, 541.5 + i * 42); ctx.lineTo(1370, 541.5 + i * 42); ctx.stroke();
-      txt(ctx, s, 1030, 570 + i * 42, 17, DIM);
+    // a side column: a generic topic panel, dim text only. It sits right of x = 1170, and its words right of 1236: the
+    // frame's right edge reaches texture x 1219 at most once the results are in (3.53 s, still transparent) and 1097
+    // at the hold, so no word of it is ever cut by the frame edge (review 10 had its blocks, then its words, cut there);
+    // only the panel's pale edge passes through the frame during the drift. No sentence in it states anything.
+    rr(ctx, 1170, 262, 300, 560, 18, '#f6f7f9');
+    txt(ctx, 'Prize contests', 1236, 322, 26, '#4a5059', 600);
+    txt(ctx, 'Topic', 1236, 350, 17, DIM);
+    txt(ctx, 'Related topics', 1236, 410, 19, '#7a8089', 600);
+    ['Contest rules', 'Prize claims', 'Travel prizes', 'Winner notices', 'Prize draws', 'Sweepstakes'].forEach((s, i) => {
+      ctx.strokeStyle = '#e6e9ee'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(1236, 427.5 + i * 42); ctx.lineTo(1440, 427.5 + i * 42); ctx.stroke();
+      txt(ctx, s, 1236, 456 + i * 42, 17, DIM);
     });
     // related searches, a row of chips at the foot
     txt(ctx, 'Related searches', 120, 920, 22, C.soft, 600);
