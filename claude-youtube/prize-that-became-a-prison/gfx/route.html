@@ -123,16 +123,7 @@ function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre m
   const c = [from[0] + (to[0] - from[0]) * p, from[1] + (to[1] - from[1]) * p];
   ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * c[0], H / 2 - z * c[1]);
 }
-function keysAt(t, keys) {                            // camKeys()'s [x, y, zoom] at t
-  let i = 0; while (i < keys.length - 2 && t > keys[i + 1][0]) i++;
-  const [t0, x0, y0, z0] = keys[i], [t1, x1, y1, z1] = keys[i + 1], p = sm((t - t0) / (t1 - t0));
-  return [x0 + (x1 - x0) * p, y0 + (y1 - y0) * p, z0 * Math.pow(z1 / z0, p) * (1 + 0.006 * t)];
-}
-function camKeys(ctx, t, keys) {                      // a camera through keyframes [t, x, y, zoom], eased between them
-  const [cx, cy, z] = keysAt(t, keys);
-  ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy);
-}
-function camAt(ctx, [cx, cy, z]) { ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy); }
+function camAt(ctx, [cx, cy, z]) {                   // a camera at the framing [x, y, zoom] ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy); }
 // The mainland and split cameras. Under every hold runs one slow push, PUSH (3 % in 5 s, a constant rate in log zoom),
 // and each move is added on top of it, so a move lands into the push instead of stopping. A move pans evenly on screen
 // (the centre travels in proportion to 1/zoom, so a zoom-in does not race across the map at the end) and is timed by
@@ -170,10 +161,10 @@ function dashed(ctx, pts, f, a = 1, fade = 0, phase = 0) {
   ctx.setLineDash(DASH); ctx.lineDashOffset = phase; ctx.strokeStyle = fill('3,5,9', 0.7); ctx.lineWidth = (DASH_W + 2 * EDGE) / ZOOM; path(ctx, pts, f); ctx.stroke();
   ctx.shadowColor = 'rgba(236,232,225,0.5)'; ctx.shadowBlur = 2 * GLOW; ctx.strokeStyle = fill('236,232,225', 0.95 * a); ctx.lineWidth = DASH_W / ZOOM;
   const h = path(ctx, pts, f); ctx.stroke(); ctx.setLineDash([]);
-  if (f < 1) { const g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 20); g.addColorStop(0, 'rgba(236,232,225,0.6)'); g.addColorStop(1, 'rgba(236,232,225,0)');
+  if (f < 1) { const R = 24 / ZOOM, g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], R); g.addColorStop(0, 'rgba(236,232,225,0.6)'); g.addColorStop(1, 'rgba(236,232,225,0)');
     // the head's glow grows in as the line leaves, so it never sits on the (unmarked) start point as a marker, and
     // gives way to the arrowhead over the last tenth, so neither line ends on a flash
-    ctx.shadowBlur = 0; ctx.globalAlpha = sm(f / 0.06) * (1 - sm((f - 0.9) / 0.1)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 20, 0, 7); ctx.fill(); }
+    ctx.shadowBlur = 0; ctx.globalAlpha = sm(f / 0.06) * (1 - sm((f - 0.9) / 0.1)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], R, 0, 7); ctx.fill(); }
   ctx.restore();
 }
 function region(ctx, a, key = 'CHN') { // a country's own outline, lit (mainland China for the days of travel; Australia)
@@ -188,12 +179,12 @@ function arrowEnd(ctx, pts, f) {   // the one open arrowhead both disputed lines
   if (GROUND) return; const k = sm((f - 0.9) / 0.1); if (k <= 0) return;
   const n = Math.max(1, Math.floor((pts.length - 1) * f)), h = pts[n];
   let j = n; while (j > 0 && Math.hypot(h[0] - pts[j][0], h[1] - pts[j][1]) < 6) j--;
-  const ang = Math.atan2(h[1] - pts[j][1], h[0] - pts[j][0]), r = 15 / ZOOM, s = 0.5;
+  const ang = Math.atan2(h[1] - pts[j][1], h[0] - pts[j][0]), r = 18 / ZOOM, s = 0.5, w = 0.8 * DASH_W;   // in proportion to the dashes
   const chev = () => { ctx.beginPath(); ctx.moveTo(h[0] - r * Math.cos(ang - s), h[1] - r * Math.sin(ang - s)); ctx.lineTo(h[0], h[1]);
     ctx.lineTo(h[0] - r * Math.cos(ang + s), h[1] - r * Math.sin(ang + s)); ctx.stroke(); };
   ctx.save(); ctx.globalAlpha = k; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  ctx.strokeStyle = 'rgba(3,5,9,0.7)'; ctx.lineWidth = 6.5 / ZOOM; chev();
-  ctx.shadowColor = 'rgba(236,232,225,0.3)'; ctx.shadowBlur = 8; ctx.strokeStyle = 'rgba(236,232,225,0.95)'; ctx.lineWidth = 3.2 / ZOOM; chev();
+  ctx.strokeStyle = 'rgba(3,5,9,0.7)'; ctx.lineWidth = (w + 2 * EDGE) / ZOOM; chev();
+  ctx.shadowColor = 'rgba(236,232,225,0.5)'; ctx.shadowBlur = 2 * GLOW; ctx.strokeStyle = 'rgba(236,232,225,0.95)'; ctx.lineWidth = w / ZOOM; chev();
   ctx.restore(); }
 function landDist(p, key) {  // the shortest distance (map px) from p, outside it, to a region's land
   let best = Infinity;
