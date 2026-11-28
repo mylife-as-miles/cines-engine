@@ -59,11 +59,12 @@ def _math(nt, op, a, b=0.0, clamp=False):
     return n.outputs[0]
 
 
-def _mix(nt, fac, a, b, blend="MIX"):
-    n = _n(nt, "ShaderNodeMix", data_type="RGBA", blend_type=blend)
+def _mix(nt, fac, a, b, blend="MIX", *, data_type="RGBA"):
+    n = _n(nt, "ShaderNodeMix", data_type=data_type, blend_type=blend)
+    socket_type = "VALUE" if data_type == "FLOAT" else "RGBA"
     fs = [i for i in n.inputs if i.name == "Factor" and i.type == "VALUE"][0]
-    sa = [i for i in n.inputs if i.name == "A" and i.type == "RGBA"][0]
-    sb = [i for i in n.inputs if i.name == "B" and i.type == "RGBA"][0]
+    sa = [i for i in n.inputs if i.name == "A" and i.type == socket_type][0]
+    sb = [i for i in n.inputs if i.name == "B" and i.type == socket_type][0]
     for s, v in ((fs, fac), (sa, a), (sb, b)):
         if isinstance(v, (int, float)):
             s.default_value = v
@@ -71,7 +72,7 @@ def _mix(nt, fac, a, b, blend="MIX"):
             s.default_value = (*v[:3], 1.0)
         else:
             _link(nt, v, s)
-    return [o for o in n.outputs if o.type == "RGBA"][0]
+    return [o for o in n.outputs if o.type == socket_type][0]
 
 
 def _noise(nt, vec, scale, detail=2.0, rough=0.5, mapping=None, offset=None):
@@ -473,10 +474,11 @@ def brick(name, rgb=(0.05, 0.047, 0.045), mortar=(0.03, 0.03, 0.029)):
 
 
 def satin_wood(holder, centre, facing, rgb=(0.07, 0.035, 0.02), rough=(0.45, 0.55), wear=0.15, seat_z=(0.4, 0.53)):
-    """Replace a generated chair's baked texture (blotchy in close-up: a speckled-stone seat, smeared rails) with a
-    satin-finished hardwood: grain along the seat's front-to-back axis on up-facing faces and along Z on the legs and
-    spindles, low contrast, open pores, a dark grime in the joints, roughness 0.45-0.55, a light bump, and the seat's
-    front edge worn lighter (`wear`) where legs rub. `centre` (x, y) and `facing` (unit x, y) place the wear band."""
+    """Finish the chair with satin hardwood and a worn fabric seat on its single-material mesh.
+
+    The wood grain follows the frame, with open pores and dark joints. The chair centre and facing place the wear band
+    and keep the fabric inside the raised seat footprint.
+    """
     cx, cy = centre
     fx, fy = facing
     seen = set()
@@ -511,16 +513,27 @@ def satin_wood(holder, centre, facing, rgb=(0.07, 0.035, 0.02), rough=(0.45, 0.5
             col = _mix(nt, _maprange(nt, pores, 0.62, 0.72, 0.0, 0.35), col, tuple(c * 0.6 for c in rgb))
             # the worn front edge of the seat: lighter where the legs rub, on the up faces at seat height only
             px, py, pz = _xyz(nt, p)
-            s = _math(nt, "ADD", _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", px, cx), fx), _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", py, cy), fy))
+            dx, dy = _math(nt, "SUBTRACT", px, cx), _math(nt, "SUBTRACT", py, cy)
+            s = _math(nt, "ADD", _math(nt, "MULTIPLY", dx, fx), _math(nt, "MULTIPLY", dy, fy))
             band = _maprange(nt, s, 0.17, 0.27, 0.0, 1.0)
             inz = _math(nt, "MULTIPLY", _maprange(nt, pz, seat_z[0] - 0.01, seat_z[0], 0.0, 1.0), _maprange(nt, pz, seat_z[1], seat_z[1] + 0.01, 1.0, 0.0))
             worn = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", band, inz), up)
             col = _mix(nt, worn, col, tuple(min(1.0, c * (1.0 + wear)) for c in rgb))
+            across = _math(nt, "ADD", _math(nt, "MULTIPLY", dx, -fy), _math(nt, "MULTIPLY", dy, fx))
+            seat_length = _maprange(nt, _math(nt, "ABSOLUTE", s), 0.17, 0.205, 1.0, 0.0)
+            seat_width = _maprange(nt, _math(nt, "ABSOLUTE", across), 0.16, 0.205, 1.0, 0.0)
+            seat_area = _math(nt, "MULTIPLY", seat_length, seat_width)
+            cushion = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", up, inz), seat_area)
+            weave = _noise(nt, p, 710, 2.0, 0.55)
+            fabric = _mix(nt, weave, (0.043, 0.039, 0.035), (0.055, 0.050, 0.044))
+            col = _mix(nt, cushion, col, fabric)
             col = _mix(nt, _maprange(nt, _ao(nt, 0.04), 0.35, 1.0, 0.55, 0.0), col, tuple(c * 0.35 for c in rgb))
             _link(nt, col, b.inputs["Base Color"])
             r = _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.3, 0.7, rough[0], rough[1])
-            _link(nt, _math(nt, "ADD", r, _math(nt, "MULTIPLY", worn, 0.08)), b.inputs["Roughness"])
-            _bump(nt, b, _math(nt, "ADD", grain, _math(nt, "MULTIPLY", pores, 0.4)), 0.1, 0.0005)
+            r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", worn, 0.08))
+            _link(nt, _mix(nt, cushion, r, 0.80, data_type="FLOAT"), b.inputs["Roughness"])
+            wood_bump = _math(nt, "ADD", grain, _math(nt, "MULTIPLY", pores, 0.4))
+            _bump(nt, b, _mix(nt, cushion, wood_bump, weave, data_type="FLOAT"), 0.1, 0.0005)
     return holder
 
 

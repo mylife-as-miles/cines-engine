@@ -803,12 +803,12 @@ def desk(x0, idx, open_):
         card.rotation_euler.z = yaw_pass + math.radians(7)
         card.data.materials.append(sk.mat("plain slate payment card", (0.10, 0.15, 0.17), 0.52))
         terminal = box(p + "payment terminal", (0.075, 0.155, 0.035),
-                       (x0 + 0.18, 0.20, LEDGE + 0.0525), m["plastic"], bevel=0.006,
+                       (x0 + 0.345, 0.260, LEDGE + 0.0525), m["plastic"], bevel=0.006,
                        rot=(0, 0, math.radians(-9)))
         screen_colour = (0.33, 0.45, 0.53)
         blank = screen_mat("terminal blank glass", screen_colour, 3.0)
         child(box(p + "terminal glass", (0.050, 0.038, 0.0012), (0, 0.033, 0.0178), blank,
-                  bevel=0.0018, rot=(math.radians(6), 0, 0)), terminal)
+                  bevel=0.0018, rot=(math.radians(2), 0, 0)), terminal)
         spill = light(p + "terminal spill", (0, 0.028, 0.030), (0.06, 0.05), 0.30, colour=screen_colour,
                       rot=Vector((0, -1, -0.3)).to_track_quat("-Z", "Y").to_euler(), spread=90)
         child(spill, terminal)
@@ -1474,6 +1474,9 @@ def build(cast=True):
     orig = getattr(sk.render, "_orig", sk.render)
     dawn_meshes = [ob for ob in d.children_recursive if ob.type == "MESH" and ob.visible_camera]
     agent_meshes = [ob for ob in a.children_recursive if ob.type == "MESH" and ob.visible_camera]
+    scale_end = [bpy.data.objects["desk0_" + name] for name in (
+        "ledge", "nosing", "ledge back band", "work", "ledge end.001", "desk end.001", "side_reveal.001",
+    )]
     agent_mark = a.location.copy()
     island = bpy.data.objects["pos0_island"]
     island_receivers = island.light_linking.receiver_collection
@@ -1495,7 +1498,7 @@ def build(cast=True):
     def render(*args, **kwargs):
         cam = bpy.context.scene.camera
         name = cam.get("stage_camera") if cam else None
-        hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes if name == "scale" else ()
+        hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes + scale_end if name == "scale" else ()
         profile = name == "profile"
         shoulder = name == "shoulder"
         edge.hide_render = profile
@@ -1563,8 +1566,8 @@ def pose_cast(d, a):
     # exposed so the page block reads as a closed passport.
     for part in ("back", "pages", "front"):
         piece = bpy.data.objects["desk0_passport_" + part]
-        piece.location.x = hand["pad"].x - 0.005
-        piece.location.y = hand["pad"].y + 0.012
+        piece.location.x = hand["pad"].x + 0.025
+        piece.location.y = hand["pad"].y + 0.002
         if part == "pages":
             piece.location += piece.rotation_euler.to_matrix() @ Vector((0, 0.001, 0))
     card = bpy.data.objects["desk0_payment_card"]
