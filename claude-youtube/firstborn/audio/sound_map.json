@@ -198,7 +198,16 @@
    "file": "notify",
    "rel_db": -21.2,
    "align": "start",
-   "class": "pop"
+   "class": "pop",
+   "variants": [
+    {
+     "if_word": "^(first|he)$",
+     "file": "credit_alert",
+     "rel_db": -14,
+     "after_speech": 0.4,
+     "class": "story"
+    }
+   ]
   },
   "door": {
    "file": "door",
@@ -248,9 +257,17 @@
    "variants": [
     {
      "if_kind": "yes",
-     "if_word": "^(yes)$",
      "file": "stamp_yes",
-     "rel_db": -12
+     "rel_db": -10.5
+    },
+    {
+     "if_word": "^(born|promoted|management|yes)",
+     "file": "stamp_yes",
+     "rel_db": -10.5
+    },
+    {
+     "if_word": "^passed",
+     "mute": true
     }
    ],
    "class": "story"
@@ -346,12 +363,7 @@
    "align": "start",
    "class": "pop"
   },
-  "sigh": {
-   "file": "cloud",
-   "rel_db": -22,
-   "align": "start",
-   "class": "pop"
-  },
+  "sigh": null,
   "swell": {
    "file": "swell",
    "rel_db": -21,
@@ -446,7 +458,13 @@
    "rel_db": -14,
    "align": "start",
    "after_speech": 0.8,
-   "class": "story"
+   "class": "story",
+   "variants": [
+    {
+     "if_word": "^parents",
+     "mute": true
+    }
+   ]
   },
   "sneeze": {
    "file": "sneeze",
@@ -545,7 +563,193 @@
    "align": "start",
    "class": "pop"
   },
-  "crunch": null
+  "crunch": null,
+  "soft_ding": {
+   "file": "ding",
+   "rel_db": -21,
+   "align": "start",
+   "class": "pop"
+  },
+  "marker": {
+   "file": "marker",
+   "rel_db": -21,
+   "align": "start",
+   "class": "pop"
+  },
+  "siren": {
+   "file": "siren",
+   "rel_db": -17,
+   "align": "start",
+   "class": "story"
+  },
+  "page_flip": {
+   "file": "page_flip",
+   "rel_db": -22,
+   "align": "start",
+   "class": "pop"
+  },
+  "snore": {
+   "file": "snore",
+   "rel_db": -21,
+   "align": "start",
+   "class": "pop"
+  },
+  "slow_clap": {
+   "steps": [
+    "clap"
+   ],
+   "n": 3,
+   "gap": 0.45,
+   "rel_db": -17,
+   "align": "start",
+   "class": "story"
+  },
+  "applause": {
+   "file": "applause",
+   "rel_db": -22,
+   "align": "start",
+   "class": "pop"
+  },
+  "bank_bell": {
+   "file": "bank_bell",
+   "rel_db": -14,
+   "align": "start",
+   "class": "story"
+  },
+  "pot_lid": {
+   "file": "pot_lid",
+   "rel_db": -12.5,
+   "align": "start",
+   "class": "story"
+  },
+  "stir": {
+   "file": "stir",
+   "rel_db": -23,
+   "align": "start",
+   "class": "pop"
+  },
+  "thud": {
+   "file": "thud",
+   "rel_db": -20,
+   "align": "start",
+   "class": "pop"
+  },
+  "clock_tick": {
+   "file": "clock_tick",
+   "rel_db": -16,
+   "align": "start",
+   "class": "story"
+  },
+  "heartbeat": {
+   "file": "heartbeat",
+   "rel_db": -20,
+   "align": "start",
+   "class": "pop"
+  },
+  "receipt": {
+   "file": "receipt",
+   "rel_db": -21,
+   "align": "start",
+   "class": "pop"
+  },
+  "clink": {
+   "file": "clink",
+   "rel_db": -21,
+   "align": "start",
+   "class": "pop"
+  },
+  "tiptoe": {
+   "steps": [
+    "step_1",
+    "step_2",
+    "step_3",
+    "step_4"
+   ],
+   "n": 6,
+   "gap": 0.45,
+   "rel_db": -24,
+   "align": "start",
+   "class": "pop"
+  },
+  "footsteps_small": {
+   "steps": [
+    "step_1",
+    "step_2",
+    "step_3",
+    "step_4"
+   ],
+   "n": 6,
+   "gap": 0.2,
+   "rel_db": -22,
+   "align": "start",
+   "class": "pop"
+  },
+  "toddler_sneeze": {
+   "file": "sneeze",
+   "rel_db": -10,
+   "align": "start",
+   "class": "story",
+   "after_speech": 0.5
+  },
+  "dial": {
+   "file": "typing",
+   "per_n_s": 0.13,
+   "n": 5,
+   "rel_db": -21,
+   "align": "start",
+   "class": "pop"
+  },
+  "debit": {
+   "file": "receive",
+   "rel_db": -19,
+   "align": "start",
+   "class": "pop"
+  },
+  "punch_in": {
+   "file": "whoosh_2",
+   "rel_db": -22.5,
+   "align": "peak",
+   "class": "pop",
+   "variants": [
+    {
+     "if_word": "^when$",
+     "file": "sting_2",
+     "rel_db": -13,
+     "align": "start",
+     "after_speech": 0.6,
+     "class": "story"
+    }
+   ]
+  },
+  "cross": {
+   "file": "stamp",
+   "rel_db": -9,
+   "align": "peak",
+   "class": "story",
+   "variants": [
+    {
+     "if_word": "^fight",
+     "file": "marker",
+     "rel_db": -20,
+     "align": "start",
+     "class": "pop"
+    }
+   ]
+  },
+  "baby_breath": null,
+  "baby_hmm": null,
+  "gulp": null,
+  "huff": null,
+  "sniff": null,
+  "strain": null,
+  "argue": null,
+  "whisper": null,
+  "laugh": null,
+  "water_slosh": null,
+  "lid_creak": null,
+  "chairs": null,
+  "lab_beep": null,
+  "moth": null
  },
  "cues_why": {
   "shrug": "silent: the shrug is a picture gag, the narration lands it",
@@ -560,7 +764,11 @@
   "gavel": "Mum's wooden spoon as a gavel: tok-tok on \"Judgment already passed\", and again for the United Nations; a cue with p.kind 'one' is a single tap",
   "meter": "\"First name. Middle name. Surname.\": one low pizzicato note per name, climbing E-flat, G, B-flat",
   "stings": "sting_1 (deadpan, falling) on \"the fourth one is also doctor\"; sting_2 (cheeky, rising) after \"Not if. When.\"",
-  "crunch": "silent: mouth sounds under the narrator read badly"
+  "crunch": "silent: mouth sounds under the narrator read badly",
+  "engine_names": "The Engine's cue sheet names about 100 kinds of cue; aliases map each to one of the sounds here, so one sound serves a family of picture events (door_slide, card_flip, whoosh_small: the small whoosh; chalk, scribble, marker: the felt-tip stroke; paper_slap, sign_clack, frame_clack, sticky: the card slap).",
+  "mouth_sounds": "Silent on purpose: baby_breath, baby_hmm, gulp, huff, sniff, sigh, strain, argue, whisper, laugh (mouth sounds and voices under the narrator read badly), crunch (the same), water_slosh, lid_creak, chairs, lab_beep, moth (picture gags the narration carries; fewer effects).",
+  "variants": "A stamp on 'born', 'promoted' or 'management' is the YES stamp (a badge); the stamp right after the gavel on 'passed' is muted (the gavel is the sound); a notify on 'First salary alert' or 'And he does' is the credit alert; the punch-in on 'When.' is the cheeky sting; the cross-out on 'fight' (Q08) is the felt-tip stroke, not the NO stamp; the baby_coo over the young parents in Q07 is muted (a cry would undercut the sincere part).",
+  "clock_tick": "The room goes silent: the music stops and a clock ticks (One Too Many CC0 tick and tock) until Mum swoons."
  },
  "aliases": {
   "buzz": "phone_buzz",
@@ -584,7 +792,7 @@
   "puff": "cloud",
   "running": "run",
   "click": "button_click",
-  "tick": "button_click",
+  "tick": "soft_ding",
   "baby": "baby_cry",
   "coo": "baby_cry",
   "baby_coo": "baby_cry",
@@ -634,6 +842,41 @@
   "biscuit": "crunch",
   "calc": "calculator",
   "sparkle": "bulb",
-  "heart": "grow"
+  "heart": "grow",
+  "chime": "soft_ding",
+  "whoosh_small": "whoosh_2",
+  "record_scratch": "wrong",
+  "baby_sneeze": "sneeze",
+  "toddler_cry": "baby_cry",
+  "cup_clink": "clink",
+  "computer_boot": "notify",
+  "bug_crawl": "pop",
+  "chalk": "marker",
+  "scribble": "marker",
+  "alarm_short": "battery_low",
+  "alarm_step": "meter",
+  "frame_clack": "card_land",
+  "school_bell": "soft_ding",
+  "paper": "card_land",
+  "envelope": "pop",
+  "door_slide": "whoosh_2",
+  "sign_flip": "sting_1",
+  "calendar_flip": "page_flip",
+  "warning": "wrong",
+  "cheer_crowd": "applause",
+  "cha_ching": "ka_ching",
+  "counter_tick": "button_click",
+  "clock_fast": "clock_tick",
+  "paper_slap": "card_land",
+  "thud_big": "stamp",
+  "unroll": "whoosh",
+  "sign_clack": "card_land",
+  "choir_ahh": "bulb",
+  "card_flip": "whoosh_2",
+  "set_down": "thud",
+  "sticky": "card_land",
+  "cheer_small": "grow",
+  "soften": "grow",
+  "fanfare_small": "grow"
  }
 }

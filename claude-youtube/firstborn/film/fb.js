@@ -143,7 +143,10 @@
   GFX.starBadge = (g, x, y, s, label) => { s = s || 1; g.save(); g.translate(x, y); g.scale(s, s); g.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 46 : 100; g.lineTo(Math.cos(a) * r, Math.sin(a) * r); } g.closePath(); inked(g, C.gold, 6); ell(g, 0, 0, 40, 40); inked(g, '#F7D25A', 4);
     if (label) { rr(g, -130, 70, 260, 60, 14); inked(g, C.red, 5); text(g, label, 0, 102, { size: 36, weight: 900, color: '#FFFFFF', maxW: 230 }); } g.restore(); };
   // the ID badge on a lanyard (FIRSTBORN): (x, y) = the card's centre; o.cord = the cord's length above (0 hides it)
-  GFX.badge = (g, x, y, s, label, o) => { o = o || {}; s = s || 1; g.save(); g.translate(x, y); g.rotate(o.rot || 0); g.scale(s, s);
+  GFX.badge = (g, x, y, s, label, o) => { o = o || {}; s = s || 1;
+    // the Sets kit's badge (portrait, the hero's photo) when it has one: (x, y) here is the card's centre, the kit's is the clip
+    if (typeof SETS !== 'undefined' && SETS && typeof SETS.badge === 'function') { try { const sc = s * 0.8; g.save(); SETS.badge(g, x, y - 205 * sc, { text: label || 'FIRSTBORN', scale: sc, lanyard: !!o.cord, strap: (o.cord || 0) * s, swing: o.rot || 0, color: o.color }); g.restore(); return; } catch (e) { g.restore(); } }
+    g.save(); g.translate(x, y); g.rotate(o.rot || 0); g.scale(s, s);
     const cord = o.cord == null ? 160 : o.cord; if (cord) { g.beginPath(); g.moveTo(-40, -96); g.lineTo(-70, -96 - cord); g.moveTo(40, -96); g.lineTo(70, -96 - cord); g.lineWidth = 16; g.strokeStyle = INK; g.stroke(); g.lineWidth = 9; g.strokeStyle = '#3E6FA6'; g.stroke(); }
     rr(g, -24, -116, 48, 34, 8); inked(g, '#C9CED4', 4);
     rr(g, -120, -96, 240, 192, 20); inked(g, '#FFFFFF', 6); rr(g, -120, -96, 240, 50, 20); g.save(); g.clip(); g.fillStyle = o.color || C.teal; g.fillRect(-120, -96, 240, 50); g.restore(); rr(g, -120, -96, 240, 192, 20); inked(g, null, 6);

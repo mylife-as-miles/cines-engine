@@ -448,6 +448,7 @@ def firstborn(W, onset_trim):
       "a deadpan sting: pizzicato G4, E-flat4, B-flat3 falling, 0.2 s apart (earshot's real pizzicato, VSCO-2 CE / VCSL, CC0)", ES_SRC, ES_LIC)
     W('sting_2', played('pizzicato', [(0, 'Eb4', 0.8), (0.12, 'G4', 0.85), (0.24, 'Bb4', 0.9), (0.42, 'Eb4', 1.0), (0.42, 'Eb3', 0.8)], vel=0.65),
       "a cheeky sting: pizzicato E-flat4 G4 B-flat4 rising, landing on E-flat in octaves (earshot's real pizzicato)", ES_SRC, ES_LIC)
+    engine_cues(W)
     # meter_1..3: the meter rising with each name (first name, middle name, surname): a comic "dun, dun, DUN" on low
     # pizzicato climbing the E-flat triad, each note harder. (Alarm beeps read as a success chime and a bell alarm as a
     # phone ringing, which this scene has none of.)
@@ -455,6 +456,53 @@ def firstborn(W, onset_trim):
         W(f'meter_{i + 1}', played('pizzicato', [(0, nm, 0.7 + 0.15 * i)], vel=0.6 + 0.1 * i),
           f"one low pizzicato note, {nm.replace('b', '-flat')} (earshot's real pizzicato), the {['first', 'second', 'third'][i]} step of the meter", ES_SRC, ES_LIC)
 
+
+
+def engine_cues(W):
+    """the sounds the Engine's cue sheet names beyond the plan (out/cuesheet.json): small, quiet, mostly pops"""
+    # marker: a felt-tip stroke for a cross-out, the chalk rules and the plan board: a squeaky band of noise, 0.24 s
+    r = np.random.default_rng(71); n = int(0.24 * SR); t = T(0.24)
+    sq_ = bp(r.standard_normal(n), 1800, 5200) * (0.6 + 0.4 * np.sin(2 * np.pi * 38 * t + 0.5))
+    sq_ += 0.15 * np.sin(2 * np.pi * np.cumsum(2100 + 500 * t / 0.24) / SR)
+    W('marker', fade(sq_ * np.sin(np.pi * t / 0.24) ** 0.6, 0.004, 0.03),
+      'a felt-tip stroke: noise band-passed 1.8-5.2 kHz with a 38 Hz squeak and a faint 2.1-2.6 kHz glide, 0.24 s')
+    # siren: a toy "nee-naw" for "it is an emergency": two soft square-ish tones alternating twice a second, 1.2 s
+    x = np.zeros(int(1.25 * SR))
+    for i, f in enumerate([932.33, 783.99, 932.33, 783.99]):                       # B-flat5, G5: in the key
+        tt = T(0.3); y = sum(np.sin(2 * np.pi * f * k * tt) / k for k in (1, 3, 5)) * np.minimum(1, tt / 0.01) * np.minimum(1, (0.3 - tt) / 0.02)
+        place(x, y, 0.3 * i)
+    W('siren', lp(x, 5000) * np.linspace(1, 0.7, len(x)), 'a toy siren: B-flat5 and G5 alternating every 0.3 s (odd harmonics), 1.2 s, low-passed at 5 kHz')
+    # page_flip: a page turned (earshot page/turn), the first 0.8 s
+    W('page_flip', fade(es('page/turn', 1)[: int(0.8 * SR)], 0.002, 0.1), 'earshot page/turn (seed 11, take 1), the first 0.8 s', ES_SRC, ES_LIC)
+    # snore: one cartoon snore in (earshot snore/person, its first breath, 1.25 s)
+    W('snore', fade(es('snore/person', 1)[: int(1.25 * SR)], 0.01, 0.15), 'earshot snore/person (seed 11, take 1), the first snore, 1.25 s', ES_SRC, ES_LIC)
+    # clap: one hand clap (the slow clap lays the cue's n of them at its gap)
+    W('clap', fade(es('clap/hands', 1), 0.0005, 0.03), 'earshot clap/hands (seed 11, take 1): one clap', ES_SRC, ES_LIC)
+    # applause: a small audience (the graduation; the cap toss's cheer), 2.6 s
+    W('applause', fade(es('applause/audience', 1), 0.05, 0.4), 'earshot applause/audience (seed 11, take 1)', ES_SRC, ES_LIC)
+    # bank_bell: the bank counter's desk bell
+    W('bank_bell', fade(es('bell/desk', 1)[: int(1.6 * SR)], 0.0005, 0.4), 'earshot bell/desk (seed 11, take 1), 1.6 s', ES_SRC, ES_LIC)
+    # pot_lid: the giant pot of rice, a lid set down with a ringing clank
+    W('pot_lid', fade(es('pot_lid/set', 1), 0.0005, 0.15), 'earshot pot_lid/set (seed 11, take 1)', ES_SRC, ES_LIC)
+    # stir: a spoon stirring (earshot spoon/stir, 1.4 s)
+    W('stir', fade(es('spoon/stir', 1)[: int(1.4 * SR)], 0.005, 0.15), 'earshot spoon/stir (seed 11, take 1), the first 1.4 s', ES_SRC, ES_LIC)
+    # thud: something set down on a table (the house set down, a decision landing): earshot book/place
+    W('thud', fade(es('book/place', 1), 0.0005, 0.05), 'earshot book/place (seed 11, take 1): a soft thud on a table', ES_SRC, ES_LIC)
+    # clock_tick: the room goes silent and a clock ticks: One Too Many's tick and tock, four of them 0.5 s apart
+    tk, tc = otm('tick1'), otm('tock1'); x = np.zeros(int(1.75 * SR))
+    for i in range(4): place(x, (tk if i % 2 == 0 else tc) / np.max(np.abs(tk)), 0.5 * i)
+    W('clock_tick', fade(x, 0.0005, 0.05), "One Too Many's tick1 and tock1 alternating, four, 0.5 s apart",
+      'otm/tick1, tock1: "Clock_Tick_Tock_Loop.wav" by michael_grinnell, https://freesound.org/people/michael_grinnell/sounds/464402/', 'CC0')
+    # heartbeat: two lub-dubs (One Too Many's beat)
+    hb = otm('beat'); x = np.zeros(int(1.45 * SR)); place(x, hb, 0.0); place(x, hb, 0.75)
+    W('heartbeat', fade(lp(x, 2500), 0.002, 0.05), "One Too Many's beat (a heartbeat) twice, 0.75 s apart, low-passed at 2.5 kHz",
+      'otm/beat: "heartbeat-80bpm.wav" by loudernoises, https://freesound.org/people/loudernoises/sounds/332820/', 'CC0')
+    # receipt: a receipt torn off (One Too Many's paper rip)
+    W('receipt', fade(otm('tear'), 0.0005, 0.03), "One Too Many's tear (a quick paper rip)",
+      'otm/tear: "Sharp and quick teabag paper envelope rip 1" by FOSSarts, https://freesound.org/people/FOSSarts/sounds/740171/', 'CC0')
+    # clink: the cup handed over ("Give him water")
+    W('clink', fade(otm('clink3'), 0.0005, 0.05), "One Too Many's clink3 (a glass clink)",
+      'otm/clink3: "Glass Clink2.m4a" by RoyalRose, https://freesound.org/people/RoyalRose/sounds/560297/', 'CC0')
 
 
 if __name__ == '__main__':

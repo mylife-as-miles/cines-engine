@@ -387,8 +387,9 @@ def main():
         duck = np.minimum(duck, w * d); wsp = np.maximum(wsp, w)
     duck = uniform_filter1d(duck, size=int(0.5 * rate))         # gentle: no step faster than half a second
     ctrl = undb(duck)
-    for x in cs.get('ducks', []):
-        c0 = np.interp(tt, [x['t0'] - 0.3, x['t0'], x['t1'], x['t1'] + 0.3], [1, float(x['level']), float(x['level']), 1])
+    for x in cs.get('ducks', []):                                          # a level <= 0 is in dB (the engine's -12), else a factor
+        lvl = float(undb(float(x['level']))) if float(x['level']) <= 0 else float(x['level'])
+        c0 = np.interp(tt, [x['t0'] - 0.3, x['t0'], x['t1'], x['t1'] + 0.3], [1, lvl, lvl, 1])
         ctrl = np.minimum(ctrl, c0)
     sil = [(x['t0'], x['t1']) for x in cs.get('silences', [])]; mute = np.ones(nc)
     for a, b2 in sil: mute = np.minimum(mute, np.interp(tt, [a - 0.05, a, b2, b2 + 0.3], [1, 0, 0, 1]))
@@ -465,6 +466,7 @@ def main():
         for var in e.get('variants', []):                                      # e.g. a YES stamp rather than the red NO
             if (var.get('if_kind') and p.get('kind') == var['if_kind']) or (var.get('if_word') and re.match(var['if_word'], wd)):
                 e = dict(e, **{kk: vv for kk, vv in var.items() if not kk.startswith('if_')}); e.pop('cycle', None) if 'file' in var else None; break
+        if e.get('mute'): dropped.append([c['name'], c['t'], 'muted by a variant']); continue
         if 'steps' in e:                                                        # n steps at the cue's own gap
             nst, gap = int(p.get('n', e['n'])), float(p.get('gap', e['gap'])); parts = []
             for j in range(nst):
@@ -479,8 +481,8 @@ def main():
             r = snd(fname)
             if not r: continue
             y, ly = r
-            if 'per_n_s' in e and p.get('n'):                                   # typing: the cue's n taps long
-                want = int(int(p['n']) * e['per_n_s'] * SR); xf = int(0.08 * SR)
+            if 'per_n_s' in e and (p.get('n') or e.get('n')):                   # typing: the cue's n taps long
+                want = int(int(p.get('n') or e['n']) * e['per_n_s'] * SR); xf = int(0.08 * SR)
                 if want > len(y): y = loop_window(y[:, None], 0, want, (int(0.15 * SR), len(y)), xf)[:, 0]
                 y = y[:want].copy(); f = min(len(y) // 3, int(0.08 * SR)); y[-f:] *= raised(f, False)
         g = undb(Lv + e['rel_db'] + float(p.get('gain_db', 0) or 0) + float(p.get('level', 0) or 0) - ly)
@@ -507,8 +509,9 @@ def main():
     for f_ in fxlog: by.setdefault(f_['class'], []).append(f_['heard_re_voice_db'])
     heard_sum = {k: {'n': len(v), 'median': round(float(np.median(v)), 1), 'min': round(float(np.min(v)), 1), 'max': round(float(np.max(v)), 1)}
                  for k, v in by.items()}
-    report['effects'] = {'placed': len(fxlog), 'beds': fxbeds, 'heard_re_voice_db_by_class': heard_sum,
-                         'dropped_same_cue_within_150ms': dropped, 'cues': fxlog}
+    silent = sorted({c['name'] for c in cs['cues'] if M['cues'].get(M['aliases'].get(c['name'], c['name']), 'missing') is None})
+    report['effects'] = {'placed': len(fxlog), 'cues_in_sheet': len(cs['cues']), 'silent_on_purpose': silent, 'beds': fxbeds,
+                         'heard_re_voice_db_by_class': heard_sum, 'dropped': dropped, 'cues': fxlog}
 
     # ---------------- 5. master ----------------
     stems = {'voice': np.repeat(voice[:, None], 2, axis=1), 'music': music, 'fx': fx}

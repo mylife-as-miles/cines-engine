@@ -317,6 +317,90 @@
   "how": "a cheeky sting: pizzicato E-flat4 G4 B-flat4 rising, landing on E-flat in octaves (earshot's real pizzicato)",
   "dur_s": 2.417
  },
+ "marker": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a felt-tip stroke: noise band-passed 1.8-5.2 kHz with a 38 Hz squeak and a faint 2.1-2.6 kHz glide, 0.24 s",
+  "dur_s": 0.24
+ },
+ "siren": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a toy siren: B-flat5 and G5 alternating every 0.3 s (odd harmonics), 1.2 s, low-passed at 5 kHz",
+  "dur_s": 1.25
+ },
+ "page_flip": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot page/turn (seed 11, take 1), the first 0.8 s",
+  "dur_s": 0.8
+ },
+ "snore": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot snore/person (seed 11, take 1), the first snore, 1.25 s",
+  "dur_s": 1.25
+ },
+ "clap": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot clap/hands (seed 11, take 1): one clap",
+  "dur_s": 0.304
+ },
+ "applause": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot applause/audience (seed 11, take 1)",
+  "dur_s": 2.32
+ },
+ "bank_bell": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot bell/desk (seed 11, take 1), 1.6 s",
+  "dur_s": 1.6
+ },
+ "pot_lid": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot pot_lid/set (seed 11, take 1)",
+  "dur_s": 1.118
+ },
+ "stir": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot spoon/stir (seed 11, take 1), the first 1.4 s",
+  "dur_s": 1.4
+ },
+ "thud": {
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "earshot book/place (seed 11, take 1): a soft thud on a table",
+  "dur_s": 0.321
+ },
+ "clock_tick": {
+  "source": "otm/tick1, tock1: \"Clock_Tick_Tock_Loop.wav\" by michael_grinnell, https://freesound.org/people/michael_grinnell/sounds/464402/",
+  "licence": "CC0",
+  "how": "One Too Many's tick1 and tock1 alternating, four, 0.5 s apart",
+  "dur_s": 1.75
+ },
+ "heartbeat": {
+  "source": "otm/beat: \"heartbeat-80bpm.wav\" by loudernoises, https://freesound.org/people/loudernoises/sounds/332820/",
+  "licence": "CC0",
+  "how": "One Too Many's beat (a heartbeat) twice, 0.75 s apart, low-passed at 2.5 kHz",
+  "dur_s": 1.45
+ },
+ "receipt": {
+  "source": "otm/tear: \"Sharp and quick teabag paper envelope rip 1\" by FOSSarts, https://freesound.org/people/FOSSarts/sounds/740171/",
+  "licence": "CC0",
+  "how": "One Too Many's tear (a quick paper rip)",
+  "dur_s": 0.211
+ },
+ "clink": {
+  "source": "otm/clink3: \"Glass Clink2.m4a\" by RoyalRose, https://freesound.org/people/RoyalRose/sounds/560297/",
+  "licence": "CC0",
+  "how": "One Too Many's clink3 (a glass clink)",
+  "dur_s": 0.407
+ },
  "meter_1": {
   "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
   "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
