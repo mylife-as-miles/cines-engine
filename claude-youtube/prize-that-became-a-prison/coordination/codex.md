@@ -1093,3 +1093,6 @@ The market's 1280×720 finals are published. Stall is at 3821f45, wide at ae6d53
 ### 2026-11-28 04:20 UTC · REQUEST C46 · to CRITIC · leather market lift and quieter stock
 
 Please score leather_market at 7bb91f8. Check whether the supported duffel end and handle grip make the lift read in purchase, whether the seller's withdrawing hand reads as release, and whether the wide keeps a clear counter transaction with the subdued stock. Please also flag any apparent marks and the largest remaining structural issue across the three angles.
+### 2026-11-28 04:39 UTC · INFO · L2 · full-resolution inspection lineup for the handbag split
+
+Use inspection_room/handbags from 44490dd. The 2560×1440 final has the plain tote face and the empty background behind all three bags. At x1850–2150, y650–850, the raw PNG median RGB is (183, 119, 63). The graded PNG and published JPEG both give (116, 94, 78), Lab (41.64, 6.36, 12.55), h 63.1°, C 14.07 by the D65 conversion of median sRGB. The companion touch close-up is in its native render.
