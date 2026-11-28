@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>SETS · Bill and invoice cards</title>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* FIRSTBORN IN AN AFRICAN HOME · Sets kit test page: Bill and invoice cards.
+   node tools/shoot.js src/SETS_billCard.html frames/SET_billCard.png 1920 1080 300
+   Query: ?o={...} set options (JSON) · &fig=1 stand the hero at the anchors (scale check) · &anchors=1 mark the anchors · &bench=1 time 48 frames */
+function draw(g, o, q) {
+
+  SETS.plain(g, {});
+  SETS.billCard(g, { kind: 'bill', title: 'School fees', amount: 85000, sub: 'Due Friday', x: 360, y: 300, rot: -0.06, color: '#E37F78' });
+  SETS.billCard(g, { kind: 'bill', title: 'Rent', amount: 120000, x: 360, y: 760, rot: 0.05, color: '#7BAFE1' });
+  SETS.billCard(g, Object.assign({ title: 'INVOICE', x: 1200, y: 540, scale: 0.92, lines: [{ label: 'School fees', amount: 85000 }, { label: 'Rent', amount: 120000 }, { label: 'Hospital bill', amount: 45000 }, { label: 'Just a small thing', amount: 30000 }], total: 280000, stamp: 'BLACK TAX' }, o));
+  return null;
+}
+window.addEventListener('load', async () => {
+  const q = new URLSearchParams(location.search);
+  const g = POV.stage('#000'); await SETS.ready();
+  const o = Object.assign({ t: 0.3 }, JSON.parse(q.get('o') || '{}'));
+  if (q.get('bench')) {
+    const t0 = performance.now(); draw(g, o, q); const first = performance.now() - t0; const ms = [];
+    for (let i = 0; i < 48; i++) { g.setTransform(1, 0, 0, 1, 0, 0); const a = performance.now(); draw(g, Object.assign({}, o, { t: i / 24, k: 1 }), q); ms.push(performance.now() - a); }
+    g.getImageData(0, 0, 1, 1);
+    window.BENCH = { first: +first.toFixed(1), mean: +(ms.reduce((s, v) => s + v, 0) / ms.length).toFixed(2), max: +Math.max(...ms).toFixed(2) };
+    return;
+  }
+  const S = draw(g, o, q);
+  if (S && S.anchors && q.get('anchors')) for (const k in S.anchors) { const a = S.anchors[k]; g.save(); g.fillStyle = '#E5534B'; g.beginPath(); g.arc(a.x, a.y, 8, 0, 6.283); g.fill(); g.font = '700 22px sans-serif'; g.fillStyle = '#1c1c1c'; g.fillText(k, a.x + 12, a.y - 6); g.restore(); }
+  window.FRAME_READY = true;
+});
+</script>

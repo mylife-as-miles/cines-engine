@@ -51,7 +51,7 @@
     shots: [
       { at: T.start, name: 'the graduation stage: the hero in cap and gown, his diploma; the cap tossed', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.05, x: 960, y: 520 },
         draw(c) {
-          const t = c.t; c.set('school', { view: 'stage' }); const st = c.anchor('school', 'stage', [960, 760]);
+          const t = c.t; STAGE.gradStage(c); const st = c.anchor('school', 'stage', [960, 760]);
           const h = c.fig('hero', { x: 900, y: st.y + 10, s: 1, face: 1, pose: 'cheer', expr: 'happy', outfit: KITGOWN() ? 'gown' : undefined }); h.who = 'hero';
           if (!KITGOWN()) { const toss = seg(t, T.grad + 0.2, T.job); gradOutfit(c, h, { lift: Math.sin(toss * Math.PI) * 300, rot: -0.06 + toss * 6 }); }
           GFX.diploma(c.g, ART.hand('hero', h).x, ART.hand('hero', h).y, 0.7, -0.4);
@@ -105,7 +105,7 @@
       { at: T.invoice, name: '"the invoice is real": a giant invoice unrolls to the floor', in: 'cut', push: { from: 1, to: 1.05, x: 960, y: 400 },
         draw(c) {
           const t = c.t; c.set('plain', {}); const len = 160 + 1000 * ease.outCubic(seg(t, T.invoiceW - 0.1, T.real + 0.6));
-          GFX.invoice(c.g, 760, -20, 1.05, len, { items: ['SCHOOL FEES', 'RENT', 'HOSPITAL', 'A SMALL THING', 'GENERATOR FUEL', 'WEDDING ASO-EBI', 'DATA BUNDLE', 'TRANSPORT'] });
+          GFX.invoice(c.g, 760, 60, 1.0, len, { items: ['SCHOOL FEES', 'RENT', 'HOSPITAL', 'A SMALL THING', 'GENERATOR FUEL', 'WEDDING ASO-EBI', 'DATA BUNDLE', 'TRANSPORT'] });
           c.fig('hero', { x: 1450, y: 1000, s: 1.05, face: -1, pose: 'hand_mouth', expr: 'surprised', turn: 0.4, look: [1, -0.6 + 0.8 * seg(t, T.invoiceW, T.real + 0.6)] });
         } },
       { at: T.budget, name: '"nobody asked if you have a budget": his empty wallet, a moth flies out', in: 'cut', push: { from: 1.05, to: 1.15, x: 960, y: 440 },
@@ -116,17 +116,20 @@
       { at: T.congrats, name: '"the family bank": the hero behind the FAMILY BANK counter, the family queueing', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.04 },
         draw(c) {
           const t = c.t; c.set('bankCounter', {}); const tl = c.anchor('bankCounter', 'teller', [960, 900, 0.95]);
-          c.fig('hero', { x: tl.x, y: tl.y, s: tl.s, face: 1, pose: 'hands_clasped', expr: 'happy', turn: 0, look: [0, 0] });
+          const Q = ['mum', 'dad', 'auntie', 'uncle', 'brother'];
+          Q.slice().reverse().forEach((w, j) => { const i = Q.length - 1 - j, q = c.anchor('bankCounter', 'q' + (i + 1), [1060 - 230 * i, 985]); c.fig(w, { x: q.x, y: q.y, s: q.s || 1, face: 1, age: w === 'brother' ? 'kid' : undefined, pose: i === 0 ? 'hold_card' : 'stand', expr: 'happy', turn: 0.3, look: [1, -0.1], dy: -Math.abs(Math.sin(t * 2 + i)) * 5 }); });
+          c.fig('hero', { x: tl.x, y: tl.y, s: tl.s, face: -1, pose: 'hands_clasped', expr: 'happy', turn: 0.4, look: [1, 0] });
           c.setFront('bankCounter', {}); if (!ART.hasSet('bankCounter')) { GFX.rr(c.g, 300, 640, 1320, 50, 8); GFX.inked(c.g, '#C98E5A', 6); GFX.rr(c.g, 320, 690, 1280, 295, 0); GFX.inked(c.g, '#A8723F', 5); }
-          [['mum', 360, 1.1], ['dad', 640, 1.12], ['auntie', 1320, 1.1], ['uncle', 1600, 1.12]].forEach(([w, x, s], i) => c.fig(w, { x, y: 1180, s, face: i < 2 ? 1 : -1, pose: i % 2 ? 'stand' : 'hold_card', expr: 'happy', turn: 0.4, look: [1, -0.4], dy: -Math.abs(Math.sin(t * 2 + i)) * 6 }));
+          if (ART.hasSet('bankCounter')) STAGE.tag(c, 1300, 150, 'FAMILY BANK', { t0: T.bank, size: 60, fill: '#3A8594', color: '#FFFFFF' });
         } },
-      { at: T.interest, name: 'three signs on the counter: 0% INTEREST, NO COLLATERAL, CUSTOMER CARE: CLOSED', in: 'cut', push: { from: 1.08, to: 1.14, x: 960, y: 560 },
+      { at: T.interest, name: 'three signs on the counter: 0% INTEREST, NO COLLATERAL, CUSTOMER CARE: CLOSED', in: 'cut', push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) {
-          const t = c.t; c.set('bankCounter', {}); const tl = c.anchor('bankCounter', 'teller', [960, 900, 0.95]);
-          c.fig('hero', { x: tl.x, y: tl.y, s: tl.s, face: 1, pose: 'shrug', expr: 'neutral', turn: 0, look: [0, 0] });
-          c.setFront('bankCounter', {}); if (!ART.hasSet('bankCounter')) { GFX.rr(c.g, 300, 640, 1320, 50, 8); GFX.inked(c.g, '#C98E5A', 6); GFX.rr(c.g, 320, 690, 1280, 295, 0); GFX.inked(c.g, '#A8723F', 5); }
-          [[T.interest, 520, '0% INTEREST', '#3E8A5A'], [T.collateral, 960, 'NO COLLATERAL', '#4E8FC4'], [T.care, 1400, 'CUSTOMER CARE: CLOSED', '#E5534B']].forEach(([t0, x, label, col], i) =>
-            GFX.at(c.g, x, i === 1 ? 830 : 770, pop(t, t0, 0.3), () => STAGE.pill(c, 0, 0, label, { size: i === 2 ? 44 : 50, fill: col, color: '#FFFFFF' })));
+          const t = c.t; c.camera({ x: 1300, y: 520, zoom: 1.5 }); c.set('bankCounter', {}); const tl = c.anchor('bankCounter', 'teller', [960, 900, 0.95]);
+          c.fig('hero', { x: tl.x, y: tl.y, s: tl.s, face: -1, pose: 'shrug', expr: 'neutral', turn: 0, look: [0, 0] });
+          const SIGNS = [[T.interest, '0% INTEREST'], [T.collateral, 'NO COLLATERAL'], [T.care, 'CUSTOMER CARE: CLOSED']];
+          if (ART.hasSet('bankCounter')) c.setFront('bankCounter', { signs: SIGNS.map(([t0, text]) => ({ text, k: seg(t, t0, t0 + 0.35) })) });
+          else { GFX.rr(c.g, 300, 640, 1320, 50, 8); GFX.inked(c.g, '#C98E5A', 6); GFX.rr(c.g, 320, 690, 1280, 295, 0); GFX.inked(c.g, '#A8723F', 5);
+            SIGNS.forEach(([t0, label], i) => GFX.at(c.g, [520, 960, 1400][i], i === 1 ? 830 : 770, pop(t, t0, 0.3), () => STAGE.pill(c, 0, 0, label, { size: i === 2 ? 44 : 50, fill: ['#3E8A5A', '#4E8FC4', '#E5534B'][i], color: '#FFFFFF' }))); }
         } },
       { at: T.ownRent, name: '"who is paying my own rent?": he holds up his own RENT DUE bill', in: 'cut', push: { from: 1, to: 1.08, x: 960, y: 440 },
         draw(c) {
@@ -163,17 +166,17 @@
         } },
       { at: T.sister, name: 'the sister crosses the graduation stage; the hero claps in the front row', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) {
-          const t = c.t; c.set('school', { view: 'stage' }); const st = c.anchor('school', 'stage', [960, 760]);
+          const t = c.t; STAGE.gradStage(c); const st = c.anchor('school', 'stage', [960, 760]);
           const wk = walk(t, T.walks, T.paid + 0.6, 520, 1200, { s: 0.95 });
           const sis = c.fig('sister', { age: 'grown', x: wk.x, y: st.y + 10, s: 0.95, face: 1, pose: wk.moving ? 'walk' : 'wave', walk: wk.walk, phase: wk.moving ? undefined : t * 1.4, expr: 'happy', outfit: KITGOWN() ? 'gown' : undefined }); sis.who = 'sister';
           if (!KITGOWN()) gradOutfit(c, sis, { gown: '#3E3A6E' });
           c.fig('hero', { x: 760, y: 1260, s: 1.15, face: 1, pose: 'clap', expr: 'happy', turn: 0.6, look: [0.6, -1] });
         } },
       { at: T.cry, name: 'he cries harder than she does, still clapping', in: 'cut', push: { from: 1.1, to: 1.18, x: 960, y: 420 },
-        draw(c) { const t = c.t; c.set('school', { view: 'stage' }); const h = c.fig('hero', { x: 960, y: 1080, s: 1.25, face: 1, pose: 'clap', expr: KE('happy_cry') ? 'happy_cry' : 'sad', turn: 0.3, look: [0.5, -0.8] }); GFX.tears(c.g, ART.head('hero', h), t, KE('happy_cry') ? 0.6 : 1); } },
+        draw(c) { const t = c.t; STAGE.gradStage(c); const h = c.fig('hero', { x: 960, y: 1080, s: 1.25, face: 1, pose: 'clap', expr: KE('happy_cry') ? 'happy_cry' : 'sad', turn: 0.3, look: [0.5, -0.8] }); GFX.tears(c.g, ART.head('hero', h), t, KE('happy_cry') ? 0.6 : 1); } },
       { at: T.dust, name: '"dust in your eye": he wipes it and points at it, deadpan', in: 'cut', push: { from: 1.1, to: 1.16, x: 960, y: 420 },
         draw(c) {
-          const t = c.t; c.set('school', { view: 'stage' });
+          const t = c.t; STAGE.gradStage(c);
           const wipe = t < T.dustW + 0.1 && KP('wipe_eye');
           const h = c.fig('hero', { x: 960, y: 1080, s: 1.25, face: 1, pose: wipe ? 'wipe_eye' : 'point', expr: t > T.dustW ? 'firm' : (KE('happy_cry') ? 'happy_cry' : 'sad'), turn: 0, look: [0, 0], override: wipe ? null : { armR: { ik: [40, -390], bend: 1, ul: 0.6, hand: 'point', flip: 1, hrot: 2.4 } } });
           const hd = ART.head('hero', h); if (t < T.dustW + 0.6) GFX.tears(c.g, hd, t, 1 - seg(t, T.dustW, T.dustW + 0.6));

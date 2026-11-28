@@ -149,7 +149,10 @@
   ART.clock = clockFace;
 
   // ---------------------------------------------------------------- characters
-  const SEED = { hero: 1, boss: 2, friend: 3, mum: 4, coworker: 5, stranger: 6, dad: 7, sister: 8, brother: 10, auntie: 11, auntie2: 12, auntie3: 13, uncle: 14, uncle2: 15, cousin: 16, cousin2: 17, neighbour: 18 };
+  const SEED = { hero: 1, boss: 2, friend: 3, mum: 4, coworker: 5, stranger: 6, dad: 7, sister: 8, brother: 10, auntie: 11, auntie2: 12, auntie3: 13, uncle: 14, uncle2: 15, cousin: 16, cousin2: 17, neighbour: 18,
+    fb_mum: 4, fb_dad: 7, fb_sister: 8, fb_brother: 10, fb_auntie: 11, fb_uncle1: 14, fb_uncle2: 15, fb_cousin1: 16, fb_cousin2: 17, fb_okafor_son: 18 };
+  // a seed for any other id (dot-suffixed ids share their base's)
+  const seedOf = who => SEED[who] || SEED[String(who).split('.')[0]] || (9 + (FILM.hashStr(String(who)) % 40));
   const EXPR_ALIAS = { beaming: 'happy', calm: 'neutral', honest: 'happy' };
   // the roles the sequences use -> the kit's ids: POV.ROLES[role] when the kit exports that map, else the first candidate that
   // POV.CAST has. 'mum' never resolves to POV.CAST.mum (that is Seven Days' mum, not this family's).
@@ -167,9 +170,10 @@
     auntie2: { base: 'fb_auntie', top: ['#3F7FBF', '#356CA3'], bottom: ['#3F7FBF', '#356CA3'], hair: ['#3F7FBF', '#356CA3', '#5B98D4'], skin: 'fbSkinMum' },
     auntie3: { base: 'fb_auntie', top: ['#4E9A5B', '#40814B'], bottom: ['#4E9A5B', '#40814B'], hair: ['#4E9A5B', '#40814B', '#6BB476'], skin: 'fbSkinU2' },
   };
-  const castHas = id => { const P = pov(); return !!(P && P.CAST && P.CAST[id]); };
+  const castHas = id => { const P = pov(); return !!(P && P.CAST && P.CAST[String(id).split('.')[0]]); };
   ART.resolve = function (role) {
     const P = pov(); if (!P) return null;
+    if (String(role).includes('.')) { const [b, ...rest] = String(role).split('.'); const id = ART.resolve(b); return id ? [id].concat(rest).join('.') : null; }
     const R = P.ROLES || P.FAMILY; if (R && R[role] && castHas(R[role])) return R[role];
     const list = ART.ROLES[role]; if (!list) return castHas(role) && role !== 'mum' ? role : null;
     for (const id of list) if (castHas(id)) return id;
@@ -253,7 +257,7 @@
     const t = c.t, g = c.g; const op = Object.assign({}, o); op.t = t; op.s = op.s || 1; op.face = op.face === -1 ? -1 : 1;
     if (op.x == null) op.x = W / 2; if (op.y == null) op.y = 962;
     if (op.mouth == null) op.mouth = op.talk ? FILM.talk(t, op.talk) : 0;
-    if (op.blink == null) op.blink = op.blinks ? FILM.blinkAt(t, op.blinks) : (op.noBlink ? 0 : FILM.blink(t, SEED[who] || 9));
+    if (op.blink == null) op.blink = op.blinks ? FILM.blinkAt(t, op.blinks) : (op.noBlink ? 0 : FILM.blink(t, seedOf(who)));
     const P = pov(); const vr = P ? variant(who) : null; const id = P ? (ART.resolve(who) || null) : null; const age = op.age || null;
     const kitAge = (id || vr) ? ART.kitAges(id || (ART.VARIANTS[who] || {}).base, age) : false;
     // a baby (age newborn | baby): lie: 1 | -1 lying with the head toward that side, (x, y) under the bundle's middle; upright: true
@@ -310,7 +314,7 @@
       // the kit reports device pixels: bring them back to the caller's world space
       const wp = p => { const q = toWorld.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
       const o2 = { head: wp(out.head), headTop: wp(out.headTop), mouth: wp(out.mouth), handL: wp(out.handL), handR: wp(out.handR), pelvis: wp(out.pelvis), headR: out.headR };
-      ['seat', 'lap', 'knee', 'feet', 'elbowL', 'elbowR'].forEach(k => { if (out[k]) o2[k] = wp(out[k]); }); out = o2;
+      ['seat', 'lap', 'knee', 'feet', 'elbowL', 'elbowR'].forEach(k => { if (out[k]) o2[k] = wp(out[k]); }); if (out.bodyScale != null) o2.bodyScale = out.bodyScale; out = o2;
     }
     g.restore();
     // the stand-in's name tag, under the feet (or above the head when the feet are off the frame)

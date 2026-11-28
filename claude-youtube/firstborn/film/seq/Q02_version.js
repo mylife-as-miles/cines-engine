@@ -166,16 +166,16 @@
         } },
       { at: T.experiment, name: 'the lab: the baby hero on the table under the lamp, "the experiment"', in: { type: 'wipe', dir: 'down' }, push: { from: 1, to: 1.1, x: 960, y: 600 },
         draw(c) {
-          const t = c.t; c.set('lab', {}); const a = c.anchor('lab', 'table', [960, 720]);
-          c.fig('hero', { age: 'newborn', x: a.x, y: a.y, s: 1.5, lie: 1, expr: 'confused', look: [0.5 * Math.sin(t * 1.5), -0.5] });
+          const t = c.t; c.set('lab', {}); const a = c.anchor('lab', 'bench', [960, 720]);
+          c.fig('hero', { age: 'newborn', x: a.x, y: a.y, s: 1.6, lie: 1, expr: 'confused', look: [0.5 * Math.sin(t * 1.5), -0.5] });
           GFX.sparkles(c.g, a.x, a.y - 160, 170, t, 5, '#9FD3E6');
         } },
       { at: T.scientists, name: 'the parents as scientists: goggles and clipboards over the table', push: { from: 1, to: 1.06, x: 960, y: 560 },
         draw(c) {
-          const t = c.t; c.set('lab', {}); const a = c.anchor('lab', 'table', [960, 720]);
-          c.fig('hero', { age: 'newborn', x: a.x, y: a.y, s: 1.5, lie: 1, expr: 'worried', look: [0.6 * Math.sin(t * 2), -0.6] });
-          const m = c.fig('mum', { x: a.x - 520, y: 985, s: 1, face: 1, pose: 'hold_clipboard', outfit: 'labcoat', expr: 'firm', turn: 0.5, look: [0.9, 0.7], young: true, nod: 0.2 * Math.sin(t * 3) });
-          const d = c.fig('dad', { x: a.x + 520, y: 985, s: 1, face: -1, pose: 'hold_clipboard', outfit: 'labcoat', expr: 'firm', turn: 0.5, look: [0.9, 0.7], young: true });
+          const t = c.t; c.set('lab', {}); const a = c.anchor('lab', 'bench', [960, 720]), L = c.anchor('lab', 'scientistL', [440, 985]), R = c.anchor('lab', 'scientistR', [1480, 985]);
+          c.fig('hero', { age: 'newborn', x: a.x, y: a.y, s: 1.6, lie: 1, expr: 'worried', look: [0.6 * Math.sin(t * 2), -0.6] });
+          const m = c.fig('mum', { x: L.x, y: L.y, s: L.s || 1, face: 1, pose: 'hold_clipboard', outfit: 'labcoat', expr: 'firm', turn: 0.5, look: [0.9, 0.7], young: true, nod: 0.2 * Math.sin(t * 3) });
+          const d = c.fig('dad', { x: R.x, y: R.y, s: R.s || 1, face: -1, pose: 'hold_clipboard', outfit: 'labcoat', expr: 'firm', turn: 0.5, look: [0.9, 0.7], young: true });
           goggles(c.g, ART.head('mum', m), 1); goggles(c.g, ART.head('dad', d), -1);
         } },
       { at: T.stable, name: 'the siblings get the stable release: the brother in a shiny box; the little hero side-eyes it', in: 'pop', push: { from: 1, to: 1.06, x: 1000, y: 560 },

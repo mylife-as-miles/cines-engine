@@ -1232,9 +1232,9 @@
       const extra = Math.min(2, Math.max(0, (n.count || 1) - 1));
       for (let j = extra; j >= 1; j--) { rrP(g, L + j * 18, -hgt / 2 + j * 16, cw - j * 36, hgt, 34); paint(g, j === 1 ? '#EDE6DA' : '#DCD3C6', 3.5); }
       rrP(g, L, -hgt / 2, cw, hgt, 34); paint(g, 'rgba(255,252,246,0.97)', 3.5);
-      const icol = n.icon === 'call' ? C.bubGreen : n.icon === 'mail' ? C.bubRed : C.bubBlue, ix = L + 64, iy = -hgt / 2 + 64;
+      const icol = noteColour(n.icon), ix = L + 64, iy = -hgt / 2 + 64;   // noteColour/noteGlyph: call, mail, msg, bank, transfer
       ellP(g, ix, iy, 44, 44); paint(g, icol, 3.5);
-      if (n.icon === 'call') handset(g, ix + 2, iy, 1.0, '#FFFFFF'); else msgGlyph(g, ix, iy - 2, 1.12, '#FFFFFF');
+      noteGlyph(g, n.icon, ix, iy, 1.0, '#FFFFFF');
       const tx = L + 130;
       g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillStyle = '#1c1c1c'; g.font = font(900, PHT.title); g.fillText(n.title || '', tx, -hgt / 2 + 76);
       g.font = font(700, PHT.body); g.fillStyle = '#333333';
@@ -2771,7 +2771,7 @@
     let slots = LP.bends.concat([{ u: 0.985, dir: 0 }]);
     while (slots.length < n) { let bi = 0, bg = 0; for (let i = 0; i < slots.length - 1; i++) if (slots[i + 1].u - slots[i].u > bg) { bg = slots[i + 1].u - slots[i].u; bi = i; } slots.splice(bi + 1, 0, { u: (slots[bi].u + slots[bi + 1].u) / 2, dir: 0 }); }
     const pick = n === slots.length ? slots : Array.from({ length: n }, (_, i) => slots[Math.round(i * (slots.length - 1) / Math.max(1, n - 1))]);
-    return ms.map((kind, i) => { const sl = pick[i], p = LP.at(sl.u), sc = Math.max(0.45, Math.min(0.95, 0.9 / p.Z)), off = p.w * 0.5 * 1.25 + 40 * sc;
+    return ms.map((kind, i) => { const sl = pick[i], p = LP.at(sl.u), sc = Math.max(0.62, Math.min(0.95, 0.9 / p.Z)), off = p.w * 0.5 * 1.25 + 40 * sc;
       let sx = p.x, sy = p.y;
       if (sl.dir) { sx += sl.dir * off; sy += 6; } else { const nx = -Math.sin(p.a), ny = Math.cos(p.a), f = ny > 0 ? -1 : 1; sx += nx * off * f; sy += ny * off * f; }
       return { kind, u: sl.u, p, sx, sy, s: sc }; });
@@ -3136,6 +3136,333 @@
     live(g, xf, (g2) => D.forEach((d, i) => oneDoor(g2, d, labels[i], colOf[String(labels[i]).toLowerCase()], clamp(shown - i), o.open && o.open.i === i ? o.open.k : 0, o.glow === i ? 1 : 0, o.t || 0)));
     const A = { center: { x: 960, y: 990, s: 1.02 } }; D.forEach((d, i) => { A['door' + i] = { x: d.x + d.w / 2, y: 985, s: 1 }; });
     return result(xf, A, 990, 850);
+  };
+
+  // ================================================================ PHONE SCREEN: bank app, incoming call, notification banner
+  // SETS.phoneScreen keeps its lock and chat modes and adds:
+  //   mode 'bank': a banking app. o.app (app name, optional), o.balanceLabel ('Balance'), o.balance (text, or a number shown as naira),
+  //     o.balanceK (0..1 bump when it changes), o.title ('Salary credited'), o.amount (the credited amount; text or number), o.creditK
+  //     (0..1: the card pops in), o.rows [{label, amount, out: true|false, k}] (transactions sliding in under the card; two fit,
+  //     o.newestFirst puts the last row on top).
+  //   mode 'call': an incoming call. o.contact (name), o.status ('incoming call'), o.avatarColor, o.answered (true: the call is on,
+  //     o.timer shows its time), o.t (the rings pulse).
+  //   o.banner {icon: 'transfer'|'bank'|'call'|'msg', title, body, time, k}: a notification dropping in at the top of any mode
+  //     (k 0..1 slides it down, 1..2 slides it away). The lock screen's notes also take icon 'bank' and 'transfer'.
+  // Text on the new screens is 40 px or more. A naira sign (U+20A6) in any amount is drawn as an N with two bars.
+  function bankGlyph(g, x, y, s, col) {
+    g.save(); g.translate(x, y); g.scale(s, s); g.fillStyle = col;
+    polyP(g, [-22, -8, 0, -22, 22, -8]); g.fill(); rectP(g, -20, 14, 40, 6); g.fill();
+    for (const cx of [-14, 0, 14]) { rectP(g, cx - 3.5, -5, 7, 18); g.fill(); }
+    g.restore();
+  }
+  function transferGlyph(g, x, y, s, col) {
+    g.save(); g.translate(x, y); g.scale(s, s); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 5; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(-18, -8); g.lineTo(12, -8); g.stroke(); polyP(g, [10, -17, 22, -8, 10, 1]); g.fill();
+    g.beginPath(); g.moveTo(18, 9); g.lineTo(-12, 9); g.stroke(); polyP(g, [-10, 0, -22, 9, -10, 18]); g.fill();
+    g.restore();
+  }
+  function noteGlyph(g, kind, x, y, s, col) {
+    if (kind === 'bank') bankGlyph(g, x, y, s, col); else if (kind === 'transfer') transferGlyph(g, x, y, s, col);
+    else if (kind === 'call') handset(g, x + 2, y, s, col); else msgGlyph(g, x, y - 2, s * 1.12, col);
+  }
+  function noteColour(kind) { return kind === 'call' ? C.bubGreen : kind === 'mail' ? C.bubRed : (kind === 'bank' || kind === 'transfer') ? X.teal : C.bubBlue; }
+  function fmtMoney(v) {
+    if (typeof v !== 'number') return v == null ? '' : String(v);
+    const s = Math.abs(v).toFixed(2).split('.'); return (v < 0 ? '-' : '') + '₦' + s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + s[1];
+  }
+  function bankScreen(g, o) {
+    const sx = PH.sx, sy = PH.sy, sw = PH.sw, sh = PH.sh, L = sx + 30, cw = sw - 60, hh = 430;
+    g.fillStyle = '#F6F1EA'; g.fillRect(sx, sy, sw, sh);
+    rectP(g, sx, sy, sw, hh); paint(g, X.teal, 0);
+    ellP(g, sx + sw * 0.9, sy + 120, 220, 220); g.fillStyle = 'rgba(255,255,255,0.08)'; g.fill();
+    ellP(g, sx + sw * 0.1, sy + hh, 180, 120); g.fillStyle = 'rgba(0,0,0,0.06)'; g.fill();
+    statusBar(g, o, true);
+    // app bar
+    ellP(g, L + 30, sy + 136, 30, 30); paint(g, '#FFFFFF', 0); bankGlyph(g, L + 30, sy + 138, 0.95, X.teal);
+    g.textBaseline = 'middle'; g.textAlign = 'left';
+    if (o.app) { g.fillStyle = '#FFFFFF'; fitFont(g, o.app, 900, 44, cw - 90, 40); g.fillText(o.app, L + 76, sy + 138); }
+    // balance
+    g.fillStyle = 'rgba(255,255,255,0.85)'; g.font = font(700, 40); g.fillText(o.balanceLabel == null ? 'Balance' : o.balanceLabel, L, sy + 214);
+    if (o.balance != null) {
+      const txt = fmtMoney(o.balance), bk = o.balanceK == null ? 0 : clamp(o.balanceK), bump = 1 + 0.12 * Math.sin(bk * Math.PI);
+      g.save(); g.translate(L, sy + 278); g.scale(bump, bump); g.fillStyle = '#FFFFFF'; fitFont(g, txt, 900, 72, cw, 44); g.textBaseline = 'middle'; moneyText(g, txt, 0, 0, 'left'); g.restore();
+    }
+    // the credited card
+    const ck = o.creditK == null ? 1 : clamp(o.creditK);
+    if (ck > 0) {
+      const e = easeOutBack(ck), cy = sy + 346, ch = 220;
+      g.save(); g.globalAlpha *= clamp(ck * 3); g.translate(sx + sw / 2, cy + ch / 2); g.scale(0.7 + 0.3 * e, 0.7 + 0.3 * e); g.translate(-(sx + sw / 2), -(cy + ch / 2));
+      rrP(g, L + 6, cy + 10, cw, ch, 30); g.fillStyle = 'rgba(40,40,40,0.12)'; g.fill();
+      rrP(g, L, cy, cw, ch, 30); paint(g, '#FFFFFF', 3.5);
+      ellP(g, L + 62, cy + 70, 38, 38); paint(g, C.bubGreen, 3);
+      g.beginPath(); g.moveTo(L + 44, cy + 70); g.lineTo(L + 58, cy + 85); g.lineTo(L + 82, cy + 56); g.lineWidth = 7; g.strokeStyle = '#FFFFFF'; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke();
+      const title = o.title == null ? 'Salary credited' : o.title;
+      g.fillStyle = '#1c1c1c'; g.textAlign = 'left'; g.textBaseline = 'middle'; fitFont(g, title, 900, 44, cw - 130, 40); g.fillText(title, L + 118, cy + 72);
+      if (o.amount != null) { const at = fmtMoney(o.amount); g.fillStyle = '#3E9E57'; fitFont(g, at, 900, 60, cw - 50, 44); moneyText(g, (String(at).charAt(0) === '+' || String(at).charAt(0) === '-') ? at : '+' + at, L + 30, cy + 160, 'left'); }
+      g.restore();
+    }
+    // transactions: two-line rows (label, then amount), newest at the top when o.newestFirst
+    let y = sy + 620;
+    const rows = (o.rows || []).slice(); if (o.newestFirst) rows.reverse();
+    g.save(); rectP(g, sx, sy + 600, sw, sh - 600 - 96); g.clip();
+    rows.forEach((r) => {
+      const k = r.k == null ? 1 : clamp(r.k); if (k <= 0) return;
+      const e = easeOutCubic(k), rh = 140;
+      g.save(); g.globalAlpha *= clamp(k * 2); g.translate((1 - e) * 120, 0);
+      rrP(g, L, y, cw, rh - 16, 24); paint(g, '#FFFFFF', 2.5);
+      const out = r.out !== false, ic = out ? C.badgeRed : C.bubGreen, my = y + (rh - 16) / 2;
+      ellP(g, L + 50, my, 32, 32); paint(g, rgba(ic, 0.18), 0);
+      g.save(); g.translate(L + 50, my); g.rotate(out ? -Math.PI / 4 : Math.PI * 3 / 4); g.strokeStyle = ic; g.fillStyle = ic; g.lineWidth = 5; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(-12, 0); g.lineTo(8, 0); g.stroke(); polyP(g, [6, -9, 18, 0, 6, 9]); g.fill(); g.restore();
+      g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#1c1c1c'; fitFont(g, r.label || '', 700, 42, cw - 120, 40);
+      g.save(); rectP(g, L + 96, y, cw - 110, rh); g.clip(); g.fillText(r.label || '', L + 96, y + 38);
+      const amt = r.amount == null ? '' : fmtMoney(r.amount), amtTxt = amt && !/^[+-]/.test(amt) ? (out ? '-' : '+') + amt : amt;
+      if (amtTxt) { g.fillStyle = out ? '#C9443D' : '#3E9E57'; fitFont(g, amtTxt, 900, 44, cw - 120, 40); moneyText(g, amtTxt, L + 96, y + 88, 'left'); }
+      g.restore(); g.restore();
+      y += rh * e;
+    });
+    g.restore();
+    // bottom bar
+    rectP(g, sx, sy + sh - 96, sw, 96); paint(g, '#FFFFFF', 0); line(g, sx, sy + sh - 96, sx + sw, sy + sh - 96, 2.5);
+    for (let i = 0; i < 4; i++) { const bx = sx + sw * (i + 0.5) / 4; rrP(g, bx - 18, sy + sh - 66, 36, 36, 10); paint(g, i === 0 ? X.teal : '#D8D2C8', 0); }
+  }
+  function callScreen(g, o) {
+    const sx = PH.sx, sy = PH.sy, sw = PH.sw, sh = PH.sh, cx = 0, t = o.t || 0;
+    const gr = g.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#2C6E7B'); gr.addColorStop(1, '#1F4E58'); g.fillStyle = gr; g.fillRect(sx, sy, sw, sh);
+    statusBar(g, o, true);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = 'rgba(255,255,255,0.85)'; g.font = font(700, 40); g.fillText(o.answered ? (o.timer || '') : (o.status == null ? 'incoming call' : o.status), cx, sy + 170);
+    if (o.contact) { g.fillStyle = '#FFFFFF'; fitFont(g, o.contact, 900, 76, sw - 60, 44); g.fillText(o.contact, cx, sy + 250); }
+    const ay = sy + 520;
+    if (!o.answered) for (let i = 0; i < 3; i++) { const ph = (t * 0.8 + i / 3) % 1; ellP(g, cx, ay, 130 + ph * 120, 130 + ph * 120); g.lineWidth = 4; g.strokeStyle = 'rgba(255,255,255,' + (0.4 * (1 - ph)).toFixed(3) + ')'; g.stroke(); }
+    ellP(g, cx, ay, 130, 130); paint(g, o.avatarColor || '#E9A73F', LW.frame);
+    if (o.contact) { g.fillStyle = '#FFFFFF'; g.font = font(900, 120); g.fillText(String(o.contact).charAt(0).toUpperCase(), cx, ay + 6); }
+    const by = sy + sh - 150;
+    if (o.answered) { ellP(g, cx, by, 66, 66); paint(g, C.badgeRed, 4); g.save(); g.translate(cx, by); g.rotate(Math.PI * 0.75); handset(g, 0, 0, 1.4, '#FFFFFF'); g.restore(); }
+    else {
+      const wob = Math.sin(t * TAU * 2.2) * 0.12;
+      ellP(g, cx - 150, by, 66, 66); paint(g, C.badgeRed, 4); g.save(); g.translate(cx - 150, by); g.rotate(Math.PI * 0.75); handset(g, 0, 0, 1.4, '#FFFFFF'); g.restore();
+      ellP(g, cx + 150, by, 66, 66); paint(g, C.bubGreen, 4); g.save(); g.translate(cx + 150, by); g.rotate(wob); handset(g, 2, 0, 1.4, '#FFFFFF'); g.restore();
+    }
+  }
+  function phoneBanner(g, b) {
+    const k = b.k == null ? 1 : b.k; if (!(k > 0) || k >= 2) return;
+    const kin = clamp(k), kout = clamp(k - 1), e = easeOutBack(kin) - easeInCubic(kout) * 1.2;
+    const L = PH.sx + 16, cw = PH.sw - 32;
+    g.font = font(700, 40); const body = b.body ? wrap(g, b.body, cw - 150).slice(0, 2) : [];
+    const hgt = 108 + body.length * 48, y = PH.sy + 76 - (1 - e) * (hgt + 120);
+    g.save();
+    rrP(g, L + 4, y + 8, cw, hgt, 32); g.fillStyle = 'rgba(40,40,40,0.25)'; g.fill();
+    rrP(g, L, y, cw, hgt, 32); paint(g, 'rgba(255,252,246,0.98)', 3.5);
+    const ix = L + 62, iy = y + 62; ellP(g, ix, iy, 40, 40); paint(g, noteColour(b.icon || 'transfer'), 3); noteGlyph(g, b.icon || 'transfer', ix, iy, 1.0, '#FFFFFF');
+    g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#1c1c1c';
+    const tw = cw - 140 - (b.time ? 70 : 0); fitFont(g, b.title || '', 900, 44, tw, 40);
+    g.save(); rectP(g, L + 118, y, tw + 4, hgt); g.clip(); moneyText(g, b.title || '', L + 118, y + 62, 'left'); g.restore();
+    if (b.time) { g.font = font(700, 40); g.fillStyle = '#8a8580'; g.textAlign = 'right'; g.fillText(b.time, L + cw - 22, y + 62); }
+    g.font = font(700, 40); g.fillStyle = '#333333'; g.textAlign = 'left'; body.forEach((l, i) => moneyText(g, l, L + 118, y + 116 + i * 48, 'left'));
+    g.restore();
+  }
+  { const prevPhone = SETS.phoneScreen;
+    SETS.phoneScreen = function (g, o) {
+      o = o || {};
+      if (o.mode !== 'bank' && o.mode !== 'call' && !o.banner) return prevPhone(g, o);
+      refresh();
+      if (o.bg !== false) {
+        const bg = o.bg || '#F2B587';
+        blit(g, camXf(null), layer('phonebg|' + bg, 1, (lg) => {
+          lg.fillStyle = bg; lg.fillRect(0, 0, W, H);
+          softFill(lg, 60, 'rgba(255,236,200,0.45)', () => ellP(lg, 960, 540, 600, 520));
+          softFill(lg, 14, 'rgba(255,236,200,0.3)', () => polyP(lg, [240, -20, 500, -20, 100, H + 20, -160, H + 20]));
+          softFill(lg, 14, 'rgba(255,236,200,0.25)', () => polyP(lg, [1520, -20, 1660, -20, 1260, H + 20, 1120, H + 20]));
+        }));
+      }
+      const buzz = o.buzz || 0, t = o.t || 0, sc = o.scale || 1, cx = o.x == null ? 960 : o.x, cy = o.y == null ? 540 : o.y;
+      const jx = buzz ? Math.sin(t * TAU * 22) * 7 * buzz : 0, jr = buzz ? Math.sin(t * TAU * 17) * 0.012 * buzz : 0;
+      g.save(); g.lineJoin = 'round'; g.lineCap = 'round';
+      g.translate(cx + jx, cy); g.rotate((o.rot || 0) + jr); g.scale(sc, sc);
+      rrP(g, -PH.w / 2 + 18, -PH.h / 2 + 24, PH.w, PH.h, PH.r); g.fillStyle = 'rgba(100,48,22,0.22)'; g.fill();
+      phoneBody(g);
+      g.save(); rrP(g, PH.sx, PH.sy, PH.sw, PH.sh, PH.sr); g.clip();
+      if (o.mode === 'bank') bankScreen(g, o); else if (o.mode === 'call') callScreen(g, o); else if (o.mode === 'chat') chatScreen(g, o); else lockScreen(g, o);
+      if (o.banner) phoneBanner(g, o.banner);
+      g.restore();
+      rrP(g, PH.sx, PH.sy, PH.sw, PH.sh, PH.sr); paint(g, null, 3.5);
+      if (buzz > 0.05) { g.strokeStyle = INK; g.lineWidth = 6; g.globalAlpha = buzz; for (const sxn of [-1, 1]) for (const dy of [-70, 0, 70]) { g.beginPath(); g.moveTo(sxn * (PH.w / 2 + 36), dy - 22); g.quadraticCurveTo(sxn * (PH.w / 2 + 56), dy, sxn * (PH.w / 2 + 36), dy + 22); g.stroke(); } g.globalAlpha = 1; }
+      g.restore();
+      return { screen: { x: cx + PH.sx * sc, y: cy + PH.sy * sc, w: PH.sw * sc, h: PH.sh * sc } };
+    }; }
+
+  // ================================================================ CARDS (overlays: draw them over any set). All text >= 40 px at scale 1.
+  // Each takes (g, o) with o.x, o.y (centre), o.scale, o.rot, o.k (0..1 entrance pop; 1..2 exit, as dayCard), o.t, and returns its rect.
+  function cardIn(g, o, defX, defY) {
+    const k = o.k == null ? 1 : o.k, kin = clamp(k), kout = clamp(k - 1);
+    const e = easeOutBack(kin / 0.6), a = clamp(kin / 0.12) * (1 - easeInCubic(kout));
+    if (a <= 0.001) return null;
+    const x = o.x == null ? defX : o.x, y = o.y == null ? defY : o.y, sc = (o.scale || 1) * (0.4 + 0.6 * e) * (1 + 0.06 * kout);
+    g.save(); g.globalAlpha *= a; g.lineJoin = 'round'; g.lineCap = 'round';
+    g.translate(x, y + 60 * (1 - e) - 50 * kout); g.rotate((o.rot == null ? -0.02 : o.rot) - 0.1 * (1 - e)); g.scale(sc, sc);
+    return { x, y, sc };
+  }
+  function strikeLine(g, x0, x1, y, k, col) {
+    if (!(k > 0)) return;
+    const e = easeOutCubic(k), xe = x0 + (x1 - x0) * e;
+    g.save(); g.lineCap = 'round'; g.strokeStyle = col || '#E5534B'; g.lineWidth = 10;
+    g.beginPath(); g.moveTo(x0 - 10, y + 4); g.bezierCurveTo(x0 + (xe - x0) * 0.3, y - 6, x0 + (xe - x0) * 0.7, y + 10, xe + 10, y - 2); g.stroke(); g.restore();
+  }
+  // ---------------------------------------------------------------- ID badge (and its lanyard)
+  // SETS.badge(g, x, y, o): (x, y) = the clip at the top of the badge. o.text ('FIRSTBORN'), o.sub (a second line), o.color (header),
+  // o.photo (false: no portrait; the portrait is the hero's round bald head in his teal hoodie), o.lanyard (true: the strap rises in a
+  // V from the clip, o.strap px long), o.swing (radians), o.scale, o.k (pop). Returns {x, y, w, h} of the card.
+  SETS.badge = function (g, x, y, o) {
+    o = o || {}; refresh();
+    const k = o.k == null ? 1 : clamp(o.k); if (k <= 0) return null;
+    const e = easeOutBack(k), sc = (o.scale || 1) * (0.5 + 0.5 * e), col = o.color || X.teal, w = 300, h = 410;
+    g.save(); g.lineJoin = 'round'; g.lineCap = 'round'; g.globalAlpha *= clamp(k * 3);
+    g.translate(x, y); g.scale(sc, sc);
+    if (o.lanyard) { const st = o.strap || 300; for (const sx of [-1, 1]) { g.beginPath(); g.moveTo(sx * 12, -6); g.lineTo(sx * 110, -st); g.lineWidth = 26 + 2 * LW.small; g.strokeStyle = INK; g.stroke(); g.lineWidth = 26; g.strokeStyle = C.lanyard || '#3E6FA6'; g.stroke(); } }
+    g.rotate(o.swing || 0);
+    shape(g, () => rrP(g, -20, -14, 40, 34, 8), '#C9CED3', LW.small);
+    rrP(g, -w / 2 + 8, 30, w, h, 26); g.fillStyle = 'rgba(70,32,16,0.22)'; g.fill();
+    shape(g, () => rrP(g, -w / 2, 22, w, h, 26), '#FFFFFF', LW.frame - 1, '#EEF0F2', () => rectP(g, -w / 2, 22 + h - 40, w, 40));
+    clipDo(g, () => rrP(g, -w / 2, 22, w, h, 26), () => { rectP(g, -w / 2, 22, w, 92); paint(g, col, 0); ellP(g, w * 0.32, 60, 70, 70); g.fillStyle = 'rgba(255,255,255,0.12)'; g.fill(); });
+    rrP(g, -46, 34, 92, 18, 9); paint(g, '#FFFFFF', 2.5);
+    line(g, -w / 2, 114, w / 2, 114, LW.small);
+    if (o.photo !== false) {
+      shape(g, () => rrP(g, -72, 130, 144, 144, 16), '#D8ECEE', LW.small);
+      clipDo(g, () => rrP(g, -72, 130, 144, 144, 16), () => {
+        g.beginPath(); g.moveTo(-70, 290); g.quadraticCurveTo(-64, 230, 0, 226); g.quadraticCurveTo(64, 230, 70, 290); g.closePath(); paint(g, C.hoodie, LW.small);
+        g.beginPath(); g.moveTo(-18, 228); g.lineTo(0, 252); g.lineTo(18, 228); g.closePath(); paint(g, '#FFFFFF', LW.detail);
+        ellP(g, 0, 186, 46, 46); paint(g, C.skin, LW.small);
+      });
+      rrP(g, -72, 130, 144, 144, 16); paint(g, null, LW.small);
+    }
+    const name = o.text == null ? 'FIRSTBORN' : String(o.text);
+    g.fillStyle = '#1c1c1c'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    fitFont(g, name, 1000, 52, w - 36, 40); g.fillText(name, 0, o.photo === false ? 200 : 318);
+    if (o.sub) { g.fillStyle = '#5E6064'; fitFont(g, o.sub, 800, 40, w - 36, 40); g.fillText(o.sub, 0, o.photo === false ? 256 : 366); }
+    if (!o.sub) { g.fillStyle = '#1c1c1c'; for (let i = 0; i < 22; i++) { const bw = (i * 7) % 3 + 2; rectP(g, -96 + i * 9, 362, bw, 34); g.fill(); } }
+    g.restore();
+    return { x: x - w / 2 * sc, y: y + 22 * sc, w: w * sc, h: h * sc };
+  };
+  // ---------------------------------------------------------------- job offer card
+  // SETS.jobCard(g, o): o.title ('JOB OFFER'), o.lines: strings or {text, strike: 0..1 (a red pen line through it)}, o.sign (false: no
+  // signature line), o.badge (badge text, 'FIRSTBORN'; false hides the badge), o.badgeSub, o.badgeK (0..1), o.t (the badge swings).
+  // Card 980 x 660 at scale 1, centred on (o.x, o.y). Returns {x, y, w, h, badge: {x, y}} (the badge clip, screen space).
+  SETS.jobCard = function (g, o) {
+    o = o || {}; refresh();
+    const st = cardIn(g, o, 900, 540); if (!st) return null;
+    const w = 980, h = 660, x0 = -w / 2, y0 = -h / 2;
+    rrP(g, x0 + 16, y0 + 20, w, h, 30); g.fillStyle = 'rgba(70,32,16,0.25)'; g.fill();
+    shape(g, () => rrP(g, x0, y0, w, h, 30), '#FFFAF0', LW.frame, '#F1E6D2', () => polyP(g, [x0, y0 + h - 60, x0 + w, y0 + h - 140, x0 + w, y0 + h, x0, y0 + h]));
+    clipDo(g, () => rrP(g, x0, y0, w, h, 30), () => { rectP(g, x0, y0, w, 140); paint(g, X.teal, 0); rectP(g, x0, y0 + 112, w, 28); paint(g, C.hoodieSh || '#2F7280', 0); });
+    line(g, x0, y0 + 140, x0 + w, y0 + 140, LW.small);
+    rrP(g, x0, y0, w, h, 30); paint(g, null, LW.frame);
+    const title = o.title == null ? 'JOB OFFER' : String(o.title);
+    g.fillStyle = '#FFF8EC'; g.textAlign = 'left'; g.textBaseline = 'middle'; if ('letterSpacing' in g) g.letterSpacing = '4px';
+    fitFont(g, title, 1000, 76, w - 120, 44); g.fillText(title, x0 + 56, y0 + 66);
+    if ('letterSpacing' in g) g.letterSpacing = '0px';
+    const lines = (o.lines || []).map(l => typeof l === 'string' ? { text: l } : l);
+    lines.forEach((l, i) => {
+      const ly = y0 + 214 + i * 74; g.fillStyle = '#1c1c1c'; fitFont(g, l.text || '', 800, 48, w - (o.badge === false ? 160 : 460), 40); g.textAlign = 'left';
+      ellP(g, x0 + 70, ly, 9, 9); paint(g, X.teal, 0); g.fillText(l.text || '', x0 + 100, ly + 2);
+      if (l.strike) strikeLine(g, x0 + 92, x0 + 108 + g.measureText(l.text || '').width, ly + 2, l.strike);
+    });
+    if (o.sign !== false) { const sy = y0 + h - 90; line(g, x0 + 70, sy, x0 + 420, sy, 3, '#9AA3AA'); g.beginPath(); g.moveTo(x0 + 90, sy - 14); g.bezierCurveTo(x0 + 140, sy - 70, x0 + 170, sy + 10, x0 + 220, sy - 30); g.bezierCurveTo(x0 + 250, sy - 54, x0 + 270, sy - 6, x0 + 330, sy - 26); g.lineWidth = 4; g.strokeStyle = '#3E6FA6'; g.stroke(); }
+    // gold seal
+    const zx = x0 + w - 130, zy = y0 + h - 110;
+    g.beginPath(); for (let i = 0; i < 24; i++) { const a = i / 24 * TAU, r = i % 2 ? 54 : 62; g.lineTo(zx + Math.cos(a) * r, zy + Math.sin(a) * r); } g.closePath(); paint(g, '#F4BF54', LW.small);
+    ellP(g, zx, zy, 38, 38); paint(g, '#FFE08A', LW.detail); ellP(g, zx, zy, 16, 16); paint(g, '#F4BF54', LW.detail);
+    let badge = null;
+    if (o.badge !== false) {
+      const bx = x0 + w - 230, by = y0 + 150, bk = o.badgeK == null ? 1 : o.badgeK;
+      const sw = Math.sin((o.t || 0) * 2.6) * 0.06 + (1 - clamp(bk)) * 0.4;
+      SETS.badge(g, bx, by, { text: o.badge == null ? 'FIRSTBORN' : o.badge, sub: o.badgeSub, k: bk, lanyard: true, strap: 200, swing: sw, scale: 0.92 });
+      const m = g.getTransform ? g.getTransform() : null; if (m) badge = { x: m.a * bx + m.c * by + m.e, y: m.b * bx + m.d * by + m.f };
+    }
+    g.restore();
+    return { x: st.x - w / 2 * st.sc, y: st.y - h / 2 * st.sc, w: w * st.sc, h: h * st.sc, badge };
+  };
+  // ---------------------------------------------------------------- rules board
+  // SETS.rulesBoard(g, o): a framed chalkboard on a nail. o.title ('HOUSE RULES'), o.rules: strings or {text, strike: 0..1, k},
+  // o.ruleK (rules shown, a float; default all), o.check (true: a chalk box before each rule). 900 wide at scale 1; height follows.
+  SETS.rulesBoard = function (g, o) {
+    o = o || {}; refresh();
+    const st = cardIn(g, o, 960, 520); if (!st) return null;
+    const rules = (o.rules || []).map(r => typeof r === 'string' ? { text: r } : r), w = 900, h = 220 + Math.max(1, rules.length) * 92, x0 = -w / 2, y0 = -h / 2;
+    line(g, -150, y0 + 10, 0, y0 - 80, 3); line(g, 150, y0 + 10, 0, y0 - 80, 3); ellP(g, 0, y0 - 82, 9, 9); paint(g, '#8A8F96', 2);
+    rrP(g, x0 + 14, y0 + 18, w, h, 22); g.fillStyle = 'rgba(70,32,16,0.28)'; g.fill();
+    shape(g, () => rrP(g, x0, y0, w, h, 22), '#B0703F', LW.frame, '#965E35', () => rectP(g, x0, y0 + h - 30, w, 30));
+    shape(g, () => rectP(g, x0 + 30, y0 + 30, w - 60, h - 60), '#2F5E57', LW.small, '#294F4A', () => polyP(g, [x0 + 30, y0 + 30, x0 + w - 30, y0 + 30, x0 + w - 30, y0 + 48, x0 + 48, y0 + 48, x0 + 48, y0 + h - 30, x0 + 30, y0 + h - 30]));
+    softFill(g, 16, 'rgba(255,255,255,0.07)', () => polyP(g, [x0 + w * 0.55, y0 + 30, x0 + w * 0.7, y0 + 30, x0 + w * 0.45, y0 + h - 30, x0 + w * 0.3, y0 + h - 30]));
+    const title = o.title == null ? 'HOUSE RULES' : String(o.title);
+    g.fillStyle = '#FFF8E6'; g.textAlign = 'center'; g.textBaseline = 'middle'; if ('letterSpacing' in g) g.letterSpacing = '3px';
+    fitFont(g, title, 1000, 64, w - 120, 44); g.fillText(title, 0, y0 + 100); if ('letterSpacing' in g) g.letterSpacing = '0px';
+    line(g, -g.measureText(title).width / 2, y0 + 142, g.measureText(title).width / 2, y0 + 142, 4, 'rgba(255,248,230,0.7)');
+    const shown = o.ruleK == null ? rules.length : o.ruleK;
+    rules.forEach((r, i) => {
+      const k = r.k != null ? clamp(r.k) : clamp(shown - i); if (k <= 0) return;
+      const ry = y0 + 210 + i * 92;
+      g.save(); g.globalAlpha *= k; g.translate((1 - easeOutCubic(k)) * -40, 0);
+      if (o.check) { rrP(g, x0 + 80, ry - 22, 44, 44, 6); g.lineWidth = 4; g.strokeStyle = 'rgba(255,248,230,0.85)'; g.stroke(); } else { ellP(g, x0 + 100, ry, 10, 10); g.fillStyle = '#FFF8E6'; g.fill(); }
+      g.fillStyle = '#FFF8E6'; g.textAlign = 'left'; fitFont(g, r.text || '', 800, 52, w - 230, 40); g.fillText(r.text || '', x0 + 150, ry + 2);
+      if (r.strike) strikeLine(g, x0 + 140, x0 + 160 + g.measureText(r.text || '').width, ry + 2, r.strike, '#F28B82');
+      g.restore();
+    });
+    // a stub of chalk on the ledge
+    shape(g, () => rrP(g, x0 + w - 200, y0 + h - 40, 60, 16, 6), '#FFFFFF', 2);
+    g.restore();
+    return { x: st.x - w / 2 * st.sc, y: st.y - h / 2 * st.sc, w: w * st.sc, h: h * st.sc };
+  };
+  // ---------------------------------------------------------------- bill / invoice
+  // SETS.billCard(g, o): o.kind 'bill' (a small torn-off bill: o.title, o.amount, o.sub, o.color accent) or 'invoice' (default when
+  // o.lines are given: o.title ('INVOICE'), o.lines [{label, amount}], o.total {label, amount} or text, o.stamp (text, slammed on with
+  // o.stampK)). Amounts may be numbers (shown as naira) or text. 'bill' is 560 wide, 'invoice' 900 wide at scale 1.
+  SETS.billCard = function (g, o) {
+    o = o || {}; refresh();
+    const kind = o.kind || (o.lines ? 'invoice' : 'bill');
+    const st = cardIn(g, o, 960, 540); if (!st) return null;
+    const acc = o.color || C.badgeRed;
+    const torn = (x0, y1, w) => { const n = Math.round(w / 40); g.lineTo(x0 + w, y1); for (let i = n; i >= 0; i--) g.lineTo(x0 + w * i / n, y1 + (i % 2 ? 0 : 18)); };
+    let w, h;
+    if (kind === 'bill') {
+      w = 560; h = 360; const x0 = -w / 2, y0 = -h / 2;
+      const path = () => { g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + w, y0); torn(x0, y0 + h, w); g.closePath(); };
+      g.save(); g.translate(12, 16); path(); g.fillStyle = 'rgba(70,32,16,0.25)'; g.fill(); g.restore();
+      shape(g, path, '#FFFDF6', LW.frame - 1, '#F1E9DA', () => rectP(g, x0, y0 + h - 60, w, 80));
+      clipDo(g, path, () => { rectP(g, x0, y0, w, 104); paint(g, acc, 0); });
+      line(g, x0, y0 + 104, x0 + w, y0 + 104, LW.small);
+      g.fillStyle = '#FFFFFF'; g.textAlign = 'center'; g.textBaseline = 'middle'; fitFont(g, o.title || '', 1000, 54, w - 60, 40); g.fillText(o.title || '', 0, y0 + 54);
+      if (o.amount != null) { g.fillStyle = '#1c1c1c'; const at = fmtMoney(o.amount); fitFont(g, at, 1000, 72, w - 60, 44); moneyText(g, at, 0, y0 + 190, 'center'); }
+      if (o.sub) { g.fillStyle = '#6A6A6A'; fitFont(g, o.sub, 800, 40, w - 60, 40); g.fillText(o.sub, 0, y0 + 270); }
+    } else {
+      const lines = o.lines || []; w = 900; h = 260 + lines.length * 76 + (o.total != null ? 110 : 0); const x0 = -w / 2, y0 = -h / 2;
+      const path = () => { g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + w, y0); torn(x0, y0 + h, w); g.closePath(); };
+      g.save(); g.translate(14, 18); path(); g.fillStyle = 'rgba(70,32,16,0.25)'; g.fill(); g.restore();
+      shape(g, path, '#FFFDF6', LW.frame, '#F1E9DA', () => polyP(g, [x0, y0 + h - 40, x0 + w, y0 + h - 120, x0 + w, y0 + h + 30, x0, y0 + h + 30]));
+      clipDo(g, path, () => { rectP(g, x0, y0, w, 130); paint(g, acc, 0); });
+      line(g, x0, y0 + 130, x0 + w, y0 + 130, LW.small);
+      const title = o.title == null ? 'INVOICE' : String(o.title);
+      g.fillStyle = '#FFFFFF'; g.textAlign = 'left'; g.textBaseline = 'middle'; if ('letterSpacing' in g) g.letterSpacing = '4px';
+      fitFont(g, title, 1000, 78, w - 120, 44); g.fillText(title, x0 + 50, y0 + 66); if ('letterSpacing' in g) g.letterSpacing = '0px';
+      lines.forEach((l, i) => {
+        const ly = y0 + 196 + i * 76, k = l.k == null ? 1 : clamp(l.k); if (k <= 0) return;
+        g.save(); g.globalAlpha *= k;
+        const amt = fmtMoney(l.amount); g.font = font(900, 46); const aw = amt ? g.measureText(String(amt).replace('₦', 'N')).width : 0;
+        g.fillStyle = '#1c1c1c'; g.textBaseline = 'middle'; if (amt) moneyText(g, amt, x0 + w - 50, ly, 'right');
+        fitFont(g, l.label || '', 700, 46, w - 140 - aw, 40); g.textAlign = 'left'; g.fillText(l.label || '', x0 + 50, ly);
+        const lw2 = g.measureText(l.label || '').width; g.fillStyle = '#C9C2B5'; for (let x = x0 + 70 + lw2; x < x0 + w - 70 - aw; x += 18) { ellP(g, x, ly + 14, 3, 3); g.fill(); }
+        g.restore();
+      });
+      if (o.total != null) {
+        const ty = y0 + 196 + lines.length * 76 + 30, T = typeof o.total === 'object' ? o.total : { label: 'Total', amount: o.total };
+        line(g, x0 + 40, ty - 36, x0 + w - 40, ty - 36, 4);
+        g.fillStyle = '#1c1c1c'; g.textBaseline = 'middle'; g.font = font(1000, 58); const amt = fmtMoney(T.amount); if (amt) moneyText(g, amt, x0 + w - 50, ty + 6, 'right');
+        g.textAlign = 'left'; fitFont(g, T.label || 'Total', 1000, 58, w * 0.45, 40); g.fillText(T.label || 'Total', x0 + 50, ty + 6);
+      }
+      if (o.stamp) { g.save(); SETS.stamp(g, x0 + w * 0.68, y0 + h * 0.42, String(o.stamp), o.stampK == null ? 1 : o.stampK, { size: 96, rot: -0.22, color: C.badgeRed }); g.restore(); }
+    }
+    g.restore();
+    return { x: st.x - w / 2 * st.sc, y: st.y - h / 2 * st.sc, w: w * st.sc, h: h * st.sc };
   };
 
   // ================================================================ exports

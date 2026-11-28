@@ -11,7 +11,7 @@ import json, os, subprocess
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'audio', 'vo', 'voice.mp3')
 OUT = os.path.join(ROOT, 'out', 'vo', 'narration.wav')
-FIX = {'1 .0,': '1.0,', 'Okofre\'s': 'Okafor\'s'}   # spelling only; "Go in by salt" etc. are fixed in the captions
+FIX = {'Okofre\'s': 'Okafor\'s'}   # spelling only; "Go in by salt" etc. are fixed in the captions
 
 
 def main():
@@ -25,7 +25,7 @@ def main():
             p = out[-1]
             a, b = p['w'].lower().strip('.,?!'), text.lower().strip('.,?!')
             same = a == b or (len(b) > 2 and a.endswith(b))      # 'firstborn,' then 'born,' across a window seam
-            if same and w['t0'] - p['t0'] < 1.2:          # an overlap duplicate: keep the first, extend its end
+            if same and w['t0'] < p['t1'] - 0.01:        # a window-seam duplicate starts inside the previous word: keep the first, extend its end
                 p['t1'] = max(p['t1'], w['t1']); continue
         out.append({'w': text, 't0': w['t0'], 't1': w['t1']})
     json.dump({'source': 'audio/vo/voice.mp3', 'cuts_src_s': [], 'words': out},

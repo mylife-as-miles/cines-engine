@@ -503,7 +503,7 @@
   // the newborn lying in the maternity cot, head to the right (away from the cot's name card): the kit's newborn, else the bundle
   STAGE.cotBaby = function (c, o) {
     o = o || {}; const a = c.anchor(o.set || 'maternity', 'cot', [860, 652, 1]); const s = (o.s || 1) * (a.s || 1);
-    const f = c.fig(o.who || 'hero', Object.assign({ age: 'newborn', x: a.x, y: a.y + 6 * s, s: s * 1.3, lie: 1 }, o.fig || {}));
+    const f = c.fig(o.who || 'hero', Object.assign({ age: 'newborn', x: a.x - 10 * s, y: a.y - 22 * s, s: s * 1.45, lie: 1 }, o.fig || {}));
     if (o.front !== false) c.setFront(o.set || 'maternity', o.setOpts || {});
     return f;
   };

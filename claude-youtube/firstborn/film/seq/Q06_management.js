@@ -53,7 +53,7 @@
           const h = c.fig('hero', { x: 640, y: 1240, s: 1.45, face: 1, pose: 'stand', expr: t > T.mgmtW + 0.3 ? 'surprised' : 'neutral', turn: 0.4, look: [1, 0.3] });
           c.g.save(); c.g.translate(1250, 560); c.g.scale(Math.max(0.03, sc), 1); GFX.badge(c.g, 0, 0, 1.6, fl < 0.5 ? 'FIRSTBORN' : 'MANAGEMENT', { cord: 300, color: fl < 0.5 ? '#3A8594' : '#7B5EA7' }); c.g.restore();
           if (t > T.mgmtW + 0.2) c.impact(T.mgmtW + 0.2, 0.2, 6);
-          STAGE.chapterCard(c, T.start + 0.2, T.start + 2.0, 'MANAGEMENT AT 30', { x: 1240, y: 150, scale: 0.55 });
+          STAGE.chapterCard(c, T.start + 0.2, T.start + 2.0, 'MANAGEMENT AT 30', { x: 1380, y: 960, scale: 0.55 });
         } },
       { at: T.wedding, name: 'the hall changes on each word: a wedding, a funeral, a naming ceremony; the hero with his clipboard', in: { type: 'wipe', dir: 'left' },
         draw(c) {
@@ -104,11 +104,12 @@
         } },
       { at: T.un, name: '"you are the United Nations": the hero at a podium between them, plain coloured flags', in: 'pop', push: { from: 1, to: 1.05, x: 960, y: 520 },
         draw(c) {
-          const t = c.t; c.set('podium', {}); GFX.flags(c.g, 960, 700, 1, t);
-          c.fig('cousin', { x: 360, y: 990, s: 1, face: 1, pose: 'stand', expr: 'angry', turn: 0.5, look: [1, 0] });
-          c.fig('cousin2', { x: 1560, y: 990, s: 1, face: -1, pose: 'stand', expr: 'angry', turn: 0.5, look: [1, 0] });
-          c.fig('hero', { x: 960, y: 990, s: 1.02, face: 1, pose: 'shrug', expr: 'firm', turn: 0, look: [0, 0] });
-          if (!ART.hasSet('podium') || true) GFX.podium(c.g, 960, 995, 1.05);
+          const t = c.t; c.set('podium', { t }); const kit = ART.hasSet('podium'); if (!kit) GFX.flags(c.g, 960, 700, 1, t);
+          const sp = c.anchor('podium', 'speaker', [960, 990]);
+          c.fig('cousin', { x: 400, y: 990, s: 1, face: 1, pose: 'point', expr: 'angry', turn: 0.5, look: [1, 0] });
+          c.fig('cousin2', { x: 1520, y: 990, s: 1, face: -1, pose: 'point', expr: 'angry', turn: 0.5, look: [1, 0] });
+          c.fig('hero', { x: sp.x, y: sp.y, s: sp.s || 1, face: 1, pose: 'shrug', expr: 'firm', turn: 0, look: [0, 0] });
+          if (kit) c.setFront('podium', {}); else GFX.podium(c.g, 960, 995, 1.05);
         } },
       { at: T.question, name: 'the aunties close in around him: "the question that has followed you since you were 25"', in: 'cut', push: { from: 1, to: 1.12, x: 960, y: 480 },
         draw(c) {

@@ -13,7 +13,9 @@
 # Corrected by ear (Whisper small.en heard otherwise; checked with medium.en and large-v3-turbo on
 # 28 Nov 2026): "Go and buy salt" (not "Go in by salt"), "Middle name. Surname." (it dropped "name"),
 # "And the careers?" (not "In the careers,"), "Here is" (not "Here's"), "You know the look" and
-# "You graduate" (the "You" was lost in clean-up), "firstborn", "version 1.0", "Okafor's", "kobo".
+# "You graduate" (the "You" was lost in clean-up), "firstborn", "version 1.0", "kobo", and "Okafor's" (the three
+# models wrote "Okofre's", "Okofer's" and "O'Coffer's": the Igbo surname they all approximate, as the design
+# names him). "I know. That is the problem." is stopped after "know", where she pauses for 0.33 s.
 
 You have just been born. Welcome.
 Before you even take a proper breath, / I need to tell you something.

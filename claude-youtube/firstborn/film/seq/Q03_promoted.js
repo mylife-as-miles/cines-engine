@@ -29,6 +29,7 @@
     poster: W('you are now a poster'), posterW: W('poster'), moving: W('a moving'), breathing: W('breathing'), water: W('water'), end: FILM.W('now you are a teenager'),
   };
   const EYE = STAGE.EYE, DAY = { tod: 'day' };
+  const JUDGE = c => c.anchor('courtroom', 'judge', [1430, 985]);
   const GAVEL = () => !!(POV && POV.POSES && POV.POSES.gavel), KH = n => !!(POV && POV.HOLD && POV.HOLD[n]);
   const KID = (o) => Object.assign({ age: 'kid', s: 1.02, face: -1, pose: 'stand', expr: 'neutral' }, o);
   // Mum on the sofa with the new baby in her arms, Dad standing by her
@@ -39,7 +40,7 @@
   }
   // the courtroom's front pieces over the figures: the kit's courtroomFront (o.part) when it has one, else the placeholder's
   function courtFront(c, part) {
-    if (ART.hasSet('courtroom')) { if (part === 'bench') c.setFront('courtroom', { part }); return; }
+    if (ART.hasSet('courtroom')) { c.setFront('courtroom', { parts: [part === 'witness' ? 'dock' : 'bench'] }); return; }
     if (part === 'witness') { GFX.rr(c.g, 360, 760, 420, 225, 10); GFX.inked(c.g, '#8A5A3E', 6); GFX.rr(c.g, 340, 740, 460, 36, 8); GFX.inked(c.g, '#A8723F', 5); }
     else { GFX.rr(c.g, 1080, 560, 700, 425, 10); GFX.inked(c.g, '#8A5A3E', 6); GFX.rr(c.g, 1060, 540, 740, 40, 8); GFX.inked(c.g, '#A8723F', 5); }
   }
@@ -103,7 +104,7 @@
           const t = c.t; c.set('home', DAY); const k = seg(t, T.barely + 0.2, T.bag + 0.2, 'outBack'), wob = Math.sin(t * 5) * 0.06 * seg(t, T.bag, T.bag + 0.3);
           c.camera({ x: 960, y: 540, zoom: punch(t, [T.six2 + 0.05], 0.12, 0.3) - 0.12 * seg(t, T.barely, T.barely + 0.6), free: true }); c.set('home', DAY);
           const kitBag = !!(POV && POV.HOLD && POV.HOLD.schoolbag) && k > 0;
-          const h = c.fig('hero', KID({ x: 960, y: 1000, s: 1.2, face: 1, expr: t > T.barely ? 'tired' : 'worried', rot: wob, turn: 0, look: [0, 0], hold: kitBag ? 'schoolbag' : undefined }));
+          const h = c.fig('hero', KID({ x: 960 + (kitBag ? 60 * seg(t, T.barely, T.rule) : 0), y: 1000, s: 1.2, face: 1, pose: kitBag ? 'walk' : 'stand', walk: kitBag ? (t - T.barely) * 0.9 : undefined, stride: 0.25, expr: t > T.barely ? 'tired' : 'worried', rot: wob, turn: kitBag ? 0.3 : 0, look: [0, 0], hold: kitBag ? 'schoolbag' : undefined }));
           if (k > 0 && !kitBag) { const hd = ART.head('hero', h); GFX.at(c.g, hd.x - 30, hd.y + hd.r * 2.6, { s: k, a: 1 }, q => GFX.schoolBag(q, 0, 0, 1.25, { color: '#E5534B' })); }
           if (t < T.barely) { const hd = ART.head('hero', h); GFX.sweat(c.g, hd.x + hd.r * 0.9, hd.y - hd.r * 0.4, 1.3); }
         } },
@@ -123,32 +124,32 @@
           c.fig('hero', KID({ x: 1430, y: 1000, face: -1, expr: t > T.didIt ? 'surprised' : 'worried', turn: EYE.turn, look: [1, 0.2] }));
           c.setFront('home', DAY);
         } },
-      { at: T.say1, name: 'courtroom: the little hero pleads in the witness box ("I didn\'t even touch him")', in: { type: 'wipe', dir: 'left' }, push: { from: 1.05, to: 1.12, x: 640, y: 560 },
+      { at: T.say1, name: 'courtroom: the little hero pleads in the witness box ("I didn\'t even touch him")', in: { type: 'wipe', dir: 'left' }, push: { from: 1.2, to: 1.28, x: 560, y: 560 },
         draw(c) {
-          const t = c.t; c.set('courtroom', {}); const w = c.anchor('courtroom', 'witness', [560, 985]);
+          const t = c.t; c.set('courtroom', {}); const w = c.anchor('courtroom', 'accused', [560, 985]);
           c.fig('hero', KID({ x: w.x + 10, y: w.y, face: 1, pose: 'shrug', expr: 'worried', talk: T.touch, turn: 0.5, look: [1, -0.3] }));
           courtFront(c, 'witness');
-          c.fig('mum', { x: 1430, y: 985, s: 1, face: -1, pose: 'stand', expr: 'firm', turn: 0.5, look: [1, 0.3] });
+          { const J = JUDGE(c); c.fig('mum', { x: J.x, y: J.y, s: J.s || 1, face: -1, pose: 'stand', expr: 'firm', turn: 0.5, look: [1, 0.3] }); }
           courtFront(c, 'bench');
         } },
-      { at: T.theySay, name: 'the judge: Mum at the bench, a wooden spoon for a gavel ("then why is he crying?")', in: 'cut', push: { from: 1.3, to: 1.4, x: 1400, y: 440 },
+      { at: T.theySay, name: 'the judge: Mum at the bench, a wooden spoon for a gavel ("then why is he crying?")', in: 'cut', push: { from: 1.35, to: 1.45, x: 1000, y: 400 },
         draw(c) {
           const t = c.t; c.set('courtroom', {});
-          if (GAVEL()) c.fig('mum', { x: 1430, y: 985, s: 1, face: -1, pose: 'gavel', phase: 0, expr: 'stern', talk: T.why, turn: 0.3, look: [1, 0.2] });
+          const J = JUDGE(c); if (GAVEL()) c.fig('mum', { x: J.x, y: J.y, s: J.s || 1, face: -1, pose: 'gavel', phase: 0, expr: 'stern', talk: T.why, turn: 0.3, look: [1, 0.2] });
           else { const m = c.fig('mum', { x: 1430, y: 985, s: 1, face: -1, pose: 'stand', expr: 'firm', talk: T.why, turn: 0.3, look: [1, 0.2], override: { armR: { ik: [60, -330], bend: 1, ul: 0.7, hand: 'hold', flip: 1, hrot: 0.2 } } }); const hn = ART.hand('mum', m); GFX.spoon(c.g, hn.x, hn.y + 30, 0.9, -0.3 + 0.1 * Math.sin(t * 3)); }
           courtFront(c, 'bench');
         } },
       { at: T.thatIs, name: 'wide court: "the whole case"; no evidence (an empty tray); the spoon lands: GUILTY', push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) {
-          const t = c.t, hit = T.passed + 0.15; if (t > hit) c.impact(hit, 0.35, 12); c.set('courtroom', {}); const w = c.anchor('courtroom', 'witness', [560, 985]);
+          const t = c.t, hit = T.passed + 0.15; if (t > hit) c.impact(hit, 0.35, 12); c.set('courtroom', {}); const w = c.anchor('courtroom', 'accused', [560, 985]);
           c.fig('hero', KID({ x: w.x + 10, y: w.y, face: 1, pose: 'stand', expr: t > hit ? 'sad' : 'worried', turn: 0.5, look: [1, -0.3], dy: t > hit ? 20 * seg(t, hit, hit + 0.4) : 0 }));
           courtFront(c, 'witness');
           const up = seg(t, T.judgment, hit - 0.12), down = seg(t, hit - 0.12, hit);
-          if (GAVEL()) c.fig('mum', { x: 1430, y: 985, s: 1, face: -1, pose: 'gavel', phase: down, expr: 'stern', turn: 0.3, look: [1, 0.3] });
+          const J = JUDGE(c); if (GAVEL()) c.fig('mum', { x: J.x, y: J.y, s: J.s || 1, face: -1, pose: 'gavel', phase: down, expr: 'stern', turn: 0.3, look: [1, 0.3] });
           else { const m = c.fig('mum', { x: 1430, y: 985, s: 1, face: -1, pose: 'stand', expr: 'firm', turn: 0.3, look: [1, 0.3], override: { armR: { ik: [120 - 20 * up + 40 * down, -300 - 140 * up + 200 * down], bend: 1, ul: 0.8, hand: 'hold', flip: 1, hrot: 0.2 } } }); const hn = ART.hand('mum', m); GFX.spoon(c.g, hn.x, hn.y + 30, 0.9, -0.5 - 0.6 * up + 1.2 * down); }
           courtFront(c, 'bench');
-          GFX.at(c.g, 960, 640, FILM.popInOut(t, T.evidence, T.passed - 0.1, 0.3), q => { GFX.rr(q, -170, -60, 340, 120, 20); GFX.inked(q, '#FFFFFF', 5); GFX.rr(q, -140, -30, 280, 70, 14); GFX.inked(q, '#E3E8EE', 4); GFX.text(q, 'EVIDENCE', 0, -100, { size: 44, weight: 900, color: '#FFFFFF', stroke: 8 }); });
-          STAGE.stamp(c, 960, 380, T.passed + 0.4, 'GUILTY', { size: 130, rot: -0.12 });
+          GFX.at(c.g, 1480, 420, FILM.popInOut(t, T.evidence, T.passed - 0.1, 0.3), q => { GFX.rr(q, -170, -60, 340, 120, 20); GFX.inked(q, '#FFFFFF', 5); GFX.rr(q, -140, -30, 280, 70, 14); GFX.inked(q, '#E3E8EE', 4); GFX.text(q, 'EVIDENCE', 0, -100, { size: 44, weight: 900, color: '#FFFFFF', stroke: 8 }); });
+          STAGE.stamp(c, 520, 300, T.passed + 0.4, 'GUILTY', { size: 120, rot: -0.12 });
         } },
       { at: T.trouble, name: '"really in trouble": the hero tiptoes through the house, listening', in: 'fade', push: { from: 1, to: 1.05, x: 900, y: 600 },
         draw(c) {

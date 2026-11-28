@@ -42,7 +42,7 @@
           GFX.spotlight(c.g, 520, 1000, 420, lit); c.g.save(); c.g.beginPath(); c.g.ellipse(520, 1000, 190, 36, 0, 0, Math.PI * 2); GFX.inked(c.g, lit > 0.5 ? '#FFE38A' : '#BFE3E0', 5); c.g.restore();
           QUEUE.forEach(([w, age], i) => c.fig(w, { age, x: 880 + i * 260, y: 1000, s: 1.05, face: -1, pose: 'stand', expr: 'neutral', turn: 0.3, look: [1, 0] }));
           c.fig('hero', { x: 520, y: 1000, s: 1.02, face: 1, pose: 'stand', expr: lit > 0.5 ? 'surprised' : 'neutral', turn: 0.2 });
-          GFX.at(c.g, 520, 260, FILM.popInOut(t, T.strongest - 0.2, T.firstW - 0.1, 0.3), q => { q.save(); q.lineCap = 'round'; q.lineWidth = 46; q.strokeStyle = '#1c1c1c'; q.beginPath(); q.moveTo(-90, 60); q.lineTo(0, 40); q.lineTo(30, -50); q.stroke(); q.lineWidth = 34; q.strokeStyle = '#FCEBCB'; q.stroke(); q.beginPath(); q.arc(0, 30, 40, Math.PI, 0); GFX.inked(q, '#FCEBCB', 5); q.restore(); GFX.cross(q, 0, 0, 220, seg(t, T.strongest + 0.3, T.strongest + 0.6)); });
+          GFX.at(c.g, 230, 430, FILM.popInOut(t, T.strongest - 0.2, T.firstW - 0.1, 0.3), q => { q.save(); q.lineCap = 'round'; q.lineWidth = 46; q.strokeStyle = '#1c1c1c'; q.beginPath(); q.moveTo(-90, 60); q.lineTo(0, 40); q.lineTo(30, -50); q.stroke(); q.lineWidth = 34; q.strokeStyle = '#FCEBCB'; q.stroke(); q.beginPath(); q.arc(0, 30, 40, Math.PI, 0); GFX.inked(q, '#FCEBCB', 5); q.restore(); GFX.cross(q, 0, 0, 220, seg(t, T.strongest + 0.3, T.strongest + 0.6)); });
         } },
       { at: T.thatAll, name: 'push in on him in the spotlight: "Position, not talent"', in: 'cut', push: { from: 1.1, to: 1.35, x: 620, y: 520 },
         draw(c) {
