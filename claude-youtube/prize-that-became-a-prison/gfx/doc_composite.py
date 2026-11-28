@@ -72,7 +72,7 @@ def ease_push_rate(p):       # d ease_push / dp
 PAGE_GAIN = 1.6              # linear gain on the lit sheet: the paper peaks near 225/255 after the grade
 PAGE_KNEE = 0.8              # linear level where the lifted sheet's brightest channel starts to roll off (no clipped red)
 MARKER_RGB = [1.0, 1.0, 0.35]  # a clean pale yellow (was 0.97, 0.86, 0.30: khaki on the grey paper, after the grade)
-MARKER_FEATHER_PX = 0.5      # Gaussian sigma of the stroke's edge on screen, px (with the render's softness: 2-3 px 10-90 %)
+MARKER_FEATHER_PX = 0.35     # Gaussian sigma of the stroke's edge on screen, px (with the render's softness: 2-3 px 10-90 %)
 
 CREEP = 0.0012               # after the push lands: a one-way creep in, log zoom per frame (24 fps)
 CREEP_IN = 12                # frames over which the creep's rate eases in, so the end push never starts with a jolt

@@ -9,10 +9,11 @@
 //   cutaway  chapter 3: a section of the bag wall, lit like the plates (a soft top key) and grained like them: cognac
 //            leather (a fine pebble grain on its face, its cut edge rounded and edge-painted, the whole sheet bowed a
 //            little as the tote's seam is) over a pale woven lining. The lining drops away parallel to the leather (its
-//            stitched end at the bag's lip stays put) to open an empty gap between the two layers, holds it open 1.8 s,
-//            and closes again on a small click at 4.05 s. The gap is dark and empty: all that shows in it is the lining's
-//            own upper face in shadow, lit only from the open cut and the open end; red marks only the seam's stitches.
-//            Nothing is drawn inside the space (no packets, no substance, no object); no words.
+//            stitched end at the bag's lip stays put) to open an empty gap between the two layers, holds it fully open
+//            about 1.8 s (1.85-3.65 s), and closes, gathering speed, to meet on the frame of the click (4.04 s). The
+//            gap is dark and empty: all that shows in it is the lining's own upper face in shadow, lit only from the
+//            open cut and the open end; red marks only the seam's stitches. Nothing is drawn inside the space (no
+//            packets, no substance, no object); no words.
 //   cutaway_half  chapter 4's split frame: the same section fitted into the right half (x 962-1919, gfx/split.py), opening
 //            on a match from the right-hand tote's top seam, and held open (it does not close).
 // The seam path is read from a JSON in plate pixels (window.SEAM: {space:[w,h], seam:[[x,y],...]}): the prototype is
@@ -182,7 +183,7 @@ function TWILL() {           // a 2/1 twill of 3-unit threads: the warp floats o
 // held to the leather by four stitches at the lip; right of them it bends away over XS0-XS1 and runs parallel to the leather,
 // G below it when open. The whole sheet bows: at rest a sag of BOW in the middle; on frame 1 the bow of the seam it is cut from.
 const SEC = { X0: 330, X1: 1560, Y: 524, D: [170, -136], LEA: 42, LIN: 24, RT: 16, RB: 9, LI: 4, RO: 10, SY: 15,
-              G: 68, XS0: 470, XS1: 610, BOW: 16 };
+              G: 76, XS0: 470, XS1: 620, BOW: 16 };
 const sA = [SEC.X0 + 18, SEC.Y + SEC.SY], sB = [SEC.X1 - 14, SEC.Y + SEC.SY];   // the front edge's stitch row, end to end
 const bend = x => sm((x - SEC.XS0) / (SEC.XS1 - SEC.XS0));
 function leatherProfile() {          // the front edge, clockwise: the rounded lip, the top, the end, the bottom, the round
@@ -287,8 +288,9 @@ function cutaway(ctx, t, half) {
   const k = k0 + (kf - k0) * e, rot0 = r0 * (1 - e), T = [tA[0] + (kf * sA[0] + of[0] - tA[0]) * e, tA[1] + (kf * sA[1] + of[1] - tA[1]) * e];
   const drift = 1 + 0.02 * sm(t / 5), s = k * drift, O = [CX * (1 - drift) + drift * T[0], H / 2 * (1 - drift) + drift * T[1]];
   const bow = u => (1 - e) * dev(u) / k0 + e * restBow(u);           // local units, + down
-  // opens 1.1-1.9 s as the view settles, holds 1.7 s, closes 3.6-4.05 s, landing on the click (the split holds it open)
-  const open = sm((t - 1.1) / 0.8) * (half ? 1 : 1 - cl((t - 3.6) / 0.45) ** 2);
+  // opens 1.1-1.9 s as the view settles, holds 1.7 s, closes 3.59-4.04 s gathering speed, so the layers meet on the frame
+  // that carries the click (4.05 s: frame 97 at 24 fps, as before); the split holds it open
+  const open = sm((t - 1.1) / 0.8) * (half ? 1 : 1 - cl((t - 3.59) / 0.45) ** 2);
   // the soft contact shadow under the section, on the frame (it does not bow)
   ctx.save(); ctx.translate(O[0], O[1]); ctx.rotate(rot0); ctx.scale(s, s); ctx.translate(-sA[0], -sA[1]);
   { const cy = bot + G * open + 40 + 0.6 * SEC.BOW * e, g = ctx.createRadialGradient((X0 + X1) / 2 + 60, cy, 40, (X0 + X1) / 2 + 60, cy, (X1 - X0) * 0.6);
