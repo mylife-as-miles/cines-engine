@@ -608,31 +608,7 @@ def rack_case():
 
     # The scanned pull curls into a numeral. A plain fabric keeper covers it
     # on the case itself, so it stays in place across the wide and rack insert.
-    shell = max(meshes, key=lambda obj: len(obj.data.vertices))
-    scale = shell.matrix_world.to_scale().x
-    normal = Vector((0.61, 0, 0.7924)).normalized()
-    rotation = Matrix.Rotation(math.asin(normal.x), 4, "Y")
-    mount = Vector((0.115, 0.001, 0.279)) + normal * 0.008
-    pocket_side = rotation.to_3x3() @ Vector((1, 0, 0))
-    mount += pocket_side * (0.012 / scale)
-    nylon = sk.mat("matte charcoal zipper keeper", (0.021, 0.023, 0.026), rough=0.89)
-    keeper = st.box("suitcase zipper keeper", (0.080, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007, segs=5)
-    keeper.parent = shell
-    keeper.matrix_basis = Matrix.Translation(mount) @ rotation
-    meshes.append(keeper)
-    # The two scanned hubs have bright curls. Fit matte covers to the
-    # measured centres and axle directions on the unposed shell.
-    for label, centre, direction in (
-        ("upper", (0.1035, 0.204, -0.466), (1.0, 0.0, 0.0)),
-        ("lower", (0.103, -0.200, -0.460), (0.944, -0.33, 0.0)),
-    ):
-        axis = Vector(direction).normalized()
-        cap = sk.cyl(f"suitcase {label} wheel axle cover", 0.024 / scale, 0.006 / scale, (0, 0, 0), nylon, verts=48)
-        cap.parent = shell
-        cap.matrix_basis = Matrix.Translation(Vector(centre) + axis * (0.001 / scale)) @ axis.to_track_quat("Z", "Y").to_matrix().to_4x4()
-        for face in cap.data.polygons:
-            face.use_smooth = len(face.vertices) == 4
-        meshes.append(cap)
+    meshes.extend(props.suitcase_hardware_covers(case))
     _STATE["bag_meshes"] = meshes
     print(f"TRAIN only suitcase: rack contact {dz * 1000:+.1f} mm from initial mark", flush=True)
     return lo, hi

@@ -15,7 +15,7 @@ import os
 import bpy
 from bpy_extras.object_utils import world_to_camera_view
 import setkit as sk
-from mathutils import Vector
+from mathutils import Matrix, Vector
 from mathutils.bvhtree import BVHTree
 
 PROPS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "props")
@@ -164,6 +164,38 @@ def _plain_suitcase_side(ob, topstitch=False):
 def meshes(holder):
     """All mesh parts of a prop, including a reinforcement parented under its shell."""
     return [o for o in (holder, *holder.children_recursive) if o.type == "MESH"]
+
+
+def suitcase_hardware_covers(holder):
+    """Plain covers for the zipper and two scanned wheel hubs on Dawn's case."""
+    shell = max(meshes(holder), key=lambda obj: len(obj.data.vertices))
+    scale = shell.matrix_world.to_scale().x
+    nylon = sk.mat("matte charcoal zipper keeper", (0.021, 0.023, 0.026), rough=0.89)
+    normal = Vector((0.61, 0.0, 0.7924)).normalized()
+    rotation = Matrix.Rotation(math.asin(normal.x), 4, "Y")
+    pocket_side = rotation.to_3x3() @ Vector((1, 0, 0))
+    mount = Vector((0.115, 0.001, 0.279)) + normal * 0.008 + pocket_side * (0.012 / scale)
+    keeper = sk.box("suitcase zipper keeper", (0.080, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007)
+    keeper.modifiers["bevel"].segments = 5
+    keeper.modifiers["bevel"].limit_method = "ANGLE"
+    keeper.parent = shell
+    keeper.matrix_basis = Matrix.Translation(mount) @ rotation
+    covers = [keeper]
+    # Centres in the scan's local coordinates, measured at the exposed
+    # hub faces. Radius and thickness are in metres at the case's size.
+    for label, centre, direction in (
+        ("upper", (0.1035, 0.204, -0.466), (1.0, 0.0, 0.0)),
+        ("lower", (0.103, -0.200, -0.460), (0.944, -0.33, 0.0)),
+    ):
+        axis = Vector(direction).normalized()
+        cap = sk.cyl(f"suitcase {label} wheel axle cover", 0.024 / scale, 0.006 / scale, (0, 0, 0), nylon, verts=48)
+        cap.parent = shell
+        offset = Vector(centre) + axis * (0.001 / scale)
+        cap.matrix_basis = Matrix.Translation(offset) @ axis.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        for face in cap.data.polygons:
+            face.use_smooth = len(face.vertices) == 4
+        covers.append(cap)
+    return covers
 
 
 def surface_bvh(holder):
