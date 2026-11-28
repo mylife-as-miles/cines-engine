@@ -211,7 +211,7 @@ function cutaway(ctx, t, half) {
   // shadow, so the gap reads as a hollow, darker than both layers but not the ground's colour.
   if (open > 0.005) {
     const f0 = RA, f1 = rot([X1, top]);
-    paint([f0, f1, add(f1), add(f0)], '#4e4942', [
+    paint([f0, f1, add(f1), add(f0)], '#57514a', [
       ['multiply', lin(f0, f1, [[0, grey(20)], [0.22, grey(70)], [0.6, grey(118)], [1, grey(160)]])],
       ['multiply', lin(f0, add(f0), [[0, grey(255)], [0.1, grey(205)], [0.5, grey(128)], [1, grey(150)]])],
       ['multiply', grey(255 * (0.3 + 0.7 * open))],
@@ -263,7 +263,7 @@ function cutaway(ctx, t, half) {
       ['multiply', depthKey(s.p)],
       ['multiply', KX],
       ['multiply', grey(255 * (0.5 + 0.5 * up))],
-      ['screen', lin(s.p, add(s.p, 0.035), [[0, warm(0.3 + 0.25 * toward)], [1, warm(0)]])],   // the lit arris along the near edge
+      ['screen', lin(s.p, add(s.p, 0.035), [[0, warm(0.18 + 0.17 * toward)], [1, warm(0)]])],  // the lit arris along the near edge
       () => {                                                           // the leather's soft sheen: a broad highlight from the key
         if (up < 0.9) return; ctx.globalCompositeOperation = 'screen';
         const cx = X0 + 0.36 * (X1 - X0) + 0.25 * D[0], cy = Y + 0.25 * D[1];
@@ -279,7 +279,7 @@ function cutaway(ctx, t, half) {
     ['overlay', pat(FB, [1, 0, 0, 1, X0, Y])],
     ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [0.05, grey(255)], [0.07, grey(208)], [0.15, grey(214)], [0.19, grey(255)], [1, grey(176)]])],
     ['multiply', KX],
-    ['screen', lin([0, Y], [0, Y + 4], [[0, warm(0.5)], [1, warm(0)]])],
+    ['screen', lin([0, Y], [0, Y + 4], [[0, warm(0.3)], [1, warm(0)]])],
     ['screen', lin([X0, 0], [X0 + 12, 0], [[0, warm(0.16)], [1, warm(0)]])],
     () => { ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = lin([0, top], [0, top - 4], [[0, pale(0.2 * open)], [1, pale(0)]]);
       poly([[HX + 40, top], [X1, top], [X1, top - 4], [HX + 260, top - 4]]); ctx.fill(); },

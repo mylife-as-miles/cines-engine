@@ -1,6 +1,7 @@
 """Pin a real document page onto a blank-sheet plate, light it with the plate, mark a phrase, push in, grade.
 
     <gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --out out/gfx/s1_yes.mp4 [--still 3.0 out.png]
+    <gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --camlog     (the zoom and its rate, per frame)
 
 A shot file (JSON) names the plate and its corner pins (from evidence_table `page` / `pair`), the PDF page, the
 phrases to mark (in order, with their start times), the phrases to keep soft (privacy), the framing and the push.
@@ -14,7 +15,9 @@ sheet in linear light, so the lamp's falloff, the paper's warmth and the grade a
 keeps the marked line sharp and softens lines away from it (two fixed blur levels, cinetic's rule), which is also
 what keeps private lines unreadable. The film's grade (GRADE in scenes/shoot.py) is applied last, with its grain.
 Motion numbers from cinetic: the push runs in log space, 2-8 % a shot, landing 60/85/97 % of the way at 25/50/75 %
-of its time, then creeping; the marker writes each line in about half a second with a dry, fixed-seed edge.
+of its time, then creeping (when `length` outlasts `duration`; the creep's rate eases in over 12 frames from the
+push's own landing rate, so the end push never starts with a jolt); the marker writes each line in about half a
+second with a dry, fixed-seed edge.
 """
 import argparse
 import json
