@@ -96,8 +96,8 @@ def ease_inout(p):           # stdInOut (the focus rack, the texture rack, the d
 
 
 STROKE_RAMP = 0.2            # the marker's speed ramps up over the first 20 % of a stroke's time and down over the last
-SWIPE_FRAMES = 20            # frames a line's stroke spends crossing the screen (a 14-18-frame visible sweep: the first
-                             # and last frames of a ramp barely move), whatever part of the line runs off the frame
+SWIPE_FRAMES = 20            # frames a line's stroke spends crossing the screen, whatever part of the line runs off the
+                             # frame: measured on S1, 18-19 frames of visible growth, 13 frames from 10 % to 90 % covered
 LINE_GAP = 2                 # frames between one line's stroke ending and the next line's starting (the pen moves down)
 
 
@@ -371,7 +371,7 @@ def main():
             sigma = feather / max(np.hypot(*(ab[1] - ab[0])), 1e-6)   # screen px -> page px, across the line
             ts = te - nfr / a.fps
             strokes.append(dict(line=lines[i], i=i, n=n, pad=pad, t=ts, T=nfr / a.fps, sigma=sigma, seed=7 + 31 * mi + i,
-                                mark=mi, on=(round(on[0] / 400, 3), round(on[-1] / 400, 3)) if len(on) else None))
+                                mark=mi, on=(round(float(on[0]) / 400, 3), round(float(on[-1]) / 400, 3)) if len(on) else None))
             te = ts - LINE_GAP / a.fps
 
     def frame(t):
