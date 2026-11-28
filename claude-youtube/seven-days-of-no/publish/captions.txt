@@ -1,0 +1,102 @@
+# Caption text for seven_days.en.srt and .vtt. Rebuild with: python3 tools/make_captions.py
+#
+# One caption per line, in spoken order; " / " forces the line break (otherwise lines over 42 characters
+# are broken automatically). The words must match the narration's words (audio/vo/words.json, after the
+# tool removes Whisper's duplicated words and fixes "Five -thirty" and "co -worker"), ignoring case and
+# punctuation: the tool takes each caption's times from its words, so a re-timed or re-cut narration
+# re-times the captions. A caption whose words were all cut is dropped with a warning; changed words stop
+# the tool with the place to fix here.
+#
+# Style: one voice speaks everything, so there are no speaker names; the lines the narrator speaks for
+# the other characters (and "you") are in quotation marks. Typographic quotes and apostrophes are applied
+# on output. "mom" is what the narrator says (checked by ear-model on 28 Nov 2026).
+
+You say yes to everything.
+Staying late, lending money,
+going to the thing / you did not want to go to.
+Yes, yes, yes.
+Even when your whole body is saying no.
+So here is the question.
+What happens if, for seven days, / you say no to everyone?
+Not rude, not angry, just no.
+Let's see.
+Monday, 5:30. Your boss walks over.
+"Can you stay a bit late tonight?"
+Normally you say, "Of course," / before he finishes the sentence.
+Today you say, "No."
+He blinks.
+Then he says, "Okay."
+That's it. "Okay."
+You prepared for war and got a shrug.
+Tuesday. Your friend calls.
+"Can you help me move on Saturday?"
+"No."
+And you hear it.
+That small pause.
+The one that says, / "I thought we were close."
+Now your stomach drops.
+Nobody did anything to you / and you still feel guilty.
+Remember that feeling.
+It comes back later.
+Wednesday, your mom calls.
+"Are you coming for Sunday lunch?"
+"No."
+She does not argue.
+She says, "Fine."
+In a voice that is not fine.
+Then she calls again. And again.
+By evening, you have nine missed calls / and one text.
+"Are you alive?"
+Day three. The world has not ended.
+But your phone is exhausted.
+Thursday, a coworker pops by.
+"Lunch? That new place just opened."
+"No."
+And the second it leaves your mouth, / you know.
+You wanted to go.
+You have been wanting to try / that place for weeks.
+Here is the problem / with saying no to everything.
+You also say no / to the things you actually want.
+Friday. A tourist asks, / "Sorry, could you take our photo?"
+"No."
+They look hurt.
+And you feel terrible.
+So you run after them.
+You take the photo,
+and it is the happiest / you have been all week.
+Why? / Because this time, you chose it.
+Same yes, different reason.
+Not fear, choice.
+Saturday, your boss texts, / "Need that report tonight."
+You do not say no.
+You do not panic yes, either.
+You say, "I can't tonight. / I can send it first thing tomorrow."
+He says, "Perfect."
+That is the one that works.
+Not a flat no. A real answer.
+Sunday. So what happened?
+A few people were annoyed.
+One went quiet for a day.
+And one or two actually / respected you more.
+Nobody's life ended.
+Here's what I noticed.
+Most of our yeses are not kindness.
+They are fear.
+Fear that people will stop liking us.
+That guilty feeling on Tuesday.
+It was not proof you did something wrong.
+It was just what changing / a habit feels like.
+So, do not say no to everyone.
+Try this instead.
+For one week, when someone asks you / for something, say,
+"Let me think and get back to you." / That is all.
+It gives you a pause, / and in that pause, you get to choose.
+Yes, no, or "yes, but not like that."
+You decide on purpose.
+So, what if you said no to everyone / for seven days?
+You would be tired, a little guilty, / and a lot more honest.
+Now tell me in the comments: / what is one thing you said yes to
+this week that you really / wanted to say no to?
+I'll go first.
+I said no to food because / I honestly do not want it.
+See you in the next one.
