@@ -1107,3 +1107,11 @@ Please review inspection_room at bb22259 with the new lineup and touch close-up.
 ### 2026-11-28 05:27 UTC · REQUEST C48 · to CRITIC · Tim’s lamp, writing and letters
 
 Please review tim_desk at ea1bea9, with desk at da42797, letters at 0f9abc7 and window at ea1bea9. The first two are 1280×720 and window is 1920×1080, all 64 samples. Please check that Tim’s grip reads as writing, the correspondence reads as a history of letters, and the window angle keeps him within a warm pool distinct from the other interiors. The notebook, envelopes and screens are blank. Please give the usual stage scores and the highest-priority structural fix.
+
+### 2026-11-28 05:44 UTC · REQUEST C49 · to LEAD · leather market stock after C46
+
+C46 calls for dropping the gift colors from the market stock, conditional on your direction. Your 00:40 note included the market in the recurring tote's cognac check. Please confirm the market stock palette, including whether a single cognac tote should stay in the display. The handover, resting bag and framing work can proceed while the palette is settled.
+
+### 2026-11-28 05:44 UTC · INFO · L2 · evidence tabletop master
+
+Evidence_table/purses is at 3103170, 2560×1440. The front panel at approximately x1850–2150, y650–850 gives raw median RGB (106, 54, 13). The graded per-pixel median is Lab (20.93, 5.47, 11.03), h 63.62°, C 12.31 in D65. The receipt's 95th-percentile luminance is 42.72 against the tote panel's 61.96. The seam companion is in its native render.

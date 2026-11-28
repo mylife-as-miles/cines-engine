@@ -35,9 +35,8 @@ PROPS = {  # size, axis, grade, finish (spec)
     # black nylon: at val 0.36 and a cut sheen it went to a featureless black in the lamp light (leather_market saw
     # the same): lifted, with enough sheen for its folds and straps to read
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.5, rough_add=0.15), 0.3),
-    # cognac: the red-brown that grades to salmon turned toward orange and lifted (inspection_room's values)
-    # (under the warm lamp the inspection room's orange turn read yellow-olive after the grade: less hue, less sat)
-    "handbag-tote": (0.35, "long", dict(sat=1.08, val=1.04, hue=0.53, rough_add=0.2), 0.38),
+    # The upright cognac tote is lit from the side. The flat tote below receives the full bedside pool.
+    "handbag-tote": (0.35, "long", dict(sat=0.985, val=1.13, hue=0.526, rough_add=0.2), 0.38),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12), 0.35),
     # glossy raspberry darkened toward burgundy (prop table: val ~0.55, rough_add ~0.25), a touch redder
     "handbag-shoulder": (0.32, "long", dict(sat=0.75, val=0.62, hue=0.49, rough_add=0.25), 0.3),
@@ -49,10 +48,12 @@ def _link(ob):
     return ob
 
 
-def load_baked(name):
+def load_baked(name, *, dye=None):
     """Import a prop at its real size and return its mesh object with the data in the prop's own frame (metres,
     footprint centred at the origin, floor at z 0, as the prop table describes its front), identity transform."""
     size, axis, grade, spec = PROPS[name]
+    if dye:
+        grade = {**grade, **dye}
     h = pk.load(name, size=size, axis=axis, loc=(0, 0, 0), turn_deg=0.0, **grade)
     bpy.context.view_layer.update()
     meshes = [o for o in h.children_recursive if o.type == "MESH"]
@@ -487,7 +488,7 @@ def half_closed_duffel(root, body):
 def tote_flat(loc, turn_deg, surfaces):
     """The tote on its back, its clean face (file +Y, the face turn 162 shows in the inspection room) up, its top
     toward laid -Y; the handles swung back past the top edge and let down onto the bedspread."""
-    ob = load_baked("handbag-tote")
+    ob = load_baked("handbag-tote", dye=dict(sat=0.61, val=0.81, hue=0.533))
     me = ob.data
     co = verts_np(me)
     zr = 0.256                                     # the body's rim; above it, the two handles
