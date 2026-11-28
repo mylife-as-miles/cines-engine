@@ -1,0 +1,1423 @@
+{
+ "about": "Put the score plan's placements on the film's real clock (design/edit/EDL.json) -> audio/score/placements.json.",
+ "clock": "design/edit/EDL.json (animatic_v1, measured from the scratch narration, audio/vo/scratch/lines.json (101 of 101 voice segments matched))",
+ "duration_s": 728.958,
+ "fps": 24,
+ "rows": {
+  "00.01": {
+   "shot": "00-01",
+   "edl_s": 0.0,
+   "script_s": 0.0,
+   "picture": "checkin_hall scale"
+  },
+  "00.04": {
+   "shot": "00-06",
+   "edl_s": 19.333,
+   "script_s": 15.0,
+   "picture": "departure_gate seated_called"
+  },
+  "00.07": {
+   "shot": "00-12",
+   "edl_s": 32.667,
+   "script_s": 33.0,
+   "picture": "inspection_room match (YES)"
+  },
+  "00.09": {
+   "shot": "00-16",
+   "edl_s": 41.167,
+   "script_s": 43.0,
+   "picture": "inspection_room handbags"
+  },
+  "00.12": {
+   "shot": "00-22",
+   "edl_s": 61.917,
+   "script_s": 64.0,
+   "picture": "inspection_room match -> void_stage bags"
+  },
+  "00.15": {
+   "shot": "00-27",
+   "edl_s": 76.042,
+   "script_s": 81.0,
+   "picture": "hearing_room wide -> witness"
+  },
+  "00.17": {
+   "shot": "00-30",
+   "edl_s": 89.083,
+   "script_s": 97.0,
+   "picture": "void_stage bags in the beam (TITLE)"
+  },
+  "01.01": {
+   "shot": "01-01",
+   "edl_s": 94.083,
+   "script_s": 102.0,
+   "picture": "chicago_night wide -> profile"
+  },
+  "01.08": {
+   "shot": "01-15",
+   "edl_s": 170.792,
+   "script_s": 178.0,
+   "picture": "departure_gate window"
+  },
+  "02.01": {
+   "shot": "02-01",
+   "edl_s": 186.875,
+   "script_s": 185.0,
+   "picture": "aircraft_cabin window, over"
+  },
+  "02.06": {
+   "shot": "02-12",
+   "edl_s": 219.75,
+   "script_s": 230.0,
+   "picture": "route map: dashed line to Australia"
+  },
+  "03.01": {
+   "shot": "03-01",
+   "edl_s": 232.208,
+   "script_s": 240.0,
+   "picture": "hotel_room accept"
+  },
+  "03.05": {
+   "shot": "03-11",
+   "edl_s": 266.0,
+   "script_s": 278.0,
+   "picture": "checkin_hall scale (matched)"
+  },
+  "03.06": {
+   "shot": "03-16",
+   "edl_s": 286.625,
+   "script_s": 286.0,
+   "picture": "baggage_belt curtain, belt"
+  },
+  "04.04": {
+   "shot": "04-08",
+   "edl_s": 307.833,
+   "script_s": 327.0,
+   "picture": "inspection_room handbags (officer's hand)"
+  },
+  "04.06": {
+   "shot": "04-11",
+   "edl_s": 321.458,
+   "script_s": 345.0,
+   "picture": "inspection_room empty"
+  },
+  "04.08": {
+   "shot": "04-19",
+   "edl_s": 349.042,
+   "script_s": 368.0,
+   "picture": "detention_corridor corridor (2014)"
+  },
+  "06.02": {
+   "shot": "06-02",
+   "edl_s": 424.917,
+   "script_s": 450.0,
+   "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)"
+  },
+  "06.06": {
+   "shot": "06-12",
+   "edl_s": 470.25,
+   "script_s": 495.0,
+   "picture": "void_stage divide"
+  },
+  "06.07": {
+   "shot": "06-14",
+   "edl_s": 476.708,
+   "script_s": 513.0,
+   "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")"
+  },
+  "07.01": {
+   "shot": "07-01",
+   "edl_s": 481.167,
+   "script_s": 525.0,
+   "picture": "prison_exterior wall, gate"
+  },
+  "07.07": {
+   "shot": "07-10",
+   "edl_s": 533.917,
+   "script_s": 596.0,
+   "picture": "tim_desk bill page (MAY 2025)"
+  },
+  "08.01": {
+   "shot": "08-01",
+   "edl_s": 566.708,
+   "script_s": 610.0,
+   "picture": "home dining, cold, Gene alone"
+  },
+  "08.03": {
+   "shot": "08-02",
+   "edl_s": 575.458,
+   "script_s": 638.0,
+   "picture": "home blinds (JANUARY 25, 2026)"
+  },
+  "09.01": {
+   "shot": "09-01",
+   "edl_s": 622.708,
+   "script_s": 670.0,
+   "picture": "prison_exterior gate (JULY 2026)"
+  },
+  "09.03": {
+   "shot": "09-04",
+   "edl_s": 645.75,
+   "script_s": 698.0,
+   "picture": "visiting_room glass, locked, long hold"
+  },
+  "09.04": {
+   "shot": "09-05",
+   "edl_s": 652.917,
+   "script_s": 708.0,
+   "picture": "visiting_room empty"
+  },
+  "09.07": {
+   "shot": "09-09",
+   "edl_s": 669.708,
+   "script_s": 728.0,
+   "picture": "hearing_room wide (matched)"
+  },
+  "09.09": {
+   "shot": "09-17",
+   "edl_s": 712.792,
+   "script_s": 752.0,
+   "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)"
+  },
+  "09.10": {
+   "shot": "09-18",
+   "edl_s": 717.125,
+   "script_s": 768.0,
+   "picture": "void_stage bags held (end screen)"
+  }
+ },
+ "words": {
+  "00.12 not. (end)": [
+   "00.12",
+   3.13
+  ],
+  "02.07 one (start)": [
+   "02.07",
+   2.0
+  ],
+  "04.03 Yes. (start)": [
+   "04.03",
+   0.005
+  ],
+  "04.03 Yes. (end)": [
+   "04.03",
+   0.54
+  ],
+  "04.05 Yes. (start)": [
+   "04.05",
+   0.005
+  ],
+  "04.05 Yes. (end)": [
+   "04.05",
+   0.54
+  ],
+  "04.07 linings. (end)": [
+   "04.07",
+   2.64
+  ],
+  "06.06 anyway. (end)": [
+   "06.06",
+   12.59
+  ],
+  "08.04 years. (end)": [
+   "08.04",
+   6.44
+  ],
+  "09.08 answer. (end)": [
+   "09.08",
+   6.4
+  ],
+  "09.14 asking. (end)": [
+   "09.14",
+   1.88
+  ]
+ },
+ "speech": [
+  [
+   1.4,
+   2.909
+  ],
+  [
+   3.259,
+   7.964
+  ],
+  [
+   8.314,
+   18.52
+  ],
+  [
+   19.32,
+   26.594
+  ],
+  [
+   26.944,
+   30.488
+  ],
+  [
+   30.838,
+   32.874
+  ],
+  [
+   33.224,
+   34.448
+  ],
+  [
+   34.948,
+   35.619
+  ],
+  [
+   35.969,
+   41.155
+  ],
+  [
+   42.155,
+   52.432
+  ],
+  [
+   52.782,
+   61.554
+  ],
+  [
+   61.904,
+   65.137
+  ],
+  [
+   66.637,
+   73.199
+  ],
+  [
+   73.549,
+   81.856
+  ],
+  [
+   94.864,
+   96.855
+  ],
+  [
+   97.205,
+   104.235
+  ],
+  [
+   104.585,
+   118.078
+  ],
+  [
+   118.428,
+   134.231
+  ],
+  [
+   134.581,
+   137.052
+  ],
+  [
+   137.402,
+   140.9
+  ],
+  [
+   141.25,
+   142.663
+  ],
+  [
+   143.463,
+   157.614
+  ],
+  [
+   157.964,
+   167.711
+  ],
+  [
+   168.061,
+   170.426
+  ],
+  [
+   170.776,
+   171.658
+  ],
+  [
+   172.008,
+   175.372
+  ],
+  [
+   175.722,
+   180.716
+  ],
+  [
+   181.066,
+   185.361
+  ],
+  [
+   187.861,
+   198.965
+  ],
+  [
+   199.315,
+   207.46
+  ],
+  [
+   207.81,
+   209.345
+  ],
+  [
+   209.695,
+   219.391
+  ],
+  [
+   219.741,
+   224.478
+  ],
+  [
+   224.828,
+   227.46
+  ],
+  [
+   227.81,
+   231.201
+  ],
+  [
+   233.001,
+   240.136
+  ],
+  [
+   240.486,
+   245.71
+  ],
+  [
+   246.06,
+   249.321
+  ],
+  [
+   249.671,
+   257.412
+  ],
+  [
+   257.762,
+   263.016
+  ],
+  [
+   263.366,
+   266.94
+  ],
+  [
+   267.29,
+   268.228
+  ],
+  [
+   268.578,
+   269.757
+  ],
+  [
+   270.107,
+   277.884
+  ],
+  [
+   278.234,
+   288.301
+  ],
+  [
+   290.301,
+   297.353
+  ],
+  [
+   297.703,
+   299.905
+  ],
+  [
+   300.255,
+   300.889
+  ],
+  [
+   301.239,
+   302.415
+  ],
+  [
+   302.815,
+   303.448
+  ],
+  [
+   303.798,
+   307.49
+  ],
+  [
+   307.84,
+   310.561
+  ],
+  [
+   311.561,
+   321.12
+  ],
+  [
+   321.47,
+   325.627
+  ],
+  [
+   326.427,
+   343.488
+  ],
+  [
+   343.838,
+   352.197
+  ],
+  [
+   352.547,
+   356.174
+  ],
+  [
+   358.474,
+   367.504
+  ],
+  [
+   367.854,
+   381.474
+  ],
+  [
+   381.824,
+   382.957
+  ],
+  [
+   383.307,
+   400.683
+  ],
+  [
+   401.033,
+   409.463
+  ],
+  [
+   409.813,
+   415.836
+  ],
+  [
+   416.186,
+   419.14
+  ],
+  [
+   423.24,
+   424.429
+  ],
+  [
+   424.929,
+   427.249
+  ],
+  [
+   427.599,
+   436.894
+  ],
+  [
+   437.244,
+   453.558
+  ],
+  [
+   453.908,
+   463.319
+  ],
+  [
+   463.669,
+   476.356
+  ],
+  [
+   476.706,
+   477.52
+  ],
+  [
+   477.87,
+   479.181
+  ],
+  [
+   481.981,
+   487.798
+  ],
+  [
+   488.148,
+   515.946
+  ],
+  [
+   516.296,
+   533.551
+  ],
+  [
+   533.901,
+   553.719
+  ],
+  [
+   554.069,
+   559.178
+  ],
+  [
+   559.528,
+   561.206
+  ],
+  [
+   561.556,
+   565.188
+  ],
+  [
+   567.488,
+   580.775
+  ],
+  [
+   581.125,
+   584.508
+  ],
+  [
+   584.858,
+   600.729
+  ],
+  [
+   601.079,
+   607.605
+  ],
+  [
+   607.955,
+   615.25
+  ],
+  [
+   617.25,
+   619.715
+  ],
+  [
+   623.515,
+   629.18
+  ],
+  [
+   629.53,
+   645.42
+  ],
+  [
+   645.77,
+   648.792
+  ],
+  [
+   649.142,
+   650.442
+  ],
+  [
+   650.792,
+   652.553
+  ],
+  [
+   652.903,
+   654.953
+  ],
+  [
+   655.753,
+   669.376
+  ],
+  [
+   669.726,
+   676.227
+  ],
+  [
+   676.577,
+   678.961
+  ],
+  [
+   679.311,
+   680.614
+  ],
+  [
+   682.614,
+   694.878
+  ],
+  [
+   695.228,
+   709.208
+  ],
+  [
+   709.558,
+   716.758
+  ],
+  [
+   717.108,
+   719.09
+  ],
+  [
+   719.44,
+   721.471
+  ],
+  [
+   721.821,
+   726.968
+  ]
+ ],
+ "placements": [
+  {
+   "id": "SC00a",
+   "source": "G1",
+   "chapter": "00",
+   "motif": "M1 THE PULSE (before it)",
+   "script": {
+    "start_s": 2.0,
+    "end_s": 15.0
+   },
+   "row_time": {
+    "start_s": 2.0,
+    "end_s": 19.333,
+    "start_row": {
+     "shot": "00-01",
+     "edl_s": 0.0,
+     "script_s": 0.0,
+     "picture": "checkin_hall scale"
+    },
+    "end_row": {
+     "shot": "00-06",
+     "edl_s": 19.333,
+     "script_s": 15.0,
+     "picture": "departure_gate seated_called"
+    }
+   },
+   "start_s": 2.0,
+   "end_s": 19.333,
+   "start_event": [
+    "row",
+    "00.01",
+    2.0
+   ],
+   "end_event": [
+    "row",
+    "00.04",
+    0.0
+   ],
+   "why": "both on their rows: after 2 s with no music; joins SC00b on the cut to seated_called (the tannoy).",
+   "level_under_voice_db": -24,
+   "level_in_gaps_db": -20,
+   "fade_in_s": 6.0,
+   "fade_out_s": 0.0,
+   "hard_out": false,
+   "entry": "fade in from nothing over 6 s",
+   "exit": "joins SC00b",
+   "join_next": "SC00b",
+   "span_s": 17.333
+  },
+  {
+   "id": "SC00b",
+   "source": "G1",
+   "chapter": "00",
+   "motif": "M1 THE PULSE",
+   "script": {
+    "start_s": 15.0,
+    "end_s": 33.0
+   },
+   "row_time": {
+    "start_s": 19.333,
+    "end_s": 32.667,
+    "start_row": {
+     "shot": "00-06",
+     "edl_s": 19.333,
+     "script_s": 15.0,
+     "picture": "departure_gate seated_called"
+    },
+    "end_row": {
+     "shot": "00-12",
+     "edl_s": 32.667,
+     "script_s": 33.0,
+     "picture": "inspection_room match (YES)"
+    }
+   },
+   "start_s": 19.333,
+   "end_s": 32.667,
+   "start_event": [
+    "row",
+    "00.04",
+    0.0
+   ],
+   "end_event": [
+    "row",
+    "00.07",
+    0.0
+   ],
+   "why": "the pulse enters on the cut to seated_called; hard stop on the frame where YES lands (the word \"yes\" is 32.30-32.56 on the scratch read, its tail to 32.79).",
+   "level_under_voice_db": -16,
+   "level_in_gaps_db": -12,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.012,
+   "hard_out": true,
+   "entry": "the pulse enters under the tannoy (0:15)",
+   "exit": "HARD STOP on \"Yes.\" (0:33)",
+   "span_s": 13.334
+  },
+  {
+   "id": "SC00c",
+   "source": "G1",
+   "chapter": "00",
+   "motif": "M1 THE PULSE, M4 THE DRONE joins at 0:56",
+   "script": {
+    "start_s": 44.0,
+    "end_s": 65.0
+   },
+   "row_time": {
+    "start_s": 42.167,
+    "end_s": 62.917,
+    "start_row": {
+     "shot": "00-16",
+     "edl_s": 41.167,
+     "script_s": 43.0,
+     "picture": "inspection_room handbags"
+    },
+    "end_row": {
+     "shot": "00-22",
+     "edl_s": 61.917,
+     "script_s": 64.0,
+     "picture": "inspection_room match -> void_stage bags"
+    }
+   },
+   "start_s": 42.155,
+   "end_s": 65.034,
+   "start_event": [
+    "voice",
+    "00.10",
+    0.0
+   ],
+   "end_event": [
+    "word",
+    "00.12 not. (end)",
+    0.0
+   ],
+   "why": "start at the end of the 1 s silence (the row gives 42.167, 12 ms off); CUT DEAD as \"were not.\" ends (the row gives 62.917, inside \"The luggage was hers\").",
+   "level_under_voice_db": -18,
+   "level_in_gaps_db": -12,
+   "fade_in_s": 2.0,
+   "fade_out_s": 0.012,
+   "hard_out": true,
+   "entry": "from near silence after the 1 s drop (0:44)",
+   "exit": "CUT DEAD at \"were not.\" (1:05)",
+   "span_s": 22.879
+  },
+  {
+   "id": "SC00d",
+   "source": "G2",
+   "chapter": "00",
+   "motif": "M1 into the title chord",
+   "script": {
+    "start_s": 86.5,
+    "end_s": 101.0
+   },
+   "row_time": {
+    "start_s": 81.542,
+    "end_s": 93.083,
+    "start_row": {
+     "shot": "00-27",
+     "edl_s": 76.042,
+     "script_s": 81.0,
+     "picture": "hearing_room wide -> witness"
+    },
+    "end_row": {
+     "shot": "00-30",
+     "edl_s": 89.083,
+     "script_s": 97.0,
+     "picture": "void_stage bags in the beam (TITLE)"
+    }
+   },
+   "start_s": 82.856,
+   "end_s": 93.083,
+   "start_event": [
+    "voice_end",
+    "00.sil3",
+    0.0
+   ],
+   "end_event": [
+    "row",
+    "00.17",
+    4.0
+   ],
+   "why": "from nothing at the end of the near silence after \"answer\" (the row gives 81.542, inside it); the peak on the first frame of the title (shot 00-30); 4 s decay.",
+   "level_under_voice_db": -14,
+   "level_in_gaps_db": 0,
+   "fade_in_s": 2.5,
+   "fade_out_s": 4.0,
+   "hard_out": false,
+   "entry": "from nothing after the near silence (1:26.5)",
+   "exit": "the peak lands on the TITLE (1:37), decays to silence over 4 s",
+   "peak_s": 89.083,
+   "span_s": 10.227
+  },
+  {
+   "id": "SC01",
+   "source": "G3",
+   "chapter": "01",
+   "motif": "M2 THE PRIZE",
+   "script": {
+    "start_s": 102.5,
+    "end_s": 183.5
+   },
+   "row_time": {
+    "start_s": 94.583,
+    "end_s": 176.292,
+    "start_row": {
+     "shot": "01-01",
+     "edl_s": 94.083,
+     "script_s": 102.0,
+     "picture": "chicago_night wide -> profile"
+    },
+    "end_row": {
+     "shot": "01-15",
+     "edl_s": 170.792,
+     "script_s": 178.0,
+     "picture": "departure_gate window"
+    }
+   },
+   "start_s": 94.583,
+   "end_s": 185.361,
+   "start_event": [
+    "row",
+    "01.01",
+    0.5
+   ],
+   "end_event": [
+    "voice",
+    "01.sil1",
+    0.0
+   ],
+   "why": "starts on its row (the Chicago wide); decays before the 1.5 s silence (the row gives 176.292: the edit added two shots after departure_gate window).",
+   "level_under_voice_db": -18,
+   "level_in_gaps_db": -14,
+   "fade_in_s": 3.0,
+   "fade_out_s": 2.5,
+   "hard_out": false,
+   "entry": "fades in under the Chicago wide over 3 s",
+   "exit": "decays before the 1.5 s silence (3:03.5)",
+   "span_s": 90.778
+  },
+  {
+   "id": "SC02",
+   "source": "G4",
+   "chapter": "02",
+   "motif": "M3 THE TICK, M2 answers",
+   "script": {
+    "start_s": 186.0,
+    "end_s": 237.0
+   },
+   "row_time": {
+    "start_s": 187.875,
+    "end_s": 226.75,
+    "start_row": {
+     "shot": "02-01",
+     "edl_s": 186.875,
+     "script_s": 185.0,
+     "picture": "aircraft_cabin window, over"
+    },
+    "end_row": {
+     "shot": "02-12",
+     "edl_s": 219.75,
+     "script_s": 230.0,
+     "picture": "route map: dashed line to Australia"
+    }
+   },
+   "start_s": 187.875,
+   "end_s": 229.81,
+   "start_event": [
+    "row",
+    "02.01",
+    1.0
+   ],
+   "end_event": [
+    "word",
+    "02.07 one (start)",
+    0.0
+   ],
+   "why": "starts on its row (the cabin); drops out on \"one more gift\" (the row gives 226.750, a line early: the chapter now ends on the gift, shot 02-14).",
+   "level_under_voice_db": -17,
+   "level_in_gaps_db": -13,
+   "fade_in_s": 4.0,
+   "fade_out_s": 0.4,
+   "hard_out": false,
+   "entry": "fades in under the cabin over 4 s",
+   "exit": "drops out on \"one more gift\" (3:57)",
+   "span_s": 41.935
+  },
+  {
+   "id": "SC03",
+   "source": "G5",
+   "chapter": "03",
+   "motif": "M2 turns minor, M3 darkens",
+   "script": {
+    "start_s": 241.0,
+    "end_s": 278.5
+   },
+   "row_time": {
+    "start_s": 233.208,
+    "end_s": 266.5,
+    "start_row": {
+     "shot": "03-01",
+     "edl_s": 232.208,
+     "script_s": 240.0,
+     "picture": "hotel_room accept"
+    },
+    "end_row": {
+     "shot": "03-11",
+     "edl_s": 266.0,
+     "script_s": 278.0,
+     "picture": "checkin_hall scale (matched)"
+    }
+   },
+   "start_s": 233.208,
+   "end_s": 266.0,
+   "start_event": [
+    "row",
+    "03.01",
+    1.0
+   ],
+   "end_event": [
+    "row",
+    "03.05",
+    0.0
+   ],
+   "why": "starts on its row (the hotel room); out on the cut to the matched scale, so the scale plays without music as at 0:00 and the drop comes before \"Overweight.\" (the row + 0.5 s lands in \"already know\").",
+   "level_under_voice_db": -19,
+   "level_in_gaps_db": -15,
+   "fade_in_s": 4.0,
+   "fade_out_s": 1.0,
+   "hard_out": false,
+   "entry": "fades in under the hotel room over 4 s",
+   "exit": "out at 4:38.5 for the drop before \"Overweight.\"",
+   "span_s": 32.792
+  },
+  {
+   "id": "SC03b",
+   "source": "G1",
+   "chapter": "03",
+   "motif": "M1 THE PULSE returns",
+   "script": {
+    "start_s": 286.0,
+    "end_s": 331.0
+   },
+   "row_time": {
+    "start_s": 286.625,
+    "end_s": 311.833,
+    "start_row": {
+     "shot": "03-16",
+     "edl_s": 286.625,
+     "script_s": 286.0,
+     "picture": "baggage_belt curtain, belt"
+    },
+    "end_row": {
+     "shot": "04-08",
+     "edl_s": 307.833,
+     "script_s": 327.0,
+     "picture": "inspection_room handbags (officer's hand)"
+    }
+   },
+   "start_s": 286.625,
+   "end_s": 310.48,
+   "start_event": [
+    "row",
+    "03.06",
+    0.0
+   ],
+   "end_event": [
+    "word",
+    "04.07 linings. (end)",
+    0.0
+   ],
+   "why": "the pulse returns on the baggage belt (its row); HARD STOP as \"...inside the linings.\" ends (the row gives 311.833, after the silence).",
+   "level_under_voice_db": -18,
+   "level_in_gaps_db": -14,
+   "fade_in_s": 2.0,
+   "fade_out_s": 0.012,
+   "hard_out": true,
+   "entry": "fades in fast (2 s) under the baggage belt",
+   "exit": "stop-downs before each \"Yes\"; HARD STOP at the discovery (5:31)",
+   "stop_downs": [
+    {
+     "from_s": 299.66,
+     "to_s": 300.795
+    },
+    {
+     "from_s": 302.22,
+     "to_s": 303.355
+    }
+   ],
+   "span_s": 23.855
+  },
+  {
+   "id": "SC04b",
+   "source": "G8",
+   "chapter": "04",
+   "motif": "M5 THE HELD NOTE (low D, E-flat above)",
+   "script": {
+    "start_s": 346.0,
+    "end_s": 378.0
+   },
+   "row_time": {
+    "start_s": 322.458,
+    "end_s": 359.042,
+    "start_row": {
+     "shot": "04-11",
+     "edl_s": 321.458,
+     "script_s": 345.0,
+     "picture": "inspection_room empty"
+    },
+    "end_row": {
+     "shot": "04-19",
+     "edl_s": 349.042,
+     "script_s": 368.0,
+     "picture": "detention_corridor corridor (2014)"
+    }
+   },
+   "start_s": 322.458,
+   "end_s": 356.174,
+   "start_event": [
+    "row",
+    "04.06",
+    1.0
+   ],
+   "end_event": [
+    "voice_end",
+    "04.12",
+    0.0
+   ],
+   "why": "starts on its row, under \"The same bags.\"; ends with \"The case was only beginning.\" before the 1.5 s silence (the row gives 359.042, in chapter 5).",
+   "level_under_voice_db": -24,
+   "level_in_gaps_db": -20,
+   "fade_in_s": 3.0,
+   "fade_out_s": 1.5,
+   "hard_out": false,
+   "entry": "very quiet, under \"The same room. The same bags.\" (5:46)",
+   "exit": "ends at \"The case was only beginning\" (6:18)",
+   "span_s": 33.716
+  },
+  {
+   "id": "SC06",
+   "source": "G8",
+   "chapter": "06",
+   "motif": "M5 THE HELD NOTE",
+   "script": {
+    "start_s": 455.0,
+    "end_s": 513.5
+   },
+   "row_time": {
+    "start_s": 429.917,
+    "end_s": 477.208,
+    "start_row": {
+     "shot": "06-02",
+     "edl_s": 424.917,
+     "script_s": 450.0,
+     "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)"
+    },
+    "end_row": {
+     "shot": "06-14",
+     "edl_s": 476.708,
+     "script_s": 513.0,
+     "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")"
+    }
+   },
+   "start_s": 429.917,
+   "end_s": 476.356,
+   "start_event": [
+    "row",
+    "06.02",
+    5.0
+   ],
+   "end_event": [
+    "voice",
+    "06.07",
+    -0.35
+   ],
+   "why": "enters as the impact (5.0 s, from 424.917) rings out; one held A by the divide; out in the breath before \"Deceived.\" (the row gives 477.208, on the word).",
+   "level_under_voice_db": -20,
+   "level_in_gaps_db": -16,
+   "fade_in_s": 3.0,
+   "fade_out_s": 2.5,
+   "hard_out": false,
+   "entry": "enters after the impact rings out (7:35)",
+   "exit": "thins to one held A at the divide (8:15), out before \"Deceived.\" (8:33.5)",
+   "thin_by_s": 470.25,
+   "span_s": 46.439
+  },
+  {
+   "id": "SC07",
+   "source": "G9",
+   "chapter": "07",
+   "motif": "M2 fragments, M1 at half speed",
+   "script": {
+    "start_s": 527.0,
+    "end_s": 607.5
+   },
+   "row_time": {
+    "start_s": 483.167,
+    "end_s": 545.417,
+    "start_row": {
+     "shot": "07-01",
+     "edl_s": 481.167,
+     "script_s": 525.0,
+     "picture": "prison_exterior wall, gate"
+    },
+    "end_row": {
+     "shot": "07-10",
+     "edl_s": 533.917,
+     "script_s": 596.0,
+     "picture": "tim_desk bill page (MAY 2025)"
+    }
+   },
+   "start_s": 483.167,
+   "end_s": 565.188,
+   "start_event": [
+    "row",
+    "07.01",
+    2.0
+   ],
+   "end_event": [
+    "voice",
+    "07.sil1",
+    0.0
+   ],
+   "why": "starts on its row (the rain); ends before the 1.5 s silence (the row gives 545.417, twenty seconds early).",
+   "level_under_voice_db": -22,
+   "level_in_gaps_db": -18,
+   "fade_in_s": 5.0,
+   "fade_out_s": 2.0,
+   "hard_out": false,
+   "entry": "fades in under the rain over 5 s",
+   "exit": "ends before the 1.5 s silence (10:07.5)",
+   "span_s": 82.021
+  },
+  {
+   "id": "SC08",
+   "source": "G10",
+   "chapter": "08",
+   "motif": "M2 once, slowly",
+   "script": {
+    "start_s": 611.0,
+    "end_s": 640.5
+   },
+   "row_time": {
+    "start_s": 567.708,
+    "end_s": 577.958,
+    "start_row": {
+     "shot": "08-01",
+     "edl_s": 566.708,
+     "script_s": 610.0,
+     "picture": "home dining, cold, Gene alone"
+    },
+    "end_row": {
+     "shot": "08-02",
+     "edl_s": 575.458,
+     "script_s": 638.0,
+     "picture": "home blinds (JANUARY 25, 2026)"
+    }
+   },
+   "start_s": 567.708,
+   "end_s": 607.605,
+   "start_event": [
+    "row",
+    "08.01",
+    1.0
+   ],
+   "end_event": [
+    "voice",
+    "08.05",
+    -0.35
+   ],
+   "why": "starts on its row (the cold dining room); its last note rings out by the end of \"...lost ten years.\", before \"On January 25th\" (the row gives 577.958: the date moved from the blinds to the chair).",
+   "level_under_voice_db": -22,
+   "level_in_gaps_db": -18,
+   "fade_in_s": 4.0,
+   "fade_out_s": 1.5,
+   "hard_out": false,
+   "entry": "fades in under the cold dining room over 4 s",
+   "exit": "its last note rings out before \"On January 25th\" (10:40.5)",
+   "span_s": 39.897
+  },
+  {
+   "id": "SC09a",
+   "source": "G11",
+   "chapter": "09",
+   "motif": "M2 fragments",
+   "script": {
+    "start_s": 672.0,
+    "end_s": 698.5
+   },
+   "row_time": {
+    "start_s": 624.708,
+    "end_s": 646.25,
+    "start_row": {
+     "shot": "09-01",
+     "edl_s": 622.708,
+     "script_s": 670.0,
+     "picture": "prison_exterior gate (JULY 2026)"
+    },
+    "end_row": {
+     "shot": "09-04",
+     "edl_s": 645.75,
+     "script_s": 698.0,
+     "picture": "visiting_room glass, locked, long hold"
+    }
+   },
+   "start_s": 624.708,
+   "end_s": 645.75,
+   "start_event": [
+    "row",
+    "09.01",
+    2.0
+   ],
+   "end_event": [
+    "row",
+    "09.03",
+    0.0
+   ],
+   "why": "starts on its row (the gate); HARD OUT on the cut to the glass hold (the row + 0.5 s would cut inside \"But there was\").",
+   "level_under_voice_db": -23,
+   "level_in_gaps_db": -19,
+   "fade_in_s": 4.0,
+   "fade_out_s": 0.012,
+   "hard_out": true,
+   "entry": "fades in under the gate in the rain over 4 s",
+   "exit": "HARD OUT at 11:38.5: silence under \"When would she be released?\"",
+   "span_s": 21.042
+  },
+  {
+   "id": "SC09b",
+   "source": "G11",
+   "chapter": "09",
+   "motif": "M2 fragments",
+   "script": {
+    "start_s": 711.0,
+    "end_s": 729.0
+   },
+   "row_time": {
+    "start_s": 655.917,
+    "end_s": 670.708,
+    "start_row": {
+     "shot": "09-05",
+     "edl_s": 652.917,
+     "script_s": 708.0,
+     "picture": "visiting_room empty"
+    },
+    "end_row": {
+     "shot": "09-09",
+     "edl_s": 669.708,
+     "script_s": 728.0,
+     "picture": "hearing_room wide (matched)"
+    }
+   },
+   "start_s": 654.953,
+   "end_s": 676.583,
+   "start_event": [
+    "voice",
+    "09.beat1",
+    0.0
+   ],
+   "end_event": [
+    "shot",
+    "09-10",
+    0.0
+   ],
+   "why": "enters in the beat after \"Tim could not give her a date.\", under the end of the empty room (the row gives 655.917, after that shot); out on the cut to void_stage dawn, whose sound is silence, before \"It was never really his question. It was hers.\" (the row gives 670.708, under \"Remember the question\").",
+   "level_under_voice_db": -23,
+   "level_in_gaps_db": -19,
+   "fade_in_s": 3.0,
+   "fade_out_s": 0.6,
+   "hard_out": false,
+   "entry": "fades in under the empty visiting room over 3 s",
+   "exit": "out before \"It was hers.\" (12:09)",
+   "span_s": 21.63
+  },
+  {
+   "id": "SC09c",
+   "source": "G3",
+   "chapter": "09",
+   "motif": "M2 its first note alone, over M4",
+   "script": {
+    "start_s": 763.0,
+    "end_s": 773.0
+   },
+   "row_time": {
+    "start_s": 723.792,
+    "end_s": 722.125,
+    "start_row": {
+     "shot": "09-17",
+     "edl_s": 712.792,
+     "script_s": 752.0,
+     "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)"
+    },
+    "end_row": {
+     "shot": "09-18",
+     "edl_s": 717.125,
+     "script_s": 768.0,
+     "picture": "void_stage bags held (end screen)"
+    }
+   },
+   "start_s": 718.792,
+   "end_s": 726.968,
+   "start_event": [
+    "shot",
+    "09-18",
+    1.667
+   ],
+   "end_event": [
+    "voice",
+    "09.sil2",
+    0.0
+   ],
+   "why": "the A sounds as WHEN? has risen out of YES (shot 09-18: YES holds 0.9 s, the five letters rise over the next 0.77 s), after \"asking.\" (the row gives 723.792, under \"linked below\"); rings out and is gone before the last 2 s of silence.",
+   "level_under_voice_db": -20,
+   "level_in_gaps_db": -16,
+   "fade_in_s": 0.005,
+   "fade_out_s": 3.0,
+   "hard_out": false,
+   "entry": "one warm piano note A (the prize motif's first note) over THE DRONE as YES becomes WHEN? (12:43)",
+   "exit": "rings out under the end card; gone before the last 2 s of silence (12:53)",
+   "span_s": 8.176
+  }
+ ],
+ "unscored": [
+  [
+   0.0,
+   2.0
+  ],
+  [
+   32.667,
+   42.155
+  ],
+  [
+   65.034,
+   82.856
+  ],
+  [
+   93.083,
+   94.583
+  ],
+  [
+   185.361,
+   187.875
+  ],
+  [
+   229.81,
+   233.208
+  ],
+  [
+   266.0,
+   286.625
+  ],
+  [
+   310.48,
+   322.458
+  ],
+  [
+   356.174,
+   429.917
+  ],
+  [
+   476.356,
+   483.167
+  ],
+  [
+   565.188,
+   567.708
+  ],
+  [
+   607.605,
+   624.708
+  ],
+  [
+   645.75,
+   654.953
+  ],
+  [
+   676.583,
+   718.792
+  ],
+  [
+   726.968,
+   728.958
+  ]
+ ],
+ "scored_s": 506.05
+}

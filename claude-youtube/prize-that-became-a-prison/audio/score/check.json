@@ -1,0 +1,3571 @@
+{
+ "G10_t1": {
+  "file": "audio/gen/score/G10_t1.mp3",
+  "duration_s": 60.81,
+  "tune_cents": 0.0,
+  "tune_cents_peaks": -0.7,
+  "tune_spread_cents": 10.6,
+  "lufs": -11.3,
+  "short_term_max_lufs": -7.6,
+  "true_peak_dbtp": -0.1,
+  "lra_lu": 9.8,
+  "key": [
+   {
+    "key": "C major",
+    "r": 0.855
+   },
+   {
+    "key": "E minor",
+    "r": 0.795
+   },
+   {
+    "key": "G major",
+    "r": 0.761
+   }
+  ],
+  "tempo_earshot": 152.0,
+  "f0_hz": 87.8,
+  "pulse_bpm": null,
+  "onsets": [
+   0.464,
+   0.569,
+   2.844,
+   3.611,
+   4.04,
+   4.4,
+   4.841,
+   5.201,
+   5.979,
+   6.769,
+   7.152,
+   7.558,
+   7.964,
+   8.429,
+   10.031,
+   10.414,
+   10.809,
+   11.192,
+   11.587,
+   12.399,
+   13.247,
+   13.607,
+   13.967,
+   14.42,
+   14.872,
+   15.662,
+   16.033,
+   16.451,
+   17.589,
+   17.995,
+   18.355,
+   18.762,
+   19.203,
+   19.551,
+   19.621,
+   19.981,
+   20.387,
+   21.223,
+   22.036,
+   22.43,
+   22.709,
+   22.837,
+   23.22,
+   23.591,
+   23.963,
+   24.787,
+   25.228,
+   25.6,
+   26.018,
+   26.413,
+   26.842,
+   27.26,
+   27.748,
+   30.023,
+   30.871,
+   31.184,
+   31.626,
+   32.032,
+   32.403,
+   34.029,
+   34.435,
+   34.842,
+   35.248,
+   36.049,
+   36.397,
+   36.815,
+   37.222,
+   39.695,
+   40.066,
+   41.227,
+   41.575,
+   43.607,
+   44.431,
+   45.987,
+   46.417,
+   46.858,
+   47.218,
+   48.39,
+   49.226,
+   50.411,
+   51.328,
+   51.862,
+   51.966,
+   52.233,
+   52.582,
+   52.953,
+   53.383,
+   54.207,
+   54.602,
+   55.716,
+   55.902,
+   56.053
+  ],
+  "peak_at": 38.104,
+  "top_tags": [
+   [
+    "a sustained glass harp tone",
+    1.99,
+    "no match"
+   ],
+   [
+    "a music box melody",
+    1.77,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.64,
+    "no match"
+   ],
+   [
+    "a pen click",
+    1.29,
+    "no match"
+   ],
+   [
+    "church bells",
+    1.18,
+    "no match"
+   ],
+   [
+    "scissors cutting",
+    1.15,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "sad and melancholic music",
+    3.94
+   ],
+   [
+    "solo piano music",
+    3.51
+   ],
+   [
+    "romantic music",
+    3.15
+   ],
+   [
+    "playful children's piano music",
+    3.14
+   ],
+   [
+    "jazz music",
+    2.91
+   ],
+   [
+    "pizzicato strings",
+    2.74
+   ],
+   [
+    "warm and cozy music",
+    2.7
+   ],
+   [
+    "dreamy and ethereal music",
+    2.7
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.814
+   ],
+   [
+    "Cello",
+    0.65
+   ],
+   [
+    "Double bass",
+    0.503
+   ],
+   [
+    "Bowed string instrument",
+    0.482
+   ],
+   [
+    "Piano",
+    0.384
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.834
+     ],
+     [
+      "Piano",
+      0.437
+     ],
+     [
+      "Electric piano",
+      0.382
+     ],
+     [
+      "Keyboard (musical)",
+      0.316
+     ],
+     [
+      "Musical instrument",
+      0.216
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "solo piano music",
+      4.4
+     ],
+     [
+      "playful children's piano music",
+      4.05
+     ],
+     [
+      "sad and melancholic music",
+      4.01
+     ],
+     [
+      "jazz music",
+      3.54
+     ]
+    ],
+    "lufs": -14.0
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.715
+     ],
+     [
+      "Cello",
+      0.646
+     ],
+     [
+      "Bowed string instrument",
+      0.471
+     ],
+     [
+      "Double bass",
+      0.388
+     ],
+     [
+      "Musical instrument",
+      0.336
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.7
+     ],
+     [
+      "classical string quartet",
+      2.91
+     ],
+     [
+      "romantic music",
+      2.81
+     ],
+     [
+      "solo piano music",
+      2.78
+     ]
+    ],
+    "lufs": -11.0
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.833
+     ],
+     [
+      "Cello",
+      0.494
+     ],
+     [
+      "Double bass",
+      0.429
+     ],
+     [
+      "Piano",
+      0.329
+     ],
+     [
+      "Musical instrument",
+      0.282
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.44
+     ],
+     [
+      "solo piano music",
+      3.01
+     ],
+     [
+      "romantic music",
+      2.9
+     ],
+     [
+      "strings ensemble",
+      2.87
+     ]
+    ],
+    "lufs": -9.9
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "a tender, quiet solo piano with a soft cello",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 3.47,
+   "p_vs_alts": 0.668,
+   "summary": "G10_t1.mp3: 'a tender, quiet solo piano with a soft cello' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a tender, quiet solo piano with a soft cello' 67%, 'bright, happy, upbeat music' 1%, 'an epic orchestral trailer' 0%, 'dark and tense music' 32%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'sad and melancholic music' (z +3.9), 'solo piano music' (z +3.5), 'romantic music' (z +3.1), 'playful children's piano music' (z +3.1)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G11_t1": {
+  "file": "audio/gen/score/G11_t1.mp3",
+  "duration_s": 61.57,
+  "tune_cents": 1.5,
+  "tune_cents_peaks": -0.6,
+  "tune_spread_cents": 10.4,
+  "lufs": -11.7,
+  "short_term_max_lufs": -9.3,
+  "true_peak_dbtp": -0.1,
+  "lra_lu": 5.3,
+  "key": [
+   {
+    "key": "A minor",
+    "r": 0.736
+   },
+   {
+    "key": "E minor",
+    "r": 0.71
+   },
+   {
+    "key": "C major",
+    "r": 0.575
+   }
+  ],
+  "tempo_earshot": 120.2,
+  "f0_hz": 86.6,
+  "pulse_bpm": null,
+  "onsets": [
+   0.209,
+   4.667,
+   6.118,
+   6.455,
+   7.628,
+   12.063,
+   12.121,
+   15.023,
+   16.509,
+   18.007,
+   19.482,
+   23.928,
+   26.865,
+   29.849,
+   35.782,
+   38.731,
+   40.229,
+   41.68,
+   47.636,
+   50.434,
+   50.596,
+   52.059,
+   53.348,
+   53.557,
+   55.182,
+   56.796,
+   56.993
+  ],
+  "peak_at": 12.115,
+  "top_tags": [
+   [
+    "church bells",
+    1.66,
+    "no match"
+   ],
+   [
+    "a singing bowl",
+    1.42,
+    "no match"
+   ],
+   [
+    "a music box melody",
+    1.3,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.26,
+    "no match"
+   ],
+   [
+    "a sustained glass harp tone",
+    1.15,
+    "no match"
+   ],
+   [
+    "footsteps on wood",
+    1.13,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "sad and melancholic music",
+    4.01
+   ],
+   [
+    "dark and tense music",
+    3.15
+   ],
+   [
+    "dreamy and ethereal music",
+    2.98
+   ],
+   [
+    "romantic music",
+    2.87
+   ],
+   [
+    "mysterious music",
+    2.74
+   ],
+   [
+    "solo piano music",
+    2.6
+   ],
+   [
+    "ambient synth pad music",
+    2.59
+   ],
+   [
+    "a grand piano",
+    2.57
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.922
+   ],
+   [
+    "Sad music",
+    0.56
+   ],
+   [
+    "Harp",
+    0.342
+   ],
+   [
+    "Musical instrument",
+    0.329
+   ],
+   [
+    "New-age music",
+    0.244
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.872
+     ],
+     [
+      "Sad music",
+      0.342
+     ],
+     [
+      "New-age music",
+      0.146
+     ],
+     [
+      "Background music",
+      0.11
+     ],
+     [
+      "Musical instrument",
+      0.083
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      4.03
+     ],
+     [
+      "dreamy and ethereal music",
+      3.13
+     ],
+     [
+      "dark and tense music",
+      3.13
+     ],
+     [
+      "romantic music",
+      2.79
+     ]
+    ],
+    "lufs": -11.2
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.925
+     ],
+     [
+      "Sad music",
+      0.536
+     ],
+     [
+      "New-age music",
+      0.227
+     ],
+     [
+      "Background music",
+      0.199
+     ],
+     [
+      "Tender music",
+      0.06
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.92
+     ],
+     [
+      "dreamy and ethereal music",
+      3.49
+     ],
+     [
+      "dark and tense music",
+      3.33
+     ],
+     [
+      "ambient synth pad music",
+      3.21
+     ]
+    ],
+    "lufs": -12.2
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.846
+     ],
+     [
+      "Sad music",
+      0.285
+     ],
+     [
+      "Musical instrument",
+      0.275
+     ],
+     [
+      "Harp",
+      0.232
+     ],
+     [
+      "Piano",
+      0.11
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.51
+     ],
+     [
+      "solo piano music",
+      2.81
+     ],
+     [
+      "dark and tense music",
+      2.67
+     ],
+     [
+      "romantic music",
+      2.6
+     ]
+    ],
+    "lufs": -11.9
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "a very spare, slow, sad solo piano, very quiet",
+  "mood_match": {
+   "verdict": "plausible",
+   "z": 2.84,
+   "p_vs_alts": 0.54,
+   "summary": "G11_t1.mp3: 'a very spare, slow, sad solo piano, very quiet' -> plausible (unvalidated: music / instrument / voice description) (z +2.8; would rank #5 among 322 vocabulary descriptions; cosine 0.28). Forced choice vs your alternatives: 'a very spare, slow, sad solo piano, very quiet' 54%, 'bright, happy, upbeat music' <1%, 'an epic orchestral trailer' 7%, 'tense action music' 38%, 'a pop song with vocals' 1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'sad and melancholic music' (z +4.0), 'dark and tense music' (z +3.1), 'dreamy and ethereal music' (z +2.9), 'romantic music' (z +2.8)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G1_t1": {
+  "file": "audio/gen/score/G1_t1.mp3",
+  "duration_s": 78.55,
+  "tune_cents": 3.5,
+  "tune_cents_peaks": -0.7,
+  "tune_spread_cents": 15.5,
+  "lufs": -11.8,
+  "short_term_max_lufs": -9.5,
+  "true_peak_dbtp": -0.2,
+  "lra_lu": 7.7,
+  "key": [
+   {
+    "key": "C# minor",
+    "r": 0.928
+   },
+   {
+    "key": "C# major",
+    "r": 0.665
+   },
+   {
+    "key": "E major",
+    "r": 0.549
+   }
+  ],
+  "tempo_earshot": 147.7,
+  "f0_hz": 72.2,
+  "pulse_bpm": 74.9,
+  "onsets": [
+   0.046,
+   6.397,
+   12.841,
+   13.642,
+   14.454,
+   15.244,
+   15.662,
+   16.01,
+   16.858,
+   17.647,
+   18.437,
+   18.855,
+   19.238,
+   20.05,
+   20.863,
+   21.618,
+   22.047,
+   22.465,
+   23.232,
+   24.056,
+   24.857,
+   25.252,
+   25.646,
+   26.436,
+   27.214,
+   28.05,
+   28.456,
+   28.851,
+   29.629,
+   30.465,
+   31.184,
+   31.66,
+   32.044,
+   32.856,
+   33.657,
+   34.4,
+   34.807,
+   35.248,
+   36.037,
+   36.827,
+   37.651,
+   38.058,
+   38.452,
+   39.253,
+   40.008,
+   40.844,
+   41.239,
+   41.645,
+   42.458,
+   43.247,
+   43.979,
+   44.466,
+   44.849,
+   45.662,
+   46.463,
+   47.253,
+   47.613,
+   48.03,
+   48.657,
+   48.832,
+   49.656,
+   50.457,
+   50.817,
+   51.235,
+   52.036,
+   52.849,
+   53.673,
+   55.24,
+   60.035,
+   60.442,
+   60.894,
+   61.649,
+   62.462,
+   63.228,
+   64.041,
+   64.853,
+   65.631,
+   66.862,
+   68.023,
+   68.859,
+   70.043,
+   70.438,
+   71.262,
+   72.063,
+   74.443,
+   75.256
+  ],
+  "peak_at": 25.763,
+  "top_tags": [
+   [
+    "a sustained glass harp tone",
+    1.58,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.43,
+    "no match"
+   ],
+   [
+    "a big braam",
+    1.39,
+    "no match"
+   ],
+   [
+    "a big drum hit",
+    1.19,
+    "no match"
+   ],
+   [
+    "a cinematic hit with a long tail",
+    1.11,
+    "no match"
+   ],
+   [
+    "an airplane flying overhead",
+    1.09,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "classical string quartet",
+    3.09
+   ],
+   [
+    "dark and tense music",
+    3.03
+   ],
+   [
+    "strings ensemble",
+    2.97
+   ],
+   [
+    "sad and melancholic music",
+    2.76
+   ],
+   [
+    "jazz music",
+    2.75
+   ],
+   [
+    "pizzicato strings",
+    2.65
+   ],
+   [
+    "cinematic orchestral music",
+    2.63
+   ],
+   [
+    "drum and bass music",
+    2.62
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.866
+   ],
+   [
+    "Double bass",
+    0.829
+   ],
+   [
+    "Cello",
+    0.772
+   ],
+   [
+    "Bowed string instrument",
+    0.462
+   ],
+   [
+    "Pizzicato",
+    0.237
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Double bass",
+      0.802
+     ],
+     [
+      "Cello",
+      0.715
+     ],
+     [
+      "Music",
+      0.674
+     ],
+     [
+      "Bowed string instrument",
+      0.379
+     ],
+     [
+      "Pizzicato",
+      0.202
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "jazz music",
+      2.85
+     ],
+     [
+      "dark and tense music",
+      2.7
+     ],
+     [
+      "a bass guitar",
+      2.65
+     ],
+     [
+      "drum and bass music",
+      2.64
+     ]
+    ],
+    "lufs": -14.5
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Double bass",
+      0.802
+     ],
+     [
+      "Cello",
+      0.783
+     ],
+     [
+      "Music",
+      0.563
+     ],
+     [
+      "Bowed string instrument",
+      0.497
+     ],
+     [
+      "Pizzicato",
+      0.104
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "classical string quartet",
+      3.16
+     ],
+     [
+      "drum and bass music",
+      2.95
+     ],
+     [
+      "jazz music",
+      2.88
+     ],
+     [
+      "pizzicato strings",
+      2.8
+     ]
+    ],
+    "lufs": -12.1
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.841
+     ],
+     [
+      "Double bass",
+      0.724
+     ],
+     [
+      "Cello",
+      0.715
+     ],
+     [
+      "Bowed string instrument",
+      0.476
+     ],
+     [
+      "Sad music",
+      0.121
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "classical string quartet",
+      3.45
+     ],
+     [
+      "strings ensemble",
+      3.07
+     ],
+     [
+      "dark and tense music",
+      2.91
+     ],
+     [
+      "sad and melancholic music",
+      2.89
+     ]
+    ],
+    "lufs": -11.3
+   },
+   {
+    "start": 60.0,
+    "end": 78.5,
+    "audioset": [
+     [
+      "Music",
+      0.911
+     ],
+     [
+      "Sad music",
+      0.26
+     ],
+     [
+      "Background music",
+      0.153
+     ],
+     [
+      "Theme music",
+      0.105
+     ],
+     [
+      "Cello",
+      0.089
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "strings ensemble",
+      3.26
+     ],
+     [
+      "sad and melancholic music",
+      3.12
+     ],
+     [
+      "dreamy and ethereal music",
+      3.01
+     ],
+     [
+      "dark and tense music",
+      2.97
+     ]
+    ],
+    "lufs": -11.1
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "dark, tense, low pulsing film underscore with strings",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 3.08,
+   "p_vs_alts": 0.279,
+   "summary": "G1_t1.mp3: 'dark, tense, low pulsing film underscore with strings' -> strong (unvalidated: music / instrument / voice description) (z +3.0; would rank #2 among 322 vocabulary descriptions; cosine 0.28). Forced choice vs your alternatives: 'dark, tense, low pulsing film underscore with strings' 28%, 'bright, happy, upbeat music' <1%, 'warm, tender, romantic music' 65%, 'an epic orchestral trailer' 5%, 'a pop song with vocals' 1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'classical string quartet' (z +3.0), 'dark and tense music' (z +3.0), 'strings ensemble' (z +2.9), 'sad and melancholic music' (z +2.7)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G2_t1": {
+  "file": "audio/gen/score/G2_t1.mp3",
+  "duration_s": 62.64,
+  "tune_cents": 0.0,
+  "tune_cents_peaks": -2.7,
+  "tune_spread_cents": 14.9,
+  "lufs": -11.5,
+  "short_term_max_lufs": -8.5,
+  "true_peak_dbtp": 0.0,
+  "lra_lu": 6.2,
+  "key": [
+   {
+    "key": "C major",
+    "r": 0.896
+   },
+   {
+    "key": "C minor",
+    "r": 0.632
+   },
+   {
+    "key": "E minor",
+    "r": 0.467
+   }
+  ],
+  "tempo_earshot": 147.7,
+  "f0_hz": 87.0,
+  "pulse_bpm": 74.9,
+  "onsets": [
+   0.046,
+   0.871,
+   1.672,
+   2.45,
+   3.251,
+   4.029,
+   4.865,
+   5.666,
+   6.455,
+   8.069,
+   8.87,
+   9.625,
+   10.461,
+   11.262,
+   12.074,
+   12.829,
+   13.665,
+   14.431,
+   15.256,
+   15.662,
+   16.068,
+   16.846,
+   17.659,
+   18.065,
+   18.471,
+   19.261,
+   20.05,
+   20.468,
+   21.258,
+   21.664,
+   22.071,
+   22.465,
+   22.872,
+   23.22,
+   23.65,
+   24.067,
+   24.857,
+   25.263,
+   25.646,
+   31.254,
+   32.067,
+   36.037,
+   38.452
+  ],
+  "peak_at": 42.607,
+  "top_tags": [
+   [
+    "a cinematic hit with a long tail",
+    1.75,
+    "no match"
+   ],
+   [
+    "a rising riser building tension",
+    1.54,
+    "no match"
+   ],
+   [
+    "a big braam",
+    1.19,
+    "no match"
+   ],
+   [
+    "scissors cutting",
+    1.13,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.11,
+    "no match"
+   ],
+   [
+    "church bells",
+    1.07,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "dark and tense music",
+    3.32
+   ],
+   [
+    "strings ensemble",
+    2.94
+   ],
+   [
+    "cinematic orchestral music",
+    2.92
+   ],
+   [
+    "uplifting orchestral film score",
+    2.86
+   ],
+   [
+    "triumphant and heroic music",
+    2.74
+   ],
+   [
+    "sad and melancholic music",
+    2.69
+   ],
+   [
+    "orchestral percussion",
+    2.68
+   ],
+   [
+    "epic trailer music",
+    2.62
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.826
+   ],
+   [
+    "Gong",
+    0.577
+   ],
+   [
+    "Scary music",
+    0.506
+   ],
+   [
+    "Double bass",
+    0.396
+   ],
+   [
+    "Cello",
+    0.386
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.806
+     ],
+     [
+      "Scary music",
+      0.497
+     ],
+     [
+      "Double bass",
+      0.257
+     ],
+     [
+      "Cello",
+      0.219
+     ],
+     [
+      "Ambient music",
+      0.146
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "dark and tense music",
+      3.37
+     ],
+     [
+      "strings ensemble",
+      2.7
+     ],
+     [
+      "cinematic orchestral music",
+      2.64
+     ],
+     [
+      "sad and melancholic music",
+      2.64
+     ]
+    ],
+    "lufs": -13.3
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.85
+     ],
+     [
+      "Theme music",
+      0.299
+     ],
+     [
+      "Background music",
+      0.273
+     ],
+     [
+      "Sad music",
+      0.133
+     ],
+     [
+      "Wedding music",
+      0.084
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "uplifting orchestral film score",
+      3.34
+     ],
+     [
+      "strings ensemble",
+      3.3
+     ],
+     [
+      "cinematic orchestral music",
+      3.3
+     ],
+     [
+      "dark and tense music",
+      3.19
+     ]
+    ],
+    "lufs": -11.5
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.768
+     ],
+     [
+      "Theme music",
+      0.345
+     ],
+     [
+      "Background music",
+      0.204
+     ],
+     [
+      "Organ",
+      0.135
+     ],
+     [
+      "Keyboard (musical)",
+      0.105
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "uplifting orchestral film score",
+      3.19
+     ],
+     [
+      "triumphant and heroic music",
+      3.13
+     ],
+     [
+      "strings ensemble",
+      3.02
+     ],
+     [
+      "dark and tense music",
+      2.98
+     ]
+    ],
+    "lufs": -9.6
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "a dark orchestral crescendo with low brass and strings rising to a climax",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 3.1,
+   "p_vs_alts": 0.429,
+   "summary": "G2_t1.mp3: 'a dark orchestral crescendo with low brass and strings rising to a climax' -> strong (unvalidated: music / instrument / voice description) (z +3.1; would rank #2 among 322 vocabulary descriptions; cosine 0.33). Forced choice vs your alternatives: 'a dark orchestral crescendo with low brass and strings rising to a climax' 43%, 'bright, happy, upbeat music' 1%, 'calm, quiet ambient music' <1%, 'warm, tender, romantic music' 56%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'dark and tense music' (z +3.3), 'strings ensemble' (z +2.9), 'cinematic orchestral music' (z +2.9), 'uplifting orchestral film score' (z +2.8)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G3_t1": {
+  "file": "audio/gen/score/G3_t1.mp3",
+  "duration_s": 77.14,
+  "tune_cents": 0.5,
+  "tune_cents_peaks": -0.8,
+  "tune_spread_cents": 11.3,
+  "lufs": -11.2,
+  "short_term_max_lufs": -8.9,
+  "true_peak_dbtp": -0.1,
+  "lra_lu": 7.5,
+  "key": [
+   {
+    "key": "D major",
+    "r": 0.906
+   },
+   {
+    "key": "A major",
+    "r": 0.846
+   },
+   {
+    "key": "F# minor",
+    "r": 0.65
+   }
+  ],
+  "tempo_earshot": 132.5,
+  "f0_hz": 82.8,
+  "pulse_bpm": null,
+  "onsets": [
+   0.07,
+   3.239,
+   3.704,
+   5.526,
+   7.338,
+   10.519,
+   10.983,
+   11.447,
+   11.877,
+   12.341,
+   12.806,
+   13.711,
+   14.605,
+   17.775,
+   18.239,
+   18.321,
+   21.397,
+   21.873,
+   23.696,
+   25.53,
+   27.341,
+   29.106,
+   29.176,
+   29.605,
+   30.07,
+   30.523,
+   30.964,
+   31.44,
+   31.881,
+   32.322,
+   32.798,
+   33.251,
+   34.168,
+   36.351,
+   36.455,
+   37.314,
+   37.802,
+   38.255,
+   39.172,
+   39.602,
+   40.078,
+   41.448,
+   41.889,
+   43.723,
+   44.594,
+   45.082,
+   46.44,
+   46.893,
+   47.775,
+   50.527,
+   51.003,
+   51.897,
+   52.814,
+   54.625,
+   55.519,
+   56.448,
+   56.9,
+   57.342,
+   57.794,
+   58.027,
+   58.259,
+   58.688,
+   59.141,
+   59.606,
+   60.047,
+   60.987,
+   61.893,
+   62.346,
+   63.205,
+   63.716,
+   64.621,
+   65.55,
+   66.432,
+   66.897,
+   70.078,
+   73.038,
+   76.475
+  ],
+  "peak_at": 47.414,
+  "top_tags": [
+   [
+    "a music box melody",
+    1.6,
+    "no match"
+   ],
+   [
+    "a sustained glass harp tone",
+    1.43,
+    "no match"
+   ],
+   [
+    "church bells",
+    1.42,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.34,
+    "no match"
+   ],
+   [
+    "a singing bowl",
+    1.18,
+    "no match"
+   ],
+   [
+    "footsteps on wood",
+    0.85,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "sad and melancholic music",
+    3.86
+   ],
+   [
+    "romantic music",
+    3.12
+   ],
+   [
+    "solo piano music",
+    3.12
+   ],
+   [
+    "dreamy and ethereal music",
+    2.95
+   ],
+   [
+    "warm and cozy music",
+    2.94
+   ],
+   [
+    "playful children's piano music",
+    2.85
+   ],
+   [
+    "dark and tense music",
+    2.81
+   ],
+   [
+    "mysterious music",
+    2.78
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.92
+   ],
+   [
+    "Piano",
+    0.44
+   ],
+   [
+    "Sad music",
+    0.425
+   ],
+   [
+    "New-age music",
+    0.38
+   ],
+   [
+    "Keyboard (musical)",
+    0.342
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.809
+     ],
+     [
+      "Piano",
+      0.385
+     ],
+     [
+      "Musical instrument",
+      0.277
+     ],
+     [
+      "Keyboard (musical)",
+      0.272
+     ],
+     [
+      "Electric piano",
+      0.196
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "solo piano music",
+      3.5
+     ],
+     [
+      "sad and melancholic music",
+      3.42
+     ],
+     [
+      "playful children's piano music",
+      3.31
+     ],
+     [
+      "jazz music",
+      2.94
+     ]
+    ],
+    "lufs": -12.5
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.923
+     ],
+     [
+      "New-age music",
+      0.404
+     ],
+     [
+      "Piano",
+      0.302
+     ],
+     [
+      "Background music",
+      0.252
+     ],
+     [
+      "Sad music",
+      0.249
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.64
+     ],
+     [
+      "romantic music",
+      3.08
+     ],
+     [
+      "warm and cozy music",
+      3.0
+     ],
+     [
+      "dreamy and ethereal music",
+      2.92
+     ]
+    ],
+    "lufs": -11.6
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.935
+     ],
+     [
+      "Sad music",
+      0.34
+     ],
+     [
+      "New-age music",
+      0.263
+     ],
+     [
+      "Background music",
+      0.221
+     ],
+     [
+      "Tender music",
+      0.08
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.97
+     ],
+     [
+      "dreamy and ethereal music",
+      3.35
+     ],
+     [
+      "romantic music",
+      3.29
+     ],
+     [
+      "warm and cozy music",
+      3.18
+     ]
+    ],
+    "lufs": -10.3
+   },
+   {
+    "start": 60.0,
+    "end": 77.1,
+    "audioset": [
+     [
+      "Music",
+      0.93
+     ],
+     [
+      "Sad music",
+      0.361
+     ],
+     [
+      "Background music",
+      0.297
+     ],
+     [
+      "New-age music",
+      0.266
+     ],
+     [
+      "Theme music",
+      0.093
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.72
+     ],
+     [
+      "romantic music",
+      3.23
+     ],
+     [
+      "pizzicato strings",
+      2.93
+     ],
+     [
+      "warm and cozy music",
+      2.89
+     ]
+    ],
+    "lufs": -11.5
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "warm, tender, gentle solo piano with soft strings",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 3.45,
+   "p_vs_alts": 0.774,
+   "summary": "G3_t1.mp3: 'warm, tender, gentle solo piano with soft strings' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #2 among 322 vocabulary descriptions; cosine 0.34). Forced choice vs your alternatives: 'warm, tender, gentle solo piano with soft strings' 77%, 'dark and tense music' 22%, 'bright, bouncy, upbeat pop music' <1%, 'an epic orchestral trailer' <1%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'sad and melancholic music' (z +3.8), 'romantic music' (z +3.1), 'solo piano music' (z +3.1), 'dreamy and ethereal music' (z +2.9)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G4_t1": {
+  "file": "audio/gen/score/G4_t1.mp3",
+  "duration_s": 66.67,
+  "tune_cents": 1.5,
+  "tune_cents_peaks": -0.8,
+  "tune_spread_cents": 12.6,
+  "lufs": -11.5,
+  "short_term_max_lufs": -7.7,
+  "true_peak_dbtp": 0.1,
+  "lra_lu": 11.0,
+  "key": [
+   {
+    "key": "Ab major",
+    "r": 0.92
+   },
+   {
+    "key": "Eb major",
+    "r": 0.747
+   },
+   {
+    "key": "C minor",
+    "r": 0.556
+   }
+  ],
+  "tempo_earshot": 161.5,
+  "f0_hz": 103.9,
+  "pulse_bpm": null,
+  "onsets": [
+   0.093,
+   0.476,
+   0.848,
+   1.207,
+   1.602,
+   1.974,
+   2.31,
+   2.682,
+   3.1,
+   3.471,
+   3.855,
+   4.238,
+   4.609,
+   4.957,
+   5.317,
+   5.712,
+   6.107,
+   6.467,
+   6.838,
+   7.221,
+   7.593,
+   7.976,
+   8.348,
+   8.731,
+   9.102,
+   9.485,
+   9.834,
+   10.228,
+   10.553,
+   10.96,
+   11.343,
+   11.703,
+   11.935,
+   12.086,
+   12.272,
+   12.469,
+   12.817,
+   13.015,
+   13.212,
+   13.41,
+   13.584,
+   13.781,
+   13.944,
+   14.327,
+   14.524,
+   14.698,
+   14.907,
+   15.093,
+   15.279,
+   15.476,
+   15.836,
+   16.033,
+   16.219,
+   16.405,
+   16.567,
+   16.765,
+   16.962,
+   17.171,
+   17.322,
+   17.531,
+   17.694,
+   17.879,
+   17.984,
+   18.088,
+   18.286,
+   18.46,
+   18.657,
+   18.82,
+   19.029,
+   19.215,
+   19.389,
+   19.574,
+   19.76,
+   19.969,
+   20.283,
+   20.515,
+   20.701,
+   20.852,
+   21.095,
+   21.269,
+   21.467,
+   21.815,
+   21.978,
+   22.21,
+   22.396,
+   22.57,
+   22.779,
+   22.965,
+   23.115,
+   23.324,
+   23.522,
+   23.708,
+   23.905,
+   23.963,
+   24.102,
+   24.276,
+   24.474,
+   24.66,
+   24.822,
+   25.02,
+   25.217,
+   25.414,
+   25.6,
+   25.786,
+   25.972,
+   26.297,
+   26.506,
+   26.715,
+   26.912,
+   27.051,
+   27.295,
+   27.469,
+   27.829,
+   28.003,
+   28.224,
+   28.41,
+   28.572,
+   28.781,
+   28.967,
+   29.129,
+   29.304,
+   29.524,
+   29.687,
+   29.919,
+   30.0,
+   30.105,
+   30.465,
+   30.662,
+   30.801,
+   31.01,
+   31.208,
+   31.393,
+   31.602,
+   31.777,
+   31.974,
+   32.102,
+   32.334,
+   32.717,
+   32.914,
+   33.042,
+   33.1,
+   33.297,
+   33.46,
+   33.657,
+   33.808,
+   34.215,
+   34.412,
+   34.586,
+   34.783,
+   34.958,
+   35.143,
+   35.341,
+   35.527,
+   35.677,
+   35.968,
+   36.107,
+   36.281,
+   36.444,
+   36.676,
+   36.85,
+   37.024,
+   37.222,
+   37.419,
+   37.581,
+   37.976,
+   38.348,
+   38.731,
+   39.102,
+   39.277,
+   39.416,
+   39.845,
+   40.031,
+   40.217,
+   40.403,
+   40.6,
+   40.972,
+   41.332,
+   41.958,
+   42.098,
+   42.469,
+   42.852,
+   43.038,
+   43.224,
+   43.375,
+   43.607,
+   43.955,
+   44.164,
+   44.339,
+   44.71,
+   45.291,
+   45.476,
+   45.836,
+   46.034,
+   46.208,
+   46.405,
+   46.602,
+   47.334,
+   47.705,
+   48.077,
+   48.251
+  ],
+  "peak_at": 54.157,
+  "top_tags": [
+   [
+    "a sustained glass harp tone",
+    1.86,
+    "no match"
+   ],
+   [
+    "a music box melody",
+    1.66,
+    "no match"
+   ],
+   [
+    "a kalimba note",
+    1.64,
+    "no match"
+   ],
+   [
+    "a singing bowl",
+    1.11,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.06,
+    "no match"
+   ],
+   [
+    "church bells",
+    1.02,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "pizzicato strings",
+    3.47
+   ],
+   [
+    "sad and melancholic music",
+    3.29
+   ],
+   [
+    "dreamy and ethereal music",
+    3.11
+   ],
+   [
+    "romantic music",
+    2.99
+   ],
+   [
+    "dark and tense music",
+    2.74
+   ],
+   [
+    "uplifting orchestral film score",
+    2.55
+   ],
+   [
+    "mysterious music",
+    2.51
+   ],
+   [
+    "strings ensemble",
+    2.51
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.882
+   ],
+   [
+    "New-age music",
+    0.443
+   ],
+   [
+    "Background music",
+    0.428
+   ],
+   [
+    "Harp",
+    0.309
+   ],
+   [
+    "Sad music",
+    0.16
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.874
+     ],
+     [
+      "New-age music",
+      0.423
+     ],
+     [
+      "Harp",
+      0.282
+     ],
+     [
+      "Background music",
+      0.129
+     ],
+     [
+      "Sad music",
+      0.128
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.55
+     ],
+     [
+      "dreamy and ethereal music",
+      3.5
+     ],
+     [
+      "pizzicato strings",
+      3.19
+     ],
+     [
+      "dark and tense music",
+      2.92
+     ]
+    ],
+    "lufs": -15.0
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.827
+     ],
+     [
+      "Harp",
+      0.756
+     ],
+     [
+      "Pizzicato",
+      0.285
+     ],
+     [
+      "New-age music",
+      0.244
+     ],
+     [
+      "Background music",
+      0.232
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "pizzicato strings",
+      3.43
+     ],
+     [
+      "dreamy and ethereal music",
+      3.13
+     ],
+     [
+      "sad and melancholic music",
+      3.02
+     ],
+     [
+      "romantic music",
+      2.79
+     ]
+    ],
+    "lufs": -11.3
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.893
+     ],
+     [
+      "Background music",
+      0.48
+     ],
+     [
+      "New-age music",
+      0.392
+     ],
+     [
+      "Theme music",
+      0.145
+     ],
+     [
+      "Sad music",
+      0.143
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "romantic music",
+      3.15
+     ],
+     [
+      "inspirational corporate background music",
+      3.06
+     ],
+     [
+      "sad and melancholic music",
+      2.96
+     ],
+     [
+      "uplifting and hopeful music",
+      2.92
+     ]
+    ],
+    "lufs": -9.5
+   },
+   {
+    "start": 60.0,
+    "end": 66.7,
+    "audioset": [
+     [
+      "Music",
+      0.733
+     ],
+     [
+      "Background music",
+      0.075
+     ],
+     [
+      "Pizzicato",
+      0.067
+     ],
+     [
+      "Ringtone",
+      0.059
+     ],
+     [
+      "Tender music",
+      0.059
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "pizzicato strings",
+      4.79
+     ],
+     [
+      "orchestral percussion",
+      3.16
+     ],
+     [
+      "classical string quartet",
+      3.05
+     ],
+     [
+      "playful children's piano music",
+      2.74
+     ]
+    ],
+    "lufs": -19.8
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "light, gentle, curious music with soft strings and pizzicato",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 4.04,
+   "p_vs_alts": 0.969,
+   "summary": "G4_t1.mp3: 'light, gentle, curious music with soft strings and pizzicato' -> strong (unvalidated: music / instrument / voice description) (z +4.0; would rank #1 among 322 vocabulary descriptions; cosine 0.36). Forced choice vs your alternatives: 'light, gentle, curious music with soft strings and pizzicato' 97%, 'dark and tense music' 3%, 'an epic orchestral trailer' <1%, 'sad and slow solo piano' <1%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'pizzicato strings' (z +3.4), 'sad and melancholic music' (z +3.2), 'dreamy and ethereal music' (z +3.1), 'romantic music' (z +2.9)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G5_t1": {
+  "file": "audio/gen/score/G5_t1.mp3",
+  "duration_s": 63.09,
+  "tune_cents": 0.5,
+  "tune_cents_peaks": -1.3,
+  "tune_spread_cents": 12.8,
+  "lufs": -11.3,
+  "short_term_max_lufs": -8.9,
+  "true_peak_dbtp": 0.0,
+  "lra_lu": 15.8,
+  "key": [
+   {
+    "key": "A minor",
+    "r": 0.837
+   },
+   {
+    "key": "A major",
+    "r": 0.639
+   },
+   {
+    "key": "E minor",
+    "r": 0.576
+   }
+  ],
+  "tempo_earshot": 120.2,
+  "f0_hz": 109.3,
+  "pulse_bpm": null,
+  "onsets": [
+   0.046,
+   0.557,
+   1.045,
+   1.556,
+   2.531,
+   3.019,
+   3.553,
+   4.063,
+   4.563,
+   5.526,
+   6.037,
+   6.56,
+   7.047,
+   7.535,
+   8.545,
+   9.056,
+   9.555,
+   10.054,
+   10.542,
+   12.051,
+   13.05,
+   13.56,
+   14.547,
+   15.035,
+   16.567,
+   17.485,
+   18.054,
+   18.53,
+   19.029,
+   19.54,
+   20.55,
+   20.77,
+   21.026,
+   22.558,
+   24.044,
+   24.485,
+   25.054,
+   25.554,
+   26.529,
+   27.028,
+   27.55,
+   28.502,
+   29.559,
+   30.058,
+   30.557,
+   31.509,
+   32.055,
+   32.787,
+   32.891,
+   33.054,
+   33.553,
+   34.551,
+   36.049,
+   36.548,
+   37.547,
+   38.545,
+   39.056,
+   39.555,
+   40.53,
+   41.552,
+   42.051,
+   42.551,
+   43.549,
+   44.524,
+   45.035,
+   45.523,
+   46.068,
+   46.544,
+   47.531,
+   48.03,
+   48.193,
+   51.037,
+   52.547,
+   53.94,
+   54.056,
+   57.017,
+   59.896,
+   60.07
+  ],
+  "peak_at": 46.665,
+  "top_tags": [
+   [
+    "a sustained glass harp tone",
+    2.07,
+    "weak"
+   ],
+   [
+    "a music box melody",
+    2.03,
+    "weak"
+   ],
+   [
+    "church bells",
+    1.38,
+    "no match"
+   ],
+   [
+    "a singing bowl",
+    1.35,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.22,
+    "no match"
+   ],
+   [
+    "scissors cutting",
+    1.21,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "sad and melancholic music",
+    3.66
+   ],
+   [
+    "pizzicato strings",
+    3.32
+   ],
+   [
+    "classical string quartet",
+    3.13
+   ],
+   [
+    "strings ensemble",
+    3.06
+   ],
+   [
+    "dark and tense music",
+    2.93
+   ],
+   [
+    "mysterious music",
+    2.83
+   ],
+   [
+    "romantic music",
+    2.8
+   ],
+   [
+    "dreamy and ethereal music",
+    2.71
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.788
+   ],
+   [
+    "Cello",
+    0.603
+   ],
+   [
+    "Bowed string instrument",
+    0.5
+   ],
+   [
+    "Double bass",
+    0.419
+   ],
+   [
+    "Violin, fiddle",
+    0.312
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.776
+     ],
+     [
+      "Cello",
+      0.293
+     ],
+     [
+      "Violin, fiddle",
+      0.285
+     ],
+     [
+      "Musical instrument",
+      0.266
+     ],
+     [
+      "Bowed string instrument",
+      0.255
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      4.25
+     ],
+     [
+      "dreamy and ethereal music",
+      3.12
+     ],
+     [
+      "romantic music",
+      2.98
+     ],
+     [
+      "dark and tense music",
+      2.96
+     ]
+    ],
+    "lufs": -12.4
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.794
+     ],
+     [
+      "Sad music",
+      0.255
+     ],
+     [
+      "Musical instrument",
+      0.201
+     ],
+     [
+      "Bowed string instrument",
+      0.181
+     ],
+     [
+      "Violin, fiddle",
+      0.165
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.94
+     ],
+     [
+      "pizzicato strings",
+      3.31
+     ],
+     [
+      "classical string quartet",
+      3.2
+     ],
+     [
+      "strings ensemble",
+      2.96
+     ]
+    ],
+    "lufs": -10.5
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.712
+     ],
+     [
+      "Cello",
+      0.445
+     ],
+     [
+      "Bowed string instrument",
+      0.35
+     ],
+     [
+      "Double bass",
+      0.223
+     ],
+     [
+      "Musical instrument",
+      0.202
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "pizzicato strings",
+      3.46
+     ],
+     [
+      "classical string quartet",
+      3.36
+     ],
+     [
+      "sad and melancholic music",
+      3.13
+     ],
+     [
+      "strings ensemble",
+      2.97
+     ]
+    ],
+    "lufs": -11.1
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "quiet, uneasy, sparse piano over soft low strings",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 3.23,
+   "p_vs_alts": 0.163,
+   "summary": "G5_t1.mp3: 'quiet, uneasy, sparse piano over soft low strings' -> strong (unvalidated: music / instrument / voice description) (z +3.2; would rank #3 among 322 vocabulary descriptions; cosine 0.28). Forced choice vs your alternatives: 'quiet, uneasy, sparse piano over soft low strings' 16%, 'bright, happy, upbeat music' <1%, 'an epic orchestral trailer' 1%, 'warm, romantic love theme' 83%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'sad and melancholic music' (z +3.6), 'pizzicato strings' (z +3.3), 'classical string quartet' (z +3.1), 'strings ensemble' (z +3.0)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G8_t1": {
+  "file": "audio/gen/score/G8_t1.mp3",
+  "duration_s": 73.4,
+  "tune_cents": 4.5,
+  "tune_cents_peaks": -0.6,
+  "tune_spread_cents": 15.8,
+  "lufs": -11.9,
+  "short_term_max_lufs": -9.1,
+  "true_peak_dbtp": -0.1,
+  "lra_lu": 6.9,
+  "key": [
+   {
+    "key": "A minor",
+    "r": 0.916
+   },
+   {
+    "key": "C major",
+    "r": 0.715
+   },
+   {
+    "key": "F major",
+    "r": 0.589
+   }
+  ],
+  "tempo_earshot": 123.0,
+  "f0_hz": 109.8,
+  "pulse_bpm": null,
+  "onsets": [
+   0.43,
+   1.242,
+   2.02,
+   3.448,
+   3.599,
+   3.646,
+   4.447,
+   5.248,
+   6.757,
+   7.616,
+   8.406,
+   9.183,
+   9.764,
+   9.973,
+   10.008,
+   11.587,
+   13.166,
+   13.978,
+   14.78,
+   15.557,
+   16.173,
+   17.961,
+   19.493,
+   20.341,
+   21.107,
+   21.931,
+   22.489,
+   22.605,
+   22.686,
+   23.51,
+   25.89,
+   26.691,
+   27.492,
+   28.282,
+   29.06,
+   30.674,
+   32.241,
+   33.054,
+   33.855,
+   34.644,
+   35.41,
+   36.212,
+   37.036,
+   38.603,
+   39.381,
+   39.799,
+   41.796,
+   43.386,
+   44.954,
+   45.697,
+   48.158,
+   49.726,
+   51.304,
+   52.071,
+   54.451,
+   56.111,
+   56.889,
+   57.678,
+   58.468,
+   60.813,
+   60.871,
+   62.45,
+   64.319
+  ],
+  "peak_at": 26.038,
+  "top_tags": [
+   [
+    "a sustained glass harp tone",
+    1.69,
+    "no match"
+   ],
+   [
+    "a singing bowl",
+    1.61,
+    "no match"
+   ],
+   [
+    "scissors cutting",
+    1.33,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.26,
+    "no match"
+   ],
+   [
+    "a music box melody",
+    1.19,
+    "no match"
+   ],
+   [
+    "a cinematic hit with a long tail",
+    1.09,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "dark and tense music",
+    3.08
+   ],
+   [
+    "drum and bass music",
+    2.94
+   ],
+   [
+    "classical string quartet",
+    2.84
+   ],
+   [
+    "sad and melancholic music",
+    2.75
+   ],
+   [
+    "pizzicato strings",
+    2.73
+   ],
+   [
+    "strings ensemble",
+    2.71
+   ],
+   [
+    "cinematic orchestral music",
+    2.36
+   ],
+   [
+    "aggressive music",
+    2.34
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.802
+   ],
+   [
+    "Cello",
+    0.696
+   ],
+   [
+    "Double bass",
+    0.578
+   ],
+   [
+    "Bowed string instrument",
+    0.391
+   ],
+   [
+    "Musical instrument",
+    0.181
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.801
+     ],
+     [
+      "Cello",
+      0.634
+     ],
+     [
+      "Double bass",
+      0.613
+     ],
+     [
+      "Bowed string instrument",
+      0.346
+     ],
+     [
+      "Scary music",
+      0.105
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "dark and tense music",
+      3.16
+     ],
+     [
+      "drum and bass music",
+      2.87
+     ],
+     [
+      "aggressive music",
+      2.51
+     ],
+     [
+      "hip hop beat with heavy bass",
+      2.51
+     ]
+    ],
+    "lufs": -12.3
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.801
+     ],
+     [
+      "Cello",
+      0.673
+     ],
+     [
+      "Double bass",
+      0.62
+     ],
+     [
+      "Bowed string instrument",
+      0.406
+     ],
+     [
+      "Musical instrument",
+      0.156
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "drum and bass music",
+      3.04
+     ],
+     [
+      "dark and tense music",
+      2.96
+     ],
+     [
+      "classical string quartet",
+      2.8
+     ],
+     [
+      "strings ensemble",
+      2.65
+     ]
+    ],
+    "lufs": -11.0
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.72
+     ],
+     [
+      "Cello",
+      0.651
+     ],
+     [
+      "Bowed string instrument",
+      0.412
+     ],
+     [
+      "Double bass",
+      0.368
+     ],
+     [
+      "Musical instrument",
+      0.188
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      3.17
+     ],
+     [
+      "dark and tense music",
+      3.09
+     ],
+     [
+      "classical string quartet",
+      2.85
+     ],
+     [
+      "pizzicato strings",
+      2.75
+     ]
+    ],
+    "lufs": -11.6
+   },
+   {
+    "start": 60.0,
+    "end": 73.4,
+    "audioset": [
+     [
+      "Cello",
+      0.7
+     ],
+     [
+      "Music",
+      0.669
+     ],
+     [
+      "Bowed string instrument",
+      0.454
+     ],
+     [
+      "Double bass",
+      0.43
+     ],
+     [
+      "Musical instrument",
+      0.147
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "dark and tense music",
+      2.84
+     ],
+     [
+      "drum and bass music",
+      2.83
+     ],
+     [
+      "sad and melancholic music",
+      2.66
+     ],
+     [
+      "pizzicato strings",
+      2.6
+     ]
+    ],
+    "lufs": -16.9
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "grave, slow, dark low strings, very quiet",
+  "mood_match": {
+   "verdict": "no match",
+   "z": 1.88,
+   "p_vs_alts": 0.035,
+   "summary": "G8_t1.mp3: 'grave, slow, dark low strings, very quiet' -> no match (unvalidated: music / instrument / voice description) (z +1.8; would rank #16 among 322 vocabulary descriptions; cosine 0.17). Forced choice vs your alternatives: 'grave, slow, dark low strings, very quiet' 4%, 'bright, happy, upbeat music' <1%, 'an epic orchestral trailer' 26%, 'warm, romantic love theme' 62%, 'a pop song with vocals' 7%, 'a choir singing' <1%, 'a drum kit playing a beat' 1%, 'a person speaking' <1%. It sounds most like: 'dark and tense music' (z +3.0), 'drum and bass music' (z +2.9), 'classical string quartet' (z +2.8), 'sad and melancholic music' (z +2.7)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ },
+ "G9_t1": {
+  "file": "audio/gen/score/G9_t1.mp3",
+  "duration_s": 81.82,
+  "tune_cents": 3.0,
+  "tune_cents_peaks": -1.7,
+  "tune_spread_cents": 11.5,
+  "lufs": -12.2,
+  "short_term_max_lufs": -9.4,
+  "true_peak_dbtp": -0.1,
+  "lra_lu": 7.4,
+  "key": [
+   {
+    "key": "C minor",
+    "r": 0.663
+   },
+   {
+    "key": "Bb major",
+    "r": 0.576
+   },
+   {
+    "key": "C major",
+    "r": 0.51
+   }
+  ],
+  "tempo_earshot": 120.2,
+  "f0_hz": null,
+  "pulse_bpm": null,
+  "onsets": [
+   0.058,
+   1.068,
+   1.556,
+   2.055,
+   4.063,
+   5.05,
+   5.561,
+   6.037,
+   8.069,
+   9.079,
+   9.567,
+   10.077,
+   12.063,
+   13.05,
+   13.549,
+   14.083,
+   16.068,
+   17.043,
+   17.554,
+   18.077,
+   20.05,
+   21.049,
+   21.56,
+   22.047,
+   24.067,
+   25.554,
+   26.041,
+   28.073,
+   29.083,
+   29.536,
+   30.058,
+   32.032,
+   33.576,
+   34.075,
+   36.061,
+   37.082,
+   37.57,
+   38.069,
+   40.066,
+   41.053,
+   41.575,
+   42.086,
+   44.071,
+   45.082,
+   45.558,
+   46.08,
+   48.077,
+   49.087,
+   49.575,
+   50.062,
+   52.059,
+   52.558,
+   53.081,
+   53.568,
+   54.079,
+   56.065,
+   57.075,
+   57.562,
+   60.047,
+   60.569,
+   61.08,
+   61.521,
+   62.055,
+   64.075,
+   65.062,
+   65.55,
+   66.061,
+   68.034,
+   68.58,
+   69.056,
+   69.567,
+   70.078,
+   72.063,
+   76.08,
+   76.579,
+   77.055
+  ],
+  "peak_at": 20.091,
+  "top_tags": [
+   [
+    "footsteps on wood",
+    1.63,
+    "no match"
+   ],
+   [
+    "a deep cinematic boom",
+    1.54,
+    "no match"
+   ],
+   [
+    "a big drum hit",
+    1.52,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    1.2,
+    "no match"
+   ],
+   [
+    "a heartbeat",
+    1.17,
+    "no match"
+   ],
+   [
+    "a knock on a door",
+    1.15,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "sad and melancholic music",
+    4.04
+   ],
+   [
+    "romantic music",
+    2.84
+   ],
+   [
+    "calm and relaxing music",
+    2.75
+   ],
+   [
+    "warm and cozy music",
+    2.75
+   ],
+   [
+    "solo piano music",
+    2.71
+   ],
+   [
+    "dark and tense music",
+    2.71
+   ],
+   [
+    "a grand piano",
+    2.68
+   ],
+   [
+    "mysterious music",
+    2.45
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.906
+   ],
+   [
+    "New-age music",
+    0.564
+   ],
+   [
+    "Sad music",
+    0.439
+   ],
+   [
+    "Background music",
+    0.166
+   ],
+   [
+    "Tender music",
+    0.147
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Music",
+      0.797
+     ],
+     [
+      "New-age music",
+      0.335
+     ],
+     [
+      "Ambient music",
+      0.17
+     ],
+     [
+      "Piano",
+      0.11
+     ],
+     [
+      "Keyboard (musical)",
+      0.095
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      2.92
+     ],
+     [
+      "solo piano music",
+      2.73
+     ],
+     [
+      "jazz music",
+      2.72
+     ],
+     [
+      "hip hop beat with heavy bass",
+      2.46
+     ]
+    ],
+    "lufs": -11.7
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.906
+     ],
+     [
+      "New-age music",
+      0.451
+     ],
+     [
+      "Sad music",
+      0.335
+     ],
+     [
+      "Background music",
+      0.159
+     ],
+     [
+      "Tender music",
+      0.102
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      4.08
+     ],
+     [
+      "dark and tense music",
+      2.97
+     ],
+     [
+      "romantic music",
+      2.93
+     ],
+     [
+      "calm and relaxing music",
+      2.89
+     ]
+    ],
+    "lufs": -12.7
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.915
+     ],
+     [
+      "New-age music",
+      0.549
+     ],
+     [
+      "Sad music",
+      0.445
+     ],
+     [
+      "Background music",
+      0.184
+     ],
+     [
+      "Tender music",
+      0.143
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      4.0
+     ],
+     [
+      "warm and cozy music",
+      2.94
+     ],
+     [
+      "romantic music",
+      2.92
+     ],
+     [
+      "calm and relaxing music",
+      2.74
+     ]
+    ],
+    "lufs": -11.5
+   },
+   {
+    "start": 60.0,
+    "end": 80.0,
+    "audioset": [
+     [
+      "Music",
+      0.916
+     ],
+     [
+      "Sad music",
+      0.463
+     ],
+     [
+      "New-age music",
+      0.313
+     ],
+     [
+      "Background music",
+      0.176
+     ],
+     [
+      "Tender music",
+      0.151
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "sad and melancholic music",
+      4.12
+     ],
+     [
+      "romantic music",
+      2.88
+     ],
+     [
+      "warm and cozy music",
+      2.88
+     ],
+     [
+      "dreamy and ethereal music",
+      2.84
+     ]
+    ],
+    "lufs": -13.0
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "slow, sparse, sad solo piano, very quiet",
+  "mood_match": {
+   "verdict": "strong",
+   "z": 3.28,
+   "p_vs_alts": 0.841,
+   "summary": "G9_t1.mp3: 'slow, sparse, sad solo piano, very quiet' -> strong (unvalidated: music / instrument / voice description) (z +3.2; would rank #2 among 322 vocabulary descriptions; cosine 0.31). Forced choice vs your alternatives: 'slow, sparse, sad solo piano, very quiet' 84%, 'bright, happy, upbeat music' <1%, 'an epic orchestral trailer' 2%, 'tense action music' 11%, 'a pop song with vocals' 2%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'sad and melancholic music' (z +4.0), 'romantic music' (z +2.8), 'calm and relaxing music' (z +2.7), 'warm and cozy music' (z +2.7)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
+ }
+}
