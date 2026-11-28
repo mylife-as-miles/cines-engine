@@ -94,6 +94,28 @@ The account holds 3,000 credits. The recommended plan needs about 7,000 more, fo
 - The risk is two looks in one film (Unreal worlds, Blender characters).
 - Recommended only for those two or three exteriors, and only if the Blender versions fall short.
 
+## Checked against Higgsfield's own published runs
+
+These are from the six Higgsfield GPU posts the author pasted on 28 Nov. They are the closest real numbers to this film.
+
+| Their film | Render | Speed | Cost |
+| --- | --- | --- | --- |
+| Flower street (Houdini growth, Cycles) | 1920×1080, 192 samples, 8× RTX PRO 6000 | 14-29 s a frame on most shots; about 60 s on the heaviest macro | 1,340 film + 800 clay frames: 1,099.5 credits (about 1,230 with boxes stopped early) |
+| Black liquid (Houdini sim, Cycles) | 1920×1080, 512 samples, 14× RTX PRO 6000 | 86-90 s a frame | 2,167 frames: 5,653 credits (2.6 a frame) |
+| Shibuya city (Cycles) | 1920×804, 19.5 M triangles, 9,662 people, 4× RTX PRO 6000 | 55 s a frame | 960 frames in 4 h 30 min |
+| Zombie dance (Cycles) | 1920×1080, 4× H100 | | 2 × 929 frames: 1,705 credits |
+| Walking mech (Cycles) | 1920×1080, 256 samples, 1× L40S | 5.3-7.5 s a frame | 62 frames: 17 credits |
+| Beach town (Unreal 5.8, Lumen) | 1920×1080, 64 samples at 4K | 2.9-6.1 s a frame (RTX PRO 6000), 8.2-8.6 s (L40S) | first editor start: 15-113 min of shader compiling |
+
+Our estimate (about 18 s a frame at 128 samples, about 0.5 credits a frame) sits inside the flower film's 14-29 s at 192 samples. Our sets are lighter than the city and the liquid, so the estimate holds. The test below confirms it.
+
+Habits taken from those runs:
+- **Every scene is code** that rebuilds the same way every time. Our stages already are.
+- **Preview before paying.** Motion is judged in grey or clay previews made here, for free. One test frame is approved before any paid render.
+- **One GPU type for the whole film.** An L40S renders slightly darker than an RTX PRO 6000 in Unreal. Every box first renders a reference frame and must match the approved one.
+- **Copy frames home while the render runs.** Anything left on a box is lost when it stops (except /workspace).
+- **Check every frame:** none missing, black or too dark. In Unreal, a frame counts only if a second run gives the same image.
+
 ## The first paid step: a calibration test
 
 The test costs about 150 credits (about $7.50) and needs the author's yes first. It renders three 4-second animated shots on one RTX PRO 6000:
