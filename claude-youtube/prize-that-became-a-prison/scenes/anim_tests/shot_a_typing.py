@@ -222,6 +222,39 @@ def orient_hand(holder, side, fwd_dir, pitch_deg, roll_deg=0.0):
     bpy.context.view_layer.update()
 
 
+def arm_pos(f, o, e, L1, L2, side):
+    """Wrist relative to the shoulder for rigged.pose_figure's arm angles (degrees), the same model as
+    rigged.fit_wrist (forearm out at 60 % of the upper arm's)."""
+    f, o, e = math.radians(f), math.radians(o), math.radians(e)
+    a1, a2 = L1 * math.cos(f), L2 * math.cos(f + e)
+    return Vector((side * (a1 * math.sin(o) + a2 * math.sin(0.6 * o)),
+                   -L1 * math.sin(f) - L2 * math.sin(f + e),
+                   -a1 * math.cos(o) - a2 * math.cos(0.6 * o)))
+
+
+def arm_newton(shoulder, target, L1, L2, side, guess, iters=12):
+    """(forward, out, elbow) in degrees that put the wrist exactly on target: Newton steps with a numeric Jacobian."""
+    from mathutils import Matrix as M3
+    d = Vector(target) - Vector(shoulder)
+    q = Vector(guess)
+    for _ in range(iters):
+        r = arm_pos(*q, L1, L2, side) - d
+        if r.length < 1e-7:
+            break
+        h = 1e-3
+        cols = []
+        for i in range(3):
+            dq = Vector((0.0, 0.0, 0.0))
+            dq[i] = h
+            cols.append((arm_pos(*(q + dq), L1, L2, side) - arm_pos(*(q - dq), L1, L2, side)) / (2 * h))
+        J = M3((cols[0], cols[1], cols[2])).transposed()
+        try:
+            q -= J.inverted() @ r
+        except ValueError:
+            break
+    return tuple(q)
+
+
 def set_finger(holder, side, finger, a, b, spread=0.0):
     """Knuckle flexion a, middle-joint flexion b, end joint 0.55 b (degrees), and spread toward the thumb."""
     rig = bpy.data.objects[holder["rig"]]
@@ -430,7 +463,11 @@ def build(frames=None):
         L2 = {k: pb[f"forearm_fk.{k}"].length for k in ("L", "R")}
         inv = rig.matrix_world.inverted()
         for side, key, sgn in (("L", "l_arm", 1), ("R", "r_arm", -1)):
-            err, P[key] = rigged.fit_wrist(sh[side], inv @ wr[side], L1[side], L2[side], sgn, min_forward=-10)
+            err, coarse = rigged.fit_wrist(sh[side], inv @ wr[side], L1[side], L2[side], sgn, min_forward=-10)
+            # rigged.fit_wrist answers on a 0.5-degree grid: as the wrist target drifts, its answer steps, and the
+            # whole hand jumped 1-2 mm between two frames (preview v1, frame 68). Newton from the grid answer
+            # lands on the target exactly, so the arm moves continuously.
+            P[key] = arm_newton(sh[side], inv @ wr[side], L1[side], L2[side], sgn, coarse)
         pose_body(d, P)
         for side in ("L", "R"):
             orient_hand(d, side, fwd[side], pitch[side], roll[side])
@@ -555,8 +592,9 @@ def build(frames=None):
         wr = {}
         for side in ("L", "R"):
             p1, p2 = drift_phase[side]
-            # the hand floats: a slow drift of a few millimetres, and a dip as each of its fingers strikes
-            dip = sum(0.0012 * max(0.0, -stroke(t, te) / TRAVEL) for te, s_, _ in events if s_ == side)
+            # the hand floats: a slow drift of a few millimetres, and a soft half-millimetre give as each of its
+            # fingers strikes (a smooth 0.14 s bump: a 1.2 mm dip held for one frame read as a twitch in preview v1)
+            dip = sum(0.0005 * math.exp(-((t - te - 0.02) / 0.07) ** 2) for te, s_, _ in events if s_ == side)
             wr[side] = base_wrist[side] + Vector((0.0018 * math.sin(0.9 * t + p1), 0.0015 * math.sin(0.7 * t + p2),
                                                  0.0012 * math.sin(1.3 * t + p2) - dip))
         pose_arms(wr)
