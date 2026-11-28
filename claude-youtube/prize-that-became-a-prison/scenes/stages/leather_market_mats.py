@@ -418,16 +418,16 @@ def stock_leather():
 
 def nylon(mat):
     """Give the existing black cloth a fine weave while preserving the model's normal map."""
-    tune_prop(mat, spec=0.45)
+    tune_prop(mat, spec=0.39)
     nt = mat.node_tree
     b = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
     for link in list(b.inputs["Roughness"].links):
         nt.links.remove(link)
-    b.inputs["Roughness"].default_value = 0.48
+    b.inputs["Roughness"].default_value = 0.52
     tex = _obj(nt)
     weave = _noise(nt, tex, 1000, 2, 0.55, mapping=(1, 3.0, 1))
     bump = nt.nodes.new("ShaderNodeBump")
-    bump.inputs["Strength"].default_value = 0.03
+    bump.inputs["Strength"].default_value = 0.05
     bump.inputs["Distance"].default_value = 0.00035
     if b.inputs["Normal"].links:
         nt.links.new(b.inputs["Normal"].links[0].from_socket, bump.inputs["Normal"])

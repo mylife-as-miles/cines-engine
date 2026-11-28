@@ -82,7 +82,7 @@ BAG_GRADE = {  # size, axis, dye and finish. The warm key and fixed grade keep t
     "handbag-tote": (0.35, "long", dict(sat=0.955, val=0.84, hue=0.50, rough_add=0.32),
                      dict(spec=0.08, leather_grain=True, brass=(0.23, 0.128, 0.052))),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.33, rough_add=0.28),
-                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10, brass=(0.15, 0.085, 0.033))),
+                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10, brass=(0.0441, 0.0126, 0.00315))),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.50, rough_add=0.42), dict(spec=0.12)),
 }
 
@@ -115,7 +115,7 @@ CAMERAS = {
                  lamp=(-0.35, 0.20, -123.0), exposure=-1.18, final_res=(2560, 1440)),
     "pair": dict(loc=(0.07, -0.508, TOP + 0.82), aim=(0.05, -0.008, TOP), lens=54,
                  focus="fx_page", fstop=6.3, beat="plate", show=("pair sheets", "document tools"),
-                 lamp=(-0.35, 0.20, -122.0), spot=(72.0, 0.68), board_fill=2.8,
+                 lamp=(-0.35, 0.20, -122.0), spot=(72.0, 0.68), board_fill=2.8, board_spot=0.32,
                  exposure=-1.22, final_res=(2560, 1440)),
     "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.110), lens=50,
                    focus="fx_screen", fstop=2.2, beat="ch02", show=("screen spill",), hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
@@ -124,7 +124,8 @@ CAMERAS = {
 }
 
 CAMERAS["page_foot"] = dict(CAMERAS["page"], loc=(0.03, -0.306, TOP + 0.346), aim=(0.03, -0.105, TOP),
-                           focus="fx_page_foot", fstop=8.0, show=("page sheet",), spot=(62.0, 0.72), board_fill=2.0)
+                           focus="fx_page_foot", fstop=8.0, show=("page sheet",), spot=(62.0, 0.72), board_fill=2.0,
+                           board_spot=0.21)
 CAMERAS["laptop_before"] = dict(CAMERAS["laptop"],
                                hide=CAMERAS["laptop"]["hide"] + ("passes_c2", "passport_c2"),
                                show=CAMERAS["laptop"]["show"] + ("booklet on wood",))
@@ -551,6 +552,8 @@ def bags():
             for slot in o.material_slots:
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
+                    if name == "handbag-tote":
+                        mt.clean_tote_finish(slot.material)
                     mt.tune_prop(slot.material, to_metres=to_m, **fin)
         if name == "handbag-tote":
             props.tote_topstitch(h, soften_lip_normals=True, lip_normal_band=28, behind_tabs=True, slant=0.22,
@@ -592,7 +595,7 @@ def bag_lighting():
     leather.objects.link(bpy.data.objects["macro front rolled lip"])
     graze.light_linking.receiver_collection = leather
     source = Vector((0.077, -0.405, TOP + 0.327))
-    thread_fill = sk.area_light("stitch reflected lamp", source, (0.22, 0.10), 1.8, WARM, spread_deg=88,
+    thread_fill = sk.area_light("stitch reflected lamp", source, (0.22, 0.10), 0.14, (1.0, 0.80, 0.63), spread_deg=88,
                                 rot=(lip - source).to_track_quat("-Z", "Y").to_euler())
     thread_fill.visible_camera = thread_fill.visible_glossy = thread_fill.visible_volume_scatter = False
     fibres = bpy.data.collections.new("Macro stitch receivers")
@@ -917,7 +920,8 @@ def apply_camera(name):
     plate = beat == "plate"
     for ob in _STATE["lamp_meshes"]:
         ob.hide_render = plate
-    spot = bpy.data.objects["lamp_spot"].data
+    main_spot = bpy.data.objects["lamp_spot"]
+    spot = main_spot.data
     if "spot" in cfg:
         degrees, blend = cfg["spot"]
         spot.spot_size, spot.spot_blend = math.radians(degrees), blend
@@ -925,6 +929,15 @@ def apply_camera(name):
     edge = bpy.data.objects["table edge bounce"].data
     spot.color = edge.color = BAG_LIGHT if reveal else WARM
     edge.energy = cfg.get("board_fill", 4.5 if name == "purses" else TABLE_EDGE_RETURN)
+    board_spot = _STATE["document board light"]
+    board_scale = cfg.get("board_spot")
+    main_spot.light_linking.receiver_collection = _STATE["exclude document boards"] if board_scale is not None else None
+    board_spot.hide_render = board_scale is None
+    if board_scale is not None:
+        board_spot.matrix_world = main_spot.matrix_world.copy()
+        board_spot.data.spot_size, board_spot.data.spot_blend = spot.spot_size, spot.spot_blend
+        board_spot.data.energy = spot.energy * board_scale
+        board_spot.data.color = spot.color
     bpy.data.objects["cone_haze"].hide_render = plate or reveal
     bpy.data.objects["bag edge return"].hide_render = name != "purses"
     bpy.data.objects["tote lip graze"].hide_render = name != "seam"
@@ -1024,6 +1037,25 @@ def room_bounce(power=1.6):
     return li
 
 
+def document_board_light():
+    """Keep the lamp's full output on the paper while cutting its direct spill onto the wood."""
+    key = bpy.data.objects["lamp_spot"]
+    board = bpy.data.objects["table_top"]
+    only_board = bpy.data.collections.new("Document boards only")
+    only_board.objects.link(board)
+    exclude_board = bpy.data.collections.new("Lamp excluding document boards")
+    exclude_board.objects.link(board)
+    exclude_board.collection_objects[0].light_linking.link_state = "EXCLUDE"
+    light = bpy.data.objects.new("Document board light", key.data.copy())
+    bpy.context.scene.collection.objects.link(light)
+    light.light_linking.receiver_collection = only_board
+    light.visible_camera = light.visible_glossy = light.visible_volume_scatter = False
+    light.data.specular_factor = 0.0
+    light.hide_render = True
+    _STATE["document board light"] = light
+    _STATE["exclude document boards"] = exclude_board
+
+
 def room():
     """The room the table stands in, never lit by anything but the lamp's bounce: three walls of old dark plaster
     (back, left and right, about a metre and a half off the table) up to a 2.7 m ceiling height, so the low shots
@@ -1101,6 +1133,7 @@ def build(cast=True):
     materials()
     table()
     lamp()
+    document_board_light()
     spread()
     document_plates()
     entry_stationery()
@@ -1115,8 +1148,8 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.072, 0.068, 0.060), spec=0.25)
-    group("receipt_c4", pp.receipt("receipt_c4", receipt_stock, *RECEIPT_C4, seed=12))
+    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.064, 0.055, 0.032), spec=0.175)
+    group("receipt_c4", pp.receipt("receipt_c4", receipt_stock, *RECEIPT_C4, roll=0.062, roll_deg=217, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.
     group("booklet on wood", pp.passport("passport before", M["cover"], M["pages"], 0.21, 0.06, -28.0,

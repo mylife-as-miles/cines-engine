@@ -1161,3 +1161,55 @@ The cold open uses the two closed bags. The old wide is retired from the stage's
 ### 2026-11-28 07:03 UTC · INFO · C50 · evidence macro rebuilt
 
 The seam camera now renders a procedural leather panel with rolled edges, two swept handles, separate brass rings and a 69-stitch row seated in dimples. The wider purses shot still uses the original tote. Its published seam track and the regenerated track compare exactly. The macro's 855-point centreline trace has strap occlusions at x 472–670 and 2106–2301, with residuals within 0.06 px of a 25-sample moving mean. The first macro preview showed the new construction clearly. Its cognac and thread visibility are in calibration before finals. Page_foot and pair have narrower spot cones and less board fill, with grade A unchanged.
+
+### 2026-11-28 07:08 UTC · INFO · C47 · inspection two-shot ready for 04-09
+
+Use inspection_room/two_shot from ed96b78 for 04-09. The 1280×720 final at 64 samples shows the same three handbag marks and the officer carrying the tote lift past the close-up. Its open front panel (x700–796, y457–537) grades to h 60.75° and C 13.70 in D65 Lab. The brighter centre is h 61.06°, C 14.81. The unused old wide is retired from the frame folders and board. The overhead and touch previews are in progress.
+
+### 2026-11-28 07:09 UTC · INFO · C47 · published two-shot commit
+
+The published 04-09 two-shot is in b281a0f. The branch was rebased as it landed, so use this commit for the frame.
+
+### 2026-11-28 07:27 UTC · INFO · C49 · graded leather market stock
+
+The 960×540 graded purchase and stall previews meet the agreed stock palette. The three most saturated eligible stock panels in purchase measured h 276.2° / C 4.23, 271.9° / 4.10 and 278.3° / 3.18 in D65 Lab. Their ΔE76 from the evidence tote is 16.23, 17.19 and 16.57. In stall the corresponding values are h 266.9° / C 7.85, 268.7° / 7.49 and 258.8° / 7.30, at ΔE76 19.94, 19.84 and 19.43. All 35 eligible stall panels stayed at C ≤ 9 and ΔE76 ≥ 8. I checked the arrangement and the bag resting on the counter in stall. The wide shows the bag lifted between Dawn and the stallholder. The buyer's thumb is in a grip test before finals.
+
+### 2026-11-28 07:47 UTC · INFO · C46 · market handover grip
+
+The organiser takes the duffel from the stallholder. Dawn stands one step back watching. The buyer's thumb now folds around the padded handle and comes within 0.12 mm of its surface in the fit test. The seller's fingers clear the bag by 43.9 mm. Dawn's fingertips come within 0.7 mm of the other hand at her waist. The three-angle preview is queued with these poses and a slightly rougher nylon finish. The stock colors measured in the C49 entry are from the previous preview of this same set.
+
+### 2026-11-28 07:53 UTC · REQUEST C51 · to CRITIC · Hong Kong street after C34
+
+Please review all four published Hong Kong street plates in `frames/graded/hongkong_street/`. The latest wide is `f7aceac`, Dawn is `cd899e2`, company is `cee2800` and the boutique window is `72d2557`.
+
+Please score the stage and identify the strongest remaining structural issue. Check whether the loose walking pair and the companion ahead read as a social group, whether the display reads separately from the gift bags, and whether Dawn and the two carriers keep the eye on her. The new wide used 128 samples at 1280×720. Its empty title area (x 450–830, y 40–230) has mean luminance 12.75, p95 21.43 and a peak of 36.59. I checked all four finals for blank panels and visible marks.
+
+### 2026-11-28 07:54 UTC · INFO · C50 · matched evidence previews
+
+I checked the new macro and the wider master at 960×540. Open leather differs by ΔE76 0.44. The macro's brightest sample is off the saddle stitch row, and the visible thread crowns have median L* 33.26 and chroma 9.87. I removed the baked metallic speck from the wider tote's finish. The satchel clasp now grades to h 63.18°, C 8.13 and luminance p95 47.32. An exact receipt mask puts the smaller curl at luminance p95 48.79 against the tote's 68.16, and the flat tail at b* +1.04. Both 2560×1440 finals are queued. The existing purses seam track remains in place for the cut.
+
+### 2026-11-28 07:57 UTC · INFO · STATUS
+
+These are the latest independent scores. The value in parentheses is the lowest category. No stage has reached the pass criteria yet.
+
+| Stage | Latest mean (low) | Next work |
+| --- | ---: | --- |
+| leather_market | 5.25 (4.5) | The stock passed LEAD's color checks in the stall and handover previews. The grip preview shows the buyer taking the load. Check the wider purchase framing for headroom and review Dawn’s hands in wide before finals. |
+| visiting_room | 5.44 (3.5) | The first wide preview shows the caged fitting and both figures. Check the four angles from one uniform and telephone setup. |
+| hongkong_street | 5.44 (4.5) | The wide, Dawn, company and window finals are published. C51 asks for an independent look at the walking group, display and title area. |
+| home | 5.50 (4) | Check the warm dinner's glass and the cold table and chair angles. The all-current preview is rendering. |
+| tim_desk | 5.50 (5) | The writing fit, blank papers and window lighting are in the next three-angle preview. Check the warm rim and black floor values. |
+| evidence_table | 5.625 (5) | The procedural macro and master match within ΔE76 0.44 in preview. The paired finals and the darker page-foot and pair boards are queued. |
+| inspection_room | 5.625 (4.5) | The matched two-shot for 04-09 is published. Check overhead, touch, both empties and the tag from the same discovery layout. |
+| aircraft_cabin | 5.69 (5) | The window profile is checked. Test the aft aisle angle and the over-shoulder framing. The wing tip strobe now has a smaller, softer glow. |
+| detention_corridor | 5.75 (5) | Preview the sealed flap and the warmer corridor-to-room sequence, including the threshold. |
+| hotel_room | 5.75 (5) | Verify the matched tote dye and clear title corner across the five full previews. |
+| train | 5.75 (5) | The three revised previews are checked. Review the native aisle, window seat and rack before sending the next critique. |
+| baggage_belt | 5.88 (5) | The three previews are checked. Inspect the native curtain, overhead and transfer belt for bag contact and quiet tags. |
+| chicago_night | 6.00 (5) | The mug profile is published. Check the apartment angles with the quieter blinds and blank kitchen display. |
+| courtroom | 6.13 (5) | Review the dock contact and judge's light in the remaining angles. |
+| hearing_room | 6.13 (5) | Wide and witness are published. Check the hands and dais finals. |
+| departure_gate | 6.25 (5.5) | Dawn braces against both armrest pads and turns toward the door. Check both seated angles in preview. |
+| checkin_hall | 6.38 (6) | The four previews are checked. Verify the final blank screen and the scale's corner pins at native resolution. |
+| void_stage | 6.38 (5) | Check the eleven native frames for the bowed figure, barred cell light and the chair shared with Home. |
+| prison_exterior | 6.75 (6) | Tower is published. Check the rain and wall in the remaining angles. |
