@@ -733,7 +733,7 @@ def family_member(name, chair, age, height, weight, tone):
     holder.location.z += dz
     bpy.context.view_layer.update()
     rig = rigged.rig_of(holder)
-    glass_xy = None
+    glass_point = None
     for side, k in ((1, "L"), (-1, "R")):
         shoulder = rig.matrix_world @ rig.pose.bones[f"upper_arm_fk.{k}"].head
         bone = rig.pose.bones[f"upper_arm_fk.{k}"]
@@ -742,15 +742,17 @@ def family_member(name, chair, age, height, weight, tone):
         elbow_y = shoulder.y - math.sqrt(max(0, length**2 - (shoulder.z - elbow_z)**2 - 0.015**2))
         elbow = (shoulder.x + side * 0.015, elbow_y, elbow_z)
         if tim and k == "R":
-            wrist = (hip.x - 0.05, elbow_y - 0.20, st.D_TOP + 0.052)
+            lift = 0.072
+            wrist = (hip.x - 0.05, elbow_y - 0.20, st.D_TOP + 0.052 + lift)
             rigged.articulate_hand(holder, k, {"f_index": (25, 30, 20), "f_middle": (30, 35, 25),
                                              "f_ring": (35, 40, 30), "f_pinky": (40, 45, 35),
                                              "thumb": (25, 18, 12)})
             _, wrist_point, tip = arm_to(holder, side, elbow, wrist, hand_pitch=0.0, palm_tilt=85.0)
             forward = (tip - wrist_point).xy.normalized()
             inward = Vector((-forward.y, forward.x))
-            # Keep the rim between his thumb and fingertips while the base stays on the table.
-            glass_xy = wrist_point.xy + forward * 0.064 + inward * 0.031 + Vector((0.050, 0.026))
+            # The raised glass clears the left hand from the dining camera.
+            xy = wrist_point.xy + forward * 0.064 + inward * 0.031 + Vector((0.025, 0.025))
+            glass_point = Vector((*xy, st.D_TOP + lift))
             continue
         if older and k == "L":
             rigged.articulate_hand(holder, k, {"f_index": (14, 16, 10), "f_middle": (18, 18, 12),
@@ -776,9 +778,10 @@ def family_member(name, chair, age, height, weight, tone):
     rotation = holder.rotation_euler.to_matrix()
     shift = rotation @ Vector((hip.x, hip.y + (0 if tim else 0.01), 0.0))
     holder.location.x, holder.location.y = x - shift.x, y - shift.y
-    if glass_xy is not None:
+    if glass_point is not None:
         glass = bpy.data.objects["d_glass_tim"]
-        glass.location.xy = holder.location.xy + (rotation @ Vector((*glass_xy, 0.0))).xy
+        glass.location.xy = holder.location.xy + (rotation @ glass_point).xy
+        glass.location.z = glass_point.z
     bpy.context.view_layer.update()
     return holder
 
@@ -786,7 +789,7 @@ def family_member(name, chair, age, height, weight, tone):
 def family_layout(layout):
     """Only build the people needed by the requested camera. Restore hidden members on repeat visits."""
     warm = layout == "family"
-    for piece in _STATE["dinner"].children:
+    for piece in _STATE["dinner"].children_recursive:
         piece.hide_render = not warm
     for piece in _STATE["gene_mug"]:
         piece.hide_render = layout != "gene"
