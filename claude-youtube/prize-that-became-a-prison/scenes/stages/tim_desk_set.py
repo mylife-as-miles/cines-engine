@@ -65,6 +65,7 @@ LAMP = (0.24, -0.16, 36.6)         # prop origin on the desk and turn: the light
 SPOT_OUT = 0.012 * _K              # the bulb's glowing end, this far down the axis toward the shade's mouth: from
                                    # there (ray casts) the pad and his hands see all of it, his brow two thirds
 LAPTOP = (0.50, 0.10, -75.0)       # prop origin and turn: the screen faces (-cos t, -sin t): pushed aside, toward the room
+MONITOR = (0.58, -0.187, TOP + 0.417)
 PAD = (-0.02, 0.165, 194.0)        # the writing pad: centre and turn (its head away from Tim, turned for a right hand,
                                    # pulled up to the desk's edge: he is half way down the page)
 PAD_H = 0.0069                     # the pad's top surface above the desk (board, block and a sheet)
@@ -818,6 +819,30 @@ def laptop():
     h.rotation_euler = (0, 0, math.radians(t))
     bpy.context.view_layer.update()
     return [h] + list(h.children_recursive) + [scr, li, deck, keys]
+
+
+def monitor():
+    """A desktop monitor on a weighted foot, with a separate blank 16:9 panel."""
+    width, height = 0.43, 0.43 * 9 / 16
+    case = sk.mat("monitor charcoal housing", (0.019, 0.020, 0.023), 0.46)
+    panel_material = mt.glow("monitor blank panel", (0.68, 0.75, 0.86), 0.61)
+    x, y, z = MONITOR
+    bottom = z - height / 2
+    turn = Matrix.Rotation(math.radians(202), 4, "Z")
+    place = Matrix.Translation((x, y, TOP)) @ turn
+    foot = box("monitor foot", (0.198, 0.122, 0.014), (0, 0.023, 0.007), case, bevel=0.005)
+    post = box("monitor post", (0.049, 0.047, bottom - TOP + 0.043),
+               (0, 0.036, (bottom - TOP + 0.043) / 2), case, bevel=0.005)
+    back = box("monitor housing", (width + 0.029, 0.039, height + 0.035),
+               (0, 0.0215, z - TOP - 0.005), case, bevel=0.006)
+    bm = bmesh.new()
+    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5,
+                          matrix=Matrix.Diagonal((width, height, 1, 1)))
+    screen = _link("monitor_screen", bm, panel_material)
+    for part in (foot, post, back):
+        part.matrix_world = place @ Matrix.Translation(part.location)
+    screen.matrix_world = place @ Matrix.Translation((0, 0, z - TOP)) @ Matrix.Rotation(math.pi / 2, 4, "X")
+    return [foot, post, back, screen]
 
 
 # ---------------------------------------------------------------- small things built here

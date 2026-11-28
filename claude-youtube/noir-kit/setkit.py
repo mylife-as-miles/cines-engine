@@ -12,6 +12,7 @@ import time
 
 import bpy  # first: bmesh and mathutils only exist once bpy is loaded
 import bmesh
+from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Matrix, Vector
 
 
@@ -213,6 +214,23 @@ def plate_optics(name, scene, resolution):
     return {"camera": name, "resolution": list(resolution), "origin": "top-left pixel edge",
             "depth_axis": "camera forward", "focus_m": round(focus, 6), "fstop": round(lens.dof.aperture_fstop, 3),
             "lens_mm": round(lens.lens, 3), "sensor_mm": round(lens.sensor_width, 3)}
+
+
+def screen_frame_metadata(name, scene, resolution, screen):
+    """Project a rectangular display face modelled in local XY, facing +Z."""
+    display = screen.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    left, right = sorted({vertex.co.x for vertex in display.data.vertices})
+    bottom, top = sorted({vertex.co.y for vertex in display.data.vertices})
+    width, height = resolution
+    corners, depths, inside = {}, {}, {}
+    for label, x, y in (("top_left", left, top), ("top_right", right, top),
+                        ("bottom_right", right, bottom), ("bottom_left", left, bottom)):
+        point = world_to_camera_view(scene, scene.camera, display.matrix_world @ Vector((x, y, 0)))
+        corners[label] = [round(point.x * width, 3), round((1 - point.y) * height, 3)]
+        depths[label] = round(point.z, 6)
+        inside[label] = point.z > 0 and 0 <= point.x <= 1 and 0 <= point.y <= 1
+    return {**plate_optics(name, scene, resolution), "screen": screen.name,
+            "corners": corners, "depth_m": depths, "in_frame": inside}
 
 
 def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=0.03):

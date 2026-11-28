@@ -17,6 +17,7 @@ Cameras:
            the lamp on the right, the pad and his hands between them, the letters soft in the foreground
   letters  straight down on the desk (Tim's chair is empty in this one: the pen lies on the pad)
   window   wide from behind, low: Tim small at the desk against the blinds and the night, the lamp past his shoulder
+  monitor  from the chair side of his desk: the desktop monitor's blank playback panel
 
 The set is in tim_desk_set.py, its materials in tim_desk_mats.py, the paper in tim_desk_paper.py. Seating and the
 forearms on the desk follow the family home's stage (home.py), the hand solving the hearing room's (hearing_room.py);
@@ -80,7 +81,8 @@ SPREAD = (1.0, 1.0, 1.5)            # degrees between neighbours: fingers togeth
 HAND_GROUPS = ("DEF-hand", "DEF-palm", "DEF-f_", "DEF-thumb")
 PEN_R = 0.0046
 
-FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01), "fx_pad": (st.PAD[0], st.PAD[1], TOP + 0.01)}
+FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01),
+         "fx_pad": (st.PAD[0], st.PAD[1], TOP + 0.01), "fx_monitor": st.MONITOR}
 
 CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
@@ -91,6 +93,8 @@ CAMERAS = {
     # Ch 09 (and Ch 01 'Tim himself'): from behind the letter side, with the lit desktop clear of Tim's shoulder
     "window": dict(loc=(-1.68, 1.62, 2.09), aim=(-0.18, -0.22, 0.92), lens=30, focus="fx_tim", fstop=4.0,
                    beat="ch09", exposure=-1.3, final_res=(1920, 1080)),
+    "monitor": dict(loc=(0.68, 0.64, 1.255), aim=(0.575, -0.187, 1.15), lens=44,
+                    focus="fx_monitor", fstop=5.6, beat="ch09", exposure=-1.0),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
@@ -99,7 +103,8 @@ TRIMS = {"desk": {"night_glow": 1.5, "lamp_spot": 0.9, "letter return": 0.0,
                    "laptop_screen_light": 0.0, "lamp wall return": 1.5, "room_fill": 9.0},
          "letters": {"tim_bounce": 0.0, "lamp_spill": 2.5, "street": 3.0},
          "window": {"room_fill": 15.0, "night_glow": 1.0, "lamp_spill": 4.0, "lamp_spot": 2.5,
-                    "laptop_screen_light": 0.25, "street": 1.6, "letter return": 0.62}}
+                    "laptop_screen_light": 0.25, "street": 1.6, "letter return": 0.62},
+         "monitor": {"laptop_screen_light": 0.18, "night_glow": 1.0, "room_fill": 8.0}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -961,7 +966,8 @@ def apply_camera(name):
     st.LIGHTS["lamp_spot"].data.color = (1.0, 0.195, 0.013) if name == "desk" else st.WARM
     panel = bpy.data.objects["laptop_screen"].active_material.node_tree.nodes
     # The screen is idle in the writing angles.
-    panel["Screen backlight power"].inputs[1].default_value = {"desk": 0.08, "window": 0.0}.get(name, st.LAPTOP_EMISSION)
+    panel["Screen backlight power"].inputs[1].default_value = {"desk": 0.08, "window": 0.0, "monitor": 0.06}.get(
+        name, st.LAPTOP_EMISSION)
     screen_colour = (0.29, 0.51, 1.0) if name == "window" else st.COOL
     panel["Principled BSDF"].inputs["Emission Color"].default_value = (*screen_colour, 1)
     hz = bpy.data.objects.get("room_haze")
@@ -972,6 +978,11 @@ def apply_camera(name):
         pv.inputs["Density"].default_value = max(dens, 0.0)
     print(f"TIMDESK camera {name or '?'}: beat {cfg.get('beat', '?')}, Tim {'at the desk' if seated else 'not in the chair'}, haze {dens}",
           flush=True)
+
+
+def frame_metadata(name, scene, resolution):
+    if name == "monitor":
+        return sk.screen_frame_metadata(name, scene, resolution, bpy.data.objects["monitor_screen"])
 
 
 def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=None):
@@ -1074,6 +1085,7 @@ def build(cast=True):
     st.chair(cx, cy, ct)
     st.lamp()
     st.group("laptop", st.laptop())
+    st.group("monitor", st.monitor())
     st.papers()
     st.desk_things()
     lights()

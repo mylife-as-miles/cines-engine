@@ -43,6 +43,7 @@ COUNTER_D = 0.635
 DT = (2.8, 0.0)                      # dining table centre, long axis X, 1.8 x 0.97, top at 0.753 (toward the foot:
                                      # room at the head for the chair to stand well off the end wall)
 D_TOP = 0.753
+TV = (1.62, D["y0"] + 0.055, 1.57)   # wall-mounted, beside the sideboard and its framed picture
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
 D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
                                                      # (a cottage sash: short lower sash, tall upper one)
@@ -837,7 +838,7 @@ LID_H, LID_T = 0.208, 0.0055
 def laptop(loc, turn_deg, open_deg=112.0):
     """A plain aluminium laptop, front edge toward local -Y: bevelled base, keyboard well with 78 dark keys (no
     legends), a trackpad, a hinge barrel, the lid with a black glass bezel and a blank glowing screen, opened
-    `open_deg` from closed. Returns (holder, screen object, lid frame matrix)."""
+    `open_deg` from closed. Returns (holder, screen object)."""
     hold = bpy.data.objects.new("laptop", None)
     bpy.context.scene.collection.objects.link(hold)
     parts = []
@@ -912,6 +913,24 @@ def laptop(loc, turn_deg, open_deg=112.0):
     hold.rotation_euler = (0, 0, math.radians(turn_deg))
     bpy.context.view_layer.update()
     return hold, scr
+
+
+def television():
+    """A wall-mounted, unbranded television with a separate 16:9 display face."""
+    width, height = 0.90, 0.90 * 9 / 16
+    x, y, z = TV
+    case = sk.mat("TV charcoal case", (0.016, 0.017, 0.019), 0.51)
+    box("television wall mount", (0.34, 0.026, 0.18), (x, y - 0.040, z), case, bevel=0.004)
+    box("television cabinet", (width + 0.036, 0.044, height + 0.048), (x, y - 0.024, z - 0.005),
+        case, bevel=0.008)
+    material = mt.glow("TV blank panel", (0.70, 0.76, 0.85), 0.68)
+    bm = bmesh.new()
+    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5,
+                          matrix=Matrix.Diagonal((width, height, 1, 1)))
+    panel = _link("television_screen", bm, material)
+    panel.location = TV
+    panel.rotation_euler = (math.radians(90), 0, math.pi)  # local right is -X when viewed from the room
+    return panel
 
 
 def mug(loc, turn_deg=0.0, *, name="mug"):
