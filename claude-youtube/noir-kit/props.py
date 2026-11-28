@@ -270,7 +270,7 @@ def tote_topstitch(holder, *, soften_lip_normals=False, lip_normal_band=20, behi
     return ob
 
 
-def project_tote_seam(hem, blockers, scene, resolution, *, sample_trace=False):
+def project_tote_seam(hem, blockers, scene, resolution, *, sample_trace=False, centres_only=False):
     """Project the actual stitch crowns and endpoints in the graphic's left-to-right drawing order."""
     surfaces = [surface_bvh(obj) for obj in blockers]
     eye = scene.camera.matrix_world.translation
@@ -285,7 +285,9 @@ def project_tote_seam(hem, blockers, scene, resolution, *, sample_trace=False):
     paths, controls = [], []
     previous = None
     for spline in reversed(hem.data.splines[:]):
-        for control in reversed(spline.points[:]):
+        points = spline.points[:]
+        centres = points[len(points) // 2:len(points) // 2 + 1] if centres_only else points
+        for control in reversed(centres):
             point = hem.matrix_world @ Vector(control.co[:3])
             uv = world_to_camera_view(scene, scene.camera, point)
             pixel = (uv.x * width, (1 - uv.y) * height)

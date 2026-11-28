@@ -165,7 +165,8 @@ CAMERAS = {
     "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-4.3),
     # Ch 04: after the close-up, the officer is still lifting the tote from the same mark.
     "two_shot": dict(loc=(2.60, 0.22, 1.41), aim=(-0.1, -0.12, 1.30), lens=31, focus="fx_two", fstop=4.0,
-                      beat="ch05", cheat={"OfficerA": TOTE_OFFICER, "OfficerB": (-0.02, 0.94)}, **TOTE_HANDLING),
+                      beat="ch05", tote_saturation=0.981,
+                      cheat={"OfficerA": TOTE_OFFICER, "OfficerB": (-0.02, 0.94)}, **TOTE_HANDLING),
     # Ch 04: the same three handbags stay on their marks after the people leave.
     "empty": dict(loc=(2.5, -2.5, 1.5), aim=(0.25, 0.1, 0.92), lens=24, focus="fx_empty", fstop=4.5,
                   beat="ch05", layout="three bags", cast=False,
@@ -1007,6 +1008,8 @@ def apply_camera(name):
         light.hide_render = watts == 0
         light.data.energy = watts
     _STATE["tote_panel_return"].hide_render = name != "handbags_touch"
+    for socket, base in _STATE["tote_saturation"]:
+        socket.default_value = base * cfg.get("tote_saturation", 1.0)
     top = bpy.data.materials.get("bench top steel")
     if top and "ghost" in top.node_tree.nodes:  # the cleaner patch where the tote stood: only once it has gone
         top.node_tree.nodes["ghost"].outputs[0].default_value = 1.0 if beat == "ch11" else 0.0
@@ -1102,8 +1105,13 @@ def build(cast=True):
     origin = Vector((0.55, 0.85, TOP + 0.30))
     aim = Vector((tx, ty, TOP + 0.20))
     tote = _STATE["props"]["handbag-tote"]
+    tote_parts = props.meshes(tote)
+    dye_nodes = {node for part in tote_parts for mat in part.data.materials if mat and mat.use_nodes
+                 for node in mat.node_tree.nodes if node.type == "HUE_SAT"}
+    _STATE["tote_saturation"] = [(node.inputs["Saturation"], node.inputs["Saturation"].default_value)
+                                  for node in dye_nodes]
     return_light = st.linked_light("tote panel shadow return", origin, (0.25, 0.15), 9.0,
-                                   (0.91, 0.94, 1.0), props.meshes(tote), spread_deg=72,
+                                   (0.91, 0.94, 1.0), tote_parts, spread_deg=72,
                                    rot=(aim - origin).to_track_quat("-Z", "Y").to_euler())
     return_light.visible_glossy = return_light.visible_camera = False
     return_light.hide_render = True
