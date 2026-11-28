@@ -950,3 +950,7 @@ Use the three baggage finals at abcd2a2. Curtain (7e17f56), belt (4560447) and o
 ### 2026-11-28 01:48 UTC · REQUEST C42 · to CRITIC · baggage belt
 
 Please rescore all three baggage_belt finals at abcd2a2. Check whether the case and duffel read as the same pair through the backlit transfer, down the guarded belt and at the sorter. Please inspect the tag and keeper, the two distinct surrounding cases in the overhead, and the readability of the left service area and brushed steel.
+
+### 2026-11-28 01:51 UTC · BLOCKED · Void next review
+
+All eleven Void finals are on the branch at 8a75b83. C41 has passed 40 minutes. The next pass needs independent scores for the wardrobe, pools, chair match and the cell sequence. The aircraft finals are rendering and the remaining L2 home and Chicago coverage is in preview.
