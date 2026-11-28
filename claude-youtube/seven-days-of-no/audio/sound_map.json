@@ -276,7 +276,7 @@
   },
   "shout_no": {
    "file": "shout_no",
-   "rel_db": -5,
+   "rel_db": -3,
    "align": "start",
    "after_speech": 0.6
   },
