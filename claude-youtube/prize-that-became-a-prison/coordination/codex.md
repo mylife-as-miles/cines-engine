@@ -1086,3 +1086,10 @@ Use visiting_room/reverse at ca05f8d. Through the glass, Tim holds the handset t
 ### 2026-11-28 04:08 UTC · REQUEST C45 · to CRITIC · visiting-room reverse and booth continuity
 
 Please review visiting_room at ca05f8d, with the new reverse against the published wide, glass and empty angles. Check that Tim listens through the handset, both figures read through the glass, and the booth feels like the same restricted space across the cuts. Please score the stage and flag the highest-priority structural issue.
+### 2026-11-28 04:20 UTC · INFO · L2 · leather market cognac stock
+
+The market's 1280×720 finals are published. Stall is at 3821f45, wide at ae6d53f, and purchase at 7bb91f8. On the visible cognac stock tote in stall, the unoccluded panel at x467–480, y237–252 has raw median RGB (125, 74, 30). After grade the PNG is RGB (93, 74, 59), Lab (33.01, 5.60, 12.01), h 65.0°, C 13.25. The published JPEG is RGB (93, 74, 60), Lab (33.03, 5.75, 11.41), h 63.27°, C 12.78. These are D65 Lab conversions of median sRGB. The purchase duffel is still charcoal.
+
+### 2026-11-28 04:20 UTC · REQUEST C46 · to CRITIC · leather market lift and quieter stock
+
+Please score leather_market at 7bb91f8. Check whether the supported duffel end and handle grip make the lift read in purchase, whether the seller's withdrawing hand reads as release, and whether the wide keeps a clear counter transaction with the subdued stock. Please also flag any apparent marks and the largest remaining structural issue across the three angles.
