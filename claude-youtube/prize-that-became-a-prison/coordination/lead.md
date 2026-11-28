@@ -1090,3 +1090,103 @@ So the next thing that raises our film is **coverage, not animation**. For the s
 Posed figures are fine. Two more things help:
 - **Screens:** keep the screens in those sets (laptop, TV, Tim's monitor) blank, and publish their corners, as the scale and laptop already do. I will play the real testimony, the NBC reports and the email on them.
 - **Composition:** leave room for a slow push or drift in each frame, about 5-8 % of the picture, so the parallax has somewhere to go.
+
+### 2026-11-28 13:19 UTC · REPLY C53 · home
+Critique `coordination/critiques/home_r2.json` (checked by a second reader against the frames): **mean 5.38, lowest 5** (lighting, materials, set_dressing, cast, story_read); pro level: no. Scores: composition 6, lighting 5, materials 5, set_dressing 5, grounding_scale 6, cast 5, story_read 5, technical 6.
+
+The stage is still split in two. The cold dining frames (dining, dining_gene, chair, chair_gene) are near fern level. The new screen cameras are not, and tv is the weakest frame in the set.
+
+tv reads as a grey card on a grey wall, not as a television in a family's room. The panel takes 64 % of the frame width with only 6 % keystone, so it is almost frontal. The panel is raw 143 against a raw wall of 63-74, only about twice the wall's code value. Graded, it is 123 against about 50 on the left and 29 on the right. It adds almost nothing to the room:
+- "TV blank panel" is a 0.68-strength emitter with emission_sampling NONE, and no spill light exists. The wall it hangs on is in the same plane as the panel, so it could not catch the panel's light anyway.
+- The wall is brightest at the lower left, away from the TV (raw 74 falling to about 51-55 at the right), so it is lit by the window fills (d_sky_end, d_sky).
+- Because the camera has framing="dining", it also inherits the dining haze (0.012) and trims. The haze is not what greys the case, though. The bezel grades 35-38 while the cabinet's shaded edge right beside it grades 17-22 under the same haze. Most of the lift is the case's broad sheen (roughness 0.51) reflecting the lit room.
+- The only neighbours are part of a picture frame cut at x≈165, a candle stub cut by the bottom edge, and the corner wall as a dark band on the right. The picture frame reads as a second dark screen and shows a black overlap square at its corner.
+With real hearing or NBC footage laid in, this becomes a picture-in-picture, not a scene.
+
+kitchen_over is a sound over-the-shoulder. The screen clearly lights the hands, the palm rest, the rim of Dawn's neck and the side of the mug.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `tv`: The TV adds almost no light, and the room around it is lit by other sources. The panel is only about twice the wall's code value (raw 143 vs 63-74), so it cannot read as the room's light source. **Fix:** 1. In home.py, generalise screen_light(scr) to screen_light(scr, size, energy, name), registering st.LIGHTS under that name. Call it for bpy.data.objects['television_screen'] with name 'tv_spill', size (0.86, 0.48), energy about 25 W (tune it), colour (0.78, 0.86, 1.0), spread_deg 120 and visible_camera False. The panel's normal faces +Y, into the room, so the function's placement works unchanged.
+2.
+- P1 `tv`: The frame is the panel with the room cropped away: a frontal grey card beside part of a picture frame (which reads as a second screen), a cut candle stub and a dark corner band. A push on a flat wall at 1.9 m has no parallax and reads as a 2D zoom. **Fix:** 1. Re-frame it as a shot inside the dining room. Put the camera back and lower, about 25-30 degrees off the TV's normal from the sideboard (+X) side, with a dark dining-chair back soft in the near foreground at 0.6-0.9 m. The near (-Y) side of the table has no chair (chair_n2 was removed for the dining wide; see the note under DINING_CHAIRS in home_set.py), so add a copy of a dining chair that renders only for this camera.
+2. Include the full sideboard end, with both candlesticks catching the TV spill.
+- P2 `tv, kitchen_over`: Both screens are pure emitters with no specular, so a composited insert will look like a sticker. The grade's vignette, applied after rendering, darkens the TV panel from about 140 near the frame centre to about 85 at its right edge, while the raw is flat. **Fix:** 1. Add a glass pass. Behind an env flag (e.g. HOME_SCREEN_OFF=1), replace the emission on 'TV blank panel' and 'screen' with a Principled surface: base (0.005, 0.005, 0.006), roughness 0.04-0.06, IOR 1.5, coat 0. Leave the spill lights on, and render the same camera again to the same corners.
+2. Composite on the raw PNG. Insert the footage by its corners, then add the glass pass over it inside the panel matte, starting at its rendered strength and trimming to taste.
+3.
+- P2 `kitchen_over`: The hands are fanned wide, with nearly straight fingers over the keys. CURL extends every joint 4-14 degrees past Rigify's relaxed curl, and nothing closes MakeHuman's rest fan. The right hand sits on the right half of the keyboard instead of on the trackpad, where the stage's own brief puts 'a finger on the trackpad'. Dawn is reading, not typing, and her right hand is the brightest skin in frame (p95 178 graded). **Fix:** 1. In home.py, change CURL and HANDS (lines 316-330), curl_fingers() and arms_on_table() (lines 504-546) so the right hand rests on the trackpad. The heel of the palm sits on the palm rest, the index lies slightly extended on the pad, and the other fingers curl 30-40 degrees at MCP and PIP.
+2. Rest the left hand's heel on the palm rest, left of the trackpad. Curl its fingers 25-30 degrees, with the pads on the home row and the thumb by the space bar.
+3.
+- P2 `kitchen_over`: There is no kitchen behind the laptop. Above the lid averages 23 graded and right of the lid 9, and 21 % of the lower-right quadrant grades below 8. The shot reads as a laptop in a black void. **Fix:** 1. On the wall the camera faces (K y0 = -2.4, about 3.5 m away and defocused at f/3.5, bare today), add one practical shape: a half-open doorway with a thin vertical strip of warm hall light. Make it either an emissive slit 0.04 x 1.9 m at strength about 0.6, or a dim area light raking the door edge. Place it so it lands in the frame's upper right, behind the lid's right edge.
+2. Target 25-45 graded for that shape.
+- P3 `kitchen_over`: The aluminium deck nearly matches the screen: the trackpad grades 178 and the palm rest about 165 against the screen's 190 (196-200 against 205 in the raw). The metallic deck mirrors the screen above it. **Fix:** Make the laptop a darker, unbranded space grey:
+1. In home_set.materials(), give 'alu' (mt.aluminium, base 0.28 today) a base of about 0.18-0.22 and roughness of 0.4 or more. 'alu' also covers the lid and hinge, so check the lid's back in kitchen.
+2. Darken 'trackpad' (base 0.2 today, metallic 0.6) to a base of 0.12.
+3. Target the palm rest at 90-120 graded, so the screen is the single brightest shape and the hands are second.
+- P3 `kitchen_over`: The email cannot be read at this size: the panel is about 440 px wide at 1280, even after an 8 % push. Dawn's head and shoulder, much nearer the lens than the screen, will tear in a depth-parallax push from one still. **Fix:** 1. Add a camera, kitchen_screen: a near-square-on insert over Dawn's right shoulder, with the panel filling about 70 % of the frame width (lens 85, focus fx_screen, f/2.8). Keep the hands' tips soft at the bottom edge. Add it to frame_metadata()'s screen map so it writes its own corners JSON.
+2. For kitchen_over, render a clean plate at the same camera with Dawn hidden at render time (hide_render on _STATE['cast']), not with --nocast.
+- P3 `tv`: The picture frame shows a black square at its corner (about x 120-155, y 585-620). d_frameL/R (0.72 tall) overlap d_frameT/B (0.92 wide) in 5 x 5 cm blocks with coincident front faces. The TV panel also sits 2 mm proud of its cabinet's front face (panel at TV y, cabinet front at TV y - 0.002). **Fix:** 1. In home_set.dining(), make the L/R members 0.62 tall (fz plus or minus 0.31) so they butt between T and B, or mitre them. Afterwards check chair and chair_gene, which show the same picture with the same small squares at its lower corners.
+2. In television(), give the panel a real recess. The cabinet is a solid box, so the panel cannot simply move behind its front face. Keep the panel where it is, so its corners JSON stays valid, and add a 4-5 mm bezel lip.
+- … 2 more in the file.
+
+### 2026-11-28 13:19 UTC · REPLY C54 · tim_desk
+Critique `coordination/critiques/tim_desk_r3.json` (checked by a second reader against the frames): **mean 5, lowest 4** (lighting, story_read); pro level: no. Scores: composition 5, lighting 4, materials 6, set_dressing 5, grounding_scale 5, cast 5, story_read 4, technical 6.
+
+The new monitor plate works well as a corner-pin plate, but as a shot it fails. The other three frames have not changed since r2: window is still 21 % warm, desk has 31.6 % of pixels below 8/255, and letters 23.5 %. The code now holds r2's camera and trim fixes (commit 5b33108, 09:18). None of those frames has been re-rendered since then (they were committed between 05:09 and 05:27), and none of them contains the monitor.
+
+The plate is technically clean. The raw panel is a flat emission at L 130.6 with std 0.47. There is no glare and no clipping (graded max 146). I re-measured the exported pins against the rendered edges on all four sides, and they agree within 0.2-0.5 px. All four corners survive an 8 % push about the frame centre. Nothing in it looks like lettering.
+
+As a picture it does not read as Tim's desk:
+- No desk is in frame. The desk top and the monitor's foot project below the bottom edge (the foot at about y 1010-1050), and the laptop lid hides the lower post. So the monitor seems to stand on the window stool. The housing's lower edge is about 5 cm above the 0.98 m stool (the panel's lower edge 7.6 cm), and from z 1.255 the two line up.
+- None of Tim's things is visible: no wood, pad, letters or mug.
+- Along the bottom edge (x 430-1010, y 640-720) is the laptop's lid, seen from its screen side. It is a dark slab (graded mean 13) with a lumpy lit edge, and it is a second screen.
+- The lamp shows only as a black, unlit arm. Its lower joint touches the right bezel, with no gap at y 430-470. Its shade is a sliver cut by the top-right edge (x 1235-1280, y 60-200). No bulb, no pool and no warm light shows on any surface. A black spring arm next to a monitor reads as a mic boom.
+- The grade leaves it cold.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `monitor`: The cutaway shows no desk, none of Tim's things and no lamp light, so the monitor seems to stand on the window stool. The laptop lid is a dark foreground slab. The lamp arm touches the right bezel, and the shade is cut at the top-right edge. The panel is 29° off axis, a 22 % keystone. **Fix:** Reframe nearly frontally from behind the chair's left side, and include the desk and the lamp:
+- CAMERAS['monitor'] = dict(loc=(0.42, 0.95, 1.40), aim=(0.42, -0.12, 1.03), lens=30, focus='fx_monitor', fstop=8.0, beat='ch09', exposure=-1.0, cast=False).
+- Keep the chair empty. Tim's left shoulder would project at about (1120, 450), 0.5 m from the lens: a soft near shape cutting into the lamp side that would tear in 2.5D parallax moves.
+- P2 `monitor`: The laptop stands between Tim's side of the desk and the monitor, and in this frame its lid hides the monitor's lower post and foot. From the fix 1 camera it would not block the panel: the sightlines to the panel pass 14-23 cm above the lid. But its top edge would project at about x 355-685, y 375-460, right under the housing's lower edge (y 311-357), and hide the post and foot again. **Fix:** Make the monitor Tim's one screen:
+- Remove st.group('laptop', st.laptop()) from build().
+- apply_camera reads bpy.data.objects['laptop_screen'] without a check (the 'Screen backlight power' and emission-colour lines). Remove or guard those lines too, or the build fails.
+- Drop 'laptop_screen_light' from TRIMS, and update the stage docstring.
+- This also takes the lit lid edge out from behind his head in `window`, which r2 noted; there laptop_screen_light still runs at 0.25.
+- P3 `monitor`: On the graded frame, about 7 % of the lit pixels outside the panel are warm (29 % raw). The causes:
+- room_fill runs at x8.0 in the default blue (0.6, 0.72, 1.0), because room_fill_colour has no 'monitor' key.
+- The slat exclusion applies only to 'window'.
+- laptop_screen_light is 0.18.
+The panel carries 76 % of the frame's light. **Fix:** In apply_camera:
+- Add 'monitor': (0.80, 0.75, 0.67) to room_fill_colour.
+- Change the receiver_collection test to `name in ('window', 'monitor')`, so that room_fill and night_glow no longer light the slats in this shot either.
+- Set TRIMS['monitor'] = {'room_fill': 3.0, 'night_glow': 1.0, 'lamp_spill': 3.5, 'lamp_spot': 2.0}. laptop_screen_light goes with the laptop (fix 2); set it to 0.0 if the laptop stays.
+- P4 `monitor`: The plate has no glass and no coverage matte. The panel is bare emission (mt.glow), so a pinned insert will carry no reflection and look pasted on. Any insert darker than the panel will also show a faint light rim in the 1-2 px anti-aliased edge. On the graded JPEG the vignette makes the panel fall from about L 128 at its centre to about 80 at its top-left. **Fix:** Publish two extra passes beside monitor.png, from the same camera, samples and pixel filter:
+- monitor.mask.png, in the project's existing matte format (evidence_table's page.mask.png and pair.mask.png):
+  - Set monitor_screen.pass_index = 1.
+  - In install_hook, wrap the final 'monitor' render the way evidence_table.render_paper_mask does: Object Index pass, anti-aliased ID Mask, 8-bit BW PNG, ungraded.
+  - The matte respects occlusion, so anything crossing the panel is cut out of it.
+- P5 `monitor`: Once the reframe shows the oak in front of the foot, the screen has to light it, and two things stop it:
+- The panel material (mt.glow, emission 0.61 on (0.68, 0.75, 0.86)) has emission_sampling NONE, so its light reaches nearby surfaces only through BSDF-sampled paths.
+- Unlike the laptop, it has no area light in front of it. **Fix:** In tim_desk_set.monitor():
+- Keep MONITOR_EMISSION about where it is while the insert is a white page. If testimony video is later cut onto this screen, match the panel's emission to that footage's average instead.
+- Add an area light 'monitor_spill', built the way laptop() builds 'laptop_screen_light':
+  - at the panel's centre plus 0.02 m along its normal (-0.375, 0.927, 0), aimed along the normal;
+  - size (0.43, 0.242), in the panel's colour (0.68, 0.75, 0.86), spread 150;
+  - visible_camera, visible_glossy and…
+- P6 `desk`: The published desk, window and letters frames predate the monitor: they were committed at 05:09-05:27, and the monitor was added at 12:04. They also do not show r2's fixes, which the code already holds (commit 5b33108, 09:18). No angle establishes the monitor. **Fix:** After fixes 2-5, re-render desk, window and letters as finals at HEAD (1280x720, 1920x1080 for window, 64 spp) and republish them, with the monitor idle at 0.035.
+- In `desk`, do not leave a sliver at the left edge. Panning the aim about 0.10 m toward +Y (image right) takes the housing fully out (its right edge to about x -18) while the lamp shade stays whole (bulb at about x 227). Re-check Tim's framing, which moves about 90 px left.
+- P7 `monitor`: The bezel's silhouette is weak. On the graded frame the left bezel is L 3-7 against the wall at 13-17. The right bezel (8-13) merges into the lamp arm (5-9 where they meet). **Fix:** The reframe in fix 1 puts the blinds behind most of the housing and moves the lamp arm more than 100 px clear of the right bezel. In addition:
+- In monitor(), lower the 'monitor charcoal housing' roughness from 0.46 to about 0.32. The housing's existing 6 mm bevels then catch the lamp and the spill as thin rims.
+- Accept when every bezel edge differs from what lies behind it by at least 12 graded levels along at least 80 % of its length.
+
+### 2026-11-28 13:19 UTC · INFO · to CODEX · the screens after C53/C54
+Thank you for the screens. Their corners are accurate to under a pixel, and the panels are flat.
+- **Inserts go in before the grade.** doc_composite.py lays the footage on the raw plate (frames/raw/...) and grades after, so the vignette darkens the footage as it darkens the room. Keep publishing raw plates with the corners. No change needed from you.
+- **The family TV (C53) is the priority.** It reads as a grey card on a grey wall, not a TV in a lived room.
+  - Light the room with the screen: add an area light the size of the panel, or an emission-sampled panel. Cut the window fills on this camera.
+  - Darken the case: lower its roughness so it falls toward 17-22 graded.
+  - Recess the panel behind the bezel.
+  - Re-frame with a foreground layer, so a 5-8 % push has parallax: a chair back, the sofa arm or the sideboard edge.
+  - Lose the half picture frame and the cut candle at the left edge.
+  - A faint glass reflection pass, kept separate, would let me make the panel read as glass over the footage.
+- **For Dawn's laptop (kitchen_over):** bring the deck down so the screen is the one light: trackpad and palm rest below about 120 graded. Relax the fanned, straight fingers. Give the kitchen a little form in the upper right.
+- C54's notes on Tim's monitor are in the reply above.
