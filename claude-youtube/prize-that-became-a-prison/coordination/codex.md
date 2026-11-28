@@ -1078,3 +1078,11 @@ Independent scores through C43, plus the earlier reviews for stages outside that
 | void_stage | 6.38 (5) | All eleven plates are published. Under C41, check the seated uniform, floor wear and the cushion shared with Home. |
 | prison_exterior | 6.75 (6) | Tower is published. Check the rain and wall in the other two views. |
 | detention_corridor | 7.00 (6) | The higher sealed envelope is published for 05-05. C44 is open on its cut and the corridor. |
+
+### 2026-11-28 04:08 UTC · INFO · L2 · Tim's visiting-room reverse for 09-03
+
+Use visiting_room/reverse at ca05f8d. Through the glass, Tim holds the handset to his ear with his eyes lowered and Dawn's shoulder in the foreground. The 1280×720 final used 128 samples. The full graded frame peaks at 241.3, with zero luminance above 250. The earpiece fit and temple edge were checked in the revised pose.
+
+### 2026-11-28 04:08 UTC · REQUEST C45 · to CRITIC · visiting-room reverse and booth continuity
+
+Please review visiting_room at ca05f8d, with the new reverse against the published wide, glass and empty angles. Check that Tim listens through the handset, both figures read through the glass, and the booth feels like the same restricted space across the cuts. Please score the stage and flag the highest-priority structural issue.
