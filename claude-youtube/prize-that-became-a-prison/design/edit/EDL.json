@@ -58,7 +58,7 @@
    "words": 151,
    "speech_s": 52.15,
    "spoken_wpm": 174,
-   "shots": 16
+   "shots": 17
   },
   {
    "n": "04",
@@ -2748,9 +2748,9 @@
    "start_frame": 5739,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/hotel_room/overhead_pre.png",
+    "plate": "frames/raw/hotel_room/window.png",
     "stage": "hotel_room",
-    "camera": "overhead_pre",
+    "camera": "window",
     "zoom": [
      1.0,
      1.02658
@@ -2762,6 +2762,14 @@
     "frames": 58,
     "push": "in 2.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hotel_room/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -2775,7 +2783,7 @@
     }
    ],
    "sound": "A soft room",
-   "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above."
+   "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above. Continuity (LEAD, 28 Nov, from C37): the full case with the three gifts moves to 03-04, its own line; here Dawn at the hotel window."
   },
   {
    "id": "03-03",
@@ -2830,9 +2838,9 @@
    "start_frame": 5905,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/hotel_room/overhead.png",
+    "plate": "frames/raw/hotel_room/overhead_pre.png",
     "stage": "hotel_room",
-    "camera": "overhead",
+    "camera": "overhead_pre",
     "zoom": [
      1.0,
      1.03988
@@ -2853,7 +2861,7 @@
     }
    ],
    "sound": "Zips",
-   "change": "Added: \"Her luggage was already full\" on the packed case from above."
+   "change": "Added: \"Her luggage was already full\" on the packed case from above. Continuity (LEAD, 28 Nov, from C37): 'Her luggage was already full' on overhead_pre (one closed case, three gifts, no extra bag yet); the packed overhead with the duffel showed the duffel before she bought it."
   },
   {
    "id": "03-05",
@@ -2989,8 +2997,8 @@
    "chapter": "03",
    "start": 257.75,
    "start_tc": "4:17.75",
-   "duration": 3.25,
-   "frames": 78,
+   "duration": 1.9167,
+   "frames": 46,
    "start_frame": 6186,
    "source": {
     "kind": "plate",
@@ -2999,14 +3007,14 @@
     "camera": "pack",
     "zoom": [
      1.0,
-     1.03575
+     1.02108
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 78,
-    "push": "in 3.6 % (log space, constant speed)",
+    "frames": 46,
+    "push": "in 2.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
      "k": 1.0,
@@ -3026,6 +3034,42 @@
    ],
    "row": "hotel_room `pack`",
    "sound": "Zips"
+  },
+  {
+   "id": "03-08a",
+   "chapter": "03",
+   "start": 259.6667,
+   "start_tc": "4:19.66",
+   "duration": 1.3333,
+   "frames": 32,
+   "start_frame": 6232,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/overhead.png",
+    "stage": "hotel_room",
+    "camera": "overhead",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 32,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.05",
+     "text": "Dawn packed the handbags herself. Two pieces of luggage. Both checked in her name."
+    }
+   ],
+   "row": "hotel_room `overhead`: the case and the new duffel packed, from above",
+   "sound": "A zip",
+   "change": "Continuity (LEAD, 28 Nov, from C37): the packed overhead (case and duffel) moves here, after the packing, on 'Two pieces of luggage'."
   },
   {
    "id": "03-09",
@@ -3267,14 +3311,14 @@
    "chapter": "03",
    "start": 282.4583,
    "start_tc": "4:42.45",
-   "duration": 3.8333,
-   "frames": 92,
+   "duration": 4.1667,
+   "frames": 100,
    "start_frame": 6779,
    "source": {
     "kind": "piece",
     "name": "cutaway",
     "in": 0.0,
-    "frames": 92,
+    "frames": 100,
     "file": "out/gfx/r7/13_cutaway.mp4",
     "gen": {
      "tool": "seam",
@@ -3282,9 +3326,9 @@
     },
     "fixed": false,
     "note_piece": "the section opens 1.3-2.1 s, closes 3.6-4.05 s",
-    "render_secs": 4.083,
-    "clip": "out/film/pieces/cutaway-6cb332a37c4a.mp4",
-    "command": "node gfx/type_render.js seq cutaway 4.083 out/film/pieces/cutaway-6cb332a37c4a.mp4 --page gfx/seam.html",
+    "render_secs": 4.417,
+    "clip": "out/film/pieces/cutaway-8f69dc9c432f.mp4",
+    "command": "node gfx/type_render.js seq cutaway 4.417 out/film/pieces/cutaway-8f69dc9c432f.mp4 --page gfx/seam.html",
     "clip_from": "re-rendered"
    },
    "voice": [
@@ -3299,11 +3343,11 @@
   {
    "id": "03-16",
    "chapter": "03",
-   "start": 286.2917,
-   "start_tc": "4:46.29",
-   "duration": 3.0,
-   "frames": 72,
-   "start_frame": 6871,
+   "start": 286.625,
+   "start_tc": "4:46.62",
+   "duration": 2.6667,
+   "frames": 64,
+   "start_frame": 6879,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/curtain.png",
@@ -3311,14 +3355,14 @@
     "camera": "curtain",
     "zoom": [
      1.0,
-     1.033
+     1.02933
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 72,
-    "push": "in 3.3 % (log space, constant speed)",
+    "frames": 64,
+    "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
      "k": 1.0,
@@ -3338,7 +3382,7 @@
    ],
    "row": "baggage_belt `curtain`, `belt`",
    "sound": "Belt rollers; the pulse returns",
-   "change": "The seam and cut-away move to the last line (\"whatever was hidden in those linings\") so they land on the words; `belt` already played in the cold open, so `curtain` ends the chapter."
+   "change": "The seam and cut-away move to the last line (\"whatever was hidden in those linings\") so they land on the words; `belt` already played in the cold open, so `curtain` ends the chapter. Cue moved from @0.80 (LEAD, 28 Nov): the cut-away's close runs 3.6-4.05 s, so its shot now lasts about 4.2 s and the close lands on screen before the cut."
   },
   {
    "id": "04-01",
