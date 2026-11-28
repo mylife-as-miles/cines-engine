@@ -1067,11 +1067,10 @@
     {
      "id": "03-02",
      "at": "03.01@0.86",
-     "plate": "hotel_room/overhead_pre",
+     "plate": "hotel_room/window",
      "move": "in",
      "sound": "A soft room",
-     "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above.",
-     "parallax": false
+     "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above. Continuity (LEAD, 28 Nov, from C37): the full case with the three gifts moves to 03-04, its own line; here Dawn at the hotel window."
     },
     {
      "id": "03-03",
@@ -1084,10 +1083,10 @@
     {
      "id": "03-04",
      "at": "03.03",
-     "plate": "hotel_room/overhead",
+     "plate": "hotel_room/overhead_pre",
      "move": "in",
      "sound": "Zips",
-     "change": "Added: \"Her luggage was already full\" on the packed case from above.",
+     "change": "Added: \"Her luggage was already full\" on the packed case from above. Continuity (LEAD, 28 Nov, from C37): 'Her luggage was already full' on overhead_pre (one closed case, three gifts, no extra bag yet); the packed overhead with the duffel showed the duffel before she bought it.",
      "parallax": false
     },
     {
@@ -1121,6 +1120,16 @@
      "move": "in",
      "row": "hotel_room `pack`",
      "sound": "Zips"
+    },
+    {
+     "id": "03-08a",
+     "at": "03.05@0.36",
+     "plate": "hotel_room/overhead",
+     "move": "in",
+     "parallax": false,
+     "row": "hotel_room `overhead`: the case and the new duffel packed, from above",
+     "sound": "A zip",
+     "change": "Continuity (LEAD, 28 Nov, from C37): the packed overhead (case and duffel) moves here, after the packing, on 'Two pieces of luggage'."
     },
     {
      "id": "03-09",
