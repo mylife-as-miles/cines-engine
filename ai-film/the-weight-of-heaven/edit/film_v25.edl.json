@@ -1,0 +1,36 @@
+{
+ "file": "out/review/film_v25.mp4",
+ "frames": 4499,
+ "seconds": 187.4583,
+ "is": "cut v22 with its stumble and fall shots replaced by the cutter over the wall",
+ "sound": "out/edits/film_v22.wav, unchanged",
+ "excerpt": "out/review/film_v25_hall.mp4",
+ "excerpt_starts_at_s": 137.0,
+ "shots": [
+  {
+   "name": "the cutter over the wall",
+   "starts_at_s": 140.0,
+   "frames": 58
+  },
+  {
+   "name": "the spear",
+   "starts_at_s": 142.417,
+   "frames": 56
+  },
+  {
+   "name": "they watch",
+   "starts_at_s": 144.75,
+   "frames": 42
+  },
+  {
+   "name": "Karst",
+   "starts_at_s": 146.5,
+   "frames": 20
+  },
+  {
+   "name": "from her close shot on, cut v22 unchanged",
+   "starts_at_s": 147.333,
+   "frames": 963
+  }
+ ]
+}
