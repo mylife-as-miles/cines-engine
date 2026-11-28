@@ -1,0 +1,630 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Type test</title>
+<style>
+@font-face{font-family:"Archivo";src:url("fonts/archivo/Archivo%5Bwdth,wght%5D.ttf") format("truetype");font-weight:100 900}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-Regular.ttf");font-weight:400}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-Medium.ttf");font-weight:500}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-SemiBold.ttf");font-weight:600}
+html,body{margin:0;background:#060708}canvas{display:block}
+</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../out/gfx/typetest/testimony_env.js" onerror="window.TENV=null"></script>
+<script>
+'use strict';
+// Motion-typography style test for The Prize That Became a Prison: three looks for the author to choose from.
+//   testimony  kinetic captions over Tim Hunt's 2026 testimony (real clip, cut by gfx/typetest_build.sh prep)
+//   casefile   an animated dossier: the real photo, four facts, the sentence changing from death to life
+//   years      a camera travelling a dark 3D timeline, 2014 to 2026, year numerals made of particles
+// Contract (canvas_render.js): window.draw(mode, t) draws one frame from t alone; window.READY once loaded.
+// mode 'all' plays the three looks back to back with straight cuts (the test reel); each look also renders alone.
+// Fonts: Archivo (OFL) for words, IBM Plex Mono (OFL) for typed records. One accent, cold cyan, marks time only.
+// No red anywhere: in this film red marks only the tote's seam. No labels, credits or invented facts.
+const W = 1920, H = 1080, FPS = 24;
+const cv = document.getElementById('c'), MAIN = cv.getContext('2d');
+let ctx = MAIN;                      // swapped to an offscreen context while the dossier plane is drawn
+const COL = { ink: '#eef0f2', grey: '#8d97a2', grey2: '#b7bec6', line: 'rgba(170,182,194,0.28)', acc: '#8ad8e4' };
+const ACC = (a) => `rgba(138,216,228,${a})`, INK = (a) => `rgba(238,240,242,${a})`;
+const SANS = 'Archivo', MONO = 'PlexMono';
+const LOOKS = [{ id: 'testimony', n: 261 }, { id: 'casefile', n: 230 }, { id: 'years', n: 324 }];
+
+// ---------- math ----------
+const cl = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
+const lerp = (a, b, u) => a + (b - a) * u;
+const ramp = (t, a, b) => cl((t - a) / (b - a));
+const oExpo = u => u >= 1 ? 1 : 1 - Math.pow(2, -10 * u);
+const oCubic = u => 1 - Math.pow(1 - u, 3);
+const oQuint = u => 1 - Math.pow(1 - u, 5);
+const ioCubic = u => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+const ioQuint = u => u < .5 ? 16 * u * u * u * u * u : 1 - Math.pow(-2 * u + 2, 5) / 2;
+const sm = u => (u = cl(u), u * u * (3 - 2 * u));
+function bez(x1, y1, x2, y2) {         // cubic-bezier(x1,y1,x2,y2) as y(x), by bisection
+  const B = (a, b, u) => 3 * a * u * (1 - u) * (1 - u) + 3 * b * u * u * (1 - u) + u * u * u;
+  return x => { x = cl(x); let lo = 0, hi = 1, u = x; for (let i = 0; i < 24; i++) { if (B(x1, x2, u) < x) lo = u; else hi = u; u = (lo + hi) / 2; } return B(y1, y2, u); };
+}
+const ENTER = bez(.2, .8, .2, 1);      // the handbook's entrance curve
+function rng(seed) { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+// ---------- type helpers ----------
+function setFont(w, s, fam = SANS, ls = 0) { ctx.font = `${w} ${s}px ${fam}`; ctx.letterSpacing = ls + 'px'; }
+const tw = s => ctx.measureText(s).width;
+// a word rising out of a mask that sits just under its baseline (entrances ease out, no overshoot)
+function rise(text, x, y, size, p) {
+  if (p <= 0) return;
+  const e = oExpo(cl(p)), w = tw(text);
+  ctx.save();
+  ctx.beginPath(); ctx.rect(x - size * .25, y - size * 1.15, w + size * .5, size * 1.47); ctx.clip();
+  ctx.globalAlpha *= cl(p * 2.4);
+  ctx.fillText(text, x, y + (1 - e) * size * .9);
+  ctx.restore();
+}
+// a key word landing: from 1.08x and out of focus to sharp, about its own centre
+function slam(text, x, y, size, p) {
+  if (p <= 0) return;
+  const e = oQuint(cl(p)), w = tw(text), s = lerp(1.08, 1, e), b = (1 - e) * 14;
+  ctx.save(); ctx.globalAlpha *= cl(p * 3.2);
+  if (b > .3) ctx.filter = `blur(${b.toFixed(1)}px)`;
+  ctx.translate(x + w / 2, y - size * .36); ctx.scale(s, s); ctx.fillText(text, -w / 2, size * .36);
+  ctx.restore();
+}
+// per-letter rise, letters staggered (prefix widths keep the kerning)
+function riseLetters(text, x, y, size, t, t0, stagger, dur) {
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === ' ') continue;
+    const px = x + tw(text.slice(0, i));
+    rise(text[i], px, y, size, ramp(t, t0 + i * stagger, t0 + i * stagger + dur));
+  }
+}
+
+// ---------- texture ----------
+const GRAIN = [];
+function buildGrain() {
+  for (let k = 0; k < 4; k++) {
+    const c = document.createElement('canvas'); c.width = c.height = 1024;
+    const g = c.getContext('2d'), id = g.createImageData(1024, 1024), r = rng(101 + k);
+    for (let i = 0; i < id.data.length; i += 4) { const v = 128 + (r() + r() + r() - 1.5) * 110; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; }
+    g.putImageData(id, 0, 0); GRAIN.push(c);
+  }
+}
+function grain(t, amt) {   // fresh every frame (frame-seeded offset), overlay so mid grey is neutral
+  const f = Math.round(t * FPS), r = rng(f * 7919 + 13), c = GRAIN[((f % 4) + 4) % 4];
+  const ox = Math.floor(r() * 1024), oy = Math.floor(r() * 1024);
+  ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = amt;
+  for (let y = -oy; y < H; y += 1024) for (let x = -ox; x < W; x += 1024) ctx.drawImage(c, x, y);
+  ctx.restore();
+}
+function vignette(a, inner = .42) {
+  const g = ctx.createRadialGradient(W / 2, H / 2, H * inner, W / 2, H / 2, H * 1.08);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${a})`);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+
+// =====================================================================================================
+// LOOK 1 · TESTIMONY. The clip is cut by typetest_build.sh into three lines (T.segs); word times are the ASR's,
+// shifted per line onto the measured speech onsets (A +0.19 s, B +0.08 s, C +0.15 s, the second "12 years" measured).
+// A lyrics-style stack on a darkened left column: run words rise, key words land; each key word punch-cuts the
+// picture (which also hides the joins). Text stays inside y 70-900 and x 140-1100; Tim sits right of centre.
+// =====================================================================================================
+const TF = [];                       // the 261 frames of the cut, 1280x720
+const T = {
+  face: [700, 235],                  // Tim's face in the source frame (it stays within ~20 px through the three lines)
+  shots: [                           // t (s), crop width in source px, where the face sits in the frame (0-1)
+    { t: 0,      w: 900, ax: .70, ay: .40 },
+    { t: 0.567,  w: 780, ax: .70, ay: .40 },   // "no"
+    { t: 2.307,  w: 700, ax: .70, ay: .40 },   // "reunification"
+    { t: 83 / 24, w: 860, ax: .70, ay: .41 },  // line B
+    { t: 3.895,  w: 720, ax: .70, ay: .41 },   // "no story"
+    { t: 152 / 24, w: 840, ax: .70, ay: .41 }, // line C
+    { t: 7.020,  w: 700, ax: .70, ay: .40 },   // "12"
+    { t: 9.040,  w: 900, ax: .69, ay: .42, last: 1 },  // the second "12 years": the statement
+  ],
+  segEnd: [83 / 24, 152 / 24, 261 / 24],
+  lines: [
+    { seg: 0, key: 0, words: [['There', 0.11], ['are', 0.51]] },
+    { seg: 0, key: 1, words: [['no', 0.65], ['happy', 0.87]] },
+    { seg: 0, key: 1, words: [['stories', 1.11]] },
+    { seg: 0, key: 0, words: [['I', 1.47], ['can', 1.69], ['tell', 1.81], ['you', 2.01], ['about', 2.17]] },
+    { seg: 0, key: 1, words: [['reunification.', 2.39]] },
+    { seg: 1, key: 0, words: [['There', 3.618], ['is', 3.838]] },
+    { seg: 1, key: 1, words: [['no', 3.978], ['story', 4.238]] },
+    { seg: 1, key: 0, words: [['about', 4.60], ['Dawn', 4.838, { w: 700 }]] },
+    { seg: 1, key: 0, words: [['rebuilding', 5.138], ['her', 5.498], ['life.', 5.798]] },
+    { seg: 2, key: 0, words: [['It', 6.493], ['has', 6.733], ['been', 6.893]] },
+    { seg: 2, key: 1, words: [['12', 7.103, { acc: 1 }], ['years.', 7.423]] },
+  ],
+  final: { t12: 9.123, tyears: 9.823 },
+};
+const LEAD = 2 / FPS;                // words arrive two frames before they are spoken
+const TS = { run: { w: 500, s: 64 }, key: { w: 800, s: 128 } };
+const XL = 140, YA = 700;            // left margin; baseline of the line being spoken
+
+function tShot(t) { let s = T.shots[0]; for (const x of T.shots) if (t >= x.t - 1e-6) s = x; return s; }
+function tFootage(t, sh) {
+  const fi = cl(Math.floor(t * FPS + 1e-4), 0, 260), img = TF[fi];
+  if (!img) { ctx.fillStyle = '#15181c'; ctx.fillRect(0, 0, W, H); return; }
+  const dt = t - sh.t, w = sh.w * (1 - .02 * dt), h = w * 9 / 16;      // a slow push inside every shot
+  const x0 = T.face[0] - sh.ax * w, y0 = T.face[1] - sh.ay * h;
+  ctx.save();
+  ctx.filter = sh.last ? 'saturate(0.25) brightness(0.5) contrast(1.1) blur(2px)' : 'saturate(0.3) brightness(0.86) contrast(1.1)';
+  ctx.drawImage(img, x0, y0, w, h, 0, 0, W, H);
+  ctx.restore();
+  ctx.save(); ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = 'rgba(40,90,120,0.55)'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  const g = ctx.createLinearGradient(0, 0, 1280, 0);                   // the dark column the words live in
+  g.addColorStop(0, 'rgba(5,6,8,0.90)'); g.addColorStop(.42, 'rgba(5,6,8,0.74)'); g.addColorStop(1, 'rgba(5,6,8,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function lineStyle(L) { return L.key ? TS.key : TS.run; }
+function gap(prev, cur) { const a = lineStyle(prev).s, b = lineStyle(cur).s; return .95 * b + .24 * a + (cur.key || prev.key ? 4 : 12); }
+
+function tStack(t, seg) {
+  const lines = T.lines.filter(L => L.seg === seg);
+  const act = lines.map(L => L.words[0][1] - LEAD - .26);   // the stack makes room before the line's first word lands
+  // baseline of line i: YA minus the gaps of every later line that has started, each eased in over 0.42 s
+  for (let i = 0; i < lines.length; i++) {
+    if (t < act[i]) break;
+    let y = YA;
+    for (let j = i + 1; j < lines.length; j++) if (t >= act[j]) y -= gap(lines[j - 1], lines[j]) * ENTER(ramp(t, act[j], act[j] + .42));
+    const L = lines[i], st = lineStyle(L);
+    const next = i + 1 < lines.length ? act[i + 1] : 1e9;
+    const dim = ramp(t, next, next + .3);
+    const alpha = L.key ? lerp(1, .9, dim) : lerp(1, .46, dim);
+    let x = XL;
+    for (const [word, wt, o] of L.words) {
+      setFont((o && o.w) || st.w, st.s, SANS, L.key ? -st.s * .015 : 0);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = o && o.acc ? COL.acc : COL.ink;
+      const t0 = wt - LEAD;
+      if (L.key) slam(word, x, y, st.s, ramp(t, t0, t0 + .24)); else rise(word, x, y, st.s, ramp(t, t0, t0 + .3));
+      x += tw(word) + st.s * .26;
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+function tFinal(t) {                 // "12 years." the second time: the statement, held to the cut
+  const life = 1 + .018 * ramp(t, T.final.t12 - LEAD, 10.875);
+  ctx.save(); ctx.translate(XL, 600); ctx.scale(life, life); ctx.translate(-XL, -600);
+  setFont(800, 380, SANS, -8); ctx.fillStyle = COL.acc;
+  slam('12', XL - 6, 560, 380, ramp(t, T.final.t12 - LEAD, T.final.t12 - LEAD + .26));
+  setFont(300, 210, SANS, -2); ctx.fillStyle = COL.ink;
+  rise('years.', XL + 4, 790, 210, ramp(t, T.final.tyears - LEAD, T.final.tyears - LEAD + .4));
+  ctx.restore();
+}
+function tWave(t) {                  // Tim's voice, live: the last 1.3 s of level as thin bars
+  if (!window.TENV) return;
+  const n = 64, i1 = Math.floor(t * 48), x0 = XL, y0 = 862;
+  for (let k = 0; k < n; k++) {
+    const i = i1 - (n - 1 - k); if (i < 0) continue;
+    const db = TENV[Math.min(i, TENV.length - 1)], a = cl((db + 58) / 46), h = 2 + a * 30;
+    ctx.fillStyle = k > n - 4 ? ACC(.9) : INK(.16 + .3 * (k / n));
+    ctx.fillRect(x0 + k * 7, y0 - h / 2, 3, h);
+  }
+}
+function drawTestimony(t) {
+  const sh = tShot(t);
+  tFootage(t, sh);
+  vignette(.55);
+  if (sh.last) tFinal(t);              // the statement stands alone: no waveform under it
+  else { tStack(t, t < T.segEnd[0] ? 0 : t < T.segEnd[1] ? 1 : 2); tWave(t); }
+  grain(t, .16);
+}
+
+// =====================================================================================================
+// LOOK 2 · THE CASE FILE. Three cards on a textured dark ground, built in layers; a camera cuts between a wide and
+// close-ups with depth of field. The sentence is typed, struck, and replaced by LIFE; the struck words stay small.
+// =====================================================================================================
+let PHOTO = null, GROUND = null;
+const PCROP = [440, 30, 862, 1150];  // head and shoulders; the uniform's wings pin is below the crop
+const CA = { x: 250, y: 130, w: 400, h: 533 }, CB = { x: 700, y: 130, w: 970, h: 533 }, CC = { x: 250, y: 700, w: 1420, h: 185 };
+const CF = {
+  shots: [   // t, zoom from-to, centre from-to, roll (rad), the plane's turn about the vertical (deg), the group in focus
+    { t: 0.00, z: [1.6, 1.06], c: [[452, 400], [960, 404]], r: [-.012, 0], ry: [9, 6], ease: 1.25, focus: null },
+    { t: 2.00, z: [1.78, 1.84], c: [[640, 380], [652, 384]], r: [.004, .004], ry: [-5, -4], focus: ['photo', 'name'] },
+    { t: 2.46, z: [2.0, 2.08], c: [[1075, 552], [1090, 552]], r: [-.006, -.006], ry: [6, 7], focus: ['rows'] },
+    { t: 2.92, z: [1.12, 1.08], c: [[960, 560], [960, 552]], r: [0, 0], ry: [-8, -6], focus: null },
+    { t: 4.10, z: [1.38, 1.45], c: [[830, 730], [845, 732]], r: [.003, .003], ry: [4, 3], focus: ['sent'] },
+    { t: 7.00, z: [1.9, 1.97], c: [[452, 372], [452, 376]], r: [0, 0], ry: [-4, -3], focus: ['photo'] },
+    { t: 7.42, z: [1.0, 1.035], c: [[960, 515], [960, 508]], r: [0, 0], ry: [8, 5.5], focus: null },
+  ],
+  end: 230 / 24,
+};
+function cfCam(t) {
+  let i = 0; for (let k = 0; k < CF.shots.length; k++) if (t >= CF.shots[k].t - 1e-6) i = k;
+  const s = CF.shots[i], t1 = i + 1 < CF.shots.length ? CF.shots[i + 1].t : CF.end, u = ramp(t, s.t, t1);
+  const e = s.ease ? oCubic(ramp(t, s.t, s.t + s.ease)) : u;
+  return { z: lerp(s.z[0], s.z[1], e), cx: lerp(s.c[0][0], s.c[1][0], e), cy: lerp(s.c[0][1], s.c[1][1], e), r: lerp(s.r[0], s.r[1], e), ry: lerp(s.ry[0], s.ry[1], e) * Math.PI / 180, focus: s.focus, since: t - s.t };
+}
+function camApply(cam, k) {          // k < 1: a layer further back (moves and scales less); centred on the plane canvas
+  const z = Math.pow(cam.z, k);
+  ctx.translate(PW / 2, PH / 2); ctx.rotate(cam.r * k); ctx.scale(z, z);
+  ctx.translate(-(W / 2 + (cam.cx - W / 2) * k), -(H / 2 + (cam.cy - H / 2) * k));
+}
+function blurFor(cam, group) {
+  if (!cam.focus) return 0;
+  if (cam.focus.includes(group)) return 7 * (1 - oCubic(ramp(cam.since, 0, .2)));   // the focus racks in after the cut
+  return cam.z > 1.8 ? 8 : 6;
+}
+function withBlur(b, fn) { ctx.save(); if (b > .2) ctx.filter = `blur(${b}px)`; fn(); ctx.restore(); }
+function buildGround() {
+  const c = document.createElement('canvas'); c.width = 2800; c.height = 1800;
+  const g = c.getContext('2d'), r = rng(7);
+  g.fillStyle = '#07080a'; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < 70; i++) {    // slow mottling, like a dark matte board under a lamp
+    const x = r() * c.width, y = r() * c.height, rad = 120 + r() * 520, a = .012 + r() * .03;
+    const gr = g.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, `rgba(150,170,190,${a})`); gr.addColorStop(1, 'rgba(150,170,190,0)');
+    g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+  }
+  const ox = 440, oy = 370;          // grid registered to the cards (world 0,0 sits at ox,oy)
+  for (let x = ox % 64; x < c.width; x += 64) { const maj = ((x - ox) / 64) % 4 === 0; g.fillStyle = `rgba(160,175,190,${maj ? .075 : .04})`; g.fillRect(x, 0, 1, c.height); }
+  for (let y = oy % 64; y < c.height; y += 64) { const maj = ((y - oy) / 64) % 4 === 0; g.fillStyle = `rgba(160,175,190,${maj ? .075 : .04})`; g.fillRect(0, y, c.width, 1); }
+  g.fillStyle = 'rgba(200,210,220,0.22)';
+  for (let x = ox % 256; x < c.width; x += 256) for (let y = oy % 256; y < c.height; y += 256) { g.fillRect(x - 6, y, 13, 1); g.fillRect(x, y - 6, 1, 13); }
+  const id = g.getImageData(0, 0, c.width, c.height), d = id.data;   // fibre speckle
+  for (let i = 0; i < d.length; i += 4) { const v = (r() - .5) * 9; d[i] += v; d[i + 1] += v; d[i + 2] += v; }
+  g.putImageData(id, 0, 0);
+  GROUND = c;
+}
+function card(b, p, blur) {          // corners fly in, edges draw from them, then the glass fills
+  if (p <= 0) return;
+  const { x, y, w, h } = b, pc = oExpo(ramp(p, 0, .45)), pe = oExpo(ramp(p, .15, .75)), pf = ramp(p, .3, .9);
+  withBlur(blur, () => {
+    if (pf > 0) {
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.55)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 18;
+      ctx.fillStyle = `rgba(12,15,19,${.84 * pf})`; ctx.fillRect(x, y, w, h); ctx.restore();
+      ctx.fillStyle = `rgba(255,255,255,${.035 * pf})`; ctx.fillRect(x, y, w, 1);
+    }
+    ctx.fillStyle = COL.line;
+    ctx.fillRect(x, y, w * pe, 1); ctx.fillRect(x + w - w * pe, y + h - 1, w * pe, 1);
+    ctx.fillRect(x, y + h - h * pe, 1, h * pe); ctx.fillRect(x + w - 1, y, 1, h * pe);
+    const a = 22, o = (1 - pc) * 34; ctx.strokeStyle = INK(.85 * cl(p * 3)); ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x - o, y - o + a); ctx.lineTo(x - o, y - o); ctx.lineTo(x - o + a, y - o);
+    ctx.moveTo(x + w + o - a, y - o); ctx.lineTo(x + w + o, y - o); ctx.lineTo(x + w + o, y - o + a);
+    ctx.moveTo(x + w + o, y + h + o - a); ctx.lineTo(x + w + o, y + h + o); ctx.lineTo(x + w + o - a, y + h + o);
+    ctx.moveTo(x - o + a, y + h + o); ctx.lineTo(x - o, y + h + o); ctx.lineTo(x - o, y + h + o - a);
+    ctx.stroke();
+  });
+}
+function photo(t, blur) {
+  const t0 = -.04, p = oExpo(ramp(t, t0, t0 + .4)); if (p <= 0) return;
+  const { x, y, w, h } = CA, ins = 14, ix = x + ins, iy = y + ins, iw = w - ins * 2, ih = h - ins * 2;
+  const oh = ih * p, cy = iy + ih / 2, s = lerp(1.16, 1, oExpo(ramp(t, t0, t0 + .8)));
+  withBlur(blur, () => {
+    ctx.save(); ctx.beginPath(); ctx.rect(ix, cy - oh / 2, iw, oh); ctx.clip();
+    ctx.filter = (blur > .2 ? `blur(${blur}px) ` : '') + 'saturate(0.62) contrast(1.06) brightness(0.93)';
+    const dw = iw * s, dh = ih * s;
+    if (PHOTO) ctx.drawImage(PHOTO, PCROP[0], PCROP[1], PCROP[2], PCROP[3], ix + (iw - dw) / 2, iy + (ih - dh) / 2, dw, dh);
+    ctx.filter = blur > .2 ? `blur(${blur}px)` : 'none';
+    const g = ctx.createLinearGradient(0, iy, 0, iy + ih); g.addColorStop(0, 'rgba(10,14,20,0.10)'); g.addColorStop(1, 'rgba(10,14,20,0.42)');
+    ctx.fillStyle = g; ctx.fillRect(ix, iy, iw, ih);
+    ctx.restore();
+    const ea = 1 - ramp(t, t0 + .3, t0 + .6);          // the two scan edges of the opening
+    if (ea > 0) { ctx.fillStyle = ACC(.9 * ea); ctx.fillRect(ix, cy - oh / 2 - 1, iw, 2); ctx.fillRect(ix, cy + oh / 2 - 1, iw, 2); }
+    ctx.strokeStyle = INK(.18 * p); ctx.lineWidth = 1; ctx.strokeRect(ix + .5, iy + .5, iw - 1, ih - 1);
+  });
+}
+const ROWS = [
+  { text: 'CHICAGO', t: .95, y: 494 },
+  { text: 'FORMER FLIGHT ATTENDANT', t: 1.17, y: 558 },
+  { text: 'ARRESTED 2014', t: 1.66, y: 622, acc: [9, 13] },
+];
+const CPS = 42;                       // typing speed, characters a second
+function typed(text, x, y, t, t0, cps, opt = {}) {   // returns the x of the typing head, or null when not begun
+  const n = Math.floor((t - t0) * cps); if (t < t0) return null;
+  const k = Math.min(text.length, Math.max(0, n)), shown = text.slice(0, k);
+  if (opt.acc) {
+    const [a, b] = opt.acc;
+    let px = x;
+    for (let i = 0; i < k; i++) { ctx.fillStyle = i >= a && i < b ? COL.acc : opt.col; ctx.fillText(text[i], px, y); px = x + tw(text.slice(0, i + 1)); }
+  } else { ctx.fillStyle = opt.col; ctx.fillText(shown, x, y); }
+  return { head: x + tw(shown), done: k >= text.length, tDone: t0 + text.length / cps };
+}
+function cursor(x, y, size, t, show) {
+  if (!show) return;
+  ctx.fillStyle = ACC(.95); ctx.fillRect(x + 3, y - size * .78, size * .5, size * .92);
+}
+function idCard(t, cam) {
+  const bn = blurFor(cam, 'name'), br = blurFor(cam, 'rows');
+  withBlur(bn, () => {
+    setFont(800, 92, SANS, -1); ctx.fillStyle = COL.ink;
+    riseLetters('DAWN MICHELLE', 750, 252, 92, t, .32, .022, .34);
+    riseLetters('HUNT', 750, 352, 92, t, .5, .022, .34);
+  });
+  withBlur(br, () => {
+    const pd = oExpo(ramp(t, .82, 1.12));
+    ctx.fillStyle = COL.line; ctx.fillRect(750, 412, 870 * pd, 1);
+    ctx.fillStyle = ACC(.9 * pd); ctx.fillRect(750, 411, 36 * pd, 3);
+    setFont(500, 44, MONO, 3);
+    ROWS.forEach((R, i) => {
+      const st = typed(R.text, 796, R.y, t, R.t, CPS, { col: INK(.92), acc: R.acc });
+      if (!st) return;
+      ctx.fillStyle = INK(.35); ctx.fillRect(752, R.y - 28, 14, 14);            // a square bullet per record
+      const nextT = i + 1 < ROWS.length ? ROWS[i + 1].t : 2.2;
+      cursor(st.head, R.y, 44, t, t < Math.min(nextT, st.tDone + .25));
+    });
+  });
+}
+const SENT = 'DEATH, WITH A TWO-YEAR REPRIEVE';
+const SC = { key: 3.2, val: 3.42, strike: 5.55, shift: 5.84, life: 6.0 };
+function sentCard(t, cam) {
+  const b = blurFor(cam, 'sent');
+  withBlur(b, () => {
+    setFont(600, 30, MONO, 7);
+    const k = typed('SENTENCE', 300, 754, t, SC.key, 50, { col: COL.grey2 });
+    if (!k) return;
+    setFont(700, 58, SANS, 0);
+    const vw = tw(SENT);
+    setFont(800, 100, SANS, -1); const lw = tw('LIFE');
+    // the old value: typed, struck, then pushed aside small and dim
+    const ps = ioCubic(ramp(t, SC.shift, SC.shift + .46));
+    const sx = 300 + ps * (lw + 46), sc = lerp(1, .62, ps), sy = lerp(838, 833, ps);
+    ctx.save(); ctx.translate(sx, sy); ctx.scale(sc, sc); ctx.globalAlpha = lerp(1, .5, ps);
+    setFont(700, 58, SANS, 0);
+    const v = typed(SENT, 0, 0, t, SC.val, CPS, { col: COL.ink });
+    const pk = oExpo(ramp(t, SC.strike, SC.strike + .26));
+    if (pk > 0) { ctx.fillStyle = COL.acc; ctx.fillRect(-4, -23, (vw + 8) * pk, 5); }
+    ctx.restore();
+    if (v && !v.done) { setFont(700, 58, SANS, 0); cursor(300 + v.head - 1, 838, 58, t, true); }
+    else if (v && t < v.tDone + .3) cursor(300 + vw, 838, 58, t, true);
+    setFont(800, 100, SANS, -1); ctx.fillStyle = COL.ink;
+    rise('LIFE', 296, 856, 100, ramp(t, SC.life, SC.life + .36));
+  });
+}
+const PW = 2304, PH = 1296;           // the dossier plane is drawn 1.2x the frame, then turned in perspective onto it
+let PLANE = null, PCTX = null;
+function drawCasefile(t) {
+  const cam = cfCam(t);
+  ctx = PCTX; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1;
+  ctx.fillStyle = '#07080a'; ctx.fillRect(0, 0, PW, PH);
+  ctx.save(); camApply(cam, .55);                     // the ground, further back
+  withBlur(cam.focus ? (cam.z > 2.2 ? 4 : 2.5) : 0, () => ctx.drawImage(GROUND, -440, -370));
+  ctx.restore();
+  ctx.save(); camApply(cam, 1);
+  card(CA, ramp(t, -.06, .4), blurFor(cam, 'photo'));
+  card(CB, ramp(t, .04, .48), cam.focus && !cam.focus.includes('name') && !cam.focus.includes('rows') ? blurFor(cam, 'name') : 0);
+  card(CC, ramp(t, 2.95, 3.4), blurFor(cam, 'sent'));
+  photo(t, blurFor(cam, 'photo'));
+  idCard(t, cam);
+  sentCard(t, cam);
+  ctx.restore();
+  ctx = MAIN;
+  // turn the plane about its vertical axis: vertical strips, each scaled by its own perspective depth
+  ctx.fillStyle = '#060708'; ctx.fillRect(0, 0, W, H);
+  const fp = 2300, sn = Math.sin(cam.ry), cs = Math.cos(cam.ry), SW = 4;
+  const X = u => W / 2 + fp * u * cs / (fp + u * sn);
+  for (let i = 0; i < PW; i += SW) {
+    const u0 = i - PW / 2, u1 = u0 + SW, x0 = X(u0), x1 = X(u1);
+    if (x1 < -2 || x0 > W + 2) continue;
+    const sc = fp / (fp + (u0 + SW / 2) * sn);
+    ctx.drawImage(PLANE, i, 0, SW, PH, x0, H / 2 - sc * PH / 2, x1 - x0 + .7, sc * PH);
+  }
+  vignette(.7, .38);
+  grain(t, .14);
+}
+
+// =====================================================================================================
+// LOOK 3 · THE YEARS. A camera travels a dark 3D timeline. Year numerals are clouds of particles that gather as the
+// camera arrives; events are crisp sans labels at nodes; depth of field follows the next node; the line behind the
+// camera lights cyan. At the end the camera cranes back to see the whole span. Only the six events of the brief;
+// "later" has no year and no tick, so its place implies no date.
+// =====================================================================================================
+const Y3 = {
+  f: 1250,
+  nodes: [
+    { z: 0,    year: '2014', lines: ['Arrested'] },
+    { z: 2300, year: '2017', lines: ['Trial and sentence'], sub: 'Death, with a two-year reprieve' },
+    { z: 4400, tag: 'LATER', lines: ['Sentence reduced', 'to life'] },
+    { z: 6500, year: '2024', lines: ['Her brother testifies', 'to Congress'] },
+    { z: 8600, year: '2026', tag: 'JANUARY', lines: ['Her father, Gene, dies'] },
+    { z: 9600, lines: ['Her brother', 'testifies again'] },
+  ],
+  arrive: [0.62, 2.18, 4.62, 6.56, 8.5, 10.22],     // when the camera settles at each node
+  leave:  [1.5,  3.98, 6.0,  7.96, 9.88, 11.3],
+  poster: [11.3, 12.62],                            // the crane back
+};
+const STA = (n, dz = 0) => ({ x: -210, y: -600, z: Y3.nodes[n].z - 900 + dz, yaw: .12, pitch: .45 });
+const POSTER = { x: 7021, y: -3835, z: 4800, yaw: -Math.PI / 2, pitch: .5 };   // side-on above the whole span, solved so no numerals touch
+function y3Pose(t) {
+  const A = Y3.arrive, L = Y3.leave, N = Y3.nodes.length;
+  if (t < A[0]) { const u = oCubic(ramp(t, -.25, A[0])); const a = STA(0, -3200), b = STA(0); return mixPose(a, b, u); }
+  for (let n = 0; n < N; n++) {
+    if (t < L[n]) return STA(n, 55 * (t - A[n]));                         // hold: a slow creep forward
+    if (n + 1 < N && t < A[n + 1]) { const u = ioCubic(ramp(t, L[n], A[n + 1])); return mixPose(STA(n, 55 * (L[n] - A[n])), STA(n + 1), u); }
+  }
+  const last = STA(N - 1, 55 * (L[N - 1] - A[N - 1]));
+  const u = ioQuint(ramp(t, Y3.poster[0], Y3.poster[1]));
+  const p = mixPose(last, POSTER, u);
+  const d = Math.max(0, t - Y3.poster[1]);                                // the poster keeps drifting
+  p.x -= 160 * d; p.y += 70 * d; p.z += 40 * d; p.yaw += .012 * d;
+  return p;
+}
+function mixPose(a, b, u) { const o = {}; for (const k in a) o[k] = lerp(a[k], b[k], u); return o; }
+function proj(cam, X, Y, Z) {
+  const dx = X - cam.x, dy = Y - cam.y, dz = Z - cam.z, cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  const x1 = dx * cy - dz * sy, z1 = dx * sy + dz * cy, y2 = dy * cp - z1 * sp, z2 = dy * sp + z1 * cp;
+  return { x: W / 2 + Y3.f * x1 / z2, y: H / 2 + Y3.f * y2 / z2, z: z2 };
+}
+function camBasis(cam) {             // camera right and up in world space (for billboards)
+  const cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  return { r: [cy, 0, -sy], u: [-sy * sp, cp, -cy * sp], f: [sy * cp, sp, cy * cp] };   // right, screen-down, forward
+}
+let DOFK = 1;                         // depth-of-field strength (relaxed for the closing poster)
+const COC = (z, focus) => Math.min(18, 24 * DOFK * Math.abs(z - focus) / Math.max(z, 1));
+let FOGN = 4200, FOGS = 6500;
+const FOG = z => 1 - sm((z - FOGN) / FOGS);
+let NUMS = [], DUST = [];
+function buildYears() {
+  // particle numerals: sample the numeral's ink on a grid, each point gets a scatter position and a delay
+  const c = document.createElement('canvas'); c.width = 1300; c.height = 420;
+  const g = c.getContext('2d');
+  NUMS = Y3.nodes.filter(n => n.year).map((n, k) => {
+    g.clearRect(0, 0, c.width, c.height); g.fillStyle = '#fff'; g.font = '600 320px Archivo'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.fillText(n.year, c.width / 2, 330);
+    const d = g.getImageData(0, 0, c.width, c.height).data, r = rng(500 + k), pts = [];
+    const step = 3.8, s = 200 / (320 * .72);       // cap height 200 world units
+    for (let y = 0; y < c.height; y += step) for (let x = 0; x < c.width; x += step) {
+      const jx = x + (r() - .5) * step, jy = y + (r() - .5) * step;
+      if (d[(Math.floor(jy) * c.width + Math.floor(jx)) * 4 + 3] > 140) {
+        const th = r() * Math.PI * 2, ph = Math.acos(2 * r() - 1), rad = 200 + r() * 900;
+        pts.push({ u: (jx - c.width / 2) * s, v: (jy - 330 + 320 * .36) * s, w: (r() - .5) * 18,
+          sx: Math.sin(ph) * Math.cos(th) * rad, sy: Math.sin(ph) * Math.sin(th) * rad * .6, sz: Math.cos(ph) * rad,
+          dl: r() * .45, ph: r() * 6.28, b: .55 + r() * .45 });
+      }
+    }
+    const idx = Y3.nodes.indexOf(n);
+    return { node: idx, x: -380, y: -180, z: n.z + 120, pts, form: [Y3.arrive[idx] - 1.75, Y3.arrive[idx] + .05] };
+  });
+  const r = rng(77); DUST = [];
+  for (let i = 0; i < 1100; i++) { const nearPath = i < 600; DUST.push({ x: (r() - .5) * (nearPath ? 2600 : 7000), y: (nearPath ? -1100 : -2200) + r() * (nearPath ? 1400 : 2800), z: -3500 + r() * 17000, b: .3 + r() * .7, s: .8 + r() * 1.8 }); }
+}
+function focusDist(t, cam) {
+  const A = Y3.arrive, L = Y3.leave, N = Y3.nodes.length, zN = n => proj(cam, 0, 0, Y3.nodes[n].z).z;
+  for (let n = 0; n < N; n++) {
+    if (t < L[n]) return zN(n);
+    if (n + 1 < N && t < A[n + 1]) return lerp(zN(n), zN(n + 1), ioCubic(ramp(t, L[n], A[n + 1])));
+  }
+  return lerp(zN(N - 1), proj(cam, 0, 0, 4650).z, ioCubic(ramp(t, Y3.poster[0], Y3.poster[1])));
+}
+function drawYears(t) {
+  const cam = y3Pose(t), camP = y3Pose(t - .5 / FPS), focus = focusDist(t, cam), B = camBasis(cam);
+  const posterU = ioQuint(ramp(t, Y3.poster[0], Y3.poster[1]));
+  FOGN = lerp(4200, 9500, posterU); FOGS = lerp(6500, 9000, posterU); DOFK = lerp(1, 0, posterU);
+  ctx.fillStyle = '#050607'; ctx.fillRect(0, 0, W, H);
+  const hz = ctx.createLinearGradient(0, 0, 0, H); hz.addColorStop(0, 'rgba(30,44,56,0.0)'); hz.addColorStop(.5, 'rgba(30,44,56,0.16)'); hz.addColorStop(1, 'rgba(10,12,14,0)');
+  ctx.fillStyle = hz; ctx.fillRect(0, 0, W, H);
+  // the floor grid, 420 below the line, fogged with distance
+  const FY = 420, GS = 450;
+  ctx.lineWidth = 1;
+  const seg = (a, b, al) => {
+    if (a.z < 40 && b.z < 40) return;
+    ctx.strokeStyle = `rgba(150,170,190,${al})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  };
+  const zs = Math.floor((cam.z - 2000 - 7000 * posterU) / GS) * GS;
+  for (let gx = -4500; gx <= 4500; gx += GS) for (let gz = zs; gz < zs + 15000; gz += GS) {
+    const a = proj(cam, gx, FY, gz), b = proj(cam, gx, FY, gz + GS); if (a.z < 60 || b.z < 60) continue;
+    seg(a, b, lerp(.09, .16, posterU) * FOG((a.z + b.z) / 2));
+  }
+  for (let gz = zs; gz < zs + 15000; gz += GS) for (let gx = -4500; gx < 4500; gx += GS) {
+    const a = proj(cam, gx, FY, gz), b = proj(cam, gx + GS, FY, gz); if (a.z < 60 || b.z < 60) continue;
+    seg(a, b, lerp(.09, .16, posterU) * FOG((a.z + b.z) / 2));
+  }
+  // dust, with motion streaks while the camera travels
+  for (const d of DUST) {
+    const p = proj(cam, d.x, d.y, d.z); if (p.z < 30 || p.x < -50 || p.x > W + 50 || p.y < -50 || p.y > H + 50) continue;
+    const q = proj(camP, d.x, d.y, d.z), coc = COC(p.z, focus), r = Math.max(.6, d.s * Y3.f / p.z * .9), re = r + coc * .45;
+    const a = d.b * FOG(p.z) * Math.min(1, (r / re) ** 2 * 1.6) * .7 * cl((p.z - 150) / 300);
+    const len = Math.hypot(p.x - q.x, p.y - q.y);
+    if (len > 3 && q.z > 30) { ctx.strokeStyle = INK(a * Math.min(1, 6 / len) * 1.4); ctx.lineWidth = Math.max(1, re); ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    else { ctx.fillStyle = INK(a); ctx.beginPath(); ctx.arc(p.x, p.y, re, 0, 6.283); ctx.fill(); }
+  }
+  // the timeline: grey ahead, lit cyan behind the camera's progress
+  const prog = progressZ(t);
+  const Z0 = -4200, Z1 = 15000;
+  for (let z = Z0; z < Z1; z += 300) {
+    const a = proj(cam, 0, 0, z), b = proj(cam, 0, 0, z + 300); if (a.z < 50 || b.z < 50) continue;
+    const lw = cl(2.6 * 1000 / ((a.z + b.z) / 2), lerp(.7, 2.2, posterU), 4), fog = FOG((a.z + b.z) / 2);
+    const lit = z + 150 >= 0 && z + 150 <= prog;
+    ctx.strokeStyle = lit ? ACC(.95 * Math.max(fog, .25)) : `rgba(150,162,176,${.4 * fog})`; ctx.lineWidth = lw;
+    if (lit) { ctx.shadowColor = ACC(.8); ctx.shadowBlur = 10; }
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); ctx.shadowBlur = 0;
+  }
+  // numerals, far first
+  const numScale = lerp(1, 2.4, posterU);
+  NUMS.map(N => ({ N, p: proj(cam, N.x * lerp(1, 1.6, posterU), N.y * lerp(1, 2.2, posterU), N.z) })).sort((a, b) => b.p.z - a.p.z).forEach(({ N }) => drawNumeral(N, t, cam, B, focus, numScale, posterU));
+  // nodes and labels
+  Y3.nodes.forEach((n, i) => drawNode(n, i, t, cam, focus, posterU));
+  vignette(.75, .36);
+  grain(t, .12);
+}
+function progressZ(t) {
+  const A = Y3.arrive, L = Y3.leave, N = Y3.nodes.length, Z = n => Y3.nodes[n].z;
+  if (t < A[0]) return lerp(-600, 0, oCubic(ramp(t, 0, A[0])));
+  for (let n = 0; n < N; n++) {
+    if (t < L[n]) return Z(n);
+    if (n + 1 < N && t < A[n + 1]) return lerp(Z(n), Z(n + 1), ioCubic(ramp(t, L[n], A[n + 1])));
+  }
+  return Z(N - 1);
+}
+function drawNumeral(N, t, cam, B, focus, sc, posterU) {
+  const F = ramp(t, N.form[0], N.form[1]);
+  if (F <= 0) return;
+  const cx = N.x * lerp(1, 1.6, posterU), cyy = N.y * lerp(1, 2.2, posterU), cz = N.z;
+  const c = proj(cam, cx, cyy, cz); if (c.z < 80) return;
+  const coc = COC(c.z, focus), fog = FOG(c.z), active = t >= Y3.arrive[N.node] - .2;
+  const rr = Math.max(.75, 1.25 * Y3.f / c.z * sc), re = rr + coc * .5, al = .92 * fog * Math.min(1, (rr / re) ** 2 * 1.3);
+  ctx.fillStyle = INK(al);
+  for (const q of N.pts) {
+    const f = oCubic(cl((F - q.dl) / (1 - q.dl)));
+    const sh = (1 - f), wob = 2.2 * Math.sin(t * 1.7 + q.ph);
+    const u = q.u * sc + q.sx * sh, v = q.v * sc + q.sy * sh + wob, w = q.w + q.sz * sh;
+    const X = cx + B.r[0] * u + B.u[0] * v + B.f[0] * w, Y = cyy + B.r[1] * u + B.u[1] * v + B.f[1] * w, Z = cz + B.r[2] * u + B.u[2] * v + B.f[2] * w;
+    const p = proj(cam, X, Y, Z); if (p.z < 40) continue;
+    const r = re * Math.sqrt(q.b), near = cl((p.z - 380) / 520);
+    if (near <= 0) continue;
+    ctx.globalAlpha = (.35 + .65 * f) * (active ? 1 : .8) * near;
+    if (r > 2.2) { ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.fill(); } else ctx.fillRect(p.x - r, p.y - r, r * 2, r * 2);
+  }
+  ctx.globalAlpha = 1;
+}
+function drawNode(n, i, t, cam, focus, posterU) {
+  const p = proj(cam, 0, 0, n.z); if (p.z < 60) return;
+  const A = Y3.arrive[i], fog = FOG(p.z), coc = COC(p.z, focus);
+  const lit = progressZ(t) >= n.z - 1;
+  const r = cl(11 * Y3.f / p.z, lerp(3, 6.5, posterU), 26);
+  ctx.save(); if (coc > .6) ctx.filter = `blur(${(coc * .6).toFixed(1)}px)`;
+  ctx.strokeStyle = lit ? ACC(.95 * Math.max(fog, .4)) : `rgba(190,200,210,${.6 * fog})`; ctx.lineWidth = Math.max(1.2, r * .18);
+  ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.stroke();
+  ctx.fillStyle = lit ? ACC(Math.max(fog, .4)) : INK(.7 * fog); ctx.beginPath(); ctx.arc(p.x, p.y, r * .38, 0, 6.283); ctx.fill();
+  const pu = ramp(t, A - .1, A + .9);                    // one soft ring when the camera arrives
+  if (pu > 0 && pu < 1) { ctx.strokeStyle = ACC(.5 * (1 - pu)); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(p.x, p.y, r * (1 + 3.2 * oCubic(pu)), 0, 6.283); ctx.stroke(); }
+  ctx.restore();
+  // the label: a hairline from the node, then the words (sans), a small mono tag above when the event has one
+  const la = (1 - ramp(posterU, 0, .35));
+  if (la <= 0 || t < A - .45) return;
+  const size = 56 * 1094 / p.z, lx = p.x + size * 1.25, x0 = p.x + r + 4;
+  const pl = oExpo(ramp(t, A - .42, A - .2));
+  const dimAfter = lerp(1, .55, ramp(t, Y3.leave[i], Y3.leave[i] + .25));
+  ctx.save(); ctx.globalAlpha = la * fog * dimAfter;
+  if (coc > .6) ctx.filter = `blur(${(coc * .7).toFixed(1)}px)`;
+  ctx.fillStyle = lit ? ACC(.9) : INK(.6); ctx.fillRect(x0, p.y - .75, (lx - x0 - size * .3) * pl, 1.5);
+  let y = p.y + size * .34, k = 0;
+  if (n.tag) {
+    setFont(600, size * .72, MONO, size * .14);
+    typed(n.tag, lx, y - size * 1.2, t, A - .3, 30, { col: COL.acc });
+  }
+  setFont(500, size, SANS, 0); ctx.fillStyle = COL.ink;
+  n.lines.forEach((ln, li) => {
+    let x = lx;
+    ln.split(' ').forEach(wd => { const t0 = A - .28 + k * .05; rise(wd, x, y + li * size * 1.16, size, ramp(t, t0, t0 + .36)); x += tw(wd + ' '); k++; });
+  });
+  if (n.sub) {
+    setFont(400, size * .78, SANS, 0); ctx.fillStyle = INK(.74);
+    const yy = y + n.lines.length * size * 1.16 + size * .02; let x = lx;
+    n.sub.split(' ').forEach(wd => { const t0 = A - .05 + k * .05; rise(wd, x, yy, size * .78, ramp(t, t0, t0 + .36)); x += tw(wd + ' '); k++; });
+  }
+  ctx.restore();
+}
+
+// =====================================================================================================
+const T0 = []; { let a = 0; for (const L of LOOKS) { T0.push(a); a += L.n / FPS; } }
+window.TOTAL = LOOKS.reduce((s, L) => s + L.n, 0) / FPS;
+const DRAW = { testimony: drawTestimony, casefile: drawCasefile, years: drawYears };
+window.draw = (mode, t) => {
+  ctx = MAIN; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.letterSpacing = '0px';
+  if (mode === 'all') {
+    const f = Math.round(t * FPS); let i = 0;
+    for (let k = 0; k < LOOKS.length; k++) if (f >= Math.round(T0[k] * FPS)) i = k;
+    DRAW[LOOKS[i].id]((f - Math.round(T0[i] * FPS)) / FPS);
+  } else DRAW[mode](t);
+  ctx.restore();
+};
+(async () => {
+  await Promise.all([document.fonts.load('500 64px Archivo'), document.fonts.load('800 64px Archivo'), document.fonts.load('300 64px Archivo'),
+    document.fonts.load('500 34px PlexMono'), document.fonts.load('600 26px PlexMono')]);
+  buildGrain(); buildGround(); buildYears();
+  PLANE = document.createElement('canvas'); PLANE.width = PW; PLANE.height = PH; PCTX = PLANE.getContext('2d');
+  const load = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+  PHOTO = await load('../archive/media/photos/04_dawn_flight_attendant_uniform.jpg');
+  const fr = await Promise.all(Array.from({ length: 261 }, (_, i) => load(`../out/gfx/typetest/tframes/f_${String(i + 1).padStart(4, '0')}.jpg`)));
+  fr.forEach((im, i) => TF[i] = im);
+  window.READY = true;
+})();
+</script></body></html>
