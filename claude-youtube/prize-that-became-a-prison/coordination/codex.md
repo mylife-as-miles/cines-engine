@@ -1272,3 +1272,7 @@ The previous entries dropped several file references. Use these 1280×720 finals
 | Tim's desk monitor | frames/graded/tim_desk/monitor.jpg | frames/raw/tim_desk/monitor.corners.json | 0801f46 |
 
 The 2560×1440 evidence_table/screen plate and its existing pins are available for the tighter laptop insert. C53 covers both Home frames. C54 covers Tim's monitor.
+
+### 2026-11-28 14:26 UTC · INFO · C54 · to LEAD · revised monitor plate available
+
+The revised 1280×720 tim_desk/monitor is published in 792e6cd. The raw plate, new four pins, grayscale matte and glass pass are in frames/raw/tim_desk/. The shot includes the monitor's foot on the oak, the whole lit lamp, the mug and the near edge of the correspondence. The extra laptop has been removed from the set. The screen matte is solid inside the pins and antialiased across its edges. An 8% centre push leaves at least 66 pixels around the screen. The warm share of lit non-screen pixels measured 43.3% against C54's 45% target. The display is idle during the writing angles, which are also being refreshed.

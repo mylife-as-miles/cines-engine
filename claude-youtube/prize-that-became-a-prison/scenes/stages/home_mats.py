@@ -383,6 +383,23 @@ def cast_iron(name, rgb=(0.26, 0.255, 0.24)):
     return _remember(name, m)
 
 
+def landscape(name):
+    """A small matte landscape print for the dining-room picture frame."""
+    m, nt, surface = _new(name)
+    coords = _obj(nt)
+    _, _, height = _xyz(nt, coords)
+    skyline = _maprange(nt, _noise(nt, coords, 8.0, 1.0, 0.5, mapping=(1.0, 0.0, 0.0)),
+                        0.27, 0.72, -0.07, 0.04)
+    sky = _mix(nt, _maprange(nt, height, 0.0, 0.21, 0.0, 1.0), (0.32, 0.235, 0.159), (0.155, 0.186, 0.201))
+    edge = _maprange(nt, _math(nt, "SUBTRACT", height, skyline), -0.004, 0.004, 0.0, 1.0)
+    ground = _mix(nt, _maprange(nt, height, -0.21, 0.0, 0.0, 1.0), (0.054, 0.042, 0.032), (0.088, 0.101, 0.078))
+    tone = _mix(nt, edge, ground, sky)
+    grain = _noise(nt, coords, 420.0, 2.0, 0.5)
+    _link(nt, _mix(nt, 0.09, tone, grain, blend="MULTIPLY"), surface.inputs["Base Color"])
+    surface.inputs["Roughness"].default_value = 0.88
+    return _remember(name, m)
+
+
 def paper(name, rgb=(0.62, 0.6, 0.55), rough=0.88):
     """Matt envelope paper, slightly warm: felted tooth, faint mottling, a little translucency."""
     m, nt, b = _new(name)

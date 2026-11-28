@@ -9,7 +9,7 @@ y = R["y0"]), so his left is +X and the room runs back to +Y behind him.
   the desk      a worn oak double-pedestal desk built here: a boarded top with rubbed arrises, two pedestals of three
                 drawers with turned pulls on a recessed plinth, a pencil drawer over the kneehole, a modesty panel
   on the desk   the desk-lamp prop (enamelled, with a bulb, a spot down its reflector and the spill round it), the
-                laptop prop open with a blank glowing panel set in its bezel, a ruled writing pad, loose sheets, a
+                desktop monitor with a blank panel, a ruled writing pad, loose sheets, a
                 banded bundle and a loose pile of airmail and plain envelopes, two window envelopes and an unfolded
                 letter, a phone lying face down, reading glasses, a mug, a framed photograph on its easel (its back
                 to the window)
@@ -17,8 +17,8 @@ y = R["y0"]), so his left is +X and the room runs back to +Y behind him.
                 framed picture on the right wall, a bookcase of books and binders left of the window, file boxes
                 on the floor beside the desk (twelve years of paperwork)
 
-Primitives, the window and the blind are adapted from the family home's set (home_set.py); the lamp and the laptop
-finishing from the evidence table (evidence_table.py); copied so this stage stands alone.
+Primitives, the window and the blind are adapted from the family home's set (home_set.py).
+The lamp finishing follows the evidence table (evidence_table.py).
 """
 import math
 import os
@@ -49,8 +49,6 @@ PED_IN, PED_OUT, PED_Y = 0.30, 0.685, 0.315                 # pedestals: |x| fro
 PLINTH = 0.085
 RUG = (0.0, 1.2, 2.3, 1.6)                                   # centre x, y, size x, y
 WARM = (1.0, 0.40, 0.085)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
-COOL = (0.38, 0.60, 1.0)           # the laptop's blank page
-LAPTOP_EMISSION = 1.25
 NIGHT = (0.55, 0.68, 1.0)          # the street and the sky
 
 # the lamp prop at LAMP_SIZE (base near the origin, the shade looking along +Y and down). Measured by ray probes at
@@ -64,9 +62,9 @@ LAMP = (0.24, -0.16, 36.6)         # prop origin on the desk and turn: the light
                                    # from the back of the desk, left of the pad, toward the pen and Tim
 SPOT_OUT = 0.012 * _K              # the bulb's glowing end, this far down the axis toward the shade's mouth: from
                                    # there (ray casts) the pad and his hands see all of it, his brow two thirds
-LAPTOP = (0.50, 0.10, -75.0)       # prop origin and turn: the screen faces (-cos t, -sin t): pushed aside, toward the room
 MONITOR = (0.58, -0.187, TOP + 0.417)
 MONITOR_EMISSION = 0.61
+MONITOR_COLOUR = (0.68, 0.75, 0.86)
 PAD = (-0.02, 0.165, 194.0)        # the writing pad: centre and turn (its head away from Tim, turned for a right hand,
                                    # pulled up to the desk's edge: he is half way down the page)
 PAD_H = 0.0069                     # the pad's top surface above the desk (board, block and a sheet)
@@ -270,8 +268,6 @@ def materials():
         case=mt.worn_wood("bookcase wood", 0.3, -0.15, light=(0.06, 0.036, 0.02), dark=(0.025, 0.015, 0.008), rough=0.5),
         canvas=mt.matte("picture canvas", (0.06, 0.065, 0.07), 0.85),
         mat_board=mt.paper("picture mount", (0.4, 0.39, 0.36), 0.9, 0.04, 0.0, sss=0.0, translucency=0.0),
-        key=mt.plastic("blank laptop caps", (0.035, 0.038, 0.04), 0.54),
-        deck=mt.plastic("keyboard surround", (0.026, 0.029, 0.032), 0.47),
         wire=mt.satin_metal("spectacle wire", (0.16, 0.13, 0.09), 0.42),
         acetate=mt.plastic("glasses temple tips", (0.04, 0.025, 0.019), 0.52, 0.22),
     )
@@ -741,92 +737,12 @@ def lamp_bulb():
     return bpy.data.objects["lamp_spot"].matrix_world.translation.copy()
 
 
-# ---------------------------------------------------------------- the laptop (from evidence_table.py)
-def laptop():
-    """The laptop prop open, its screen switched on to a blank page: a glowing panel inset in the lid's bezel (found
-    by ray casts) and a weak area light in front of it, so the glow falls on what is near; an unlettered key deck."""
-    h = props.load("laptop", size=0.36, axis="long", loc=(0, 0, 0), turn_deg=0, sat=0.45, val=0.8, rough_add=0.12)
-    tree = props.surface_bvh(h)
-    hits = []
-    for yy in (-0.1, -0.05, 0.0, 0.05, 0.1):
-        for zz in (0.07, 0.1, 0.13, 0.16, 0.19):
-            r = tree.ray_cast(Vector((-0.4, yy, zz)), Vector((1, 0, 0)))
-            if r[0] is not None and r[0].x > 0.05:
-                hits.append(r[0])
-    n = len(hits)
-    mz = sum(p.z for p in hits) / n
-    mx = sum(p.x for p in hits) / n
-    b = sum((p.z - mz) * (p.x - mx) for p in hits) / sum((p.z - mz) ** 2 for p in hits)
-    a = mx - b * mz
-    up = Vector((b, 0.0, 1.0)).normalized()
-    nrm = Vector((-1.0, 0.0, b)).normalized()
-    zbot = 0.03
-    base = Vector((a + b * zbot, 0.0, zbot))
-
-    def dev(y, sd):
-        r = tree.ray_cast(base + up * sd + Vector((0.0, y, 0.0)) + nrm * 0.05, -nrm, 0.1)
-        return None if r[0] is None else 0.05 - r[3]
-
-    def edge(y, sd, dy, dsd):
-        while True:
-            d = dev(y + dy, sd + dsd)
-            if d is None or d > 0.0025 or abs(y) > 0.3 or sd > 0.4 or sd < -0.05:
-                return y, sd
-            y, sd = y + dy, sd + dsd
-    s_mid = 0.12
-    ymax, _ = edge(0.0, s_mid, 0.001, 0.0)
-    ymin, _ = edge(0.0, s_mid, -0.001, 0.0)
-    _, s_top = edge((ymin + ymax) / 2, s_mid, 0.0, 0.001)
-    _, s_bot = edge((ymin + ymax) / 2, s_mid, 0.0, -0.001)
-    ins = 0.003
-    s0, s1 = s_bot + ins, s_top - ins
-    w = (ymax - ymin) - 2 * ins
-    hh = s1 - s0
-    base = base + Vector((0.0, (ymin + ymax) / 2, 0.0))
-    proud = max(d for d in (dev((ymin + ymax) / 2 - w / 2 + w * i / 12, s0 + hh * j / 8) for i in range(13) for j in range(9))
-                if d is not None)
-    centre = base + up * ((s0 + s1) / 2) + nrm * (max(proud, 0.0) + 0.0007)
-    xaxis = up.cross(nrm).normalized()
-    rot = Matrix((xaxis, up, nrm)).transposed()
-    print(f"TIMDESK laptop lid {n} hits, slope {b:.3f}; panel {w:.3f} x {hh:.3f}, {proud * 1000:.1f} mm proud", flush=True)
-    bm = bmesh.new()
-    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5, matrix=Matrix.Diagonal((w, hh, 1, 1)))
-    scr = _link("laptop_screen", bm, mt.screen("laptop screen", COOL, LAPTOP_EMISSION, w, hh))
-    scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
-    li = area("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 3.5, COOL, spread=150)
-    bpy.context.view_layer.update()
-    li.matrix_world = Matrix.Translation(centre + nrm * 0.02) @ (rot @ Matrix.Rotation(math.pi, 3, "X")).to_4x4()
-    li.visible_camera = False
-    li.visible_glossy = False
-    li.visible_shadow = False
-    deck = box("laptop key well", (0.132, 0.325, 0.0034), (-0.009, 0, 0.0236), M["deck"], bevel=0.0015)
-    bm = bmesh.new()
-    rows = ((1,) * 14, (1.4,) + (1,) * 12 + (1.4,), (1.65,) + (1,) * 11 + (1.95,),
-            (2,) + (1,) * 10 + (2.5,), (1.4, 1.3, 1.3, 5.9, 1.3, 1.3, 1.4))
-    for row, units in enumerate(rows):
-        pitch = 0.308 / sum(units)
-        y0 = -0.154
-        for unit in units:
-            span = unit * pitch
-            add_box(bm, (0.017, span - 0.0023, 0.0023), (0.035 - row * 0.022, y0 + span / 2, 0.026))
-            y0 += span
-    keys = bevelled(_link("laptop blank keys", bm, M["key"]), 0.0008, 2)
-    x, y, t = LAPTOP
-    place = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
-    bpy.context.view_layer.update()
-    for o in (scr, li, deck, keys):
-        o.matrix_world = place @ o.matrix_world
-    h.location = (x, y, TOP - 0.0004)
-    h.rotation_euler = (0, 0, math.radians(t))
-    bpy.context.view_layer.update()
-    return [h] + list(h.children_recursive) + [scr, li, deck, keys]
-
-
+# ---------------------------------------------------------------- the monitor
 def monitor():
     """A desktop monitor on a weighted foot, with a separate blank 16:9 panel."""
     width, height = 0.43, 0.43 * 9 / 16
-    case = sk.mat("monitor charcoal housing", (0.019, 0.020, 0.023), 0.46)
-    panel_material = mt.glow("monitor blank panel", (0.68, 0.75, 0.86), MONITOR_EMISSION)
+    case = sk.mat("monitor charcoal housing", (0.019, 0.020, 0.023), 0.32)
+    panel_material = mt.glow("monitor blank panel", MONITOR_COLOUR, MONITOR_EMISSION)
     x, y, z = MONITOR
     bottom = z - height / 2
     turn = Matrix.Rotation(math.radians(202), 4, "Z")
@@ -843,7 +759,13 @@ def monitor():
     for part in (foot, post, back):
         part.matrix_world = place @ Matrix.Translation(part.location)
     screen.matrix_world = place @ Matrix.Translation((0, 0, z - TOP)) @ Matrix.Rotation(math.pi / 2, 4, "X")
-    return [foot, post, back, screen]
+    rotation = screen.matrix_world.to_3x3()
+    normal = rotation @ Vector((0, 0, 1))
+    spill = area("monitor_spill", screen.location + normal * 0.02, (width, height), 4.1, MONITOR_COLOUR, spread=150)
+    spill.rotation_euler = (rotation @ Matrix.Rotation(math.pi, 3, "X")).to_euler()
+    spill.visible_camera = spill.visible_glossy = spill.visible_shadow = False
+    spill.data.specular_factor = 0.0
+    return [foot, post, back, screen, spill]
 
 
 # ---------------------------------------------------------------- small things built here

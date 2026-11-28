@@ -6,39 +6,42 @@
   ],
   "origin": "top-left pixel edge",
   "depth_axis": "camera forward",
-  "focus_m": 0.836227,
-  "fstop": 5.6,
-  "lens_mm": 44.0,
+  "focus_m": 1.147447,
+  "fstop": 8.0,
+  "lens_mm": 30.0,
   "sensor_mm": 36.0,
   "screen": "monitor_screen",
   "corners": {
     "top_left": [
-      219.778,
-      68.516
+      268.514,
+      102.793
     ],
     "top_right": [
-      948.819,
-      89.782
+      675.444,
+      88.439
     ],
     "bottom_right": [
-      939.05,
-      491.239
+      673.226,
+      298.48
     ],
     "bottom_left": [
-      236.778,
-      582.792
+      294.949,
+      340.597
     ]
   },
   "depth_m": {
-    "top_left": 0.716929,
-    "top_right": 0.925297,
-    "bottom_right": 0.955524,
-    "bottom_left": 0.747156
+    "top_left": 1.031805,
+    "top_right": 1.184041,
+    "bottom_right": 1.263088,
+    "bottom_left": 1.110852
   },
   "in_frame": {
     "top_left": true,
     "top_right": true,
     "bottom_right": true,
     "bottom_left": true
-  }
+  },
+  "matte": "monitor.mask.png",
+  "glass": "monitor.glass.png",
+  "composite_before_grade": true
 }

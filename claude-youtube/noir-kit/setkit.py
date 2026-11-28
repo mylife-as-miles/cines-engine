@@ -8,7 +8,10 @@ camera and the render settings. Scenes stay short and read like a brief.
     sk.camera((1.95, -2.05, 2.45), (-0.05, 0.25, 0.75), lens=24, focus="case")
     sk.render(out, samples=64, res=(1920, 1080))
 """
+import os
+import tempfile
 import time
+from pathlib import Path
 
 import bpy  # first: bmesh and mathutils only exist once bpy is loaded
 import bmesh
@@ -230,7 +233,90 @@ def screen_frame_metadata(name, scene, resolution, screen):
         depths[label] = round(point.z, 6)
         inside[label] = point.z > 0 and 0 <= point.x <= 1 and 0 <= point.y <= 1
     return {**plate_optics(name, scene, resolution), "screen": screen.name,
-            "corners": corners, "depth_m": depths, "in_frame": inside}
+            "corners": corners, "depth_m": depths, "in_frame": inside,
+            "matte": f"{name}.mask.png", "glass": f"{name}.glass.png", "composite_before_grade": True}
+
+
+def render_object_mask(render, path, target, *args, **kwargs):
+    """Write an ungraded, antialiased matte for an object or a shared object index."""
+    scene = bpy.context.scene
+    scene.render.engine = "CYCLES"
+    layer = bpy.context.view_layer
+    indexed = isinstance(target, int)
+    render_pass = "use_pass_object_index" if indexed else "use_pass_cryptomatte_object"
+    previous_pass = getattr(layer, render_pass)
+    previous_tree = scene.compositing_node_group
+    tree = bpy.data.node_groups.new("Object matte", "CompositorNodeTree")
+    try:
+        setattr(layer, render_pass, True)
+        scene.compositing_node_group = tree
+        tree.interface.new_socket(name="Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+        inputs = tree.nodes.new("CompositorNodeRLayers")
+        inputs.scene = scene
+        composite = tree.nodes.new("NodeGroupOutput")
+        tree.links.new(inputs.outputs["Image"], composite.inputs["Image"])
+        if indexed:
+            mask = tree.nodes.new("CompositorNodeIDMask")
+            mask.inputs["Index"].default_value = target
+            mask.inputs["Anti-Alias"].default_value = True
+            tree.links.new(inputs.outputs["Object Index"], mask.inputs["ID value"])
+            alpha = mask.outputs["Alpha"]
+        else:
+            mask = tree.nodes.new("CompositorNodeCryptomatteV2")
+            mask.scene = scene
+            mask.layer_name = f"{layer.name}.CryptoObject"
+            mask.matte_id = target.name
+            alpha = mask.outputs["Matte"]
+        writer = tree.nodes.new("CompositorNodeOutputFile")
+        writer.format.media_type = "IMAGE"
+        writer.format.file_format = "PNG"
+        writer.format.color_mode = "BW"
+        writer.format.color_depth = "8"
+        writer.file_output_items.clear()
+        item = writer.file_output_items.new("FLOAT", "matte")
+        item.save_as_render = False
+        writer.save_as_render = False
+        tree.links.new(alpha, writer.inputs[item.name])
+        with tempfile.TemporaryDirectory(dir=Path(path).parent) as directory:
+            writer.directory, writer.file_name = directory, "mask"
+            result = render(path, *args, **kwargs)
+            matte, = Path(directory).rglob("*.png")
+            os.replace(matte, Path(path).with_suffix(".mask.png"))
+            return result
+    finally:
+        scene.compositing_node_group = previous_tree
+        setattr(layer, render_pass, previous_pass)
+        bpy.data.node_groups.remove(tree)
+
+
+def render_screen_layers(render, path, screen, roughness, *args, specular=0.35, **kwargs):
+    """Write the blank plate, its visible screen matte and an ungraded reflection plate."""
+    render(path, *args, **kwargs)
+    original = screen.active_material
+    glass = mat("display glass", (0.004, 0.004, 0.005), roughness)
+    glass.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = specular
+    # Pure volume shells contribute noise to surface coverage. The beauty plate retains the haze.
+    volumes = []
+    for obj in bpy.context.scene.objects:
+        material = obj.active_material
+        if obj.hide_render or material is None or not material.use_nodes:
+            continue
+        output = next((node for node in material.node_tree.nodes if node.type == "OUTPUT_MATERIAL"
+                       and node.is_active_output), None)
+        if output and output.inputs["Volume"].is_linked and not output.inputs["Surface"].is_linked:
+            volumes.append(obj)
+    for volume in volumes:
+        volume.hide_render = True
+    glass_path = Path(path).with_suffix(".glass.png")
+    screen.active_material = glass
+    try:
+        render_object_mask(render, str(glass_path), screen, *args, **kwargs)
+        os.replace(glass_path.with_suffix(".mask.png"), Path(path).with_suffix(".mask.png"))
+    finally:
+        for volume in volumes:
+            volume.hide_render = False
+        screen.active_material = original
+        bpy.data.materials.remove(glass)
 
 
 def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=0.03):

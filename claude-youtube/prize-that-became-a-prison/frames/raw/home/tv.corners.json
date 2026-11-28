@@ -6,39 +6,42 @@
   ],
   "origin": "top-left pixel edge",
   "depth_axis": "camera forward",
-  "focus_m": 1.867219,
-  "fstop": 5.6,
-  "lens_mm": 48.0,
+  "focus_m": 2.339405,
+  "fstop": 4.0,
+  "lens_mm": 26.0,
   "sensor_mm": 36.0,
   "screen": "television_screen",
   "corners": {
     "top_left": [
-      319.799,
-      93.032
+      765.508,
+      172.683
     ],
     "top_right": [
-      1133.997,
-      105.268
+      1095.489,
+      190.3
     ],
     "bottom_right": [
-      1128.43,
-      553.352
+      1109.82,
+      380.412
     ],
     "bottom_left": [
-      323.648,
-      571.189
+      769.691,
+      373.471
     ]
   },
   "depth_m": {
-    "top_left": 1.795605,
-    "top_right": 1.916985,
-    "bottom_right": 1.938833,
-    "bottom_left": 1.817453
+    "top_left": 2.310427,
+    "top_right": 2.442897,
+    "bottom_right": 2.368382,
+    "bottom_left": 2.235912
   },
   "in_frame": {
     "top_left": true,
     "top_right": true,
     "bottom_right": true,
     "bottom_left": true
-  }
+  },
+  "matte": "tv.mask.png",
+  "glass": "tv.glass.png",
+  "composite_before_grade": true
 }
