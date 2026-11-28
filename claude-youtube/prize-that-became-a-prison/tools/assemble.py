@@ -29,6 +29,9 @@ Sources (see design/edit/EDL.md for each shot's):
           film's grade (gfx/montage.py plate_shot's move, re-done here frame by frame so the grade, the type and the
           encode run in one pass: scenes/shoot.py GRADE, fresh grain, centre clamped so no edge is pulled in), with
           story type from gfx/type.html laid over it (gfx/type_render.js, look B), each layer at its own offset.
+          The push is a dolly with parallax (near layers grow and slide more than the far plane) from the plate's
+          depth map, out/depth/<stage>/<cam>.png, made by `<torch python> tools/depth_estimate.py <plates>`; off for
+          top-down shots and for both sides of a "continue" match cut (cut.json "parallax", per shot "parallax").
   piece   a graphics piece trimmed from a rendered clip (out/gfx/r7, reel 7's exact commands), or re-rendered with the
           same tool and parameters at the length the shot needs.
 
@@ -263,6 +266,10 @@ def time_cmd(args):
         if s["_n"] <= 0:
             raise SystemExit(f"shot {s['id']} has no frames: check its anchor {s.get('at')}")
     byid = {s["id"]: s for s in shots}
+    # Parallax (see plate_frames): on for every plate shot by default (cut.json "parallax", per shot "parallax": false
+    # or {"k": .., "slide": [x, y]}), off for both sides of a "continue" match cut, whose alignment must stay exact.
+    par_default = cut.get("parallax", {"k": 1.0})
+    matched = {s["continue"] for s in shots if "continue" in s} | {s["id"] for s in shots if "continue" in s}
 
     edl_shots = []
     for s in shots:
@@ -284,6 +291,10 @@ def time_cmd(args):
                    "zoom": [round(z0, 5), round(z1, 5)], "centre": c, "frames": n,
                    "push": f"{'in' if z1 >= z0 else 'out'} {abs(z1 / z0 - 1) * 100:.1f} % (log space, constant speed)",
                    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame"}
+            par = s.get("parallax", par_default)
+            if par and s["id"] not in matched:
+                par = {**par_default, **par} if isinstance(par, dict) else dict(par_default)
+                src["parallax"] = {"k": par.get("k", 1.0), "slide": par.get("slide", [0, 0]), "depth": f"out/depth/{stage}/{cam}.png"}
             types = []
             for ty in s.get("type", []):
                 d = {"mode": ty["mode"], "look": "B"}
@@ -601,7 +612,7 @@ def piece_plan(src):
 def shot_deps_t(e):
     src = e["source"]
     if src["kind"] == "plate":
-        return newest([src["plate"]] + (TYPE_TOOLS if src["type"] else []))
+        return newest([src["plate"]] + (TYPE_TOOLS if src["type"] else []) + ([src["parallax"]["depth"]] if "parallax" in src else []))
     p = piece_plan(src)
     return max(p["deps_t"], p["path"].stat().st_mtime if p["path"].exists() else 0.0)
 
@@ -640,22 +651,63 @@ def ensure_piece(src, work):
     return out
 
 
-def plate_frames(path, n, z0, z1, cx, cy):
+def load_depth(path, pw, ph):
+    """The plate's depth map (tools/depth_estimate.py) as 0 (far plane) to 1 (nearest), at the plate's size: dilated a
+    little so a near edge keeps its own pixels and the stretch falls on the far side, then softened."""
+    import cv2
+    import numpy as np
+    d = cv2.imread(str(ROOT / path), cv2.IMREAD_UNCHANGED)
+    if d is None:
+        raise SystemExit(f"no depth map {path}: run `<torch python> tools/depth_estimate.py` on the plate, or set parallax false")
+    d = cv2.resize(d.astype(np.float32) / 65535.0, (pw, ph), interpolation=cv2.INTER_LINEAR)
+    lo, hi = np.percentile(d, 2), np.percentile(d, 99.5)
+    d = np.clip((d - lo) / max(1e-6, hi - lo), 0, 1)
+    r = max(2, round(4.5 * pw / 1920))
+    d = cv2.dilate(d, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1)))
+    return cv2.GaussianBlur(d, (0, 0), 2.0 * pw / 1920)
+
+
+def plate_frames(path, n, z0, z1, cx, cy, parallax=None):
     """gfx/montage.py plate_shot's move, frame by frame (the same constant speed in log space, the same clamp so no
     edge is ever pulled in, the same cubic resampling), warped in 8 bits so the grade, the type and the encode can run
-    in one ffmpeg pass instead of three."""
+    in one ffmpeg pass instead of three.
+
+    With `parallax` the push becomes a dolly: a point's extra scale about the plate's own centre (where the lens
+    points) grows with its nearness D from the plate's depth map, a = k (z / z0 - 1), so with k 1 the nearest layer
+    moves twice as far as the far plane; `slide` adds [x, y] output px of sideways travel at D 1 over the shot. The
+    source of each output pixel is found by fixed-point iteration (four steps). A slide widens the framing by its own
+    size so no edge is pulled in."""
     import cv2
     import numpy as np
     img = cv2.cvtColor(cv2.imread(str(ROOT / "frames/raw" / (path + ".png")), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
     ph, pw = img.shape[:2]
     base = max(W / pw, H / ph)
+    if parallax:
+        sl = parallax.get("slide", [0, 0])
+        base *= 1 + 2 * max(abs(sl[0]) / W, abs(sl[1]) / H)
+        D = load_depth(parallax["depth"], pw, ph)
+        qx, qy = np.meshgrid(np.arange(W, dtype=np.float32), np.arange(H, dtype=np.float32))
+        P0 = (pw / 2, ph / 2)
     for i in range(n):
-        z = z0 * (z1 / z0) ** (i / max(1, n - 1))
+        u = i / max(1, n - 1)
+        z = z0 * (z1 / z0) ** u
         s = base * z
         hx, hy = W / (2 * s), H / (2 * s)
         x = min(max(cx * pw, hx), pw - hx); y = min(max(cy * ph, hy), ph - hy)
-        M = np.float32([[s, 0, W / 2 - s * x], [0, s, H / 2 - s * y]])
-        yield cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE).tobytes()
+        if not parallax:
+            M = np.float32([[s, 0, W / 2 - s * x], [0, s, H / 2 - s * y]])
+            yield cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE).tobytes()
+            continue
+        a = parallax.get("k", 1.0) * (z / z0 - 1)
+        sx, sy = sl[0] * u / s, sl[1] * u / s                     # output px -> plate px
+        fx, fy = x + (qx - W / 2) / s, y + (qy - H / 2) / s          # the flat push's source
+        px, py = fx, fy
+        for _ in range(4):
+            d = cv2.remap(D, px, py, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            k = 1 + a * d
+            px = (P0[0] + (fx - P0[0]) / k - sx * d).astype(np.float32)
+            py = (P0[1] + (fy - P0[1]) / k - sy * d).astype(np.float32)
+        yield cv2.remap(img, px, py, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE).tobytes()
 
 
 def render_shot(e):
@@ -685,7 +737,8 @@ def render_shot(e):
             fc += f"{last}format=yuv420p[v]"
             ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n),
                                    "-r", str(FPS), *ENC, str(tmp)], stdin=subprocess.PIPE, cwd=ROOT)
-            for fr in plate_frames(f"{src['stage']}/{src['camera']}", n, src["zoom"][0], src["zoom"][1], src["centre"][0], src["centre"][1]):
+            for fr in plate_frames(f"{src['stage']}/{src['camera']}", n, src["zoom"][0], src["zoom"][1], src["centre"][0], src["centre"][1],
+                                   src.get("parallax")):
                 ff.stdin.write(fr)
             ff.stdin.close()
             if ff.wait():

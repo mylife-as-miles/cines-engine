@@ -483,7 +483,8 @@
      "plate": "hotel_room/overhead_pre",
      "move": "in",
      "sound": "Low drone",
-     "change": "Added: \"She believed the handbags were a prize\" on the three gifts laid on her hotel bed (a flash of chapter 3). The Hong Kong shop window is not used for the gifts: its display bags are now other colours on purpose."
+     "change": "Added: \"She believed the handbags were a prize\" on the three gifts laid on her hotel bed (a flash of chapter 3). The Hong Kong shop window is not used for the gifts: its display bags are now other colours on purpose.",
+     "parallax": false
     },
     {
      "id": "00-21",
@@ -697,7 +698,8 @@
      "move": "in",
      "row": "evidence_table `motifs` (*new*)",
      "sound": "Pencils, paper",
-     "sub": "evidence_table `motifs` (new) has no plate: `overhead` (papers and photographs under the lamp) stands in."
+     "sub": "evidence_table `motifs` (new) has no plate: `overhead` (papers and photographs under the lamp) stands in.",
+     "parallax": false
     },
     {
      "id": "01-05",
@@ -1069,7 +1071,8 @@
      "plate": "hotel_room/overhead_pre",
      "move": "in",
      "sound": "A soft room",
-     "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above."
+     "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above.",
+     "parallax": false
     },
     {
      "id": "03-03",
@@ -1085,7 +1088,8 @@
      "plate": "hotel_room/overhead",
      "move": "in",
      "sound": "Zips",
-     "change": "Added: \"Her luggage was already full\" on the packed case from above."
+     "change": "Added: \"Her luggage was already full\" on the packed case from above.",
+     "parallax": false
     },
     {
      "id": "03-05",
@@ -1125,7 +1129,8 @@
      "plate": "baggage_belt/overhead",
      "move": "in",
      "sound": "Belt rollers",
-     "change": "Added: \"Both checked in her name\" on the two bags on the belt from above."
+     "change": "Added: \"Both checked in her name\" on the two bags on the belt from above.",
+     "parallax": false
     },
     {
      "id": "03-10",
@@ -1438,7 +1443,8 @@
      "plate": "inspection_room/overhead",
      "move": "in",
      "sound": "",
-     "change": "Added: \"drugs were found in luggage she had checked\" on the opened bags from above."
+     "change": "Added: \"drugs were found in luggage she had checked\" on the opened bags from above.",
+     "parallax": false
     },
     {
      "id": "04-19",
@@ -1941,7 +1947,8 @@
      "plate": "tim_desk/letters",
      "move": "in",
      "row": "tim_desk: letters",
-     "sound": "Pen on paper"
+     "sound": "Pen on paper",
+     "parallax": false
     },
     {
      "id": "07-08",
@@ -2008,7 +2015,8 @@
      ],
      "move": "in",
      "sound": "Paper",
-     "change": "\"Every letter, every hearing, every request\" on a closer framing of the letters (1.3x), then \"a door that might open\" on the detention door."
+     "change": "\"Every letter, every hearing, every request\" on a closer framing of the letters (1.3x), then \"a door that might open\" on the detention door.",
+     "parallax": false
     },
     {
      "id": "07-13",
@@ -2448,5 +2456,8 @@
     }
    ]
   }
- ]
+ ],
+ "parallax": {
+  "k": 1.0
+ }
 }

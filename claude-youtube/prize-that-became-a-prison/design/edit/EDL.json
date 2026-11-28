@@ -195,6 +195,14 @@
     "frames": 104,
     "push": "in 4.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/checkin_hall/shoulder.png"
+    },
     "type": []
    },
    "voice": [
@@ -230,6 +238,14 @@
     "frames": 110,
     "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/checkin_hall/wide.png"
+    },
     "type": [
      {
       "mode": "place_2014",
@@ -272,6 +288,14 @@
     "frames": 76,
     "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/checkin_hall/profile.png"
+    },
     "type": []
    },
    "voice": [
@@ -307,6 +331,14 @@
     "frames": 78,
     "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/departure_gate/seated.png"
+    },
     "type": []
    },
    "voice": [
@@ -342,6 +374,14 @@
     "frames": 78,
     "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/departure_gate/seated_called.png"
+    },
     "type": []
    },
    "voice": [
@@ -378,6 +418,14 @@
     "frames": 54,
     "push": "in 2.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/enter.png"
+    },
     "type": []
    },
    "voice": [
@@ -413,6 +461,14 @@
     "frames": 51,
     "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/wide_pre.png"
+    },
     "type": []
    },
    "voice": [
@@ -448,6 +504,14 @@
     "frames": 52,
     "push": "in 2.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/two_shot_pre.png"
+    },
     "type": []
    },
    "voice": [
@@ -483,6 +547,14 @@
     "frames": 41,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/tag.png"
+    },
     "type": []
    },
    "voice": [
@@ -518,6 +590,14 @@
     "frames": 44,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/dawn_close.png"
+    },
     "type": []
    },
    "voice": [
@@ -631,6 +711,14 @@
     "frames": 39,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hotel_room/pack.png"
+    },
     "type": []
    },
    "voice": [
@@ -666,6 +754,14 @@
     "frames": 38,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/baggage_belt/belt.png"
+    },
     "type": []
    },
    "voice": [
@@ -700,6 +796,14 @@
     "frames": 105,
     "push": "in 4.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/handbags.png"
+    },
     "type": []
    },
    "voice": [
@@ -769,6 +873,14 @@
     "frames": 150,
     "push": "in 6.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/seam.png"
+    },
     "type": []
    },
    "voice": [
@@ -805,6 +917,14 @@
     "frames": 69,
     "push": "in 3.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn.png"
+    },
     "type": []
    },
    "voice": [
@@ -875,6 +995,14 @@
     "frames": 89,
     "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/aircraft_cabin/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -980,6 +1108,14 @@
     "frames": 44,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/courtroom/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -1015,6 +1151,14 @@
     "frames": 122,
     "push": "in 5.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn_high.png"
+    },
     "type": [
      {
       "mode": "death_2017",
@@ -1057,6 +1201,14 @@
     "frames": 60,
     "push": "in 2.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/tower.png"
+    },
     "type": []
    },
    "voice": [
@@ -1092,6 +1244,14 @@
     "frames": 64,
     "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -1127,6 +1287,14 @@
     "frames": 100,
     "push": "in 4.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/witness.png"
+    },
     "type": []
    },
    "voice": [
@@ -1219,6 +1387,14 @@
     "frames": 134,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/chicago_night/wide.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -1273,6 +1449,14 @@
     "frames": 76,
     "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/chicago_night/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -1309,6 +1493,14 @@
     "frames": 129,
     "push": "in 5.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/chicago_night/suitcase.png"
+    },
     "type": []
    },
    "voice": [
@@ -1384,6 +1576,14 @@
     "frames": 131,
     "push": "in 6.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/push.png"
+    },
     "type": []
    },
    "voice": [
@@ -1420,6 +1620,14 @@
     "frames": 167,
     "push": "in 7.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/home/dining.png"
+    },
     "type": []
    },
    "voice": [
@@ -1498,6 +1706,14 @@
     "frames": 152,
     "push": "in 7.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/tim_desk/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -1537,6 +1753,14 @@
     "frames": 92,
     "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/home/kitchen.png"
+    },
     "type": []
    },
    "voice": [
@@ -1572,6 +1796,14 @@
     "frames": 53,
     "push": "in 2.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/laptop.png"
+    },
     "type": []
    },
    "voice": [
@@ -1641,6 +1873,14 @@
     "frames": 175,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/departure_gate/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -1709,6 +1949,14 @@
     "frames": 120,
     "push": "in 5.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/passport.png"
+    },
     "type": []
    },
    "voice": [
@@ -1744,6 +1992,14 @@
     "frames": 66,
     "push": "out 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/chicago_night/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -1779,6 +2035,14 @@
     "frames": 118,
     "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/departure_gate/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -1819,6 +2083,14 @@
     "frames": 129,
     "push": "in 5.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/aircraft_cabin/aisle.png"
+    },
     "type": []
    },
    "voice": [
@@ -1854,6 +2126,14 @@
     "frames": 139,
     "push": "in 6.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hongkong_street/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -1889,6 +2169,14 @@
     "frames": 130,
     "push": "in 6.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/aircraft_cabin/window.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -1968,6 +2256,14 @@
     "frames": 89,
     "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hongkong_street/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -2039,6 +2335,14 @@
     "frames": 110,
     "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/train/aisle.png"
+    },
     "type": []
    },
    "voice": [
@@ -2074,6 +2378,14 @@
     "frames": 46,
     "push": "in 2.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/train/seat.png"
+    },
     "type": []
    },
    "voice": [
@@ -2142,6 +2454,14 @@
     "frames": 41,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/passport.png"
+    },
     "type": []
    },
    "voice": [
@@ -2176,6 +2496,14 @@
     "frames": 45,
     "push": "in 2.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hotel_room/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -2211,6 +2539,14 @@
     "frames": 120,
     "push": "in 5.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hongkong_street/company.png"
+    },
     "type": []
    },
    "voice": [
@@ -2281,6 +2617,14 @@
     "frames": 71,
     "push": "in 3.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/train/rack.png"
+    },
     "type": []
    },
    "voice": [
@@ -2316,6 +2660,14 @@
     "frames": 106,
     "push": "in 4.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/purses.png"
+    },
     "type": []
    },
    "voice": [
@@ -2351,6 +2703,14 @@
     "frames": 166,
     "push": "in 7.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hotel_room/accept.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -2433,6 +2793,14 @@
     "frames": 108,
     "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/aircraft_cabin/over.png"
+    },
     "type": []
    },
    "voice": [
@@ -2503,6 +2871,14 @@
     "frames": 84,
     "push": "in 3.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/leather_market/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -2538,6 +2914,14 @@
     "frames": 50,
     "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/leather_market/stall.png"
+    },
     "type": []
    },
    "voice": [
@@ -2573,6 +2957,14 @@
     "frames": 60,
     "push": "in 2.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/leather_market/purchase.png"
+    },
     "type": []
    },
    "voice": [
@@ -2608,6 +3000,14 @@
     "frames": 78,
     "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hotel_room/pack.png"
+    },
     "type": []
    },
    "voice": [
@@ -2678,6 +3078,14 @@
     "frames": 63,
     "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/checkin_hall/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -2750,6 +3158,14 @@
     "frames": 37,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/checkin_hall/shoulder.png"
+    },
     "type": []
    },
    "voice": [
@@ -2896,6 +3312,14 @@
     "frames": 72,
     "push": "in 3.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/baggage_belt/curtain.png"
+    },
     "type": []
    },
    "voice": [
@@ -2932,6 +3356,14 @@
     "frames": 100,
     "push": "in 4.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/departure_gate/seated_called.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -2975,6 +3407,14 @@
     "frames": 51,
     "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/enter.png"
+    },
     "type": []
    },
    "voice": [
@@ -3010,6 +3450,14 @@
     "frames": 51,
     "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/wide_pre.png"
+    },
     "type": []
    },
    "voice": [
@@ -3157,6 +3605,14 @@
     "frames": 48,
     "push": "in 2.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/dawn_close.png"
+    },
     "type": []
    },
    "voice": [
@@ -3192,6 +3648,14 @@
     "frames": 89,
     "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/handbags_touch.png"
+    },
     "type": []
    },
    "voice": [
@@ -3228,6 +3692,14 @@
     "frames": 92,
     "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/two_shot.png"
+    },
     "type": []
    },
    "voice": [
@@ -3299,6 +3771,14 @@
     "frames": 25,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/empty_ch05.png"
+    },
     "type": []
    },
    "voice": [
@@ -3334,6 +3814,14 @@
     "frames": 50,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/match.png"
+    },
     "type": [
      {
       "mode": "yes",
@@ -3409,6 +3897,14 @@
     "frames": 49,
     "push": "in 2.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/tag.png"
+    },
     "type": []
    },
    "voice": [
@@ -3444,6 +3940,14 @@
     "frames": 86,
     "push": "in 3.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/departure_gate/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -3479,6 +3983,14 @@
     "frames": 103,
     "push": "in 4.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/page.png"
+    },
     "type": []
    },
    "voice": [
@@ -3585,6 +4097,14 @@
     "frames": 84,
     "push": "in 3.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/corridor.png"
+    },
     "type": [
      {
       "mode": "place",
@@ -3628,6 +4148,14 @@
     "frames": 123,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/empty.png"
+    },
     "type": []
    },
    "voice": [
@@ -3663,6 +4191,14 @@
     "frames": 104,
     "push": "in 4.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/door.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -3706,6 +4242,14 @@
     "frames": 141,
     "push": "in 6.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/chair.png"
+    },
     "type": []
    },
    "voice": [
@@ -3816,6 +4360,14 @@
     "frames": 35,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/envelope.png"
+    },
     "type": []
    },
    "voice": [
@@ -3852,6 +4404,14 @@
     "frames": 63,
     "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/door.png"
+    },
     "type": []
    },
    "voice": [
@@ -3887,6 +4447,14 @@
     "frames": 196,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/hands.png"
+    },
     "type": []
    },
    "voice": [
@@ -3922,6 +4490,14 @@
     "frames": 167,
     "push": "in 7.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/dais.png"
+    },
     "type": []
    },
    "voice": [
@@ -3956,6 +4532,14 @@
     "frames": 91,
     "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/page.png"
+    },
     "type": []
    },
    "voice": [
@@ -3991,6 +4575,14 @@
     "frames": 120,
     "push": "out 5.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn.png"
+    },
     "type": []
    },
    "voice": [
@@ -4062,6 +4654,14 @@
     "frames": 107,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/corridor.png"
+    },
     "type": []
    },
    "voice": [
@@ -4097,6 +4697,14 @@
     "frames": 103,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/courtroom/wide.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -4141,6 +4749,14 @@
     "frames": 87,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn_close.png"
+    },
     "type": [
      {
       "mode": "death_2017",
@@ -4187,6 +4803,14 @@
     "frames": 76,
     "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/courtroom/dock.png"
+    },
     "type": []
    },
    "voice": [
@@ -4222,6 +4846,14 @@
     "frames": 42,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn_high.png"
+    },
     "type": []
    },
    "voice": [
@@ -4257,6 +4889,14 @@
     "frames": 91,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn_close.png"
+    },
     "type": [
      {
       "mode": "sentence_life",
@@ -4300,6 +4940,14 @@
     "frames": 66,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/wall.png"
+    },
     "type": []
    },
    "voice": [
@@ -4335,6 +4983,14 @@
     "frames": 192,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/pair.png"
+    },
     "type": []
    },
    "voice": [
@@ -4371,6 +5027,14 @@
     "frames": 142,
     "push": "in 6.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/tower.png"
+    },
     "type": []
    },
    "voice": [
@@ -4406,6 +5070,14 @@
     "frames": 117,
     "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hongkong_street/company.png"
+    },
     "type": []
    },
    "voice": [
@@ -4441,6 +5113,14 @@
     "frames": 117,
     "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/baggage_belt/belt.png"
+    },
     "type": []
    },
    "voice": [
@@ -4476,6 +5156,14 @@
     "frames": 158,
     "push": "in 7.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/courtroom/bench.png"
+    },
     "type": []
    },
    "voice": [
@@ -4511,6 +5199,14 @@
     "frames": 80,
     "push": "in 3.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/bags.png"
+    },
     "type": []
    },
    "voice": [
@@ -4547,6 +5243,14 @@
     "frames": 75,
     "push": "in 3.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn.png"
+    },
     "type": []
    },
    "voice": [
@@ -4582,6 +5286,14 @@
     "frames": 107,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn_close.png"
+    },
     "type": []
    },
    "voice": [
@@ -4621,6 +5333,14 @@
     "frames": 89,
     "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/gate.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -4665,6 +5385,14 @@
     "frames": 79,
     "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/wall.png"
+    },
     "type": []
    },
    "voice": [
@@ -4700,6 +5428,14 @@
     "frames": 153,
     "push": "in 7.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/visiting_room/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -4735,6 +5471,14 @@
     "frames": 217,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/visiting_room/glass.png"
+    },
     "type": []
    },
    "voice": [
@@ -4811,6 +5555,14 @@
     "frames": 124,
     "push": "in 5.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/tim_desk/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -4881,6 +5633,14 @@
     "frames": 120,
     "push": "in 5.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/wide.png"
+    },
     "type": [
      {
       "mode": "place",
@@ -4924,6 +5684,14 @@
     "frames": 108,
     "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/witness.png"
+    },
     "type": []
    },
    "voice": [
@@ -4959,6 +5727,14 @@
     "frames": 214,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/tim_desk/desk.png"
+    },
     "type": [
      {
       "mode": "place",
@@ -5003,6 +5779,14 @@
     "frames": 138,
     "push": "in 6.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/dais.png"
+    },
     "type": []
    },
    "voice": [
@@ -5038,6 +5822,14 @@
     "frames": 132,
     "push": "in 6.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/tower.png"
+    },
     "type": []
    },
    "voice": [
@@ -5107,6 +5899,14 @@
     "frames": 64,
     "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/detention_corridor/door.png"
+    },
     "type": []
    },
    "voice": [
@@ -5141,6 +5941,14 @@
     "frames": 48,
     "push": "out 2.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/cell_close.png"
+    },
     "type": []
    },
    "voice": [
@@ -5210,6 +6018,14 @@
     "frames": 210,
     "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/home/dining.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -5254,6 +6070,14 @@
     "frames": 136,
     "push": "in 6.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/home/dining.png"
+    },
     "type": []
    },
    "voice": [
@@ -5290,6 +6114,14 @@
     "frames": 90,
     "push": "out 4.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn_high.png"
+    },
     "type": []
    },
    "voice": [
@@ -5325,6 +6157,14 @@
     "frames": 209,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/witness.png"
+    },
     "type": []
    },
    "voice": [
@@ -5360,6 +6200,14 @@
     "frames": 180,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/chicago_night/suitcase.png"
+    },
     "type": []
    },
    "voice": [
@@ -5395,6 +6243,14 @@
     "frames": 165,
     "push": "out 7.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/cell_far.png"
+    },
     "type": []
    },
    "voice": [
@@ -5466,6 +6322,14 @@
     "frames": 179,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/home/chair.png"
+    },
     "type": []
    },
    "voice": [
@@ -5502,6 +6366,14 @@
     "frames": 164,
     "push": "in 7.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/gate.png"
+    },
     "type": [
      {
       "mode": "chapter",
@@ -5552,6 +6424,14 @@
     "frames": 107,
     "push": "in 4.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/hands.png"
+    },
     "type": []
    },
    "voice": [
@@ -5587,6 +6467,14 @@
     "frames": 282,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/visiting_room/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -5623,6 +6511,14 @@
     "frames": 172,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/visiting_room/glass.png"
+    },
     "type": []
    },
    "voice": [
@@ -5666,6 +6562,14 @@
     "frames": 68,
     "push": "in 3.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/visiting_room/empty.png"
+    },
     "type": []
    },
    "voice": [
@@ -5701,6 +6605,14 @@
     "frames": 164,
     "push": "in 7.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/witness.png"
+    },
     "type": [
      {
       "mode": "place",
@@ -5744,6 +6656,14 @@
     "frames": 91,
     "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/home/chair.png"
+    },
     "type": []
    },
    "voice": [
@@ -5779,6 +6699,14 @@
     "frames": 80,
     "push": "in 3.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/tim_desk/desk.png"
+    },
     "type": []
    },
    "voice": [
@@ -5814,6 +6742,14 @@
     "frames": 165,
     "push": "in 7.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hearing_room/wide.png"
+    },
     "type": []
    },
    "voice": [
@@ -5849,6 +6785,14 @@
     "frames": 145,
     "push": "in 6.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/void_stage/dawn.png"
+    },
     "type": []
    },
    "voice": [
@@ -5888,6 +6832,14 @@
     "frames": 162,
     "push": "out 6.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/prison_exterior/wall.png"
+    },
     "type": []
    },
    "voice": [
@@ -5923,6 +6875,14 @@
     "frames": 140,
     "push": "in 6.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/tim_desk/window.png"
+    },
     "type": []
    },
    "voice": [
@@ -5958,6 +6918,14 @@
     "frames": 118,
     "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/evidence_table/purses.png"
+    },
     "type": []
    },
    "voice": [
@@ -5993,6 +6961,14 @@
     "frames": 97,
     "push": "in 4.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/baggage_belt/curtain.png"
+    },
     "type": []
    },
    "voice": [
@@ -6027,6 +7003,14 @@
     "frames": 129,
     "push": "in 5.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/hongkong_street/company.png"
+    },
     "type": []
    },
    "voice": [
@@ -6061,6 +7045,14 @@
     "frames": 78,
     "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "parallax": {
+     "k": 1.0,
+     "slide": [
+      0,
+      0
+     ],
+     "depth": "out/depth/inspection_room/wide_pre.png"
+    },
     "type": []
    },
    "voice": [
