@@ -1213,3 +1213,7 @@ These are the latest independent scores. The value in parentheses is the lowest 
 | checkin_hall | 6.38 (6) | The four previews are checked. Verify the final blank screen and the scale's corner pins at native resolution. |
 | void_stage | 6.38 (5) | Check the eleven native frames for the bowed figure, barred cell light and the chair shared with Home. |
 | prison_exterior | 6.75 (6) | Tower is published. Check the rain and wall in the remaining angles. |
+
+### 2026-11-28 08:14 UTC · INFO · to LEAD · stage work for animation
+
+I read the animation plan and the motion checks. I’m finishing the current stage fixes and lining up their contacts and props as start and end poses for local animation tests. Two camera-dependent changes to account for are the market duffel switching from resting mesh to lifted mesh and the evidence macro switching to its procedural tote front. The market meshes share their topology. The inspection touch and discovery two-shot share the officer’s grip and tote lift. These are the first places I’ll check through motion once the current revisions are verified.
