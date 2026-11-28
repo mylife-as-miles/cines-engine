@@ -9,41 +9,68 @@ html,body{margin:0;background:#000}canvas{display:block}
 // The check-in scale's passenger display (checkin_hall `scale`, the film's first shot and its echo in chapter 3),
 // pinned by gfx/doc_composite.py through frames/raw/checkin_hall/scale.corners.json. A backlit monochrome panel: dark
 // segments on the lit face, so it multiplies the plate's own glow. No weight is shown: the sources say only "slightly
-// over the weight allowance", so a bar fills past the limit tick and the panel says OVERWEIGHT, blinking twice, then
-// holding. Contract: window.draw('display', t), window.READY.
+// over the weight allowance", so a segment bar lights past the limit tick and the panel says OVERWEIGHT, blinking
+// twice, then holding. Contract: window.draw('display', t), window.READY.
 const W = 900, H = 384, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const ease = x => 1 - Math.pow(1 - cl(x), 3);
-const INK = '#1b1f25', FACE = '#eef0f2', GHOST = 'rgba(27,31,37,0.035)';
+const INK = '#20262c', GHOST = 'rgba(32,38,44,0.05)';
+// review 9 (fault 14): the panel read as a printed card. What makes it an LCD here: uneven edge-lit backlight with LED
+// hot spots along the bottom, a face recessed behind the bezel glass (an inner shadow on the top and left edges),
+// slightly translucent segments that cast a soft second image on the backplane (the parallax shadow every
+// transflective LCD has), and a bar made of discrete segments that light one by one. The segments past the limit
+// stand taller than the rest and blink with the word, so the excess is its own shape without colour (red is the seam's).
+const N = 21, LIMIT = 16, FULL = 20;          // 16 segments up to the limit, 4 past it: slightly over, never a number
+const bx = 70, by = 286, bw = W - 140, bh = 34, gap = 8, sw = (bw - (N - 1) * gap) / N;
+function face(ctx) {
+  ctx.fillStyle = '#e4e8ea'; ctx.fillRect(0, 0, W, H);
+  const v = ctx.createLinearGradient(0, 0, 0, H);             // a little darker toward the top: the viewing angle
+  v.addColorStop(0, 'rgba(30,36,44,0.10)'); v.addColorStop(0.55, 'rgba(30,36,44,0)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+  for (const [x, a] of [[0.17, 0.75], [0.5, 0.6], [0.83, 0.7]]) {   // edge-lit LEDs along the bottom
+    const g = ctx.createRadialGradient(W * x, H + 10, 4, W * x, H + 10, 190);
+    g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+  const bl = ctx.createRadialGradient(W * 0.5, H * 0.52, 60, W * 0.5, H * 0.5, W * 0.66);   // falloff toward the bezel
+  bl.addColorStop(0, 'rgba(255,255,255,0)'); bl.addColorStop(1, 'rgba(36,42,52,0.42)'); ctx.fillStyle = bl; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(32,38,44,0.035)'; for (let x = 0; x < W; x += 4) ctx.fillRect(x, 0, 1, H); for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 1);
+}
+function bezel(ctx) {                                         // the face sits behind the glass: inner shadow top and left
+  let g = ctx.createLinearGradient(0, 0, 0, 26); g.addColorStop(0, 'rgba(10,12,16,0.55)'); g.addColorStop(1, 'rgba(10,12,16,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, 26);
+  g = ctx.createLinearGradient(0, 0, 20, 0); g.addColorStop(0, 'rgba(10,12,16,0.40)'); g.addColorStop(1, 'rgba(10,12,16,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 20, H);
+}
+// every inked element is drawn twice: a soft shadow on the backplane (3 px down-right), then the segment itself
+function ink(ctx, fn) {
+  ctx.save(); ctx.filter = 'blur(2.5px)'; ctx.translate(3, 4); ctx.globalAlpha = 0.16; fn(); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.9; fn(); ctx.restore();
+}
+function seg(ctx, i, tall) {
+  const x = bx + i * (sw + gap), e = tall ? 9 : 0;
+  ctx.fillRect(x, by - e, sw, bh + 2 * e);
+}
 function draw(mode, t) {
   const ctx = document.getElementById('c').getContext('2d');
-  ctx.fillStyle = FACE; ctx.fillRect(0, 0, W, H);
-  // a backlit panel: brighter in the middle, falling off toward the bezel, and the faint grid of an LCD
-  const bl = ctx.createRadialGradient(W * 0.5, H * 0.46, 40, W * 0.5, H * 0.5, W * 0.62);
-  bl.addColorStop(0, 'rgba(255,255,255,0)'); bl.addColorStop(1, 'rgba(40,46,56,0.30)'); ctx.fillStyle = bl; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(27,31,37,0.035)'; for (let x = 0; x < W; x += 4) ctx.fillRect(x, 0, 1, H); for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 1);
-  // the unlit segments of an LCD show faintly, as on a real panel
+  ctx.save(); face(ctx);
   ctx.font = '500 150px "Oswald"'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
-  if (t > 1.15) { ctx.fillStyle = GHOST; ctx.fillText('OVERWEIGHT', W / 2, 238); }   // unlit segments appear only once the bar is past the limit
-  // the weight bar: settles over 1.4 s with a small hunt, the way a load cell does, ending past the limit tick
-  const limit = 0.74, fill = Math.min(0.88, ease(t / 1.4) * 0.88 + 0.012 * Math.sin(t * 9) * Math.exp(-2.2 * t));
-  const bx = 70, by = 286, bw = W - 140, bh = 34;
-  ctx.strokeStyle = INK; ctx.lineWidth = 4; ctx.strokeRect(bx, by, bw, bh);
-  ctx.fillStyle = INK; ctx.fillRect(bx + 6, by + 6, (bw - 12) * fill, bh - 12);
-  // the limit: a tick through the bar with a notch above and below it, so "past the limit" reads at phone size
-  const lx = bx + bw * limit; ctx.fillRect(lx - 2.5, by - 18, 5, bh + 36);
-  ctx.beginPath(); ctx.moveTo(lx - 13, by - 34); ctx.lineTo(lx + 13, by - 34); ctx.lineTo(lx, by - 18); ctx.closePath(); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(lx - 13, by + bh + 34); ctx.lineTo(lx + 13, by + bh + 34); ctx.lineTo(lx, by + bh + 18); ctx.closePath(); ctx.fill();
-  // the part of the fill past the limit is hatched, so the excess is its own shape (no colour: red is the seam's)
-  const past = bx + 6 + (bw - 12) * fill - lx;
-  if (past > 0) { ctx.save(); ctx.beginPath(); ctx.rect(lx + 3, by + 6, past - 3, bh - 12); ctx.clip(); ctx.fillStyle = FACE;
-    for (let x = lx - 40; x < lx + past + 40; x += 11) { ctx.beginPath(); ctx.moveTo(x, by + bh); ctx.lineTo(x + 5, by + bh); ctx.lineTo(x + 5 + bh, by); ctx.lineTo(x + bh, by); ctx.closePath(); ctx.fill(); }
-    ctx.restore(); }
-  // OVERWEIGHT once the bar is past the tick: two blinks, then steady
-  const over = t - 1.25;
-  if (over > 0) {
-    const on = over > 1.1 || Math.floor(over / 0.275) % 2 === 0;
-    if (on) { ctx.fillStyle = INK; ctx.fillText('OVERWEIGHT', W / 2, 238); }
-  }
+  // the unlit segments show faintly, as on a real panel
+  ctx.fillStyle = GHOST; for (let i = 0; i < N; i++) seg(ctx, i, i >= LIMIT);
+  if (t > 1.15) ctx.fillText('OVERWEIGHT', W / 2, 230);
+  // the segments light one by one as the load cell settles over 1.4 s, with a small hunt at the end
+  const level = Math.max(0, Math.min(FULL, Math.round(ease(t / 1.4) * FULL + 0.6 * Math.sin(t * 9) * Math.exp(-2.2 * t))));
+  const over = t - 1.25, on = over > 1.1 || (over > 0 && Math.floor(over / 0.275) % 2 === 0);
+  ctx.fillStyle = INK;
+  ink(ctx, () => {
+    for (let i = 0; i < Math.min(level, LIMIT); i++) seg(ctx, i, false);
+    // past the limit: taller segments, and once OVERWEIGHT shows they blink with it (lit while the bar is still settling)
+    for (let i = LIMIT; i < level; i++) if (over <= 0 || on) seg(ctx, i, true);
+    // the limit: a tick between segments 16 and 17 with a notch above and below, so "past the limit" reads at phone size
+    const lx = bx + LIMIT * (sw + gap) - gap / 2;
+    ctx.fillRect(lx - 2.5, by - 22, 5, bh + 44);
+    ctx.beginPath(); ctx.moveTo(lx - 13, by - 38); ctx.lineTo(lx + 13, by - 38); ctx.lineTo(lx, by - 22); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(lx - 13, by + bh + 38); ctx.lineTo(lx + 13, by + bh + 38); ctx.lineTo(lx, by + bh + 22); ctx.closePath(); ctx.fill();
+    if (on) ctx.fillText('OVERWEIGHT', W / 2, 230);            // two blinks, then steady
+  });
+  bezel(ctx); ctx.restore();
 }
 window.draw = draw;
 document.fonts.load('500 150px "Oswald"').then(() => { window.READY = true; });
