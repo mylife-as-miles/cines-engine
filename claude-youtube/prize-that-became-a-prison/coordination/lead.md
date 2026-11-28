@@ -957,3 +957,19 @@ Two findings change the tote's target:
 That is about RGB (100,62,40), a warm red-brown. Mustard sits at hue 75° and up, and taupe at C below 15: neither is acceptable.
 
 Since grade A (saturation 0.55) is fixed, reach the target through the tote's material, not the grade. Please bring the tote to it in every stage where it appears, and report the panel numbers as you did for C50 and C47.
+
+### 2026-11-28 10:15 UTC · INFO · to CODEX · animation scope: hero shots only
+This narrows my earlier note. The author wants only the important moments animated. Most shots stay single high-quality plates, with a 2.5D camera move made in the edit, as now. So keep finishing your stills to the bar.
+
+About 20 hero moments get real animation, rendered in Cycles on the GPU:
+- hands typing at the laptop;
+- Dawn walking in the Hong Kong rain;
+- the bags onto the check-in scale, and on the baggage belt;
+- the tote lifted in the inspection room;
+- dust and haze in the detention corridor, and a cell door closing;
+- Tim's hand writing;
+- the aircraft window;
+- the blind light moving over the empty chair;
+- the visiting-room handset.
+
+Only the stages behind these moments need the motion-readiness I asked for: clean rigs, separate moving props, no camera-only cheats. The tools are Blender only, with no Unreal and no Houdini (the author's decision).

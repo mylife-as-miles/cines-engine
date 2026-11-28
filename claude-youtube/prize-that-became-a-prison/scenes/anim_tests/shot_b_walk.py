@@ -32,8 +32,8 @@ from mathutils import Matrix, Vector  # noqa: E402
 NAME = "B_walk"
 DEBUG = "--debug" in sys.argv
 PATH_X = 0.66                      # her line: straight up the hall to the counter, the scale on her right
-SPEED = 1.05                       # m/s
-CADENCE = 1.80                     # steps per second
+SPEED = 1.00                       # m/s
+CADENCE = 1.85                     # steps per second
 STEP_W = 0.052                     # half the step width (each foot this far from her line)
 TOE_OUT = 6.0                      # deg
 END_Y = -0.62                      # where her hips are at the last frame (still walking, a step from the counter)
@@ -262,7 +262,7 @@ def build(base=None, frames=None):
     for f in frames:
         t = C.t_of(f)
         ph = ((t - strikes["L"][3]) / STRIDE_T) % 1.0
-        z = hip_rest.z - 0.030 + 0.016 * math.cos(2 * (2 * math.pi * ph) - 2 * math.pi * 0.31)
+        z = hip_rest.z - 0.026 + 0.020 * math.cos(2 * (2 * math.pi * ph) - 2 * math.pi * 0.31)
         z_design.append(z)
         for _ in range(3):
             pose(f, z)
@@ -274,10 +274,9 @@ def build(base=None, frames=None):
                 break
             z -= e + 0.002
         z_ok.append(z)
-    # smooth below the limit: a running minimum over 5 frames, then a 5-tap blur, then clamp again
+    # smooth the clamped curve lightly (3 taps) and clamp again, so the hips still rise at mid-stance
     n = len(frames)
-    zm = [min(z_ok[max(0, i - 2):i + 3]) for i in range(n)]
-    zs = [sum(zm[max(0, min(n - 1, i + j))] * wgt for j, wgt in zip(range(-2, 3), (0.1, 0.2, 0.4, 0.2, 0.1)))
+    zs = [sum(z_ok[max(0, min(n - 1, i + j))] * wgt for j, wgt in zip((-1, 0, 1), (0.25, 0.5, 0.25)))
           for i in range(n)]
     z_final = [min(a, b) for a, b in zip(zs, z_ok)]
     lowered = sum(1 for a, b in zip(z_design, z_final) if b < a - 0.0005)
@@ -286,6 +285,7 @@ def build(base=None, frames=None):
 
     # pass 2: the full pose
     record = {}
+    curl = {"L": 1.0, "R": 1.0}
     grips_r, grips_l = [], []
     for fi, f in enumerate(frames):
         w = pose(f, z_final[fi])
@@ -305,18 +305,21 @@ def build(base=None, frames=None):
         grip_hand(rig, inv, "R", Vector((1.0, 0.0, 0.0)), Vector((0.0, 1.0, 0.0)))   # bar across, knuckles forward
         grip_hand(rig, inv, "L", Vector((0.0, 1.0, 0.0)), Vector((-1.0, 0.0, 0.0)))  # handles along, knuckles out
         for k in ("L", "R"):
-            for fname, (a, b_, c) in GRIP_FINGERS.items():
-                for seg, ang in (("01_master", a), ("02", b_), ("03", c)):
-                    bone = pb[f"{fname}.{seg}.{k}"]
-                    bone.rotation_mode = "XYZ"
-                    bone.rotation_euler = (math.radians(ang), 0.0, 0.0)
-            th = pb[f"thumb.01_master.{k}"]
-            th.rotation_mode = "XYZ"
-            th.rotation_euler = (math.radians(30), 0.0, math.radians(-10))
+            close_hand(pb, k, curl[k])
         bpy.context.view_layer.update()
         if fi == 0:
-            for k in ("L", "R"):
-                d[f"grip_{k}"] = list(fist_hollow(rig, d, k))
+            # open each fist until its hollow takes the handle (once: the grip does not change while she walks)
+            for k, bar_r in (("L", 0.009), ("R", 0.0145)):
+                for _ in range(8):
+                    close_hand(pb, k, curl[k])
+                    bpy.context.view_layer.update()
+                    room, hollow = fist_hollow(rig, d, k)
+                    if room >= bar_r + 0.0015:
+                        break
+                    curl[k] *= 0.88
+                d[f"grip_{k}"] = list(hollow)
+                print(f"ANIM grip {k}: fingers at {100 * curl[k]:.0f} % of a full fist, room for a "
+                      f"{2000 * room:.0f} mm bar (needs {2000 * bar_r:.0f})", flush=True)
         grips_r.append(grip_frame(rig, "R", Vector(d["grip_R"])))
         grips_l.append(grip_frame(rig, "L", Vector(d["grip_L"])))
         for b in pb:
@@ -384,7 +387,19 @@ def grip_hand(rig, inv, side, bar, knuckles):
     bpy.context.view_layer.update()
 
 
-def fist_hollow(rig, holder, side, bar_r=0.0125):
+def close_hand(pb, side, k):
+    """Curl the four fingers (GRIP_FINGERS scaled by k) and the thumb across them."""
+    for fname, (a, b_, c) in GRIP_FINGERS.items():
+        for seg, ang in (("01_master", a), ("02", b_), ("03", c)):
+            bone = pb[f"{fname}.{seg}.{side}"]
+            bone.rotation_mode = "XYZ"
+            bone.rotation_euler = (math.radians(ang * k), 0.0, 0.0)
+    th = pb[f"thumb.01_master.{side}"]
+    th.rotation_mode = "XYZ"
+    th.rotation_euler = (math.radians(30 * k), 0.0, math.radians(-10))
+
+
+def fist_hollow(rig, holder, side):
     """Where a bar of radius bar_r fits inside the closed hand: the centre of the largest empty circle among the
     hand's vertices (fingers, thumb, palm; armature deformation only), in the plane across the bar, in the hand
     bone's frame. Measured once (the fist does not change during the walk)."""
@@ -428,9 +443,7 @@ def fist_hollow(rig, holder, side, bar_r=0.0125):
             dmin = min((p.x - x) ** 2 + (p.y - y) ** 2 for p in band) ** 0.5
             if dmin > best[0]:
                 best = (dmin, Vector((x, y, zc)))
-    print(f"ANIM grip {side}: the fist's hollow has room for a bar of radius {1000 * best[0]:.1f} mm "
-          f"(handle about {1000 * bar_r:.1f} mm)", flush=True)
-    return best[1]
+    return best
 
 
 def grip_frame(rig, side, hollow):
@@ -571,7 +584,7 @@ def duffel_follow(frames, grips):
             ph += vph * h
         prev, vel_prev = g.copy(), vel
         R = Matrix.Rotation(th, 4, "X") @ Matrix.Rotation(ph, 4, "Y") @ Matrix.Rotation(math.radians(90), 4, "Z")
-        M = Matrix.Translation(g - Vector((0, 0, 0.040))) @ R @ Matrix.Translation(-top) @ Matrix.Diagonal((k, k, k, 1.0))
+        M = Matrix.Translation(g - Vector((0, 0, 0.055))) @ R @ Matrix.Translation(-top) @ Matrix.Diagonal((k, k, k, 1.0))
         mats.append(M)
         swing.append(math.degrees(max(abs(th), abs(ph))))
     duffel.parent = None
