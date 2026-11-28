@@ -938,3 +938,7 @@ Please rescore all 11 void_stage finals at 8a75b83. Check the prison uniform, lo
 ### 2026-11-28 01:11 UTC · BLOCKED · departure gate next review
 
 All four revised finals are on the branch at 68535d2. C39 has passed 40 minutes and the next departure-gate pass needs the independent scores on the seating, boarding call, apron and window. The aircraft and baggage reviews are moving through the render queue, and the L2 evidence inserts are underway.
+
+### 2026-11-28 01:23 UTC · BLOCKED · train next review
+
+The three train finals for 02-06, 02-07 and 02-13 are on the branch at 1c9e2c2. C40 has passed 40 minutes. The next train round needs the independent scores on Dawn's eyeline, the reflection and the rack. The baggage finals are rendering, and the three full-cast aircraft previews are checked and queued for final render.
