@@ -542,7 +542,8 @@ def handset(name):
     ob = mesh_obj(f"{name}_body", bm, m["handset"])
     rm = ob.modifiers.new("remesh", "REMESH")
     rm.mode, rm.voxel_size = "VOXEL", 0.0035
-    sm = ob.modifiers.new("smooth", "CORRECTIVE_SMOOTH")
+    # The remesh changes the vertex count, so smooth its evaluated surface.
+    sm = ob.modifiers.new("smooth", "SMOOTH")
     sm.iterations, sm.factor = 6, 0.5
     sub = ob.modifiers.new("sub", "SUBSURF")
     sub.levels = sub.render_levels = 1
