@@ -293,7 +293,9 @@ def main():
     rate = 100; nc = int(T * rate) + 1; tt = np.arange(nc) / rate
     regs = speech_regions(voice, MX['speech_gap_merge_s'])
     ctl = lambda y: np.interp(tt, np.arange(len(y)) / SR, y)       # a per-sample curve at the control rate
-    lm = -0.691 + 10 * np.log10(ctl(ms_window(music, 3.0)) + 1e-12)
+    # the music's level: the louder of its 3 s and 1 s readings, so a bed that enters at full level straight after a
+    # stop-down (Friday's lift) is caught at once rather than averaged with the silence before it
+    lm = -0.691 + 10 * np.log10(np.maximum(ctl(ms_window(music, 3.0)), ctl(ms_window(music, 1.0))) + 1e-12)
     # how far under the voice the music sits, moment by moment: the house 12 dB, or a bed's own under_voice_db (the busy
     # lift sits deeper), eased over a second at the turns. It only acts under speech, so between lines a bed keeps its level.
     under = np.full(nc, float(MX['music_under_voice_db']))

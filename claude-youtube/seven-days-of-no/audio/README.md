@@ -38,7 +38,7 @@ The reference animatic's register is warm, playful and music-box. Every take use
 |---|---|---|---|
 | `music_main` | T2 (C major, +0.3 c, 103 BPM, LRA 5 LU) | As generated | Q01–Q02, Q04–Q05 and Friday up to "They look hurt", Q07–Q08 |
 | `music_hush` | T3 (came back in A major) | Down 2 semitones by resampling: G major, 71 BPM, warmer. earshot reads "sad and melancholic" | Q03 (Tuesday's guilt), Q09 (the insight) |
-| `music_lift` | T4 (came back around C#/F#) | Down 1 semitone with rubberband (tempo kept): C/F major | Friday from "So you run after them", Q10 (the advice) |
+| `music_lift` | T4 (came back around C#/F#) | Down 1 semitone with rubberband (tempo kept): C/F major. The busiest take, so it is held 15 dB under the voice while someone speaks, not 12 (`under_voice_db`); between lines and after the stop-down it keeps its full level | Friday from "So you run after them", Q10 (the advice) |
 | `music_end` | T5 (C major) | Aligned so its own final chord (56.3 s in the take) rings out on the last frame | Q11 into the end screen |
 
 - **T1 was rejected.** It was the other main take, but it came back in E major and had a quiet patch at 30–45 s.
@@ -49,7 +49,7 @@ The reference animatic's register is warm, playful and music-box. Every take use
 
 ## Effects
 
-Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 13–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped.
+Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 12–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13, the shutter at −12. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 15:16 has 122 cues (25 pops, 28 whooshes); 117 play.
 
 | Sound | Source |
 |---|---|
@@ -80,32 +80,48 @@ Three fails are accepted, and the ear should decide (see below):
 | Measure | Value |
 |---|---|
 | Integrated loudness | **−14.0 LUFS** |
-| True peak | **−1.5 dBTP** (sample peak −1.5 dBFS); after an AAC 256 kbps encode and decode, −1.3 dBTP |
-| Loudness range | 4.0 LU |
+| True peak | **−1.5 dBTP** (sample peak −1.5 dBFS); after an AAC 256 kbps encode and decode, −1.4 dBTP |
+| Loudness range | 4.1 LU |
 | Voice | High-pass at 70 Hz; gentle 2:1 compression (at most 4 dB); about −14 LUFS in the mix |
-| Master | +1.66 dB of gain; a look-ahead true-peak limiter (4× oversampled) doing at most 2.1 dB; the same gain curve applied to the stems, so they sum to the mix |
-| Music under the voice | Median 14.2 dB under (3 s windows); 14.5–17.8 dB under per bed (integrated) |
+| Master | +1.67 dB of gain; a look-ahead true-peak limiter (4× oversampled) doing at most 2.2 dB; the same gain curve applied to the stems, so they sum to the mix |
+| Music under the voice | Median 15.0 dB under (3 s windows); main and closing beds about 14.5–15 dB under, the hush about 18, the lift about 18 (integrated) |
 | End screen | Music at −18.1 LUFS, about 4 LU under the speech, then the final chord dies away |
 
-- **Ducking.** Speech regions come from the narration's own envelope, with pauses under 1.2 s merged so the music does not pump between sentences. Inside them, the music is held about 12 dB under the voice (ridden down only), with a 0.35 s attack and a 0.9 s release. Where no one speaks (the stop-down, the end screen), the bed plays at its own level. Under the voice, the music also takes a 3 dB presence dip at 2.5 kHz.
+- **Ducking.** Speech regions come from the narration's own envelope, with pauses under 1.2 s merged so the music does not pump between sentences. Inside them, the music is held about 12 dB under the voice (15 dB for the lift), ridden down only, with a 0.35 s attack and a 0.9 s release. The music's level is read as the louder of its 1 s and 3 s loudness, so a bed that enters at full level after a stop-down is ducked at once. Where no one speaks (the stop-down, the end screen), the bed plays at its own level. Under the voice, the music also takes a 3 dB presence dip at 2.5 kHz.
 - **Sample peaks are held** at −1.5 dBFS before the encode.
 
-earshot on the hardest moments (`out/mix/listen.json`) reads "a man talking over soft background music" in every speech window:
+earshot on the hardest moments (`out/mix/listen.json`, `out/mix/listen_lift.json`) reads "a man talking over soft background music" in every speech window:
 
 - Q03 pause: 97%.
 - Q07 typing/send/receive: 92%.
 - Hook: 92%.
 - Q10 freeze: 84%.
-- Friday lift: 70% (29% "loud music drowning a voice").
-- Q10 busiest narration: 68% (31%).
+
+The lift sections, held 3 dB deeper since the first mix:
+
+| Lift window | "drowning a voice" | Music re voice | 1–4 kHz music re voice |
+|---|---|---|---|
+| Q06, 117–130.8 s | 10% | −18.1 dB | −20.6 dB |
+| Q10, 176.5–187.5 s | 8% | −18.0 dB | −17.2 dB |
+| Q10 after the freeze, 190–198.4 s | 9% | −17.8 dB | −18.4 dB |
+| Busiest 8 s windows: Friday's stop-down into the run (112.5–120 s) and Q10 179–187 s | 27% each | | |
+
+The busiest windows were 29–33% before the change.
+
+They do not fall below about 16–20% even with the music 9 dB lower, low-passed or shelved:
+
+- In Q06, the effects in that window (footsteps, run, shutter, ding) count as much as the music. Voice and music alone read 15%.
+- In Q10, the rest is earshot's reading of T4's bright strum and claps.
+
+So the remainder is not the music's level: the ear should decide (item 1 below).
 
 The end screen reads 96% "light cheerful ukulele music ending on a final chord". No take has a voice in it: earshot finds no singing, and "a person singing" is under 1% against instrument alternatives.
 
 ## For a human ear
 
-1. **The lift under the advice (Q10, 176–187 s) and Friday's lift (116–130 s).** earshot leans 30% toward "music drowning the voice". The measured gap is 14.5–15 dB, but T4 is the busiest take. If it feels busy, lower `music_lift` `level_db` in `score_plan.json` by 2 dB.
+1. **The lift under the advice (Q10, 176–187 s) and Friday's lift (116–130 s).** The lift is held 18 dB under the voice. The two busiest 8 s windows still lean 27% toward "music drowning the voice", from the effects and T4's character rather than level. If it feels busy, raise `music_lift` `under_voice_db` in `score_plan.json` (15 now), or thin the effects in 112.5–120 s.
 2. **The hush (G major, resampled) next to the main bed (C major)** at 45.8 and 66.4 s, and at 159.4 and 176.2 s: check that the crossfades sit well.
 3. **No vocals in T4 and T5.** earshot says none. Their bright ukulele sections lean toward "pop song" in a forced choice.
 4. **The run, bird and rain** (116.4, 84.6 and 174.0 s).
-5. **The density of effects.** The cue sheet has 154 cues (57 pops, 28 whooshes); 149 play. The author has asked for few, quiet effects. Muting a name in `sound_map.json` (`null`) thins them without touching the picture.
+5. **The density of effects.** The cue sheet has 122 cues (25 pops, 28 whooshes); 117 play. The author has asked for few, quiet effects. Muting a name in `sound_map.json` (`null`) thins them without touching the picture.
 6. **The end screen level** (−18 LUFS) and the final chord ending on the last frame.
