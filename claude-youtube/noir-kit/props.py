@@ -181,9 +181,11 @@ def surface_bvh(holder):
     return BVHTree.FromPolygons(vertices, polygons)
 
 
-def tote_topstitch(holder, *, soften_lip_normals=False):
+def tote_topstitch(holder, *, soften_lip_normals=False, lip_normal_band=20, behind_tabs=False, slant=0.0,
+                   thread_colour=(0.42, 0.33, 0.22)):
     """The line of saddle stitching just under the front lip, interrupted by the handle tabs."""
-    normal_paint = (lambda pixels: _paint_over_tote_lip(pixels, soften_normals=True)) if soften_lip_normals else None
+    normal_paint = ((lambda pixels: _paint_over_tote_lip(pixels, soften_normals=True, normal_band=lip_normal_band))
+                    if soften_lip_normals else None)
     _retouch_tote_textures(holder, _paint_over_tote_lip, normal_paint=normal_paint)
     surface = surface_bvh(holder)
     base = holder.matrix_world.translation
@@ -193,16 +195,26 @@ def tote_topstitch(holder, *, soften_lip_normals=False):
     yarn.dimensions = "3D"
     yarn.bevel_depth = 0.00032
     yarn.bevel_resolution = 2
-    yarn.materials.append(sk.mat("waxed linen saddle thread", (0.42, 0.33, 0.22), 0.80))
+    yarn.materials.append(sk.mat("waxed linen saddle thread", thread_colour, 0.80))
     for i in range(69):
         centre = (i - 34) * 0.00435
         points = []
         for offset in (-0.00155, 0.0, 0.00155):
             x = centre + offset
-            z = 0.246 + 0.008 * (abs(x) / 0.15) ** 1.3
+            z = 0.246 + 0.008 * (abs(x) / 0.15) ** 1.3 + offset * slant
             pos, normal, _, _ = surface.ray_cast(base + rotation @ Vector((x, 0.15, z)), -front)
-            # The raised handle tabs cover the hem. Never project thread onto a tab.
+            if behind_tabs and pos is not None:
+                # Pass through the strap to find the leather face. Ignore back faces so
+                # thick tabs keep covering the thread when viewed from the lens.
+                for _ in range(4):
+                    if (pos - base).dot(front) <= 0.054 and normal.dot(front) > 0.05:
+                        break
+                    pos, normal, _, _ = surface.ray_cast(pos - front * 0.0002, -front)
+                    if pos is None:
+                        break
             if pos is None or (pos - base).dot(front) > 0.054:
+                break
+            if behind_tabs and normal.dot(front) <= 0.05:
                 break
             points.append(pos + normal * (0.00015 if offset == 0 else -0.00010))
         if len(points) == 3:
@@ -245,13 +257,11 @@ def project_tote_seam(hem, blockers, scene, resolution, *, sample_trace=False):
             point = hem.matrix_world @ Vector(control.co[:3])
             uv = world_to_camera_view(scene, scene.camera, point)
             pixel = (uv.x * width, (1 - uv.y) * height)
+            if sample_trace:
+                controls.append((*pixel, uv.z, point))
             if not visible(point):
                 previous = None
                 continue
-            if sample_trace:
-                # A thread end can fold toward the lens under a tab. Interpolate
-                # the covered run between the last and first visible crowns.
-                controls.append((*pixel, uv.z, point))
             if previous is None or (point - previous).length > 0.008:
                 paths.append([])
             paths[-1].append([round(p, 3) for p in pixel])
@@ -268,8 +278,8 @@ def tote_seam_paths(hem, blockers, scene, resolution):
 
 
 def _sample_tote_trace(controls, visible, resolution):
-    # Between thread crowns follow the surface chord; behind tabs interpolate the
-    # unseen hem. The two are distinguished by testing the camera ray at each sample.
+    # Follow the surface chord between neighbouring stitches. Mark an uncovered
+    # gap without thread as occluded as well, so the trace stops at its edges.
     from bisect import bisect_right
 
     width, height = resolution
@@ -296,7 +306,8 @@ def _sample_tote_trace(controls, visible, resolution):
             point = p0.lerp(p1, t * depth / z1)
             seam.append([round(x, 3), round(y, 3)])
             depths.append(round(depth, 6))
-            flags.append(not visible(point))
+            gap = (p1 - p0).length > 0.008 and 0.0 < t < 1.0
+            flags.append(gap or not visible(point))
     intervals = []
     start = None
     for i, hidden in enumerate(flags):
@@ -358,7 +369,7 @@ _TOTE_LIP = (
 )
 
 
-def _paint_over_tote_lip(pixels, *, soften_normals=False):
+def _paint_over_tote_lip(pixels, *, soften_normals=False, normal_band=20):
     """Interpolate across the baked beads from clean leather on either side."""
     import numpy as np
     for index, (radius, path) in enumerate(_TOTE_LIP):
@@ -380,10 +391,10 @@ def _paint_over_tote_lip(pixels, *, soften_normals=False):
             # A grazing key reveals the old relief beyond the colour patch on these four islands.
             cols = np.arange(first - 5, last + 6)
             mid = np.rint(np.interp(cols, points[:, along], points[:, across])).astype(int)
-            offset = np.arange(-20, 21)[:, None]
+            offset = np.arange(-normal_band, normal_band + 1)[:, None]
             rows = mid + offset
             taper = np.clip(np.minimum(cols - first + 5, last + 5 - cols) / 5, 0, 1)
-            weight = 0.92 * np.clip((20 - np.abs(offset)) / 9, 0, 1) * taper
+            weight = 0.92 * np.clip((normal_band - np.abs(offset)) / 9, 0, 1) * taper
             normals = tex[rows, cols, :3]
             tex[rows, cols, :3] = normals + weight[..., None] * (np.array((0.5, 0.5, 1.0)) - normals)
 

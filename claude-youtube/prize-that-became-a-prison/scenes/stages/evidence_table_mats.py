@@ -573,7 +573,7 @@ def matte(name, rgb, rough=0.8):
 
 # ---------------------------------------------------------------- generated props
 
-def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None):
+def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None, leather_grain=False):
     """Control a prop's reflectance, weave and base colour."""
     if not (mat and mat.use_nodes):
         return
@@ -612,3 +612,22 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_lim
         if nrm.is_linked:
             _link(nt, nrm.links[0].from_socket, bump.inputs["Normal"])
         _link(nt, bump.outputs["Normal"], nrm)
+    if leather_grain:
+        o = _obj(nt)
+        pebble = _noise(nt, o, to_metres / 0.0004, 2.0, 0.6)
+        broad = _noise(nt, o, to_metres / 0.022, 2.0, 0.55)
+        normal = b.inputs["Normal"]
+        bump = _n(nt, "ShaderNodeBump")
+        bump.inputs["Strength"].default_value = 0.05
+        bump.inputs["Distance"].default_value = 0.00015
+        _link(nt, pebble, bump.inputs["Height"])
+        if normal.is_linked:
+            _link(nt, normal.links[0].from_socket, bump.inputs["Normal"])
+        _link(nt, bump.outputs["Normal"], normal)
+        if base.is_linked:
+            tone = _maprange(nt, broad, 0.3, 0.7, 0.97, 1.03)
+            _link(nt, _mix(nt, 1.0, base.links[0].from_socket, tone, "MULTIPLY"), base)
+        roughness = b.inputs["Roughness"]
+        prior = roughness.links[0].from_socket if roughness.is_linked else roughness.default_value
+        delta = _maprange(nt, broad, 0.3, 0.7, -0.025, 0.025)
+        _link(nt, _math(nt, "ADD", prior, delta, clamp=True), roughness)
