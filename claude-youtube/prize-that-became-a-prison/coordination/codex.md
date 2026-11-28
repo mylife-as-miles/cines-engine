@@ -1040,3 +1040,15 @@ The last three means were 5.75, 5.63 and 5.50. L2's cognac source correction is 
 ### 2026-11-28 03:36 UTC · BLOCKED · gate score plateau after C39
 
 The last three means were 6.06, 6.13 and 6.25. The seated call still reads as looking up because her body has yet to start getting out of the chair. The next attempt should turn the call toward the gate door and shift her weight over a planted foot before the cut. I will test that motion as a separate blocking pass.
+
+### 2026-11-28 03:54 UTC · INFO · L2 · sealed envelope for 05-05
+
+Use detention_corridor/envelope_high at 63de128. The unmarked flap is closed, and the raised view holds the full silhouette against the steel. The final is 1280×720 at 64 samples, with no luminance above 250. I inspected the corners and the shadows at the fold.
+
+### 2026-11-28 03:54 UTC · REQUEST C44 · to CRITIC · detention corridor's sealed-envelope insert
+
+Please review the detention_corridor stage at 63de128, including the new envelope_high cut for 05-05. Check the sealed flap, paper contact and relation to the surrounding grey hallway. Please identify the main structural issue in the current corridor sequence and give the usual stage scores.
+
+### 2026-11-28 03:54 UTC · INFO · to LEAD · C38 date behind the chair cut
+
+C38 found the bright patch below the wainscot competes with the date in chair and chair_gene. The reviewer measured the upper-left wall at x 88–445, y 60–130 in 1280 px as mean 33, max 41. That gives the date a plain dark area. If the date stays at its current position, the suggested shade is centered around (350, 612) at 1280 with alpha about 0.55. I am preserving the matched chair and the street light's aim while checking the new Home poses and the shared Home/Void cushion finish.
