@@ -5,14 +5,15 @@ the seam's cut-away. No headings, no labels: the two lights say it (the warm evi
 
 Each half is 958 x 1080 with a 4 px dark gutter between them (x 958-961), never a black frame. Each plate is the raw
 Blender render, framed on its tote (a window centred on it, scaled so the tote is about two thirds of the height), and
-pushed in 3 % over the shot in log space, so neither half is a still. The right half's cold plate first has its tote
-matched to the left's (match_tote: the cold light read it salmon pink beside the tan cognac). Both halves are then graded
-together with the film's grade (scenes/shoot.py GRADE, grain fresh each frame). At --cut the right half cuts straight to gfx/seam.html
-`cutaway_half`, whose red seam opens exactly where the right-hand tote's top seam was (a match cut inside the half),
-eases back to the whole section and holds it open. The cut-away is drawn after the grade, so its red stays the
+pushed in 3 % over the shot in log space, so neither half is a still. Both totes are then brought to the film's one cognac
+(TOTE: fit_tote, through the film's grade), so the two lights differ on the table, the wall and the modelling, never in the
+leather. Both halves are graded together with the film's grade (scenes/shoot.py GRADE, grain fresh each frame). At --cut the
+right half cuts straight to gfx/seam.html `cutaway_half`, whose red seam opens exactly where the right-hand tote's top seam
+was (a match cut inside the half), eases back to the whole section and holds it open. The cut-away is drawn after the grade, so its red stays the
 film's red. --still writes the frame as the film shows it: graded, and after --cut with the cut-away in the right half.
 """
 import argparse
+import colorsys
 import os
 import shutil
 import subprocess
@@ -29,45 +30,72 @@ W, H, HW, GUT = 1920, 1080, 958, 4
 
 # Each half: the plate, the window's centre in plate pixels and its scale (output px per plate px).
 # Left: evidence_table `purses` (2560 x 1440): the cognac tote, the paper note at its foot.
-# Right: inspection_room `handbags` (2560 x 1440): the same tote on the inspection table. Its rim at the cut, on the
-# output, is gfx/seam.html cutaway_half's tA, tB (re-measure both when the plate or its framing changes).
+# Right: inspection_room `handbags` (2560 x 1440): the same tote on the inspection table. Reel 10 caught the black bag beside
+# it clipped against the divider (output x 963-1030): its strap ring reaches plate x 1550 and the tote starts at 1615, so the
+# window's left edge sits at 1559 (scale 0.96, a little closer than the left's 0.92; its right edge at 2557, inside the plate),
+# which keeps the black bag out of the half at every frame of the push. Its rim at the cut, on the output, is gfx/seam.html
+# cutaway_half's HALF_SEAM (re-measure it when the plate or this framing changes).
+# `panel`: a box inside the tote's front in plate pixels, where its colour is measured and fitted.
 HALVES = [
     dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0, panel=(1800, 2200, 650, 950), warm=True),
-    dict(plate="frames/raw/inspection_room/handbags.png", cx=1974, cy=600, s=0.92, x0=HW + GUT, match=True,   # the native 2560 render (aec9820)
+    dict(plate="frames/raw/inspection_room/handbags.png", cx=2058, cy=600, s=0.96, x0=HW + GUT,   # the native 2560 render (aec9820)
          panel=(1800, 2200, 600, 950)),
 ]
 
-# The right-hand tote, graded to read as the same bag as the left's before the film's grade: the tote alone (a soft key on
-# the leather's warm hues, so the cold room keeps its light) gets a hue shift, a saturation scale and a mid-tone gamma,
-# fitted on every run by a small grid search (fit_match) so that its front panel's median colour on the raw plate meets
-# the left tote's (each half's `panel`, a box inside the tote's front in plate pixels); the two halves then share the
-# film grade. Fitting on every run means a re-rendered plate on either side is followed without a hand refit (the
-# evidence purses re-render at 8d47b04 shifted the left tote's hue, and the old fixed values left the pair unmatched).
-# The fit prints its values and its raw dE (CIE76): over 3 means the plates have drifted beyond what a grade can fix.
-HUES, SATS, GAMMAS = np.arange(-24, 24.1, 2.0), np.arange(0.5, 1.61, 0.05), np.arange(0.8, 3.01, 0.1)
+# The one cognac (reel 10: the gift half's warm lamp lifted the tote to a light caramel, HSL L 0.38; the cold room drained it
+# to a taupe-khaki, S 0.3; and the cut-away's leather was a third, darker one, L 0.17). The tote is the film's one recurring
+# object, so both totes' front panels are brought to one colour after the film's grade (the HSL of the panel's median RGB):
+# a warm red-brown, never mustard, caramel or taupe. The cut-away's leather (gfx/seam.html drawLeather) is set to the same.
+# The film's plate target (lead 00:40 note: graded a/b hue 60-65, C 13-14) is darker and greyer than this one (it is about
+# HSL hue 26, S 0.30, L 0.19, which is the taupe the reviewer read); this one is about Lab (30, hue 55, C 25).
+TOTE = dict(hue=22.0, sat=0.42, light=0.275)
+TOTE_KNEE = 210.0                # the cold half's tote: where its hue-keeping shoulder starts (the gift half's light has its own)
 
 
-def lab_median(rgb):                                                    # rgb: float 0-255, any shape (..., 3)
-    m = np.median(rgb.reshape(-1, 3), 0).astype(np.float32) / 255.0
-    return cv2.cvtColor(m[None, None], cv2.COLOR_RGB2LAB)[0, 0]
+def smooth(e0, e1, x):
+    t = np.clip((x - e0) / (e1 - e0), 0, 1)
+    return t * t * (3 - 2 * t)
 
 
-def fit_match(left, right, lbox, rbox):
-    """The hue shift, saturation scale and gamma that bring the right tote's panel median to the left's (raw plates)."""
-    def crop(img, b): return img[b[2]:b[3], b[0]:b[1]]
-    target = lab_median(crop(left, lbox))
-    patch = crop(right, rbox)[::4, ::4].reshape(1, -1, 3) / 255.0        # every 4th pixel: the median is stable
-    hsv = cv2.cvtColor(patch.astype(np.float32), cv2.COLOR_RGB2HSV)
-    best = (1e9, None)
-    for hue in HUES:
-        for sat in SATS:
-            h2 = hsv.copy(); h2[..., 0] = (h2[..., 0] + hue) % 360; h2[..., 1] *= sat
-            base = np.clip(cv2.cvtColor(h2, cv2.COLOR_HSV2RGB), 1e-4, 1)
-            for g in GAMMAS:
-                d = float(np.linalg.norm(lab_median(base ** g * 255) - target))
-                if d < best[0]:
-                    best = (d, dict(hue=float(hue), sat=round(float(sat), 2), gamma=round(float(g), 2)))
-    return best[1], best[0]
+def tote_key(img, h):
+    """The tote's matte on the raw plate, 0-1: its leather is the one strongly chromatic orange-brown in either plate (chroma
+    over 0.14, hue within 14 degrees of 26). The firm key's connected part that holds the panel is the tote (the wood table,
+    whose hue is near but whose chroma is a third of the leather's, and the other bags fall away); small gaps in it (the pale
+    stitches, the tabs' dark edges) are closed, and its edge is softened by about 1.5 output px."""
+    rgb = img / 255.0
+    hue = cv2.cvtColor(rgb.astype(np.float32), cv2.COLOR_RGB2HSV)[..., 0]
+    k = smooth(0.06, 0.14, rgb.max(2) - rgb.min(2)) * (1 - smooth(14, 26, np.abs((hue - 26 + 180) % 360 - 180)))
+    n, lab = cv2.connectedComponents((k > 0.5).astype(np.uint8), connectivity=8)
+    x0, x1, y0, y1 = h["panel"]
+    ids, cnt = np.unique(lab[y0:y1, x0:x1], return_counts=True)
+    cnt[ids == 0] = 0
+    comp = (lab == ids[np.argmax(cnt)]).astype(np.uint8)
+    comp = cv2.morphologyEx(comp, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9)))
+    return cv2.GaussianBlur(comp.astype(np.float32), (0, 0), 1.5 / h["s"])
+
+
+def knee(out, k=TOTE_KNEE):
+    k = np.float32(k)
+    return np.where(out > k, k + (255 - k) * (1 - np.exp(-(out - k) / (255 - k))), out)
+
+
+def tote_target_rgb():
+    r, g, b = colorsys.hls_to_rgb(TOTE["hue"] / 360, TOTE["light"], TOTE["sat"])
+    return np.float32([r, g, b]) * 255
+
+
+def panel_out(h, z=1.0):
+    """The panel box on the output frame (x0, x1, y0, y1) at push z."""
+    s = h["s"] * z
+    x0, x1, y0, y1 = h["panel"]
+    ox = lambda x: int(round(h["x0"] + HW / 2 + s * (x - h["cx"])))
+    oy = lambda y: int(round(H / 2 + s * (y - h["cy"])))
+    return ox(x0), ox(x1), oy(y0), oy(y1)
+
+
+def hsl_of(rgb):
+    hh, ll, ss = colorsys.rgb_to_hls(*(np.asarray(rgb, float) / 255))
+    return hh * 360, ss, ll
 
 
 # The gift half's light: the evidence plate is lit neutral, so the two halves read dark against bright rather than warm
@@ -85,10 +113,12 @@ def fit_match(left, right, lbox, rbox):
 # soft shoulder on each channel from `knee` rolls the red off toward 255 as film does, while green and blue keep rising,
 # so the lit side of the tote goes a little toward amber and keeps its modelling (a shoulder that kept the hue flattened
 # it: its lit and far sides came out equal). The film's grade (A fixed) runs over both halves unchanged after it, so it
-# is the light that differs, not the grade.
-WARM = dict(gain=(1.42, 1.06, 0.66), lift=1.30, glow=dict(x=0.06, y=0.04, r=0.75, amt=0.20, col=(1.0, 0.64, 0.32)),
-            lamp=dict(x=-0.22, y=-0.16, r=0.48, at=(0.50, 0.58), stops=0.90, col=(1.04, 0.99, 0.84)),
-            pool=dict(x=0.50, y=0.93, rx=0.40, ry=0.07, stops=0.55, col=(1.08, 0.98, 0.76)), knee=210.0)
+# is the light that differs, not the grade. Reel 11: the lamp, the pool and the glow still warm the table and the wall, but
+# the tote's own level is TOTE's (fit_tote pulls the lamp's lift on the leather back down, about a quarter), so the warmth is
+# in the room, not in a lighter leather.
+WARM = dict(gain=(1.42, 1.06, 0.66), lift=1.30, glow=dict(x=0.06, y=0.04, r=0.75, amt=0.32, col=(1.0, 0.64, 0.32)),
+            lamp=dict(x=-0.22, y=-0.16, r=0.30, at=(0.50, 0.58), stops=0.90, col=(1.04, 0.99, 0.84)),
+            pool=dict(x=0.50, y=0.93, rx=0.40, ry=0.07, stops=0.85, col=(1.08, 0.98, 0.76)), knee=210.0)
 
 
 def warm_light(img, h):
@@ -112,20 +142,51 @@ def warm_light(img, h):
     gx, gy = x0 + g["x"] * HW / h["s"], y0 + g["y"] * H / h["s"]
     d2 = ((xx - gx) ** 2 + (yy - gy) ** 2) / (g["r"] * HW / h["s"]) ** 2
     out += (255 * g["amt"] * np.exp(-d2 * 2.2))[..., None] * np.float32(g["col"])
-    k = np.float32(WARM["knee"])
-    return np.where(out > k, k + (255 - k) * (1 - np.exp(-(out - k) / (255 - k))), out)
+    return out                       # before the shoulder: the tote's correction goes in first (plate_with_tote)
 
 
-def match_tote(img, s, hue, sat, gamma):
-    rgb = img / 255.0
-    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)                          # float: hue in degrees
-    d = np.abs((hsv[..., 0] - 18 + 180) % 360 - 180)                    # how far from the leather's hue
-    key = np.clip(1 - (d - 30) / 25, 0, 1) * np.clip((hsv[..., 1] - 0.10) / 0.20, 0, 1)
-    key = cv2.GaussianBlur(key, (0, 0), 2.0 / s)[..., None]             # about 2 output px of softness
-    hsv[..., 0] = (hsv[..., 0] + hue) % 360
-    hsv[..., 1] *= sat
-    graded = np.clip(cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB), 1e-4, 1) ** gamma
-    return ((rgb + key * (graded - rgb)) * 255).astype(np.float32)
+def plate_with_tote(base, key, m, warm):
+    """A half's plate with its tote corrected: `base` (the raw plate, or the gift half's light before its shoulder) times
+    the per-channel multiplier m on the tote alone (the key), then the soft shoulder (the whole gift half, as its light
+    always had; the tote alone on the cold half)."""
+    out = base * (1 + key[..., None] * (np.float32(m) - 1))
+    if warm:
+        return knee(out, WARM["knee"])
+    # the cold half's tote: its top light is hard, and a per-channel shoulder on its brightest leather would take the red down
+    # and leave the lit top a yellower tan than the rest; this one scales the whole pixel, so the leather keeps its hue lit
+    mx = out.max(2, keepdims=True)
+    hk = out * (knee(mx) / np.maximum(mx, 1e-3))
+    return out + key[..., None] * (hk - out)
+
+
+def grade_one(img):
+    g = subprocess.run(["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-i", "-",
+                        "-vf", grade_filter(), "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                       input=img.tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(g, np.uint8).reshape(H, W, 3)
+
+
+def fit_tote(bases, keys, frame):
+    """The per-channel multipliers (one per half, on its tote alone) that bring each tote's front-panel median, after the
+    film's grade, to TOTE. Fitted on every run through the real grade (a frame at t = 0, graded by ffmpeg), so a re-rendered
+    plate or a change to the gift half's light is followed without a hand refit. Each step moves the panel's pre-grade median
+    by the graded error mapped back through the grade's main action (its chroma at 0.55, BT.601 luma kept)."""
+    T, wl = tote_target_rgb(), np.float32([0.299, 0.587, 0.114])
+    back = lambda e: (wl @ e) + (e - (wl @ e)) / 0.55
+    m = [np.ones(3, np.float32) for _ in HALVES]
+    for it in range(10):
+        plates = [plate_with_tote(b, k, mi, h.get("warm")) for b, k, mi, h in zip(bases, keys, m, HALVES)]
+        pre = frame(0.0, plates); post = grade_one(pre)
+        err = []
+        for i, h in enumerate(HALVES):
+            x0, x1, y0, y1 = panel_out(h)
+            c = np.median(pre[y0:y1, x0:x1].reshape(-1, 3), 0).astype(np.float32)
+            g = np.median(post[y0:y1, x0:x1].reshape(-1, 3), 0).astype(np.float32)
+            e = T - g; err.append(float(np.abs(e).max()))
+            m[i] = m[i] * np.clip(c + back(e), 1, 255) / np.maximum(c, 1)
+        if max(err) < 1.0:
+            break
+    return m, [np.median(post[y0:y1, x0:x1].reshape(-1, 3), 0) for x0, x1, y0, y1 in (panel_out(h) for h in HALVES)], it
 
 
 def main():
@@ -139,11 +200,10 @@ def main():
     a = ap.parse_args()
     os.chdir(ROOT)
     raw = [cv2.cvtColor(cv2.imread(h["plate"], cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32) for h in HALVES]
-    match, de = fit_match(raw[0], raw[1], HALVES[0]["panel"], HALVES[1]["panel"])
-    print(f"tote match {match}: raw dE {de:.1f}" + ("  (over 3: the plates have drifted, check them)" if de > 3 else ""))
-    plates = [match_tote(img, h["s"], **match) if h.get("match") else warm_light(img, h) if h.get("warm") else img for h, img in zip(HALVES, raw)]
+    keys = [tote_key(img, h) for h, img in zip(HALVES, raw)]
+    bases = [warm_light(img, h) if h.get("warm") else img for h, img in zip(HALVES, raw)]
 
-    def frame(t):
+    def frame(t, plates):
         out = np.zeros((H, W, 3), np.float32)
         z = np.exp(np.log(a.z) * ease_push(t / a.len))
         for h, img in zip(HALVES, plates):
@@ -152,14 +212,22 @@ def main():
             out[:, h["x0"]:h["x0"] + HW] = cv2.warpAffine(img, M, (HW, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
         return np.clip(out, 0, 255).astype(np.uint8)
 
+    m, got, it = fit_tote(bases, keys, frame)
+    T = tote_target_rgb()
+    for h, mi, g in zip(HALVES, m, got):
+        hh, ss, ll = hsl_of(g)
+        print(f"tote {os.path.basename(h['plate'])}: x({mi[0]:.3f}, {mi[1]:.3f}, {mi[2]:.3f}) -> graded panel RGB "
+              f"({g[0]:.0f}, {g[1]:.0f}, {g[2]:.0f}), HSL {hh:.1f} {ss:.2f} {ll:.3f}")
+    print(f"  target ({T[0]:.0f}, {T[1]:.0f}, {T[2]:.0f}) HSL {TOTE['hue']:.1f} {TOTE['sat']:.2f} {TOTE['light']:.3f}, {it + 1} steps")
+    plates = [plate_with_tote(b, k, mi, h.get("warm")) for b, k, mi, h in zip(bases, keys, m, HALVES)]
+    del bases, raw
+    frame_t = lambda t: frame(t, plates)
+
     env = dict(os.environ, NODE_PATH=subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip())
     x1 = HW + GUT
     if a.still:                          # the frame as the film shows it: graded, the cut-away in the right half after the cut
         t = float(a.still[0])
-        g = subprocess.run(["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-i", "-",
-                            "-vf", grade_filter(), "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
-                           input=frame(t).tobytes(), capture_output=True, check=True).stdout
-        out = np.frombuffer(g, np.uint8).reshape(H, W, 3).copy()
+        out = grade_one(frame_t(t)).copy()
         if t >= a.cut:
             tmp = tempfile.mkdtemp(prefix="split-")                     # removed after (the disk is tight)
             try:
@@ -175,7 +243,7 @@ def main():
     n = int(round(a.len * a.fps))
     tmp = tempfile.mkdtemp(prefix="split-")                             # the graded plates and the cut-away; removed after
     try:
-        render_clip(a, n, tmp, frame, env, x1)
+        render_clip(a, n, tmp, frame_t, env, x1)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

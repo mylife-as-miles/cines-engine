@@ -23,22 +23,31 @@ const W = 1920, H = 1080, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const sm = x => { x = cl(x); return x * x * (3 - 2 * x); }, eo = x => 1 - Math.pow(1 - cl(x), 3);
 const RED = '200,52,44', REDV = [200, 52, 44];       // a deep red (OKLCH C about 0.18), not neon
 const PLATE = '../frames/graded/evidence_table/purses.jpg';   // the graded plate the trace runs over (its light sets the line)
-let bgImg = null, SM = null, LIGHT = null, FULL_DEV = null;
-function pts() { return SM; }          // the seam in output px at the plate's resting view; hidden samples (behind the handle tabs) null
-// The path, read from plate pixels and smoothed a little across the seam (a Gaussian of 1.5 samples on y, within each visible
-// run): the projected samples carry a 1 px ripple that read as a wobbling vector line.
+let bgImg = null, SM = null, SMF = null, OCCX = [], LIGHT = null, FULL_DEV = null;
+function pts() { return SMF; }         // the seam in output px at the plate's resting view, every sample (the tabs' bands are clipped)
+// The path: one smooth curve through the whole stitch line (reel 10: the per-run smoothing kept each visible run's own slope,
+// so the line read as three pieces with a kink at the left tab). A least-squares quartic of the visible samples' deviation
+// from their chord (devFit, the same fit the cut-away's frame 1 is bowed by, so the cut lands on this very curve), sampled at
+// every projected sample, the hidden ones behind the handle tabs included: the line runs on behind a tab on the same curve
+// and comes out of it where it went in. On the purses plate it lies within 0.9 px of the projected samples (rms 0.38).
+// SMF is the full path; SM has the hidden samples null (the light and the cut's ends read only what the plate shows); OCCX
+// are the tabs' x bands (output px, from the JSON's occluded_x_px), which the trace clips away.
 function smoothSeam(s) {
-  const k = W / s.space[0], occ = s.occluded || [], P = s.seam.map(([x, y], i) => occ[i] ? null : [x * k, y * k]);
-  const run = []; let r = -1; P.forEach((p, i) => { if (p && (i === 0 || !P[i - 1])) r++; run.push(p ? r : -1); });
-  return P.map((p, i) => {
-    if (!p) return null; let a = 0, w = 0;
-    for (let j = i - 4; j <= i + 4; j++) { if (j < 0 || j >= P.length || run[j] !== run[i]) continue; const g = Math.exp(-((j - i) ** 2) / 4.5); a += g * P[j][1]; w += g; }
-    return [p[0], a / w];
+  const k = W / s.space[0], occ = s.occluded || [], P = s.seam.map(([x, y]) => [x * k, y * k]), vis = P.filter((_, i) => !occ[i]);
+  const A = vis[0], B = vis[vis.length - 1], Lc = Math.hypot(B[0] - A[0], B[1] - A[1]), tx = (B[0] - A[0]) / Lc, ty = (B[1] - A[1]) / Lc;
+  const dev = devFit(vis);
+  SMF = P.map(([x, y]) => { const u = ((x - A[0]) * tx + (y - A[1]) * ty) / Lc, d = dev(u); return [A[0] + u * Lc * tx - d * ty, A[1] + u * Lc * ty + d * tx]; });
+  OCCX = (s.occluded_x_px || []).map(([a, b]) => [a * k, b * k]);
+  if (!OCCX.length) occ.forEach((o, i) => {                    // no bands given: from the hidden runs, edges halfway to the visible
+    if (o && !occ[i - 1] && i > 0) OCCX.push([(P[i - 1][0] + P[i][0]) / 2, null]);
+    if (o && !occ[i + 1] && i + 1 < P.length && OCCX.length) OCCX[OCCX.length - 1][1] = (P[i][0] + P[i + 1][0]) / 2;
   });
+  OCCX = OCCX.filter(b => b[1] != null);
+  return SMF.map((p, i) => occ[i] ? null : p);
 }
 // The leather's light along the seam, per sample, 0 (in shadow) to 1 (lit): the plate's luma just under the stitch row
 // (a 5 x 6 px window), smoothed along the seam (sigma 6 samples, hidden samples skipped) and spread between its 10th and
-// 90th percentiles. It sets the line's width (2.5-4 px) and how bright its red runs, as a thread catches the key.
+// 90th percentiles. It moves the line's width and brightness a little (CORE_DW, SHADE_D), as a thread catches the key.
 function seamLight(img) {
   const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.drawImage(img, 0, 0, W, H);
   const d = g.getImageData(0, 0, W, H).data;
@@ -51,50 +60,59 @@ function seamLight(img) {
   const v = s.filter((_, i) => raw[i] != null).sort((a, b) => a - b), lo = v[Math.floor(0.1 * v.length)], hi = v[Math.floor(0.9 * v.length)];
   return s.map(x => cl((x - lo) / Math.max(1e-3, hi - lo)));
 }
-let _lc = null;
-const LC = () => { if (!_lc) { _lc = document.createElement('canvas'); _lc.width = W; _lc.height = H; } return _lc; };
+const _lc = [];
+const LC = i => { if (!_lc[i]) { _lc[i] = document.createElement('canvas'); _lc[i].width = W; _lc[i].height = H; } return _lc[i]; };
+// The line's look (reel 10 read 5-6 px and bright on the lit left, 2 px and dim in the shade on the right, so it fell into
+// pieces): a core of CORE_W px that the leather's light moves by no more than +-CORE_DW px, in one red whose brightness the
+// light moves by +-SHADE_D; and a soft glow of GLOW_W px at GLOW_A under it (a ribbon blurred by GLOW_BLUR px), so the line
+// reads as one lit thread from end to end at full size and at 480 x 270.
+const CORE_W = 2.65, CORE_DW = 0.3, SHADE_D = 0.02, GLOW_W = 7.0, GLOW_BLUR = 1.2, GLOW_A = 0.3;
 function trace(ctx, p, f, a = 1) {
-  // The line: a ribbon whose width follows the leather's light (2.5 px in shadow, 4 px where the key lies on the seam) and
-  // whose red runs a little deeper in shadow and a little brighter where lit, with a 1-2 px bloom. The head: about 11 px,
-  // the line's own red with a hot core and the same tight bloom; it rides between samples, hides behind the handle tabs as
-  // the line does, and fades in the last few percent as the line comes to rest.
+  // The line: one ribbon along the whole path (pts(): every sample), clipped away over the handle tabs' bands, so the tabs
+  // hide it and it comes out of each on the same curve. The head: about 8 px, the line's own red with a hot core and a
+  // little bloom; it rides between samples, is hidden in the tabs' bands as the line is, and fades in the last few percent as
+  // the line comes to rest.
   if (f <= 0) return;
   const m = ctx.getTransform(), z = Math.hypot(m.a, m.b), N = p.length - 1, fe = N * Math.min(f, 1), n = Math.floor(fe), fr = fe - n;
-  const L = LIGHT || p.map(() => 0.6), runs = []; let run = null;
-  for (let i = 0; i <= n; i++) { if (!p[i]) { run = null; continue; } if (!run) runs.push(run = []); run.push([p[i][0], p[i][1], L[i]]); }
+  const L = LIGHT || p.map(() => 0.6), R = [];
+  for (let i = 0; i <= n; i++) R.push([p[i][0], p[i][1], L[i] ?? 0.6]);
   let head = null;
-  if (f < 1 && n < N && p[n] && p[n + 1]) {
-    head = [p[n][0] + (p[n + 1][0] - p[n][0]) * fr, p[n][1] + (p[n + 1][1] - p[n][1]) * fr, L[n] + (L[n + 1] - L[n]) * fr];
-    run.push(head);
+  if (f < 1 && n < N) {
+    head = [p[n][0] + (p[n + 1][0] - p[n][0]) * fr, p[n][1] + (p[n + 1][1] - p[n][1]) * fr, (L[n] ?? 0.6) + ((L[n + 1] ?? 0.6) - (L[n] ?? 0.6)) * fr];
+    R.push(head);
   }
-  const lc = LC(), g = lc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.setTransform(m);
-  const all = runs.flat(); if (!all.length) return;
-  const x0 = all[0][0], x1 = Math.max(x0 + 1, all[all.length - 1][0]);       // the seam runs left to right (x rises)
-  const gr = g.createLinearGradient(x0, 0, x1, 0), shade = l => { const k = 0.86 + 0.24 * l; return `rgb(${REDV.map(v => Math.min(255, Math.round(v * k))).join(',')})`; };
-  for (let i = 0; i < all.length; i += 3) gr.addColorStop(cl((all[i][0] - x0) / (x1 - x0)), shade(all[i][2]));
-  gr.addColorStop(1, shade(all[all.length - 1][2]));
-  g.fillStyle = gr;
-  for (const R of runs) {
-    const wd = q => (2.5 + 1.5 * q[2]) / z / 2, Lf = [], Rt = [];
+  if (R.length < 2) return;
+  const hidden = x => OCCX.some(([a0, a1]) => x > a0 && x < a1);
+  const x0 = R[0][0], x1 = Math.max(x0 + 1, R[R.length - 1][0]);          // the seam runs left to right (x rises)
+  const shade = l => { const k = 1 + SHADE_D * (2 * l - 1); return `rgb(${REDV.map(v => Math.min(255, Math.round(v * k))).join(',')})`; };
+  const layer = (li, hw) => {                                             // a ribbon of half-width hw(q) into layer li, the bands clipped
+    const c = LC(li), g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.setTransform(m);
+    g.save(); g.beginPath(); g.rect(-W, -H, 3 * W, 3 * H); for (const [a0, a1] of OCCX) g.rect(a0, -H, a1 - a0, 3 * H); g.clip('evenodd');
+    const gr = g.createLinearGradient(x0, 0, x1, 0);
+    for (let i = 0; i < R.length; i += 3) gr.addColorStop(cl((R[i][0] - x0) / (x1 - x0)), shade(R[i][2]));
+    gr.addColorStop(1, shade(R[R.length - 1][2])); g.fillStyle = gr;
+    const Lf = [], Rt = [];
     R.forEach((q, i) => {
       const a0 = R[Math.max(0, i - 1)], a1 = R[Math.min(R.length - 1, i + 1)], tx = a1[0] - a0[0], ty = a1[1] - a0[1], tl = Math.hypot(tx, ty) || 1;
-      const nx = -ty / tl, ny = tx / tl, w = wd(q); Lf.push([q[0] + nx * w, q[1] + ny * w]); Rt.push([q[0] - nx * w, q[1] - ny * w]);
+      const nx = -ty / tl, ny = tx / tl, w = hw(q); Lf.push([q[0] + nx * w, q[1] + ny * w]); Rt.push([q[0] - nx * w, q[1] - ny * w]);
     });
     g.beginPath(); Lf.forEach((q, i) => i ? g.lineTo(...q) : g.moveTo(...q)); Rt.reverse().forEach(q => g.lineTo(...q)); g.closePath(); g.fill();
-    for (const q of [R[0], R[R.length - 1]]) { g.beginPath(); g.arc(q[0], q[1], wd(q), 0, 7); g.fill(); }   // round ends
-  }
+    for (const q of [R[0], R[R.length - 1]]) { g.beginPath(); g.arc(q[0], q[1], hw(q), 0, 7); g.fill(); }   // round ends
+    g.restore(); return c;
+  };
+  const glow = layer(1, () => GLOW_W / z / 2), core = layer(0, q => (CORE_W + 2 * CORE_DW * (q[2] - 0.5)) / z / 2);
   ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.globalAlpha = 0.5 * a; ctx.filter = 'blur(1.3px)'; ctx.drawImage(lc, 0, 0);          // the bloom, 1-2 px
-  ctx.filter = 'none'; ctx.globalAlpha = 0.97 * a; ctx.drawImage(lc, 0, 0);
+  ctx.globalAlpha = GLOW_A * a; ctx.filter = `blur(${GLOW_BLUR}px)`; ctx.drawImage(glow, 0, 0);   // the glow
+  ctx.filter = 'none'; ctx.globalAlpha = a; ctx.drawImage(core, 0, 0);
   ctx.globalAlpha = 1;
-  if (head) {
+  if (head && !hidden(head[0])) {
     const ha = a * cl((1 - f) / 0.035), hx = m.a * head[0] + m.c * head[1] + m.e, hy = m.b * head[0] + m.d * head[1] + m.f;
     const rg = (r0, r1, stops) => { const q = ctx.createRadialGradient(hx, hy, r0, hx, hy, r1); stops.forEach(([o, c]) => q.addColorStop(o, c)); return q; };
-    ctx.fillStyle = rg(4.2, 6.6, [[0, `rgba(${RED},${0.55 * ha})`], [1, `rgba(${RED},0)`]]);           // the bloom
-    ctx.beginPath(); ctx.arc(hx, hy, 6.6, 0, 7); ctx.fill();
-    ctx.fillStyle = `rgba(${shade(0.75).slice(4, -1)},${ha})`; ctx.beginPath(); ctx.arc(hx, hy, 5.0, 0, 7); ctx.fill();   // the body
-    ctx.fillStyle = rg(0, 3.0, [[0, `rgba(255,150,122,${ha})`], [0.45, `rgba(238,92,72,${0.85 * ha})`], [1, `rgba(${RED},0)`]]);   // the hot core
-    ctx.beginPath(); ctx.arc(hx, hy, 3.0, 0, 7); ctx.fill();
+    ctx.fillStyle = rg(3.4, 6.0, [[0, `rgba(${RED},${0.5 * ha})`], [1, `rgba(${RED},0)`]]);            // the bloom
+    ctx.beginPath(); ctx.arc(hx, hy, 6.0, 0, 7); ctx.fill();
+    ctx.fillStyle = `rgba(${shade(head[2]).slice(4, -1)},${ha})`; ctx.beginPath(); ctx.arc(hx, hy, 4.0, 0, 7); ctx.fill();   // the body
+    ctx.fillStyle = rg(0, 2.5, [[0, `rgba(255,150,122,${ha})`], [0.45, `rgba(238,92,72,${0.85 * ha})`], [1, `rgba(${RED},0)`]]);   // the hot core
+    ctx.beginPath(); ctx.arc(hx, hy, 2.5, 0, 7); ctx.fill();
   }
   ctx.restore();
 }
@@ -381,8 +399,12 @@ function drawLeather(ctx, { poly, lin, pat, paint, BIG }, { U, k, dz, add, grey,
   // change of light.
   const { X0, X1, Y, D, LEA, RO } = SEC, top = Y + LEA, KX = keyX(lin);
   const gk = 0.45 + 0.55 * Math.min(1, k);                             // less grain when the view is small, so it stays a grain, not a fizz
-  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#9a5532', EDGE = '#6c3621', PB = PEBBLE(), MO = MOTTLE(), FB = FIBRE();
-  poly(SIL); ctx.fillStyle = '#3a1f13'; ctx.fill();                   // under the faces, so no light seam shows between them
+  // The leather's colours are set so the lit face's median lands on the film's one cognac (gfx/split.py TOTE: HSL hue 22,
+  // S 0.42, L 0.275), the same as both totes in the split (reel 10: this face read 66,38,21, L 0.17, a darker leather than
+  // either tote). The face's light (key, depth, sheen) takes the base to about 0.44 of itself; the edge paint is the same
+  // hue a little deeper (L about 0.23).
+  const P = leatherProfile(), SIL = hull(sweep(P)), TOP = '#f5925a', EDGE = '#875032', PB = PEBBLE(), MO = MOTTLE(), FB = FIBRE();
+  poly(SIL); ctx.fillStyle = '#512d1b'; ctx.fill();                   // under the faces, so no light seam shows between them
   const depthKey = (p) => lin(p, add(p), [[0, grey(255)], [0.45, grey(200)], [1, grey(104)]]);
   const sides = P.map((p, i) => [p, P[(i + 1) % P.length]])           // the side faces the view sees (outward normal . D > 0)
     .map(([p, q]) => { const n = [q[1] - p[1], p[0] - q[0]], l = Math.hypot(...n) || 1; return { p, q, n: [n[0] / l, n[1] / l] }; })
@@ -390,7 +412,7 @@ function drawLeather(ctx, { poly, lin, pat, paint, BIG }, { U, k, dz, add, grey,
   for (const s of sides) {
     const Q = [s.p, s.q, add(s.q), add(s.p)];
     if (s.n[0] > 0.7) {                                                 // the far end: a cut turned away from the viewer
-      paint(Q, '#40221a', [['overlay', pat(FB, [dz[0], dz[1], 0, 1, X1, Y])], ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [1, grey(176)]])],
+      paint(Q, '#5a3224', [['overlay', pat(FB, [dz[0], dz[1], 0, 1, X1, Y])], ['multiply', lin([0, Y], [0, top], [[0, grey(255)], [1, grey(176)]])],
         ['multiply', depthKey(s.p)]]);
       continue;
     }

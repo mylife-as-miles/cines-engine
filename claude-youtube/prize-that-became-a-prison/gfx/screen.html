@@ -6,8 +6,9 @@
 // The laptop screen in chapter 1 (script version 2): an invented, unbranded mail client and a search page, drawn at
 // the display's own aspect (about 3:2) and pinned onto evidence_table `screen` / home `kitchen_over` by
 // gfx/doc_composite.py. Nothing here is the real email or a real service: no logo, no product name, no organiser,
-// no address; senders and results are greeked bars. The prize line cycles through the three versions the accounts
-// give (cash, travel, both), so the picture itself says the wording is not known.
+// no address; senders are greeked bars, the results' paths and metadata dim generic words. The prize line cycles
+// through the three versions the accounts give (cash, travel, both), so the picture itself says the wording is not
+// known.
 // Contract: window.draw(mode, t) with mode 'inbox' | 'email' | 'search'; window.READY.
 const W = 1500, H = 1000, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
@@ -92,22 +93,25 @@ function email(ctx, t) {
   ctx.fillStyle = '#9aa3b0'; ctx.beginPath(); ctx.arc(BX + 22, 214, 22, 0, 7); ctx.fill();     // sender avatar, blank
   txt(ctx, 'Notifications', BX + 60, 212, 21, C.ink, 600); txt(ctx, 'to me', BX + 60, 240, 18, C.soft);   // generic, kept soft by the composite's focus
   ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(BX, 262.5); ctx.lineTo(W - 60, 262.5); ctx.stroke();
-  txt(ctx, 'Dear winner,', BX, 330, 28, C.ink);
-  txt(ctx, 'We are delighted to tell you that your entry has been selected.', BX, 392, 28, C.ink);
+  // Only the prize line is sourced. Every other line of the letter is invented, so it must read as a letter and never
+  // as a quotation (review 10, fault 13: on a phone it could be read). The supporting lines are set in a softer grey
+  // (BODY: about 60 % of the ink's contrast) and the composite's depth of field falls off steeply above and below the
+  // prize line (screen_email.json): together they leave rows of text, not words.
+  const BODY = '#646a74';
+  txt(ctx, 'Dear winner,', BX, 330, 28, BODY);
+  txt(ctx, 'We are delighted to tell you that your entry has been selected.', BX, 392, 28, BODY);
   prizeLine(ctx, t, BX, 448);
-  // the rest of the letter: plain, generic wording that the composite's focus band keeps out of focus, so it reads as
-  // a letter, never as a quotation (nothing here is from the real email)
   const body = ['Our team will be in touch shortly to arrange the details of your prize.',
                 'Please reply to this message to confirm your entry and your contact details.',
                 'All arrangements will be made for you, at no cost to you.',
                 'We look forward to hearing from you.', '', 'With warm regards,', 'The prize team'];
-  body.forEach((line, i) => txt(ctx, line, BX, 520 + i * 44, 26, i > 4 ? C.soft : C.ink));
+  body.forEach((line, i) => txt(ctx, line, BX, 520 + i * 44, 26, i > 4 ? '#8a9099' : BODY));
   rr(ctx, BX, 860, 200, 52, 26, C.accent); txt(ctx, 'Reply', BX + 65, 894, 22, '#ffffff', 600);
 }
 // The search, in two pages like a real one. The home page: the field in the upper middle of the screen, typed like a
 // person (2-6 frames a letter in an irregular rhythm, a pause after each space), the suggestion list dropping under it.
 // On Enter the results page replaces it: the field at the top, five results, a side column and a row of related
-// searches, so the screen is full. Every result is generic, every source line greeked, nothing is a real site; the
+// searches, so the screen is full. Every result is generic, every path a plain topic path, nothing is a real site; the
 // composite's focus keeps all but the query soft. The search times are exposed (window.SEARCH) for the shot's camera.
 // The query is the one thing to read, on a phone too: 32 px medium, near-black, the same on both pages; the home field
 // sits high enough that one fixed camera centre frames it at the start and the results field at the top at the end.
@@ -115,7 +119,7 @@ const Q = 'prize contest organizers', QSTART = 0.0, QFPS = 24, QT = [];   // the
 { const R = [2, 3, 2, 2, 4, 2, 3, 2, 6, 2, 3, 2]; let t0 = QSTART;
   for (let i = 0; i < Q.length; i++) { t0 += (R[i % R.length] + (Q[i - 1] === ' ' ? 4 : 0)) / QFPS; QT.push(t0); } }
 const QDONE = QT[QT.length - 1], QENTER = QDONE + 0.45;
-const QSIZE = 32, QH = 72, QINK = '#0f1114';
+const QSIZE = 32, QH = 72, QINK = '#0f1114', DIM = '#9aa0a8';             // DIM: secondary text, a page's quiet grey
 window.SEARCH = { done: QDONE, enter: QENTER };
 function field(ctx, x, y, w, t, typedTo) {
   rr(ctx, x, y, w, QH, QH / 2, '#f1f3f5'); ctx.strokeStyle = '#dde0e5'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(x, y, w, QH, QH / 2); ctx.stroke();
@@ -131,7 +135,7 @@ function search(ctx, t) {
   ctx.fillStyle = C.side; ctx.fillRect(0, 0, W, 64);
   rr(ctx, 360, 14, 640, 36, 18, '#ffffff');                             // the browser's address field, empty
   if (t < QENTER) {
-    // the home page: a plain field, a row of generic shortcut tiles under it (greeked, no names)
+    // the home page: a plain field, a row of generic shortcut tiles under it (blank icons, plain-word labels)
     const fx = 200, fy = 210, fw = 860, shown = field(ctx, fx, fy, fw, t, false), dy = fy + QH + 12;
     // the suggestion list drops when the fourth letter lands, like a real one: opaque by its second frame, and the tiles
     // it covers are gone from its first, so nothing ever shows through it
@@ -143,30 +147,57 @@ function search(ctx, t) {
       ctx.restore();
     } else {
       const tx = fx + fw / 2 - (5 * 140 + 84) / 2;
-      for (let i = 0; i < 6; i++) { const x = tx + i * 140; rr(ctx, x, dy + 54, 84, 84, 18, '#eef0f3'); rr(ctx, x + 12, dy + 160, 60, 10, 5, C.bar2); }
+      ctx.textAlign = 'center';
+      ['Mail', 'News', 'Maps', 'Weather', 'Travel', 'Photos'].forEach((s, i) => { const x = tx + i * 140;
+        rr(ctx, x, dy + 54, 84, 84, 18, '#eef0f3'); txt(ctx, s, x + 42, dy + 170, 16, DIM); });
+      ctx.textAlign = 'left';
     }
   } else {
-    // the results page, arriving a moment after Enter: the field at the top, results down the left, a side column
-    const a = sm((t - QENTER) / 0.35), r = rand(23);
+    // the results page, arriving a moment after Enter: the field at the top, results down the left, a side column.
+    // Review 10 (fault 8): the grey rounded bars (source lines, a second bar under each snippet, the tab row, the side
+    // column) read as a page still loading. They are dim generic text now, where the bars were, so the focus keeps them
+    // as soft as the bars: a path above each title (no site, no domain), a line of metadata under each snippet, words in
+    // the tabs, a topic panel. Nothing names a real service, and nothing says anything about the case.
+    const a = sm((t - QENTER) / 0.35);
     field(ctx, 120, 96, 1000, t, true);
     ctx.strokeStyle = '#e3e6ea'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, 196.5); ctx.lineTo(W, 196.5); ctx.stroke();
-    for (let i = 0; i < 5; i++) rr(ctx, 120 + i * 120, 210, 90, 12, 6, i ? C.bar2 : '#9aa7bd');        // the result tabs, greeked
-    ctx.save(); ctx.globalAlpha = a;
-    const RES = [['Prize draw winners: how to claim', 'What to expect after a winning notice, and how prizes are delivered to winners.'],
-                 ['Travel contest official rules', 'Eligibility, prize descriptions, travel dates and conditions for winners.'],
-                 ['Is this contest legitimate?', 'Readers discuss notices from contest organizers and what they checked.'],
-                 ['Sweepstakes and prize notices', 'How to tell a genuine prize from a scam: questions to ask the organizers.'],
-                 ['Winners announced this month', 'A list of recent prize draws, with travel packages and cash awards.']];
-    RES.forEach(([title, snip], i) => {
-      const y = 262 + i * 128 + (1 - a) * 12;
-      rr(ctx, 120, y, 200 + r() * 120, 12, 6, '#cfd8cf');                   // a source line, greeked
-      txt(ctx, title, 120, y + 48, 28, '#2a4a86', 500);
-      txt(ctx, snip, 120, y + 84, 20, C.soft); rr(ctx, 120, y + 98, 300 + r() * 260, 10, 5, C.bar2);
+    let tabx = 120;                                                          // the result tabs, the first one selected
+    ['All', 'News', 'Images', 'Forums', 'Videos', 'More'].forEach((s, i) => {
+      ctx.font = '500 19px "Inter"'; const w = ctx.measureText(s).width;
+      txt(ctx, s, tabx, 226, 19, i ? DIM : '#3d6fb5', 500);
+      if (!i) rr(ctx, tabx - 2, 238, w + 4, 3, 1.5, '#3d6fb5');
+      tabx += w + 44;
     });
-    // a side column: a generic panel of greeked blocks
+    ctx.save(); ctx.globalAlpha = a;
+    const RES = [['Prize draw winners: how to claim', 'What to expect after a winning notice, and how prizes are delivered to winners.',
+                  'consumer guides › prizes › claiming', 'Updated 2 weeks ago · 6 min read'],
+                 ['Travel contest official rules', 'Eligibility, prize descriptions, travel dates and conditions for winners.',
+                  'contest rules › travel › terms and conditions', 'Prize details · Eligibility · Travel dates · Winner selection'],
+                 ['Is this contest legitimate?', 'Readers discuss notices from contest organizers and what they checked.',
+                  'community forum › travel › prize notices', '3 days ago · 41 replies · last reply 2 hours ago'],
+                 ['Sweepstakes and prize notices', 'How to tell a genuine prize from a scam: questions to ask the organizers.',
+                  'consumer advice › prizes › notices', 'Guide · last reviewed 1 month ago'],
+                 ['Winners announced this month', 'A list of recent prize draws, with travel packages and cash awards.',
+                  'news › contests › winners', '5 days ago · Contests · Travel']];
+    RES.forEach(([title, snip, path, meta], i) => {
+      const y = 262 + i * 128 + (1 - a) * 12;
+      txt(ctx, path, 120, y + 15, 17, '#8b968d');                          // the result's path, where the source bar was
+      txt(ctx, title, 120, y + 48, 28, '#2a4a86', 500);
+      txt(ctx, snip, 120, y + 84, 20, C.soft);
+      txt(ctx, meta, 120, y + 107, 17, DIM);                                 // its metadata, where the second bar was
+    });
+    // a side column: a generic topic panel, dim text only
     rr(ctx, 1000, 262, 400, 560, 18, '#f6f7f9');
-    rr(ctx, 1030, 292, 340, 170, 12, '#e6e9ee');
-    for (let i = 0; i < 7; i++) rr(ctx, 1030, 490 + i * 42, 180 + r() * 150, 12, 6, i % 3 ? C.bar2 : C.bar);
+    txt(ctx, 'Prize contests', 1030, 322, 26, '#4a5059', 600);
+    txt(ctx, 'Topic', 1030, 350, 17, DIM);
+    ['A contest or prize draw gives prizes to', 'entrants chosen at random or by judges.', 'Organizers publish rules that set out',
+     'eligibility and the prize details.'].forEach((s, i) => txt(ctx, s, 1030, 392 + i * 26, 17, '#8d939b'));
+    txt(ctx, 'Common questions', 1030, 524, 19, '#7a8089', 600);
+    ['How are winners chosen?', 'How are winners notified?', 'What do official rules cover?', 'How long does a claim take?',
+     'Can a prize be transferred?', 'Where are results posted?'].forEach((s, i) => {
+      ctx.strokeStyle = '#e6e9ee'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(1030, 541.5 + i * 42); ctx.lineTo(1370, 541.5 + i * 42); ctx.stroke();
+      txt(ctx, s, 1030, 570 + i * 42, 17, DIM);
+    });
     // related searches, a row of chips at the foot
     txt(ctx, 'Related searches', 120, 920, 22, C.soft, 600);
     ['contest winner notice', 'claim a prize abroad', 'travel prize rules', 'prize organizers'].forEach((c, i) => {

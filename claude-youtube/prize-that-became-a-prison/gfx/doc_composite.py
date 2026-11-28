@@ -23,6 +23,10 @@ its path, so the centre moves on one straight eased line. An optional `drift` ea
 lands somewhere new (the search). A mark (`t`, `dur` a line) ends at t + dur x lines, on its spoken word; each line's
 stroke is a hand's stroke (ramped speed) that spends `swipe_frames` (20) crossing the screen, with a dry, fixed-seed
 edge feathered 2-3 px on screen.
+Options a shot may set, all off by default: `tex_bleed_px` (a screen texture's edge pixels carried that many plate px
+past the pins, over a plate whose lit face bleeds past them: the scale), `glow` ({"sigma_px", "gain"}: the lit face's
+light spilling onto the bezel around it, sigma in plate px) and `focus_band.zoom_scaled` (the band's blur grows with the
+push, reaching `blur_px` at the end zoom, as a lens's blur does when it moves in: the email).
 """
 import argparse
 import json
@@ -200,6 +204,33 @@ class Texture:
         return self.img
 
 
+def expand_quad(q, d):
+    """The quad q (4 x 2, corners in order) with each edge moved d px outward; the corners are the moved edges' crossings."""
+    q = np.float64(q)
+    c = q.mean(0)
+    edges = []
+    for i in range(4):
+        a, b = q[i], q[(i + 1) % 4]
+        n = np.array([b[1] - a[1], a[0] - b[0]])
+        n /= np.linalg.norm(n)
+        if np.dot(n, a - c) < 0:
+            n = -n
+        edges.append((a + d * n, b - a))
+    out = []
+    for i in range(4):                        # corner i joins edge i-1 (q[i-1] -> q[i]) and edge i (q[i] -> q[i+1])
+        (p1, d1), (p2, d2) = edges[i - 1], edges[i]
+        s = np.linalg.solve(np.array([d1, -d2]).T, p2 - p1)
+        out.append(p1 + s[0] * d1)
+    return np.float64(out)
+
+
+def quad_mask(q):
+    """An antialiased 0..1 mask of a screen-space quad."""
+    m = np.zeros((H, W), np.uint8)
+    cv2.fillConvexPoly(m, np.int32(np.round(np.clip(q, -1e5, 1e5) * 16)), 255, lineType=cv2.LINE_AA, shift=4)
+    return m.astype(np.float32) / 255.0
+
+
 def stroke_band(line, i, n, pad):
     """A line's marker band in page pixels: (x0, x1, top, bottom, em). The band is about 1.3 x-heights tall and sits on
     the line; it starts pad[0] em before the first word and ends pad[1] em past the last (0.25 em on all but the last
@@ -374,9 +405,20 @@ def main():
                                 mark=mi, on=(round(float(on[0]) / 400, 3), round(float(on[-1]) / 400, 3)) if len(on) else None))
             te = ts - LINE_GAP / a.fps
 
+    # A screen texture's bleed (off unless the shot sets tex_bleed_px). The scale's plate lights its face 3-4 px past the
+    # pins (a hairline at about raw 200, then the bezel), while the texture darkens its own edges inside them: warped
+    # alone, the hairline read as a white keyline inside the bezel. The texture's edge pixels are carried out to the pins
+    # moved tex_bleed_px outward, so the plate's whole lit face is under the texture. The lit face (pins plus bleed) is
+    # also the source of the optional glow onto the bezel.
+    bleed = float(shot.get("tex_bleed_px", 0.0)) if tex else 0.0
+    face_q = expand_quad(dst, bleed) if bleed > 0 else np.float64(dst)
+    glow = shot.get("glow") if tex else None
+    to_screen = lambda A, q: q @ A[:2, :2].T + A[:2, 2]
+
     def frame(t):
         A, Ht = view(t)
         base = cv2.warpAffine(plate, A[:2], (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
+        fm = quad_mask(to_screen(A, face_q)) if (bleed > 0 or glow) else None
         if tex:                               # an emissive screen: the UI scales the blank display's own glow
             alb = srgb_to_lin(tex.get(t)).astype(np.float32)
         else:                                 # page albedo for this frame (marker under the ink)
@@ -396,13 +438,16 @@ def main():
             alb = np.stack([ink_lin * (1 - mk + mk * yellow_lin[i]) for i in range(3)], -1)
         # pre-scale the page texture near the output scale so the warp does not alias
         scale = np.sqrt(abs(np.linalg.det(Ht[:2, :2])))
+        wb = dict(borderMode=cv2.BORDER_REPLICATE) if bleed > 0 else dict(borderValue=(1, 1, 1))
         if scale < 0.8:
             f = max(scale * 1.25, 0.05)
             small = cv2.resize(alb, None, fx=f, fy=f, interpolation=cv2.INTER_AREA)
             S = np.diag([1 / f, 1 / f, 1.0])
-            alb_w = cv2.warpPerspective(small, Ht @ S, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
+            alb_w = cv2.warpPerspective(small, Ht @ S, (W, H), flags=cv2.INTER_LINEAR, **wb)
         else:
-            alb_w = cv2.warpPerspective(alb, Ht, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
+            alb_w = cv2.warpPerspective(alb, Ht, (W, H), flags=cv2.INTER_LINEAR, **wb)
+        if bleed > 0:                         # the texture's edge carried over the bleed; the plate untouched beyond it
+            alb_w = 1.0 + (alb_w - 1.0) * fm[..., None]
         tb = shot.get("tex_blur_px", 0.55)                    # the render's own softness (or defocus)
         tr = shot.get("tex_blur_rack")                         # a rack focus onto the texture: [t0, t1, blur at t1]
         if tr:
@@ -422,6 +467,11 @@ def main():
             if over.any():
                 soft = PAGE_KNEE + (1 - PAGE_KNEE) * np.tanh((mx - PAGE_KNEE) / (1 - PAGE_KNEE))
                 lit = np.where(over, lit * soft / np.maximum(mx, 1e-6), lit)
+        if glow:                              # the lit face's light spilling onto the bezel: linear light, outside the pins
+            kz = np.sqrt(abs(np.linalg.det(A[:2, :2])))       # plate px -> screen px, so the glow scales with the push
+            spill = cv2.GaussianBlur(lit * fm[..., None], (0, 0), glow["sigma_px"] * kz)
+            fp = quad_mask(to_screen(A, np.float64(dst)))     # the pins (the bleed ring takes the glow too: no dark ring)
+            lit = lit + glow.get("gain", 0.1) * spill * (1.0 - fp)[..., None]
         out = lin_to_srgb(lit)
         # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels, or a
         # continuous depth of field with "continuous": true)
@@ -439,10 +489,13 @@ def main():
             d = np.abs(py - fyt) / em                          # distance from the focus line, in lines of text
             wgt = np.clip((d - band["sharp_lines"]) / band["ramp_lines"], 0, 1).astype(np.float32)
             wgt = cv2.resize(wgt, (W, H), interpolation=cv2.INTER_LINEAR)[..., None]
+            bp = band["blur_px"]
+            if band.get("zoom_scaled"):                        # the blur grows with the push: blur_px at the end zoom
+                bp *= camera(t)[0] / shot["zoom"][1]
             if band.get("continuous"):
                 # a lens's depth of field: the blur radius grows smoothly with distance from the focal line, the same
                 # above and below, up to `blur_px` (blended between five blur levels, so no line steps to the next)
-                lv = [out] + [cv2.GaussianBlur(out, (0, 0), band["blur_px"] * k / 4) for k in (1, 2, 3, 4)]
+                lv = [out] + [cv2.GaussianBlur(out, (0, 0), bp * k / 4) for k in (1, 2, 3, 4)]
                 pos = wgt * 4; lo = np.clip(np.floor(pos), 0, 3).astype(np.int32); fr = pos - lo
                 acc = np.zeros_like(out)
                 for k in range(4):
@@ -450,7 +503,7 @@ def main():
                     acc += m * (lv[k] * (1 - fr) + lv[k + 1] * fr)
                 out = acc
             else:
-                soft = cv2.GaussianBlur(out, (0, 0), band["blur_px"])
+                soft = cv2.GaussianBlur(out, (0, 0), bp)
                 out = out * (1 - wgt) + soft * wgt
         return (np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8)
 

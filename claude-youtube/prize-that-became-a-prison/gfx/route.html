@@ -28,7 +28,12 @@ const PU = (lat, lon) => P(lat, U(lon));
 const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], departA: [26.3, 110.6], departQ: [27.0, 104.5], ausAim: [-11.2, 130.3], australia: [-25.57, 134.36], qingdao: [36.07, 120.38] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
-const INK = '#ece8e1', LAND_C = '#1f2833', LIT = 0.12;   // land, and the white a lit region lays over it
+// Land, and the cream a lit region lays over it: LIT of INK over LAND_C puts the lit mainland at HSL lightness about
+// 0.37 against the land's 0.13 (0.12 once FOCUS dims the other land as the mainland lights). Australia, the claimed
+// destination, is lit to AUS_LIT of that. The lit mainland has a cream outline, OUTLINE px at 60 %.
+const INK = '#ece8e1', LAND_C = '#161d25', LIT = 0.34, FOCUS = 0.12, AUS_LIT = 0.42, OUTLINE = 2;
+const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const LIT_C = (() => { const a = rgb(LAND_C), b = rgb(INK); return `rgb(${a.map((v, i) => Math.round(v + LIT * (b[i] - v))).join(',')})`; })();
 function gc(a, b, n = 200) {
   const r = Math.PI / 180, v = ([la, lo]) => [Math.cos(la * r) * Math.cos(lo * r), Math.cos(la * r) * Math.sin(lo * r), Math.sin(la * r)];
   const p1 = v(a), p2 = v(b), om = Math.acos(p1.reduce((s, x, i) => s + x * p2[i], 0)), out = [];
@@ -95,27 +100,65 @@ function pin(ctx, x, y, a) {          // a plain dot with the lines' dark edge, 
   ctx.fillStyle = 'rgba(3,5,9,0.7)'; ctx.beginPath(); ctx.arc(x, y, (QDOT + 1.5) * s, 0, 7); ctx.fill();
   ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(x, y, QDOT * s, 0, 7); ctx.fill(); ctx.restore();
 }
-// Land and regions are built once as paths in map units (Natural Earth 1:50m, see tools/prep_land.py) and stroked at a
-// constant width on screen with round joins, so the coast never thickens or grows spikes as the camera pushes in.
-let LANDP = null; const REGP = {}, REGR = {};   // REGR: each region's rings as map points, to measure a gap to its land
+// Land, lakes and regions are built once as paths in map units (Natural Earth 1:50m, see tools/prep_land.py; the lakes,
+// design/gfx/lakes_pacific.json, at the land's own rounding) and stroked at a constant width on screen with round
+// joins, so the coast never thickens or grows spikes as the camera pushes in.
+let LANDP = null, LAKEP = null, SHOREP = null, GRAIN = null; const REGP = {}, REGR = {};   // REGR: each region's rings as map points, to measure a gap to its land
 function buildPaths() {
   const add = (p, r, close) => { for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? p.lineTo(x, y) : p.moveTo(x, y); } if (close) p.closePath(); };
   LANDP = new Path2D(); for (const r of window.LAND.rings) add(LANDP, r, true);
+  // the lakes (the Great Lakes, Baikal, the Caspian ...) with their islands as holes: filled even-odd
+  LAKEP = new Path2D(); for (const l of window.LAKES_SRC) for (const r of l.rings) add(LAKEP, r, true);
+  SHOREP = new Path2D(LANDP); SHOREP.addPath(LAKEP);   // filled even-odd: the land without its lakes, for the relief
   // a region fills every polygon of its country (mainland China with Hainan and its coastal islands; Taiwan, Hong Kong
-  // and Macau are separate features and are not in it), but strokes only the main ring's land frontier
-  for (const k in window.REG) { const fill = new Path2D(), edge = new Path2D(); add(fill, window.REG[k].ring, true);
-    for (const r of window.REG[k].islands || []) add(fill, r, true);
-    for (const b of window.REG[k].border || []) add(edge, b, false); REGP[k] = { fill, edge };
+  // and Macau are separate features and are not in it); the same path is stroked as the lit mainland's outline
+  for (const k in window.REG) { const fill = new Path2D(); add(fill, window.REG[k].ring, true);
+    for (const r of window.REG[k].islands || []) add(fill, r, true); REGP[k] = { fill };
     REGR[k] = [window.REG[k].ring, ...(window.REG[k].islands || [])].map(r => { const o = []; for (let i = 0; i < r.length; i += 2) o.push(P(r[i + 1], r[i])); return o; }); }
+  // the land's print grain: a seeded tile of soft two-octave noise (1 and 4 tile px, laid at GRAIN_S map px a tile px, so
+  // it stays fine through the mainland's 2.5x push), as black at 0-GRAIN_A alpha
+  const N = 256, tile = document.createElement('canvas'); tile.width = tile.height = N; const tx = tile.getContext('2d'), img = tx.createImageData(N, N);
+  let s = 20141; const rnd = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+  const oct = (step) => { const m = N / step, v = Array.from({ length: m * m }, rnd), f = x => x * x * (3 - 2 * x);
+    return (x, y) => { const X = x / step, Y = y / step, i = Math.floor(X), j = Math.floor(Y), u = f(X - i), w = f(Y - j), at = (a, b) => v[((b % m + m) % m) * m + ((a % m + m) % m)];
+      return (at(i, j) * (1 - u) + at(i + 1, j) * u) * (1 - w) + (at(i, j + 1) * (1 - u) + at(i + 1, j + 1) * u) * w; }; };
+  const o1 = oct(1), o4 = oct(4);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const n = 0.6 * o1(x, y) + 0.4 * o4(x, y); img.data[(y * N + x) * 4 + 3] = Math.round(255 * GRAIN_A * n); }
+  tx.putImageData(img, 0, 0); GRAIN = tile;
 }
-function base(ctx) {
-  const g = ctx.createRadialGradient(W * 0.55, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.75);
-  g.addColorStop(0, '#0d131b'); g.addColorStop(1, '#03050a'); ctx.fillStyle = g; ctx.fillRect(-W, -H, 3 * W, 3 * H);
+// The sea's light: one radial gradient in map space, the same for the sea and (as a falloff) for the land.
+const seaLight = (ctx, c0, c1) => { const g = ctx.createRadialGradient(W * 0.55, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.75); g.addColorStop(0, c0); g.addColorStop(1, c1); return g; };
+// The land's relief is light only, never invented ground. The land stands a little above the sea (a soft shadow
+// SHADOW px down from every coast); its own shape, blurred LIFT_R px and laid over it in cream, lifts the land's middle
+// so every coast and lake shore falls off softly into it while a small island keeps the plain land tone; the sea's own
+// light lifts the middle of the map and lets its edges fall away; and a fine print grain fixed to the map gives the land
+// a surface. All monochrome; sizes are screen px.
+const SHADOW = 3, LIFT = 0.05, LIFT_R = 9, GRAIN_A = 0.10, GRAIN_S = 0.6;
+function relief(ctx) {
+  ctx.save(); ctx.clip(SHOREP, 'evenodd');                 // the land without its lakes
+  ctx.filter = `blur(${LIFT_R}px)`; ctx.fillStyle = `rgba(236,232,225,${LIFT})`; ctx.fill(SHOREP, 'evenodd'); ctx.filter = 'none';
+  ctx.fillStyle = seaLight(ctx, 'rgba(0,0,0,0)', 'rgba(0,0,0,0.15)'); ctx.fill(LANDP);
+  const pat = ctx.createPattern(GRAIN, 'repeat'); pat.setTransform(new DOMMatrix().scale(GRAIN_S)); ctx.fillStyle = pat; ctx.fill(LANDP);
+  ctx.restore(); }
+// base: the sea, the land and the lit regions (`lit`: each region's alpha, 0-1), the lakes, then the lines. FOCUS dims
+// all the land as the mainland lights; a lit region's fill is opaque, so the mainland ends at LIT_C whatever lies under.
+function base(ctx, lit = {}) {
+  const sea = seaLight(ctx, '#0d131b', '#03050a'); ctx.fillStyle = sea; ctx.fillRect(-W, -H, 3 * W, 3 * H);
   if (!GROUND) { ctx.strokeStyle = 'rgba(120,150,180,0.06)'; ctx.lineWidth = 1 / ZOOM;
     for (let lon = 75; lon <= 315; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, -H); ctx.lineTo(x, 2 * H); ctx.stroke(); }
     for (let lat = -75; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke(); } }
-  ctx.fillStyle = LAND_C; ctx.fill(LANDP); if (GROUND) return;
-  ctx.save(); ctx.strokeStyle = 'rgba(236,232,225,0.60)'; ctx.lineWidth = 1.1 / ZOOM; ctx.lineJoin = 'round'; ctx.stroke(LANDP); ctx.restore();
+  ctx.save(); ctx.filter = 'blur(4px)'; ctx.translate(0, SHADOW / ZOOM); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fill(LANDP); ctx.restore();
+  ctx.fillStyle = LAND_C; ctx.fill(LANDP);
+  const chn = lit.CHN || 0;
+  if (chn > 0) { ctx.fillStyle = `rgba(4,6,10,${FOCUS * chn})`; ctx.fill(LANDP); }
+  for (const k in lit) if (lit[k] > 0) { ctx.save(); ctx.clip(LANDP); ctx.globalAlpha = lit[k]; ctx.fillStyle = LIT_C; ctx.fill(REGP[k].fill); ctx.restore(); }
+  relief(ctx);
+  ctx.fillStyle = sea; ctx.fill(LAKEP, 'evenodd');
+  if (GROUND) return;
+  ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(236,232,225,0.60)'; ctx.lineWidth = 1.1 / ZOOM; ctx.stroke(LANDP);
+  ctx.strokeStyle = 'rgba(236,232,225,0.50)'; ctx.lineWidth = 1 / ZOOM; ctx.stroke(LAKEP);
+  if (chn > 0) { ctx.strokeStyle = `rgba(236,232,225,${0.6 * chn})`; ctx.lineWidth = OUTLINE / ZOOM; ctx.stroke(REGP.CHN.fill); }
+  ctx.restore();
 }
 const camZ = (t, z0, z1, dur) => z0 * Math.pow(z1 / z0, sm(t / dur)) * (1 + 0.006 * t);   // camera()'s zoom at t
 function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre moving toward the route's goal
@@ -170,13 +213,6 @@ function dashed(ctx, pts, f, a = 1, fade = 0, phase = 0) {
     ctx.shadowBlur = 0; ctx.globalAlpha = sm(f / 0.06) * (1 - sm((f - 0.9) / 0.1)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], R, 0, 7); ctx.fill(); }
   ctx.restore();
 }
-function region(ctx, a, key = 'CHN') { // a country's own outline, lit (mainland China for the days of travel; Australia)
-  // the fill is clipped to the land, so it ends exactly on the coastline; only the land frontier is stroked (the coast is
-  // already drawn once, by base()). Australia's ring is all coast, so it has no stroke of its own.
-  if (a <= 0) return; const R = REGP[key]; ctx.save(); ctx.globalAlpha = a;
-  ctx.save(); ctx.clip(LANDP); ctx.fillStyle = `rgba(236,232,225,${LIT})`; ctx.fill(R.fill); ctx.restore();
-  if (!GROUND) { ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.4 / ZOOM; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke(R.edge); }
-  ctx.restore(); }
 function arrowEnd(ctx, pts, f) {   // the one open arrowhead both disputed lines end in (no ring, no city): it rides in on
   // the line's head over the last tenth of the draw and settles on the tip, in the line's own ink, dark edge and glow
   if (GROUND) return; const k = sm((f - 0.9) / 0.1); if (k <= 0) return;
@@ -220,15 +256,19 @@ const RISE = 32;   // map px over which each disputed line rises out of the lit 
 const NAME = 48, DAYS = 68;
 // mainland: in on the mainland while it is named (0-2.4 s), then back and south as the Australia line draws (4.4-6.2 s),
 // landing on the split's framing and pushing on into it. split: the two disputed lines fill the frame, centred on
-// 120 E, 15 N, with the slow push. The pull-back's target is the split's opening frame with the push still to come taken
-// out, so mainland's last frame (7.5 s) is split's first.
-const MAIN_C = PU(34.5, 99.5), SPLIT_C = PU(15, 120), SPLIT_Z = 1.79, MAIN_END = 7.5;
+// 120 E, 12.1 N at 1.69, with the slow push: framed so QINGDAO's top stays at y 116 or below the top edge's 110 and
+// AUSTRALIA's lowest ink (its rise in included) at y 937 or above the safe line at 940, through the whole push. The
+// pull-back's target is the split's opening frame with the push still to come taken out, so mainland's last frame
+// (7.5 s) is split's first.
+const MAIN_C = PU(34.5, 99.5), SPLIT_C = PU(12.1, 120), SPLIT_Z = 1.69, MAIN_END = 7.5;
 const M0 = [W * 0.47, H * 0.41, 1.04], M1 = [MAIN_C[0], MAIN_C[1], 2.5], M2 = [SPLIT_C[0], SPLIT_C[1], SPLIT_Z * Math.exp(-PUSH * MAIN_END)];
 const mainCam = t => { const [x, y, z] = t < 4.4 ? moveTo(M0, M1, glide(t / 2.4)) : moveTo(M1, M2, glide((t - 4.4) / 1.8)); return [x, y, z * Math.exp(PUSH * t)]; };
 const splitCam = t => [SPLIT_C[0], SPLIT_C[1], SPLIT_Z * Math.exp(PUSH * t)];
 // AUSTRALIA in the split's framing: only the continent's top end is in frame, too narrow at this zoom for the name, so
-// the name sits on open water just west of it (the Indian Ocean below Timor), right-aligned short of the Kimberley coast.
-const AUS_L = PU(-13.6, 122.6);
+// the name sits on open water just west of it, right-aligned short of the Kimberley coast, in the band of open sea
+// between Sumba and Savu above (10.3-10.6 S) and Christmas Island to the west (10.5 S): more than 10 px from any land
+// but lit Australia.
+const AUS_L = PU(-12.6, 122.3);
 const MODES = {
   leg1(ctx, t) {
     camera(ctx, t, [W / 2, H * 0.41], [W * 0.47, H * 0.41], 1.0, 1.04, 6);   // framed low enough that the arc's top stays below y 110
@@ -243,20 +283,19 @@ const MODES = {
     // two moves: in on the mainland while it is named (the label sits inside the lit land), then back and south as the
     // Australia line draws, ending on the split's opening frame
     camAt(ctx, mainCam(t));
-    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [ax, ay] = AUS_L;
+    // the mainland lights as the leg fades; Australia lights as its line arrives, to the level the split opens on
+    base(ctx, { CHN: span(t, 0.4, 1.6), AUS: AUS_LIT * span(t, 6.0, 6.7) }); const [hx, hy] = PU(...CITY.hongkong), [ax, ay] = AUS_L;
     solid(ctx, leg1(), 1, 1 - span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 0.2, 1.2), 1);
-    region(ctx, span(t, 0.4, 1.6));
     const [lx, ly] = PU(38.2, 99.5);         // inside the lit mainland where it is widest (about 37 N), no leader; it leaves before the camera pulls back
     label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.7, 'center', 600, 0.2, 4.2);
     label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 74 / ZOOM, DAYS, t, 2.2, 'center', 500, 0.0, 4.25);
     const A = legA(), fA = span(t, 4.6, 6.2);                           // rises out of the lit land, unmarked
     dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(mainCam(6.2)[2]))); arrowEnd(ctx, A, fA);
-    region(ctx, 0.8 * span(t, 6.0, 6.7), 'AUS'); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'right', 600);
+    label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'right', 600);
   },
   split(ctx, t) {
     camAt(ctx, splitCam(t));
-    base(ctx); const [ax, ay] = AUS_L, [qx, qy] = PU(...CITY.qingdao);
-    region(ctx, 0.7); region(ctx, 0.55, 'AUS');
+    base(ctx, { CHN: 1, AUS: AUS_LIT }); const [ax, ay] = AUS_L, [qx, qy] = PU(...CITY.qingdao);   // as mainland ends, so the cut holds
     const A = legA(), Q = legQ(), fA = span(t, 0.4, 2.4), fQ = span(t, 1.0, 2.4), zEnd = splitCam(2.4)[2];   // two unmarked starts
     dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(zEnd))); arrowEnd(ctx, A, fA); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'right', 600);
     dashed(ctx, Q, fQ, 1, RISE / plen(Q), dashPhase(legQ(zEnd))); arrowEnd(ctx, Q, fQ);
@@ -277,6 +316,7 @@ window.draw = (mode, t) => {
   GROUND = false; LABELS = []; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t);
   drawLabels(ctx); ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t);
 };
-fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/regions.json'); }).then(r => r.json()).then(d => { window.REG = d.regions; buildPaths(); return document.fonts.load('500 26px "Cormorant"'); })
+fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/lakes_pacific.json'); }).then(r => r.json()).then(d => { window.LAKES_SRC = d.lakes; return fetch('../design/gfx/regions.json'); })
+  .then(r => r.json()).then(d => { window.REG = d.regions; buildPaths(); return document.fonts.load('500 26px "Cormorant"'); })
   .then(() => document.fonts.load('400 26px "Cormorant"')).then(() => { window.READY = true; });
 </script></body></html>

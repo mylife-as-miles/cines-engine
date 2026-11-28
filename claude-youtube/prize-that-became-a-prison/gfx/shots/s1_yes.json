@@ -1,5 +1,5 @@
 {
-  "about": "Cold open and chapter 4: Tim's 2024 statement (S1, page 1), the two 'yes' lines lit in turn as the voice says them. Framed tight (about 2.1x the first cut) so the lit lines read at 40 px x-height on a phone: the lines are longer than the frame at that size, so the hold keeps both 'yes' endings in frame and lets the lines' starts run off the left edge; each stroke ends about 4 px past its last character (pad_em measured at the hold). Each mark still ends at t + dur (1.55 s and 3.95 s, on the spoken 'yes'); its stroke now spends 20 frames crossing the screen (the composite's swipe_frames), so with the lines' starts off the frame each stroke begins off screen, earlier (0.37 s and 2.55 s), and enters at speed.",
+  "about": "Cold open and chapter 4: Tim's 2024 statement (S1, page 1), the two 'yes' lines lit in turn as the voice says them. Framed tight (about 2.1x the first cut) so the lit lines read at about 42 px x-height on a phone. The page's lines are longer than the frame at that size, so each mark starts on a whole word inside the frame: 'to which she responded “yes”.' and 'each time she said “yes”' (review 10, fault 3: the marks used to run from the lines' starts, off the left edge, so the lit run entered mid-word, 'nged to her', 'nd each time'). The push now runs about the lit pair's own centre: from 8.2 to 8.75 with the camera easing about 30 px along the line, so through the push and the end creep both lit runs start 76 px or more inside the left edge (the stroke's lead-in, 0.12 em so it starts in the word space, not under the comma of 'her,' or the 'd' of 'and'; the first word about 15 px further in) and both quoted 'yes' endings stay 55 px or more inside the right edge; at 2.75 s (the film's cut) 94 and 73 px. Each mark still ends at t + dur (1.55 s and 3.95 s, on the spoken 'yes') and its stroke spends 20 frames (the composite's swipe_frames) crossing from its first word to about 4 px past its last character (pad_em measured at the hold): 0.72-1.55 s and 3.12-3.95 s. The focus line stays the whole first line, so the end framing is the one reel 10 had.",
   "plate": "frames/raw/evidence_table/page.png",
   "corners": "frames/raw/evidence_table/page.corners.json",
   "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
@@ -7,20 +7,20 @@
   "dpi": 400,
   "marks": [
     {
-      "phrase": "the luggage belonged to her, to which she responded “yes”.",
+      "phrase": "to which she responded “yes”.",
       "t": 1.0,
       "dur": 0.55,
       "pad_em": [
-        0.25,
+        0.12,
         0.022
       ]
     },
     {
-      "phrase": "multiple times and each time she said “yes”",
+      "phrase": "each time she said “yes”",
       "t": 3.4,
       "dur": 0.55,
       "pad_em": [
-        0.25,
+        0.12,
         0.0383
       ]
     }
@@ -36,8 +36,8 @@
     8.75
   ],
   "start_center": [
-    1117.6,
-    860.8
+    1137.3,
+    865.0
   ],
   "end_offset": [
     62.3,
