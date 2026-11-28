@@ -1,0 +1,81 @@
+{
+ "file": "out/review/film_v28.mp4",
+ "frames": 5205,
+ "seconds": 216.875,
+ "is": "cut v27 (frames 0 to 4639), then Q11 take 1 whole with the mended hand between its shots 1 and 2",
+ "shots_added": [
+  {
+   "name": "Karst: \"Ninety tons.\" \"Anvil Vale, the same hour.\" \"Every bell is a mountain now.\"",
+   "starts_at_s": 193.333,
+   "frames": 190
+  },
+  {
+   "name": "her bare hand comes down onto the shard",
+   "starts_at_s": 201.25,
+   "frames": 84
+  },
+  {
+   "name": "Serath: \"I did not read it.\"",
+   "starts_at_s": 204.75,
+   "frames": 103
+  },
+  {
+   "name": "Karst: \"No one above reads them.\" \"I read every one.\"",
+   "starts_at_s": 209.042,
+   "frames": 135
+  },
+  {
+   "name": "Serath, looking at him",
+   "starts_at_s": 214.667,
+   "frames": 53
+  }
+ ],
+ "take_gain_db": -2.6,
+ "spoken_at_s": [
+  [
+   194.63,
+   195.35
+  ],
+  [
+   196.35,
+   198.03
+  ],
+  [
+   199.35,
+   200.88
+  ],
+  [
+   206.26,
+   207.26
+  ],
+  [
+   209.57,
+   210.85
+  ],
+  [
+   212.7,
+   214.0
+  ]
+ ],
+ "song_db_at_s": {
+  "190.0": -17.0,
+  "192.0": -25.0,
+  "195.0": -25.0,
+  "200.0": -25.0,
+  "202.0": -14.4,
+  "203.0": -13.0,
+  "204.0": -13.0,
+  "206.5": -25.0,
+  "210.0": -25.0,
+  "213.0": -25.0,
+  "215.5": -25.0,
+  "216.5": -52.5
+ },
+ "song_out_of_cut_v27_check": {
+  "correlation_with_song_before": 0.117,
+  "after": -0.0001
+ },
+ "sound_unchanged_before_s": 189.29,
+ "largest_difference_there": 2.9802322387695312e-08,
+ "peak_dbfs": -1.89
+}
