@@ -18,7 +18,8 @@ music bed is); audio/sound_map.json (which file and level each cue is, and the m
    music_end is aligned so the take's final chord dies away on the last frame.
 3. Ducking: speech regions from the narration's own envelope (pauses under 1.2 s merged, so the music does not pump
    between sentences). In each region the music is held 12 dB under the voice's level there (its 3 s loudness, ridden
-   down only, never up), with a 0.35 s attack before the words and a 0.9 s release after. Where no one speaks (the
+   down only, never up; a bed's own under_voice_db overrides the 12, as the busy lift does), with a 0.35 s attack
+   before the words and a 0.9 s release after. Where no one speaks (the
    stop-down, the end screen) the bed plays at its own level. Under the voice the music also takes a gentle 3 dB
    presence dip at 2.5 kHz (zero-phase), so the consonants stay clear without pulling the bed down further. The cue sheet's silences mute the music (Q10's freeze;
    a cue placed inside one, like the freeze itself, still plays); its ducks (level factors) apply to the music.
@@ -283,6 +284,7 @@ def main():
         if nfo: env[-nfo:] *= raised(nfo, False)
         seg = seg * env[:, None] * undb(float(sp.get('gain_db', 0) or 0))
         i0 = int(round(a * SR)); i1 = min(N, i0 + len(seg)); music[i0:i1] += seg[: i1 - i0]
+        sp['under'] = float(e.get('under_voice_db', MX['music_under_voice_db']))
         placed.append({'var': sp['var'], 'take': e['take'], 't0': round(sp['t0'], 2), 't1': round(sp['t1'], 2), 'fi': sp['fi'], 'fo': sp['fo'],
                        'from_take_s': round(src0 / SR / tscale, 2), 'resume': sp.get('resume') is not None, 'level_db': e['level_db']})
     report['music'] = placed
@@ -292,12 +294,18 @@ def main():
     regs = speech_regions(voice, MX['speech_gap_merge_s'])
     ctl = lambda y: np.interp(tt, np.arange(len(y)) / SR, y)       # a per-sample curve at the control rate
     lm = -0.691 + 10 * np.log10(ctl(ms_window(music, 3.0)) + 1e-12)
+    # how far under the voice the music sits, moment by moment: the house 12 dB, or a bed's own under_voice_db (the busy
+    # lift sits deeper), eased over a second at the turns. It only acts under speech, so between lines a bed keeps its level.
+    under = np.full(nc, float(MX['music_under_voice_db']))
+    for sp in spans:
+        if 'under' in sp: under[int(sp['a'] * rate):int(sp['b'] * rate) + 1] = sp['under']
+    under = uniform_filter1d(under, size=int(1.0 * rate))
     duck = np.zeros(nc); wsp = np.zeros(nc); att, rel = MX['duck_attack_s'], MX['duck_release_s']
     for r0, r1 in regs:
         i0, i1 = int(r0 * rate), min(nc, int(r1 * rate) + 1)
         seg = voice[int(r0 * SR):int(r1 * SR)]
         lv_r = lufs(seg) if len(seg) > 0.5 * SR else -0.691 + 10 * np.log10(np.mean(kweight(seg) ** 2) + 1e-12)
-        target = lv_r - MX['music_under_voice_db']
+        target = lv_r - under
         lo = max(0, int((r0 - att) * rate)); hi = min(nc, int((r1 + rel) * rate) + 1)
         w = np.zeros(nc); w[i0:i1] = 1
         if i0 > lo: w[lo:i0] = raised(i0 - lo)

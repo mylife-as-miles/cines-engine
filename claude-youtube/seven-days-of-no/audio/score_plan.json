@@ -78,6 +78,7 @@
   "music_lift": {
    "take": "T4",
    "level_db": -8,
+   "under_voice_db": 15,
    "pitch_cents": -103,
    "method": "rubberband",
    "windows": [
@@ -107,7 +108,8 @@
   "method": "resample (pitch and tempo move together: the hush slows a little) or rubberband (pitch only)",
   "windows": "where in the take (original seconds, before any shift) each occurrence starts, in order of the bed's spans on the clock; a later span reuses the last; all snapped to a beat of the take",
   "align": "end: the span's end lands on the take's end_s (its final chord dies away by the video's last frame)",
-  "loop": "[a, b] original seconds: the section looped (0.6 s equal-power crossfades) if a span outruns the take"
+  "loop": "[a, b] original seconds: the section looped (0.6 s equal-power crossfades) if a span outruns the take",
+  "under_voice_db": "how far under the voice's level the bed is held while someone speaks (default: sound_map mix.music_under_voice_db, 12); the lift, the busiest take, sits deeper. Between lines and in the stop-downs the bed keeps level_db."
  },
  "stop_downs": [
   "Q06 113.86-116.32 s: the music drops out for \"They look hurt. And you feel terrible.\" (the voice alone), and the lift enters on \"So you run after them\" (the cue sheet ends music_main and starts music_lift there; build_mix.py adds nothing)"
