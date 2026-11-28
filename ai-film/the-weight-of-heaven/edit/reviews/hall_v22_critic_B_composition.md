@@ -1,12 +1,12 @@
 # The hall, cut v22: composition and staging (critic B)
 
-File judged: `out/review/film_v22_hall.mp4` (1151 frames, 24 fps, active picture 992×416 = 2.39:1). Every frame was extracted and looked at; cuts were found by frame difference. All positions below are percentages of the active picture: x from the left edge, y from the top edge. Lens lengths are how the frame reads, not data. Reference frames are named by folder and file under `scratchpad/stills/` (d1 = Dune: Part One, d2 = Dune: Part Two, br = Blade Runner 2049, ar = Arrival). Sound and missing lines were not judged.
+File judged: `/home/user/cines-engine/ai-film/the-weight-of-heaven/out/review/film_v22_hall.mp4` (1151 frames, 24 fps, active picture 992×416 = 2.39:1). Every frame was extracted and looked at; cuts were found by frame difference. All positions below are percentages of the active picture: x from the left edge, y from the top edge. Lens lengths are how the frame reads, not data. Reference frames are named by folder and file under `/tmp/claude-0/-home-user-cines-engine/7b4ce7dc-5a75-55b7-bc06-62a57fcd6546/scratchpad/stills/` (d1 = Dune: Part One, d2 = Dune: Part Two, br = Blade Runner 2049, ar = Arrival). Sound and missing lines were not judged.
 
 ## Verdict in four lines
 
 - Three pictures in the hall are in the idiom and could sit in one of those films: the dark profile at the slab (14.33), Karst's back against the plain (32.50, until his eyes reach the lens), and the lamp on the floor with the hall behind it (36.04, foreground only).
 - The sequence as staged does not fit. Its payoff shot (29.21) is a woman turning to face the camera in flat front light and speaking towards it; its last shot (44.96) is a studio portrait on black with a stare into the lens; its only wide (20.71) is an off-axis coverage angle that lasts 2.9 s; and no frame anywhere gives the treaty wall or the hall any size.
-- The cut from the yard into the hall (14.33) is not a match. The eye lands 18.5% of the frame width and 13% of the height away from where it was, the face is 1.19 times larger, and the head is pitched about 20° differently.
+- The cut from the yard into the hall (14.33) is not a match. The eye lands 18.5% of the frame width and 13% of the height away from where it was, on a face of nearly the same size, and the head is pitched about 20° differently.
 - The yard still contains every fault the author named: a rank of men in a line (5.29), a frontal man centred in a black doorway, used twice (7.00, 11.71), two people who stop and turn to the camera (3.5–5.3), and the aide going down on his knees (6.4–7.0).
 
 ## 1. Measurements
@@ -63,7 +63,7 @@ The only frame that shows where anything is, and the shortest shot in the hall a
 
 It fails as a Villeneuve wide on four counts.
 
-1. The camera stands near the right wall and looks down the room with the vanishing point at x 75. The left wall takes 58% of the width at a rake. Mirror correlation is +0.02. Every hall wide in the reference set is square on the room's axis (+0.63 to +0.93). This is the angle from which a camera can see everything, which is what coverage looks like.
+1. The camera stands near the right wall and looks down the room with the vanishing point at x 75. The left wall takes 58% of the width at a rake. Mirror correlation is +0.02. The five hall wides measured in the reference set (md8/d1_0080, md/d1_0070, md/d1_0072, md/br_0106, th/d2_0147) are square on the room's axis and score +0.63 to +0.93. Ours is the angle from which a camera can see everything, which is what coverage looks like.
 2. The room is small. The timber ceiling is in frame, the slab is about 1.8 times her height, and she can reach its middle. In md8/d1_0080 the architecture runs out of every edge of the frame and the opening alone is taller than the man.
 3. The left edge is a plank side door (x 0–14) and the bottom-left corner is the palest patch of floor papers (x 3–25, y 80–97). Both pull the eye to the frame's edge.
 4. The slab, which is the subject of the scene, is a foreshortened dark trapezoid that cannot be read. No shot in the sequence shows it square.
@@ -122,7 +122,7 @@ Could it pass: no. What gives it away: the black backdrop and the stare. Closest
 
 **Geography.** From H2: slab on the left wall, shutters in the back wall, papers on the floor. H1, H2 and H3 agree. The lamp is not in the wide. Who is where at 36.04 cannot be read.
 
-**Camera height.** Five of eight shots are at standing chest or eye height. Only H6 is low. None is low and far, which is what makes architecture loom in the references.
+**Camera height.** Six of eight shots are at standing chest or eye height (H1, H2, H3, H4, H5, H8). Only H6 is low. None is low and far, which is what makes architecture loom in the references.
 
 **Camera movement.** Locked or a push of 16% or less in every hall shot; horizons measured level (0.0°) in H3 and H5. This discipline is correct and must stay.
 
@@ -147,16 +147,16 @@ Could it pass: no. What gives it away: the black backdrop and the stare. Closest
 |---|---|---|
 | Eye | (57.5, 17) | (76, 30) |
 | Nose tip | (47.5, 28) | (68.5, 47) |
-| Brow to chin | 48% of height | 57% of height |
+| Eye to nose tip | 109 px, pointing 25° below level | 103 px, pointing 44° below level |
 | Head | Chin raised, seen from below | Level |
 
-Same subject, same direction, nearly the same size, displaced a fifth of the frame: that reads as a jump, not a match. The yard shot's first frame (12.54) has the head level and matches the hall's attitude almost exactly (nose to eye offset (−8, +16) against (−7.5, +17)); the shot then tilts away from the match before the cut. Registering it would need the yard shot played backwards, punched in 1.32 times, and H1 punched in 1.25 times, which puts the fingertip on H1's left frame edge. Not worth it. The free fix is in section 5, item 6.
+Same subject, same direction, the same size to within 6%, displaced a fifth of the frame and tipped 19°: that reads as a jump, not a match. The yard shot's first frame (12.54) has the head level and matches the hall's attitude almost exactly (eye to nose tip 104 px at 40° against 103 px at 44°); the shot then tilts away from the match before the cut. Registering it would need the yard shot played backwards and both shots punched in about 1.3 times, which pushes the fingertip out of H1's left edge at the start of the shot. Not worth it. The free fix is in section 5, item 6.
 
 ## 4. The yard, short verdict
 
 - **0.50, the boat wide.** Dark backs at both edges and white in the middle is the right idea (md8/d1_0062). It runs 0.71 s, which is a flash, and its last three frames are her lurch off the ramp. At this size (she is 36% of the height) a boot reaching the ground cannot be seen.
-- **1.21–5.29, the spear and the bowl.** One set-up, with a splice inside it at 3.54. Two people in flat profile either side of a spear at x 39.5, at eye height, in even light and deep focus, with extras wandering behind who notice nothing. From 3.5 both turn their heads to the camera. This is the lowest frame in the film: television coverage, posed. The reference for watchers is md8/d2_0217: long lens, faces overlapping and filling the frame, eyes going past the camera.
-- **5.29, Serath between two dark backs.** The layout works (mirror +0.58, white on the centre line between two black masses). Behind her a rank of men in dark coats stands shoulder to shoulder facing us (x 63–80, more at x 8–15): people in a row. They are not in the wide at 0.50, and the wall behind has changed from a flat curtain wall to a round tower. From 6.4 the aide goes down on his knees and by 6.96 his head is on the ground. The author asked for the fall to be removed; it is still here. md/d1_0013 shows what Dune does with ranks: they recede on diagonals into depth under something huge; they are not a line parallel to the picture at the back.
+- **1.21–5.29, the spear and the bowl.** One set-up, with a splice inside it at 3.54. Two people in flat profile either side of a spear at x 39.5, at eye height, in even light and deep focus, with extras wandering behind who notice nothing. From 3.5 both turn their heads to the camera. This is the lowest frame in the sequence: television coverage, posed. The reference for watchers is md8/d2_0217: long lens, faces overlapping and filling the frame, eyes going past the camera.
+- **5.29, Serath between two dark backs.** The layout works (mirror +0.58, white on the centre line between two black masses). Behind her a rank of men in dark coats stands shoulder to shoulder facing us (x 63–80, more at x 9–19): people in a row. They are not in the wide at 0.50, and the wall behind has changed from a flat curtain wall to a round tower. From 6.4 the aide goes down on his knees and by 6.96 he is bent double on the ground. The author asked for the fall to be removed; it is still here. md/d1_0013 shows what Dune does with ranks: they recede on diagonals into depth under something huge; they are not a line parallel to the picture at the back.
 - **7.00 and 11.71, Karst in the doorway.** Frontal, on the centre line (subject x 34–66, centre 49.9), mirror correlation +0.96, black behind, motionless, eyes at the lens, twice. This is the man at the back of that place. The frame it was modelled on, md8/d1_0082, puts the still figure at x 25–38, turned three-quarters, with dark architecture across the other 60%.
 - **7.83, Serath close** and **12.54, Serath in profile from below.** Both at the standard: long lens, soft ground, eyes off the lens, the head given room on the side she looks to. Keep both.
 
