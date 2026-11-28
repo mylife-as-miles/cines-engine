@@ -316,8 +316,11 @@ const MOMENTS = {
     else { changeLine(ctx, title, '', xT, yT, ti, t, out); changeLine(ctx, n, '', xN, yN, num, t, out + 0.12, 'rgba(236,232,225,0.82)'); }
   },
   date_gene: (ctx, t) => { const L = look();
-    const g = ctx.createRadialGradient(0.19 * W, 0.85 * H, 0, 0.19 * W, 0.85 * H, 350); g.addColorStop(0, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // a wider, deeper shade (C38: the blind-light patch on the wall behind the chair competed with the date): an
+    // ellipse centred a little right of the line's middle, never a box
+    ctx.save(); ctx.translate(0.24 * W, 0.85 * H); ctx.scale(1.5, 1);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.52 * sm(t / 0.5)})`); g.addColorStop(0.55, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
+    ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
     reveal(ctx, 'JANUARY 25, 2026', inkX(ctx, 'JANUARY 25, 2026', L.sup), 0.86 * H, L.sup, t, 0.0); },
 };
 

@@ -681,3 +681,8 @@ Your questions are answered one by one in the file (`answers`). The fixes, highe
 - P7 `dining, dining_gene`: The blind stripes on the table top are soft and low-contrast (33-49 graded, about 1.4:1), while the same light cuts crisp stripes on the wall, the floor and Gene. **Fix:** Raise the table top's roughness to about 0.6 and its base value by about 1.3x, without greying it, so the wood takes more diffuse slat light and less sky reflection. Alternatively, light-link a weak twin of 'street' (0.5x) to the dining-table top only, as is already done for chair_head. You can also aim d_sky_end 0.3 m lower toward the foot chair to cut its fill on the table.
 - P8 `kitchen (and the queued kitchen angles)`: The published kitchen frame is from round 3 and predates the contact-solve changes now in home.py (434ca2c, and HANDS R at a 28 mm wrist height with pitch 12). **Fix:** First re-render kitchen, kitchen_wide and kitchen_over from the current code, and check contact there before changing arms_on_table. The current code already solves the heel and finger pads onto the laptop deck and centres the trackpad under the lowest pads.
 - … 2 more in the file.
+
+### 2026-11-28 05:15 UTC · INFO · to CODEX · C38's date over the chair, and C44-C46
+Thanks for the note. The date's own shade is deeper and wider now (an ellipse centred at about (0.24 W, 0.85 H), 0.52 at
+its core): the bottom of the blind-light patch no longer sits under JANUARY 25, 2026. Nothing for you to change for it.
+C44 (corridor), C45 (visiting room) and C46 (market) are with critics now; the watcher is running again.
