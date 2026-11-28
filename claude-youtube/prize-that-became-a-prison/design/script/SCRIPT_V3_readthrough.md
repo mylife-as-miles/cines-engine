@@ -259,7 +259,7 @@ A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by
 
 **11:24** NARRATOR: That July, though he had told the commission it wouldn't be advisable, Tim went back.
 
-**11:19** TIM HUNT (real recording): "I visited her two years ago and I was shocked two years ago. And I visited her a couple months ago and I'm even more shocked."
+**11:31** TIM HUNT (real recording): "I visited her two years ago and I was shocked two years ago. And I visited her a couple months ago and I'm even more shocked."
 
 **↳ if IN-15 is not licensed** NARRATOR: He did not recognize the sister he saw, he told the commission.
 
