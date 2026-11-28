@@ -1,0 +1,88 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q10 · THE TREATY HOUSE, THE HALL · THE FLOOR OF PAPERS
+References: @Image 1 — environment: the hall of the Treaty House with its shutters open: the place, its floor of papers, its daylight, and the view of shot 2 · @Image 2 — character sheet: SERATH · @Image 3 — character sheet: KARST · @Image 4 — prop: Karst's brass oil lamp · @Image 5 — prop: the shard
+Reference mode · 18 s · 4 shots · 2.35:1 · photoreal live action · spoken English: two speakers, each phrase said once · no music
+
+## SCENE INTENT
+Serath, Grand Admiral of a kingdom of the sky, stands in an old hall on the plain with Karst, an engineer of her own people who went over to the people below long ago. He has opened the shutters on the dead plain outside, and she has answered him with what she was always taught. He answers that, without heat. Then he shows her what covers the floor of the hall: thirty years of her kingdom's orders, hundreds of sheets, each with her own mark in red wax, a stone lying on many of them. On the last sheet lies a broken piece of grey rock, and she recognises it. It plays as one unbroken conversation in a quiet room: two people, four plain shots, every voice low.
+
+## GLOBAL LOCKS
+Character identity — SERATH exactly as @Image 2: a woman of fifty-five, upright, short tightly curled black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. KARST exactly as @Image 3: a man of fifty-six, grey in his dark hair and short beard, a long pale stained engineer's coat, the same coat in every shot he is in, ink on his fingers. From the sheets take face, hair and clothes only. Each face, costume, voice and line stays with its one person.
+Wardrobe override — none: both exactly as their sheets.
+Location / environment continuity — the hall exactly as @Image 1 in every shot: a long hall of dark masonry; set against the left wall one great slab of black basalt covered with carved marks, signs of no alphabet; in the far end wall one tall opening whose two heavy plank shutters stand open; outside, a plain of black basalt, flat to the horizon, under a pale overcast sky with nothing in it. The floor is dark paving, and from wall to wall it is covered with sheets of pale paper laid out in rows, one round mark of red wax on every sheet, a small stone lying on many of them, exactly as @Image 1 shows them. The papers carry only fine pale lines, too small to read.
+Light — the same in every shot, and exactly as @Image 1: cool, soft, overcast daylight comes in through the open shutters and lies along the floor and on the rows of pale sheets; the walls stay dark. In shots 2, 3 and 4 there is one more light and no other: Karst's brass oil lamp, exactly as @Image 4, standing alight on the paving among the sheets; it adds one small warm light to the sheets beside it and to the two faces above it, and reaches nothing further. The daylight stays cool and the lamplight stays warm.
+Where each stands — in shot 1 Karst is at the open shutters, and Serath is off-screen, deep in the hall. Between shot 1 and shot 2 time has passed: he has left the shutters and come into the hall. In shots 2, 3 and 4 both stand in the middle of the floor among the papers: Serath on the left, nearer the slab; Karst on the right, an arm's length from her; the lamp on the paving between them. The opening at the far end is then empty: sky and plain only, and nobody stands in front of it. Serath looks toward the right of the frame and down; Karst looks toward the left of the frame.
+Props and temporal state — Serath's white gloves stay on. Nobody picks up or moves a paper or a stone. The shard is exactly as @Image 5: a broken piece of grey rock the size of two fists with one thin white vein across it; it lies on the last sheet of the row at Serath's feet, where the other sheets have their stones, with a little grey dust around it on the paper.
+
+## MOVIE COLOR
+Black rock, white cloth, grey daylight, one small warm flame; the gold of Serath's collar and the red of the wax are the only strong colours. Shot 1 is exposed for the sky in the opening: Karst is a dark shape with a line of soft light along his cheek. Shots 2, 3 and 4 are lit as @Image 1: cool daylight from the opening lies along the floor and on the rows of pale sheets; the walls stay dark. The lamp adds one small warm light to the sheets beside it and to the two faces above it. A face is never the brightest thing in the frame; the flame, the sky and the daylit paper are.
+Influences, each with its purpose — Denis Villeneuve, Dune and Blade Runner 2049: a figure as a dark shape against a bright doorway; two figures in a great dark room with one small light between them; a face close and dim in profile; stillness, and a line timed to what is shown. James Cameron: the thing is seen before it is named; every look is answered by what it looks at.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Shallow focus on faces. Every shot is on a steady, planted camera and does not move.
+
+## VOICE DNA (immutable)
+SERATH: The high speech of Orison: a soft, unplaced Received Pronunciation, older and gentler than a modern one, with no regional mark. A woman of fifty-five with a low alto, warm but closed, a little grain at the bottom of the range. She speaks at a measured pace; she never hurries, and her voice stays low but fully voiced, never a whisper.
+KARST: The grammar of the court spoken with the vowels of the ground: an educated Received Pronunciation flattened toward a northern English plainness by nineteen years below. A man of fifty-six with a dry, tired baritone, a slight rasp, low energy. He is unhurried. His sentences end flat. He is never angry. When something matters most he gets quieter, not louder. His voice is the same voice in shot 1 and in shot 2.
+No one else is in the hall.
+
+## AUDIO DESIGN
+A bare hall of rock, close and dry, with a little of its own echo on the voices. Under everything, low, the open air of the plain at the shutters. In shots 2, 3 and 4 the small steady hiss of the lamp's flame. Both voices are close and clear. No drone, no boom, no music.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–5.8 s
+[CAM] medium close-up, 65 mm, at the height of his chest, level, from inside the hall, a pace behind him and to his left, looking out through the opening; shallow focus on him; the camera holds still. The horizon crosses the frame below his shoulder: under it the black plain, over it plain pale overcast sky with nothing in it, both out of focus, filling the left and centre of the frame. The planks of the open shutter are behind him at the right edge of the frame. Exposed for the sky.
+[BLOCK] Karst alone in the frame, on its right third, from the chest up, seen from behind his left shoulder. His head is a quarter turn back over that shoulder: his face in profile against the pale sky, facing the left of the frame.
+[ACT] From the first frame his head is turned and still, and his eyes are on Serath, who stands off-screen, deep in the hall, past the left edge of the frame; his eyes are never on the lens. For the first second nothing moves and his mouth is closed. Then he says the first line to her. He breathes out. He says the second line, more quietly, his head still. Then his eyes lower to the floor of the hall, and he holds so to the cut. His mouth is closed whenever he is not speaking.
+[DIALOGUE] / V.O. KARST (1.2 to 2.4 s): "You were sheltered." — flat, tired, not unkind. Then, after one breath (3.3 to 5.0 s): "By then you had gardens." — quieter; flat at the end.
+[SFX] the open air of the plain; his voice, close; his breath.
+[STATE OUT] Karst at the opening, his eyes lowered to the floor of the hall, his mouth closed.
+
+### SHOT 2
+[TIME] 5.8–11.4 s
+[CAM] the view of @Image 1: wide, 28 mm, at chest height, looking down the hall toward the open shutters; deep focus; the camera is planted and holds still. The black slab runs along the left of the frame; the open shutters are at the far end, two thirds of the way across the frame; the rows of pale sheets cover the floor from the bottom of the frame to the far wall.
+[BLOCK] Both stand in the middle of the floor among the sheets, in full figure, each half the height of the frame. Serath left of the centre, in three-quarter profile, facing right, her head bowed to the sheets at her feet. Karst right of the centre, an arm's length from her, in three-quarter profile, facing left. On the paving between them the brass lamp stands alight. The open shutters at the far end, to the right of them, are empty: sky and plain only. Both are dark shapes against the daylit floor, the daylight along one side of each and the lamp's small warm light on their faces from below.
+[ACT] Both stand upright where they are from the first frame of the shot to the last. Karst's eyes are on the sheets at his feet, and he says the first line, his head still. After one breath, his head still, he says the second line, more quietly; only after it do his eyes lift to her face. Serath's mouth is closed from the first frame of this shot to the last; her eyes move slowly along the row of sheets at her feet and stop on the last one. Neither looks toward the camera. After his last word nothing moves but the flame.
+[DIALOGUE] / V.O. KARST, the man on the right, the same voice as in shot 1 (6.8 to 8.8 s): "I drew where each one would fall." — dry and level, a plain fact. Then, after one breath, his head still (9.6 to 10.8 s): "You sealed them." — quieter; flat at the end.
+[SFX] the lamp's small hiss; his voice, close; the air of the plain, far off.
+[STATE OUT] The two of them among the papers, the lamp on the paving between them; her eyes on the last sheet at her feet.
+
+### SHOT 3
+[TIME] 11.4–13.8 s
+[CAM] close, 50 mm, from a forearm's height above the floor, looking down at the last sheet of the row; shallow focus on the shard; the camera holds still.
+[BLOCK] No person and no hand in the frame. One pale sheet on the dark paving, a round mark of red wax on it, new and bright. On the sheet, where the others have their stones, the shard exactly as @Image 5: grey rock the size of two fists, one thin white vein across it, a little grey dust on the paper under it. The lamp's warm light comes from the right edge of the frame; the cool daylight from the top of the frame. Other sheets, soft, beyond it.
+[ACT] Nothing moves but a thin thread of grey dust, a finger long, that slips from the shard onto the pale paper and lies still.
+[DIALOGUE] / V.O. none in this shot.
+[SFX] the lamp's small hiss.
+[STATE OUT] The shard on the last sheet, the dust still.
+
+### SHOT 4
+[TIME] 13.8–18.0 s
+[CAM] close-up, 85 mm, at the height of her collar, level, from the same side as shot 2; shallow focus on her nearer eye; the camera is planted and holds still. Far behind her, out of focus, at the right edge of the frame, the open shutters: one small soft pale shape.
+[BLOCK] Serath alone in the frame, head and shoulders, on the left half, in near profile, facing the right of the frame, her head bowed a little. Her eyes are open and lowered to the bottom right corner of the frame, on the shard, which lies below the frame. The lamp, below the frame at the right, lights her brow, cheek and mouth warm; the back of her head is in the dark.
+[ACT] At the first frame she is already looking down at the shard and she is still. For a second and a half she only looks at it, and breathes in once. Then she says the line, quietly, to the shard: her lips part only a little and her brow does not move. Her mouth closes. Her eyes stay lowered and do not lift; she holds so, quite still, to the end.
+[DIALOGUE] / V.O. SERATH (15.2 to 16.4 s): "The marriage bell." — quiet but fully voiced, her own low alto; level; she is naming a thing she has just recognised.
+[SFX] the lamp's small hiss; her breath; her voice, close.
+[STATE OUT] Serath in near profile, her eyes lowered, her mouth closed.
+
+## PERFORMANCE ARC
+KARST: answers what she was taught, without heat → gets quieter → shows her the floor and states what he did → states what she did, quieter still.
+SERATH: hears him → looks along thirty years of her own mark → finds the one stone she knows → names it.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+Four plain shots: the answer at the shutters, the floor, the shard, her face.
+
+## PHYSICS LOCKS
+Normal speed and real weight throughout. Both stand upright where they are from the first frame of each shot to the last. The flame is small and steady. Cloth hangs. Eyes move at a living pace, never snapping. Paper lies flat and heavy.
+
+## AUDIO LOCKS
+Each quoted phrase is spoken once, word for word, by the one named, in the order written: Karst's four phrases, then Serath's one. Nothing else is said by anyone. No narration. Karst's mouth moves only during his own phrases; Serath's mouth moves only during her one phrase in shot 4. Karst's voice in shot 2 is the voice of shot 1. Speech is unhurried in every phrase. No music, no singing, no drone.
+
+## CONTINUITY LOCKS
+[POSITIVE] the hall as @Image 1 in every shot, its shutters open, its floor covered with pale sheets, a round mark of red wax on every one, a stone on many · shot 2 is the view of @Image 1 · light only from the open shutters and from the one brass lamp · the lamp standing on the paving between them in shot 2 · Karst in the same pale coat in shots 1 and 2 · Serath's white gloves on · the gold collar on Serath alone · the shard as @Image 5 on the last sheet · only the two of them in the hall · Serath on the left looking right, Karst on the right looking left · the opening empty in shots 2 and 4
+[NEGATIVE] other lamps, candles, torches or fires · sunbeams · other people · a figure in the doorway in shots 2, 3 and 4 · captions, subtitles or readable lettering · a look into the lens · narration · camera movement or shake · anyone leaving their place · papers lifted, rolled or moved · a grey studio backdrop
+
+## GENERATION PRIORITY ORDER
+1. Every quoted phrase, word for word, once, each in its speaker's one voice, unhurried  2. Character identity from the sheets  3. Four shots in order, each with its own framing and length, each on a still camera  4. The hall and its daylight as @Image 1 in every shot; shot 2 is its view  5. The one brass lamp, low on the paving, the only other light  6. The shard as @Image 5 on the last sheet  7. Sound: a dry bare hall, the air of the plain, the lamp's hiss, no music
+
+## FINAL STATE
+Karst stands among the papers, the lamp on the paving between them. Serath, beside him, looks down at the shard on the last sheet; she has named it, and she does not look up.
