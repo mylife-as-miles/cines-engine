@@ -571,29 +571,46 @@ def matte(name, rgb, rough=0.8):
     return m
 
 
-# ---------------------------------------------------------------- generated props
+# ---------------------------------------------------------------- macro leather and generated props
 
-def tote_fittings(mat):
-    """Warm, muted hardware on the cognac tote's shared leather material."""
-    if not mat.use_nodes:
-        return
-    nt = mat.node_tree
-    shader = nt.nodes.get("Principled BSDF")
-    if shader is None:
-        return
-    base = shader.inputs["Base Color"]
-    metal = shader.inputs["Metallic"]
-    if not base.is_linked or not metal.is_linked:
-        return
-    source = base.links[0].from_socket
-    fittings = _maprange(nt, metal.links[0].from_socket, 0.075, 0.13, 0.0, 1.0)
-    value = _n(nt, "ShaderNodeRGBToBW")
-    _link(nt, source, value.inputs["Color"])
-    bronze = _mix(nt, 1.0, (0.96, 0.42, 0.30), value.outputs[0], "MULTIPLY")
-    _link(nt, _mix(nt, fittings, source, bronze), base)
+def macro_tote_materials():
+    leather = {}
+    for name, colour, roughness in (
+        ("leather", (0.252, 0.088, 0.025), 0.58),
+        ("tab", (0.217, 0.076, 0.026), 0.60),
+        ("strap", (0.205, 0.078, 0.028), 0.64),
+        ("edge", (0.113, 0.045, 0.019), 0.67),
+        ("lining", (0.036, 0.022, 0.014), 0.82),
+    ):
+        mat, nt, bsdf = _new(f"Macro tote {name}")
+        p = _obj(nt)
+        broad = _noise(nt, p, 52.0, 2.4, 0.65)
+        pebble = _noise(nt, p, 2500.0, 2.0, 0.58)
+        tint = nt.nodes.new("ShaderNodeRGB")
+        tint.name = "Leather dye"
+        tint.outputs[0].default_value = (*colour, 1.0)
+        dye = _maprange(nt, broad, 0.22, 0.78, 0.94, 1.06)
+        facing = _maprange(nt, pebble, 0.30, 0.68, 0.90, 1.07)
+        tone = _math(nt, "MULTIPLY", dye, facing)
+        _link(nt, _mix(nt, 1.0, tint.outputs[0], tone, "MULTIPLY"), bsdf.inputs["Base Color"])
+        _bump(nt, bsdf, pebble, 0.22, 0.00034)
+        bsdf.inputs["Roughness"].default_value = roughness
+        bsdf.inputs["Specular IOR Level"].default_value = 0.24
+        leather[name] = mat
+    brass, nt, bsdf = _new("Macro tote aged brass")
+    bsdf.inputs["Base Color"].default_value = (0.31, 0.160, 0.058, 1)
+    bsdf.inputs["Metallic"].default_value = 0.46
+    bsdf.inputs["Roughness"].default_value = 0.47
+    _bump(nt, bsdf, _noise(nt, _obj(nt), 5700, 2, 0.53), 0.10, 0.00008)
+    thread, nt, bsdf = _new("Macro waxed linen saddle thread")
+    bsdf.inputs["Base Color"].default_value = (0.30, 0.20, 0.11, 1)
+    bsdf.inputs["Roughness"].default_value = 0.8
+    bsdf.inputs["Specular IOR Level"].default_value = 0.15
+    return dict(leather, brass=brass, thread=thread)
 
 
-def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None, leather_grain=False):
+def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None,
+              leather_grain=False, brass=None):
     """Control a prop's reflectance, weave and base colour."""
     if not (mat and mat.use_nodes):
         return
@@ -603,8 +620,9 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_lim
         return
     if spec is not None:
         b.inputs["Specular IOR Level"].default_value = spec
+    metallic = b.inputs["Metallic"]
+    raw_metal = metallic.links[0].from_socket if metallic.is_linked else None
     if metal_limit is not None:
-        metallic = b.inputs["Metallic"]
         if metallic.is_linked:
             _link(nt, _math(nt, "MINIMUM", metallic.links[0].from_socket, metal_limit), metallic)
         else:
@@ -638,8 +656,8 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_lim
         broad = _noise(nt, o, to_metres / 0.022, 2.0, 0.55)
         normal = b.inputs["Normal"]
         bump = _n(nt, "ShaderNodeBump")
-        bump.inputs["Strength"].default_value = 0.05
-        bump.inputs["Distance"].default_value = 0.00015
+        bump.inputs["Strength"].default_value = 0.15
+        bump.inputs["Distance"].default_value = 0.0003
         _link(nt, pebble, bump.inputs["Height"])
         if normal.is_linked:
             _link(nt, normal.links[0].from_socket, bump.inputs["Normal"])
@@ -651,3 +669,12 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_lim
         prior = roughness.links[0].from_socket if roughness.is_linked else roughness.default_value
         delta = _maprange(nt, broad, 0.3, 0.7, -0.025, 0.025)
         _link(nt, _math(nt, "ADD", prior, delta, clamp=True), roughness)
+    if brass and raw_metal is not None and base.is_linked:
+        mask = _maprange(nt, raw_metal, 0.06, 0.13, 0.0, 1.0)
+        _link(nt, _mix(nt, mask, base.links[0].from_socket, brass), base)
+        unmasked = _math(nt, "SUBTRACT", 1.0, mask)
+        for name, finish in (("Roughness", 0.45), ("Metallic", 0.45)):
+            socket = b.inputs[name]
+            prior = socket.links[0].from_socket if socket.is_linked else socket.default_value
+            _link(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", prior, unmasked),
+                            _math(nt, "MULTIPLY", finish, mask)), socket)

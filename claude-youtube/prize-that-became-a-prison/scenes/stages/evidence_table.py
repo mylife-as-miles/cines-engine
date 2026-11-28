@@ -36,6 +36,7 @@ import setkit as sk  # noqa: E402
 import evidence_table_art as art  # noqa: E402
 import evidence_table_mats as mt  # noqa: E402
 import evidence_table_paper as pp  # noqa: E402
+import evidence_table_tote as tote_macro  # noqa: E402
 
 TOP = pp.TOP                       # table top height
 TL, TW, TT = 2.2, 1.05, 0.045      # table length (x), depth (y), top thickness
@@ -79,9 +80,9 @@ TABLE_EDGE_RETURN = 7.5
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # size, axis, dye and finish. The warm key and fixed grade keep the tote cognac and the hobo burgundy.
     "handbag-tote": (0.35, "long", dict(sat=0.955, val=0.84, hue=0.50, rough_add=0.32),
-                     dict(spec=0.08, leather_grain=True)),
+                     dict(spec=0.08, leather_grain=True, brass=(0.23, 0.128, 0.052))),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.33, rough_add=0.28),
-                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10)),
+                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10, brass=(0.15, 0.085, 0.033))),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.50, rough_add=0.42), dict(spec=0.12)),
 }
 
@@ -102,7 +103,7 @@ CAMERAS = {
                    beat="ch02", show=("chair",), hide=("envelope", "highlighter"), exposure=-1.3),
     # Ch 04: the three handbags in the lamp's light, the receipt curling in front of them
     "purses": dict(loc=(-0.62, -1.10, TOP + 0.48), aim=(-0.05, 0.02, TOP + 0.13), lens=35, focus="fx_tote_edge", fstop=4.0,
-                   beat="ch04", hide=("envelope",), exposure=-1.0, final_res=(2560, 1440)),
+                   beat="ch04", hide=("envelope",), exposure=-0.75, final_res=(2560, 1440)),
     # controlled close-up: the passport lying across the two boarding passes on the folder, its cover sprung open.
     # For this insert the lamp is cheated to the passport's front left: the cover's sheen then reflects away from the
     # lens (from behind, it greyed the whole navy cover), the cream page edge facing the camera catches the light, and
@@ -114,7 +115,8 @@ CAMERAS = {
                  lamp=(-0.35, 0.20, -123.0), exposure=-1.18, final_res=(2560, 1440)),
     "pair": dict(loc=(0.07, -0.508, TOP + 0.82), aim=(0.05, -0.008, TOP), lens=54,
                  focus="fx_page", fstop=6.3, beat="plate", show=("pair sheets", "document tools"),
-                 lamp=(-0.35, 0.20, -122.0), spot=(88.0, 0.60), exposure=-1.22, final_res=(2560, 1440)),
+                 lamp=(-0.35, 0.20, -122.0), spot=(72.0, 0.68), board_fill=2.8,
+                 exposure=-1.22, final_res=(2560, 1440)),
     "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.110), lens=50,
                    focus="fx_screen", fstop=2.2, beat="ch02", show=("screen spill",), hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
                    exposure=-1.6, final_res=(2560, 1440)),
@@ -122,7 +124,7 @@ CAMERAS = {
 }
 
 CAMERAS["page_foot"] = dict(CAMERAS["page"], loc=(0.03, -0.306, TOP + 0.346), aim=(0.03, -0.105, TOP),
-                           focus="fx_page_foot", fstop=8.0, show=("page sheet",))
+                           focus="fx_page_foot", fstop=8.0, show=("page sheet",), spot=(62.0, 0.72), board_fill=2.0)
 CAMERAS["laptop_before"] = dict(CAMERAS["laptop"],
                                hide=CAMERAS["laptop"]["hide"] + ("passes_c2", "passport_c2"),
                                show=CAMERAS["laptop"]["show"] + ("booklet on wood",))
@@ -136,7 +138,7 @@ CAMERAS["motifs"] = dict(loc=(0.11, -0.62, TOP + 0.44), aim=(-0.015, -0.002, TOP
                         focus="fx_entries", fstop=4, beat="document", show=("art materials",),
                         lamp=(-0.42, 0.16, -120), exposure=-1.5)
 CAMERAS["seam"] = dict(loc=(0.012, -0.47, TOP + 0.34), aim=(0.22, -0.19, TOP + 0.248), lens=63,
-                      focus="fx_seam_mid", fstop=6.3, beat="ch04", exposure=-0.76,
+                      focus="fx_seam_mid", fstop=6.3, beat="ch04", exposure=-0.51,
                       final_res=(2560, 1440), hide=("receipt_c4", "mug"))
 CAMERAS["visa"] = dict(loc=(0.105, -0.29, TOP + 0.30), aim=(-0.028, 0.002, TOP + 0.018), lens=69,
                       focus="fx_open_booklet", fstop=6.3, beat="document", show=("open booklet",),
@@ -550,12 +552,13 @@ def bags():
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, to_metres=to_m, **fin)
-                    if name == "handbag-tote":
-                        mt.tote_fittings(slot.material)
         if name == "handbag-tote":
             props.tote_topstitch(h, soften_lip_normals=True, lip_normal_band=28, behind_tabs=True, slant=0.22,
                                  thread_colour=(0.30, 0.20, 0.11))
         out += [h] + list(h.children_recursive)
+        if name == "handbag-tote":
+            _STATE["original tote"] = list(h.children_recursive)
+            _STATE["macro tote"], _STATE["macro hem"] = tote_macro.build(h)
     return out
 
 
@@ -570,7 +573,7 @@ def bag_lighting():
     # A low return from the far wall traces the satchel's flap and handle.
     source = Vector((-0.61, 0.37, TOP + 0.53))
     target = Vector((-0.16, 0.095, TOP + 0.255))
-    return_light = sk.area_light("bag edge return", source, (0.29, 0.13), 3.5, WARM, spread_deg=72,
+    return_light = sk.area_light("bag edge return", source, (0.29, 0.13), 5.0, WARM, spread_deg=72,
                                  rot=(target - source).to_track_quat("-Z", "Y").to_euler())
     return_light.visible_glossy = return_light.visible_volume_scatter = False
     satchel = bpy.data.collections.new("Satchel rim receivers")
@@ -578,20 +581,26 @@ def bag_lighting():
         satchel.objects.link(part)
     return_light.light_linking.receiver_collection = satchel
     # The tight insert catches the lamp lengthwise along the rolled edge.
-    # Only the leather and its thread receive this reflection.
+    # The graze reaches the rolled rim, with no direct light on the threads or straps.
     lip = Vector((0.233, -0.186, TOP + 0.247))
     source = lip + Vector((-0.31, 0.155, 0.021))
-    graze = sk.area_light("tote lip graze", source, (0.07, 0.003), 0.55, WARM, spread_deg=37)
+    graze = sk.area_light("tote lip graze", source, (0.07, 0.003), 0.22, WARM, spread_deg=37)
     frame = Matrix.Translation(source) @ (lip - source).to_track_quat("-Z", "Y").to_matrix().to_4x4()
     graze.matrix_world = frame
     graze.visible_volume_scatter = False
-    leather = bpy.data.collections.new("Tote and thread")
-    for part in bpy.data.objects["handbag-tote"].children_recursive:
-        if part.type in ("MESH", "CURVE"):
-            leather.objects.link(part)
+    leather = bpy.data.collections.new("Rolled leather lip receivers")
+    leather.objects.link(bpy.data.objects["macro front rolled lip"])
     graze.light_linking.receiver_collection = leather
-    # A four-millimetre slot leaves the front leather at the master's value
-    # while the lip and the stitches catch the small warm source.
+    source = Vector((0.077, -0.405, TOP + 0.327))
+    thread_fill = sk.area_light("stitch reflected lamp", source, (0.22, 0.10), 1.8, WARM, spread_deg=88,
+                                rot=(lip - source).to_track_quat("-Z", "Y").to_euler())
+    thread_fill.visible_camera = thread_fill.visible_glossy = thread_fill.visible_volume_scatter = False
+    fibres = bpy.data.collections.new("Macro stitch receivers")
+    for part in _STATE["macro tote"].children_recursive:
+        if part.type == "CURVE" and "stitch" in part.name:
+            fibres.objects.link(part)
+    thread_fill.light_linking.receiver_collection = fibres
+    # A four-millimetre slot keeps the graze on the roll.
     shutters = []
     for side in (-1, 1):
         card = shadow_card("lip light shutter", (0.18, 0.06, 0.001), (0, 0, 0), M["leg"])
@@ -778,9 +787,16 @@ def entry_stationery():
 
 def frame_metadata(name, scene, resolution):
     """Export compositor coordinates in top-left-origin frame pixels."""
-    if name in ("purses", "seam"):
-        tracks = props.project_tote_seam(bpy.data.objects["tote front hem"], [bpy.data.objects[key] for key in BAGS],
-                                         scene, resolution, sample_trace=True)
+    if name == "purses":
+        blockers = [bpy.data.objects[key] for key in ("handbag-shoulder", "handbag-satchel")]
+        blockers.extend(ob for ob in _STATE["original tote"] if ob.type == "MESH")
+        tracks = props.project_tote_seam(bpy.data.objects["tote front hem"], blockers, scene, resolution,
+                                         sample_trace=True)
+        return {**sk.plate_optics(name, scene, resolution), **tracks}
+    if name == "seam":
+        blockers = [_STATE["macro tote"], bpy.data.objects["handbag-shoulder"], bpy.data.objects["handbag-satchel"]]
+        tracks = props.project_tote_seam(_STATE["macro hem"], blockers, scene, resolution,
+                                         sample_trace=True, centres_only=True)
         return {**sk.plate_optics(name, scene, resolution), **tracks}
     names = {"page": ("document_single",), "page_foot": ("document_single",),
              "pair": ("document_left", "document_right"), "screen": ("laptop_screen",)}
@@ -893,6 +909,11 @@ def apply_camera(name):
     # The crop shows the matte key deck immediately beneath the luminous panel.
     bpy.data.objects["laptop_screen_light"].data.energy = 5.0 if name == "screen" else 22.0
     set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()), cfg.get("lamp"))
+    if name == "seam":
+        for ob in _STATE["original tote"]:
+            ob.hide_render = True
+    for ob in _STATE["macro tote"].children_recursive:
+        ob.hide_render = name != "seam"
     plate = beat == "plate"
     for ob in _STATE["lamp_meshes"]:
         ob.hide_render = plate
@@ -903,10 +924,11 @@ def apply_camera(name):
     reveal = name in ("purses", "seam")
     edge = bpy.data.objects["table edge bounce"].data
     spot.color = edge.color = BAG_LIGHT if reveal else WARM
-    edge.energy = 4.5 if name == "purses" else TABLE_EDGE_RETURN
+    edge.energy = cfg.get("board_fill", 4.5 if name == "purses" else TABLE_EDGE_RETURN)
     bpy.data.objects["cone_haze"].hide_render = plate or reveal
     bpy.data.objects["bag edge return"].hide_render = name != "purses"
     bpy.data.objects["tote lip graze"].hide_render = name != "seam"
+    bpy.data.objects["stitch reflected lamp"].hide_render = name != "seam"
     for shutter in _STATE["lip shutters"]:
         shutter.hide_render = name != "seam"
     bpy.data.objects["table lamp front cutter"].hide_render = name != "purses"
@@ -1093,7 +1115,7 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.053, 0.054, 0.057), spec=0.16)
+    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.072, 0.068, 0.060), spec=0.25)
     group("receipt_c4", pp.receipt("receipt_c4", receipt_stock, *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.
