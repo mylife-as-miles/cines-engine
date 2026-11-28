@@ -478,9 +478,10 @@ def _bake_pose(gar, subdiv=2):
     return new
 
 
-def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, leg_r=0.07):
+def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, leg_r=0.061, *, seated=False):
     """Reshape the posed suit (see the module's note). `push` more stand-off everywhere (along the normals), the legs
-    straight from the knee, the shirt hanging from the bust with its hem `hem_lift` off the hips."""
+    straight from the knee, the shirt hanging from the bust with its hem `hem_lift` off the hips.
+    On the bunk, use less of that drape so the shirt settles into the lap."""
     gar = bpy.data.objects.get(f"{holder.name}_{garment}")
     if gar is None:
         return None
@@ -519,7 +520,7 @@ def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, le
             off[i] = off[i] * _smooth(ztop_shirt, ztop_shirt - 0.10, P[i].z)
     Q = lambda i: P[i] + off[i]  # noqa: E731
 
-    # the trouser legs: straight from the knee, a few soft vertical folds, the break stacking over the shoe
+    # Straight from the knee, with a few vertical folds and the shoe toes clear.
     for side, k in ((1, "L"), (-1, "R")):
         K, A = pb[f"DEF-shin.{k}"].head.copy(), pb[f"DEF-foot.{k}"].head.copy()
         u = A - K
@@ -548,11 +549,9 @@ def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, le
             th = math.atan2(rv.dot(e2), rv.dot(e1))
             w = _smooth(0.0, 0.35, t)
             R = min(Rk, leg_r) * (1.0 - knee_taper * t)   # the uniform's legs are already eased: no flares
-            tgt = r + w * max(0.0, R - r)
+            tgt = r + w * max(-0.007, R - r)
             tgt += w * 0.0022 * (0.5 + 0.5 * math.sin(5 * th + 1.1 * math.sin(2 * th + 0.7)))
-            hb = _smooth(0.66, 0.88, t)
-            tgt += hb * 0.008 * (0.5 + 0.5 * math.cos(2 * math.pi * t * L / 0.045 + 0.8 * math.sin(th)))
-            off[i] = off[i] + rv / r * (tgt - r) + u * (0.022 * _smooth(0.85, 1.03, t))
+            off[i] += rv / r * (tgt - r)
         print(f"VOID suit: leg {k} falls straight from the knee at r {Rk * 1000:.0f} mm "
               f"({len(geo)} vertices)", flush=True)
 
@@ -588,6 +587,7 @@ def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, le
     for _ in range(2):
         hang = [[0.25 * hang[(b - 1) % NB][j] + 0.5 * hang[b][j] + 0.25 * hang[(b + 1) % NB][j] for j in range(nj)]
                 for b in range(NB)]
+    drape = 0.43 if seated else 1.0
     for i in torso:
         p = Q(i)
         r, th = polar(p)
@@ -605,10 +605,12 @@ def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, le
             return hb_[j0] * (1 - fz) + hb_[min(nj - 1, j0 + 1)] * fz
         h = hv(b0) * (1 - fr) + hv(b0 + 1) * fr
         w = _smooth(0.0, 0.05, ztop - p.z)
-        tgt = r + w * max(0.0, h - r)
+        tgt = r + w * drape * max(0.0, h - r)
         drop = _smooth(0.0, 0.25, ztop - p.z)
         tgt += drop * 0.0042 * (0.5 + 0.5 * math.sin(9 * th + 1.4 * math.sin(3 * th + 0.5)))
-        tgt += hem_lift * _smooth(zmin + 0.07, zmin, p.z)
+        rear = 1.0 - 0.70 * _smooth(math.radians(103), math.radians(132), abs(th))
+        lap = 0.40 + 0.60 * _smooth(math.radians(20), math.radians(75), abs(th)) if seated else 1.0
+        tgt += hem_lift * rear * lap * _smooth(zmin + 0.07, zmin, p.z)
         radial = Vector((p.x, p.y - yc, 0.0)) / r
         off[i] = off[i] + radial * (tgt - r)
 
