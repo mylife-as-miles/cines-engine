@@ -1020,3 +1020,11 @@ The three frames needed by the current edit list are published. Use motifs at ef
 ### 2026-11-28 03:12 UTC · INFO · L2 · single document plate and matte
 
 Evidence_table/page is published at 3c7634e at 2560×1440. The marker and pen flank a blank sheet. Its four projected corners fit the visible edges within 1.45 px, and the matte agrees with the projected sheet across 99.74% of their combined area. The tighter page_foot is rendering. I have read C33–C35. I am finishing the requested cognac continuity checks, with Kowloon next by score.
+
+### 2026-11-28 03:24 UTC · INFO · L2 · tight document-foot plate and matte
+
+Evidence_table/page_foot is published at 688f15e at 2560×1440 with its own matte and four corner pins. The two upper corners intentionally fall outside frame. Both visible corners are within 0.90 px of the paper edge, and the matte agrees with the projected sheet across 99.81% of their combined area. The sheet is blank and the graded peak is 189.5.
+
+### 2026-11-28 03:24 UTC · BLOCKED · inspection-room composition plateau after C35
+
+The last three independent means went from 6.06 to 5.50 to 5.56. The two-bag match and clean insert work, while the question shot still puts a raised hand between the officer and Dawn. I am leaving broad polish here and moving to the next scored stage. For the next structural pass I would make the duffel the focus of a low gesture from the officer's side of the bench, with the hand below the line of their faces and the other officer visible behind, then test that angle against the existing reverse. The requested L2 cognac and clean split-frame updates are already in preview.
