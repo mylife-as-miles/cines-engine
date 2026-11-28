@@ -9,3 +9,7 @@ __pycache__/
 
 # chosen sounds are committed as FLAC (sound.md); the WAVs are working copies
 claude-youtube/prize-that-became-a-prison/audio/sfx/*.wav
+
+# BOOM Library sounds: licensed to the author as a single user; the licence forbids sharing raw or processed files, and this repo is public.
+# Only the finished mix (which combines them with voice and picture) may be committed.
+claude-youtube/prize-that-became-a-prison/audio/boom/
