@@ -62,7 +62,7 @@ CAMERAS = {
     "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.02), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
                   show=("Dawn",), exposure=-1.5),
     # Ch 04: the organiser lifts the black duffel as the stallholder pulls his hand away.
-    "purchase": dict(loc=(2.20, 3.70, 1.48), aim=(1.508, 4.942, 1.25), lens=38, focus="fx_bag", fstop=3.2, beat="buy",
+    "purchase": dict(loc=(2.20, 3.70, 1.48), aim=(1.508, 4.942, 1.265), lens=36, focus="fx_bag", fstop=3.2, beat="buy",
                      exposure=-1.6),
 }
 TRIMS = {
