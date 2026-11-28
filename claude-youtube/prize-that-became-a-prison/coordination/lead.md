@@ -973,3 +973,104 @@ About 20 hero moments get real animation, rendered in Cycles on the GPU:
 - the visiting-room handset.
 
 Only the stages behind these moments need the motion-readiness I asked for: clean rigs, separate moving props, no camera-only cheats. The tools are Blender only, with no Unreal and no Houdini (the author's decision).
+
+### 2026-11-28 10:23 UTC · REPLY C51 · hongkong_street
+Critique `coordination/critiques/hongkong_street_r4.json` (checked by a second reader against the frames): **mean 5.56, lowest 4.5** (cast); pro level: no. Scores: composition 6, lighting 6, materials 5.5, set_dressing 5, grounding_scale 6, cast 4.5, story_read 5, technical 6.5.
+
+Hongkong_street r4 is a small step up from r3 but still not a fern plate. Mean 5.56, lowest 4.5. The night canyon in `wide` is believable, with wet road, rails and wires, and its top title area is clean. `dawn` is still the best frame: a woman stopped at a window with real carriers in her hands. `window` is a quiet, well-lit shelf of handbags. Three things hold the stage back.
+
+1. `company` is still in the published set, but SCRIPT_V3 retired it (lines 108 and 575: "it invents two male organizers"). The code still names one of the two men "Organiser". The frame reads exactly as what V3 forbids: Dawn walking close beside two men, all three seen from behind.
+
+2. The stage is built as four separately cheated stills, but DECISIONS (28 November) now asks for real 3D camera moves and rigged, moving characters. `apply_camera()` changes these per camera: light energies, light visibility, the sky gain (0.16 in `wide`, 1.0 elsewhere), haze, glass reflectance, subdivision, and whether Dawn shows in reflections. The bags are placed by `matrix_world`, not parented to the hands. Every walker holds one solved stride. Both the sign layout and the choice of which windows may light are cut around the wide's 2D title rectangle. None of this survives a moving camera or moving figures.
+
+3. Up close the street is still made of primitives. The signs read as nearly flat colour fields. The magenta face has a std of about 3.7 on the raw frame, and the sign material's hotspot shows only as a 15-20% fall-off to the edges. The cabinet sides are plain dark and there is no grime. The near right building, a tenement, is dominated by one long lit solid balcony parapet: about 70-80 on the graded frame, over 110 at its near end.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `company`: SCRIPT_V3 lines 108 and 575 retire `company` because it invents two male organizers. It is still rendered and published, and the code still names a figure "Organiser". **Fix:** In hongkong_street.py, delete:
+- CAMERAS["company"], BLOCK["company"] and the TRIMS["company"] entry
+- the "left pavement return" light and its view mapping
+- the `if beat == "company"` branches in act() (the lead override, the stride override and the glance turns)
+- the `hide_render = beat == "company"` bag line
+- its entry in CABLE_VIEWS
+
+Remove frames/graded/hongkong_street/company.jpg and frames/raw/hongkong_street/company.png from the published set.
+- P2 `all`: The stage is four per-camera cheats that break under the animation DECISIONS now asks for (28 November: real 3D camera moves, rigged characters). The bags are placed, not parented. The walkers are frozen strides. Lights, sky, haze, glass, reflection visibility and subdivision are changed inside apply_camera(), and signs and lit windows are cut around the wide's 2D title rectangle. **Fix:** (a) In make_bags()/hang_bag(), attach each bag to the hand with a CHILD_OF constraint on `ORG-hand.R`/`ORG-hand.L` (or bone-parent it to `hand_fk`), with the handle apex at grip_point(). To keep the bag hanging straight down while the hand moves, either turn rotation inheritance off, or add a DAMPED_TRACK (track axis -Z) aimed at an empty that follows the grip about 1 m below.
+- P3 `dawn`: On the graded frame the kraft bag (about 105-113), the turquoise lightbox (about 105) and its pavement streak (about 115-120, peaking near 160) all out-read her head (about 80). T1, walking straight toward camera on the pavement beyond her, becomes a second subject: a lone man coming at a woman who is looking away. He is the same actor as the retired companion. **Fix:** Remove T1 from BLOCK["window"], or move him across the road to about (-5.6, 31.0), walking away.
+
+Bring the kraft bag under her head. First take it out of the "display shelf return" receivers, so the 28 W light models only the suit. Then lower M["kraft"]'s base colour only as far as it still reads as kraft paper.
+
+Deal with the turquoise lightbox in the set, with one value for every view: move that sign along a bay, or lower its strength, so it no longer hangs straight up the pavement behind her.
+- P4 `wide`: The signs read as nearly flat colour fields. The magenta face has a std of about 3.7 on the raw frame, the hotspot shows only as a 15-20% fall-off to the edges, the cabinet sides are plain dark and there is no grime. The near right building (R3, a tenement) is dominated by one long lit solid balcony parapet, about 70-80 graded and over 110 at its near end. **Fix:** Keep the cabinet and the 12 mm bevel the signboards already get. In sign_box(), t = 0.15 is a half-depth, so the cabinet is already 0.30 m deep.
+
+The "sign face" material (_attr_emitter) already has a 0.6 hotspot and tube banding. Multiply its emission by a soft grime mask: a low-frequency, unstretched Noise texture through a ColorRamp 0.55-0.8, darkening the bottom quarter and the area under each bracket by 20-35%.
+- P5 `wide`: All the left-pavement walkers (T1, M2, W1, M3, the Organiser, W4, M7) walk in one lane about a metre wide (x -5.5 to -6.6), so they read as a line along the shopfront. The only vehicle, the tram at y 120 m, is two pale bars at the vanishing point, so the busy street reads as a stage set. Dawn's coat (about 25-40) is darker than every near sign (45-100) and than the right balcony parapet; only her head reads. **Fix:** Stagger BLOCK["walk"]. Put M3 and the renamed walker at the kerb (x about -4.9), facing each other in conversation. Pull T1 off the wall line to x about -5.0, midway across toward the road. ShopFar needs no change: build() already places him inside the shop at a counter, overriding his BLOCK entry.
+
+Bring the existing tram() nearer, to about y 45-55, and put it on the left track (x -1.25) so it reads as a tram without covering the vanishing point.
+- P6 `window`: Dawn's reflection reads as a featureless ghost: a soft lobe at about 28-30 luma on felt at 15-20, with a std of about 3-4, a faint neck line, no bun and nothing that says "her". The grey left wall (x 0-200, mean 34) is as bright as the bags (about 31-42). The upper shelf, which carries only the shallow lid box, ends 30-50 px short of the right edge, almost touching the pane joint there. **Fix:** In BLOCK["reflect"], turn Dawn's head 20-25 degrees so her reflection shows her head in profile, with the bun at the nape and the jaw line. Raise "reflected cheek" from 8 to about 18 W and narrow it from 0.40 x 0.26 to 0.25 x 0.18 m.
+
+The left wall is the display's felt side panel (M["felt"], whose albedo is already 0.012). Its grey comes from light: mainly the "display far bounce" (4.3 W), which is on only in this view, plus the felt's sheen at this grazing angle.
+- P7 `wide`: V3 at 2:27 holds "treated her well" low on the dark of the plate. The low centre (x 400-880, y 590-700) is the brightest reflective band (mean 30, p95 74, peak 166), while the clean area the builder measured is at the top. **Fix:** First settle the type's look and position with the lead. DECISIONS (28 November) rejects the cinema-serif story type and moves text into the scene, so V3's low placement may change.
+
+If the words stay low, cut the near-road reflections for the first 10 m in front of the camera. In asphalt(), add a world-Y ramp that lifts roughness toward about 0.35 and fades the mirror puddles for y < 10, and do the same for the rail steel there.
+
+### 2026-11-28 10:23 UTC · REPLY C52 · leather_market
+Critique `coordination/critiques/leather_market_r6.json` (checked by a second reader against the frames): **mean 5.31, lowest 5** (materials, grounding_scale, cast, story_read); pro level: no. Scores: composition 5.5, lighting 5.5, materials 5, set_dressing 6, grounding_scale 5, cast 5, story_read 5, technical 5.5.
+
+Not at the bar yet. Mean 5.3, lowest 5. The wide is still the only frame that would sit in a fern film. It has:
+- a lit stall island (graded column means in 8-bit luma about 72 and 56 to 60, against 9 to 18 for the shutter walls),
+- haze, a wet lane and a drain leading the eye,
+- the two men at the counter with the duffel between them.
+The other two angles still fail at their own beats.
+
+The strongest remaining structural issue is the purchase close-up. Its camera and its hand solve put the handoff where nobody can see it.
+- The bag is a dark mass (graded L* about 15 to 17) filling the middle of the frame.
+- The buyer's fist sits knuckles-up above it. The wrist is solved below the grip: the starting target is about 10 cm under it, and the solve puts the palm centre 1.4 cm below the crown. The hand follows the forearm, so it points up.
+- The handle webbing goes into the heel of his hand instead of passing under his curled fingers.
+- The duffel's own two carry handles hang in slack loops down its side, so nothing in the prop shows tension.
+- The seller is only a dark sleeve cut by the right frame edge, with a pale hand hanging from it.
+- The 9-degree tilt is in the geometry, but the near end overhangs the counter's lane edge. From this camera the space under it shows the organiser's dark trousers, not lit counter. In the grade it is dark on dark, so on screen the bag still reads as resting.
+
+In the stall angle the camera sits at counter-top height (z 0.90 against a top at 0.905). So the bag's base (graded luma about 15 to 25) sits on a horizon line, right over the brightest line in the lower half of the frame: the counter top's front bevel (a 1 to 2 px line at about 65 to 98) above the steel edge band (about 47 to 63). This floats the bag instead of settling it.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `purchase`: The handoff is not framed. The bag fills the middle of the frame, the seller is only a sleeve at the right edge, and the hands are at the edges of the frame. **Fix:** Restage it as a profile two-shot across the counter's short end, from the cross alley.
+
+The hands sit at chest height (grip about z 1.3). So a tight insert either loses them at the top edge or runs the edge through necks, which AGENT_BRIEF rules out.
+
+Numbers projected from the set coordinates:
+- In CAMERAS['purchase'] set loc about (1.60, 3.20, 1.40), aim (1.55, 4.95, 1.35), lens 35 and fstop 2.8, with focus on an empty moved to _STATE['grip'].
+- P1 `purchase`: The buyer's grip reads as a raised fist. The wrist is solved below the grip, the webbing ends in the heel of the hand, and nothing in the prop shows tension. **Fix:** In pose_buy, put the organiser's wrist target above the handle, at about grip + (-0.035, 0.0, +0.055), so the hand comes down onto it with the knuckle line level.
+
+rest_hand's `contact` is where the palm-vertex centre goes, not the fingers. Set it to about grip + (-0.01, 0.0, +0.03): the palm then sits over the crown, and the curled fingers (curl about 85) wrap under it. With follow_forearm=True, palm_normal only picks the side, so it can stay as it is.
+- P1 `purchase`: The seller's 'withdrawing' hand hangs limp beside the bag's far end, from a sleeve that does not read as a person. **Fix:** In pose_buy, solve the stallholder's left hand as an open, palm-down release just above the bag.
+
+rest_hand always moves the palm-vertex centre onto `contact`; there is no contact-free mode. So pass:
+- contact = Vector((BX + 0.30, wy, bag_top(BX + 0.30, wy) + 0.06)),
+- palm_normal (0.2, 0, -0.98),
+- curl 10, so the fingers are extended,
+- a starting wrist target about 8 cm above bag_top on his side.
+At the moment the palm centre is at BX+0.485, about 12 cm past the far end and 3 cm below the bag's top.
+- P2 `stall`: The camera is at counter-top height (z 0.90 against TOP 0.905), so it sees the counter edge from just below. The bag's base sits on the brightest line in the lower half: the top's front bevel (graded luma about 65 to 98) over the steel band (47 to 63). So the bag does not settle. **Fix:** Raise CAMERAS['stall'] loc z to about 1.30 and aim z to 1.15, so the counter top plane and a contact shadow are visible. Dawn's feet then fall near the bottom edge, so re-check that they stay in frame.
+
+Give counter_band its own dark neutral material, about base 0.05, metallic 0.3, roughness 0.6. Do not edit M['steel_bare'], which the hooks, rail and bars share. Check the top's front bevel in the new view; if it still draws a pale line, roughen or darken that edge.
+- P2 `all (animation)`: Per-camera cheats will pop on cuts and break any moving camera. **Fix:** Replace TRIMS, display_tone and the per-camera haze with one set state:
+- Pick single energies, about hero_ceil_a 1.6x, hero_ceil_b 1.8x and hero_alley 1.2x of base.
+- Fix display_tone at about 0.7 for all angles, and haze at 0.005.
+- Then fix each frame with exposure only.
+
+Turn the bag swap into shape keys, with the rest mesh as Basis and the lifted, pulled mesh as 'Lift' (you report that the two share topology). Keyframe the pivot rotation from 0 to 13 degrees together with Lift from 0 to 1.
+- P3 `stall`: The glossy mustard-kraft tape roll sits about 6 cm from the duffel's end. With the kraft carton at the right edge, it is the most saturated thing in the frame (about 11 to 12 raw chroma, against stock at or below 7.6). That goes against the intent of C49's mustard note. **Fix:** Recolour M['tape'] (used only by counter_tape) to a dull grey-brown, about (0.16, 0.13, 0.10) with roughness 0.5, and the kraft core to the same. Or take the roll off the counter, for example onto the lower shelf.
+
+Do not move it along the counter top. In the rest beat the duffel covers y about 4.6 to 5.3, so the far end of the counter, around (x0+0.18, y1-0.18), is under the bag. In the buy beat that spot is right against the bag's side.
+- P3 `wide`: Dawn's open hands float in front of her waist. At its far end the duffel runs into the stallholder's dark sleeve, and a blue shoulder bag beside his face pulls the eye. **Fix:** In pose_buy, give Dawn one clear action. For example, her left hand at her side (l_arm about (4, 6, 15)) and her right hand loosely holding her left forearm at the waist, not two open hands held forward. She carries no bag in this scene, so there is no strap to hold.
+
+Behind the transfer, re-dye the hero_side_far bags to taupe (dye 7), so the duffel silhouettes against lighter stock. These are on the far side wall, at y about 6.6, x about 1.8 to 2.8 and z 0.9 to 1.7; they are not on hero_back.
+- P4 `purchase`: In the close-up the duffel's Tripo mesh reads as crumpled foil: faceted lumps and pinched creases. **Fix:** Smooth the body geometry. Add a Smooth modifier at about factor 0.5 and 6 repeats, limited to a vertex group that leaves out the strap loops. Corrective Smooth also works, but only with Only Smooth on; without it, a mesh with no deformation comes out unchanged.
+
+mt.nylon already has a fine weave bump (noise at scale 1000, strength 0.05) and roughness 0.52, so the crumple is in the mesh, not the shader. If the creases still glint, lower the nylon's specular from 0.39 to about 0.25.
+- … 1 more in the file.
+
+### 2026-11-28 10:23 UTC · INFO · to CODEX · hongkong_street after C51
+- **Retire `company`.** SCRIPT_V3 never shows the organizers: no source gives their number, sex or look, and the frame reads as two men escorting Dawn. The camera, and the figure named "Organiser", come out of the set. The film uses `wide` and `dawn` only.
+- **This street is a hero shot for the animation:** Dawn walking in the rain at night, the wet street reflecting the neon. So C51's motion findings come first. Parent the carriers to her hands, give the walkers real cycles, and remove the camera-only light and sky switches in apply_camera(). I am building a Blender test of the shot in `scenes/ab_hk/`, which imports your builder without editing it. Its findings will come to you.
+- **In `dawn`, the man walking toward her (T1) reads as a threat** in a beat about trust. Move him out of the gap, or turn him away.
