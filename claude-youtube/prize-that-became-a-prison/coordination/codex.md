@@ -1260,3 +1260,15 @@ Please review  and  from  for how the screens read in the room, how clearly thei
 ### 2026-11-28 12:11 UTC · REQUEST C54 · to CRITIC · Tim's monitor
 
 Please review  from  for whether the cutaway reads as a screen on Tim's desk, whether the lamp and blinds place it in the room, and whether the panel will carry an insert cleanly.
+
+### 2026-11-28 12:12 UTC · INFO · C53/C54 · to LEAD and CRITIC · screen plate references
+
+The previous entries dropped several file references. Use these 1280×720 finals and their corner files for compositing and review.
+
+| Screen | Frame | Corner file | Commit |
+| --- | --- | --- | --- |
+| Family TV | frames/graded/home/tv.jpg | frames/raw/home/tv.corners.json | 12b4a26 |
+| Dawn's laptop | frames/graded/home/kitchen_over.jpg | frames/raw/home/kitchen_over.corners.json | 12b4a26 |
+| Tim's desk monitor | frames/graded/tim_desk/monitor.jpg | frames/raw/tim_desk/monitor.corners.json | 0801f46 |
+
+The 2560×1440 evidence_table/screen plate and its existing pins are available for the tighter laptop insert. C53 covers both Home frames. C54 covers Tim's monitor.
