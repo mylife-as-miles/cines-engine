@@ -2,10 +2,12 @@
 
     python3 scenes/ab_hk/package.py
 
-The tar has the calibration package's layout (scenes/anim_tests/package.py), so it can be unpacked on its own or its
-blend/AB_HK.blend dropped into the calibration folder and rendered by the same run_gpu.sh (SHOTS=AB_HK):
+The tar has the calibration package's layout (scenes/anim_tests/package.py) and unpacks beside it:
   blend/AB_HK.blend   self-contained (textures packed; rain, ripples and steam are node trees, no caches)
-  render.py, encode.py, check_gpu.py, run_gpu.sh   copied unchanged from scenes/anim_tests (one pipeline)
+  render.py           scenes/ab_hk/render.py: the flags of scenes/anim_tests/render.py, plus --engine EEVEE|CYCLES
+  encode.py           scenes/ab_hk/encode.py: grade A and a named BT.709 conversion (gfx/doc_composite.py TO_YUV)
+  run_ab_hk.sh        check, test, eevee, cycles (the 2 s comparison), encode
+  check_gpu.py, check_frames.py   unchanged from scenes/anim_tests
   grade_A.txt         the film's grade A, read from scenes/shoot.py
   RUN_AB_HK.md        the commands for this shot
   source/             the code that built it, for the record (rebuilding needs the repository and MPFB; the box does not)
@@ -51,7 +53,9 @@ def main():
     if not os.path.exists(blend):
         raise SystemExit(f"missing {blend}: build the shot first (scenes/ab_hk/shot_hk_rain.py)")
     files = [(f"blend/{SHOT}.blend", blend)]
-    for n in ("render.py", "encode.py", "check_gpu.py", "run_gpu.sh", "check_frames.py"):
+    for n in ("render.py", "encode.py", "run_ab_hk.sh"):
+        files.append((n, os.path.join(HERE, n)))
+    for n in ("check_gpu.py", "check_frames.py"):
         files.append((n, os.path.join(TESTS, n)))
     files.append(("RUN_AB_HK.md", os.path.join(HERE, "RUN_AB_HK.md")))
     files.append(("grade_A.txt", (grade_a() + "\n").encode()))

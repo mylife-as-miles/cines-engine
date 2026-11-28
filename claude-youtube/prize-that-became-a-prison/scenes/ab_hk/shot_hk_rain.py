@@ -59,9 +59,10 @@ GLANCE = -13.0                   # head turn toward the shop windows on her righ
 
 # ---- the camera
 LENS, FSTOP = 32.0, 2.8
+SHIFT_Y = 0.09                   # lens shift up (verticals stay vertical; the signs come into the top of frame)
 
 # ---- rain
-RAIN_COUNT = 15000
+RAIN_COUNT = 22000
 RAIN_TOP = 12.5
 RAIN_SPEED = (5.2, 7.4)          # m/s: light rain, drops of about 1 mm
 WIND = (0.45, -0.12)             # m/s across and along the street
@@ -463,7 +464,7 @@ def rain(cam_path, exclude, shelter):
         attrs["floor"].append(floor)
         attrs["speed"].append(rng.uniform(*RAIN_SPEED))
         r = rng.random()
-        attrs["radius"].append(0.00045 + 0.0005 * r * r)
+        attrs["radius"].append(0.0009 + 0.0011 * r * r)       # 0.9-2 mm: what a 1080p streak needs to read
         attrs["length"].append(0.010 + 0.008 * rng.random())
     for o in hidden:
         o.hide_viewport = False
@@ -487,10 +488,36 @@ def rain(cam_path, exclude, shelter):
     tl = nt.nodes.new("ShaderNodeBsdfTranslucent")
     tl.inputs["Color"].default_value = (0.9, 0.93, 0.97, 1)
     mix = nt.nodes.new("ShaderNodeMixShader")
-    mix.inputs[0].default_value = 0.22
+    mix.inputs[0].default_value = 0.42
     nt.links.new(pr.outputs[0], mix.inputs[1])
     nt.links.new(tl.outputs[0], mix.inputs[2])
-    nt.links.new(mix.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    out_c = nt.nodes["Material Output"]
+    out_c.target = "CYCLES"
+    nt.links.new(mix.outputs[0], out_c.inputs["Surface"])
+    # Eevee has no cheap refraction through a 2 mm rod: there the drop is mostly see-through with a white gloss that
+    # takes the lights and the signs, and some translucency for back-light (dithered, resolved by the TAA samples)
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    gl = nt.nodes.new("ShaderNodeBsdfGlossy")
+    gl.inputs["Roughness"].default_value = 0.12
+    tl2 = nt.nodes.new("ShaderNodeBsdfTranslucent")
+    tl2.inputs["Color"].default_value = (0.9, 0.93, 0.97, 1)
+    lit = nt.nodes.new("ShaderNodeMixShader")
+    lit.inputs[0].default_value = 0.5
+    nt.links.new(gl.outputs[0], lit.inputs[1])
+    nt.links.new(tl2.outputs[0], lit.inputs[2])
+    see = nt.nodes.new("ShaderNodeMixShader")
+    see.inputs[0].default_value = 0.45
+    nt.links.new(tr.outputs[0], see.inputs[1])
+    nt.links.new(lit.outputs[0], see.inputs[2])
+    out_e = nt.nodes.new("ShaderNodeOutputMaterial")
+    out_e.target = "EEVEE"
+    nt.links.new(see.outputs[0], out_e.inputs["Surface"])
+    out_e.is_active_output = True
+    out_c.is_active_output = True
+    try:
+        mat.surface_render_method = "DITHERED"
+    except (AttributeError, TypeError):
+        pass
     mat.cycles.emission_sampling = "NONE"
 
     ng = bpy.data.node_groups.new("rain fall", "GeometryNodeTree")
@@ -703,20 +730,83 @@ def steam():
 # ------------------------------------------------------------------ camera
 
 def camera(frames):
-    """A low dolly-crane on the road just off the kerb: it tracks her at her own speed from a little behind her
-    left shoulder, gaining slightly so she turns from three-quarter back toward profile, and rises from 0.45 to 1.0 m
-    (the wet gutter and her stride first, then the lit shopfronts and signs above her). Focus on her chest."""
+    """A low dolly-crane on the road by the kerb: it tracks her at her own speed from behind her left shoulder,
+    looking up the street (the signs stacking into the distance, their colours streaking down the wet road), gaining a
+    little on her, and rises from 0.48 to 1.0 m: the wet gutter and her stride first, then the street over her
+    shoulder. Level, with the lens shifted up so verticals stay vertical. Focus on her."""
     n = len(frames)
     locs, aims = [], []
     for i, f in enumerate(frames):
         t = C.t_of(f)
         u = C.cruise(i / (n - 1), 0.2)
         y = B.hip_y(t)
-        locs.append(Vector((3.30 - 0.10 * u, y - 2.85 + 0.55 * u, 0.45 + 0.55 * u)))
-        aims.append(Vector((5.95 + 0.10 * u, y + 2.35 - 0.45 * u, 1.02 + 0.10 * u)))
+        locs.append(Vector((3.78 - 0.06 * u, y - 3.75 + 0.35 * u, 0.48 + 0.52 * u)))
+        aims.append(Vector((5.05 - 0.05 * u, y + 8.0, 0.62 + 0.58 * u)))
     focus = [(Vector((PATH_X - 0.1, B.hip_y(C.t_of(f)), 1.15)) - l).length for f, l in zip(frames, locs)]
-    cam = C.moving_camera("anim_cam", frames, locs, aims, LENS, FSTOP, focus=focus, clip=(0.03, 600.0))
+    cam = C.moving_camera("anim_cam", frames, locs, aims, LENS, FSTOP, focus=focus, clip=(0.03, 600.0),
+                          shift=(0.0, SHIFT_Y))
     return cam, locs
+
+
+# ------------------------------------------------------------------ Eevee
+
+def _put(obj, key, value, log):
+    try:
+        setattr(obj, key, value)
+        log.append(key)
+    except (AttributeError, TypeError, ValueError):
+        pass
+
+
+def eevee_setup(cam_path):
+    """What Eevee needs to show this street (it cannot be tried on this machine, which has no GPU context; the
+    render script repeats the render settings so they can be changed on the box without a rebuild):
+    - planar probes on the road and both pavements, so the wet ground mirrors the signs and shopfronts that are off
+      screen too (Eevee's screen-space reflections alone lose everything outside the frame);
+    - a sphere probe over the street for the rougher reflections;
+    - ray-traced reflections, fast GI from the screen (the emissive signs bounce), soft shadows, volumetrics fine
+      enough for the steam, 8 motion-blur time steps (the rain streaks), overscan for the screen traces."""
+    sc = bpy.context.scene
+    e = sc.eevee
+    log = []
+    for k, v in (("taa_render_samples", 64), ("use_raytracing", True), ("ray_tracing_method", "SCREEN"),
+                 ("use_fast_gi", True), ("fast_gi_method", "GLOBAL_ILLUMINATION"), ("fast_gi_distance", 6.0),
+                 ("use_shadows", True), ("shadow_ray_count", 2), ("shadow_step_count", 8),
+                 ("volumetric_tile_size", "4"), ("volumetric_samples", 96), ("volumetric_end", 140.0),
+                 ("use_volumetric_shadows", True), ("motion_blur_steps", 8), ("clamp_surface_indirect", 3.0),
+                 ("use_overscan", True), ("overscan_size", 3.0)):
+        _put(e, k, v, log)
+    rto = getattr(e, "ray_tracing_options", None)
+    if rto is not None:
+        for k, v in (("resolution_scale", "1"), ("screen_trace_thickness", 0.2), ("use_denoise", True)):
+            _put(rto, k, v, log)
+    ys = [p.y for p in cam_path]
+    ymid = (min(ys) + max(ys)) / 2 + 12.0
+    probes = []
+
+    def probe(name, kinds, loc, scale, **kw):
+        for kind in kinds:
+            try:
+                pd = bpy.data.lightprobes.new(name, kind)
+                break
+            except TypeError:
+                continue
+        else:
+            return None
+        for k, v in kw.items():
+            _put(pd, k, v, log)
+        ob = bpy.data.objects.new(name, pd)
+        sc.collection.objects.link(ob)
+        ob.location, ob.scale = loc, scale
+        probes.append(name)
+        return ob
+    probe("road mirror", ("PLANE", "PLANAR"), (0.0, ymid, 0.002), (4.6, 26.0, 1.0), influence_distance=0.15)
+    probe("right pavement mirror", ("PLANE", "PLANAR"), (5.9, ymid, PZ + 0.002), (1.3, 26.0, 1.0),
+          influence_distance=0.12)
+    probe("left pavement mirror", ("PLANE", "PLANAR"), (-5.9, ymid, PZ + 0.002), (1.3, 26.0, 1.0),
+          influence_distance=0.12)
+    probe("street sphere", ("SPHERE", "CUBEMAP"), (1.5, ymid - 6.0, 2.2), (1.0, 1.0, 1.0), influence_distance=34.0)
+    print(f"AB eevee: settings {len(log)} set; probes {probes}", flush=True)
 
 
 # ------------------------------------------------------------------ checks
@@ -779,6 +869,7 @@ def build(base=None, save_base=None, frames=None):
     rain(path, [o for h in (d, *bags.values()) for o in h.children_recursive], shelter)
     ripples()
     steam()
+    eevee_setup(path)
     C.volumes_off_blur()
     checks(d, bags, frames)
     sc = bpy.context.scene

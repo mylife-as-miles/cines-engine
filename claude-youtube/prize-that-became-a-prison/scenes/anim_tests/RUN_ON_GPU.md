@@ -1,107 +1,90 @@
 # Run the calibration test on a GPU box
 
-Three 4-second shots (96 frames each, plus a 10-frame handle at each end, so frames 1-116; the cut uses 11-106),
-1920x1080, Cycles at 128 samples with adaptive sampling, the denoiser on, motion blur at a 180-degree shutter, AgX.
-Each `.blend` is self-contained, with its textures packed in. The box needs only Blender 5.3. Do not start this
-until the author has approved the cost.
+There are three animated test shots. Each file runs frames 1-116 at 24 fps, and the cut uses frames 11-106. Each
+`.blend` is self-contained, with its textures packed in. The render is 1920x1080 with motion blur at a 180-degree
+shutter and the film's AgX view. Cycles runs at 128 samples with adaptive sampling and the denoiser on. Eevee runs at
+64 samples with ray tracing and volumes. Grade A is applied afterwards in `encode.py`, never in the render.
+
+Do not start until the author has approved the cost. The author's budget for the whole film's GPU work is 300-500
+credits, so the test is lean: frames 35-82 of each shot (2 s, the middle of the cut), once in Cycles and once in
+Eevee. That is 288 frames, estimated at 50-80 credits on one RTX PRO 6000 (98 credits an hour).
 
 ## 0. Unpack and verify
 
 ```sh
+cd /workspace
 sha256sum -c prize_anim_test_gpu.tar.sha256
 tar xf prize_anim_test_gpu.tar && cd prize_anim_test_gpu
 sha256sum -c MANIFEST.sha256 | grep -v ': OK$' || echo "all files OK"
 ```
 
-## 1. Install Blender 5.3 (the version that built the files)
+## 1. On every new box
 
-Either the official build (recommended: OptiX kernels included):
-
-```sh
-cd ~ && wget https://download.blender.org/release/Blender5.3/blender-5.3.0-linux-x64.tar.xz
-tar xf blender-5.3.0-linux-x64.tar.xz
-export BLENDER=~/blender-5.3.0-linux-x64/blender
-```
-
-or the Python module (its wheel is for Python 3.13 only; `uv` fetches that Python):
+Blender 5.3.0 is already on the persistent storage. Only `/workspace` survives a box, so reinstall its system
+libraries on every new box:
 
 ```sh
-pip install uv && uv venv -p 3.13 ~/bpy && uv pip install -p ~/bpy bpy==5.3.0
-# then use: ~/bpy/bin/python -I render.py ...   instead of   $BLENDER -b -P render.py -- ...
+apt-get update && apt-get install -y xz-utils libxi6 libxrender1 libxkbcommon0 libsm6 libice6 libgl1 libegl1 \
+  libxxf86vm1 libxfixes3 libxext6 libx11-6 libglu1-mesa ffmpeg
+export BLENDER=/workspace/blender/blender-5.3.0-linux-x64/blender
+$BLENDER --version | head -1          # Blender 5.3.0: the version that built the files
 ```
 
-For the MP4s: `apt-get install -y ffmpeg`.
-
-## 2. Check that OptiX sees the card
+## 2. Check the card
 
 ```sh
 nvidia-smi -L
-$BLENDER -b --factory-startup -P check_gpu.py      # prints the OptiX devices; exits 1 if there are none
+$BLENDER -b --factory-startup -P check_gpu.py      # lists the OptiX devices; exits 1 if there are none
 ```
 
-`render.py --device OPTIX` refuses to render (exit code 3) when no OptiX device is found. It never falls back to the
-CPU.
+`render.py` never falls back to the CPU. With `--device OPTIX`, Cycles exits with code 3 if no OptiX device is found.
+Eevee reads its OpenGL renderer first and exits with code 3 if that is a software one, such as llvmpipe.
 
-## 3. One timed frame per shot
+## 3. One timed frame per shot and engine
 
-Frame 57 warms up the kernels and the scene (the first frame of a process is slower), and frame 58 is the timed one:
+Frame 57 is a warm-up: the first frame of a process loads kernels and shaders and builds the scene. Frame 58 is the
+timed one.
 
 ```sh
-for s in A_typing B_walk C_corridor; do
-  $BLENDER -b --factory-startup -P render.py -- --blend blend/$s.blend --out test/$s --frames 57,58 --device OPTIX | grep FRAME
-done
+./run_gpu.sh test        # = for each shot and engine:
+# $BLENDER -b --factory-startup -P render.py -- --blend blend/A_typing.blend --out test/A_typing_cycles \
+#     --frames 57,58 --engine CYCLES --device OPTIX
+# $BLENDER -b --factory-startup -P render.py -- --blend blend/A_typing.blend --out test/A_typing_eevee \
+#     --frames 57,58 --engine EEVEE --device OPTIX
 ```
 
-Each line reads `FRAME 0058  <seconds> s OPTIX(<card>) 128spp 1920x1080`. Send these three numbers (and the three PNGs
-in `test/`) back before going on. They turn the estimate into a quote. The approved test frame is the reference:
-every later box renders frame 58 again first and must match it.
+Each line reads `FRAME 0058  <seconds> s OPTIX(<card>) 128spp 1920x1080`, or `EEVEE(NVIDIA ...)` for Eevee. Send
+the six numbers and the six PNGs back before going on. The approved frame 58 becomes the reference, and every later
+box renders it again first and must match it.
 
-## 4. All frames, one process per GPU
+## 4. The lean test: 48 frames per shot per engine
 
 ```sh
-N=$(nvidia-smi -L | wc -l)
-for s in A_typing B_walk C_corridor; do
-  for i in $(seq 0 $((N-1))); do
-    CUDA_VISIBLE_DEVICES=$i $BLENDER -b --factory-startup -P render.py -- \
-      --blend blend/$s.blend --out frames/$s --shard $i/$N --device OPTIX > logs_${s}_$i.txt 2>&1 &
-  done
-  wait
-  grep -h "RENDER done" logs_${s}_*.txt
-done
+./run_gpu.sh lean        # frames 35-82, Cycles then Eevee, two processes per GPU
 ```
 
-(`./run_gpu.sh check|test|all|encode` runs steps 2 to 5 with the same commands.) Frames already on disk are skipped,
-so a stopped box resumes where it was.
+Each frame of A and B carries about 20 single-threaded CPU-seconds of work before the GPU starts, measured on this
+project's 2.1 GHz machine. Dawn's deformed body, clothes and hair are evaluated at render subdivision for the
+motion-blur steps and synced. C carries about 5. On the box's CPU this is perhaps 8-12 s a frame for A and B, and the
+GPU would wait during it. So `lean` runs two processes per GPU, interleaving frames, and one syncs while the other
+samples. The card's 96 GB holds two copies of any of these scenes. Its log ends with the wall time per shot and
+engine, and that divided by 48 is the cost per frame to quote. Set `PER_GPU=1` for one process per GPU.
 
-Measured here, every frame of A and B has about 20 single-threaded CPU-seconds of work before the GPU starts: Dawn's
-deformed body, clothes and hair are evaluated at render subdivision for the three motion-blur steps and re-synced.
-C has about 5. On a box CPU this is perhaps 8-12 s a frame, and the GPU waits during it. If `nvidia-smi` shows the
-GPU idle between frames, run two processes per GPU, so one syncs while the other samples. The card holds both
-scenes easily. Use `--shard` over 2N, with each pair on one `CUDA_VISIBLE_DEVICES`:
+Frames already on disk are skipped, so a stopped box resumes where it was. Copy `frames/` home while it runs (for
+example `rsync -a frames/ <home>:...`), because anything left outside `/workspace` is lost when the box stops.
+
+## 5. Assemble the MP4s (here or at home)
 
 ```sh
-for i in $(seq 0 $((2*N-1))); do
-  CUDA_VISIBLE_DEVICES=$((i/2)) $BLENDER -b --factory-startup -P render.py -- \
-    --blend blend/$s.blend --out frames/$s --shard $i/$((2*N)) --device OPTIX > logs_${s}_$i.txt 2>&1 &
-done; wait
+./run_gpu.sh encode      # = python3 encode.py --frames frames/<shot>_<engine> --out <shot>_<engine>.mp4 \
+#                              --grade grade_A.txt --first 35 --last 82
 ```
 
-Copy `frames/` home while it runs (`rsync -a frames/ <home>:...`), because anything left on a box is lost when it
-stops.
+`encode.py` stops if a frame is missing. It applies grade A, converts to YUV with the BT.709 matrix and tags the file
+BT.709, as the rest of the film does.
 
-## 5. Assemble the MP4s (grade A applied here, not in the render)
+## Later: every frame
 
-```sh
-for s in A_typing B_walk C_corridor; do
-  python3 encode.py --frames frames/$s --out $s.mp4 --grade grade_A.txt --first 1 --last 116
-done
-```
-
-`encode.py` stops if a frame is missing. Check the frame count with `ffprobe -v error -count_packets -select_streams v
--show_entries stream=nb_read_packets -of csv=p=0 A_typing.mp4` (116).
-
-## Options
-
-`render.py --frames 11-106` renders only the body. `--samples`, `--res 1920x1080`, `--format exr` and `--clay`
-(a grey matte frame) are also available. The default is what the file holds: 128 samples, adaptive threshold
-0.03, OpenImageDenoise on the GPU, and motion blur.
+`./run_gpu.sh all` renders frames 1-116 of each shot in Cycles. `ENGINE=eevee ./run_gpu.sh all` does the same in
+Eevee. `render.py` also takes `--frames 11-106` (the cut only), `--shard i/n`, `--samples`, `--res 1920x1080`,
+`--format exr` and `--clay` (a grey matte frame).

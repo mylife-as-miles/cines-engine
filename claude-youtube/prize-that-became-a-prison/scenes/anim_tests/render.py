@@ -3,13 +3,16 @@ blender binary); no repository, no add-ons.
 
     python -I render.py --blend blend/C_corridor.blend --out frames/C [--frames 1-116] [--shard 0/2]
                         [--samples 128] [--res 1920x1080] [--device OPTIX] [--format png|exr]
-                        [--engine cycles|eevee] [--clay] [--lock /tmp/cines_render.lock] [--threads N]
+                        [--engine CYCLES|EEVEE] [--clay] [--lock /tmp/cines_render.lock] [--threads N]
     blender -b -P render.py -- (same arguments)
 
 - --frames: "1-116", "11,58,106" or "1-116:5" (every fifth). Default: the file's whole range.
 - --shard i/n: this process takes every n-th frame starting at the i-th (run one process per GPU, i = 0..n-1).
 - --device: CPU, OPTIX, CUDA, HIP, ONEAPI or METAL. For any GPU type the script enables every device of that type,
   disables the CPU, and exits with an error (code 3) if there is none: it never falls back to the CPU.
+- --engine EEVEE: Eevee at the film's settings below (64 samples unless --samples, ray tracing, volumes, motion
+  blur). With a GPU --device (any but CPU) it reads the OpenGL renderer first and exits with code 3 if it is a
+  software one (llvmpipe and the like): Eevee would otherwise run on the CPU without saying so.
 - Frames already written are skipped (a killed render resumes); each frame is written to a temporary name and
   renamed when complete. One log line per frame: FRAME <n> <seconds> s <device> <samples> <res>.
 - --clay: every surface a grey matte (volumes kept off), for the clay check.
@@ -38,7 +41,7 @@ def parse():
     p.add_argument("--noise-threshold", type=float, default=None, help="adaptive threshold; default the file's")
     p.add_argument("--res", default=None, help="WxH, default the file's (1920x1080)")
     p.add_argument("--device", default="CPU", type=str.upper)
-    p.add_argument("--engine", default="cycles", choices=("cycles", "eevee", "workbench"))
+    p.add_argument("--engine", default="cycles", type=str.lower, choices=("cycles", "eevee", "workbench"))
     p.add_argument("--format", default="png", choices=("png", "exr"))
     p.add_argument("--clay", action="store_true")
     p.add_argument("--no-blur", action="store_true", help="motion blur off (look checks only)")
@@ -99,6 +102,43 @@ def use_device(sc, device):
     return f"{device}({names})"
 
 
+SOFTWARE_GL = ("llvmpipe", "softpipe", "swrast", "swiftshader", "software")
+
+
+def eevee_settings(sc, samples):
+    """Eevee for the comparison with Cycles: the same camera, lights, exposure, AgX, motion blur and depth of field
+    as the file; temporal samples, screen-space ray tracing, shadows and volumes set for finals."""
+    sc.render.engine = "BLENDER_EEVEE"
+    e = sc.eevee
+    for attr, val in (("taa_render_samples", samples or 64), ("use_raytracing", True), ("ray_tracing_method", "SCREEN"),
+                      ("use_shadows", True), ("shadow_ray_count", 2), ("shadow_step_count", 8),
+                      ("volumetric_tile_size", "4"), ("volumetric_samples", 96), ("volumetric_start", 0.05),
+                      ("volumetric_end", 30.0), ("use_volumetric_shadows", True), ("volumetric_shadow_samples", 16),
+                      ("motion_blur_steps", 2), ("use_gtao", True), ("clamp_surface_indirect", 10.0)):
+        if hasattr(e, attr):
+            try:
+                setattr(e, attr, val)
+            except (TypeError, ValueError):
+                pass
+    if hasattr(e, "ray_tracing_options"):
+        e.ray_tracing_options.resolution_scale = "1"
+        e.ray_tracing_options.use_denoise = True
+
+
+def gl_renderer():
+    """The GPU context Eevee draws with (vendor and renderer). gpu.init() starts it in background mode."""
+    try:
+        import gpu
+        try:
+            return f"{gpu.platform.vendor_get()} {gpu.platform.renderer_get()}".strip()
+        except SystemError:
+            if hasattr(gpu, "init"):
+                gpu.init()
+            return f"{gpu.platform.vendor_get()} {gpu.platform.renderer_get()}".strip()
+    except Exception as exc:                      # noqa: BLE001
+        return f"unknown ({exc.__class__.__name__}: {exc})"
+
+
 def clay(sc):
     """A grey matte override; volume-only boxes (haze) hidden so they do not become solid grey slabs."""
     m = bpy.data.materials.new("clay")
@@ -143,12 +183,11 @@ def main():
             c.denoising_prefilter = "ACCURATE"
             c.denoising_input_passes = "RGB_ALBEDO_NORMAL"
     elif a.engine == "eevee":
-        if a.device != "CPU":
-            print("RENDER note: Eevee uses the OpenGL/Vulkan context, not --device", flush=True)
-        sc.render.engine = "BLENDER_EEVEE"
-        if a.samples:
-            sc.eevee.taa_render_samples = a.samples
-        label = "EEVEE"
+        eevee_settings(sc, a.samples)
+        label = f"EEVEE({gl_renderer()})"
+        print(f"RENDER Eevee draws with: {label}", flush=True)
+        if a.device != "CPU" and any(w in label.lower() for w in SOFTWARE_GL + ("unknown",)):
+            fail(f"Eevee would draw with a software renderer ({label}); refusing to render on the CPU")
     else:
         sc.render.engine = "BLENDER_WORKBENCH"
         sc.display.shading.light = "STUDIO"
