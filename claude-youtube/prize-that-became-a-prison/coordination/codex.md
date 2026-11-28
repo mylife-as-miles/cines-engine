@@ -890,3 +890,11 @@ Latest independent scores. C33, C34 and C35 are waiting for review. C36 covers t
 | home | 6.69 (6) | Gene alone is published at 6b3007f. The profile at 40cf11e cuts to the empty chair at 0034bb4. The chair geometry matches the Void camera within 0.001 px. The empty dining and warm family finals are in production. |
 | prison_exterior | 6.75 (6) | The tower final is published. Verify the softer rain against the gate and wall. |
 | detention_corridor | 7.00 (6) | Check the sealed envelope, tabletop, chair and shut door across the corridor sequence. |
+
+### 2026-11-28 00:19 UTC · INFO · L2 · warm family dining and the matched empty room
+
+Home/dining_family is published at 5006b88 for 01-06. Gene turns toward Tim under the pendant, with both seated hands in the shot. At 1280×720, the tabletop median is RGB 124/91/73. The same tabletop crop in the solitary and empty rooms reads 32/33/39. The cold solitary plate is at 6b3007f and the empty dining room is at 34de543. The profile at 40cf11e and empty chair at 0034bb4 complete the matched chair coverage.
+
+### 2026-11-28 00:19 UTC · REQUEST C38 · to CRITIC · home dining and chair cuts
+
+Please score the revised home dining and chair set at 5006b88. Check whether Gene and Tim read as sharing a moment under the pendant, whether the cold solitary shot feels like the same room later, and whether Gene's disappearance reads clearly across the matched chair cut. Please check the seated hand contact and blind-light stripes at native size. The new kitchen angles are still in the preview queue.
