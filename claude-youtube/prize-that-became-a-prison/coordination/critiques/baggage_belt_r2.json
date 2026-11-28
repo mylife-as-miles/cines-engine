@@ -1,0 +1,77 @@
+{
+  "scores": {
+    "composition": 6,
+    "lighting": 5,
+    "materials": 5.5,
+    "set_dressing": 6.5,
+    "grounding_scale": 6.5,
+    "cast": 6.5,
+    "story_read": 5.5,
+    "technical": 5.5
+  },
+  "pro_level": false,
+  "verdict": "Not at fern level yet (mean about 5.9). The belt shot is still the strongest of the three and would hold for about two seconds: a one-point tunnel, battens dying into haze, the pair nearest the lens. The curtain shot is now almost as good: the backlit doorway works, but the strips have stepped geometry artefacts where they lie over the case. The overhead breaks the stage. Its light-linked 'sorter key' lights Dawn's two bags and the belt under them, but not the two cases beside them. Her near-black pair turns light grey (graded median: case 0.338 against 0.066 and 0.119 in the other shots; duffel 0.230 against 0.036 and 0.058). It sits them in a pool on a belt that reads as a grey slab (0.42 against 0.13 in curtain and 0.22 in belt). 23% of the frame sits below 8/255, half of it in the band above the belt. Galvanised and brushed metal do not read as metal anywhere; only the transfer rollers do. I checked all three graded JPEGs and raw PNGs with 2-5x crops and luminance statistics in regions. There is no clipping (0% above 250), and nothing is letter-like apart from two tiny zip-pull dots.",
+  "answers": "1) Do the case and duffel read as the same pair? Across curtain and belt, yes. They have the same silhouettes, the same blank case tag and the same order (duffel ahead, on the walkway side), and both stay dark: graded medians are 0.066 then 0.119 for the case, and 0.036 then 0.058 for the duffel. At the sorter, no. The 'sorter key' (power 136) is light-linked to dawn_case, dawn_duffel and the belt only. It lifts the case to 0.338 and the duffel to 0.230: the black duffel reads as grey nylon, and the charcoal case reads as a light grey soft case. Meanwhile navy_case (the same model, about 0.075-0.08) now looks more like her case from the belt shot than her own case does. Inside the overhead the pair holds together only by sharing the pool; across the cut, the identity breaks. A pool on her pair suits the beat this shot covers ('Called aside' in COVERAGE.md), and the pool itself could pass as light from the batten above (batten2 at x 9.9 hangs over the walkway edge). But a light that stops dead at the two neighbouring cases is a visible cheat: the belt just left of the shell is 0.016.\n\n2) Tag and keeper. The case tag stays blank paper and is the clearest cue for her bag in curtain and belt. In belt, though, it reads as a rigid flat ribbon running straight off the handle and lying flat on the belt, like a till receipt. The loop that tag() wraps round the grip (1.6 x 1.4 cm) does not read at this distance, and there is no visible overlap where the ends join and no slack. In the overhead it shows only as a short stub, about 20-26 px (roughly 6 cm), at the handle end. The duffel tag is wrong in two different ways. In curtain its return fold (a closed loop about 3 cm across and 4.3 cm wide) renders as a solid grey cylinder, which reads as a tube or cartridge, not paper. In overhead it is the brightest object in the frame (p95 0.70 against 0.48 or less for everything else), a white bar across the handles like a velcro strap. Tags are children of the bag roots, so the sorter key lights this one too. The keeper reads as a small matte black tab: harmless and not letter-like, but featureless, a blank patch. The two pale zip pulls just above it read as a colon or a pair of eyes at full frame. This is minor.\n\n3) Two distinct surrounding cases in the overhead. shell_case is distinct: a hard ribbed shell with a different silhouette. But it sits at the dark edge of the pool (median 0.086, and the belt just left of it is 0.016), so its four ribs are faint and its left half sinks toward black. Its wheels are only about 0.1-0.17 m from her case's handle end, so it cannot simply slide into the pool. navy_case differs from the shell. It does not differ enough from Dawn's case: it is a clone of it (same pocket outline, same spinner wheels, scale 1.18 x 1.08 x 1.1). Only the tint and the olive band separate them, and its dark value (about 0.075) matches how her case looks in the other two shots, so it competes with her case instead of contrasting with it.\n\n4) Left service area (belt). This is the +Y side: the chute landing at x 9.3-10.7. It is more readable than in round 1: bollards, hazard pillars and the landing with its end stop show. But the left third is still the murkiest (mean 0.085 against 0.116 on the right). The service zone has 14% of pixels below 8/255, and the near wall above it (x 0-400, y 0-330) has 39%. The landing reads as an ambiguous low grey slab. In curtain, the control cabinet on the left reads cleanly, but its blank screen reads as a flat pale card, not a lit screen. It does spill: the door just under the bezel is about twice the door's lower half (0.22 against 0.10). It reads flat because it renders near-white and almost uniform in the raw (0.86, with less than 0.02 drop from centre to edge), and the approved vignette brings it to 0.39 at the frame edge. That leaves it only about 1.8 times the door beside it.\n\n5) Brushed steel. It does not read. The guards ('guard galvanised') show as flat matte dark-grey paint: no spangle, no streak along the run, just one soft highlight on each rolled top. The 'brushed steel' material is used only on bolts, screws, eyes, the far door's kick plate and handle. The chute stainless in the overhead is a dark flat slab (median about 0.10, std 0.035) with no brushing direction. Only the transfer rollers in curtain read as metal.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "overhead",
+      "problem": "The light-linked 'sorter key' (power 136; receivers dawn_case, dawn_duffel and the belt) lights Dawn's pair and the belt under it, but not the two cases beside them. Her black duffel and charcoal case turn mid and light grey (3-6x their values in the other shots), the pool reads as a grey slab at 0.42, and the navy and shell cases sink.",
+      "fix": "If the pool on her pair serves 'Called aside', keep it, but make it physical and keep her bags dark. In sorter_returns(), drop 'sorter key' to about 25-35. Either remove its receiver list or add navy_case and shell_case to it, so its edge falls on them too. In set_layout(), raise batten2_light's overhead scale from 0.045 to about 0.3, and the general scale from 0.085 to about 0.15. Targets on the graded frame: dawn_case median 0.12-0.15; dawn_duffel 0.06-0.08 (matching belt); belt rubber 0.18-0.24 (the belt shot's belt is 0.22); shell and navy 0.08-0.12. Raise 'ribbed case return' from 4 to about 20 so shell_case shows its ribs."
+    },
+    {
+      "priority": 2,
+      "camera": "overhead",
+      "problem": "Outside the belt the frame is mostly dark: 23% of pixels sit below 8/255. The band above the belt (the chute and beyond) is the darkest part, with 49% below 8/255 and half of all crushed pixels. The walkway below is dark but holds (median 0.075, 10% below). The belt just left of shell_case is 0.016.",
+      "fix": "Re-centre on the belt: move camera and aim y from -0.19 to about -0.05. Do not move further toward +Y, which brings in more of the darkest band. At lens 20 the four bags already span about x 7.9-12.2 of the 4.7 m frame width, so a longer lens cuts the shell or the navy case unless the layout closes up. Rolling the camera about 20 degrees, so the belt runs on a diagonal, gives the belt more of the frame without that. Do not move shell_case toward the pool: x 8.9 would run it into her case, which starts about 0.1-0.17 m from its wheels. Light it instead (fix 1). 'walkway falloff' is linked only to the 'floor' object, so raising it lifts only the bare floor. If the yellow line and the cable box should read more, add line_conveyor and the diverter actuator parts (diverter_actuator, diverter_act_lid, diverter_act_cable) to its receivers."
+    },
+    {
+      "priority": 3,
+      "camera": "curtain",
+      "problem": "The draped PVC strips show hard, stepped rectangular notches where they meet the case: an L-shaped step at about x 795-830, y 340-470 and a rectangular cut-in at about x 1000-1050, y 330-380. These geometry artefacts sit on the brightest part of the frame.",
+      "fix": "The strips already have 40 rows and 5 columns, and there is no push-out pass. In baggage_belt_set._column()/hang(), each of a strip's 5 columns is draped on its own: a column whose ray hits the case folds onto it, while its neighbour a few cm over hangs straight, and that makes the step. Make the drape decision per strip: if any column is over the bag, drape all of them, easing the fold across the width. Alternatively, blend each column's path with its neighbours' in 2-3 smoothing passes, and raise cols to about 9 so the transition spreads over the strip's width."
+    },
+    {
+      "priority": 4,
+      "camera": "overhead",
+      "problem": "navy_case is a clone of Dawn's case and differs only by tint and its olive band, so it is not distinct from hers.",
+      "fix": "Make the surrounding bag differ in silhouette, not only in tint. Either lie navy_case pocket-face down, so its back panel and handle housing face up, or replace it in the overhead with a second shell_case variant (different rib count, warm-grey tint about 0.10). Keep its olive band."
+    },
+    {
+      "priority": 5,
+      "camera": "belt",
+      "problem": "The tags read as flat ribbons, not airline tags. The case tag runs rigidly off the handle and lies flat on the belt like a receipt; its loop round the grip does not read. The duffel tag's closed return fold is a grey cylinder in curtain, and in overhead the tag is the brightest object in frame.",
+      "fix": "In tag(), make the loop round the carry grip read: wider (about 2.5 cm across), with the two ends visibly overlapping by about 3 cm at the adhesive join, and a soft fold. Give the tail slack and a slight curl instead of a straight run, and shorten its drop (0.18 m now) so less of it lies on the belt. Flatten the duffel's return fold to an ellipse of about 3:1 (for example 0.016 along the strip, 0.005 high) so it cannot read as a tube. Do not raise the paper albedo: it is already 0.21-0.25 linear. The bright bar in the overhead comes from the sorter key reaching the tag. Fix 1 lowers it, or you can leave tag_ objects out of the key's receivers."
+    },
+    {
+      "priority": 6,
+      "camera": "curtain",
+      "problem": "Dawn's duffel is almost a silhouette (median 0.036, nearly half below 8/255) and is cut by the bottom frame edge.",
+      "fix": "bag_edge is 0.0 for curtain. At 0.3 it would give only about 5 W, and it sits at x 4.8, behind the camera and 3.8 m from the duffel, aimed at x 3.5, so it will barely register. Re-aim it, or a small copy, at the duffel (about (1.35, -0.24, 0.9)) so the straps and the near face read at about 0.06. To bring it fully into frame, move dawn_duffel in LAYOUT['curtain'] toward the curtain, from x 1.35 to about 1.15. By projection, its near base then lands at about y 860 with room for a contact shadow, and its far corner stays left of the case (about x 770 against the case's 795). Moving it toward the camera (x 1.55) would make it bigger and cut it more, and a 4 cm tilt gains only about 20 px."
+    },
+    {
+      "priority": 7,
+      "camera": "belt",
+      "problem": "The left third is still murky (mean 0.085 against 0.116 on the right; the near wall above the service area has 39% below 8/255), and the chute landing reads as an ambiguous slab.",
+      "fix": "The left of this frame is the +Y side, the chute landing at x 9.3-10.7. It already has caged bulkheads on its wall (bulk_n0 at x 3.6, 12 W; bulk_n1 at x 10.8, 25 W, over the landing) and the service batten sbatten1 (x 11.2, output 0.45). Raise these instead of adding a fitting on the walkway side (-Y, which is frame right). Take bulk_n1 to about 40 W and sbatten1 to about 0.7 so the landing rollers, end stop and bollards read. Raise sbatten0 (x 1.0, output 0.24, beside the camera) so the near wall's mortar lines read. Targets: left third mean 0.10 or more, under 10% below 8/255."
+    },
+    {
+      "priority": 8,
+      "camera": "belt",
+      "problem": "The galvanised guards and the chute stainless read as flat paint; no brushed or spangled metal shows.",
+      "fix": "In galvanised(), raise the spangle contrast (the cell colour varies only ±4% now). In the polished band of 'guard galvanised', lower roughness from 0.36 to about 0.28 and add anisotropy of about 0.5 with its tangent along X, so the battens streak along both guards in belt and curtain. In this file's noise convention, a stretch of (1, 30, 30) streaks along X, while (30, 1, 1) would streak across the run. The code notes that a 240:1 stretch along the run read as motion blur, so keep any stretched noise short. For 'chute stainless', lower roughness from (0.52, 0.62) to about (0.3, 0.4) and set anisotropy to about 0.5 along its slope. Seen straight down, it mirrors the dark soffit, so check that it gains a streak and does not just go darker."
+    },
+    {
+      "priority": 9,
+      "camera": "curtain",
+      "problem": "The strips read as frosted fabric, not PVC, and the cabinet screen reads as a pale card, not a lit screen.",
+      "fix": "In strip_mat(), raise Transmission Weight from 0.60 to about 0.85 and roughness from 0.245-0.36 to 0.12-0.18. Add a fine rib bump across each strip's width; the strips hang in the YZ plane, so the ribs vary along Y, not X. The screen already emits ('hmi blank', strength 10) and has a 5.5 W spill point 13 cm in front of it, so do not lower it to 1.5. It reads flat because it renders near-white and almost uniform in the raw (0.86). Raise the hmi falloff from 0.45 to about 0.8 so its edges drop visibly. Lower bulk_panel_light's curtain scale (0.48 now) so the screen stands at about 3x the door instead of 1.8x."
+    },
+    {
+      "priority": 10,
+      "camera": "overhead",
+      "problem": "The lacing seam is a row of dark squares that reads as a dashed graphic line, and the belt in the pool shows soft blotches and streaks along the run.",
+      "fix": "Keep the clips dull (the code notes that bright steel read as a white dashed line), but make them finer and closer: for example about 100 clips 6-8 mm wide on a 9-10 mm pitch, instead of 36 clips 16 mm wide on a 27 mm pitch, so they merge into one seam. The blotches are most likely the belt shader's own mottle (noise scale 5, blobs of about 20 cm) and its wear lanes, magnified by the key, rather than haze or denoising. The existing 420-scale bump (strength 0.12) is smaller than a pixel here. Lower the mottle's weight in belt_mat() from 0.7 to about 0.3, and judge again after fix 1 lowers the key."
+    }
+  ]
+}
