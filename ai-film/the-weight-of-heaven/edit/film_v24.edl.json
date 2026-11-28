@@ -1,0 +1,89 @@
+{
+ "file": "out/review/film_v24.mp4",
+ "frames": 4249,
+ "seconds": 177.0417,
+ "cut_v17_frames": 3360,
+ "new_frames": 889,
+ "excerpt": "out/review/film_v24_hall.mp4",
+ "excerpt_starts_at_s": 137.0,
+ "shots": [
+  {
+   "name": "the cutter over the wall",
+   "starts_at_s": 140.0,
+   "frames": 92
+  },
+  {
+   "name": "the spear",
+   "starts_at_s": 143.833,
+   "frames": 58
+  },
+  {
+   "name": "white between dark backs",
+   "starts_at_s": 146.25,
+   "frames": 30
+  },
+  {
+   "name": "Serath close",
+   "starts_at_s": 147.5,
+   "frames": 93
+  },
+  {
+   "name": "her profile",
+   "starts_at_s": 151.375,
+   "frames": 42
+  },
+  {
+   "name": "her profile at the slab",
+   "starts_at_s": 153.125,
+   "frames": 59
+  },
+  {
+   "name": "the hall, wide",
+   "starts_at_s": 155.583,
+   "frames": 154
+  },
+  {
+   "name": "Karst opens the shutters",
+   "starts_at_s": 162.0,
+   "frames": 112
+  },
+  {
+   "name": "Serath turns",
+   "starts_at_s": 166.667,
+   "frames": 17
+  },
+  {
+   "name": "Karst at the opening",
+   "starts_at_s": 167.375,
+   "frames": 70
+  },
+  {
+   "name": "the lamp",
+   "starts_at_s": 170.292,
+   "frames": 26
+  },
+  {
+   "name": "the shard",
+   "starts_at_s": 171.375,
+   "frames": 85
+  },
+  {
+   "name": "her face",
+   "starts_at_s": 174.917,
+   "frames": 51
+  }
+ ],
+ "yard_shots": 5,
+ "hall_starts_at_s": 153.125,
+ "karst_second_line_at_s": 151.47,
+ "we_were_chosen_at_s": 167.62,
+ "shutters_open_air_from_s": 163.2,
+ "grain": {
+  "amount": 0.0065,
+  "size": 1.1,
+  "chroma": 0.1,
+  "mid": 0.75,
+  "seed": 800
+ },
+ "peak_dbfs": -1.74
+}
