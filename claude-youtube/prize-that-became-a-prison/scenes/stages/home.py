@@ -9,7 +9,7 @@ Two rooms, side by side and closed (home_set.py):
   dining   Ch 10. The dining table with chairs round it, the one at the head empty, set back and turned a little; a
            street light outside the foot-end window runs the venetian blind's stripes down the table onto the empty
            chair and throws its striped shadow on the wall behind it; the blinds of the side windows glow; the
-           pendant over the table is off. Everything still.
+           pendant over the table is off. A blank television hangs beside the sideboard.
 
 Light: the kitchen has the laptop screen (an emissive face plus an area light the size of the screen just in
 front of it, and its spill toward the fridge), the night through the window and a low under-cabinet night light;
@@ -92,11 +92,13 @@ CAMERAS.update({
                      exposure=-0.75, spp_final=128),
     "kitchen_over": dict(loc=(KT[0] - 0.39, 1.13, 1.41), aim=(KT[0] - 0.05, 0.13, 0.89),
                          lens=55, focus="fx_screen", fstop=3.5, beat="ch02", exposure=-1.3),
+    "tv": dict(loc=(1.98, -0.41, 1.62), aim=(1.73, st.TV[1], 1.54), lens=48,
+               focus="fx_tv", fstop=5.6, beat="ch09", framing="dining", exposure=-0.85, final_res=(1280, 720)),
     "blinds": dict(loc=(3.28, -1.97, 1.34), aim=(3.3, 2.24, 1.18), lens=40,
                    focus="fx_blinds", fstop=5.6, beat="ch10", exposure=-0.85),
 })
 FOCUS.update(fx_gene=(4.1, -0.03, 1.27), fx_screen=(KT[0], 0.15, 0.89),
-             fx_blinds=(3.3, 2.21, 1.53), fx_table=(*st.DT, st.D_TOP))
+             fx_blinds=(3.3, 2.21, 1.53), fx_table=(*st.DT, st.D_TOP), fx_tv=st.TV)
 TRIMS = {
     "kitchen": {},
     "dining": {"d_sky": 0.3, "street_hero": 1.5},                         # less side-window glow on the end wall beside the head chair
@@ -894,6 +896,12 @@ def apply_camera(name):
           f"dining haze {dens}", flush=True)
 
 
+def frame_metadata(name, scene, resolution):
+    screen = {"kitchen_over": "lap_screen", "tv": "television_screen"}.get(name)
+    if screen is not None:
+        return sk.screen_frame_metadata(name, scene, resolution, bpy.data.objects[screen])
+
+
 def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=None, noise_threshold=None):
     """setkit.render with this stage's sampling: a final (1280 wide or more) of a dark frame takes the camera's
     `spp_final` and a tighter adaptive threshold, and the denoiser is fed albedo and normals (prefilter accurate),
@@ -952,6 +960,7 @@ def build(cast=True):
     st.dining_chair("chair_dawn", cx, cy, ct, sat=0.7, val=0.85, size=CHAIR_SIZE)
     st.dining_chair("chair_k2", KT[0] - 0.74, KT[1] - 0.05, 0.0 - 8.0, sat=0.7, val=0.85)   # pushed up on her left
     st.dining()
+    st.television()
     _STATE["dinner"], _STATE["gene_mug"] = st.dining_service()
     st.dining_table()
     st.dining_chairs()

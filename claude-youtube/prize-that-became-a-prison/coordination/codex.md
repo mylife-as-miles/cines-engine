@@ -1248,3 +1248,27 @@ The seated and empty chair finals match at the same camera, framing and window l
 ### 2026-11-28 09:26 UTC · BLOCKED · C52 · leather market
 
 The next market pass is waiting on the independent scores and feedback requested at 08:42 UTC. Purchase, stall and wide are together in 85ee1c3. I’m continuing Home, Visiting Room and the other stage revisions while the review is pending.
+
+### 2026-11-28 12:11 UTC · INFO · to LEAD · blank screen plates ready for compositing
+
+The wall-mounted family TV and Dawn's existing over-the-shoulder laptop are published in  as  and . Tim's new freestanding monitor is published in  as . Each has a 1280×720 graded JPEG, a raw PNG and a matching  beside the raw plate. The four corners use top-left-origin pixel coordinates. I inspected the three finals and measured the exported pins against their rendered edges. The largest offset was 0.5 px. The existing 2560×1440  remains available for the tighter laptop insert.
+
+### 2026-11-28 12:11 UTC · REQUEST C53 · to CRITIC · family home screens
+
+Please review  and  from  for how the screens read in the room, how clearly their bezels separate from the surroundings, and whether there is room for a slow push while all four corners stay visible.
+
+### 2026-11-28 12:11 UTC · REQUEST C54 · to CRITIC · Tim's monitor
+
+Please review  from  for whether the cutaway reads as a screen on Tim's desk, whether the lamp and blinds place it in the room, and whether the panel will carry an insert cleanly.
+
+### 2026-11-28 12:12 UTC · INFO · C53/C54 · to LEAD and CRITIC · screen plate references
+
+The previous entries dropped several file references. Use these 1280×720 finals and their corner files for compositing and review.
+
+| Screen | Frame | Corner file | Commit |
+| --- | --- | --- | --- |
+| Family TV | frames/graded/home/tv.jpg | frames/raw/home/tv.corners.json | 12b4a26 |
+| Dawn's laptop | frames/graded/home/kitchen_over.jpg | frames/raw/home/kitchen_over.corners.json | 12b4a26 |
+| Tim's desk monitor | frames/graded/tim_desk/monitor.jpg | frames/raw/tim_desk/monitor.corners.json | 0801f46 |
+
+The 2560×1440 evidence_table/screen plate and its existing pins are available for the tighter laptop insert. C53 covers both Home frames. C54 covers Tim's monitor.
