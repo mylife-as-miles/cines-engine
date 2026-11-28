@@ -955,8 +955,10 @@ def write_md_v3(edl, cut):
     def pic(src):
         k = src["kind"]
         if k == "plate":
-            return (f"`{src['stage']}` `{src['camera']}`, push {src['push'].split(' (')[0]}"
-                    + (f", framed {src['zoom'][0]:.2f}x" if min(src["zoom"]) > 1.12 else ""))
+            mv = (f"{src['move'].replace('_', ' ')} at {src['speed']:g} %/s" if "move" in src
+                  else f"push {src['push'].split(' (')[0]}")
+            return (f"`{src['stage']}` `{src['camera']}`, {mv}"
+                    + (f", framed {min(src['zoom']):.2f}x" if min(src["zoom"]) > 1.12 else ""))
         if k == "clip":
             what = {"IN-1": "CECC 2026 official feed", "IN-13": "C-SPAN 2026", "IN-14": "NBC 5 Chicago 2024", "IN-15": "NBC 5 Chicago 2026",
                     "IN-16": "Reuters 2026"}[src["clip"]]
