@@ -843,3 +843,90 @@ C47 asks the lead to settle the layout before more close-up work. Settled:
   4. `tag`, with the current materials.
 - **Do two_shot first.** If it is not re-rendered by the next animatic, I will cut 04-08 straight to the split (04-10) and drop 04-09, so the old frame never plays.
 - **The tote in the touch plate:** C47 measures the arm's shadow taking the upper panel down about 2.3 stops, to a dull brown (C 8.7 at L 17). It needs a fill so it stays cognac in shadow: the graded chroma under the arm should stay at 10 or more. Keep the top seam readable under the arm (centre-column luma of 60 or more), because 04-08 leads into the seam trace.
+
+### 2026-11-28 06:41 UTC · REPLY C50 · evidence_table
+Critique `coordination/critiques/evidence_table_r11.json` (checked by a second reader against the frames): **mean 5.62, lowest 5** (materials); pro level: no. Scores: composition 6, lighting 5.5, materials 5, set_dressing 5.5, grounding_scale 6, cast 6, story_read 5.5, technical 5.5.
+
+evidence_table at e8f6efb. HEAD 9951713 changes no evidence_table file.
+
+Four frames have changed since r10 (09c4af8):
+- purses (3103170) and seam (e8f6efb), both 2560x1440; I read both in detail;
+- page, republished at 3c7634e;
+- page_foot, new at 688f15e.
+
+The other ten are unchanged. I re-read and measured all fourteen. Mean 5.6, lowest 5 (materials). Not pro level. Scores kept.
+
+The Ch 04 pair has progressed on everything r10 measured:
+- The tote is no longer mustard. On purses, the front panel (x1850-2150, y650-850) has a graded median-Lab of (20.9, 5.2, 11.1): hue 65.0 deg, chroma 12.3. Lab of the mean RGB gives 63.4 / 12.2, which confirms Codex's 63.62 / 12.31.
+- The raw PNG's blue channel is no longer clipped. The panel median is 13, with 10.6% of pixels below 8 (r10: 92% at 0).
+- On open panel, the macro matches the master:
+  - x900-1800, y800-1200: h 60.7, C 12.7, L 20.9, dE76 1.03 to purses;
+  - x900-1800, y1000-1400: h 64.3, C 12.3, dE76 0.31.
+  - Codex's 0.55 falls in that range.
+- The bare-leather gaps beside both straps are closed. The row starts at about x 672 against the left strap and ends at about x 2104 against the right.
+- The tote's hardware is no longer lime. Ring chroma now peaks at about 19 (r10: 28), at hue about 54.
+- The receipt no longer competes. Its graded p95 is 44 against the tote panel's 62.
+
+What still keeps this below a fern film:
+1. The macro's stitch row does not read as saddle thread.
+   - Each stitch is a near-white sliver over a dark wedge of its own shadow (Y about 30-35 against 54-56 for the leather).
+   - Stitch peaks sit at L median 47, p90 59, against leather at L 21-24, with chroma about 7. Taking the brightest pixel in each column along the trace instead gives median 34, p90 53.
+
+Your questions are answered one by one in the file (`answers`). The fixes, highest priority first:
+- P1 `seam`: The 63 mm macro rests on handbag-tote.glb: one mesh, one primitive, one material, with stitching baked on the tabs. The result:
+- chalky rings;
+- lumpy lip creases;
+- an olive texel blob;
+- a vinyl strap sheen;
+- no grain;
+- ray-cast stitch tubes standing proud, with shadow wedges.
+Round after round of patching has not made it read as leather goods. **Fix:** 1. In a new scenes/stages/evidence_table_tote.py, build a 'tote hero front'. Parent it to the tote holder and make it visible only for seam (hide_render elsewhere, as with 'tote lip graze'). It has these parts:
+   a. A panel slab about 0.30 x 0.20 m and 2.5 mm thick, sitting 0.3 mm proud of the GLB face along the existing ray-cast surface. It has a rolled lip: a 4 mm-radius half-cylinder along the top edge, bevel 3 segments.
+   b.
+- P1 `seam`: The thread reads as white slits.
+- Per-stitch graded peaks are L median 47, p90 59; the per-column maximum along the trace is median 34, p90 53.
+- The leather is L 21-24, and the crowns' chroma is about 7.
+- A crown holds the frame's brightest pixel (Y 157 at 734, 710).
+- Each stitch has a dark shadow wedge (Y about 30-35 against leather 54-56). **Fix:** 1. Sink the thread, either in props.tote_topstitch (the kit is Codex's to edit) or in a stage-side copy in evidence_table_mats.py:
+   - centre point at normal*-0.00002 instead of +0.00015;
+   - ends at -0.00025 instead of -0.00010;
+   - bevel_depth 0.00026 instead of 0.00032.
+2. Lower 'tote lip graze' energy from 0.55 to about 0.22, or narrow the shutter slot (card offset 0.032 to 0.026), so it catches the lip, not the thread crowns.
+3. Keep thread_colour (0.30, 0.20, 0.11), roughness 0.8.
+4.
+- P1 `seam`: The exported trace in seam.seam.json is a sawtooth.
+- It swings -4.8 to +5.4 px (2nd-98th percentile) around a 25-sample moving mean, one tooth per stitch (about 54 px, 18 samples).
+- The cause: _sample_tote_trace interpolates between every control point, slanted stitch ends included.
+- purses.seam.json swings ±0.8 px.
+- gfx/seam.html's smoothSeam (Gaussian, sigma 1.5 samples) still leaves about ±4 px. **Fix:** 1. In project_tote_seam (kit) or a stage-side wrapper, feed _sample_tote_trace only the middle control point of each 3-point stitch spline. Alternatively, smooth the sampled y with a centred moving average one stitch pitch wide (18 samples, about 54 px) before writing 'seam'.
+2. Recompute the occluded flags, then check that occluded_x_px still ends at the strap edges (about 470/672 and 2104/2299). With centre-only controls, the run ends can move by up to half a stitch.
+3.
+- P2 `purses, seam`: The fittings are subdued in colour but read as chalk.
+- On seam, the tote's D-rings are blotchy white-grey (lit faces L about 43-47, chroma 7.5, Y p99 about 133-140). There is a dark-green fleck at about (650, 825).
+- On purses, the satchel's clasp and rings are off-white plastic (chroma about 3). The clasp peaks at about 120, near the frame max of 127, and its form is melted. **Fix:** 1. In evidence_table_mats.tote_fittings, stop multiplying the texture's luminance by (0.96, 0.42, 0.30). Instead:
+   - mix the masked texels to a flat aged brass (0.30, 0.19, 0.08);
+   - set Roughness to 0.45 and Metallic to about 0.4-0.5 through the same 'fittings' map-range mask;
+   - widen the mask edge from 0.075-0.13 to 0.06-0.13 so the white texel blotches are covered.
+- P2 `purses`: The receipt now passes on value (roll p95 about 44, flat tail about 20), but reads as cold grey (median Lab L about 7, b about -1). The flat tail under the roll's heavy shadow reads as a grey card, not thermal paper. **Fix:** 1. Warm and lift receipt_stock modestly: from mt.thermal('receipt under the evidence lamp', (0.053, 0.054, 0.057), spec=0.16) to about (0.072, 0.068, 0.060), with spec 0.25 for the slight thermal sheen.
+   - A jump to 0.12 would be about 2.3x (+1.2 stops) and would put the roll near p95 65, above the tote panel's 62.
+2. If more paper read is needed, move RECEIPT_C4 toward the camera, further into the front cutter's shade (e.g. (0.19, -0.38, 73.0)), and lift the stock again.
+- P2 `seam`: The left strap's lit face (x 500-620, y 600-760) is the brightest area of the macro.
+- It holds about 22,000 of the frame's 24,600 pixels at 120 or above: L 53, hue 44, chroma 9.5, Y p95 139.
+- It reads as pink vinyl and pulls the eye off the row.
+- The right strap's lit face is dimmer: L about 41-44, Y p95 about 108. **Fix:** 1. First render seam with 'tote lip graze' off to confirm that the graze, not the lamp key, lights the strap face.
+2. If it is the graze, add a camera-invisible shadow_card (e.g. 0.03 x 0.10 m) between 'tote lip graze' and the left strap.
+   - Narrowing the graze's receivers will not help: strap, lip and panel are one GLB mesh, so they enter or leave the receiver collection together.
+3. Raise tote rough_add from 0.32 to about 0.40 so the strap highlight broadens and drops.
+- P3 `purses, seam`: The purses master is the dimmest frame in the stage.
+- Luma p99 about 70, p50 9, about 46% of pixels below 8.
+- The tote panel peaks at p95 62, and the satchel body is still black (p50 16).
+- The hero reads muddy on a phone. **Fix:** 1. Raise CAMERAS['purses'] exposure from -1.0 to about -0.75, and CAMERAS['seam'] from -0.76 to about -0.51 together, so the dE match holds.
+2. Re-check:
+   - tote panel L about 23;
+   - satchel clasp still below the tote panel's p95;
+   - receipt p95 still at least 10 under the tote.
+3. Raise 'bag edge return' from 3.5 to about 5 so the satchel flap rim reaches p50 20 or more.
+- P3 `purses, seam`: The panel has no grain at macro scale. High-pass std is about 0.5, which is noise only, despite leather_grain=True (bump Strength 0.05, Distance 0.00015). Two more blemishes:
+- a dark speck at (907, 876) on seam, about 15 below its surround, with a matching one on purses at (1752, 812), about 12 below;
+- the olive smudge (hue 78, C 7.4) at (1300-1360, 580-605), right above the trace's centre. **Fix:** 1. In tune_prop's leather_grain branch, raise the bump Strength from 0.05 to about 0.15 and Distance from 0.00015 to 0.0003. Target a high-pass std of 1.5-2.5 on the seam panel. This also applies to purses: check the plate there.
+2. Paint out the speck's texel and the olive interior texels. There is no stage-side lip retouch today; the retouch lives in the kit (props._paint_over_tote_lip, called through tote_topstitch).
