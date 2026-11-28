@@ -68,9 +68,10 @@ render() {
 }
 
 mux() {
-  # canvas_render encodes RGB to yuv420p with swscale's default BT.601 matrix: convert to BT.709 and tag it
+  # canvas_render encodes RGB to yuv420p with swscale's default BT.601 matrix: convert to BT.709 and tag it (accurate
+  # rounding and full chroma interpolation, or the conversion loses up to 4 levels; tools/check_colour.py)
   ffmpeg -v error -y -i "$OUT/_silent.mp4" -i "$OUT/testimony.wav" \
-    -filter_complex "[0:v]scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=tv:out_range=tv,format=yuv420p[v];[1:a]apad,atrim=end=$(python3 -c "print($TOTAL_FR/24)")[a]" \
+    -filter_complex "[0:v]scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=tv:out_range=tv:flags=bicubic+accurate_rnd+full_chroma_int,format=yuv420p[v];[1:a]apad,atrim=end=$(python3 -c "print($TOTAL_FR/24)")[a]" \
     -map "[v]" -map "[a]" -frames:v $TOTAL_FR -c:v libx264 -preset slow -crf 16 -profile:v high -pix_fmt yuv420p \
     -colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv \
     -c:a aac -b:a 256k -ar 48000 -movflags +faststart "$OUT/type_test_v1.mp4"

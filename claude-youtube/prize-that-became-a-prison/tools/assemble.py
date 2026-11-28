@@ -67,8 +67,9 @@ CANVAS = Path("/home/user/cines-engine/.claude/skills/cines-engine/scripts/canva
 DEFAULT_PY = "/tmp/claude-0/-home-user-cines-engine/73593c7c-6dfc-5879-82bf-97979958b8ab/scratchpad/gfxenv/bin/python"
 PY = os.environ.get("PRIZE_GFX_PY") or (DEFAULT_PY if os.path.exists(DEFAULT_PY) else sys.executable)
 W, H, FPS = 1920, 1080, 24
-RENDER_VERSION = 4                 # bump to invalidate every cached shot
-# the cached shots are intermediates: high quality, fast to write; the join makes the one delivery encode
+RENDER_VERSION = 5                 # bump to invalidate every cached shot (5: BT.709 conversions, 28 Nov 2026)
+# the cached shots are intermediates: high quality, fast to write; the join makes the one delivery encode. Every frame
+# reaches ENC as BT.709 YUV: render_shot names the conversion (gfx/doc_composite.py TO_YUV), as ffmpeg's own is BT.601
 ENC = ["-c:v", "libx264", "-crf", "14", "-preset", "veryfast", "-pix_fmt", "yuv420p",
        "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"]
 
@@ -712,7 +713,8 @@ def plate_frames(path, n, z0, z1, cx, cy, parallax=None):
 
 def render_shot(e):
     sys.path.insert(0, str(GFX))
-    from doc_composite import grade_filter  # scenes/shoot.py GRADE, its grain made temporal (as plate_shot uses it)
+    # scenes/shoot.py GRADE, its grain made temporal (as plate_shot uses it), and the named BT.709 conversion to YUV
+    from doc_composite import TO_YUV, grade_filter, grade_filter_yuv
     SHOTS.mkdir(parents=True, exist_ok=True)
     out, side = SHOTS / f"{e['id']}.mp4", SHOTS / f"{e['id']}.json"
     h = shot_hash(e)
@@ -722,7 +724,9 @@ def render_shot(e):
     try:
         if src["kind"] == "plate":
             ins = ["-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-"]
-            fc, last = f"[0:v]{grade_filter()}[g];", "[g]"
+            # the conversion to YUV sits where ffmpeg's own sat: a plate alone goes to YUV before its grain (the grain
+            # on the 4:2:0 planes); with type, grain and type stay in RGB and the conversion comes after the type
+            fc, last = f"[0:v]{grade_filter() if src['type'] else grade_filter_yuv()}[g];", "[g]"
             for i, ty in enumerate(src["type"]):
                 secs = n / FPS - ty["t0"] + ty["tin"] + 0.1
                 mov = work / f"type{i}.mov"
@@ -734,7 +738,7 @@ def render_shot(e):
                 fc += (f"[{i + 1}:v]format=rgba,trim=start={ty['tin']:.4f},setpts=PTS-STARTPTS,"
                        f"tpad=start_duration={ty['t0']:.4f}:color=0x00000000[t{i}];{last}[t{i}]overlay=eof_action=pass:format=auto[o{i}];")
                 last = f"[o{i}]"
-            fc += f"{last}format=yuv420p[v]"
+            fc += f"{last}{TO_YUV if src['type'] else 'format=yuv420p'}[v]"
             ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n),
                                    "-r", str(FPS), *ENC, str(tmp)], stdin=subprocess.PIPE, cwd=ROOT)
             for fr in plate_frames(f"{src['stage']}/{src['camera']}", n, src["zoom"][0], src["zoom"][1], src["centre"][0], src["centre"][1],
@@ -746,8 +750,11 @@ def render_shot(e):
         else:
             f = ensure_piece(src, work)
             a = int(round(src["in"] * FPS))
+            # the piece's matrix from its tag: the tools' clips are BT.709 and pass through untouched; canvas_render.js
+            # writes BT.601 untagged (read as 601, as ffmpeg reads it), brought to BT.709 here
             run(["ffmpeg", "-v", "error", "-y", "-i", f, "-vf",
-                 f"trim=start_frame={a}:end_frame={a + n},setpts=PTS-STARTPTS,scale={W}:{H},setsar=1,format=yuv420p",
+                 f"trim=start_frame={a}:end_frame={a + n},setpts=PTS-STARTPTS,scale={W}:{H}:in_color_matrix=auto:"
+                 f"out_color_matrix=bt709:out_range=tv:flags=bicubic+accurate_rnd+full_chroma_int,setsar=1,format=yuv420p",
                  "-frames:v", str(n), "-r", str(FPS), *ENC, tmp])
         got = probe_frames(tmp)
         if got != n:
@@ -807,6 +814,7 @@ def join_cmd(args):
     lst = FILM_DIR / "concat.txt"
     lst.write_text("".join(f"file '{SHOTS / (e['id'] + '.mp4')}'\n" for e in edl["shots"]))
     tmp = FILM_DIR / "animatic_v1.tmp.mp4"
+    # a join of BT.709 shots (every one rendered at this RENDER_VERSION): the YUV passes through untouched
     run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-an", "-vf", "setsar=1,format=yuv420p",
          "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-crf", "18", "-maxrate", "14M", "-bufsize", "28M", "-preset", "fast", "-pix_fmt", "yuv420p",
          "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart", tmp])
