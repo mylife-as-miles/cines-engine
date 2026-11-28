@@ -443,8 +443,47 @@ def path_assemble(sb, R):
     return res
 
 
+def path_assemble_v3(sb, R):
+    """Animatic v3's new kinds: a real clip (decoded with the BT.709 matrix the HD sources need, cropped full frame,
+    grade none), a photograph (grade none), and a clip on a plate's screen (doc_composite with the texture the assembler
+    cuts, over a white plate, graded). The clip source is the patches encoded as an HD source is (BT.709, untagged)."""
+    asm = load("assemble_under_test_v3", ROOT / "tools/assemble.py")
+    film = sb.dir / "out/film"
+    asm.ROOT, asm.FILM_DIR, asm.SHOTS, asm.PIECES = sb.dir, film, film / "shots_v3", film / "pieces"
+    asm.VERSION = "animatic_v3"
+    (film / "tmp").mkdir(parents=True, exist_ok=True)
+    # untagged BT.709, as the archive's HD clips are; 4:4:4 so the check measures the pipeline's conversions, not the
+    # source's own chroma subsampling (a real 4:2:0 source costs pure red about one more level, before any of our steps)
+    src = sb.p("hd_source.mp4")
+    run(["ffmpeg", "-v", "error", "-y", "-loop", "1", "-i", sb.plate, "-t", "1", "-r", "30", "-vf",
+         "scale=out_color_matrix=bt709:out_range=tv,format=yuv444p", "-c:v", "libx264", "-crf", "4", src])
+    asm.CLIPS["CC"] = (str(src), None)
+    shutil.copy(sb.plate, sb.p("photo.png"))
+    n = 6
+    shots = [
+        {"id": "cc-clip", "frames": n, "source": {"kind": "clip", "clip": "CC", "file": str(src), "src_in": 0.1, "frames": n,
+                                                   "crop": [0, 0, W], "crop1": [0, 0, W], "grade": "none", "type": []}},
+        {"id": "cc-photo", "frames": n, "source": {"kind": "photo", "photo": str(sb.p("photo.png")), "zoom": [1.0, 1.0],
+                                                    "centre": [0.5, 0.5], "frames": n, "grade": "none", "type": []}},
+    ]
+    for e in shots:
+        asm.render_shot(e)
+    # a screen: the clip as a texture pinned over the white plate, full frame
+    cj = sb.p("corners_v3.json")
+    cj.write_text(json.dumps({"corners": dict(zip(["top_left", "top_right", "bottom_right", "bottom_left"], [[0, 0], [W, 0], [W, H], [0, H]]))}))
+    scr = {"kind": "screen", "plate": str(sb.white), "corners": str(cj), "clip": "CC", "file": str(src), "src_in": 0.1,
+           "crop": [0, 0, W, H], "still": False, "zoom": [1.0, 1.0], "focus_uv": [0.5, 0.5], "tex_gain": 1.0, "frames": n}
+    work = Path(tempfile.mkdtemp(prefix="scr-", dir=sb.dir))
+    out_scr = sb.p("screen_v3.mp4")
+    asm.render_screen(scr, n, work, out_scr)
+    flat = box_means(plate_image(), boxes())      # grade none: no grade and no grain, the patches themselves
+    return [("assemble v3: clip (HD source, grade none)", asm.SHOTS / "cc-clip.mp4", plan_all(flat), None),
+            ("assemble v3: photo (grade none)", asm.SHOTS / "cc-photo.mp4", plan_all(flat), None),
+            ("assemble v3: screen (clip texture, graded)", out_scr, plan_all(R.graded["yuv"]), None)]
+
+
 PATHS = dict(type_render=path_type_render, canvas=path_canvas, doc=path_doc, split=path_split, plate_type=path_plate_type,
-             montage=path_montage, assemble=path_assemble)
+             montage=path_montage, assemble=path_assemble, assemble_v3=path_assemble_v3)
 
 
 def main():

@@ -1,0 +1,144 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>quote cards</title>
+<style>
+@font-face{font-family:"Archivo";src:url("fonts/archivo/Archivo%5Bwdth,wght%5D.ttf") format("truetype");font-weight:100 900}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-Regular.ttf");font-weight:400}
+@font-face{font-family:"PlexMono";src:url("fonts/ibmplexmono/IBMPlexMono-Medium.ttf");font-weight:500}
+html,body{margin:0;background:transparent}canvas{display:block}
+</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+'use strict';
+// Testimony quote cards for The Prize That Became a Prison: the text system's look 1 (gfx/typetest.html, "testimony"),
+// made general so the animatic (tools/assemble.py, shot kinds `quote` and every shot with a `card`) can lay any real
+// testimony over footage, a plate or the dark ground. Transparent: only the words, the dark column the words live in,
+// and Tim's voice as thin bars. Every frame is a function of t and window.PLAN (set by canvas_render.js --plan).
+//
+//   mode 'card'   a lyrics-style stack: running words (Archivo 300) rise out of a mask under their baseline, key words
+//                 (Archivo 800) land from a slight blur; each sentence ("seg") builds its own stack and older lines dim.
+//                 Words arrive two frames before they are spoken. Words flagged `rec` are a written record read aloud
+//                 (Dawn's letter): IBM Plex Mono, typed letter by letter. Time words (years, dates) take the one accent.
+//                 `held`: from held.t only his last words stay, low on the frame, alone (the film holding him; no dash).
+//   mode 'typed'  written lines typed on in IBM Plex Mono at a fixed rate (his written statement, set as a record).
+// No red, no labels, no names, no credits. Text stays inside x 140-1780, y 70-900.
+const W = 1920, H = 1080, FPS = 24;
+const COL = { ink: '#eef0f2', acc: '#8ad8e4' };
+const ACC = a => `rgba(138,216,228,${a})`, INK = a => `rgba(238,240,242,${a})`;
+const SANS = 'Archivo', MONO = 'PlexMono';
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const cl = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
+const lerp = (a, b, u) => a + (b - a) * u;
+const ramp = (t, a, b) => cl((t - a) / (b - a));
+const oExpo = u => u >= 1 ? 1 : 1 - Math.pow(2, -10 * u);
+const oQuint = u => 1 - Math.pow(1 - u, 5);
+function bez(x1, y1, x2, y2) {
+  const B = (a, b, u) => 3 * a * u * (1 - u) * (1 - u) + 3 * b * u * u * (1 - u) + u * u * u;
+  return x => { x = cl(x); let lo = 0, hi = 1, u = x; for (let i = 0; i < 24; i++) { if (B(x1, x2, u) < x) lo = u; else hi = u; u = (lo + hi) / 2; } return B(y1, y2, u); };
+}
+const ENTER = bez(.2, .8, .2, 1);
+function setFont(w, s, fam = SANS, ls = 0) { ctx.font = `${w} ${s}px ${fam}`; ctx.letterSpacing = ls + 'px'; }
+const tw = s => ctx.measureText(s).width;
+function rise(text, x, y, size, p) {
+  if (p <= 0) return;
+  const e = oExpo(cl(p)), w = tw(text);
+  ctx.save(); ctx.beginPath(); ctx.rect(x - size * .25, y - size * 1.15, w + size * .5, size * 1.47); ctx.clip();
+  ctx.globalAlpha *= cl(p * 2.4); ctx.fillText(text, x, y + (1 - e) * size * .9); ctx.restore();
+}
+function slam(text, x, y, size, p) {
+  if (p <= 0) return;
+  const e = oQuint(cl(p)), w = tw(text), s = lerp(1.08, 1, e), b = (1 - e) * 14;
+  ctx.save(); ctx.globalAlpha *= cl(p * 3.2);
+  if (b > .3) ctx.filter = `blur(${b.toFixed(1)}px)`;
+  ctx.translate(x + w / 2, y - size * .36); ctx.scale(s, s); ctx.fillText(text, -w / 2, size * .36); ctx.restore();
+}
+const LEAD = 2 / FPS;
+function P() { return window.PLAN || {}; }
+function styleOf(L, pl) {
+  const k = pl.scale || 1;
+  if (L.rec) return { w: 500, s: 44 * k, fam: MONO, ls: 0.5 };
+  return L.key ? { w: 800, s: 128 * k, fam: SANS, ls: -128 * k * .015 } : { w: 300, s: 64 * k, fam: SANS, ls: 0 };
+}
+function gapOf(prev, cur, pl) { const a = styleOf(prev, pl).s, b = styleOf(cur, pl).s; return .95 * b + .24 * a + (cur.key || prev.key ? 4 : 12); }
+function column(pl, t) {
+  if (!pl.column) return;
+  const a = pl.column === true ? 1 : pl.column;
+  const g = ctx.createLinearGradient(0, 0, 1280, 0);
+  g.addColorStop(0, `rgba(5,6,8,${0.88 * a})`); g.addColorStop(.42, `rgba(5,6,8,${0.7 * a})`); g.addColorStop(1, 'rgba(5,6,8,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function stack(pl, t, seg) {
+  const lines = pl.lines.filter(L => L.seg === seg), XL = pl.x || 140, YA = pl.ya || 700, maxw = pl.maxw || 980;
+  const act = lines.map(L => L.words[0][1] - LEAD - .26);
+  for (let i = 0; i < lines.length; i++) {
+    if (t < act[i]) break;
+    let y = YA;
+    for (let j = i + 1; j < lines.length; j++) if (t >= act[j]) y -= gapOf(lines[j - 1], lines[j], pl) * ENTER(ramp(t, act[j], act[j] + .42));
+    const L = lines[i], st = styleOf(L, pl);
+    const next = i + 1 < lines.length ? act[i + 1] : 1e9;
+    const dim = ramp(t, next, next + .3);
+    const alpha = L.key ? lerp(1, .9, dim) : lerp(1, L.rec ? .62 : .46, dim);
+    // a line wider than the column is set smaller, never wrapped
+    setFont(st.w, st.s, st.fam, st.ls);
+    let full = 0; for (const [w] of L.words) full += tw(w) + st.s * .26;
+    const k = full > maxw ? maxw / full : 1, size = st.s * k;
+    let x = XL;
+    for (const [word, wt, o] of L.words) {
+      setFont(st.w, size, st.fam, st.ls * k);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = o && o.acc ? COL.acc : COL.ink;
+      const t0 = wt - LEAD;
+      if (L.rec) {                       // typed, letter by letter, from the word's time
+        const n = Math.floor((t - t0) / 0.035) + 1;
+        if (n > 0) ctx.fillText(word.slice(0, Math.min(word.length, n)), x, y);
+      } else if (L.key) slam(word, x, y, size, ramp(t, t0, t0 + .24));
+      else rise(word, x, y, size, ramp(t, t0, t0 + .3));
+      x += tw(word) + size * .26;
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+function wave(pl, t) {
+  if (!pl.env) return;
+  const n = 64, i1 = Math.floor((t + (pl.env_t0 || 0)) * 48), x0 = pl.x || 140, y0 = 862;
+  for (let k = 0; k < n; k++) {
+    const i = i1 - (n - 1 - k); if (i < 0) continue;
+    const db = pl.env[Math.min(i, pl.env.length - 1)], a = cl((db + 58) / 46), h = 2 + a * 30;
+    ctx.fillStyle = k > n - 4 ? INK(.9) : INK(.16 + .3 * (k / n));
+    ctx.fillRect(x0 + k * 7, y0 - h / 2, 3, h);
+  }
+}
+function held(pl, t) {
+  const h = pl.held, XL = pl.x || 140;
+  setFont(300, 88, SANS, 0); ctx.fillStyle = COL.ink; ctx.globalAlpha = 1;
+  ctx.fillText(h.text, XL, h.y || 822);
+}
+function drawCard(t) {
+  const pl = P(); if (!pl.lines) return;
+  if (pl.held && t >= pl.held.t) { column(pl, t); held(pl, t); return; }
+  if (pl.until != null && t >= pl.until) return;
+  column(pl, t);
+  const ends = pl.segEnd || [1e9];
+  let seg = 0; while (seg < ends.length - 1 && t >= ends[seg]) seg++;
+  stack(pl, t, seg);
+  wave(pl, t);
+}
+function drawTyped(t) {
+  const pl = P(); if (!pl.typed) return;
+  column(pl, t);
+  const XL = pl.x || 140, s = pl.size || 46, lh = pl.lh || s * 1.55;
+  let y = pl.y0 || 300;
+  for (const L of pl.typed) {
+    const st = L.style === 'key' ? { w: 800, f: SANS, s: s * 1.5 } : { w: 500, f: MONO, s };
+    setFont(st.w, st.s, st.f, 0); ctx.fillStyle = COL.ink;
+    const n = Math.floor((t - L.t) * (L.cps || 30));
+    if (n > 0) ctx.fillText(L.text.slice(0, Math.min(L.text.length, n)), XL, y);
+    y += L.style === 'key' ? lh * 1.35 : lh;
+  }
+}
+window.draw = (mode, t) => {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.letterSpacing = '0px';
+  ctx.textBaseline = 'alphabetic';
+  if (mode === 'card') drawCard(t); else if (mode === 'typed') drawTyped(t);
+};
+Promise.all(['300 64px Archivo', '800 64px Archivo', '500 32px PlexMono'].map(f => document.fonts.load(f))).then(() => { window.READY = true; });
+</script></body></html>

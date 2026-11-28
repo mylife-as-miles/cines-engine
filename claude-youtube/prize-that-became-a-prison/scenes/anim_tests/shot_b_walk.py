@@ -9,7 +9,7 @@ The walk is a procedural gait on Dawn's own Rigify rig (no motion capture), writ
 - feet: IK, each planted at a fixed point on the floor for its stance (heel strike about the heel, foot flat, heel
   rise about the ball with the toe kept flat), so a planted foot cannot slide; the swing between plants follows a
   minimum-jerk path with a lift arc, the foot pitched toe-down after push-off and toe-up before the next strike;
-- pelvis: forward at 1.05 m/s with the small surge of a real walk, lowest at double support and highest at mid-stance
+- pelvis: forward at 1.0 m/s (1.85 steps a second) with the small surge of a real walk, lowest at double support and highest at mid-stance
   (bounded every frame by what the legs can reach, so the IK never stretches), swaying over the stance foot, turning
   and dropping on the swing side; the chest counter-turns, the head stays level;
 - left arm: carries the black duffel (the extra bag) by its handles, held a little out from the body and swinging
@@ -17,7 +17,15 @@ The walk is a procedural gait on Dawn's own Rigify rig (no motion capture), writ
   a little behind the arm, as a pendulum;
 - right arm: back and a little out, holding the case's handle in a closed hand.
 The case is a two-wheeled trailer of that hand: each frame its rear wheels roll toward the hand's footprint while
-the handle keeps its length, so it tilts and swings behind her as a pulled case does.
+the handle keeps its length, so it tilts and swings behind her as a pulled case does. Its telescopic handle is
+pulled out 30 cm and its grip bar slimmed to about 20 x 17 mm.
+The grips are solved once: a bar is laid across the palm at the base of the fingers, and each finger and the thumb
+curl until they touch it, so the hand closes on the handle instead of through it. The duffel's own strap loops lie
+on the bag; it hangs just under the closed hand, on her far side from the camera.
+Checks printed by the build: the planted heel or ball of each stance drifts at most about 6 mm; the hips are
+lowered wherever a leg could not otherwise reach; no intersection between Dawn and the duffel, the duffel and the
+case, or anything and the queue posts; the right thumb's tip meets the case's grip by about 2 mm (the contact of
+the grip).
 """
 import math
 import os
@@ -355,19 +363,22 @@ def build(base=None, frames=None):
 
 
 CAM_X, CAM_Z, AIM_Z = 3.45, 1.02, 0.84
-GRIP_SHRINK = 0.45                 # the case's grip bar cross-section shrunk by this (about 29 mm -> 18 mm)
+GRIP_SHRINK = 0.45                 # the case's grip bar cross-section shrunk by this (to about 20 x 17 mm)
 LEFT_OUT = (29.0, 33.0)            # the duffel arm: upper arm and forearm out from the side (deg), so the bag clears
                                    # the leg and skirt (at 17/12 its inner face reached the middle of the thigh)
 LENS, FSTOP = 32.0, 4.0
 
 
 def grip_hand(rig, inv, side, bar, knuckles):
-    """A closed hand on a bar: the hand in line with the forearm, its width along the bar, the back of the hand
-    (knuckles) facing `knuckles` as nearly as the forearm allows."""
+    """A closed hand on a horizontal bar: the hand's width exactly along the bar (the case's handle stays parallel to
+    its axle, so a hand rolled with the forearm would put the bar through the thumb), the hand otherwise in line with
+    the forearm (a little bend at the wrist takes up the difference), the back of the hand facing `knuckles` as nearly
+    as it can."""
     pb = rig.pose.bones
     fm = rig.matrix_world @ pb[f"forearm_fk.{side}"].matrix
-    y = (fm.to_3x3() @ Vector((0, 1, 0))).normalized()
-    z = (bar - y * bar.dot(y)).normalized()
+    yf = (fm.to_3x3() @ Vector((0, 1, 0))).normalized()
+    z = Vector(bar).normalized()
+    y = (yf - z * yf.dot(z)).normalized()
     x = y.cross(z)
     dorsal = x if side == "R" else -x                   # the bone's X is the back of the hand on the right side
     if dorsal.dot(knuckles) < 0:
@@ -441,14 +452,14 @@ def wrap_fingers(rig, holder, side, bar_r):
     near = [p for part in ("palm", "f_index", "f_middle", "f_ring", "f_pinky") for p in pts.get(part, [])
             if abs(p.y - y_bar) < 0.012]
     skin = max(p.dot(palmar) for p in near)
-    c = palmar * (skin + bar_r + 0.0015) + Vector((0.0, y_bar, z_c))
+    c = palmar * (skin + bar_r + 0.004) + Vector((0.0, y_bar, z_c))
 
     def clear(digit):
         pts_, _ = hand_points(rig, holder, side)
         return min(math.hypot(p.x - c.x, p.y - c.y) for p in pts_[digit]) - bar_r
 
     for digit in list(GRIP_FINGERS) + ["thumb"]:
-        lo, hi = 0.15, 1.35
+        lo, hi = (-0.6, 1.0) if digit == "thumb" else (0.15, 1.35)   # the thumb may open away from the bar
         for _ in range(9):
             mid = 0.5 * (lo + hi)
             k[digit] = mid
@@ -462,7 +473,7 @@ def wrap_fingers(rig, holder, side, bar_r):
     close_hand(pb, side, k)
     bpy.context.view_layer.update()
     pts, H = hand_points(rig, holder, side)
-    gap = min(min(math.hypot(p.x - c.x, p.y - c.y) for p in pts[d_]) for d_ in pts if d_ != "palm") - bar_r
+    gap = min(min(math.hypot(p.x - c.x, p.y - c.y) for p in pts[d_]) for d_ in pts) - bar_r
     G = H @ c
     low = min((H @ p).z for part in pts.values() for p in part)
     print(f"ANIM grip {side}: bar {2000 * bar_r:.0f} mm across the palm; curls " +

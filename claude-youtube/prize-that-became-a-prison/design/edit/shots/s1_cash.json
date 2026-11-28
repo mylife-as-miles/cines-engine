@@ -1,0 +1,37 @@
+{
+ "about": "Animatic v3, 1:47-2:07: Tim's 2024 statement (S1, page 1), what he wrote of the prize: 'she had won a cash prize' lit, beside what he said aloud (an all-expenses-paid trip). Marks are set per shot from the voice clock.",
+ "plate": "frames/raw/evidence_table/page.png",
+ "corners": "frames/raw/evidence_table/page.corners.json",
+ "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
+ "page": 1,
+ "dpi": 400,
+ "marks": [
+  {
+   "phrase": "email stating that she had won a cash prize.",
+   "t": 1.0,
+   "dur": 0.7
+  }
+ ],
+ "focus": "email stating that she had won a cash prize.",
+ "soft": [
+  "Dear Mr. Flipse,",
+  "Dawn was born 12 June 1971, so she is now 53.",
+  "I am currently busy helping my father through cancer treatment but I am"
+ ],
+ "zoom": [
+  3.0,
+  3.2
+ ],
+ "end_offset": [
+  55,
+  -10
+ ],
+ "roll_deg": -9,
+ "focus_band": {
+  "sharp_lines": 1.8,
+  "ramp_lines": 3.5,
+  "blur_px": 3.6
+ },
+ "duration": 6.0,
+ "length": 7.0
+}

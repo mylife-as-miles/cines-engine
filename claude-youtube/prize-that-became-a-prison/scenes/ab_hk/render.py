@@ -18,7 +18,8 @@ blender binary or the bpy module); no repository, no add-ons. The flags of scene
 - Frames already written are skipped (a killed render resumes); each frame is written to a temporary name and renamed
   when complete. One log line per frame: FRAME <n> <seconds> s <device> <samples> <res>.
 - --clay: every surface a grey matte (volumes off). --no-blur: motion blur off (look checks only: the rain becomes
-  dots). --fast (Cycles, local previews only): fewer bounces, coarser volume steps.
+  dots). --fast (Cycles, local previews only): fewer bounces, coarser volume steps. --simplify N (local previews
+  only): every subdivision capped at level N.
 - --lock: hold an flock on this file while each frame renders (a machine shared between agents).
 """
 import argparse
@@ -51,6 +52,8 @@ def parse():
     p.add_argument("--clay", action="store_true")
     p.add_argument("--no-blur", action="store_true")
     p.add_argument("--fast", action="store_true")
+    p.add_argument("--simplify", type=int, default=None,
+                   help="local previews only: cap every subdivision at this level (less memory, faster sync)")
     p.add_argument("--lock", default=None)
     p.add_argument("--threads", type=int, default=0, help="CPU threads (0 = all)")
     p.add_argument("--prefix", default="", help="file name prefix")
@@ -173,6 +176,9 @@ def main():
         clay(sc)
     if a.no_blur:
         sc.render.use_motion_blur = False
+    if a.simplify is not None:
+        sc.render.use_simplify = True
+        sc.render.simplify_subdivision_render = a.simplify
     fmt = sc.render.image_settings
     if a.format == "exr":
         fmt.file_format, fmt.color_mode, fmt.color_depth, fmt.exr_codec = "OPEN_EXR", "RGB", "16", "DWAA"

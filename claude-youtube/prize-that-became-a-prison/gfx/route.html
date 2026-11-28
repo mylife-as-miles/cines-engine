@@ -1,9 +1,7 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><title>route map</title>
 <style>
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-500-normal.woff2) format("woff2");font-weight:500}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-400-normal.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-300-normal.woff2) format("woff2");font-weight:300}
+@font-face{font-family:"Archivo";src:url("fonts/archivo/Archivo%5Bwdth,wght%5D.ttf") format("truetype");font-weight:100 900}
 html,body{margin:0;background:#04060a}canvas{display:block}
 </style></head>
 <body><canvas id="c" width="1920" height="1080"></canvas>
@@ -14,8 +12,9 @@ html,body{margin:0;background:#04060a}canvas{display:block}
 //   mainland the solid leg into the mainland, ABOUT 9 MORE DAYS, then the dashed line toward Australia (ch 2)
 //   split    from the mainland, two dashed lines: Australia and Qingdao; neither resolves (ch 4)
 // The script names no city in mainland China, so the mainland is a region that warms, never a pin. No red: red marks
-// only the seam. Type is look B (Cormorant). Routes draw over about 1-2.4 s on an ease-in-out; labels reveal word by
-// word; the camera pushes slowly in log space toward where the route is going (cinetic's numbers).
+// only the seam. Type is the film's text system (Archivo; the accent, #8AD8E4, only on the day counts, which are time).
+// Routes draw over about 1-2.4 s on an ease-in-out; labels rise word by word out of a mask under their line; the camera
+// pushes slowly in log space toward where the route is going (cinetic's numbers).
 const W = 1920, H = 1080, K = 8.7, XF = 0.85, LON_C = 170, LAT_C = 18;
 const U = lon => (lon < -30 ? lon + 360 : lon);
 const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) * K];
@@ -55,18 +54,28 @@ function path(ctx, pts, f) { const n = Math.max(1, Math.floor((pts.length - 1) *
 // HALO px, so no coastline, border, graticule or route ever crosses a letter.
 let ZOOM = 1, GROUND = false, LABELS = [];
 const HALO = 7;
-function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.2, out = 0) {
-  if (GROUND) return; size /= ZOOM; const leave = out ? 1 - sm((t - out) / 0.35) : 1; if (leave <= 0) return;
-  // a calm word-by-word reveal: each word fades in and rises a third of its size into place
-  const font = `${w} ${size}px "Cormorant"`, spacing = `${(size * track).toFixed(1)}px`, runs = [];
-  ctx.save(); ctx.font = font; ctx.letterSpacing = spacing;
-  const total = ctx.measureText(text).width - size * track; let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
-  text.split(' ').forEach((wd, i) => {
-    const p = t - (t0 + i * 0.19), a = cl(p / 0.47), r = 1 - sm(p / 0.37);
-    if (p > 0) runs.push([wd, cx, y + r * size * 0.33, a * leave]);
-    cx += ctx.measureText(wd + ' ').width;
+// Two kinds of label, in the film's text system: a place name (`name`: Archivo 500 capitals, tracked) and a day count
+// (`days`: time, so in the accent; the number heavy, the words light, at 400 because they sit on the lit mainland).
+// Each word rises out of a mask that sits just under its capitals (an exponential ease-out, 0.36 s, 0.12 s apart), and
+// leaves the same way at `out`.
+const ACC = '#8ad8e4', KIND = { name: { w: 500, track: 0.16 }, days: { w: 400, track: 0.06, num: 800 } };
+const oExpo = u => u >= 1 ? 1 : 1 - Math.pow(2, -10 * u);
+function label(ctx, text, x, y, size, t, t0, align = 'left', kind = 'name', out = 0) {
+  if (GROUND) return; size /= ZOOM; const K = KIND[kind], runs = [], fontOf = wd => `${K.num && /\d/.test(wd) ? K.num : K.w} ${size}px "Archivo"`;
+  const spacing = `${(size * K.track).toFixed(2)}px`, col = kind === 'days' ? ACC : INK;
+  ctx.save(); ctx.letterSpacing = spacing; ctx.textBaseline = 'middle';
+  const words = text.split(' '), ws = words.map(wd => { ctx.font = fontOf(wd); return ctx.measureText(wd).width; });
+  ctx.font = fontOf('A'); const sp = ctx.measureText(' ').width, cap = ctx.measureText('H'), top = -cap.actualBoundingBoxAscent, bot = cap.actualBoundingBoxDescent;
+  const total = ws.reduce((a, b) => a + b, 0) + sp * (words.length - 1) - size * K.track;
+  let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
+  words.forEach((wd, i) => {
+    const p = cl((t - (t0 + i * 0.12)) / 0.36), q = out ? cl((t - out - i * 0.05) / 0.24) : 0;
+    const dy = (1 - oExpo(p)) * (bot - top + 0.08 * size) + q * q * (bot - top + 0.08 * size), a = cl(p * 2.4) * (1 - q);
+    // the mask: from well above the capitals to just under them, the word's own width (and its halo) wide
+    if (p > 0 && a > 0) runs.push([wd, cx, y + dy, a, fontOf(wd), [cx - size * 0.3, y + top - size, ws[i] + size * 0.6, bot - top + size + 0.06 * size]]);
+    cx += ws[i] + sp;
   });
-  ctx.restore(); if (runs.length) LABELS.push({ T: ctx.getTransform(), zoom: ZOOM, font, spacing, size, runs });
+  ctx.restore(); if (runs.length) LABELS.push({ T: ctx.getTransform(), zoom: ZOOM, spacing, size, col, runs });
 }
 const MASK = document.createElement('canvas'), GND = document.createElement('canvas');
 MASK.width = GND.width = W; MASK.height = GND.height = H;
@@ -74,15 +83,15 @@ function drawLabels(ctx) {
   const m = MASK.getContext('2d');
   for (const L of LABELS) {
     m.setTransform(1, 0, 0, 1, 0, 0); m.globalCompositeOperation = 'source-over'; m.globalAlpha = 1; m.clearRect(0, 0, W, H);
-    m.setTransform(L.T); m.font = L.font; m.letterSpacing = L.spacing; m.textBaseline = 'middle';
+    m.setTransform(L.T); m.letterSpacing = L.spacing; m.textBaseline = 'middle';
     m.lineJoin = 'round'; m.lineWidth = HALO / L.zoom; m.strokeStyle = m.fillStyle = '#000';
-    for (const [wd, x, y, a] of L.runs) { m.globalAlpha = a; m.strokeText(wd, x, y); m.fillText(wd, x, y); }
+    for (const [wd, x, y, a, font, r] of L.runs) { m.save(); m.beginPath(); m.rect(...r); m.clip(); m.font = font; m.globalAlpha = a; m.strokeText(wd, x, y); m.fillText(wd, x, y); m.restore(); }
     m.setTransform(1, 0, 0, 1, 0, 0); m.globalAlpha = 1; m.globalCompositeOperation = 'source-in'; m.drawImage(GND, 0, 0);
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(MASK, 0, 0);
-    // then the letters, with the soft dark halo that keeps the thin serif legible
-    ctx.setTransform(L.T); ctx.font = L.font; ctx.letterSpacing = L.spacing; ctx.textBaseline = 'middle'; ctx.fillStyle = INK;
-    ctx.shadowColor = 'rgba(3,5,9,0.85)'; ctx.shadowBlur = L.size * 0.35;
-    for (const [wd, x, y, a] of L.runs) { ctx.globalAlpha = a; ctx.fillText(wd, x, y); }
+    // then the letters, with a soft dark halo that keeps them clear of the relief
+    ctx.setTransform(L.T); ctx.letterSpacing = L.spacing; ctx.textBaseline = 'middle'; ctx.fillStyle = L.col;
+    ctx.shadowColor = 'rgba(3,5,9,0.85)'; ctx.shadowBlur = L.size * 0.3;
+    for (const [wd, x, y, a, font, r] of L.runs) { ctx.save(); ctx.beginPath(); ctx.rect(...r); ctx.clip(); ctx.font = font; ctx.globalAlpha = a; ctx.fillText(wd, x, y); ctx.restore(); }
     ctx.restore();
   }
 }
@@ -261,9 +270,9 @@ const legA = (z = ZOOM) => trunc(bow(CITY.departA, CITY.ausAim, -0.12, 200), p =
 const legQ = (z = ZOOM) => { const q = PU(...CITY.qingdao);
   return trunc(bow(CITY.departQ, CITY.qingdao, 0.02, 120), p => Math.hypot(p[0] - q[0], p[1] - q[1]) - QDOT / z, GAP / z); };
 const RISE = 32;   // map px over which each disputed line rises out of the lit land from its unmarked start
-// One label system: place names at 48 px semibold (cap height about 30 px), the day counts at 68 px; labels sit on open
-// water or inside the lit land, never across another country, with no leader lines; every named point has a dot.
-const NAME = 48, DAYS = 68;
+// One label system: place names at 44 px (Archivo capitals, cap height about 30 px), the day counts at 62 px; labels sit
+// on open water or inside the lit land, never across another country, with no leader lines; every named point has a dot.
+const NAME = 44, DAYS = 62;
 // mainland: in on the mainland while it is named (0-2.4 s), then back and south as the Australia line draws (4.4-6.2 s),
 // landing on the split's framing and pushing on into it. split: the two disputed lines fill the frame, centred on
 // 120 E, 12.1 N at 1.69, with the slow push: framed so QINGDAO's top stays at y 116 or below the top edge's 110 and
@@ -283,11 +292,11 @@ const MODES = {
   leg1(ctx, t) {
     camera(ctx, t, [W / 2, H * 0.41], [W * 0.47, H * 0.41], 1.0, 1.04, 6);   // framed low enough that the arc's top stays below y 110
     base(ctx); const L = leg1(), [cx, cy] = PU(...CITY.chicago), [hx, hy] = PU(...CITY.hongkong);
-    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 30 / ZOOM, cy + 44 / ZOOM, NAME, t, 0.2, 'right', 600);
+    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 30 / ZOOM, cy + 44 / ZOOM, NAME, t, 0.2, 'right');
     solid(ctx, L, span(t, 0.6, 3.0));
     const [bx, by] = PU(22.8, 127.5);      // Hong Kong's block: open Philippine Sea east of Taiwan, level with the marker
-    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', bx, by, NAME, t, 3.0, 'left', 600);
-    label(ctx, '9 DAYS', bx, by + 70 / ZOOM, DAYS, t, 3.6, 'left', 500, 0.05);
+    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', bx, by, NAME, t, 3.0, 'left');
+    label(ctx, '9 DAYS', bx, by + 70 / ZOOM, DAYS, t, 3.6, 'left', 'days');
   },
   mainland(ctx, t) {
     // two moves: in on the mainland while it is named (the label sits inside the lit land), then back and south as the
@@ -297,21 +306,21 @@ const MODES = {
     base(ctx, { CHN: span(t, 0.4, 1.6), AUS: AUS_LIT * span(t, 6.0, 6.7) }); const [hx, hy] = PU(...CITY.hongkong), [ax, ay] = AUS_L;
     solid(ctx, leg1(), 1, 1 - span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 0.2, 1.2), 1);
     const [lx, ly] = PU(38.2, 99.5);         // inside the lit mainland where it is widest (about 37 N), no leader; it leaves before the camera pulls back
-    label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.7, 'center', 600, 0.2, 4.2);
-    label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 74 / ZOOM, DAYS, t, 2.2, 'center', 500, 0.0, 4.25);
+    label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.7, 'center', 'name', 4.2);
+    label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 74 / ZOOM, DAYS, t, 2.2, 'center', 'days', 4.25);
     const A = legA(), fA = span(t, 4.6, 6.2);                           // rises out of the lit land, unmarked
     dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(mainCam(6.2)[2]))); arrowEnd(ctx, A, fA);
-    label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'right', 600);
+    label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'right');
   },
   split(ctx, t) {
     camAt(ctx, splitCam(t));
     base(ctx, { CHN: 1, AUS: AUS_LIT }); const [ax, ay] = AUS_L, [qx, qy] = PU(...CITY.qingdao);   // as mainland ends, so the cut holds
     const A = legA(), Q = legQ(), fA = span(t, 0.4, 2.4), fQ = span(t, 1.0, 2.4), zEnd = splitCam(2.4)[2];   // two unmarked starts
-    dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(zEnd))); arrowEnd(ctx, A, fA); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'right', 600);
+    dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(zEnd))); arrowEnd(ctx, A, fA); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'right');
     dashed(ctx, Q, fQ, 1, RISE / plen(Q), dashPhase(legQ(zEnd))); arrowEnd(ctx, Q, fQ);
     pin(ctx, qx, qy, sm((t - 2.3) / 0.3));                               // Qingdao, named in the sources: the line stops GAP px short of it
     // above and left of the dot, on the lit mainland clear of the Bohai coast, never in line with it (offsets in screen px)
-    label(ctx, 'QINGDAO', qx - 54 / ZOOM, qy - 42 / ZOOM, NAME, t, 2.4, 'right', 600);
+    label(ctx, 'QINGDAO', qx - 54 / ZOOM, qy - 42 / ZOOM, NAME, t, 2.4, 'right');
   },
 };
 function grain(ctx, t) {                  // fresh grain each frame (sigma about 1.2 luma), so a map is never a dead still
@@ -328,6 +337,6 @@ window.draw = (mode, t) => {
 };
 fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/lakes_pacific.json'); }).then(r => r.json()).then(d => { window.LAKES_SRC = d.lakes; return fetch('../design/gfx/regions.json'); })
   .then(r => r.json()).then(d => { window.REG = d.regions; buildPaths(); return fetch('../design/gfx/relief_pacific.jpg'); })
-  .then(r => r.blob()).then(b => createImageBitmap(b)).then(b => { RELIEF = b; return document.fonts.load('500 26px "Cormorant"'); })
-  .then(() => document.fonts.load('400 26px "Cormorant"')).then(() => { window.READY = true; });
+  .then(r => r.blob()).then(b => createImageBitmap(b)).then(b => { RELIEF = b; return Promise.all(['300 26px "Archivo"', '500 26px "Archivo"', '800 26px "Archivo"'].map(f => document.fonts.load(f))); })
+  .then(() => { window.READY = true; });
 </script></body></html>

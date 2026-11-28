@@ -46,6 +46,7 @@ def parse():
     p.add_argument("--clay", action="store_true")
     p.add_argument("--no-blur", action="store_true", help="motion blur off (look checks only)")
     p.add_argument("--lock", default=None)
+    p.add_argument("--lock-frames", type=int, default=1, help="frames rendered per hold of the lock")
     p.add_argument("--threads", type=int, default=0, help="CPU threads (0 = all)")
     p.add_argument("--prefix", default="", help="file name prefix")
     p.add_argument("--fast", action="store_true",
@@ -123,6 +124,23 @@ def eevee_settings(sc, samples):
     if hasattr(e, "ray_tracing_options"):
         e.ray_tracing_options.resolution_scale = "1"
         e.ray_tracing_options.use_denoise = True
+
+
+def freeze_bone_children(sc, frame):
+    """Eevee 5.3 crashes (segfault) rendering motion blur on a mesh that is parented to a bone and carries its own
+    modifier stack (the cast's sculpted hair: subdivision, shrinkwrap onto the head, displace, solidify). Bake each
+    such mesh to a plain mesh as it stands at `frame`; it still follows its bone, so the head carries it as before."""
+    sc.frame_set(frame)
+    dg = bpy.context.evaluated_depsgraph_get()
+    frozen = []
+    for o in bpy.data.objects:
+        if o.type == "MESH" and o.parent_type == "BONE" and len(o.modifiers) and not o.hide_render:
+            me = bpy.data.meshes.new_from_object(o.evaluated_get(dg))
+            o.modifiers.clear()
+            o.data = me
+            frozen.append(o.name)
+    if frozen:
+        print(f"RENDER Eevee: froze {len(frozen)} bone-parented modifier stacks ({', '.join(frozen)})", flush=True)
 
 
 def gl_renderer():
@@ -214,6 +232,8 @@ def main():
         ext = ".png"
     i, n = (int(v) for v in a.shard.split("/"))
     frames = frame_list(a.frames, sc)[i::n]
+    if a.engine == "eevee" and frames:
+        freeze_bone_children(sc, frames[0])
     os.makedirs(a.out, exist_ok=True)
     W, H = sc.render.resolution_x, sc.render.resolution_y
     spp = sc.cycles.samples if a.engine == "cycles" else (sc.eevee.taa_render_samples if a.engine == "eevee" else 0)
@@ -221,12 +241,13 @@ def main():
           f"{'on' if sc.render.use_motion_blur else 'off'} -> {a.out}", flush=True)
     times = []
     lock = open(a.lock, "w") if a.lock else None
+    held = 0
     for f in frames:
         final = os.path.join(a.out, f"{a.prefix}{f:04d}{ext}")
         if os.path.exists(final) and os.path.getsize(final) > 0:
             print(f"FRAME {f:04d} skip (exists)", flush=True)
             continue
-        if lock:
+        if lock and held == 0:
             fcntl.flock(lock, fcntl.LOCK_EX)
         try:
             t0 = time.time()
@@ -237,8 +258,10 @@ def main():
             os.replace(tmp, final)
             dt = time.time() - t0
         finally:
-            if lock:
+            held += 1
+            if lock and (held >= a.lock_frames or f == frames[-1]):
                 fcntl.flock(lock, fcntl.LOCK_UN)
+                held = 0
         times.append(dt)
         print(f"FRAME {f:04d} {dt:7.2f} s {label} {spp}spp {W}x{H}", flush=True)
     if times:

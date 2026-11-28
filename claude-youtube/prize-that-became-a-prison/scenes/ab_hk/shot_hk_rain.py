@@ -62,7 +62,7 @@ LENS, FSTOP = 32.0, 2.8
 SHIFT_Y = 0.09                   # lens shift up (verticals stay vertical; the signs come into the top of frame)
 
 # ---- rain
-RAIN_COUNT = 22000
+RAIN_COUNT = 26000
 RAIN_TOP = 12.5
 RAIN_SPEED = (5.2, 7.4)          # m/s: light rain, drops of about 1 mm
 WIND = (0.45, -0.12)             # m/s across and along the street
@@ -377,12 +377,48 @@ def close_hand(pb, side, k):
     th.rotation_euler = (math.radians(30 * k), 0.0, math.radians(-10))
 
 
-def fist_room(rig, d, side):
-    """shot B's fist_hollow, whichever of its two return forms (hollow, or (room, hollow)) it has."""
-    r = B.fist_hollow(rig, d, side)
-    if isinstance(r, tuple):
-        return r
-    return 0.0058, r
+def fist_room(rig, holder, side):
+    """Where the gathered cords fit inside the closed hand: the centre of the largest empty circle among the hand's
+    vertices (fingers, thumb, palm; armature deformation only) in the plane across the cords, in the hand bone's
+    frame, and that circle's radius. (Shot B's fist_hollow of 28 Nov, kept here: shot B's hand code is still moving.)"""
+    body = bpy.data.objects[holder["body"]]
+    saved = [(m, m.show_viewport) for m in body.modifiers]
+    for m, _ in saved:
+        m.show_viewport = m.type == "ARMATURE"
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = body.evaluated_get(dg)
+    me = ev.to_mesh()
+    names = {g.index: g.name for g in body.vertex_groups}
+    H = rig.matrix_world @ rig.pose.bones[f"hand_fk.{side}"].matrix
+    Hi = H.inverted()
+    pts = []
+    for v, vo in zip(me.vertices, body.data.vertices):
+        if any(g.group in names and g.weight > 0.3 and names[g.group].endswith("." + side)
+               and names[g.group].startswith(("DEF-f_", "DEF-thumb", "DEF-palm", "DEF-hand")) for g in vo.groups):
+            pts.append(Hi @ (ev.matrix_world @ v.co))
+    ev.to_mesh_clear()
+    for m, sv in saved:
+        m.show_viewport = sv
+    bpy.context.view_layer.update()
+    zs = sorted(p.z for p in pts)                       # the cords run along the hand frame's z (grip_hand)
+    zc = 0.5 * (zs[len(zs) // 10] + zs[9 * len(zs) // 10])
+    band = [p for p in pts if abs(p.z - zc) < 0.035]
+    xs, ys = [p.x for p in band], [p.y for p in band]
+    best = (-1.0, Vector((0.0, 0.0, zc)))
+    steps = 40
+    for i in range(steps + 1):
+        x = min(xs) + (max(xs) - min(xs)) * i / steps
+        for j in range(steps + 1):
+            y = min(ys) + (max(ys) - min(ys)) * j / steps
+            sx = [p.x for p in band if abs(p.y - y) < 0.008]
+            sy = [p.y for p in band if abs(p.x - x) < 0.008]
+            if not (sx and sy and min(sx) < x < max(sx) and min(sy) < y < max(sy)):
+                continue
+            dmin = min((p.x - x) ** 2 + (p.y - y) ** 2 for p in band) ** 0.5
+            if dmin > best[0]:
+                best = (dmin, Vector((x, y, zc)))
+    return best
 
 
 # ------------------------------------------------------------------ the carriers
@@ -465,7 +501,8 @@ def rain(cam_path, exclude, shelter):
         attrs["speed"].append(rng.uniform(*RAIN_SPEED))
         r = rng.random()
         attrs["radius"].append(0.0009 + 0.0011 * r * r)       # 0.9-2 mm: what a 1080p streak needs to read
-        attrs["length"].append(0.010 + 0.008 * rng.random())
+        attrs["length"].append(0.035 + 0.035 * rng.random())   # a little streak of its own: the shutter's blur
+                                                                # spreads a 1 cm drop too thin to read
     for o in hidden:
         o.hide_viewport = False
     bpy.context.view_layer.update()
@@ -484,11 +521,11 @@ def rain(cam_path, exclude, shelter):
     pr.inputs["Base Color"].default_value = (1, 1, 1, 1)
     pr.inputs["Transmission Weight"].default_value = 1.0
     pr.inputs["IOR"].default_value = 1.333
-    pr.inputs["Roughness"].default_value = 0.06
+    pr.inputs["Roughness"].default_value = 0.1
     tl = nt.nodes.new("ShaderNodeBsdfTranslucent")
-    tl.inputs["Color"].default_value = (0.9, 0.93, 0.97, 1)
+    tl.inputs["Color"].default_value = (0.95, 0.97, 1.0, 1)
     mix = nt.nodes.new("ShaderNodeMixShader")
-    mix.inputs[0].default_value = 0.42
+    mix.inputs[0].default_value = 0.6
     nt.links.new(pr.outputs[0], mix.inputs[1])
     nt.links.new(tl.outputs[0], mix.inputs[2])
     out_c = nt.nodes["Material Output"]
@@ -722,7 +759,7 @@ def ripples():
 def steam():
     """A slow plume from the manhole in the road behind her (2.9, 23.0): denser at the cover, thinning upward, its
     texture rising and drifting with the wind."""
-    return C.local_haze("steam plume", (1.6, 21.7, 0.0), (4.4, 24.6, 4.2), peak=0.16, centre=(2.95, 23.05, 0.15),
+    return C.local_haze("steam plume", (1.6, 21.7, 0.0), (4.4, 24.6, 4.2), peak=0.32, centre=(2.95, 23.05, 0.15),
                         sigma=(0.42, 0.42, 1.25), colour=(0.86, 0.88, 0.9), drift=(-0.10, 0.02, -0.34),
                         noise_scale=1.9)
 
@@ -741,7 +778,7 @@ def camera(frames):
         u = C.cruise(i / (n - 1), 0.2)
         y = B.hip_y(t)
         locs.append(Vector((3.78 - 0.06 * u, y - 3.75 + 0.35 * u, 0.48 + 0.52 * u)))
-        aims.append(Vector((5.05 - 0.05 * u, y + 8.0, 0.62 + 0.58 * u)))
+        aims.append(Vector((6.30 + 0.15 * u, y + 8.0, 0.62 + 0.58 * u)))   # she sits about 72 % across
     focus = [(Vector((PATH_X - 0.1, B.hip_y(C.t_of(f)), 1.15)) - l).length for f, l in zip(frames, locs)]
     cam = C.moving_camera("anim_cam", frames, locs, aims, LENS, FSTOP, focus=focus, clip=(0.03, 600.0),
                           shift=(0.0, SHIFT_Y))

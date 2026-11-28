@@ -25,7 +25,7 @@ libraries on every new box:
 
 ```sh
 apt-get update && apt-get install -y xz-utils libxi6 libxrender1 libxkbcommon0 libsm6 libice6 libgl1 libegl1 \
-  libxxf86vm1 libxfixes3 libxext6 libx11-6 libglu1-mesa ffmpeg
+  libxxf86vm1 libxfixes3 libxext6 libx11-6 libglu1-mesa
 export BLENDER=/workspace/blender/blender-5.3.0-linux-x64/blender
 $BLENDER --version | head -1          # Blender 5.3.0: the version that built the files
 ```
@@ -40,9 +40,9 @@ $BLENDER -b --factory-startup -P check_gpu.py      # lists the OptiX devices; ex
 `render.py` never falls back to the CPU. With `--device OPTIX`, Cycles exits with code 3 if no OptiX device is found.
 Eevee reads its OpenGL renderer first and exits with code 3 if that is a software one, such as llvmpipe.
 
-## 3. One timed frame per shot and engine
+## 3. One timed frame per shot and engine (optional, about 10 minutes)
 
-Frame 57 is a warm-up: the first frame of a process loads kernels and shaders and builds the scene. Frame 58 is the
+Skip this step to save credits: the lean run in step 4 times every frame too. Frame 57 is a warm-up: the first frame of a process loads kernels and shaders and builds the scene. Frame 58 is the
 timed one.
 
 ```sh
@@ -73,7 +73,7 @@ engine, and that divided by 48 is the cost per frame to quote. Set `PER_GPU=1` f
 Frames already on disk are skipped, so a stopped box resumes where it was. Copy `frames/` home while it runs (for
 example `rsync -a frames/ <home>:...`), because anything left outside `/workspace` is lost when the box stops.
 
-## 5. Assemble the MP4s (here or at home)
+## 5. Assemble the MP4s (at home, or on the box after `apt-get install -y ffmpeg`)
 
 ```sh
 ./run_gpu.sh encode      # = python3 encode.py --frames frames/<shot>_<engine> --out <shot>_<engine>.mp4 \

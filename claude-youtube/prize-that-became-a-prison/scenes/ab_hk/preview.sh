@@ -10,6 +10,6 @@ SPP=${SPP:-6}
 FRAMES=${FRAMES:-1-116}
 OUTF=out/ab_hk/preview_frames
 "$PY" -I scenes/ab_hk/render.py --blend out/ab_hk/blend/AB_HK.blend --out "$OUTF" --frames "$FRAMES" \
-  --engine CYCLES --samples "$SPP" --res 640x360 --fast --lock /tmp/cines_render.lock
+  --engine CYCLES --samples "$SPP" --res 640x360 --fast --simplify 1 --lock /tmp/cines_render.lock
 python3 scenes/ab_hk/encode.py --frames "$OUTF" --out out/ab_hk/preview_blender.mp4 --first 1 --last 116
 python3 scenes/anim_tests/check_frames.py "$OUTF"

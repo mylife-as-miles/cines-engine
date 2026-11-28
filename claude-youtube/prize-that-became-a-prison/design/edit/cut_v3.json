@@ -1,0 +1,3759 @@
+{
+ "about": "Animatic v3's cut plan (SCRIPT_V3, fern's method: design/REFERENCE_DECISION.md), the one file edited by hand: run `<gfx python> tools/assemble.py time --cut design/edit/cut_v3.json` after any change. Voice: the narrator's lines verbatim (Kokoro scratch, audio/vo/scratch_v3), real voices from the clips in hand (`real`), Tim's 2024 lines as words only (`t24`: V01 is not in hand), holds as written. Shots start at anchors on that clock.",
+ "version": "animatic_v3",
+ "paths": {
+  "edl_json": "design/edit/EDL_v3.json",
+  "edl_md": "design/edit/EDL_v3.md",
+  "film": "out/film/animatic_v3.mp4",
+  "srt": "out/film/animatic_v3.srt",
+  "shots": "out/film/shots_v3",
+  "sheets": "out/film/sheets_v3",
+  "lines": "audio/vo/scratch_v3/lines.json",
+  "mix": "out/audio/mix_v3.wav"
+ },
+ "fps": 24,
+ "gap": 0.35,
+ "min_line": 0.6,
+ "parallax": {
+  "k": 1.0
+ },
+ "pieces": {
+  "scale": {
+   "file": null,
+   "fixed": true,
+   "about": "the scale display: the bar fills, OVERWEIGHT from 1.25 s",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/scale_overweight.json"
+   }
+  },
+  "yes": {
+   "file": null,
+   "about": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "yes",
+    "plate": "frames/raw/inspection_room/match.png"
+   }
+  },
+  "flash": {
+   "file": null,
+   "fixed": true,
+   "about": "the red seam, 1 s, gone with the cut",
+   "gen": {
+    "tool": "seam",
+    "mode": "flash",
+    "bg": "frames/graded/evidence_table/purses.jpg"
+   }
+  },
+  "montage": {
+   "file": null,
+   "fixed": true,
+   "about": "the flash-forward, ten shots",
+   "gen": {
+    "tool": "montage"
+   }
+  },
+  "title": {
+   "file": null,
+   "about": "THE PRIZE THAT BECAME A PRISON over the bags",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "title",
+    "plate": "frames/raw/void_stage/bags.png"
+   }
+  },
+  "email": {
+   "file": null,
+   "fixed": true,
+   "about": "the prize email; its line cycles the three accounts",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/screen_email.json"
+   }
+  },
+  "search": {
+   "file": null,
+   "fixed": true,
+   "about": "the search, greeked results",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/screen_search.json"
+   }
+  },
+  "route_leg1": {
+   "file": null,
+   "about": "Chicago → Hong Kong, HONG KONG 3.0 s, 9 DAYS 3.6 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/route.html",
+    "mode": "leg1"
+   }
+  },
+  "route_mainland": {
+   "file": null,
+   "about": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/route.html",
+    "mode": "mainland"
+   }
+  },
+  "route_split": {
+   "file": null,
+   "about": "Australia and Qingdao, dashed, labels at 2.4 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/route.html",
+    "mode": "split"
+   }
+  },
+  "trace": {
+   "file": null,
+   "about": "the red trace along the tote's seam, drawn over 1.8 s",
+   "gen": {
+    "tool": "seam",
+    "mode": "trace",
+    "bg": "frames/graded/evidence_table/purses.jpg"
+   }
+  },
+  "cutaway": {
+   "file": null,
+   "about": "the section opens 1.3-2.1 s, closes 3.6-4.05 s",
+   "gen": {
+    "tool": "seam",
+    "mode": "cutaway"
+   }
+  },
+  "doc_yes": {
+   "file": null,
+   "about": "S1 p. 1, the first 'yes' line lit at 1.0 s",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/s1_yes.json"
+   }
+  },
+  "split": {
+   "file": null,
+   "about": "the split frame, the right half cutting to the cut-away",
+   "gen": {
+    "tool": "split",
+    "cut": 2.2
+   }
+  },
+  "split_r7": {
+   "file": null,
+   "about": "the split frame with the right half cut to the cut-away at 2.2 s, held open",
+   "gen": {
+    "tool": "split",
+    "cut": 2.2
+   }
+  },
+  "calendar": {
+   "file": null,
+   "about": "2014 → 2017 beside the bags, 1.7 s a year",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "calendar",
+    "plate": "frames/raw/void_stage/bags.png"
+   }
+  },
+  "counter": {
+   "file": null,
+   "about": "2014 → 2026 over the far cell, the pull back",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "counter",
+    "plate": "frames/raw/void_stage/cell_far.png",
+    "push": [
+     1.6,
+     0.7
+    ]
+   }
+  },
+  "father": {
+   "file": null,
+   "about": "S1 p. 2, \"not going to live long enough to see his daughter free\" lit at 1.2 s",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/s1_father.json"
+   }
+  },
+  "gene": {
+   "file": null,
+   "about": "JANUARY 25, 2026 over the empty chair",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "date_gene",
+    "plate": "frames/raw/home/chair.png"
+   }
+  },
+  "doc_fee": {
+   "file": null,
+   "about": "S1 p. 1, the excess-weight fee line lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_fee.json"
+   }
+  },
+  "doc_emails": {
+   "file": null,
+   "about": "S1 p. 2, the emails line lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_emails.json"
+   }
+  },
+  "doc_gene": {
+   "file": null,
+   "about": "S1 p. 2, Gene's and Tim's service lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_gene.json"
+   }
+  },
+  "doc_cash": {
+   "file": null,
+   "about": "S1 p. 1, 'she had won a cash prize' lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_cash.json"
+   }
+  },
+  "doc_foot": {
+   "file": null,
+   "about": "S1 p. 1, footnote 1 (Qingdao; the discrepancy) lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_footnote.json"
+   }
+  },
+  "doc_market": {
+   "file": null,
+   "about": "S1 p. 1, the Baiyun Leather Market lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_market.json"
+   }
+  },
+  "doc_passport": {
+   "file": null,
+   "about": "S1 p. 1, the passport and the ticket lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_passport.json"
+   }
+  },
+  "doc_denies": {
+   "file": null,
+   "about": "S1 p. 1, 'a charge she vehemently denies' lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_denies.json"
+   }
+  },
+  "doc_health": {
+   "file": null,
+   "about": "S1 p. 2, the doctors' findings lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_health.json"
+   }
+  },
+  "doc_work": {
+   "file": null,
+   "about": "S1 p. 2, 'she still has to work in the prison' lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_work.json"
+   }
+  },
+  "casefile": {
+   "file": null,
+   "fixed": false,
+   "about": "the text system's case file (gfx/typetest.html look 2): the photograph, the name, three facts, the sentence struck and LIFE at 6.0 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/typetest.html",
+    "mode": "casefile"
+   }
+  },
+  "doc_fire": {
+   "file": null,
+   "about": "S1 p. 2, the house fire lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_fire.json"
+   }
+  }
+ },
+ "chapters": [
+  {
+   "n": "00",
+   "title": "The same question",
+   "rate": 165,
+   "voice": [
+    {
+     "id": "00.pre",
+     "hold": 1.3,
+     "note": "the display settles; no voice, no music"
+    },
+    {
+     "id": "00.01",
+     "text": "The bags are overweight."
+    },
+    {
+     "id": "00.02",
+     "text": "There's a small fee. She pays it."
+    },
+    {
+     "id": "00.03",
+     "text": "Dawn Michelle Hunt, from Chicago, on a trip she thinks she's won."
+    },
+    {
+     "id": "00.04",
+     "text": "Waiting to board, she's called aside."
+    },
+    {
+     "id": "00.05",
+     "text": "Her brother told lawmakers what she told him."
+    },
+    {
+     "id": "00.T1",
+     "t24": true,
+     "say": "She was asked if the luggage belonged to her, to which she responded 'yes.'",
+     "dur": 6.2,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.666-667",
+     "card": {
+      "keys": [
+       "yes."
+      ]
+     }
+    },
+    {
+     "id": "00.h1",
+     "hold": 0.8,
+     "note": "silence at his full stop: the first sound drop",
+     "silence": "room"
+    },
+    {
+     "id": "00.T2",
+     "t24": true,
+     "say": "She stated that she was asked multiple times, and each time she stated 'yes,' not knowing drugs were in the lining of the purses.",
+     "dur": 10.2,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.667-669",
+     "card": {
+      "keys": [
+       "yes,"
+      ]
+     }
+    },
+    {
+     "id": "00.06",
+     "text": "Methamphetamine, authorities say."
+    },
+    {
+     "id": "00.07",
+     "text": "Her family says she had no idea."
+    },
+    {
+     "id": "00.08",
+     "text": "She thought the handbags were a prize."
+    },
+    {
+     "id": "00.09",
+     "text": "The bags were checked in her name."
+    },
+    {
+     "id": "00.10",
+     "text": "The drugs, she said, were not hers."
+    },
+    {
+     "id": "00.h2",
+     "hold": 1.5,
+     "note": "the second sound drop",
+     "silence": "room"
+    },
+    {
+     "id": "00.11",
+     "text": "Three years later, a court sentences her to death, with a two-year reprieve."
+    },
+    {
+     "id": "00.12",
+     "text": "Today, she is serving life."
+    },
+    {
+     "id": "00.13",
+     "text": "Twelve years on, he told a congressional commission this."
+    },
+    {
+     "id": "00.R1",
+     "real": "IN-1",
+     "in": 0.0,
+     "out": 3.78,
+     "say": "I see a woman whose physical and mental condition has deteriorated.",
+     "who": "Tim Hunt, CECC hearing, September 2026, official feed (IN-1 0.00-3.78); gate G1 fallback B",
+     "card": {
+      "keys": [
+       "deteriorated."
+      ]
+     },
+     "after": 0.0
+    },
+    {
+     "id": "00.h3",
+     "hold": 1.0,
+     "note": "the freeze: 1.0 s of digital silence",
+     "silence": "digital"
+    },
+    {
+     "id": "00.14",
+     "text": "His written statement says she keeps asking him the same question."
+    },
+    {
+     "id": "00.h4",
+     "hold": 3.0,
+     "note": "the freeze held; the score enters from nothing"
+    },
+    {
+     "id": "00.h5",
+     "hold": 3.5,
+     "note": "the title"
+    }
+   ],
+   "shots": [
+    {
+     "id": "00-01",
+     "at": "00.pre",
+     "piece": "scale",
+     "sfx": [
+      {
+       "name": "sfx_scale_beep",
+       "at": "00.pre+1.25"
+      }
+     ]
+    },
+    {
+     "id": "00-02",
+     "at": "00.01@0.45",
+     "plate": "checkin_hall/scale",
+     "move": "in",
+     "anim": "ANIMATED BEAT: the bags onto the scale (Eevee)"
+    },
+    {
+     "id": "00-03",
+     "at": "00.02",
+     "plate": "checkin_hall/shoulder",
+     "move": "in",
+     "pct": 0.04,
+     "sfx": [
+      {
+       "name": "sfx_booklet_slide",
+       "at": "00.02@0.5"
+      }
+     ]
+    },
+    {
+     "id": "00-04",
+     "at": "00.02@0.6",
+     "plate": "checkin_hall/shoulder",
+     "zoom": [
+      1.75,
+      1.82
+     ],
+     "c": [
+      0.43,
+      0.74
+     ],
+     "angle": "checkin_hall insert: her hand sliding the booklet across the desk (fern's prop insert)"
+    },
+    {
+     "id": "00-05",
+     "at": "00.03",
+     "plate": "checkin_hall/wide",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place_2014",
+       "t0": 0.1
+      }
+     ]
+    },
+    {
+     "id": "00-06",
+     "at": "00.03@0.45",
+     "plate": "checkin_hall/profile",
+     "move": "in"
+    },
+    {
+     "id": "00-06b",
+     "at": "00.03@0.75",
+     "plate": "departure_gate/wide",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "00-07",
+     "at": "00.04",
+     "plate": "departure_gate/window",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "00-08",
+     "at": "00.04@0.4",
+     "plate": "departure_gate/seated_called",
+     "move": "in",
+     "sfx": [
+      {
+       "name": "sfx_tannoy_near",
+       "at": "00.04@0.3"
+      }
+     ]
+    },
+    {
+     "id": "00-09",
+     "at": "00.05",
+     "plate": "inspection_room/enter",
+     "move": "in",
+     "sfx": [
+      {
+       "name": "sfx_door_steel",
+       "at": "00.05+0.1"
+      }
+     ]
+    },
+    {
+     "id": "00-10",
+     "at": "00.05@0.5",
+     "plate": "inspection_room/two_shot_pre",
+     "move": "in"
+    },
+    {
+     "id": "00-11",
+     "at": "00.T1",
+     "plate": "inspection_room/wide_pre",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "00-11b",
+     "at": "00.T1@0.3",
+     "plate": "inspection_room/tag",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "00-12",
+     "at": "00.T1@0.55",
+     "plate": "inspection_room/dawn_close",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "00-13",
+     "at": "00.T1+5.33",
+     "piece": "yes",
+     "max": 2.95,
+     "row": "0:16 YES lands on his word"
+    },
+    {
+     "id": "00-14",
+     "at": "00.T2",
+     "plate": "inspection_room/two_shot_pre",
+     "zoom": [
+      1.5,
+      1.58
+     ],
+     "c": [
+      0.66,
+      0.42
+     ],
+     "card": true,
+     "angle": "inspection_room: the officers asking, close (reaction/OTS from behind Dawn)"
+    },
+    {
+     "id": "00-14b",
+     "at": "00.T2@0.2",
+     "ground": true,
+     "card": true,
+     "seed": 3
+    },
+    {
+     "id": "00-14c",
+     "at": "00.T2+3.94",
+     "plate": "inspection_room/dawn_close",
+     "zoom": [
+      1.45,
+      1.52
+     ],
+     "c": [
+      0.55,
+      0.38
+     ],
+     "card": true,
+     "angle": "inspection_room: Dawn's face, close (fern's reaction)"
+    },
+    {
+     "id": "00-15",
+     "at": "00.T2+5.36",
+     "piece": "yes",
+     "in": 3.0,
+     "max": 4.0,
+     "row": "0:23 the second YES, harder, tighter"
+    },
+    {
+     "id": "00-16",
+     "at": "00.T2+6.39",
+     "plate": "inspection_room/handbags",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "00-17",
+     "at": "00.T2+8.06",
+     "piece": "flash",
+     "max": 1.0,
+     "sfx": [
+      {
+       "name": "sfx_zip",
+       "at": "00.T2+8.16"
+      }
+     ],
+     "row": "red seam 1 s"
+    },
+    {
+     "id": "00-18",
+     "at": "00.T2+9.06",
+     "plate": "evidence_table/seam",
+     "move": "in",
+     "pct": 0.05,
+     "card": true
+    },
+    {
+     "id": "00-18b",
+     "at": "00.06",
+     "plate": "inspection_room/overhead",
+     "move": "in"
+    },
+    {
+     "id": "00-19",
+     "at": "00.07",
+     "plate": "void_stage/dawn",
+     "move": "in"
+    },
+    {
+     "id": "00-19b",
+     "at": "00.07@0.55",
+     "plate": "void_stage/divide",
+     "move": "in"
+    },
+    {
+     "id": "00-20",
+     "at": "00.08",
+     "plate": "hotel_room/overhead_pre",
+     "move": "in"
+    },
+    {
+     "id": "00-21",
+     "at": "00.08@0.55",
+     "plate": "hongkong_street/window",
+     "move": "in"
+    },
+    {
+     "id": "00-22",
+     "at": "00.09",
+     "plate": "inspection_room/match",
+     "zoom": [
+      1.0,
+      1.03
+     ]
+    },
+    {
+     "id": "00-23",
+     "at": "00.09$-0.2",
+     "plate": "void_stage/bags",
+     "continue": "00-22"
+    },
+    {
+     "id": "00-24",
+     "at": "00.11",
+     "plate": "courtroom/wide",
+     "move": "lock"
+    },
+    {
+     "id": "00-24b",
+     "at": "00.11@0.25",
+     "plate": "courtroom/bench",
+     "move": "in"
+    },
+    {
+     "id": "00-25",
+     "at": "00.11@0.5",
+     "plate": "void_stage/dawn_high",
+     "move": "in",
+     "type": [
+      {
+       "mode": "death_2017",
+       "t0": 0.0
+      }
+     ],
+     "sfx": [
+      {
+       "name": "sfx_impact_low",
+       "at": "00.11@0.5"
+      }
+     ]
+    },
+    {
+     "id": "00-26",
+     "at": "00.12",
+     "plate": "void_stage/cell_dawn",
+     "move": "in"
+    },
+    {
+     "id": "00-27",
+     "at": "00.13",
+     "plate": "prison_exterior/tower",
+     "move": "in"
+    },
+    {
+     "id": "00-28",
+     "at": "00.13@0.45",
+     "plate": "hearing_room/witness",
+     "zoom": [
+      1.18,
+      1.24
+     ],
+     "c": [
+      0.5,
+      0.36
+     ],
+     "angle": "hearing_room witness_match: the Tim statue framed exactly as the official 2026 feed frames him (IN-1), for the match cut"
+    },
+    {
+     "id": "00-29",
+     "at": "00.R1",
+     "clip": "IN-1",
+     "sync": "00.R1",
+     "crop": [
+      200,
+      50,
+      760
+     ],
+     "crop1": [
+      222,
+      62,
+      700
+     ],
+     "freeze": "00.R1$+0.22",
+     "card": {
+      "maxw": 700
+     },
+     "row": "0:58 the real man; FREEZE on his full stop (fallback B)"
+    },
+    {
+     "id": "00-30",
+     "at": "00.h5",
+     "piece": "title",
+     "row": "the title, 3.5 s"
+    }
+   ]
+  },
+  {
+   "n": "01",
+   "title": "It all started",
+   "rate": 155,
+   "voice": [
+    {
+     "id": "01.T1",
+     "t24": true,
+     "say": "It all started when my sister was tricked into believing she had won a contest.",
+     "dur": 6.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.647-648",
+     "card": {
+      "keys": [
+       "tricked",
+       "won a contest."
+      ]
+     }
+    },
+    {
+     "id": "01.01",
+     "text": "Before China, there was Chicago."
+    },
+    {
+     "id": "01.02",
+     "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and travel."
+    },
+    {
+     "id": "01.03",
+     "text": "Her brother describes her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters."
+    },
+    {
+     "id": "01.04",
+     "text": "She came from a family of Chicago police officers. Her father, Gene, served thirty-two years. Tim served twenty-eight. Their mother and three uncles had been officers too, the commission was told."
+    },
+    {
+     "id": "01.05",
+     "text": "Then an email told her she'd won."
+    },
+    {
+     "id": "01.T2",
+     "t24": true,
+     "say": "She received an email stating that she had won an all-expenses-paid trip to Hong Kong. She didn't believe it at first, but checked on the company and believed they were legitimate.",
+     "dur": 12.6,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.648-651",
+     "card": {
+      "keys": [
+       "all-expenses-paid trip"
+      ]
+     }
+    },
+    {
+     "id": "01.06",
+     "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother."
+    },
+    {
+     "id": "01.07",
+     "text": "She told her father, too."
+    },
+    {
+     "id": "01.R1",
+     "real": "IN-14",
+     "in": 50.22,
+     "out": 57.42,
+     "say": "She said I checked on the internet and it's allegedly reported to be a legitimate company.",
+     "who": "Gene Hunt, NBC 5 Chicago, 19 Sep 2024 (IN-14 50.22-57.42)",
+     "card": {
+      "keys": [
+       "legitimate company."
+      ]
+     }
+    },
+    {
+     "id": "01.08",
+     "text": "She sent them her passport details, Tim wrote. They sent her a ticket."
+    },
+    {
+     "id": "01.09",
+     "text": "The first part of the promise was true."
+    },
+    {
+     "id": "01.T3",
+     "t24": true,
+     "say": "She was in Hong Kong for 9 days and she told me that the organizers treated her well.",
+     "dur": 7.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.652-653",
+     "card": {
+      "keys": [],
+      "hold": "treated her well"
+     }
+    },
+    {
+     "id": "01.h1",
+     "hold": 1.2,
+     "note": "his held words alone: 1.2 s of digital silence",
+     "silence": "digital"
+    }
+   ],
+   "shots": [
+    {
+     "id": "01-01",
+     "at": "01.T1",
+     "clip": "IN-14",
+     "src": 103.6,
+     "crop": [
+      420,
+      0,
+      1060
+     ],
+     "grade": "testimony",
+     "card": {
+      "ya": 760
+     },
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card.",
+     "still": true,
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=SEPTEMBER+18,+2024&pos=tc&y=0.13&shade=1",
+       "t0": 0.15
+      }
+     ]
+    },
+    {
+     "id": "01-02",
+     "at": "01.T1@0.48",
+     "plate": "chicago_night/wide",
+     "move": "in",
+     "pct": 0.03,
+     "card": {
+      "ya": 760
+     },
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=01&title=It+all+started",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "01-03",
+     "at": "01.01",
+     "plate": "chicago_night/window",
+     "move": "in"
+    },
+    {
+     "id": "01-04",
+     "at": "01.01@0.55",
+     "plate": "chicago_night/profile",
+     "move": "in",
+     "parallax": false,
+     "angle": "chicago_night profile_match: Dawn's statue at the glass, her head where it sits in the family photograph, for the match cut"
+    },
+    {
+     "id": "01-05",
+     "at": "01.02",
+     "photo": "06_dawn_family_holiday.jpg",
+     "zoom": [
+      2.3,
+      1.12
+     ],
+     "c": [
+      0.47,
+      0.36
+     ],
+     "note": "P03 is not in hand: its fallback P12 (the holiday photo of the same three). Never named on screen."
+    },
+    {
+     "id": "01-06",
+     "at": "01.02@0.36",
+     "photo": "04_dawn_flight_attendant_uniform.jpg",
+     "zoom": [
+      1.25,
+      1.32
+     ],
+     "c": [
+      0.5,
+      0.33
+     ],
+     "deviation": "Added: the family's photograph of Dawn in uniform on 'A former flight attendant' (claim 21 cites it), 1.5 s."
+    },
+    {
+     "id": "01-07",
+     "at": "01.02@0.56",
+     "plate": "evidence_table/motifs",
+     "move": "in"
+    },
+    {
+     "id": "01-08",
+     "at": "01.02@0.8",
+     "plate": "evidence_table/motifs",
+     "zoom": [
+      1.8,
+      1.9
+     ],
+     "c": [
+      0.36,
+      0.42
+     ],
+     "angle": "evidence_table motifs insert: the pencils and the fashion sketches, close"
+    },
+    {
+     "id": "01-09",
+     "at": "01.03",
+     "plate": "tim_desk/desk",
+     "move": "in"
+    },
+    {
+     "id": "01-09b",
+     "at": "01.03@0.22",
+     "plate": "tim_desk/window",
+     "move": "in"
+    },
+    {
+     "id": "01-10",
+     "at": "01.03@0.45",
+     "plate": "evidence_table/entries",
+     "move": "in"
+    },
+    {
+     "id": "01-11",
+     "at": "01.03@0.75",
+     "plate": "evidence_table/entries",
+     "zoom": [
+      1.7,
+      1.78
+     ],
+     "c": [
+      0.45,
+      0.52
+     ],
+     "angle": "evidence_table entries insert: the entry forms and the pen, close"
+    },
+    {
+     "id": "01-12",
+     "at": "01.04",
+     "plate": "home/dining_family",
+     "move": "in",
+     "pct": 0.03,
+     "sound": "the domestic tick (Gene's clock) for the first time"
+    },
+    {
+     "id": "01-12b",
+     "at": "01.04@0.15",
+     "plate": "home/dining_family",
+     "zoom": [
+      1.55,
+      1.6
+     ],
+     "c": [
+      0.48,
+      0.62
+     ],
+     "angle": "home dining_family insert: the hands and the plates on the warm table"
+    },
+    {
+     "id": "01-13",
+     "at": "01.04@0.3",
+     "piece": "doc_gene",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
+        "at": "01.04@0.36",
+        "dur": 0.7
+       }
+      ]
+     }
+    },
+    {
+     "id": "01-14",
+     "at": "01.04@0.62",
+     "plate": "home/dining_family",
+     "zoom": [
+      1.7,
+      1.78
+     ],
+     "c": [
+      0.66,
+      0.45
+     ],
+     "angle": "home dining_family: close on Gene at the head of the table (and a reverse on Tim)"
+    },
+    {
+     "id": "01-15",
+     "at": "01.04@0.82",
+     "plate": "home/dining_family",
+     "zoom": [
+      1.6,
+      1.66
+     ],
+     "c": [
+      0.3,
+      0.42
+     ]
+    },
+    {
+     "id": "01-16",
+     "at": "01.05",
+     "plate": "home/kitchen",
+     "move": "in"
+    },
+    {
+     "id": "01-17",
+     "at": "01.05@0.45",
+     "piece": "email",
+     "max": 7.5,
+     "sfx": [
+      {
+       "name": "sfx_mail_chime",
+       "at": "01.05@0.5"
+      }
+     ]
+    },
+    {
+     "id": "01-18",
+     "at": "01.T2",
+     "ground": true,
+     "card": true,
+     "seed": 11
+    },
+    {
+     "id": "01-18b",
+     "at": "01.T2@0.25",
+     "plate": "evidence_table/laptop",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "01-18c",
+     "at": "01.T2@0.45",
+     "ground": true,
+     "card": true,
+     "seed": 14
+    },
+    {
+     "id": "01-19",
+     "at": "01.T2+8.42",
+     "piece": "search",
+     "max": 5.5
+    },
+    {
+     "id": "01-20",
+     "at": "01.T2+10.24",
+     "plate": "home/kitchen_over",
+     "move": "in",
+     "card": true,
+     "anim": "ANIMATED BEAT: the hand typing (Cycles close-up)"
+    },
+    {
+     "id": "01-21",
+     "at": "01.06",
+     "piece": "doc_cash",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "email stating that she had won a cash prize.",
+        "at": "01.06@0.08",
+        "dur": 0.6
+       }
+      ]
+     }
+    },
+    {
+     "id": "01-22",
+     "at": "01.06@0.36",
+     "clip": "IN-14",
+     "src": 103.6,
+     "crop": [
+      560,
+      70,
+      800
+     ],
+     "grade": "testimony",
+     "card": false,
+     "note": "'Out loud, it's a trip': the man who said it aloud, at the 2024 hearing (NBC's frame, muted).",
+     "still": true
+    },
+    {
+     "id": "01-23",
+     "at": "01.06@0.6",
+     "plate": "evidence_table/pair",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "01-23b",
+     "at": "01.06@0.8",
+     "piece": "doc_cash",
+     "in": 3.0,
+     "gen": {
+      "marks": [
+       {
+        "phrase": "email stating that she had won a cash prize.",
+        "at": "01.06@0.08",
+        "dur": 0.6
+       }
+      ]
+     }
+    },
+    {
+     "id": "01-24",
+     "at": "01.07",
+     "plate": "home/dining_family",
+     "zoom": [
+      1.45,
+      1.5
+     ],
+     "c": [
+      0.62,
+      0.44
+     ],
+     "sound": "the domestic tick"
+    },
+    {
+     "id": "01-25",
+     "at": "01.R1",
+     "clip": "IN-14",
+     "sync": "01.R1",
+     "crop": [
+      51,
+      60,
+      1150
+     ],
+     "crop1": [
+      100,
+      85,
+      1060
+     ],
+     "card": {
+      "maxw": 720
+     },
+     "row": "2:10 Gene's real face and voice, pushed in past NBC's lower third and bug"
+    },
+    {
+     "id": "01-26",
+     "at": "01.08",
+     "plate": "evidence_table/passport",
+     "move": "in"
+    },
+    {
+     "id": "01-26b",
+     "at": "01.08@0.22",
+     "piece": "doc_passport",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "they gave her checked out. With that, she sent them her passport information and they sent a",
+        "at": "01.08@0.26",
+        "dur": 0.6
+       }
+      ]
+     }
+    },
+    {
+     "id": "01-27",
+     "at": "01.08@0.55",
+     "plate": "evidence_table/tickets",
+     "move": "in",
+     "sfx": [
+      {
+       "name": "sfx_boarding_chime",
+       "at": "01.08@0.85"
+      }
+     ]
+    },
+    {
+     "id": "01-28",
+     "at": "01.09",
+     "plate": "aircraft_cabin/window",
+     "move": "in"
+    },
+    {
+     "id": "01-29",
+     "at": "01.09@0.55",
+     "plate": "aircraft_cabin/over",
+     "move": "in"
+    },
+    {
+     "id": "01-30",
+     "at": "01.T3",
+     "piece": "route_leg1"
+    },
+    {
+     "id": "01-30b",
+     "at": "01.T3+2.79",
+     "plate": "hongkong_street/dawn",
+     "zoom": [
+      1.2,
+      1.25
+     ],
+     "c": [
+      0.55,
+      0.5
+     ],
+     "parallax": false,
+     "card": true,
+     "anim": "ANIMATED BEAT: Dawn walking in the Hong Kong rain (hongkong_street)"
+    },
+    {
+     "id": "01-31",
+     "at": "01.T3+4.43",
+     "plate": "hongkong_street/wide",
+     "move": "in",
+     "card": true
+    }
+   ]
+  },
+  {
+   "n": "02",
+   "title": "Once again, she agreed",
+   "rate": 155,
+   "voice": [
+    {
+     "id": "02.T1",
+     "t24": true,
+     "say": "She went sightseeing, shopping, and started to trust the organizers who put together her trip.",
+     "dur": 6.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.653-654",
+     "card": {
+      "keys": [
+       "trust"
+      ]
+     }
+    },
+    {
+     "id": "02.T2",
+     "t24": true,
+     "say": "After exploring Hong Kong, she was asked if she wanted to visit mainland China. After her positive experience in Hong Kong, she agreed.",
+     "dur": 9.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.655-657",
+     "card": {
+      "keys": [
+       "she agreed."
+      ]
+     }
+    },
+    {
+     "id": "02.T3",
+     "t24": true,
+     "say": "She went to mainland China and traveled around for another 9 days.",
+     "dur": 4.8,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.657-658",
+     "card": {
+      "keys": []
+     }
+    },
+    {
+     "id": "02.01",
+     "text": "The email became a ticket. The ticket became a city. And the city became trust."
+    },
+    {
+     "id": "02.T4",
+     "t24": true,
+     "say": "The organizers then asked if she wanted to visit Australia. Once again, she agreed.",
+     "dur": 5.6,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.659-660",
+     "card": {
+      "keys": [
+       "Once again,",
+       "she agreed."
+      ]
+     }
+    },
+    {
+     "id": "02.02",
+     "text": "Each time, she said yes. And each yes took her a step closer to that room."
+    },
+    {
+     "id": "02.h0",
+     "hold": 1.0,
+     "note": "inspection_room empty, 1.2 s with the end of the line"
+    },
+    {
+     "id": "02.T5",
+     "t24": true,
+     "say": "Before she left for her Australia trip, she was told that she also won some designer purses.",
+     "dur": 7.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.660-661",
+     "card": {
+      "keys": [
+       "designer purses."
+      ],
+      "hold": "some designer purses"
+     }
+    },
+    {
+     "id": "02.h1",
+     "hold": 1.2,
+     "note": "his held words alone: 1.2 s of digital silence",
+     "silence": "digital"
+    }
+   ],
+   "shots": [
+    {
+     "id": "02-01",
+     "at": "02.T1",
+     "plate": "hongkong_street/dawn",
+     "move": "in",
+     "parallax": false,
+     "card": true,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=02&title=Once+again,+she+agreed",
+       "t0": 0.0
+      }
+     ],
+     "anim": "ANIMATED BEAT: Dawn walking in the Hong Kong rain"
+    },
+    {
+     "id": "02-02",
+     "at": "02.T1@0.5",
+     "plate": "hongkong_street/window",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "02-02b",
+     "at": "02.T1@0.8",
+     "ground": true,
+     "card": true,
+     "seed": 15
+    },
+    {
+     "id": "02-03",
+     "at": "02.T2",
+     "plate": "hotel_room/window",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "02-04",
+     "at": "02.T2+5.12",
+     "ground": true,
+     "card": true,
+     "seed": 12
+    },
+    {
+     "id": "02-05",
+     "at": "02.T3",
+     "plate": "aircraft_cabin/window",
+     "zoom": [
+      1.35,
+      1.4
+     ],
+     "c": [
+      0.62,
+      0.42
+     ],
+     "card": true,
+     "angle": "aircraft_cabin: Dawn at the window, close (a second cabin angle)"
+    },
+    {
+     "id": "02-06",
+     "at": "02.T3+2.01",
+     "piece": "route_mainland",
+     "max": 4.4
+    },
+    {
+     "id": "02-07",
+     "at": "02.01",
+     "piece": "email",
+     "in": 4.0,
+     "max": 3.5
+    },
+    {
+     "id": "02-08",
+     "at": "02.01@0.3",
+     "plate": "evidence_table/tickets",
+     "move": "in"
+    },
+    {
+     "id": "02-09",
+     "at": "02.01@0.6",
+     "plate": "hongkong_street/wide",
+     "zoom": [
+      1.3,
+      1.36
+     ],
+     "c": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "id": "02-10",
+     "at": "02.01@0.82",
+     "plate": "hongkong_street/dawn",
+     "zoom": [
+      1.35,
+      1.4
+     ],
+     "c": [
+      0.58,
+      0.5
+     ],
+     "parallax": false
+    },
+    {
+     "id": "02-11",
+     "at": "02.T4",
+     "piece": "route_mainland",
+     "in": 4.3
+    },
+    {
+     "id": "02-12",
+     "at": "02.T4+3.65",
+     "ground": true,
+     "card": true,
+     "seed": 13
+    },
+    {
+     "id": "02-13",
+     "at": "02.02",
+     "plate": "train/rack",
+     "move": "in"
+    },
+    {
+     "id": "02-14",
+     "at": "02.02@0.45",
+     "plate": "train/aisle",
+     "move": "in"
+    },
+    {
+     "id": "02-15",
+     "at": "02.02@0.82",
+     "plate": "inspection_room/empty",
+     "move": "lock"
+    },
+    {
+     "id": "02-16",
+     "at": "02.T5",
+     "ground": true,
+     "card": true,
+     "seed": 16
+    },
+    {
+     "id": "02-16b",
+     "at": "02.T5@0.25",
+     "plate": "hotel_room/overhead",
+     "move": "in",
+     "card": true
+    },
+    {
+     "id": "02-17",
+     "at": "02.T5+2.80",
+     "plate": "evidence_table/purses",
+     "move": "in",
+     "pct": 0.04,
+     "card": true
+    }
+   ]
+  },
+  {
+   "n": "03",
+   "title": "Trusting the organizers",
+   "rate": 155,
+   "voice": [
+    {
+     "id": "03.T1",
+     "t24": true,
+     "say": "Trusting the organizers, she took the purses and packed them in luggage given to her by the organizers.",
+     "dur": 7.4,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.661-663",
+     "card": {
+      "keys": [
+       "Trusting the organizers,"
+      ]
+     }
+    },
+    {
+     "id": "03.01",
+     "text": "Her luggage was already full, Tim wrote. So she went with some of the people who organized her trip to the Baiyun Leather Market, and the organizers bought her an extra bag."
+    },
+    {
+     "id": "03.02",
+     "text": "Two pieces of luggage. She checked both."
+    },
+    {
+     "id": "03.03",
+     "text": "At the check-in desk, the scale said what you already know."
+    },
+    {
+     "id": "03.04",
+     "text": "Overweight. She paid the fee."
+    },
+    {
+     "id": "03.05",
+     "text": "\"...she even paid a small excess weight fee,\" he wrote."
+    },
+    {
+     "id": "03.h1",
+     "hold": 0.8,
+     "note": "(beat)"
+    },
+    {
+     "id": "03.06",
+     "text": "Even."
+    },
+    {
+     "id": "03.07",
+     "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother."
+    },
+    {
+     "id": "03.08",
+     "text": "Whatever was sewn into those linings was now checked in her name."
+    },
+    {
+     "id": "03.T2",
+     "t24": true,
+     "say": "It was at the airport, waiting to board her Australia flight,",
+     "dur": 4.6,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.663-664",
+     "card": {
+      "keys": [],
+      "hold": "her Australia flight"
+     }
+    },
+    {
+     "id": "03.h2",
+     "hold": 1.2,
+     "note": "his held words alone: 1.2 s of digital silence",
+     "silence": "digital"
+    }
+   ],
+   "shots": [
+    {
+     "id": "03-01",
+     "at": "03.T1",
+     "plate": "hotel_room/overhead_pre",
+     "move": "in",
+     "card": true,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=03&title=Trusting+the+organizers",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "03-02",
+     "at": "03.T1@0.5",
+     "plate": "hotel_room/pack",
+     "move": "in",
+     "card": true,
+     "angle": "hotel_room accept, re-rendered: Dawn with the tote in her hands; the plate in hand shows the tote mustard (the cognac tote never reads mustard), so the packing plate stands in"
+    },
+    {
+     "id": "03-03",
+     "at": "03.01",
+     "plate": "hotel_room/overhead_pre",
+     "zoom": [
+      1.5,
+      1.56
+     ],
+     "c": [
+      0.55,
+      0.45
+     ]
+    },
+    {
+     "id": "03-04",
+     "at": "03.01@0.18",
+     "piece": "doc_market",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "so she and some people who organized her trips went to the Baiyun Leather market and the",
+        "at": "03.01@0.3",
+        "dur": 0.8
+       }
+      ]
+     }
+    },
+    {
+     "id": "03-04b",
+     "at": "03.01@0.5",
+     "plate": "leather_market/stall",
+     "move": "in"
+    },
+    {
+     "id": "03-05",
+     "at": "03.01@0.75",
+     "plate": "leather_market/stall",
+     "zoom": [
+      1.5,
+      1.56
+     ],
+     "c": [
+      0.72,
+      0.35
+     ],
+     "angle": "leather_market purchase insert: the extra bag and the hands only (the purchase plate shows an organizer's face, which the script rules out)"
+    },
+    {
+     "id": "03-06",
+     "at": "03.02",
+     "plate": "hotel_room/pack",
+     "move": "in",
+     "sfx": [
+      {
+       "name": "sfx_zip",
+       "at": "03.02@0.2"
+      }
+     ]
+    },
+    {
+     "id": "03-07",
+     "at": "03.02@0.5",
+     "plate": "baggage_belt/overhead",
+     "move": "in",
+     "anim": "ANIMATED BEAT: the bags along the belt"
+    },
+    {
+     "id": "03-08",
+     "at": "03.03",
+     "plate": "checkin_hall/wide",
+     "move": "in"
+    },
+    {
+     "id": "03-09",
+     "at": "03.03@0.62",
+     "piece": "scale",
+     "sfx": [
+      {
+       "name": "sfx_scale_beep",
+       "at": "03.03@0.62+1.25"
+      }
+     ],
+     "row": "the cold open's first frame, exactly"
+    },
+    {
+     "id": "03-10",
+     "at": "03.04@0.5",
+     "plate": "checkin_hall/shoulder",
+     "move": "in",
+     "pct": 0.04
+    },
+    {
+     "id": "03-11",
+     "at": "03.05",
+     "piece": "doc_fee",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit",
+        "at": "03.05@0.1",
+        "dur": 0.8
+       }
+      ]
+     }
+    },
+    {
+     "id": "03-12",
+     "at": "03.07",
+     "piece": "scale",
+     "in": 2.0
+    },
+    {
+     "id": "03-13",
+     "at": "03.07@0.14",
+     "piece": "yes",
+     "in": 0.4,
+     "max": 2.5
+    },
+    {
+     "id": "03-14",
+     "at": "03.07@0.3",
+     "plate": "hotel_room/pack",
+     "zoom": [
+      1.4,
+      1.45
+     ],
+     "c": [
+      0.45,
+      0.5
+     ]
+    },
+    {
+     "id": "03-15",
+     "at": "03.07@0.48",
+     "plate": "tim_desk/letters",
+     "move": "in"
+    },
+    {
+     "id": "03-16",
+     "at": "03.08",
+     "piece": "trace",
+     "sfx": [
+      {
+       "name": "sfx_seam_click",
+       "at": "03.08@0.9"
+      }
+     ]
+    },
+    {
+     "id": "03-17",
+     "at": "03.08@0.55",
+     "piece": "cutaway",
+     "max": 4.6
+    },
+    {
+     "id": "03-17b",
+     "at": "03.T2",
+     "ground": true,
+     "card": true,
+     "seed": 17
+    },
+    {
+     "id": "03-18",
+     "at": "03.T2@0.45",
+     "plate": "baggage_belt/curtain",
+     "move": "in",
+     "card": true,
+     "anim": "ANIMATED BEAT: the bags ride into the dark"
+    }
+   ]
+  },
+  {
+   "n": "04",
+   "title": "Yes",
+   "rate": 155,
+   "voice": [
+    {
+     "id": "04.T1",
+     "t24": true,
+     "say": "that she was called by airport security.",
+     "dur": 2.8,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.664-665",
+     "card": {
+      "keys": [
+       "airport security."
+      ]
+     }
+    },
+    {
+     "id": "04.01",
+     "text": "In the room, the officers ask whether the bags are hers."
+    },
+    {
+     "id": "04.h1",
+     "hold": 1.2,
+     "note": "YES in silence",
+     "silence": "room"
+    },
+    {
+     "id": "04.02",
+     "text": "They ask again."
+    },
+    {
+     "id": "04.h2",
+     "hold": 1.0,
+     "note": "YES again, harder, in silence",
+     "silence": "room"
+    },
+    {
+     "id": "04.03",
+     "text": "She checked them herself. To her, they're her bags."
+    },
+    {
+     "id": "04.04",
+     "text": "Then they find what's inside the linings."
+    },
+    {
+     "id": "04.h3",
+     "hold": 1.0,
+     "note": "silence",
+     "silence": "room"
+    },
+    {
+     "id": "04.05",
+     "text": "Two conversations, in one room. In her account, she is identifying her luggage. The officers are investigating drug smuggling."
+    },
+    {
+     "id": "04.06",
+     "text": "The same room. The same bags. The same word. Two different meanings."
+    },
+    {
+     "id": "04.07",
+     "text": "More than two kilograms of methamphetamine, about four and a half pounds, authorities say."
+    },
+    {
+     "id": "04.08",
+     "text": "We haven't seen the court's record of the case."
+    },
+    {
+     "id": "04.09",
+     "text": "And one word in his account is disputed. He put the dispute on the record himself."
+    },
+    {
+     "id": "04.10",
+     "text": "Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao."
+    },
+    {
+     "id": "04.11",
+     "text": "\"I don't know the reason for this discrepancy.\" Neither do we."
+    },
+    {
+     "id": "04.12",
+     "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
+    },
+    {
+     "id": "04.13",
+     "text": "The trip ended in that room. The case was only beginning."
+    }
+   ],
+   "shots": [
+    {
+     "id": "04-01",
+     "at": "04.T1",
+     "plate": "departure_gate/seated_called",
+     "move": "in",
+     "pct": 0.03,
+     "card": true,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=04&title=Yes",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "04-02",
+     "at": "04.01",
+     "plate": "inspection_room/enter",
+     "move": "in",
+     "sfx": [
+      {
+       "name": "sfx_door_steel",
+       "at": "04.01+0.05"
+      }
+     ]
+    },
+    {
+     "id": "04-03",
+     "at": "04.01@0.35",
+     "plate": "inspection_room/wide_pre",
+     "move": "in"
+    },
+    {
+     "id": "04-04",
+     "at": "04.01@0.7",
+     "plate": "inspection_room/two_shot_pre",
+     "move": "in"
+    },
+    {
+     "id": "04-05",
+     "at": "04.h1",
+     "piece": "yes",
+     "max": 4.0
+    },
+    {
+     "id": "04-06",
+     "at": "04.03",
+     "plate": "inspection_room/dawn_close",
+     "move": "in"
+    },
+    {
+     "id": "04-07",
+     "at": "04.03@0.6",
+     "plate": "inspection_room/tag",
+     "move": "in"
+    },
+    {
+     "id": "04-08",
+     "at": "04.04",
+     "plate": "inspection_room/handbags_touch",
+     "move": "lock",
+     "anim": "ANIMATED BEAT: the officer lifting the tote (Cycles close-up)"
+    },
+    {
+     "id": "04-09",
+     "at": "04.05",
+     "piece": "split",
+     "gen": {
+      "cut_at": "04.05@0.55"
+     }
+    },
+    {
+     "id": "04-10",
+     "at": "04.06",
+     "plate": "inspection_room/empty_ch05",
+     "move": "in"
+    },
+    {
+     "id": "04-11",
+     "at": "04.06@0.4",
+     "plate": "inspection_room/match",
+     "move": "in",
+     "pct": 0.02,
+     "type": [
+      {
+       "mode": "yes",
+       "at": "04.06@0.52"
+      }
+     ]
+    },
+    {
+     "id": "04-12",
+     "at": "04.06@0.72",
+     "piece": "split_r7",
+     "in": 3.2,
+     "max": 2.38
+    },
+    {
+     "id": "04-13",
+     "at": "04.07",
+     "plate": "inspection_room/overhead",
+     "move": "in"
+    },
+    {
+     "id": "04-14",
+     "at": "04.08",
+     "plate": "detention_corridor/envelope_high",
+     "move": "in",
+     "parallax": false,
+     "angle": "evidence_table folder (NEW prop and camera): a plain grey card folder, closed, no text, no seal; the envelope stands in"
+    },
+    {
+     "id": "04-15",
+     "at": "04.09",
+     "plate": "detention_corridor/envelope",
+     "move": "in"
+    },
+    {
+     "id": "04-16",
+     "at": "04.09@0.55",
+     "piece": "doc_foot",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "says she was on her way to Qingdao in China on an internal flight. I don’t know the reason for this discrepancy.",
+        "at": "04.10@0.45",
+        "dur": 0.9
+       }
+      ]
+     }
+    },
+    {
+     "id": "04-17",
+     "at": "04.11",
+     "piece": "route_split"
+    },
+    {
+     "id": "04-18",
+     "at": "04.12",
+     "plate": "inspection_room/empty_ch05",
+     "zoom": [
+      1.3,
+      1.35
+     ],
+     "c": [
+      0.5,
+      0.55
+     ]
+    },
+    {
+     "id": "04-18b",
+     "at": "04.12@0.32",
+     "plate": "detention_corridor/corridor",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2014",
+       "t0": 0.2
+      }
+     ],
+     "anim": "ANIMATED BEAT: dust in the corridor light"
+    },
+    {
+     "id": "04-19",
+     "at": "04.12@0.56",
+     "piece": "doc_denies",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "in 2014 and charged with smuggling, a charge she vehemently denies.",
+        "at": "04.12@0.62",
+        "dur": 0.8
+       }
+      ]
+     }
+    },
+    {
+     "id": "04-20",
+     "at": "04.13",
+     "plate": "inspection_room/empty",
+     "move": "lock"
+    },
+    {
+     "id": "04-21",
+     "at": "04.13@0.5",
+     "plate": "detention_corridor/door",
+     "move": "in",
+     "sfx": [
+      {
+       "name": "sfx_door_far",
+       "at": "04.13@0.7"
+      }
+     ],
+     "anim": "ANIMATED BEAT: the cell door closing"
+    }
+   ]
+  },
+  {
+   "n": "05",
+   "title": "It wasn't enough",
+   "rate": 150,
+   "voice": [
+    {
+     "id": "05.01",
+     "text": "She would spend about three years in detention before any verdict."
+    },
+    {
+     "id": "05.02",
+     "text": "She cooperated, he wrote. She answered all their questions, and handed over the emails the organizers had sent her."
+    },
+    {
+     "id": "05.h1",
+     "hold": 2.2,
+     "note": "the marker reaches 'it wasn't enough'"
+    },
+    {
+     "id": "05.h2",
+     "hold": 1.0,
+     "note": "the empty pool: a sound drop",
+     "silence": "room"
+    },
+    {
+     "id": "05.03",
+     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it."
+    },
+    {
+     "id": "05.h3",
+     "hold": 3.0,
+     "note": "the calendar, the institutional tick alone"
+    },
+    {
+     "id": "05.04",
+     "text": "The State Department's advice today: do not transport unfamiliar gifts, luggage or packages across borders."
+    },
+    {
+     "id": "05.05",
+     "text": "She trusted the organizers. For more than two weeks, they had put together her trip."
+    },
+    {
+     "id": "05.T1",
+     "t24": true,
+     "say": "I hope you can see that something like this could happen to a lot of people.",
+     "dur": 6.2,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.670-671",
+     "card": {
+      "keys": [
+       "a lot of people."
+      ],
+      "hold": "a lot of people"
+     }
+    },
+    {
+     "id": "05.h4",
+     "hold": 1.2,
+     "note": "his held words: 1.2 s of digital silence",
+     "silence": "digital"
+    }
+   ],
+   "shots": [
+    {
+     "id": "05-01",
+     "at": "05.01",
+     "plate": "detention_corridor/door",
+     "zoom": [
+      1.25,
+      1.3
+     ],
+     "c": [
+      0.5,
+      0.5
+     ],
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=05&title=It+wasn%27t+enough",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "05-02",
+     "at": "05.01@0.55",
+     "plate": "detention_corridor/chair",
+     "move": "in"
+    },
+    {
+     "id": "05-03",
+     "at": "05.02@0.2",
+     "piece": "doc_emails",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "answered all their questions, produced the emails she received from the organizers",
+        "at": "05.02@0.45",
+        "dur": 1.0
+       },
+       {
+        "phrase": "but unfortunately it wasn’t enough.",
+        "at": "05.h1+0.9",
+        "dur": 0.8
+       }
+      ]
+     }
+    },
+    {
+     "id": "05-04",
+     "at": "05.h2",
+     "plate": "void_stage/pool",
+     "move": "in",
+     "parallax": false
+    },
+    {
+     "id": "05-05",
+     "at": "05.03@0.3",
+     "plate": "visiting_room/empty",
+     "move": "in"
+    },
+    {
+     "id": "05-06",
+     "at": "05.03@0.72",
+     "plate": "void_stage/pool",
+     "zoom": [
+      1.3,
+      1.36
+     ],
+     "c": [
+      0.5,
+      0.62
+     ],
+     "parallax": false
+    },
+    {
+     "id": "05-07",
+     "at": "05.h3",
+     "piece": "calendar",
+     "max": 7.5
+    },
+    {
+     "id": "05-08",
+     "at": "05.04@0.4",
+     "plate": "baggage_belt/overhead",
+     "move": "in"
+    },
+    {
+     "id": "05-09",
+     "at": "05.05",
+     "plate": "hongkong_street/wide",
+     "move": "in"
+    },
+    {
+     "id": "05-10",
+     "at": "05.T1",
+     "clip": "IN-14",
+     "src": 103.6,
+     "crop": [
+      480,
+      40,
+      960
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card.",
+     "still": true
+    },
+    {
+     "id": "05-11",
+     "at": "05.T1@0.45",
+     "ground": true,
+     "card": true,
+     "seed": 18
+    }
+   ]
+  },
+  {
+   "n": "06",
+   "title": "Found guilty",
+   "rate": 150,
+   "voice": [
+    {
+     "id": "06.T1",
+     "t24": true,
+     "say": "After her trial she was found guilty and received the 'death penalty with 2-year reprieve.'",
+     "dur": 6.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.675-676",
+     "card": {
+      "keys": [
+       "found guilty"
+      ]
+     }
+    },
+    {
+     "id": "06.T2",
+     "t24": true,
+     "say": "She was duped. She was scammed! She trusted the wrong people! She doesn't deserve this! My sister is trusting and believes that people are good.",
+     "dur": 10.8,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.676-678",
+     "card": {
+      "keys": [
+       "duped.",
+       "scammed!",
+       "the wrong people!",
+       "doesn't deserve this!"
+      ]
+     }
+    },
+    {
+     "id": "06.01",
+     "text": "The words matter. It was a suspended death sentence, not an order for her immediate execution. It was later reduced to life in prison."
+    },
+    {
+     "id": "06.02",
+     "text": "China sees a serious crime. In 2026, its foreign ministry told Reuters that she and another American are serving sentences for serious drug-related crimes, handled according to the rule of law, with their health and legitimate rights protected."
+    },
+    {
+     "id": "06.03",
+     "text": "Her family insists she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it."
+    },
+    {
+     "id": "06.04",
+     "text": "According to her family, and to reporting on the court's reasoning, the judge recognised that she had been deceived, and concluded that she should have known anyway."
+    },
+    {
+     "id": "06.05",
+     "text": "Deceived."
+    },
+    {
+     "id": "06.h1",
+     "hold": 0.6,
+     "note": "(beat)"
+    },
+    {
+     "id": "06.06",
+     "text": "And guilty anyway."
+    },
+    {
+     "id": "06.h2",
+     "hold": 2.0,
+     "note": "total silence",
+     "silence": "digital"
+    },
+    {
+     "id": "06.07",
+     "text": "In June 2024, her brother was let in to see her."
+    }
+   ],
+   "shots": [
+    {
+     "id": "06-01",
+     "at": "06.T1",
+     "plate": "courtroom/wide",
+     "move": "lock",
+     "card": true,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=06&title=Found+guilty",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "06-02",
+     "at": "06.T1+3.40",
+     "plate": "void_stage/dawn_close",
+     "move": "in",
+     "pct": 0.03,
+     "type": [
+      {
+       "mode": "death_2017",
+       "t0": 0.0
+      }
+     ],
+     "sfx": [
+      {
+       "name": "sfx_impact_low",
+       "at": "06.T1+3.50"
+      }
+     ]
+    },
+    {
+     "id": "06-03",
+     "at": "06.T2",
+     "clip": "IN-14",
+     "src": 98.4,
+     "crop": [
+      420,
+      0,
+      1060
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card."
+    },
+    {
+     "id": "06-04",
+     "at": "06.T2@0.33",
+     "ground": true,
+     "card": true,
+     "seed": 19
+    },
+    {
+     "id": "06-05",
+     "at": "06.T2@0.68",
+     "clip": "IN-14",
+     "src": 100.9,
+     "crop": [
+      560,
+      70,
+      800
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card."
+    },
+    {
+     "id": "06-05b",
+     "at": "06.01",
+     "plate": "void_stage/dawn_close",
+     "move": "in",
+     "pct": 0.02
+    },
+    {
+     "id": "06-06",
+     "at": "06.01@0.87-5.95",
+     "piece": "casefile",
+     "max": 9.5,
+     "deviation": "The text system's case file (the type test's look 2, which the author loved) carries 'a suspended death sentence ... reduced to life' in place of the sentence typed beside Dawn: DEATH, WITH A TWO-YEAR REPRIEVE struck and LIFE on 'life'. It shows the family's photograph of Dawn in uniform (the type test's crop) and only sourced facts: Chicago, a former flight attendant, arrested 2014."
+    },
+    {
+     "id": "06-07",
+     "at": "06.01@0.92",
+     "plate": "courtroom/dock",
+     "move": "in"
+    },
+    {
+     "id": "06-08",
+     "at": "06.02",
+     "plate": "prison_exterior/wall",
+     "move": "in"
+    },
+    {
+     "id": "06-09",
+     "at": "06.02@0.5",
+     "plate": "prison_exterior/wall",
+     "zoom": [
+      1.4,
+      1.46
+     ],
+     "c": [
+      0.55,
+      0.45
+     ],
+     "angle": "prison_exterior: the wall close, the rain on concrete"
+    },
+    {
+     "id": "06-10",
+     "at": "06.03",
+     "plate": "baggage_belt/belt",
+     "move": "in"
+    },
+    {
+     "id": "06-10b",
+     "at": "06.03@0.55",
+     "plate": "baggage_belt/overhead",
+     "zoom": [
+      1.4,
+      1.46
+     ],
+     "c": [
+      0.4,
+      0.45
+     ]
+    },
+    {
+     "id": "06-11",
+     "at": "06.04",
+     "plate": "courtroom/bench",
+     "move": "in"
+    },
+    {
+     "id": "06-12",
+     "at": "06.04@0.55",
+     "plate": "detention_corridor/envelope_high",
+     "move": "in",
+     "parallax": false,
+     "angle": "evidence_table folder (NEW prop and camera), its second use; the envelope stands in"
+    },
+    {
+     "id": "06-13",
+     "at": "06.05",
+     "plate": "void_stage/dawn_close",
+     "move": "lock"
+    },
+    {
+     "id": "06-14",
+     "at": "06.07",
+     "plate": "prison_exterior/tower",
+     "move": "in"
+    }
+   ]
+  },
+  {
+   "n": "07",
+   "title": "Locked up as well",
+   "rate": 145,
+   "voice": [
+    {
+     "id": "07.01",
+     "text": "Guangdong Women's Prison. It had taken him six to eight months to get permission."
+    },
+    {
+     "id": "07.02",
+     "text": "He found a sister who had lost weight, and was very pale."
+    },
+    {
+     "id": "07.03",
+     "text": "Doctors who examined her in prison, he said, had found uterine fibroids, and possibly ovarian cancer: not a confirmed diagnosis. She had needed numerous transfusions for heavy bleeding, and had been advised to have a hysterectomy. She refused, out of distrust."
+    },
+    {
+     "id": "07.04",
+     "text": "She still had to work, he said, making lithium batteries."
+    },
+    {
+     "id": "07.T1",
+     "t24": true,
+     "say": "After my visit to her, I updated my father on her condition. I had to leave out some details of her physical appearance",
+     "dur": 9.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.694-696",
+     "card": {
+      "keys": [],
+      "hold": "her physical appearance"
+     }
+    },
+    {
+     "id": "07.h1",
+     "hold": 1.2,
+     "note": "his held words alone: 1.2 s of digital silence",
+     "silence": "digital"
+    },
+    {
+     "id": "07.T2",
+     "t24": true,
+     "say": "because my dad is 91 and has recently been diagnosed with cancer. I wanted to avoid giving him an additional shock.",
+     "dur": 8.6,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.696-697",
+     "card": {
+      "keys": [
+       "additional shock."
+      ]
+     }
+    },
+    {
+     "id": "07.T3",
+     "t24": true,
+     "say": "In a strange way, my dad is locked up as well. He is worried that with all this, he's not going to live long enough to see his daughter free and safe.",
+     "dur": 12.8,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.704-706",
+     "card": {
+      "keys": [
+       "locked up as well."
+      ]
+     }
+    },
+    {
+     "id": "07.T4",
+     "t24": true,
+     "say": "And in this handwritten letter, she refused the surgery. And she said, and I'm going to quote this to bring some of her own words to this hearing: 'I, Dawn Michelle, refuse to take the surgery and will hold China liable for all the consequences from August 11, 2021, in regard to my tumor and safety of my life.'",
+     "dur": 23.0,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.717-722",
+     "card": {
+      "keys": [],
+      "rec_from": "I, Dawn Michelle"
+     }
+    },
+    {
+     "id": "07.T5",
+     "t24": true,
+     "say": "Gentlemen, this isn't political for me and my family. I'm just asking you, as a brother, just bring my sister home. Do whatever it takes; just bring her home.",
+     "dur": 13.5,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.732-734",
+     "card": {
+      "keys": [
+       "just bring my sister home.",
+       "just bring her home."
+      ]
+     }
+    },
+    {
+     "id": "07.h2",
+     "hold": 1.0,
+     "note": "held on him after the last word: a sound drop",
+     "silence": "room"
+    },
+    {
+     "id": "07.05",
+     "text": "Later, a senator asked him about that visit. Armed guards with long guns had escorted him, he said. They held his passport during the visit."
+    },
+    {
+     "id": "07.T6",
+     "t24": true,
+     "say": "After this hearing I don't believe it would be advisable for me to go and visit my sister again.",
+     "dur": 7.4,
+     "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.1273-1274",
+     "card": {
+      "keys": []
+     }
+    },
+    {
+     "id": "07.h3",
+     "hold": 1.5,
+     "note": "room tone"
+    }
+   ],
+   "shots": [
+    {
+     "id": "07-01",
+     "at": "07.01",
+     "plate": "prison_exterior/gate",
+     "move": "in",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=07&title=Locked+up+as+well",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "07-02",
+     "at": "07.02",
+     "plate": "visiting_room/wide",
+     "move": "in",
+     "note": "Known problem: the visiting room plates still have the short-sleeved top."
+    },
+    {
+     "id": "07-03",
+     "at": "07.02@0.5",
+     "plate": "visiting_room/glass",
+     "move": "in"
+    },
+    {
+     "id": "07-04",
+     "at": "07.03",
+     "plate": "void_stage/cell_floor",
+     "move": "in",
+     "parallax": false
+    },
+    {
+     "id": "07-05",
+     "at": "07.03@0.2",
+     "piece": "doc_health",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "cancer) according to the doctors who examined her in prison. She has received numerous blood",
+        "at": "07.03@0.24",
+        "dur": 0.9
+       }
+      ]
+     }
+    },
+    {
+     "id": "07-05b",
+     "at": "07.03@0.5",
+     "plate": "void_stage/cell_dawn",
+     "move": "in",
+     "parallax": false
+    },
+    {
+     "id": "07-06",
+     "at": "07.03@0.78",
+     "plate": "void_stage/cell_close",
+     "move": "in"
+    },
+    {
+     "id": "07-07",
+     "at": "07.04",
+     "piece": "doc_work",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "very pale. She told me that she still has to work in the prison despite her illness but that she can’t",
+        "at": "07.04@0.2",
+        "dur": 0.9
+       }
+      ]
+     }
+    },
+    {
+     "id": "07-07b",
+     "at": "07.T1",
+     "ground": true,
+     "card": true,
+     "seed": 20
+    },
+    {
+     "id": "07-08",
+     "at": "07.T1@0.45",
+     "plate": "home/dining_gene",
+     "move": "in",
+     "pct": 0.04,
+     "card": true,
+     "sound": "the domestic tick"
+    },
+    {
+     "id": "07-09",
+     "at": "07.T2",
+     "ground": true,
+     "card": true,
+     "seed": 21
+    },
+    {
+     "id": "07-10",
+     "at": "07.T2@0.5",
+     "plate": "home/dining_gene",
+     "zoom": [
+      1.6,
+      1.68
+     ],
+     "c": [
+      0.66,
+      0.4
+     ],
+     "card": true,
+     "angle": "home dining_gene: Gene alone in the cold light, a second angle (never close on his face)"
+    },
+    {
+     "id": "07-11",
+     "at": "07.T3",
+     "ground": true,
+     "card": true,
+     "seed": 23
+    },
+    {
+     "id": "07-11b",
+     "at": "07.T3@0.3",
+     "plate": "home/chair_gene",
+     "move": "lock",
+     "card": true
+    },
+    {
+     "id": "07-12",
+     "at": "07.T3@0.5",
+     "piece": "father",
+     "max": 7.0
+    },
+    {
+     "id": "07-13",
+     "at": "07.T4",
+     "clip": "IN-14",
+     "src": 103.6,
+     "crop": [
+      420,
+      0,
+      1060
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card.",
+     "still": true
+    },
+    {
+     "id": "07-13b",
+     "at": "07.T4@0.18",
+     "ground": true,
+     "card": true,
+     "seed": 24
+    },
+    {
+     "id": "07-14",
+     "at": "07.T4+10.50",
+     "plate": "void_stage/pool",
+     "move": "in",
+     "pct": 0.03,
+     "parallax": false,
+     "card": {
+      "x": 140,
+      "ya": 760
+     }
+    },
+    {
+     "id": "07-15",
+     "at": "07.T5",
+     "clip": "IN-14",
+     "src": 98.4,
+     "crop": [
+      480,
+      40,
+      960
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card."
+    },
+    {
+     "id": "07-16",
+     "at": "07.T5@0.3",
+     "clip": "IN-14",
+     "src": 103.6,
+     "crop": [
+      560,
+      70,
+      800
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card.",
+     "still": true
+    },
+    {
+     "id": "07-17",
+     "at": "07.T5@0.62",
+     "ground": true,
+     "card": true,
+     "seed": 22
+    },
+    {
+     "id": "07-18",
+     "at": "07.05",
+     "plate": "prison_exterior/gate",
+     "zoom": [
+      1.3,
+      1.36
+     ],
+     "c": [
+      0.5,
+      0.6
+     ]
+    },
+    {
+     "id": "07-19",
+     "at": "07.05@0.6",
+     "plate": "evidence_table/passport",
+     "zoom": [
+      1.3,
+      1.36
+     ],
+     "c": [
+      0.55,
+      0.45
+     ]
+    },
+    {
+     "id": "07-20",
+     "at": "07.T6",
+     "ground": true,
+     "card": true,
+     "seed": 25
+    },
+    {
+     "id": "07-21",
+     "at": "07.T6@0.55",
+     "clip": "IN-14",
+     "src": 103.6,
+     "crop": [
+      420,
+      0,
+      1060
+     ],
+     "grade": "testimony",
+     "card": true,
+     "note": "Stand-in for V01 (the official 2024 stream): NBC's frame of the hearing, muted; his words as a card.",
+     "still": true
+    }
+   ]
+  },
+  {
+   "n": "08",
+   "title": "An American of Americans",
+   "rate": 135,
+   "voice": [
+    {
+     "id": "08.01",
+     "text": "Gene Hunt was, in his son's words, an American of Americans. He had served in the Army, worked as a skimmer in the steel mills, and driven a Chicago bus, before thirty-two years in the police."
+    },
+    {
+     "id": "08.02",
+     "text": "As a boy, Tim wrote, he watched his father save the next-door neighbours from a house fire."
+    },
+    {
+     "id": "08.03",
+     "text": "There was one person Gene could not bring home."
+    },
+    {
+     "id": "08.R1",
+     "real": "IN-14",
+     "in": 135.76,
+     "out": 144.54,
+     "say": "I will get my daughter back as I'm talking to you. She will return to me.",
+     "who": "Gene Hunt, NBC 5 Chicago, 19 Sep 2024 (IN-14 135.76-144.54)",
+     "card": {
+      "keys": [
+       "She will return to me."
+      ]
+     },
+     "after": 0.5
+    },
+    {
+     "id": "08.04",
+     "text": "In May 2025, Tim says, the United States asked for her release on humanitarian grounds. That September, a bipartisan bill was introduced in Congress, named for her and for Nelson Wells Junior, another American held in China."
+    },
+    {
+     "id": "08.05",
+     "text": "None of it brought her home."
+    },
+    {
+     "id": "08.06",
+     "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two."
+    },
+    {
+     "id": "08.h1",
+     "hold": 2.0,
+     "note": "total silence: no score, no room tone",
+     "silence": "digital"
+    },
+    {
+     "id": "08.07",
+     "text": "He never saw Dawn come home."
+    },
+    {
+     "id": "08.h2",
+     "hold": 3.0,
+     "note": "room tone returns; then, faint, the institutional tick"
+    },
+    {
+     "id": "08.08",
+     "text": "That July, though he had told the commission it wouldn't be advisable, Tim went back."
+    },
+    {
+     "id": "08.R2",
+     "real": "IN-15",
+     "in": 63.44,
+     "out": 71.62,
+     "say": "I visited her two years ago and I was shocked two years ago. And I visited her a couple months ago and I'm even more shocked.",
+     "who": "Tim Hunt, NBC 5 Chicago, 25 Sep 2026 (IN-15 63.44-71.62)",
+     "card": {
+      "keys": [
+       "even more shocked."
+      ]
+     }
+    }
+   ],
+   "shots": [
+    {
+     "id": "08-01",
+     "at": "08.01",
+     "plate": "home/dining_gene",
+     "move": "in",
+     "pct": 0.04,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=08&title=An+American+of+Americans",
+       "t0": 0.0
+      }
+     ],
+     "note": "Gene's photograph (P07) is not in hand: its fallback, home dining_gene."
+    },
+    {
+     "id": "08-02",
+     "at": "08.01@0.4",
+     "plate": "home/blinds",
+     "move": "in",
+     "parallax": false
+    },
+    {
+     "id": "08-03",
+     "at": "08.01@0.7",
+     "plate": "home/chair_gene",
+     "zoom": [
+      1.3,
+      1.36
+     ],
+     "c": [
+      0.62,
+      0.45
+     ]
+    },
+    {
+     "id": "08-04",
+     "at": "08.02",
+     "piece": "doc_fire",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "I once witnessed him save our next-door neighbors when their",
+        "at": "08.02@0.3",
+        "dur": 0.8
+       }
+      ]
+     }
+    },
+    {
+     "id": "08-05",
+     "at": "08.03",
+     "plate": "void_stage/dawn_high",
+     "move": "in"
+    },
+    {
+     "id": "08-06",
+     "at": "08.R1",
+     "plate": "home/chair_gene",
+     "move": "lock",
+     "card": true,
+     "sound": "his room; the domestic tick"
+    },
+    {
+     "id": "08-07",
+     "at": "08.R1+5.1",
+     "clip": "IN-14",
+     "sync": "08.R1",
+     "crop": [
+      51,
+      60,
+      1150
+     ],
+     "crop1": [
+      100,
+      85,
+      1060
+     ],
+     "card": {
+      "maxw": 720
+     },
+     "row": "10:26 the real Gene in sync for 'She will return to me'"
+    },
+    {
+     "id": "08-08",
+     "at": "08.R1+7.78",
+     "plate": "home/dining_gene",
+     "zoom": [
+      1.45,
+      1.5
+     ],
+     "c": [
+      0.62,
+      0.42
+     ],
+     "card": true,
+     "deviation": "NBC's report cuts to the photograph of Dawn with an unidentified man (photo 05) at 143.7 s, under 'to me': the film cuts away to Gene's statue at 143.55 s, so that man is never shown as anyone."
+    },
+    {
+     "id": "08-09",
+     "at": "08.04",
+     "plate": "tim_desk/letters",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2025&pre=MAY",
+       "t0": 0.2
+      }
+     ],
+     "sfx": [
+      {
+       "name": "sfx_pen_paper",
+       "at": "08.04+0.4"
+      }
+     ]
+    },
+    {
+     "id": "08-10",
+     "at": "08.04@0.45",
+     "plate": "tim_desk/desk",
+     "move": "in",
+     "angle": "evidence_table page with H.R. 5491's first page (a U.S. government work: fetch the PDF), both names lit as printed"
+    },
+    {
+     "id": "08-11",
+     "at": "08.04@0.75",
+     "plate": "tim_desk/window",
+     "move": "in"
+    },
+    {
+     "id": "08-12",
+     "at": "08.05",
+     "plate": "detention_corridor/door",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "08-13",
+     "at": "08.06",
+     "plate": "home/dining_gene",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "08-14",
+     "at": "08.06@0.45",
+     "plate": "home/chair_gene",
+     "zoom": [
+      1.0,
+      1.02
+     ],
+     "parallax": false
+    },
+    {
+     "id": "08-15",
+     "at": "08.06@0.86",
+     "plate": "home/chair",
+     "continue": "08-14",
+     "type": [
+      {
+       "mode": "date_gene",
+       "t0": 0.15
+      }
+     ],
+     "row": "on 'died', the same frame empty"
+    },
+    {
+     "id": "08-16",
+     "at": "08.07",
+     "plate": "void_stage/chair",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "08-17",
+     "at": "08.08",
+     "plate": "prison_exterior/gate",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2026&pre=JULY",
+       "at": "08.08@0.2"
+      }
+     ]
+    },
+    {
+     "id": "08-18",
+     "at": "08.R2+4.46",
+     "clip": "IN-15",
+     "sync": "08.R2",
+     "crop": [
+      45,
+      20,
+      1500
+     ],
+     "crop1": [
+      110,
+      50,
+      1400
+     ],
+     "card": {
+      "maxw": 560
+     },
+     "row": "11:19 the real Tim in sync, pushed in past NBC's lower third"
+    }
+   ]
+  },
+  {
+   "n": "09",
+   "title": "When?",
+   "rate": 128,
+   "voice": [
+    {
+     "id": "09.01",
+     "text": "In September, he sat before the commission again."
+    },
+    {
+     "id": "09.02",
+     "text": "Some things had improved, he told them. More visits. A few books."
+    },
+    {
+     "id": "09.03",
+     "text": "He described a sister who had aged dramatically: slumped over, frail, her teeth yellowed and shifted, her hair much greyer."
+    },
+    {
+     "id": "09.04",
+     "text": "Two years earlier, he had spared his father some of the details. Now there was no father to spare."
+    },
+    {
+     "id": "09.05",
+     "text": "But there was one thing she kept coming back to."
+    },
+    {
+     "id": "09.h1",
+     "hold": 1.6,
+     "note": "the cold open's frozen frame; “When?” types on, in silence but the tick"
+    },
+    {
+     "id": "09.06",
+     "text": "She wants a date."
+    },
+    {
+     "id": "09.h1b",
+     "hold": 9.0,
+     "note": "the rest of his written lines type on, the frame still frozen"
+    },
+    {
+     "id": "09.h2",
+     "hold": 3.0,
+     "note": "the institutional tick alone"
+    },
+    {
+     "id": "09.07",
+     "text": "When he tells her that, he wrote, she becomes angry. All of this, she says, has only filled her head with false hopes."
+    },
+    {
+     "id": "09.h3",
+     "hold": 2.0,
+     "note": "the handset on its hook: a sound drop",
+     "silence": "room"
+    },
+    {
+     "id": "09.R1",
+     "real": "IN-1",
+     "in": 4.8,
+     "out": 9.06,
+     "say": "I see a woman who continues to hold on to the hope that one day she will be free.",
+     "who": "Tim Hunt, CECC hearing, September 2026, official feed (IN-1 4.80-9.06)",
+     "card": {
+      "keys": [
+       "she will be free."
+      ]
+     }
+    },
+    {
+     "id": "09.08",
+     "text": "Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it."
+    },
+    {
+     "id": "09.09",
+     "text": "Now she's the one asking. And no one has given her a date."
+    },
+    {
+     "id": "09.10",
+     "text": "Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family."
+    },
+    {
+     "id": "09.11",
+     "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
+    },
+    {
+     "id": "09.R2",
+     "real": "IN-13",
+     "in": 160.42,
+     "out": 182.46,
+     "say": "There are no happy stories I can tell you about reunification. There is no story about our father caring for my sister after she came home. There is no story about Dawn rebuilding her life. There is no story about Dawn getting better and moving forward because she is not home. It has been 12 years. 12 years.",
+     "who": "Tim Hunt, CECC hearing, September 2026, C-SPAN's recording (IN-13 160.42-182.46; gate G6 fallback)",
+     "card": {
+      "keys": [
+       "no happy stories",
+       "reunification.",
+       "no story",
+       "12 years."
+      ]
+     },
+     "after": 0.0
+    },
+    {
+     "id": "09.h4",
+     "hold": 5.0,
+     "note": "no voice after his: WHEN? held, the drone resolves on one warm note; 2 s of silence at the very end"
+    }
+   ],
+   "shots": [
+    {
+     "id": "09-01",
+     "at": "09.01",
+     "clip": "IN-1",
+     "src": 20.7,
+     "crop": [
+      150,
+      0,
+      980
+     ],
+     "crop1": [
+      190,
+      20,
+      920
+     ],
+     "grade": "archive",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=09&title=When%3F",
+       "t0": 0.0
+      },
+      {
+       "mode": "place",
+       "hash": "a=2026&pre=SEPTEMBER",
+       "at": "09.01@0.4"
+      }
+     ],
+     "note": "The 2026 hearing muted under the narrator, in a pause where he reads (IN-1 9.15-10.8)."
+    },
+    {
+     "id": "09-02",
+     "at": "09.02",
+     "screen": "evidence_table/screen",
+     "tex": {
+      "clip": "IN-1",
+      "src": 9.15,
+      "crop": [
+       150,
+       0,
+       980,
+       662
+      ]
+     },
+     "zoom": [
+      1.15,
+      1.45
+     ],
+     "focus_uv": [
+      0.5,
+      0.4
+     ],
+     "row": "the hearing on the laptop on the evidence table (real media inside the set)"
+    },
+    {
+     "id": "09-03",
+     "at": "09.03",
+     "plate": "visiting_room/reverse",
+     "move": "in",
+     "parallax": false
+    },
+    {
+     "id": "09-04",
+     "at": "09.03@0.55",
+     "plate": "visiting_room/reverse",
+     "zoom": [
+      1.55,
+      1.62
+     ],
+     "c": [
+      0.42,
+      0.42
+     ],
+     "parallax": false,
+     "angle": "visiting_room: Tim through the glass, close, the handset at his ear (never Dawn's face)"
+    },
+    {
+     "id": "09-05",
+     "at": "09.04",
+     "plate": "home/dining",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "09-06",
+     "at": "09.04@0.55",
+     "plate": "home/blinds",
+     "move": "in",
+     "parallax": false
+    },
+    {
+     "id": "09-07",
+     "at": "09.05",
+     "plate": "visiting_room/glass",
+     "move": "lock"
+    },
+    {
+     "id": "09-08",
+     "at": "09.h1",
+     "clip": "IN-1",
+     "src": 4.0,
+     "still": true,
+     "crop": [
+      222,
+      62,
+      700
+     ],
+     "type": [
+      {
+       "page": "quote",
+       "mode": "typed",
+       "t0": 0.0,
+       "plan": {
+        "x": 140,
+        "y0": 300,
+        "size": 46,
+        "column": 0.85,
+        "typed": [
+         {
+          "text": "“When?”",
+          "style": "key",
+          "at": "09.h1+0.3",
+          "cps": 14
+         },
+         {
+          "text": "She wants a date.",
+          "at": "09.06",
+          "cps": 30
+         },
+         {
+          "text": "A date when she will be released.",
+          "at": "09.h1b+0.4",
+          "cps": 30
+         },
+         {
+          "text": "“I don’t know.”",
+          "at": "09.h1b+2.6",
+          "cps": 30
+         },
+         {
+          "text": "“I don’t have a date.”",
+          "at": "09.h1b+4.4",
+          "cps": 30
+         },
+         {
+          "text": "“I can’t give you a date.”",
+          "at": "09.h1b+6.4",
+          "cps": 30
+         }
+        ]
+       }
+      }
+     ],
+     "row": "12:02 the cold open's frozen frame, registered; his written lines type on (fallback B)"
+    },
+    {
+     "id": "09-09",
+     "at": "09.h2",
+     "plate": "visiting_room/empty",
+     "zoom": [
+      1.6,
+      1.64
+     ],
+     "c": [
+      0.78,
+      0.42
+     ],
+     "angle": "visiting_room clock (NEW camera on the ticks-only prop): no numerals, the second hand as a black overlay"
+    },
+    {
+     "id": "09-10",
+     "at": "09.07",
+     "plate": "visiting_room/empty",
+     "move": "in"
+    },
+    {
+     "id": "09-11",
+     "at": "09.07@0.7",
+     "plate": "visiting_room/empty",
+     "zoom": [
+      1.9,
+      1.95
+     ],
+     "c": [
+      0.8,
+      0.45
+     ],
+     "angle": "visiting_room insert: the handset on its hook"
+    },
+    {
+     "id": "09-12",
+     "at": "09.R1-0.45",
+     "clip": "IN-1",
+     "sync": "09.R1",
+     "crop": [
+      222,
+      62,
+      700
+     ],
+     "crop1": [
+      240,
+      70,
+      670
+     ],
+     "card": {
+      "maxw": 700
+     },
+     "row": "12:43 a straight cut back to the frozen frame, and it moves on his next sentence"
+    },
+    {
+     "id": "09-13",
+     "at": "09.08",
+     "plate": "inspection_room/match",
+     "zoom": [
+      1.0,
+      1.035
+     ],
+     "type": [
+      {
+       "mode": "yes",
+       "at": "09.08$-0.3"
+      }
+     ]
+    },
+    {
+     "id": "09-14",
+     "at": "09.09",
+     "plate": "void_stage/bags",
+     "continue": "09-13",
+     "type": [
+      {
+       "mode": "yes_when",
+       "t0": 0.0
+      }
+     ]
+    },
+    {
+     "id": "09-15",
+     "at": "09.10",
+     "plate": "void_stage/dawn",
+     "move": "in",
+     "pct": 0.03
+    },
+    {
+     "id": "09-16",
+     "at": "09.11",
+     "photo": "06_dawn_family_holiday.jpg",
+     "room": null,
+     "zoom": [
+      1.0,
+      1.01
+     ],
+     "c": [
+      0.5,
+      0.5
+     ],
+     "parallax": false,
+     "note": "P03 is not in hand: its fallback P12, full frame, still; the second and last use."
+    },
+    {
+     "id": "09-17",
+     "at": "09.R2",
+     "clip": "IN-13",
+     "sync": "09.R2",
+     "crop": [
+      99,
+      40,
+      820
+     ],
+     "crop1": [
+      124,
+      52,
+      770
+     ],
+     "card": {
+      "maxw": 720
+     },
+     "row": "13:24 his heard words (C-SPAN's recording: G6 fallback, cropped above the bug)"
+    },
+    {
+     "id": "09-18",
+     "at": "09.R2+3.76",
+     "plate": "home/chair",
+     "move": "lock",
+     "card": true,
+     "angle": "home tim_head (NEW layout): Tim's statue in Gene's seat, two chairs empty, registered to dining_gene; Gene's empty chair stands in"
+    },
+    {
+     "id": "09-19",
+     "at": "09.R2+8.66",
+     "clip": "IN-13",
+     "sync": "09.R2",
+     "crop": [
+      124,
+      52,
+      770
+     ],
+     "crop1": [
+      150,
+      64,
+      720
+     ],
+     "card": {
+      "maxw": 720
+     }
+    },
+    {
+     "id": "09-20",
+     "at": "09.h4",
+     "plate": "void_stage/bags",
+     "move": "lock",
+     "type": [
+      {
+       "mode": "yes_when",
+       "t0": 0.0,
+       "tin": 3.0
+      }
+     ],
+     "row": "WHEN? held; the end screen sits beside the bags"
+    }
+   ]
+  }
+ ],
+ "sound": {
+  "about": "The score cues (audio/score/takes, the Lyria takes in tune; SCORE.md's motifs and arc) placed on v3's clock by anchor, each a window of a take: `from` seconds into it, entering from nothing over `fade_in` and rising, out over `fade_out` (0: a hard stop), set to `lufs` before the 8 dB duck under the voices (the voices sit at -18).",
+  "tick_stops": "08.06@0.86",
+  "tick_inst_shots": [
+   "05-04",
+   "05-06",
+   "05-07",
+   "09-08",
+   "09-09",
+   "09-16"
+  ],
+  "score": [
+   {
+    "id": "SC00a",
+    "take": "G1",
+    "from": 3.9,
+    "at": "00.pre+2.0",
+    "to": "00.T1+5.33",
+    "lufs": -34,
+    "fade_in": 6,
+    "fade_out": 0,
+    "why": "a low D under the scale and the hall; the pulse enters as she is called aside; it stops dead on YES"
+   },
+   {
+    "id": "SC00c",
+    "take": "G1",
+    "from": 42.5,
+    "at": "00.T2",
+    "to": "00.10$",
+    "lufs": -32,
+    "fade_in": 4,
+    "fade_out": 0,
+    "why": "the build from nothing under the second yes, the linings and the prize; cut dead on 'hers'"
+   },
+   {
+    "id": "SC00c_drone",
+    "file": "audio/sfx/sd_void_drone.flac",
+    "at": "00.08",
+    "to": "00.10$",
+    "lufs": -36,
+    "fade_in": 3,
+    "fade_out": 0,
+    "why": "the Void Stage drone joins, cut dead with the score"
+   },
+   {
+    "id": "SC00d",
+    "take": "G2",
+    "from": 34.7,
+    "at": "00.14",
+    "to": "01.T1+4.0",
+    "lufs": -25,
+    "fade_in": 5,
+    "fade_out": 3,
+    "why": "enters from nothing under the freeze, very low, rises to its one peak on the title, carried over the cut into chapter 01"
+   },
+   {
+    "id": "SC01",
+    "take": "G3",
+    "from": 0.0,
+    "at": "01.01",
+    "to": "01.09$",
+    "lufs": -33,
+    "fade_in": 3,
+    "fade_out": 3,
+    "why": "the prize motif, warm: Chicago, who she was, the email"
+   },
+   {
+    "id": "SC02",
+    "take": "G4",
+    "from": 0.0,
+    "at": "01.T3",
+    "to": "02.02@0.85",
+    "lufs": -33,
+    "fade_in": 4,
+    "fade_out": 0.3,
+    "why": "eighteen days in motion, the tick; out on 'that room'"
+   },
+   {
+    "id": "SC03",
+    "take": "G5",
+    "from": 10.0,
+    "at": "02.T5",
+    "to": "03.07@0.5",
+    "lufs": -34,
+    "fade_in": 4,
+    "fade_out": 2,
+    "why": "the gift: the same four notes turning cold"
+   },
+   {
+    "id": "SC03b",
+    "take": "G1",
+    "from": 13.1,
+    "at": "03.08",
+    "to": "04.04$",
+    "lufs": -33,
+    "fade_in": 2,
+    "fade_out": 0,
+    "why": "the pulse returns at the belt and runs to the discovery; it stops for each silent YES"
+   },
+   {
+    "id": "SC04b",
+    "take": "G7",
+    "from": 3.6,
+    "at": "04.06",
+    "to": "04.13$",
+    "lufs": -38,
+    "fade_in": 3,
+    "fade_out": 2,
+    "why": "two meanings, the disputed word: cold and still"
+   },
+   {
+    "id": "SC06",
+    "take": "G8",
+    "from": 24.07,
+    "at": "06.01",
+    "to": "06.04$",
+    "lufs": -35,
+    "fade_in": 4,
+    "fade_out": 3,
+    "why": "the sentence: grave, thinning to one held note; out before 'Deceived.'"
+   },
+   {
+    "id": "SC07",
+    "take": "G9",
+    "from": 0.05,
+    "at": "07.02",
+    "to": "07.T4",
+    "lufs": -36,
+    "fade_in": 5,
+    "fade_out": 2,
+    "why": "the wait: her health, the father; out for the letter (his words only)"
+   },
+   {
+    "id": "SC08",
+    "take": "G10",
+    "from": 10.0,
+    "at": "08.01",
+    "to": "08.05$",
+    "lufs": -36,
+    "fade_in": 4,
+    "fade_out": 3,
+    "why": "the father; its last note rings out before 'On January 25th'"
+   },
+   {
+    "id": "SC09a",
+    "take": "G11",
+    "from": 0.2,
+    "at": "08.08",
+    "to": "09.05$",
+    "lufs": -37,
+    "fade_in": 4,
+    "fade_out": 0,
+    "why": "Tim goes back; September; hard out before the frozen frame"
+   },
+   {
+    "id": "SC09b_drone",
+    "file": "audio/sfx/sd_void_drone.flac",
+    "at": "09.08",
+    "to": "09.10$",
+    "lufs": -40,
+    "fade_in": 2,
+    "fade_out": 2,
+    "why": "the opening drone returns, quiet, under the question turned"
+   },
+   {
+    "id": "SC09c_drone",
+    "file": "audio/sfx/sd_void_drone.flac",
+    "from": 2.0,
+    "at": "09.h4",
+    "to": "09.h4+3.0",
+    "lufs": -38,
+    "fade_in": 0.5,
+    "fade_out": 1.5,
+    "why": "the drone under WHEN?"
+   },
+   {
+    "id": "SC09c",
+    "take": "G11",
+    "from": 7.62,
+    "at": "09.h4+0.3",
+    "to": "09.h4+3.0",
+    "lufs": -34,
+    "fade_in": 0.05,
+    "fade_out": 1.5,
+    "why": "one warm note over the drone; gone before the last 2 s of silence"
+   }
+  ]
+ },
+ "changes": [
+  "Real media inside the cut, not only in its slots: S1 (Tim's 2024 written statement) is lit on the evidence table wherever the narration says 'Tim wrote' or 'he said' of something he wrote (the passport and ticket, the Baiyun market, the fee, the denial, the doctors' findings, the work, the fire), so the documents carry their own share of the runtime.",
+  "The hold device as designed: on a statue plate his last words stay alone, low on the frame, through 1.2 s of digital silence; on real footage a dead freeze (00-29).",
+  "Chapter supers are SCRIPT_V3's chapter titles in the new text system (the chapter mode of gfx/type.html); dates and places as story type over the establishing shot of each scene.",
+  "The cards' line breaks and key words are set per line in the cut plan (`card.keys`); time words (years, dates) take the one accent automatically."
+ ],
+ "fallbacks": [
+  "G1 (the frame lines not heard): fallback B. The cold open freezes IN-1 on his full stop after 'deteriorated' (IN-1 0.00-3.78, frozen at 4.0 s, mouth closed) and the narrator says 'His written statement says she keeps asking him the same question.' At 12:02 the same frozen frame returns, registered, and the 'When?' passage (S2 as written) types on in the mono while the narrator reads only 'She wants a date.'; at 12:43 the frame moves on his next sentence (IN-1 4.80-9.06).",
+  "G2 ('false hopes' not heard): the narrator's row, 'When he tells her that, he wrote, she becomes angry. All of this, she says, has only filled her head with false hopes.', over the handset on its hook.",
+  "G3 (V01, the 2024 stream, not in hand): all 22 of Tim's 2024 clips (about 3:15) are silent kinetic cards of the GPO transcript's words (S5) at his measured pace, in their places and order, never voiced. Where the script shows the 2024 stream, the picture is NBC 5 Chicago's frame of the same hearing (IN-14 98.3-104.5), muted, as a stand-in.",
+  "G4 (rights): the NBC clips (IN-14, IN-15) and the C-SPAN clip (IN-13) are used for this internal animatic, cropped so no lower third, station bug or C-SPAN bug is ever in frame; their licences are still needed before publication (else the ↳ rows: drop 2:08-2:18, the Tribune line at 10:26, the S2 paraphrase at 11:19).",
+  "G4 (photographs): P03 (1991) is not in hand, so its fallback P12, the holiday photograph of the same three (photo 06), at 1:14 and 13:13; Gene's photograph (P07) is not in hand, so home dining_gene at 9:57. The family's permission is still needed for every photograph.",
+  "G6 (the 2026 closing lines from the official feed): C-SPAN's IN-13 160.42-182.46, cropped to the upper frame (its bug and the nameplate cutaway never in frame); the man beside Tim is cropped out and never named.",
+  "H.R. 5491's first page and the S7 release are not in hand (10:35): Tim's desk stands in, logged as an asset wanted."
+ ]
+}

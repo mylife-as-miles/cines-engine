@@ -150,7 +150,7 @@ function buildTimeline() {
       const th = r() * Math.PI * 2, ph = Math.acos(2 * r() - 1), rad = 0.3 + r() * 1.1;     // scatter, in caps
       const th2 = r() * Math.PI * 2, rad2 = 0.15 + r() * 0.7;                              // where it drifts off to
       pts.push({ u: u + i * adv - tw / 2, v: v + 0.5, w: (r() - .5) * 0.1,
-        sx: Math.sin(ph) * Math.cos(th) * rad, sy: Math.sin(ph) * Math.sin(th) * rad * .6, sz: Math.cos(ph) * rad * .6,
+        sx: -Math.abs(Math.sin(ph) * Math.cos(th)) * rad, sy: Math.sin(ph) * Math.sin(th) * rad * .6, sz: Math.cos(ph) * rad * .6,   // gathered from the left: the bags and the cell stand to the right
         dx: Math.cos(th2) * rad2, dy: -0.15 - r() * 0.6, dz: Math.sin(th2) * rad2,
         dl: r() * .45, dd: r() * .35, ph: r() * 6.283, b: .55 + r() * .45 });
     }));
@@ -169,19 +169,6 @@ function basis(cam) {                // camera right, screen-down and forward in
   return { r: [cy, 0, -sy], u: [-sy * sp, cp, -cy * sp], f: [sy * cp, sp, cy * cp] };
 }
 const mixPose = (a, b, u) => { const o = {}; for (const k in a) o[k] = lerp(a[k], b[k], u); return o; };
-// Monotone cubic (Fritsch-Carlson) through [t, v] points, flat at the first and last: a smooth progress with no stop-go.
-function monotone(P) {
-  const n = P.length, d = [], m = [];
-  for (let i = 0; i < n - 1; i++) d.push((P[i + 1][1] - P[i][1]) / (P[i + 1][0] - P[i][0]));
-  m[0] = 0; m[n - 1] = 0;
-  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : 3 * (P[i + 1][0] - P[i - 1][0]) / ((2 * P[i + 1][0] - P[i][0] - P[i - 1][0]) / d[i - 1] + (P[i + 1][0] + P[i][0] - 2 * P[i - 1][0]) / d[i]);
-  return t => {
-    if (t <= P[0][0]) return P[0][1]; if (t >= P[n - 1][0]) return P[n - 1][1];
-    let i = 0; while (t > P[i + 1][0]) i++;
-    const h = P[i + 1][0] - P[i][0], s = (t - P[i][0]) / h, s2 = s * s, s3 = s2 * s;
-    return (2 * s3 - 3 * s2 + 1) * P[i][1] + (s3 - 2 * s2 + s) * h * m[i] + (-2 * s3 + 3 * s2) * P[i + 1][1] + (s3 - s2) * h * m[i + 1];
-  };
-}
 // Draw the timeline. S: { cam, prog (years from 2014, the lit progress), focusYear, form(yr) 0-1, gone(yr) 0-1, dof 0-1,
 // fogN, fogS, dust, nodeMin, numPos(yr) [x, y, z] (the numeral's centre in the world), numCap(yr), numAlpha(yr) }.
 function drawTimeline(ctx, t, S) {
@@ -261,10 +248,12 @@ const YES_Y = 0.29 * H + 18, YES_S = 276;   // YES's baseline and size: cap top 
 const TITLEF = document.createElement('canvas'), CARDF = document.createElement('canvas');
 
 // The sentence card, one layout for the cold open and chapter 6. A typed year (the record), DEATH SENTENCE heavy, WITH
-// A TWO-YEAR REPRIEVE light, the two lines justified to one width, the block's ink from MARGIN to about x 828 (clear
-// of a figure standing centre or right). With `life`: at 3.45 s the year deletes, a cyan strike runs through both
-// lines, the struck lines step down and aside, small and dim, and LIFE IN PRISON rises in their place.
-const CARD = { w: 688, y1: 0.42 * H, gap: 62 };
+// A TWO-YEAR REPRIEVE light, the two lines justified to one width, the block's ink from MARGIN to about x 828 and from
+// y 306 to 486: clear of a figure standing centre or right, and of the spot's edge on dawn_high whether the plate is
+// framed at 1.0 (the edit) or at 1.2 against its left edge (PLATE, plate_type). With `life`: at 3.45 s the year
+// deletes, a cyan strike runs through both lines, the struck lines step down and aside, small and dim, and LIFE IN
+// PRISON rises in their place (complete at about 4.3 s). The card is complete by 1.3 s (the edit opens it at 1.4 s).
+const CARD = { w: 688, y1: 0.385 * H, gap: 62 };
 function sentenceCard(ctx, t, life) {
   const sD = CARD.w / (wid(ctx, 'DEATH SENTENCE', KEY, 100) / 100), sR = CARD.w / (wid(ctx, 'WITH A TWO-YEAR REPRIEVE', RUN, 100) / 100);
   const sY = 40, y1 = CARD.y1, y2 = y1 + CARD.gap, yd = y1 - sD * CAP - 30;
@@ -283,8 +272,8 @@ function sentenceCard(ctx, t, life) {
     // the strikes, in the accent, through the middle of each line's capitals
     const s1 = oExpo(ramp(t, T0, T0 + 0.22)), s2 = oExpo(ramp(t, T0 + 0.05, T0 + 0.27));
     o.fillStyle = COL.acc;
-    if (s1 > 0) o.fillRect(xD - 6, y1 - sD * CAP * 0.5 - 3, (CARD.w + 12) * s1, 6);
-    if (s2 > 0) o.fillRect(xR - 5, y2 - sR * CAP * 0.5 - 2, (CARD.w + 10) * s2, 4);
+    if (s1 > 0) o.fillRect(MARGIN, y1 - sD * CAP * 0.5 - 3, (CARD.w + 10) * s1, 6);     // from the margin, past the line's end
+    if (s2 > 0) o.fillRect(MARGIN, y2 - sR * CAP * 0.5 - 2, (CARD.w + 10) * s2, 4);
   }
   // step aside: scaled to 0.56 about the block's left end, under the new line, at half strength
   const sc = lerp(1, 0.56, k), dy = lerp(0, 74, k);
@@ -299,17 +288,17 @@ function sentenceCard(ctx, t, life) {
 }
 
 // The calendar (chapter 5, Dawn's wait for trial) and the counter (chapter 7, the twelve years): the timeline's two
-// moments. Calendar: the near view travels 2014 -> 2017, a year every 1.7 s (the year's numeral readable about 0.2 s
+// moments. Calendar: the near view travels 2014 -> 2017, a year every 1.7 s (the year's numeral readable about 0.3 s
 // after its tick). Counter: the same near view at 2014, then the progress runs on through the years, each gap a little
 // longer (0.55 s growing to 1.0 s, 2026 arriving at 9.73 s), and the camera cranes back to the whole span, 2014 to
 // 2026 lit, while the plate pulls back from the cell.
-const CAL = { hold: 1.7, ox: -240, oy: -340 };   // the current node at about (600, 331) on the bags plate
+const CAL = { hold: 1.7, ox: -245, oy: -340 };   // the current node at about (600, 331) on the bags plate
 function calendarState(t) {
   const A = [0, 1, 2, 3].map(k => k * CAL.hold);
   // each step leaves 0.55 s before its tick and lands 0.3 s after, eased in and out; a slow creep under it all
   let prog = 0; for (let k = 1; k <= 3; k++) prog += ioCubic(ramp(t, A[k] - 0.55, A[k] + 0.3));
   const intro = oCubic(ramp(t, -0.3, 0.8));
-  const cam = Object.assign(NEAR(prog, 40 * (t - CAL.hold * prog) - 520 * (1 - intro)), { ox: CAL.ox, oy: CAL.oy });   // a slow creep at each year, given back on the way to the next
+  const cam = Object.assign(NEAR(prog, 20 * (t - CAL.hold * prog) - 150 * (1 - intro)), { ox: CAL.ox, oy: CAL.oy });   // a slow creep at each year, given back on the way to the next
   return {
     cam, prog, focusYear: prog, dof: 1, fogN: 2600, fogS: 3600, dust: 1, nodeMin: 3,
     // a year gathers as its node slides into place (readable about 0.3 s after its tick) and drifts apart as the
@@ -319,45 +308,45 @@ function calendarState(t) {
     numPos: numNear, numCap: () => NUM.cap, numAlpha: () => 1,
   };
 }
-// The counter's progress: 2014 held, then each year arrives on its tick (CTR_TICKS, the odometer's old rhythm), the
-// camera easing toward every node without stopping (three quarters an ease in and out, a quarter constant speed), so
-// it pulses gently from year to year; it comes to rest on 2026.
+// The counter's progress: 2014 held, then each year arrives on its tick (CTR_TICKS, the odometer's old rhythm): the
+// camera holds on each year for the first third of its gap and then travels to the next, eased in and out, so the
+// years step past like a clock, each step a little slower than the last; it comes to rest on 2026.
 const CTR_TICKS = (() => { const k = [1.2]; for (let i = 1; i < 12; i++) k.push(k[i - 1] + 0.55 + 0.45 * (i - 1) / 10); return k; })();
 function ctrProg(t) {
-  const arr = [0.5, ...CTR_TICKS];
+  const arr = [0.62, ...CTR_TICKS];
   if (t <= arr[0]) return 0; if (t >= arr[12]) return 12;
   let k = 0; while (t > arr[k + 1]) k++;
   const u = (t - arr[k]) / (arr[k + 1] - arr[k]);
-  const lin = k === 0 ? u * u * (2 - u) : k === 11 ? u + u * u - u * u * u : u;     // from rest into the first, to rest on the last
-  return k + 0.75 * ioCubic(u) + 0.25 * lin;
+  return k + ioCubic(k === 0 ? u : ramp(u, 0.35, 1));
 }
-const CTR = { ox: -270, oy: -381, crane: [10.1, 13.4] };   // the current node at about (630, 290): above and left of the cell
-// the crane's end: side-on and above the middle of the span, so 2014 sits left (x 233) and 2026 right (x 1687), the line
-// at y 245 over the cell, each numeral centred under its node
-const POSTER = { x: 8200, y: -2400, z: 5400, yaw: -Math.PI / 2, pitch: .28, f: 1150, ox: 0, oy: -300 };
+const CTR = { ox: -280, oy: -381, crane: [10.1, 13.4] };   // the current node at about (565, 290): above and left of the cell
+// the crane's end: side-on and above the middle of the span, so 2014 sits left (x 360) and 2026 right (x 1560), the line
+// at y 240 over the cell, each numeral centred under its node
+const POSTER = { x: 9900, y: -2900, z: 5400, yaw: -Math.PI / 2, pitch: .28, f: 1150, ox: 0, oy: -305 };
 function counterState(t) {
   const prog = ctrProg(t), u = ioQuint(ramp(t, CTR.crane[0], CTR.crane[1]));
   const near = Object.assign(NEAR(prog, 36 * Math.min(t, 1.2)), { ox: CTR.ox, oy: CTR.oy });
   const cam = mixPose(near, POSTER, u);
   const d = Math.max(0, t - CTR.crane[1]); cam.x += 70 * d; cam.yaw += .002 * d;     // the poster keeps drifting
-  const capP = yr => yr === Y1 ? 900 : 640;
+  const capP = yr => yr === Y1 ? 1060 : 760;
   return {
     cam, prog, focusYear: lerp(prog, 6, u), dof: 1 - u, fogN: lerp(2600, 11000, u), fogS: lerp(3600, 9000, u), dust: 1 - .4 * u, nodeMin: lerp(3, 4.5, u),
-    // a year gathers as the progress comes within 0.42 of it and drifts apart once the progress is 0.38 past it; in
-    // the crane only 2014, gathering again at the span's start, and 2026 remain
+    // a year gathers as the step that brings it settles and drifts apart as soon as the next step starts, so
+    // it never slides out of the frame whole; in the crane only 2014, gathering again at the span's start, and 2026 remain
     form: yr => { const k = yr - Y0;
-      if (k === 0) return Math.max(ramp(t, -0.15, 0.45) * (1 - ramp(prog, 0.38, 0.68)), ramp(t, CTR.crane[0] + 0.9, CTR.crane[1] + 0.3));
-      return ramp(prog, k - 0.42, k - 0.08); },
-    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return t > CTR.crane[0] ? 0 : ramp(prog, 0.38, 0.68); return ramp(prog, k + 0.38, k + 0.68); },
-    numPos: yr => { const n = numNear(yr); return [lerp(n[0], 0, u), lerp(n[1], 40 + capP(yr) * 0.72, u), lerp(n[2], (yr - Y0) * TLD, u)]; },
+      if (k === 0) return Math.max(ramp(t, -0.15, 0.45) * (1 - ramp(prog, 0.04, 0.32)), ramp(t, CTR.crane[0] + 0.9, CTR.crane[1] + 0.3));
+      return ramp(prog, k - 0.12, k); },
+    gone: yr => { const k = yr - Y0; if (k === 12) return 0; if (k === 0) return t > CTR.crane[0] ? 0 : ramp(prog, 0.04, 0.32); return ramp(prog, k + 0.04, k + 0.32); },
+    numPos: yr => { const n = numNear(yr); return [lerp(n[0], 0, u), lerp(n[1], 40 + capP(yr) * 0.66, u * u), lerp(n[2], (yr - Y0) * TLD, u)]; },
     numCap: yr => lerp(NUM.cap, capP(yr), u), numAlpha: yr => yr === Y0 ? lerp(1, .6, u) : 1,
   };
 }
 
 const MOMENTS = {
-  // 2014 / CHINA, low left over checkin_hall wide: the year heavy in the accent, the place light below it
+  // 2014 / CHINA, low left over checkin_hall wide: the year heavy in the accent, the place light below it. 96 px keeps
+  // the 4 about 20 px clear of the near stanchion through the shot's push (the pole at x 428 at 1.0, 400 at 1.05).
   place_2014: (ctx, t) => {
-    const sA = 112, sB = 46, yB = LOW, yA = LOW - sB * CAP - 30;
+    const sA = 96, sB = 46, yB = LOW, yA = LOW - sB * CAP - 30;
     ctx.textBaseline = 'alphabetic';
     font(ctx, KEY, sA); ctx.fillStyle = COL.acc; slam(ctx, '2014', inkX(ctx, '2014', KEY, sA), yA, sA, ramp(t, 0.0, 0.26));
     font(ctx, CAPS, sB); ctx.fillStyle = COL.ink; rise(ctx, 'CHINA', inkX(ctx, 'CHINA', CAPS, sB), yB, sB, ramp(t, 0.3, 0.62), 0.04);
@@ -386,8 +375,8 @@ const MOMENTS = {
   counter: (ctx, t) => drawTimeline(ctx, t, counterState(t)),
   // The title over the bags in the beam. PRIZE lands alone, heavy; it turns into PRISON in place (the P, R and I hold,
   // Z and E sink, S, O and N rise); the camera pulls back and PRISON settles into the lockup as the rest assembles
-  // around it: THE PRIZE THAT / BECAME A PRISON, light running words, the two key words heavy. Complete at 2.35 s,
-  // held to the cut (2.65 s). The lockup is drawn once per frame offscreen and drifted as one image, so the slow
+  // around it: THE PRIZE THAT / BECAME A PRISON, light running words, the two key words heavy. Complete at 2.45 s,
+  // held to the cut (2.55 s). The lockup is drawn once per frame offscreen and drifted as one image, so the slow
   // growth never ticks a pixel.
   title: (ctx, t) => {
     const F = TITLEF; if (F.width !== W) { F.width = W; F.height = H; }
@@ -400,7 +389,7 @@ const MOMENTS = {
     const wPrize = wid(o, 'PRIZE', KEY, BIG), wPrison = wid(o, 'PRISON', KEY, BIG);
     const at = (s, i) => o.measureText(s.slice(0, i)).width;
     const sl = ioCubic(ramp(t, 0.95, 1.55)), left = lerp(cx - wPrize / 2, cx - wPrison / 2, sl);   // the word re-centres as it grows
-    const zoom = ioCubic(ramp(t, 1.45, 2.1));
+    const zoom = ioCubic(ramp(t, 1.42, 2.02));
     if (zoom <= 0) {
       if (t < 0.95) slam(o, 'PRIZE', left, yBig, BIG, ramp(t, 0, 0.3), 1.08, 16);
       else {
@@ -420,31 +409,34 @@ const MOMENTS = {
       if (starts[i] == null) return; font(o, st, S); const x = x0 + xs[i], p = ramp(t, starts[i], starts[i] + (st === KEY ? 0.26 : 0.34));
       if (st === KEY) slam(o, w, x, y, S, p, 1.08, 12); else rise(o, w, x, y, S, p, 0.04);
     });
-    put(L1, l1.xs, x1, yL1, [1.66, 1.74, 1.84]);
-    put(L2, l2.xs, x2, yL2, [1.96, 2.04, null]);
+    put(L1, l1.xs, x1, yL1, [1.76, 1.84, 1.94]);       // once PRISON is down near its line, so no word rises beside it
+    put(L2, l2.xs, x2, yL2, [2.02, 2.10, null]);
     const d = 1 + 0.012 * sm((t - 2.1) / 2.9), dcy = (yL1 - S * CAP + yL2) / 2;
     ctx.save(); ctx.translate(cx, dcy); ctx.scale(d, d); ctx.translate(-cx, -dcy); ctx.drawImage(F, 0, 0); ctx.restore();
   },
-  // The other place and date supers on 2014 / CHINA's pattern. a: the main line (heavy; the accent when it is time),
-  // b: a light line under it, pre: a light line over it (JULY over 2026). pos=ll: low left, the lowest line on LOW;
-  // pos=tc: top centre at y (a fraction of H). fit: the main line at most fit x W wide. shade=1: a soft shade under it.
+  // The other place and date supers on 2014 / CHINA's pattern: time is heavy and in the accent, places are light
+  // tracked capitals. a: the main line (a year heavy at 112 px; a place light at 64 px), b: a light line under it, pre:
+  // a light line over it (JULY over 2026). pos=ll: low left, the lowest line on LOW; pos=tc: top centre at y (a
+  // fraction of H). fit: the main line at most fit x W wide. shade=1: a soft shade under it.
   // URL hash: a=CHICAGO[&b=...][&pre=...][&pos=ll|tc][&fit=0.245][&y=0.16][&shade=1][&t0=0]
   place: (ctx, t) => {
     const P = new URLSearchParams(location.hash.slice(1));
     const a = P.get('a') || 'CHICAGO', b = P.get('b') || '', pre = P.get('pre') || '', tc = (P.get('pos') || 'll') === 'tc', t0 = +(P.get('t0') || 0);
-    let sA = 112; const sB = 46, fit = +(P.get('fit') || 0);
-    if (fit) sA *= Math.min(1, fit * W / wid(ctx, a, KEY, sA));
+    const aT = isTime(a), stA = aT ? KEY : CAPS, sB = 46, fit = +(P.get('fit') || 0);
+    let sA = aT ? 112 : 64;
+    if (fit) sA *= Math.min(1, fit * W / wid(ctx, a, stA, sA));
     const gapB = sB * CAP + 30, yA = tc ? +(P.get('y') || 0.16) * H : (b ? LOW - gapB : LOW), yB = yA + gapB, yP = yA - sA * CAP - 26;
     const xOf = (txt, st, s) => tc ? 0.5 * W - wid(ctx, txt, st, s) / 2 : inkX(ctx, txt, st, s);
     if (P.get('shade')) {
-      const wa = Math.max(wid(ctx, a, KEY, sA), b ? wid(ctx, b, CAPS, sB) : 0, pre ? wid(ctx, pre, CAPS, sB) : 0);
+      const wa = Math.max(wid(ctx, a, stA, sA), b ? wid(ctx, b, CAPS, sB) : 0, pre ? wid(ctx, pre, CAPS, sB) : 0);
       const top = pre ? yP - sB * CAP : yA - sA * CAP, bot = b ? yB : yA;
       shade(ctx, tc ? 0.5 * W : MARGIN + wa / 2, (top + bot) / 2, wa * 0.85 + 120, (bot - top) * 0.9 + 90, 0.45 * sm((t - t0) / 0.5));
     }
     ctx.textBaseline = 'alphabetic';
     if (pre) { font(ctx, CAPS, sB); ctx.fillStyle = isTime(pre) ? COL.acc : COL.ink; rise(ctx, pre, xOf(pre, CAPS, sB), yP, sB, ramp(t, t0, t0 + 0.32), 0.04); }
     const tA = t0 + (pre ? 0.16 : 0);
-    font(ctx, KEY, sA); ctx.fillStyle = isTime(a) ? COL.acc : COL.ink; slam(ctx, a, xOf(a, KEY, sA), yA, sA, ramp(t, tA, tA + 0.26));
+    font(ctx, stA, sA); ctx.fillStyle = aT ? COL.acc : COL.ink;
+    if (aT) slam(ctx, a, xOf(a, stA, sA), yA, sA, ramp(t, tA, tA + 0.26)); else rise(ctx, a, xOf(a, stA, sA), yA, sA, ramp(t, tA, tA + 0.36), 0.04);
     if (b) { font(ctx, CAPS, sB); ctx.fillStyle = isTime(b) ? COL.acc : COL.ink; rise(ctx, b, xOf(b, CAPS, sB), yB, sB, ramp(t, tA + 0.3, tA + 0.62), 0.04); }
   },
   // Each chapter's title, top left over its establishing shot, on one line: the number typed in the mono (the record),
