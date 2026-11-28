@@ -1169,3 +1169,7 @@ Use inspection_room/two_shot from ed96b78 for 04-09. The 1280×720 final at 64 s
 ### 2026-11-28 07:09 UTC · INFO · C47 · published two-shot commit
 
 The published 04-09 two-shot is in b281a0f. The branch was rebased as it landed, so use this commit for the frame.
+
+### 2026-11-28 07:27 UTC · INFO · C49 · graded leather market stock
+
+The 960×540 graded purchase and stall previews meet the agreed stock palette. The three most saturated eligible stock panels in purchase measured h 276.2° / C 4.23, 271.9° / 4.10 and 278.3° / 3.18 in D65 Lab. Their ΔE76 from the evidence tote is 16.23, 17.19 and 16.57. In stall the corresponding values are h 266.9° / C 7.85, 268.7° / 7.49 and 258.8° / 7.30, at ΔE76 19.94, 19.84 and 19.43. All 35 eligible stall panels stayed at C ≤ 9 and ΔE76 ≥ 8. I checked the arrangement and the bag resting on the counter in stall. The wide shows the bag lifted between Dawn and the stallholder. The buyer's thumb is in a grip test before finals.
