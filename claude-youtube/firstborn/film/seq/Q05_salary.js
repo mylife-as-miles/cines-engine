@@ -1,4 +1,4 @@
-/* Q05 · THE FIRST SALARY ("graduate" to "By 30")
+/* Q05 · THE FIRST SALARY ("You graduate" to "By 30")
    Cap and gown on the graduation stage, then the office. "First salary alert": the phone, full frame. "a champion": arms up, gold
    confetti; the bank app counts up the balance; "exactly four minutes": a 4:00 timer racing down while he dances. "Then the calls
    start": MUM calling; "My dear, I don't want to disturb you": the split-screen call, sweetly; his knowing look; then the
@@ -11,7 +11,7 @@
    he cries harder than she does; "dust in your eye", he points at it. */
 (function () {
   'use strict';
-  const S0 = FILM.W('graduate') - 0.45;
+  const S0 = FILM.W('you graduate');
   const { W, Wend } = FILM.from(S0);
   const { seg, pop, ease, lerp, walk, punch, nod, span } = FILM;
   const T = {

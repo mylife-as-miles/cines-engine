@@ -14,7 +14,7 @@ window.addEventListener('load', async () => {
   const o = Object.assign({ t: 0.3 }, JSON.parse(q.get('o') || '{}'));
   if (q.get('bench')) {
     const t0 = performance.now(); draw(g, o, q); const first = performance.now() - t0; const ms = [];
-    for (let i = 0; i < 48; i++) { g.setTransform(1, 0, 0, 1, 0, 0); const a = performance.now(); draw(g, Object.assign({}, o, { t: i / 24, k: 1 }), q); ms.push(performance.now() - a); }
+    for (let i = 0; i < 48; i++) { g.setTransform(1, 0, 0, 1, 0, 0); const a = performance.now(); draw(g, Object.assign({}, o, { t: i / 24, k: 1 }), q); g.getImageData(0, 0, 1, 1); ms.push(performance.now() - a); }
     g.getImageData(0, 0, 1, 1);
     window.BENCH = { first: +first.toFixed(1), mean: +(ms.reduce((s, v) => s + v, 0) / ms.length).toFixed(2), max: +Math.max(...ms).toFixed(2) };
     return;

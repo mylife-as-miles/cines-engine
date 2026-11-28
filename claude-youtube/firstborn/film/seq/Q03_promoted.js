@@ -15,7 +15,7 @@
   const { seg, pop, ease, lerp, walk, punch, nod, span } = FILM;
   const S0 = FILM.W('then a baby arrives');
   const T = {
-    start: S0, arrives: W('arrives'), looks: W('and your mother looks'), look: W('the look'), six: W('you are six years'), promoted: W('promoted'),
+    start: S0, arrives: W('arrives'), looks: W('and your mother looks'), look: W('you know the look'), six: W('you are six years'), promoted: W('promoted'),
     carry: W('carry your sister'), watch: W('watch your brother'), dont: W("don't let him"), that: W('that', { after: FILM.W("don't let him") }),
     six2: W('you are six', { after: FILM.W("don't let him") }), barely: W('you can barely'), bag: W('school bag'),
     rule: W('now here is the rule'), simple: W('simple'), cries: W('if the small one'), criesW: W('cries'), didIt: W('you did it'),

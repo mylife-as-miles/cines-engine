@@ -196,7 +196,7 @@
   },
   "notify": {
    "file": "notify",
-   "rel_db": -20.5,
+   "rel_db": -21.2,
    "align": "start",
    "class": "pop"
   },
@@ -366,7 +366,7 @@
   },
   "grow": {
    "file": "grow",
-   "rel_db": -20.5,
+   "rel_db": -21.2,
    "align": "start",
    "class": "pop"
   },
@@ -378,7 +378,7 @@
   },
   "button_click": {
    "file": "click",
-   "rel_db": -22,
+   "rel_db": -22.7,
    "align": "start",
    "class": "pop"
   },
@@ -421,7 +421,7 @@
     "card_land_2",
     "card_land_3"
    ],
-   "rel_db": -20.5,
+   "rel_db": -21.2,
    "align": "peak",
    "class": "pop"
   },

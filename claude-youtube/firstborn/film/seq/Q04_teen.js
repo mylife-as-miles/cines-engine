@@ -1,4 +1,4 @@
-/* Q04 · THE TEENAGE YEARS ("Now you are a teenager" to "graduate")
+/* Q04 · THE TEENAGE YEARS ("Now you are a teenager" to "You graduate")
    The classroom: the teen hero with his report card. "They belong to the family": it flies from hand to hand along the family.
    The parents' friends whisper over a phone. "An auntie calls from another state": the split-screen call, "I heard you came
    first"; "How?": the hero holds up his results envelope, still sealed. Three doors: DOCTOR, LAWYER, ENGINEER, each lighting on its
@@ -23,7 +23,7 @@
     okafor: W('mrs'), reading: W('reading'), sleep: W('sleep'), good: W('good for him'),
     nobody: W("here's the part"), watching: W('your younger siblings are watching'), succeed: W('if you succeed'), path: W('path'),
     fail: W('if you fail'), warning: W('warning'), cannot: W('so you cannot fail'), studying: W('you are not studying'), queue: W('you are studying for the whole'), queueW: W('queue'),
-    end: FILM.W('graduate') - 0.45,
+    end: FILM.W('you graduate'),
   };
   const EYE = STAGE.EYE, DAY = { tod: 'day' };
   const KH = n => !!(POV && POV.HOLD && POV.HOLD[n]);

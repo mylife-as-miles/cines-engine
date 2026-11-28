@@ -56,7 +56,7 @@ ka_ching        an old cash register's ka-ching: earshot's cash_register/open, t
 credit_alert    the bank app's credit alert: four quick rising marimba notes (E-flat5 G5 B-flat5 E-flat6), real marimba
 gavel, gavel_1  Mum's wooden spoon on the table as a gavel: two hollow wooden knocks ("tok-tok"), or one
 coins           a handful of coins dropped into a hand: earshot's coins/floor
-party_murmur    a party hall's soft murmur, no words: One Too Many's walla (CC0 restaurant ambience) low-passed at 1.5 kHz
+party_murmur    a party hall's soft murmur, no words: two takes of earshot's cafe/busy summed, low-passed at 1.5 kHz
 swoon           Mum swooning: a harp glissando falling an octave and a half through E-flat major, with a soft falling swish
 sting_1         a deadpan comic sting: three pizzicato notes falling (G4 E-flat4 B-flat3)
 sting_2         a cheeky comic sting: pizzicato rising E-flat4 G4 B-flat4, landing on E-flat in octaves
@@ -428,11 +428,13 @@ def firstborn(W, onset_trim):
     W('gavel_1', fade(k1, 0.0005, 0.03), 'earshot knock/hollow (seed 11, take 1): one tap', ES_SRC, ES_LIC)
     # coins: a handful dropped into a hand (coins/handful and coin/cup read as glass)
     W('coins', fade(es('coins/floor', 2), 0.001, 0.05), 'earshot coins/floor (seed 11, take 2)', ES_SRC, ES_LIC)
-    # party_murmur: a soft hall murmur with no words: One Too Many's walla, low-passed so no word is clear
-    # (earshot's cafe/busy reads 66 % against 28 % 'wind'; this reads 78 % 'people murmuring', 14 % 'chanting')
-    wl = otm_bed('walla')
-    W('party_murmur', fade(lp(wl, 1500, 4), 0.5, 0.5), "One Too Many's beds/walla (40 s), low-passed at 1.5 kHz (4th order)",
-      'otm/beds/walla: "restaurant ambience.wav" by sarahmariealice, https://freesound.org/people/sarahmariealice/sounds/265870/', 'CC0')
+    # party_murmur: a soft hall murmur with no words: two takes of earshot's cafe/busy (murmuring voices and clinking
+    # dishes, a seamless 20 s loop) summed and low-passed so no word is clear. It reads 76 % 'a crowd murmuring softly in a
+    # hall' and 4 % 'people chanting'; One Too Many's walla, low-passed the same way, read 16-31 % 'chanting' (sound.md:
+    # crowd walla once read as chanting and was cut)
+    cb = es('cafe/busy', 1) + es('cafe/busy', 2)
+    W('party_murmur', lp(cb, 1500, 4), 'two takes of earshot cafe/busy (seed 11, takes 1 and 2; a seamless 20 s loop) summed, '
+      'low-passed at 1.5 kHz (4th order)', ES_SRC, ES_LIC)
     # swoon: a harp glissando falling through E-flat major with a soft falling swish under it
     gl = played('harp', [(0.035 * i, n_, 0.9 - 0.04 * i) for i, n_ in
                          enumerate(['Bb6', 'G6', 'F6', 'Eb6', 'D6', 'C6', 'Bb5', 'Ab5', 'G5', 'F5', 'Eb5'])], vel=0.5)[: int(1.6 * SR)]
@@ -452,12 +454,6 @@ def firstborn(W, onset_trim):
         W(f'meter_{i + 1}', played('pizzicato', [(0, nm, 0.7 + 0.15 * i)], vel=0.6 + 0.1 * i),
           f"one low pizzicato note, {nm.replace('b', '-flat')} (earshot's real pizzicato), the {['first', 'second', 'third'][i]} step of the meter", ES_SRC, ES_LIC)
 
-
-def otm_bed(name):
-    import subprocess
-    p = os.path.join(os.path.dirname(OTM), 'beds', name + '.ogg')
-    raw = subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout
-    return np.frombuffer(raw, np.float32).astype(np.float64)
 
 
 if __name__ == '__main__':
