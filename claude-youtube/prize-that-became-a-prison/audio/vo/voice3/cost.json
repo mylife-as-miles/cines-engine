@@ -1,0 +1,86 @@
+[
+ {
+  "line": "00_01",
+  "chars": 24,
+  "character_cost": "11",
+  "context": false
+ },
+ {
+  "line": "00_02",
+  "chars": 77,
+  "character_cost": "34",
+  "context": false
+ },
+ {
+  "line": "00_03",
+  "chars": 140,
+  "character_cost": "62",
+  "context": false
+ },
+ {
+  "line": "00_04",
+  "chars": 106,
+  "character_cost": "47",
+  "context": false
+ },
+ {
+  "line": "00_05",
+  "chars": 57,
+  "character_cost": "25",
+  "context": false
+ },
+ {
+  "line": "00_06",
+  "chars": 39,
+  "character_cost": "17",
+  "context": false
+ },
+ {
+  "line": "00_07",
+  "chars": 15,
+  "character_cost": "7",
+  "context": false
+ },
+ {
+  "line": "00_08",
+  "chars": 4,
+  "character_cost": "2",
+  "context": false
+ },
+ {
+  "line": "00_09",
+  "chars": 86,
+  "character_cost": "38",
+  "context": false
+ },
+ {
+  "line": "00_10",
+  "chars": 150,
+  "character_cost": "66",
+  "context": false
+ },
+ {
+  "line": "00_11",
+  "chars": 140,
+  "character_cost": "62",
+  "context": false
+ },
+ {
+  "line": "00_12",
+  "chars": 52,
+  "character_cost": "23",
+  "context": false
+ },
+ {
+  "line": "00_13",
+  "chars": 104,
+  "character_cost": "46",
+  "context": false
+ },
+ {
+  "line": "00_14",
+  "chars": 134,
+  "character_cost": "59",
+  "context": false
+ }
+]
