@@ -321,9 +321,14 @@ def cover_cloth(name, sx, coll, half=0.15):
     verts, faces = [], []
     for i in range(nx + 1):
         x = sx - half + 2 * half * i / nx
-        edge = abs(2 * i / nx - 1) ** 6                       # the hems hang a touch lower at the corners
+        across = 2 * i / nx - 1
+        edge = abs(across) ** 6
         for j, (w, v) in enumerate(prof):
-            dv = -0.006 * edge if j == 0 else 0.0
+            front_hem = max(0.0, 1.0 - j / 5)
+            back_hem = max(0.0, 1.0 - (len(prof) - 1 - j) / 3)
+            ripple = 0.0025 * math.sin(0.72 * i + 4 * sx)
+            dv = front_hem * (-0.006 * edge - 0.012 * (1 - across**2) + ripple)
+            dv += back_hem * (-0.005 * (1 - across**2) + 0.7 * ripple)
             verts.append(back_pt(x, v + dv, w))
     n = len(prof)
     for i in range(nx):
@@ -904,7 +909,7 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     sky.visible_shadow = False
     # the wing: tapered, swept, with dihedral; sections from root to tip, an aerofoil-like section
     tx, ty, tz = tip
-    root_x, root_z = -3.0, -2.0     # wing carry-through below the cabin floor
+    root_x, root_z = -3.0, tz - 0.97     # maintain the carry-through's height below the tip
     span = abs(tx - root_x)
     sweep_le = span * math.tan(math.radians(31))
     root_le = ty + sweep_le
@@ -927,7 +932,8 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
         rings.append([(x, le - c * chord, z + h * thick) for c, h in ring_def])
     # a blended winglet: the tip section swept up, back and a little out
     x, le, chord, thick, z = sections[-1]
-    for t, up, out, back, ch in ((0.35, 0.22, -0.30, 0.25, 2.1), (0.7, 0.75, -0.50, 0.75, 1.5), (1.0, 1.75, -0.72, 1.6, 0.8)):
+    for t, up, out, back, ch in ((0.15, 0.08, -0.12, 0.10, 2.4), (0.35, 0.22, -0.30, 0.25, 2.1),
+                                (0.7, 0.75, -0.50, 0.75, 1.5), (1.0, 1.75, -0.72, 1.9, 0.45)):
         rings.append([(x + out - h * thick * 0.6 * (1 - t), le - back - c * ch, z + up + h * thick * 0.25 * (1 - t))
                       for c, h in ring_def])
     wing = loft("wing", rings, M["wing"], closed_end=True)
@@ -944,7 +950,7 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     st = cyl("strobe", 0.015, 0.003, mount + aim * 0.023, M["nav_white"], rot=rot)
     halo = bpy.data.objects.new("navlight_halo", bpy.data.meshes.new("navlight_halo"))
     bm = bmesh.new()
-    bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.16)
+    bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.35)
     bm.to_mesh(halo.data)
     bm.free()
     for p in halo.data.polygons:

@@ -189,7 +189,7 @@ def upholstery(name, rgb=(0.050, 0.056, 0.068), pitch=420.0):
     return m
 
 
-def cover_cloth(name, rgb=(0.30, 0.31, 0.325)):
+def cover_cloth(name, rgb=(0.15, 0.155, 0.165)):
     """The headrest cover: a light, matt, fine twill cloth, heathered, slightly soiled where heads rest."""
     m, nt, b = _new(name)
     o = _obj(nt)
@@ -384,7 +384,7 @@ def curtain(name, rgb=(0.045, 0.05, 0.062)):
     return m
 
 
-def sky(name, dip=-0.059):
+def sky(name, dip=-0.059, *, moon_dir=(0.30, 0.60, 0.60)):
     """The night sky seen from cruise altitude, as an emitting dome around the aircraft (object space, centred on the
     cabin): near-black navy overhead, a faint pale airglow band along a horizon that sits `dip` (sin of the dip
     angle, about 3.4 degrees) below level, and under it a dark cloud deck faintly lit by a moon out of shot, its
@@ -404,7 +404,7 @@ def sky(name, dip=-0.059):
     col = _mix(nt, t, (0.030, 0.040, 0.062), (0.0035, 0.005, 0.011))
     # airglow: a thin pale band right on the horizon
     band = _math(nt, "POWER", _maprange(nt, _math(nt, "ABSOLUTE", rel), 0.0, 0.022, 1.0, 0.0), 2.2)
-    col = _mix(nt, _math(nt, "MULTIPLY", band, 0.85), col, (0.128, 0.143, 0.18))
+    col = _mix(nt, _math(nt, "MULTIPLY", band, 0.85), col, (0.08, 0.09, 0.115))
     # stars: sparse points from a fine Voronoi, only above the horizon
     vo = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
     vo.inputs["Scale"].default_value = 420.0
@@ -420,12 +420,17 @@ def sky(name, dip=-0.059):
     cv = _n(nt, "ShaderNodeCombineXYZ")
     _link(nt, cx, cv.inputs["X"])
     _link(nt, cy, cv.inputs["Y"])
-    cloud = _noise(nt, cv.outputs["Vector"], 0.9, 6.0, 0.62)
-    cells = _maprange(nt, cloud, 0.4, 0.72, 0.0, 1.0)
+    cloud = _noise(nt, cv.outputs["Vector"], 2.2, 6.0, 0.62)
+    cells = _maprange(nt, cloud, 0.48, 0.62, 0.0, 1.0)
     below = _maprange(nt, rel, 0.0, -0.004, 0.0, 1.0)
     near = _maprange(nt, rel, -0.01, -0.25, 0.25, 1.0)          # detail fades into haze near the horizon
-    deck = _mix(nt, _math(nt, "MULTIPLY", cells, near), (0.006, 0.007, 0.010), (0.024, 0.028, 0.036))
-    deck = _mix(nt, _maprange(nt, rel, -0.002, -0.05, 1.0, 0.0), deck, (0.05, 0.056, 0.07))   # haze at the horizon
+    towards_moon = _n(nt, "ShaderNodeVectorMath", operation="DOT_PRODUCT")
+    towards_moon.inputs[1].default_value = moon_dir
+    _link(nt, d, towards_moon.inputs[0])
+    lit_side = _maprange(nt, towards_moon.outputs["Value"], -0.20, 0.30, 0.62, 1.0)
+    cloud_tops = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", cells, near), lit_side)
+    deck = _mix(nt, cloud_tops, (0.003, 0.0035, 0.005), (0.042, 0.048, 0.060))
+    deck = _mix(nt, _maprange(nt, rel, -0.002, -0.05, 1.0, 0.0), deck, (0.032, 0.036, 0.046))
     col = _mix(nt, below, col, deck)
     _link(nt, col, em.inputs["Color"])
     em.inputs["Strength"].default_value = 8.75
@@ -486,7 +491,7 @@ def halo(name, rgb, strength):
     nt.nodes.remove(nt.nodes["Principled BSDF"])
     lw = _n(nt, "ShaderNodeLayerWeight")
     lw.inputs["Blend"].default_value = 0.5
-    f = _math(nt, "POWER", _math(nt, "SUBTRACT", 1.0, _out(lw, "Facing")), 5.0)
+    f = _math(nt, "POWER", _math(nt, "SUBTRACT", 1.0, _out(lw, "Facing")), 3.0)
     em = _n(nt, "ShaderNodeEmission")
     em.inputs["Color"].default_value = (*rgb, 1)
     _link(nt, _math(nt, "MULTIPLY", f, strength), em.inputs["Strength"])
@@ -499,7 +504,7 @@ def halo(name, rgb, strength):
     return m
 
 
-def materials(lanes=()):
+def materials(lanes=(), *, moon_dir=(0.30, 0.60, 0.60)):
     M.clear()
     M["seat"] = upholstery("seat cloth")
     M["seat_dark"] = upholstery("seat cloth dark", (0.032, 0.036, 0.045))
@@ -522,7 +527,7 @@ def materials(lanes=()):
     M["pane"] = glass("window pane", refl=0.035)
     M["scratch_pane"] = glass("scratch pane", tint=(0.9, 0.92, 0.94), refl=0.02, rough=0.05)
     M["screen_off"] = screen_off("screen off")
-    M["screen_on"] = glow("screen blank glow", (0.55, 0.66, 0.85), 0.9, falloff=0.45, axes=("X", "Z"))
+    M["screen_on"] = glow("screen blank glow", (0.55, 0.66, 0.85), 0.30, falloff=0.45, axes=("X", "Z"))
     M["lens_off"] = pbr("reading lens off", (0.2, 0.2, 0.2), (0.25, 0.3), spec=0.5)
     M["lens_on"] = glow("reading lens on", (1.0, 0.68, 0.38), 48.0, falloff=0.5, axes=("X", "Y"))
     M["cove"] = glow("night cove light", (0.32, 0.45, 0.9), 1.9, sample=True)
@@ -535,11 +540,11 @@ def materials(lanes=()):
     M["magazine"] = paper("magazine cover", (0.07, 0.085, 0.11), rough=0.45, coat=0.4)
     M["sign"] = glow("blank sign glow", (0.7, 0.76, 0.86), 1.2, falloff=0.3)
     M["curtain"] = curtain("galley curtain")
-    M["galley"] = glow("galley glow", (0.64, 0.74, 0.95), 0.58, falloff=0.6, axes=("X", "Z"))
-    M["sky"] = sky("night sky")
+    M["galley"] = glow("galley glow", (0.64, 0.74, 0.95), 1.0, falloff=0.6, axes=("X", "Z"))
+    M["sky"] = sky("night sky", moon_dir=moon_dir)
     M["wing"] = wing_paint("wing paint")
     M["wing_dark"] = pbr("wing edges", (0.16, 0.165, 0.17), (0.35, 0.5), spec=0.5)
-    M["nav_halo"] = halo("strobe halo", (0.91, 0.95, 1.0), 0.65)
-    M["nav_white"] = glow("strobe lens", (0.94, 0.97, 1.0), 12.0)
+    M["nav_halo"] = halo("strobe halo", (0.91, 0.95, 1.0), 1.0)
+    M["nav_white"] = glow("strobe lens", (0.94, 0.97, 1.0), 48.0)
     M["black"] = pbr("black void", (0.005, 0.005, 0.006), (0.8, 0.9))
     return M
