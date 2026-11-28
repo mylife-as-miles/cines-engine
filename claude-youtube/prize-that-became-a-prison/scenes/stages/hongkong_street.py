@@ -306,21 +306,24 @@ def background_walkers():
 
 def build_cast():
     holders = {"Dawn": dawn()}
-    # A window-insert run needs only Dawn's reflection.
-    if any(cfg.get("only") != ("Dawn",) for cfg in CAMERAS.values()):
-        holders["T1"] = people.man("T1", height_cm=186, age=0.32, weight=0.5, suit="male_casualsuit05",
-                                   tone=(0.20, 0.18, 0.15), shoes="shoes04")
-        holders["M2"] = people.man("M2", height_cm=175, age=0.56, weight=0.7, suit="male_casualsuit03",
-                                   tone=(0.14, 0.125, 0.105), shoes="shoes04")
-        holders["W1"] = woman("W1", 160, 0.36, 0.42, (0.105, 0.12, 0.15))
-        holders["M3"] = people.man("M3", height_cm=168, age=0.64, weight=0.62, suit="male_casualsuit06",
-                                   tone=(0.2, 0.2, 0.19), shoes="shoes04")
-        holders["M4"] = people.man("M4", height_cm=172, age=0.24, weight=0.42, suit="male_casualsuit01",
-                                   tone=(0.075, 0.08, 0.085), shoes="shoes04")
-        holders["Organiser"] = people.man("Organiser", age=0.4, suit="male_casualsuit03",
-                                          tone=(0.1, 0.1, 0.11), shoes="shoes04")
-        holders["ShopNear"] = people.staff("ShopNear", 0)
-        holders["ShopFar"] = people.staff("ShopFar", 1)
+    # Single-camera runs can omit the characters from other beats.
+    needed = {name for cfg in CAMERAS.values() for name in cfg.get("only", BLOCK[cfg["beat"]])}
+    actors = {
+        "T1": lambda: people.man("T1", height_cm=186, age=0.32, weight=0.5, suit="male_casualsuit05",
+                                 tone=(0.20, 0.18, 0.15), shoes="shoes04"),
+        "M2": lambda: people.man("M2", height_cm=175, age=0.56, weight=0.7, suit="male_casualsuit03",
+                                 tone=(0.14, 0.125, 0.105), shoes="shoes04"),
+        "W1": lambda: woman("W1", 160, 0.36, 0.42, (0.105, 0.12, 0.15)),
+        "M3": lambda: people.man("M3", height_cm=168, age=0.64, weight=0.62, suit="male_casualsuit06",
+                                 tone=(0.2, 0.2, 0.19), shoes="shoes04"),
+        "M4": lambda: people.man("M4", height_cm=172, age=0.24, weight=0.42, suit="male_casualsuit01",
+                                 tone=(0.075, 0.08, 0.085), shoes="shoes04"),
+        "Organiser": lambda: people.man("Organiser", age=0.4, suit="male_casualsuit03",
+                                        tone=(0.1, 0.1, 0.11), shoes="shoes04"),
+        "ShopNear": lambda: people.staff("ShopNear", 0),
+        "ShopFar": lambda: people.staff("ShopFar", 1),
+    }
+    holders.update((name, create()) for name, create in actors.items() if name in needed)
     _STATE["subdivisions"] = {}
     for name, holder in holders.items():
         finish_cast(name, holder)
