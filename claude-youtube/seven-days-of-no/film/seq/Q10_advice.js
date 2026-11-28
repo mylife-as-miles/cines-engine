@@ -55,7 +55,7 @@
     shots: [
       { at: T.start, name: 'plain: do not say no to everyone: pointing at the lens (ref 02)', in: { type: 'wipe', dir: 'right', color: '#3A8594' }, push: { from: 1, to: 1.06 },
         draw(c) { const h = STAGE.plainHero(c, { pose: 'stand', expr: 'happy', turn: 0, look: [0, 0.08], override: { armR: { ik: [20, -150], bend: -1, ul: 0.75, fl: 0.4, hand: 'fist', flip: 1 } } }); const hd = ART.head('hero', h);
-          GFX.pointAtYou(c.g, hd.x + hd.r * 0.35, hd.y + hd.r * 2.05, hd.r / 100 * (1 + 0.04 * Math.sin(c.t * 5))); } },
+          GFX.pointAtYou(c.g, hd.x + hd.r * 0.3, hd.y + hd.r * 2.3, 1.3 * hd.r / 100 * (1 + 0.04 * Math.sin(c.t * 5))); } },
       { at: T.try, name: 'plain: try this instead (a finger up)', in: 'pop', push: { from: 1.1, to: 1.14, x: 960, y: 380 },
         draw(c) { STAGE.plainHero(c, { pose: 'finger_up', expr: 'happy' }); } },
       { at: T.forWeek, name: 'office: the coworker asks', push: { from: 1, to: 1.05, x: 900, y: 520 },

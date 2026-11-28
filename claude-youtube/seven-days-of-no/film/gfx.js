@@ -424,9 +424,13 @@
     for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(-34 + i * 30, 40, 16, Math.PI * 0.05, Math.PI * 0.95); g.lineWidth = lw * 0.7; g.stroke(); }
     // the thumb across the side
     g.beginPath(); g.ellipse(-58, 0, 22, 40, 0.35, 0, TAU); g.fillStyle = C('skinSh'); g.fill(); g.lineWidth = lw * 0.8; g.stroke();
-    // the index finger aimed at the lens: a short foreshortened tube ending in a round tip with its nail toward us
-    g.beginPath(); g.ellipse(10, -26, 36, 34, 0, 0, TAU); g.fillStyle = C('skin'); g.fill(); g.lineWidth = lw; g.stroke();
-    g.beginPath(); g.ellipse(12, -30, 20, 16, 0, 0, TAU); g.fillStyle = '#FFF6EC'; g.fill(); g.lineWidth = lw * 0.6; g.stroke();
+    // the index finger aimed at the lens: a short foreshortened tube (sides outlined, no seam on the fist) to a round tip, nail toward us
+    g.beginPath(); g.moveTo(-18, 6); g.lineTo(-15, -50); g.lineTo(43, -50); g.lineTo(41, 6); g.closePath(); g.fillStyle = C('skin'); g.fill();
+    g.beginPath(); g.moveTo(-18, 0); g.lineTo(-15, -50); g.moveTo(43, -50); g.lineTo(41, 0); g.lineWidth = lw; g.strokeStyle = INK; g.stroke();
+    g.beginPath(); g.ellipse(14, -54, 32, 30, 0, 0, TAU); g.fillStyle = C('skin'); g.fill(); g.stroke();
+    g.beginPath(); g.ellipse(15, -58, 18, 14, 0, 0, TAU); g.fillStyle = '#FFF6EC'; g.fill(); g.lineWidth = lw * 0.6; g.stroke();
+    // emphasis strokes on the open side of the tip (toward you!)
+    if (o.lines !== false) { g.lineWidth = lw; [-0.75, -0.1, 0.55].forEach(a => { g.beginPath(); g.moveTo(14 + Math.cos(a) * 52, -54 + Math.sin(a) * 52); g.lineTo(14 + Math.cos(a) * 78, -54 + Math.sin(a) * 78); g.stroke(); }); }
     g.restore();
   };
 })(window);
