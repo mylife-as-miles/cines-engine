@@ -1,0 +1,88 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q11 · THE TREATY HOUSE, THE HALL · "I DID NOT READ IT"
+References: @Image 1 — environment: the wall of the hall: dark masonry, soft behind the faces in every shot · @Image 2 — character sheet: SERATH · @Image 3 — character sheet: KARST · @Image 4 — a frame of this film: Serath's close shot: the framing and the light of shots 2 and 4
+Reference mode · 20 s · 4 shots · 2.35:1 · photoreal live action · spoken English: two speakers, each phrase said once · no music
+
+## SCENE INTENT
+Serath, Grand Admiral of a kingdom of the sky, and Karst, an engineer of her own people who went over to the people below long ago, are in an old hall on the plain. On the floor between them lies a broken piece of grey rock from the valley where her wedding was held, and she has just recognised it. He tells her the figures of what was set down there. She has laid her bare hand on the rock, below the frame, and she tells him the truth about the orders she marked. He answers with the truth about himself. It plays as one unbroken, quiet conversation: two faces, each framed alone, every voice low, nothing hurried.
+
+## GLOBAL LOCKS
+Character identity — SERATH exactly as @Image 2 and as she is in @Image 4: a woman of fifty-five, short tightly curled black hair going grey, a long white coat, a heavy gold collar at her throat. KARST exactly as @Image 3: a man of fifty-six, grey in his dark hair and short beard, a long pale stained engineer's coat, the same coat in both his shots. From the sheets take face, hair and clothes only. Each face, costume, voice and line stays with its one person.
+Wardrobe override — none: both exactly as their sheets. No hands are in any frame.
+Location / environment continuity — an old hall of dark masonry, as @Image 1: behind each face only its dark stone wall, out of focus.
+Light — the same in every shot, and as @Image 4: soft, cool, overcast daylight from a tall opening off-screen, falling on each face from the side that face looks toward; the other side of the head is in the dark. A small oil lamp stands on the floor below the frame; it adds only a faint warm touch from low down and is never seen.
+Where each is — they are an arm's length apart. Serath is low, beside the rock on the floor; Karst stands. Each is framed alone, from the chest up. Serath is on the right and looks toward the left of the frame; Karst is on the left and looks toward the right of the frame. What they look at, the rock and her hand on it, is on the floor between them, below every frame.
+Props and temporal state — nothing is carried and nothing is handled.
+
+## MOVIE COLOR
+Dark stone, white cloth, grey daylight; the gold of Serath's collar is the only strong colour. All four shots are low key, as @Image 4: one side of the face in soft cool light, the rest falling off into the dark, the background near black.
+Influences, each with its purpose — Denis Villeneuve, Arrival and Blade Runner 2049: a face close and dim against the dark; stillness; a line said only after the thing has been looked at. James Cameron: every look is answered by what it looks at.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Shallow focus on the eyes. Every shot is on a steady, planted camera and does not move.
+
+## VOICE DNA (immutable)
+SERATH: The high speech of Orison: a soft, unplaced Received Pronunciation, older and gentler than a modern one, with no regional mark. A woman of fifty-five with a low alto, warm but closed, a little grain at the bottom of the range. She speaks at a measured pace; she never hurries, and her voice stays low but fully voiced, never a whisper.
+KARST: The grammar of the court spoken with the vowels of the ground: an educated Received Pronunciation flattened toward a northern English plainness by nineteen years below. A man of fifty-six with a dry, tired baritone, a slight rasp, low energy. He is unhurried. His sentences end flat. He is never angry. When something matters most he gets quieter, not louder. His voice is the same voice in shot 1 and in shot 3.
+Only these two are in the hall.
+
+## AUDIO DESIGN
+A bare hall of rock, close and dry, with a little of its own echo on the voices. Low, far off, the open air of a plain. Both voices are close and clear. No drone, no boom, no music.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–8.4 s
+[CAM] medium close-up, 65 mm, at the height of his chest, level; shallow focus on his face; the camera is planted and holds still. Behind him the dark wall, out of focus.
+[BLOCK] Karst alone in the frame, on its left half, from the chest up, standing, in three-quarter face turned toward the right of the frame, his head bowed a little. His eyes are lowered to the bottom right corner of the frame, on the rock, which is below the frame. Soft cool daylight falls on his face from the right; the left side of his head is in the dark.
+[ACT] His head is still from the first frame to the last and his eyes stay lowered to the bottom right corner; they are never on the lens. For the first second nothing moves and his mouth is closed. Then he says the three phrases one after another, plainly, as bare figures, with one slow breath between each, his head still. His mouth is closed whenever he is not speaking. After the last phrase he is still.
+[DIALOGUE] / V.O. KARST (1.2 to 2.0 s): "Ninety tons." — flat, a figure. Then, after one breath (3.4 to 5.0 s): "Anvil Vale, the same hour." — the same flat voice. Then, after one breath (6.4 to 7.9 s): "Every bell is a mountain now." — quieter; flat at the end.
+[SFX] his voice, close; his breath; the air of the plain, far off.
+[STATE OUT] Karst looking down, his mouth closed.
+
+### SHOT 2
+[TIME] 8.4–12.8 s
+[CAM] the view of @Image 4: close-up, 85 mm, at the height of her collar, level; shallow focus on her nearer eye; the camera is planted and holds still.
+[BLOCK] Exactly as @Image 4: Serath alone in the frame, head and shoulders, her head right of the centre of the frame, in three-quarter face turned toward the left of the frame, her head bowed, the gold collar at the bottom of the frame, the dark behind her. Her eyes are open and lowered to the bottom left corner of the frame, on her own hand, which is below the frame.
+[ACT] At the first frame she is still, her eyes lowered, her mouth closed. For a little more than a second she only looks down. Then she says the line, quietly, to the rock: her lips part only a little and her brow does not move. Her mouth closes. After the line, and only then, her eyes come up slowly to the left, over the top left corner of the frame, to Karst; her eyes are never on the lens. She holds so to the cut.
+[DIALOGUE] / V.O. SERATH (9.6 to 10.8 s): "I did not read it." — quiet but fully voiced, her own low alto; level; a plain admission.
+[SFX] her breath; her voice, close.
+[STATE OUT] Serath looking up to the left, her mouth closed.
+
+### SHOT 3
+[TIME] 12.8–18.2 s
+[CAM] the same set-up as shot 1: medium close-up, 65 mm, at the height of his chest, level; shallow focus on his face; the camera holds still.
+[BLOCK] Karst exactly as in shot 1: on the left half of the frame, from the chest up, in three-quarter face turned toward the right of the frame, his head bowed a little, soft cool daylight on his face from the right. His eyes stay lowered to the bottom right corner of the frame, as in shot 1.
+[ACT] His head is still from the first frame to the last, and his eyes stay lowered; they are never on the lens. For the first three quarters of a second his mouth is closed. Then he says the first phrase. One slow breath. He says the second phrase, more quietly, his head still. His mouth closes and he holds so to the cut.
+[DIALOGUE] / V.O. KARST, the same voice as in shot 1 (13.7 to 15.1 s): "No one above reads them." — dry and level, without blame. Then, after one breath, his head still (16.3 to 17.4 s): "I read every one." — quieter; flat at the end.
+[SFX] his voice, close; his breath.
+[STATE OUT] Karst looking down, his mouth closed.
+
+### SHOT 4
+[TIME] 18.2–20.0 s
+[CAM] the same set-up as shot 2, the view of @Image 4; the camera holds still.
+[BLOCK] Serath as shot 2 ended: her head right of the centre, turned toward the left of the frame, her eyes raised to the left, over the top left corner of the frame, on Karst.
+[ACT] hold: her eyes on him, her mouth closed, her face still.
+[DIALOGUE] / V.O. none in this shot.
+[SFX] her breath.
+[STATE OUT] Serath looking up at him, still.
+
+## PERFORMANCE ARC
+KARST: states the figures → hears her → answers without blame → gets quieter where it is about himself.
+SERATH: looks at her hand on the rock → says the plain thing → looks up at him, and goes on looking.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+Four plain shots: his face, her face, his face, her face.
+
+## PHYSICS LOCKS
+Normal speed and real weight throughout. Each stays where they are from the first frame of the take to the last. Cloth hangs. Eyes move at a living pace, never snapping.
+
+## AUDIO LOCKS
+Each quoted phrase is spoken once, word for word, by the one named, in the order written: Karst's three phrases, Serath's one, Karst's two. Nothing else is said by anyone. No narration. Karst's mouth moves only during his own phrases; Serath's mouth moves only during her one phrase in shot 2. Karst's voice in shot 3 is the voice of shot 1. Speech is unhurried in every phrase. No music, no singing, no drone.
+
+## CONTINUITY LOCKS
+[POSITIVE] shots 2 and 4 are the view of @Image 4 · shots 1 and 3 are one set-up · the dark wall of @Image 1 behind every face · soft cool daylight from the side each face looks toward · Karst in the same pale coat in shots 1 and 3 · the gold collar on Serath alone · only the two of them · Serath on the right looking left, Karst on the left looking right
+[NEGATIVE] hands in the frame · papers or objects held · other people · captions, subtitles or legible lettering · a look into the lens · narration · camera movement or shake · anyone changing their place · warm firelight on the faces · a grey studio backdrop
+
+## GENERATION PRIORITY ORDER
+1. Every quoted phrase, word for word, once, each in its speaker's one voice, unhurried  2. Character identity from the sheets  3. Four shots in order, each with its own framing and length, each on a still camera  4. Shots 2 and 4 as @Image 4; Karst on the left half, turned to the right, in shots 1 and 3  5. Low key: one side of each face in soft cool light, the rest dark  6. Sound: a dry bare hall, the air of the plain far off, no music
+
+## FINAL STATE
+Shot 4 as written.
