@@ -16,3 +16,5 @@ claude-youtube/prize-that-became-a-prison/audio/boom/
 claude-youtube/prize-that-became-a-prison/audio/vo/audition_el/*/*.wav
 # raw generated takes stay out of git (sound.md); the chosen ones are committed as FLAC
 claude-youtube/prize-that-became-a-prison/audio/gen/
+# archival media files stay out of git (size and third-party rights); their provenance is in archive/MEDIA_CATALOGUE.md
+claude-youtube/prize-that-became-a-prison/archive/media/
