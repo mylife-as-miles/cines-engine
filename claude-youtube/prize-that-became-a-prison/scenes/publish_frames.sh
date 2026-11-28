@@ -27,7 +27,7 @@ publish_stage() (
   # Finish all conversions and the board before replacing any published frame.
   work=$(mktemp -d)
   trap 'rm -rf -- "$work"' EXIT
-  mkdir "$work/raw" "$work/graded" "$work/masks"
+  mkdir "$work/raw" "$work/graded" "$work/passes"
   existing=( "frames/graded/$stage"/*.jpg )
   if (( ${#existing[@]} )); then
     cp -- "${existing[@]}" "$work/graded/"
@@ -67,7 +67,17 @@ publish_stage() (
         echo "Expected an 8-bit grayscale mask at $raw_dimensions for $stage/$camera" >&2
         exit 1
       fi
-      cp -- "$matte" "$work/masks/$camera.mask.png"
+      cp -- "$matte" "$work/passes/$camera.mask.png"
+    fi
+    glass="$source_dir/final_$camera.glass.png"
+    if [[ -f "$glass" ]]; then
+      glass_dimensions=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x "$glass")
+      if [[ "$glass_dimensions" != "$raw_dimensions" ]]; then
+        echo "Glass pass dimensions differ from the plate at $stage/$camera" >&2
+        exit 1
+      fi
+      ffmpeg -v error -xerror -i "$glass" -f null -
+      cp -- "$glass" "$work/passes/$camera.glass.png"
     fi
     ffmpeg -v error -xerror -y -i "$image" -q:v 2 "$work/graded/$camera.jpg"
   done
@@ -103,7 +113,7 @@ publish_stage() (
     mv -- "$raw" "frames/raw/$stage/$filename"
     mv -- "$work/graded/${filename%.png}.jpg" "frames/graded/$stage/"
   done
-  for sidecar in "$work/raw"/*.corners.json "$work/raw"/*.seam.json "$work/masks"/*.mask.png; do
+  for sidecar in "$work/raw"/*.corners.json "$work/raw"/*.seam.json "$work/passes"/*.png; do
     mv -- "$sidecar" "frames/raw/$stage/"
   done
   mv -- "$work/board.jpg" "design/boards/latest_$stage.jpg"

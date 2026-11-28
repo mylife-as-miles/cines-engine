@@ -18,8 +18,6 @@ evidence_table_mats.py.
 import math
 import os
 import sys
-import tempfile
-from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
@@ -968,48 +966,6 @@ def apply_camera(name):
     print(f"EVIDENCE camera {name or '?'}: beat {beat}, hidden {sorted(set(HIDE.get(beat, ())) | set(cfg.get('hide', ())))}", flush=True)
 
 
-def render_paper_mask(render, path, *args, **kwargs):
-    """Write an ungraded, antialiased paper silhouette alongside the ordinary colour render."""
-    scene = bpy.context.scene
-    scene.render.engine = "CYCLES"
-    layer = bpy.context.view_layer
-    previous_index = layer.use_pass_object_index
-    previous_tree = scene.compositing_node_group
-    tree = bpy.data.node_groups.new("Paper ID matte", "CompositorNodeTree")
-    try:
-        layer.use_pass_object_index = True
-        scene.compositing_node_group = tree
-        tree.interface.new_socket(name="Image", in_out="OUTPUT", socket_type="NodeSocketColor")
-        inputs = tree.nodes.new("CompositorNodeRLayers")
-        inputs.scene = scene
-        composite = tree.nodes.new("NodeGroupOutput")
-        tree.links.new(inputs.outputs["Image"], composite.inputs["Image"])
-        mask = tree.nodes.new("CompositorNodeIDMask")
-        mask.inputs["Index"].default_value = 1
-        mask.inputs["Anti-Alias"].default_value = True
-        tree.links.new(inputs.outputs["Object Index"], mask.inputs["ID value"])
-        writer = tree.nodes.new("CompositorNodeOutputFile")
-        writer.format.media_type = "IMAGE"
-        writer.format.file_format = "PNG"
-        writer.format.color_mode = "BW"
-        writer.format.color_depth = "8"
-        writer.file_output_items.clear()
-        item = writer.file_output_items.new("FLOAT", "paper")
-        item.save_as_render = False
-        writer.save_as_render = False
-        tree.links.new(mask.outputs["Alpha"], writer.inputs[item.name])
-        with tempfile.TemporaryDirectory(dir=Path(path).parent) as directory:
-            writer.directory, writer.file_name = directory, "mask"
-            result = render(path, *args, **kwargs)
-            matte, = Path(directory).rglob("*.png")
-            os.replace(matte, Path(path).with_suffix(".mask.png"))
-            return result
-    finally:
-        scene.compositing_node_group = previous_tree
-        layer.use_pass_object_index = previous_index
-        bpy.data.node_groups.remove(tree)
-
-
 def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
@@ -1017,7 +973,7 @@ def install_hook():
         name = which_camera()
         apply_camera(name)
         if name in ("page", "page_foot", "pair") and os.path.basename(args[0]).startswith("final"):
-            return render_paper_mask(orig, *args, **kw)
+            return sk.render_object_mask(orig, args[0], 1, *args[1:], **kw)
         return orig(*args, **kw)
     render._orig = orig
     sk.render = render
