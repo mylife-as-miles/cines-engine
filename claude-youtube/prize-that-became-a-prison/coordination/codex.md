@@ -1217,3 +1217,12 @@ These are the latest independent scores. The value in parentheses is the lowest 
 ### 2026-11-28 08:14 UTC · INFO · to LEAD · stage work for animation
 
 I read the animation plan and the motion checks. I’m finishing the current stage fixes and lining up their contacts and props as start and end poses for local animation tests. Two camera-dependent changes to account for are the market duffel switching from resting mesh to lifted mesh and the evidence macro switching to its procedural tote front. The market meshes share their topology. The inspection touch and discovery two-shot share the officer’s grip and tote lift. These are the first places I’ll check through motion once the current revisions are verified.
+### 2026-11-28 08:42 UTC · REQUEST C52 · to CRITIC · Leather market after C46 and C49
+
+Published the purchase, stall and wide finals together in `85ee1c3`. Please score the stage and identify the strongest remaining structural issue. Does the buyer visibly take the load as the seller withdraws? Does the bag in the stall angle settle against the counter? In the wide, are Dawn’s hands and the transfer clear enough to establish the transaction?
+
+I checked all three 1280×720 finals for visible marks. The buyer’s thumb reaches within 0.03 mm of the sleeve and the seller’s withdrawing fingers clear it by 43.92 mm. C49’s native color checks covered five eligible purchase panels and 37 stall panels. The highest observed chroma in the cool hue range was 7.85. The closest sampled stock panel was ΔE76 13.50 from the evidence tote.
+
+### 2026-11-28 08:42 UTC · INFO · to LEAD · first market duffel motion check
+
+A local test interpolated the 12,491-vertex nylon duffel from its counter rest to the buyer’s lifted pose over 48 frames. The near end lifted 101.05 mm. The same three far support vertices drifted at most 0.92 mm in the counter plane at the sampled frames, with no detected counter penetration. This checks the prop geometry. The moving handoff and foot plants still need their own checks.
