@@ -45,6 +45,7 @@ OPEN_W, OPEN_H = 1.075, 2.105             # wall opening for a cell-door block
 FRONT = 0.34                              # the prop's local x lying in the wall face
 LEAF = 0.301                              # the prop's leaf face (set back 4 cm in its frame)
 WIN_IY, WIN_IZ, WIN_FW = 0.19, 0.22, 0.05  # the vision panel's opening (half sizes) and its flat frame's width
+WIN_BACK = 0.19                          # depth of the welded reveal, in door-local metres
 DOOR_PAINT = (0.135, 0.165, 0.19)         # blue-grey: a step off the warm grey wall in hue and value
 CELL_D, CELL_W, CELL_H = 3.2, 2.4, 2.6
 RX, RY0, RY1 = 1.8, Y1 + T, 17.4          # visitation room: half width, front and back wall faces
@@ -383,7 +384,7 @@ def door_proto():
     inv = mw.inverted()
     bm = bmesh.new()
     bm.from_mesh(ob.data)
-    win = lambda p: abs(p.y) < 0.19 and 1.28 < p.z < 1.72
+    win = lambda p: abs(p.y) < WIN_IY and abs(p.z - 1.5) < WIN_IZ
     # the prop's own bars (one flat vertical with a kink, two flat horizontals: a muntin grid) go; round bars are
     # built in cell_doors()
     bar = lambda p: abs(p.y) < 0.168 and 1.302 < p.z < 1.698 and 0.25 < p.x < 0.30
@@ -435,6 +436,33 @@ def door_proto():
             p.x = LEAF + 0.0008
             v.co = inv @ p
             squashed += 1
+    # Clear the deep backing that remains visible through the window at an
+    # angle. The new welded reveal already covers the front of the opening.
+    margin = 0.055
+    normal_transform = mw.to_3x3().transposed()
+
+    def cut(axis, stop, geometry):
+        normal = Vector((0, 0, 0))
+        normal[axis] = 1.0
+        bmesh.ops.bisect_plane(bm, geom=geometry, dist=0.000001,
+                               plane_co=inv @ (normal * stop), plane_no=normal_transform @ normal)
+
+    cut(0, WIN_BACK, [*bm.verts, *bm.edges, *bm.faces])
+    axes = ((1, (-WIN_IY - margin, WIN_IY + margin)),
+            (2, (1.5 - WIN_IZ - margin, 1.5 + WIN_IZ + margin)))
+    for axis, stops in axes:
+        for stop in stops:
+            rear_verts = [v for v in bm.verts if (mw @ v.co).x <= WIN_BACK + 0.00001]
+            rear = set(rear_verts)
+            rear_edges = [e for e in bm.edges if all(v in rear for v in e.verts)]
+            rear_faces = [f for f in bm.faces if all(v in rear for v in f.verts)]
+            cut(axis, stop, [*rear_verts, *rear_edges, *rear_faces])
+    aperture = []
+    for face in bm.faces:
+        p = mw @ face.calc_center_median()
+        if p.x < WIN_BACK and abs(p.y) < WIN_IY + margin and abs(p.z - 1.5) < WIN_IZ + margin:
+            aperture.append(face)
+    bmesh.ops.delete(bm, geom=aperture, context="FACES")
     bm.to_mesh(ob.data)
     bm.free()
     # its generated texture read as trowelled plaster: painted steel built here instead, in the door's own metres
@@ -446,7 +474,8 @@ def door_proto():
     M["frame_steel"] = mt.door_steel("window frame steel", paint=DOOR_PAINT)
     for slot in ob.material_slots:
         slot.material = steel
-    print(f"CORRIDOR cell door: {len(kill)} faces cut ({nbar} of the prop's bars), {moved} recess verts brought forward, "
+    print(f"CORRIDOR cell door: {len(kill)} faces cut ({nbar} of the prop's bars), {len(aperture)} aperture pieces cut, "
+          f"{moved} recess verts brought forward, "
           f"{squashed} hatch verts closed, {flat} surround verts flat, {hinged} hinge verts flat; "
           f"mesh-to-door {tuple(round(v, 3) for v in sc)}", flush=True)
     return h, ob
@@ -619,7 +648,7 @@ def window_frame(i, xf, turn):
     weld.rotation_euler = (0, 0, turn)
     # reveal liners from the glass to the leaf face
     L = lambda nm, size, p: box(f"cd{i}_{nm}", size, xf(p), M["frame_steel"], bevel=0.0015, rot=(0, 0, turn))
-    d, xm = LEAF + 0.004 - 0.19, (LEAF + 0.004 + 0.19) / 2
+    d, xm = LEAF + 0.004 - WIN_BACK, (LEAF + 0.004 + WIN_BACK) / 2
     L("rev_b", (d, 2 * iy, 0.006), (xm, 0.0, zc - iz + 0.003))
     L("rev_t", (d, 2 * iy, 0.006), (xm, 0.0, zc + iz - 0.003))
     for sg in (-1, 1):
@@ -943,9 +972,9 @@ def back_door():
     # the corridor beyond lit: a cool sliver of light under the door (an 18 mm gap), fanning out across the floor
     # (round 4: the sliver dimmed, it read as an LED strip, and its light raised and tipped further down, so it fans
     # 30-40 cm across the tiles with a soft falloff)
-    box("bd_under", (lw - 0.02, 0.01, 0.008), (BD_X, RY1 + 0.07, 0.004), mt.glow("bd under", COOL, 0.12))
+    box("bd_under", (lw - 0.02, 0.01, 0.008), (BD_X, RY1 + 0.07, 0.004), mt.glow("bd under", COOL, 0.05))
     d = Vector((0.0, -math.cos(math.radians(20)), -math.sin(math.radians(20))))
-    li = area("bd_under_light", (BD_X, RY1 + 0.01, 0.011), (lw - 0.04, 0.012), 6.0, COOL, spread=150)
+    li = area("bd_under_light", (BD_X, RY1 + 0.01, 0.011), (lw - 0.04, 0.012), 3.0, COOL, spread=150)
     li.visible_camera = li.visible_glossy = False
     li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     # its vision panel: the cold corridor on the far side, faint through wired glass
