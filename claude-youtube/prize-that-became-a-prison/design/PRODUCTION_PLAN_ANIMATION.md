@@ -80,7 +80,9 @@ The plan is to render chapter by chapter, review each, then go on. Spending then
 
 The account holds 3,000 credits. The recommended plan needs about 7,000 more, for example two 4,000-credit packs at $421.06 in all. Top-up credits expire after 90 days.
 
-## Optional: Houdini and Unreal
+## Houdini and Unreal: not used (the author's decision, 28 Nov: Blender only)
+
+The notes below are kept as the reasoning behind that decision.
 
 **Houdini** (SideFX) is the best tool for heavy simulations: smoke, fire, liquids, destruction and large crowds.
 - On a rented box it needs a paid SideFX licence. Indie is the cheapest that works; the free Apprentice licence does not run there. Check sidefx.com/buy for the current price.
