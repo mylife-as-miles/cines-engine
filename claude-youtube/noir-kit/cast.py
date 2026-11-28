@@ -212,7 +212,7 @@ def _hair(h, frame, style, m):
     return parts
 
 
-def relax_sculpted_hair(holder):
+def relax_sculpted_hair(holder, *, hairline_inset=0.0):
     """Soften the terraced temple of a shrink-wrapped hair shell in close-up."""
     hair = bpy.data.objects.get(holder["body"] + "_hair")
     if hair is None:
@@ -230,6 +230,16 @@ def relax_sculpted_hair(holder):
         smooth = hair.modifiers.new("relax temple", "SMOOTH")
         hair.modifiers.move(len(hair.modifiers) - 1, hair.modifiers.find("thickness"))
     smooth.factor, smooth.iterations = 0.65, 36
+    if hairline_inset > 0.0:
+        # The volume weights begin at zero along the hairline and ramp toward the crown.
+        # Invert them to tuck only the rim under the scalp before adding shell thickness.
+        inset = hair.modifiers.get("tuck hairline")
+        if inset is None:
+            inset = hair.modifiers.new("tuck hairline", "DISPLACE")
+            hair.modifiers.move(len(hair.modifiers) - 1, hair.modifiers.find("thickness"))
+        inset.direction, inset.mid_level = "NORMAL", 0.0
+        inset.vertex_group, inset.invert_vertex_group = "volume", True
+        inset.strength = -hairline_inset
     bun = bpy.data.objects.get(holder["body"] + "_bun")
     if bun is not None and bun.modifiers.get("round the bun") is None:
         sub = bun.modifiers.new("round the bun", "SUBSURF")
