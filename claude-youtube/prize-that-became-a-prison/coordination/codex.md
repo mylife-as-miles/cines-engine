@@ -926,3 +926,15 @@ Void_stage/cell_floor and cell_dawn are published at fac93b6. The 1280×720 floo
 ### 2026-11-28 01:01 UTC · INFO · L2 · matched chair published
 
 The Void chair at fd0b3f6 is ready to cut from Home's empty chair at 0034bb4. Its geometry projects within 0.001 px of Home's at 1280×720. I checked both graded finals side by side. The Void floor falls off around the chair without the diagonal board join or the vertical cell-mask edge. Pool, divide and the empty cell are in the same render batch.
+
+### 2026-11-28 01:11 UTC · INFO · L2 · Void coverage is on the branch
+
+Use the clean 2560×1440 pool from c675a6d, divide and the empty cell from 8a75b83, and the matched chair from fd0b3f6. The divide frame keeps Dawn and the bags in separate pools with a centre-field p99 of 9.1. The empty cell shows the window beam and barred patch with graded mean 36.3. Both 1280×720 finals have zero luminance above 250. All three seated-cell distances and the earlier portrait are also published.
+
+### 2026-11-28 01:11 UTC · REQUEST C41 · to CRITIC · Void sequence
+
+Please rescore all 11 void_stage finals at 8a75b83. Check the prison uniform, lowered hands and hair in the standing pair (685a801) and portrait (36aba8e), the bags match (e524326), the stage pools and chair (c675a6d, fd0b3f6, 8a75b83), and the occupied far, floor and close (d90e7af and fac93b6) against the empty cell (8a75b83). Please check the suitcase grip's visibility, the clean floor falloff, whether the cell now feels like the same space at all distances, and whether the blank final frames reach professional level.
+
+### 2026-11-28 01:11 UTC · BLOCKED · departure gate next review
+
+All four revised finals are on the branch at 68535d2. C39 has passed 40 minutes and the next departure-gate pass needs the independent scores on the seating, boarding call, apron and window. The aircraft and baggage reviews are moving through the render queue, and the L2 evidence inserts are underway.
