@@ -69,12 +69,8 @@ CAMERAS = {
 }
 # per-camera light changes (absolute watts by light name)
 TRIMS = {
-    # the corridor: the room through the gap washed warm, so it is the brightest, warmest thing at the vanishing
-    # point, and its warm wedge on the corridor floor (round 4: the room's wash raised from 900 W and the pools
-    # lowered, so the doorway outshines the floor pools, which were the frame's brightest thing)
-    "corridor": {"room_warm": 3400.0, "vd_spill": 0.0, "vd_floor_wedge": 1800.0,
-                 # the pendant's wide cone off and the rest turned down: 15 m away nobody reads its level, and its
-                 # near-white light greyed the amber
+    # The doorway is the brightest part of the distant room, with a quieter spill on the corridor floor.
+    "corridor": {"room_warm": 2000.0, "vd_spill": 0.0, "vd_floor_wedge": 1020.0,
                  "pendant_light": 0.0, "pendant_pool": 80.0, "pendant_glow": 5.0},
     # the door close-up: a raking key from the hinge side does the shaping; the fitting beyond the door turned
     # down so it does not fill; a dim fill on the hinge strip (frame trim, knuckles, hinge leaves) at frame left,
@@ -82,7 +78,9 @@ TRIMS = {
     "door": {"door_rake": 8.0, "fit4_down": 150.0, "fit4_up": 4.0, "door_hinge_fill": 7.0},
     # the room from the doorway: the corridor's cool light through the open door behind the lens raised and turned
     # toward the visitor's chair (ROTS), so its backrest and seat edge and the left wall read instead of black
-    "chair": {"vd_spill": 40.0},
+    "chair": {"vd_spill": 40.0, "room_warm": 180.0},
+    "envelope": {"env_rake": 5.0},
+    "envelope_high": {"pendant_light": 25.0, "env_rake": 5.0},
 }
 # per-camera light positions: in the insert the pool's hot centre comes from the far left side of the bulb (still
 # inside the shade), so the curl and the envelope's edges throw their shadows toward the lens
@@ -93,9 +91,11 @@ ROTS = {"chair": {"vd_spill": (math.pi / 2, 0.0, math.radians(20.0))}}
 CHAIR_VAL = {"envelope": 0.8}
 # per-camera swing of the visitation room's door leaf (deg): for the chair camera, which stands in the doorway with
 # the end wall cut away, the leaf is swung back flat out of its way (the corridor shot shows it ajar at 50)
-LEAF_OPEN = {"chair": 172.0}
-CAMERAS["envelope_high"] = dict(CAMERAS["envelope"], loc=(0.23, 14.73, st.TOP + 0.61),
-                                aim=(*ENVELOPE[:2], st.TOP + 0.01), lens=57, fstop=4.0)
+LEAF_OPEN = {"chair": 172.0, "threshold": 80.0}
+CAMERAS["envelope_high"] = dict(CAMERAS["envelope"], loc=(0.22, 14.62, st.TOP + 0.48),
+                                aim=(0.0, 15.72, st.TOP + 0.06), lens=50, fstop=4.0)
+CAMERAS["threshold"] = dict(loc=(0.42, 11.3, 1.3), aim=(0.05, 15.6, 0.8), lens=30,
+                            focus="fx_chair", fstop=5.6, exposure=-1.5)
 CAMERAS["table_top"] = dict(loc=(0.08, 15.48, 2.55), aim=(0.015, 15.54, st.TOP), lens=31,
                             focus="fx_envelope", clip=1.22, fstop=5.6, exposure=-1.6)
 MOVES["envelope_high"] = MOVES["envelope"]
@@ -134,6 +134,9 @@ def apply_camera(name):
         ob.location = moves.get(n, bl)
         br = base_rot.setdefault(n, tuple(ob.rotation_euler))
         ob.rotation_euler = rots.get(n, br)
+    pool = st.LIGHTS["pendant_pool"].data
+    base_cone = _STATE.setdefault("pool cone", pool.spot_size)
+    pool.spot_size = math.radians(26) if name == "envelope_high" else base_cone
     for node, v0 in _STATE.get("chair_val", []):
         node.inputs["Value"].default_value = v0 * CHAIR_VAL.get(name, 1.0)
     leaf = st.PARTS.get("vd_leaf")
@@ -204,6 +207,9 @@ def build(cast=True):
                            if n.type == "HUE_SAT"]
     st.chair(NEAR_CHAIR[:2], NEAR_CHAIR[2], val=0.4)
     st.envelope(ENVELOPE[0], ENVELOPE[1], st.TOP, ENVELOPE[2])
+    rake_point = Vector((ENVELOPE[0] - 0.30, ENVELOPE[1] + 0.30, st.TOP + 0.10))
+    rake = st.area("env_rake", tuple(rake_point), (0.12, 0.04), 0.0, st.LEAK, spread=75, glossy=False)
+    rake.rotation_euler = (Vector((*ENVELOPE[:2], st.TOP)) - rake_point).to_track_quat("-Z", "Y").to_euler()
     door_rake()
     sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.02), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.0018)
     room_haze = sk.haze((2 * st.RX - 0.02, st.RY1 - st.RY0 - 0.02, st.H - 0.02), (0, (st.RY0 + st.RY1) / 2, st.H / 2), 0.014)

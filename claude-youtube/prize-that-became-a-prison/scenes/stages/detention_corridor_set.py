@@ -61,10 +61,6 @@ WARM = (1.0, 0.87, 0.7)
 LEAK = (1.0, 0.70, 0.42)                  # the room's light leaking out (pushed warm: the grade halves saturation)
 AMBER = (1.0, 0.40, 0.08)                 # the leak and the room seen through the gap: AgX and the grade both
                                           # wash warm light toward neutral, so the source is pushed hard
-AMBER_DEEP = (1.0, 0.24, 0.03)            # the room washed warm and the wedge on the floor out of the door: the
-                                          # grade halves saturation and lifts blue, so it is pushed harder still
-AMBER_ROOM = (1.0, 0.18, 0.01)            # the room's wash seen through the gap: deeper still, as AgX's highlight
-                                          # desaturation grows with the level the doorway now needs
 UPPER, LOWER = (0.19, 0.187, 0.172), (0.055, 0.069, 0.081)
 
 M = {}
@@ -114,13 +110,12 @@ def materials():
         # dark, matt, worn: under the pendant it must stay a table top, not a grey lightbox, and the envelope reads
         # against it
         laminate=mt.laminate("table laminate", rgb=(0.062, 0.065, 0.063), rough=0.58,
-                             rings=((0.34, -0.13, 0.037), (0.385, -0.06, 0.036), (-0.36, 0.21, 0.04),
-                                    (0.17, -0.06, 0.038)),
+                             rings=((0.34, -0.13, 0.037), (-0.36, 0.21, 0.04)),
                              half=(0.55, 0.35)),
         table_steel=mt.paint("table frame", (0.045, 0.05, 0.055), 0.45, 0.03, 0.2, edge_rgb=(0.2, 0.2, 0.2)),
         # matt, warm, fibrous: under the pendant it reads as paper, not a cold white card
         paper=mt.paper("envelope paper", (0.6, 0.565, 0.49), rough=0.85, fibre=0.02, grime=0.35),
-        flap=mt.paper("envelope flap", (0.587, 0.552, 0.479), rough=0.85, fibre=0.02),
+        flap=mt.paper("envelope flap", (0.558, 0.525, 0.456), rough=0.85, fibre=0.02),
         shade_out=mt.enamel("shade enamel", (0.045, 0.06, 0.056)),
         shade_in=mt.enamel("shade inside", (0.62, 0.62, 0.58), 0.4),
         bakelite=mt.plastic("bakelite", (0.015, 0.014, 0.013), 0.35),
@@ -903,13 +898,13 @@ def vis_door():
          rot=(-math.radians(68), 0, 0), glossy=False)
     # for the corridor camera only (TRIMS): the room behind the gap washed warm from above, so through the gap it
     # is the brightest, warmest thing at the vanishing point
-    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_ROOM, spread=110, glossy=False)
+    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER, spread=110, glossy=False)
     # for the corridor camera only (TRIMS): the room's lamp light falling out through the gap at a downward angle:
     # a spot 0.5 m inside the room, tipped 30 deg down with a wide, fully blended 60 deg cone, so the door gap (the
     # jamb on one side, the leaf's shadow on the other) cuts it into a warm wedge on the corridor floor, narrow at
     # the threshold, widening and fading over 2-3 m, with no spotlight edge (a 75 deg cone since round 4, so the
     # wedge lies 2-3 m out of the door past the dying tube's footprint)
-    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.5, 1.15), 0.0, AMBER_DEEP, 75.0, 1.0, radius=0.08,
+    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.5, 1.15), 0.0, LEAK, 75.0, 1.0, radius=0.08,
          rot=(-math.radians(70), 0, 0))
     # and the corridor's cool light falling in through the open door: a faint wash across the room
     area("vd_spill", (VD_X + 0.25, Y1 + T + 0.05, 1.15), (0.4, 2.0), 16.0, COOL, spread=100, rot=(math.pi / 2, 0, 0),
@@ -1032,18 +1027,14 @@ def chair(xy, facing_deg, val=0.95):
 
 
 def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
-    """A sealed envelope lying back up: its body (0.8 mm: paper and the folded letter inside) pillowed in the
-    middle, the bottom flap and the sealed top flap laid over it as thin sheets 0.3 mm proud, so their edges draw
-    the envelope's seams and cast hairline shadows; the top flap's tip lifts a little where the glue gave, and the
-    far left corner lifts gently, about 3 mm over its last 9 cm, from handling and damp (round 4: the 20 mm curl
-    rising to a point read as a paper boat)."""
+    """A sealed envelope back up, with a folded letter, layered flaps and a gently curled corner."""
     m = materials()
     root = empty("envelope", (cx, cy, z), math.radians(ang_deg))
     cq = 0.09                                            # the curl's reach in from the corner, along the diagonal
     def pill(x, y):
         """Height of the envelope's back: pillowed by the folded letter, a gentle warp, and its far left corner
         curled up off the table (a fold line square to the diagonal, rising as the square of the distance)."""
-        h = 0.0024 * max(0.0, 1 - (2 * x / W) ** 4) * max(0.0, 1 - (2 * y / D) ** 4)
+        h = 0.0045 * max(0.0, 1 - (2 * x / W) ** 4) * max(0.0, 1 - (2 * y / D) ** 4)
         h += 0.0006 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
         h += 0.0006 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
         q = ((x + W / 2) + (D / 2 - y)) * 0.70711
@@ -1056,10 +1047,10 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
         for j in range(nv):
             bm.faces.new((vs[i][j], vs[i + 1][j], vs[i + 1][j + 1], vs[i][j + 1]))
     for v in bm.verts:
-        v.co.z = pill(v.co.x, v.co.y) + 0.0008
+        v.co.z = pill(v.co.x, v.co.y) + 0.0012
     body = mesh_obj("envelope_body", bm, m["paper"], smooth=True)
     so = body.modifiers.new("card", "SOLIDIFY")
-    so.thickness, so.offset = 0.0008, -1.0
+    so.thickness, so.offset = 0.0012, -1.0
     body.parent = root
 
     def flap(name, poly, lift, mat):
@@ -1070,18 +1061,19 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
             bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=2, use_grid_fill=True)
         bmesh.ops.triangulate(bm, faces=bm.faces[:])
         for v in bm.verts:
-            v.co.z = pill(v.co.x, v.co.y) + 0.0008 + lift(v.co.x, v.co.y)
+            v.co.z = pill(v.co.x, v.co.y) + 0.0012 + lift
         ob = mesh_obj(name, bm, mat, smooth=True)
         s = ob.modifiers.new("card", "SOLIDIFY")
         s.thickness, s.offset = 0.0003, -1.0
         ob.parent = root
         return ob
     e = 0.0015                                           # flaps stop just short of the body's edges
-    tip = (0.0, -D * 0.06)
+    tip = -D * 0.06
     flap("envelope_bottom_flap", [(-W / 2 + e, -D / 2 + e), (W / 2 - e, -D / 2 + e), (W * 0.1, D * 0.1), (-W * 0.1, D * 0.1)],
-         lambda x, y: 0.0003, m["flap"])
-    flap("envelope_top_flap", [(-W / 2 + e, D / 2 - e), (-W * 0.035, tip[1]), (W * 0.035, tip[1]), (W / 2 - e, D / 2 - e)],
-         lambda x, y: 0.0006 + 0.0009 * max(0.0, 1 - math.hypot(x - tip[0], y - tip[1]) / 0.035) ** 2, m["flap"])
+         0.0003, m["flap"])
+    flap("envelope_top_flap", [(-W / 2 + e, D / 2 - e), (-W * 0.03, tip + 0.005),
+                               (-W * 0.012, tip + 0.001), (0.0, tip), (W * 0.012, tip + 0.001),
+                               (W * 0.03, tip + 0.005), (W / 2 - e, D / 2 - e)], 0.0006, m["flap"])
     return root
 
 
@@ -1142,8 +1134,8 @@ def pendant():
     # rectangular shadow), a second, narrower one from the same bulb for the pool's hot centre round the envelope
     # (falling off about 0.35 m out, so the table's ends sit 2-3 stops down), and a weak bare point inside the
     # shade for its white inner glow and rim
-    spot("pendant_light", (x, y, z0 + 0.1), PEND_W, WARM, 95.0, 0.35, 0.03)
-    spot("pendant_pool", (x, y, z0 + 0.1), POOL_W, WARM, POOL_CONE, 0.65, 0.03)
+    spot("pendant_light", (x, y, z0 + 0.1), PEND_W, LEAK, 95.0, 0.35, 0.03)
+    spot("pendant_pool", (x, y, z0 + 0.1), POOL_W, LEAK, POOL_CONE, 0.65, 0.03)
     g = point("pendant_glow", (x, y, z0 + 0.135), GLOW_W, WARM, radius=0.02)
     g.visible_glossy = True
 

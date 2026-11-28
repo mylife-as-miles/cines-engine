@@ -7,6 +7,9 @@ flat value: tone and roughness always vary, and wear sits where hands, feet, tro
 Node helpers are copied from inspection_room_mats / departure_gate_mats (the Mix-node lookup is the departure gate's,
 which picks the colour sockets explicitly).
 """
+import math
+import random
+
 import bpy  # noqa: F401  (first: bmesh and mathutils only exist once bpy is loaded)
 
 
@@ -543,22 +546,22 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=(), half=None):
     # sleeve-polished patches: broad, faintly lighter (the matt texture rubbed off)
     pol = _noise(nt, o, 1.8, 3.0, 0.5)
     col = _mix(nt, _maprange(nt, pol, 0.55, 0.75, 0.0, 0.35), col, tuple(c * 1.25 for c in rgb))
-    # wear lives in the ROUGHNESS only: fine micro-scratches running every which way (three stretched noises at
-    # unrelated angles, thresholded thin), gathered where arms and cups go
+    # Thin scratches with different spans and angles gather where arms and cups go.
+    scatter = random.Random(42)
     scr_m = None
-    for k, ang in enumerate((0.31, 1.24, 2.17, 2.79)):
+    for k in range(10):
         rot = _n(nt, "ShaderNodeMapping")                # turn first, then stretch: each set runs its own way
-        rot.inputs["Rotation"].default_value = (0.0, 0.0, ang)
+        rot.inputs["Rotation"].default_value = (0.0, 0.0, scatter.uniform(0, math.pi))
         rot.inputs["Location"].default_value = (0.37 * k, 1.1 * k, 0.0)
         _link(nt, o, rot.inputs["Vector"])
         mp = _n(nt, "ShaderNodeMapping")
-        mp.inputs["Scale"].default_value = (28.0, 650.0, 28.0)
+        mp.inputs["Scale"].default_value = (scatter.uniform(18, 40), scatter.uniform(400, 900), 28.0)
         _link(nt, rot.outputs["Vector"], mp.inputs["Vector"])
         nn = _n(nt, "ShaderNodeTexNoise")
         nn.inputs["Scale"].default_value = 1.0 + 0.37 * k
         nn.inputs["Detail"].default_value = 1.0
         _link(nt, mp.outputs["Vector"], nn.inputs["Vector"])
-        s = _maprange(nt, nn.outputs["Fac"], 0.6, 0.64, 0.0, 1.0)
+        s = _maprange(nt, nn.outputs["Fac"], 0.63, 0.66, 0.0, 1.0)
         scr_m = s if scr_m is None else _math(nt, "MAXIMUM", scr_m, s)
     scr_m = _math(nt, "MULTIPLY", scr_m, _maprange(nt, _noise(nt, o, 4.0, 2.0, 0.5), 0.42, 0.62, 0.0, 1.0))
     ring_m = ring_in = None
@@ -577,10 +580,10 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=(), half=None):
             ring_m = edge if ring_m is None else _math(nt, "MAXIMUM", ring_m, edge)
             ring_in = inside if ring_in is None else _math(nt, "MAXIMUM", ring_in, inside)
         # a dried coffee ring: the inside faintly warm and dark, the rim where it dried darker again
-        col = _mix(nt, _math(nt, "MULTIPLY", ring_in, 0.55), col, (0.03, 0.026, 0.022))
+        col = _mix(nt, _math(nt, "MULTIPLY", ring_in, 0.3), col, (0.03, 0.026, 0.022))
         col = _mix(nt, ring_m, col, (0.02, 0.017, 0.014))
     # the scratches cut through the print layer: a touch lighter
-    col = _mix(nt, _math(nt, "MULTIPLY", scr_m, 0.55), col, tuple(c * 1.9 for c in rgb))
+    col = _mix(nt, _math(nt, "MULTIPLY", scr_m, 0.25), col, tuple(c * 1.9 for c in rgb))
     chip = None
     if half:
         ox, oy, oz = _xyz(nt, o)
@@ -596,7 +599,7 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=(), half=None):
         col = _mix(nt, _math(nt, "MULTIPLY", near, 0.35), col, tuple(c * 0.75 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
     r = _maprange(nt, pol, 0.3, 0.75, rough + 0.1, rough - 0.12)
-    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.14), clamp=True)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.07), clamp=True)
     if ring_in is not None:
         r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_in, 0.1), clamp=True)
     if chip is not None:
@@ -604,7 +607,7 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=(), half=None):
     r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.72), 0.45)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.25
-    h = _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -0.3), _math(nt, "MULTIPLY", sp, 0.2))
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -0.15), _math(nt, "MULTIPLY", sp, 0.2))
     if chip is not None:
         h = _math(nt, "SUBTRACT", h, chip)
     _bump(nt, b, h, 0.05, 0.0003)
