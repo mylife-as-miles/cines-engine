@@ -61,7 +61,7 @@ def main():
         img = cv2.warpAffine(plate, A, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue=edge)
         if c.get("spot"):            # the light closing in, in the plate (before the grade), as in type.html's preview
             r1, r0 = W * c["spot"]["r"], W * c["spot"]["r"] * 0.55
-            d = np.sqrt((xx - W / 2) ** 2 + (yy - H * 0.58) ** 2)
+            d = np.sqrt((xx - W / 2) ** 2 + (yy - H * c["spot"].get("cy", 0.58)) ** 2)
             m = np.clip((d - r0) / (r1 - r0), 0, 1) * c["spot"]["dark"]
             img = img * (1 - m[..., None]) + np.float32([3, 4, 6]) / 255 * m[..., None]
         ff.stdin.write((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8).tobytes())

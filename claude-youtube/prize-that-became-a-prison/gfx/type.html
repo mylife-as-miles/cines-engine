@@ -75,6 +75,8 @@ function width(ctx, text, st, scale = 1) { font(ctx, st, scale); return ctx.meas
 // One left margin for every left-set super (place, date, card, chapter): the x at which a line's first glyph's ink
 // starts exactly at MARGIN, so glyph side bearings (the 2's, the J's overhang) no longer drift the edges apart.
 const MARGIN = 140;
+// The lowest baseline of any low-left super: out of YouTube's bottom band (captions, controls), which starts near y 860.
+const LOW = 822;
 function inkX(ctx, text, st, m = MARGIN) { font(ctx, st); return m + ctx.measureText(text.charAt(0)).actualBoundingBoxLeft; }
 
 // ---- motion ----
@@ -160,8 +162,8 @@ const STRIP = document.createElement('canvas'), SLOT = document.createElement('c
 function roll(ctx, a, b, x, y, st, t, t0) {
   // An odometer. Each changing digit rolls up inside its own slot over 7 frames, eased in and out: the old digit and
   // the new one are one slot apart at full opacity, so they never sit on top of each other. The slot is the row's own
-  // height (cap height plus a hair), its edges feathered over 12 % of a cap, and the strip carries a vertical motion
-  // blur that peaks mid-roll, so the change reads as one quick roll (5 frames), not two stacked halves. The two digits are drawn at whole pixels into a strip that is then moved at sub-pixel offsets, so the roll
+  // height (cap height plus a hair), its edges feathered over 12 % of a cap, and the strip carries a true shutter motion
+  // blur (see below), so the change reads as one quick roll (5 frames), not two stacked halves. The two digits are drawn at whole pixels into a strip that is then moved at sub-pixel offsets, so the roll
   // never steps. Unchanged digits never move (tabular figures).
   const L = look(), p = cl((t - t0) / (5 / 24)), r = p * p * (3 - 2 * p), sa = String(a), sb = String(b);
   font(ctx, st); ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
@@ -175,8 +177,13 @@ function roll(ctx, a, b, x, y, st, t, t0) {
     STRIP.width = w; STRIP.height = 2 * h; const g = STRIP.getContext('2d'); font(g, st); g.fillStyle = L.ink; g.textBaseline = 'alphabetic';
     g.fillText(sa[i], pad, cap + lead); g.fillText(sb[i], pad, cap + lead + h);
     SLOT.width = w; SLOT.height = h; const m = SLOT.getContext('2d');
-    const v = Math.sin(Math.PI * r) * 0.035 * h;                    // a vertical motion blur, strongest mid-roll
-    m.globalAlpha = 1 / 3; for (const o of [-v, 0, v]) m.drawImage(STRIP, 0, -h * r + o); m.globalAlpha = 1;
+    // A true motion blur: a 180-degree shutter, i.e. the strip's travel over half a frame (dr per frame is
+    // 6p(1-p)/5 of the row), sampled 16 times and summed additively, so a moving digit is one smooth smear instead of
+    // stacked copies, and a still one stays sharp.
+    const N = 16, d = 0.5 * 6 * p * (1 - p) / 5;
+    m.globalCompositeOperation = 'lighter'; m.globalAlpha = 1 / N;
+    for (let k = 0; k < N; k++) m.drawImage(STRIP, 0, -h * (r + d * (k / (N - 1) - 0.5)));
+    m.globalAlpha = 1;
     m.globalCompositeOperation = 'destination-in';
     const gr = m.createLinearGradient(0, 0, 0, h); const f = 0.12 * cap / h;
     gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(f, 'rgba(0,0,0,1)'); gr.addColorStop(1 - f, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
@@ -216,17 +223,21 @@ function sentenceCard(ctx, t, life) {
 // plate's darkest plain area (checked on the stills).
 const FRAME = document.createElement('canvas');
 const TITLEF = document.createElement('canvas');   // the title block, drawn whole before its drift
-const YES_Y = 0.29 * H + 18;   // YES's baseline: cap top about 117 px (clear of YouTube's top bar), about 47 px above the case handle on the native 2560 bag plates
+const YES_Y = 0.29 * H + 18;
+const BAGX = 0.534 * W;   // the bag pair's centre on both bag plates (case 620-880, duffel 900-1430 at 1920): YES and WHEN? sit over it   // YES's baseline: cap top about 117 px (clear of YouTube's top bar), about 47 px above the case handle on the native 2560 bag plates
 const CAL_X = 110 + 190;   // the calendar's centre: left edge at about 110 px, about 140 px clear of the case
 const MOMENTS = {
   place_2014: (ctx, t) => { const L = look();      // checkin_hall wide, low left
-    reveal(ctx, '2014', inkX(ctx, '2014', L.sup2), 0.80 * H, L.sup2, t, 0.0);
-    reveal(ctx, 'CHINA', inkX(ctx, 'CHINA', L.sup), 0.80 * H + L.sup.size * 1.25 + 34, L.sup, t, 0.35); },
+    const y = LOW - (L.sup.size * 1.25 + 34);                    // CHINA's baseline on LOW
+    reveal(ctx, '2014', inkX(ctx, '2014', L.sup2), y, L.sup2, t, 0.0);
+    reveal(ctx, 'CHINA', inkX(ctx, 'CHINA', L.sup), LOW, L.sup, t, 0.35); },
   yes: (ctx, t) => { const L = look();             // above the two bags (void bags / inspection match), twice
-    if (t < 3.0) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 0.0);
-    else land(ctx, 'YES', 0.5 * W, YES_Y + 12, L.hero, t, 3.0, { from: 1.14, scale: 1.12 }); },   // the second: larger, lower, on a tighter frame
+    if (t < 3.0) land(ctx, 'YES', BAGX, YES_Y, L.hero, t, 0.0);
+    // the second: the same word on a much tighter, darker frame (PLATE.yes: 1.4x on the pair, the light closing hard);
+    // the escalation is the camera's and the light's, so the word keeps its size and stays clear of the top bar
+    else land(ctx, 'YES', 0.5 * W, YES_Y + 12, L.hero, t, 3.0, { from: 1.12 }); },
   yes_when: (ctx, t) => { const L = look();
-    if (t < 0.9) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', 0.5 * W, YES_Y, L.hero, t, 0.9); },
+    if (t < 0.9) land(ctx, 'YES', BAGX, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', BAGX, YES_Y, L.hero, t, 0.9); },
   death_2017: (ctx, t) => sentenceCard(ctx, t, false),   // cold open
   sentence_life: (ctx, t) => sentenceCard(ctx, t, true),  // chapter 6: the same card, then life
   calendar: (ctx, t) => { const L = look();        // ch 5, beside the empty pool: 2014, 2015, 2016, 2017, each held
@@ -277,8 +288,9 @@ const MOMENTS = {
     const a = P.get('a') || 'CHICAGO', b = P.get('b') || '', pre = P.get('pre') || '', pos = P.get('pos') || 'll', t0 = +(P.get('t0') || 0);
     const big = Object.assign({}, L.sup2), fit = +(P.get('fit') || 0);
     if (fit) big.size *= Math.min(1, fit * W / width(ctx, a, big));
-    const tc = pos === 'tc', x = tc ? 0.5 * W : 0.072 * W, y = tc ? +(P.get('y') || 0.16) * H : 0.80 * H;
-    const yb = y + L.sup.size * 1.25 + 34 * big.size / L.sup2.size, align = tc ? 'center' : 'left';
+    const tc = pos === 'tc', x = tc ? 0.5 * W : 0.072 * W, gapB = L.sup.size * 1.25 + 34 * big.size / L.sup2.size;
+    const y = tc ? +(P.get('y') || 0.16) * H : (b ? LOW - gapB : LOW);   // low left: the lowest line's baseline on LOW
+    const yb = y + gapB, align = tc ? 'center' : 'left';
     if (P.get('shade')) {
       const wa = Math.max(width(ctx, a, big), b ? width(ctx, b, L.sup) : 0), gx = tc ? x : x + wa / 2, gy = (y + (b ? yb : y)) / 2 - big.size * 0.3;
       ctx.save(); ctx.translate(gx, gy); ctx.scale(1.7, 1);
@@ -318,10 +330,10 @@ const MOMENTS = {
   date_gene: (ctx, t) => { const L = look();
     // a wider, deeper shade (C38: the blind-light patch on the wall behind the chair competed with the date): an
     // ellipse centred a little right of the line's middle, never a box
-    ctx.save(); ctx.translate(0.24 * W, 0.85 * H); ctx.scale(1.5, 1);
+    ctx.save(); ctx.translate(0.24 * W, LOW - 0.02 * H); ctx.scale(1.5, 1);
     const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.52 * sm(t / 0.5)})`); g.addColorStop(0.55, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
     ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
-    reveal(ctx, 'JANUARY 25, 2026', inkX(ctx, 'JANUARY 25, 2026', L.sup), 0.86 * H, L.sup, t, 0.0); },
+    reveal(ctx, 'JANUARY 25, 2026', inkX(ctx, 'JANUARY 25, 2026', L.sup), LOW, L.sup, t, 0.0); },
 };
 
 // The plate's own move under some moments (the final compositor applies the same numbers to the Blender plate):
@@ -332,7 +344,7 @@ const PLATE = {
   // clears it by about 50 px without rising under YouTube's top bar
   counter: t => ({ z: 1.0, cx: 0.5, cy: 0.48, spot: null }),
   yes: t => t < 3.0 ? { z: 1.0, cx: 0.5, cy: 0.5, spot: null }
-                    : { z: 1.09, cx: 0.5, cy: 0.445, spot: { r: 0.52 - 0.17 * E.out(cl((t - 3.0) / 0.9)), dark: 0.62 } },
+                    : { z: 1.4, cx: 0.534, cy: 0.425, spot: { r: 0.46 - 0.15 * E.out(cl((t - 3.0) / 0.9)), dark: 0.82, cy: 0.67 } },
   // the sentence card's plates: in to 1.2x and held against their left edge (the clamp), so the figure sits right of
   // the card with room
   death_2017: t => ({ z: 1.2, cx: 0.4, cy: 0.5, spot: null }),
@@ -349,7 +361,7 @@ window.draw = (mode, t) => {
     const bx = Math.min(0, Math.max(W - dw, W * 0.5 - dw * cam.cx)), by = Math.min(0, Math.max(H - dh, H * 0.5 - dh * cam.cy));
     ctx.drawImage(bgImg, bx, by, dw, dh);
     if (cam.spot) {                                  // the light closing in: a soft dark surround, never black
-      const g = ctx.createRadialGradient(W / 2, H * 0.58, W * cam.spot.r * 0.55, W / 2, H * 0.58, W * cam.spot.r);
+      const sy = H * (cam.spot.cy || 0.58), g = ctx.createRadialGradient(W / 2, sy, W * cam.spot.r * 0.55, W / 2, sy, W * cam.spot.r);
       g.addColorStop(0, 'rgba(3,4,6,0)'); g.addColorStop(1, `rgba(3,4,6,${cam.spot.dark})`);
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     }
