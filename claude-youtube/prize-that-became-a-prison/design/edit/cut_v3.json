@@ -4,8 +4,8 @@
  "paths": {
   "edl_json": "design/edit/EDL_v3.json",
   "edl_md": "design/edit/EDL_v3.md",
-  "film": "out/film/animatic_v3.mp4",
-  "srt": "out/film/animatic_v3.srt",
+  "film": "out/film/animatic_v3_1.mp4",
+  "srt": "out/film/animatic_v3_1.srt",
   "shots": "out/film/shots_v3",
   "sheets": "out/film/sheets_v3",
   "lines": "audio/vo/scratch_v3/lines.json",
@@ -635,118 +635,145 @@
      "id": "00-02",
      "at": "00.01@0.45",
      "plate": "checkin_hall/scale",
-     "move": "in",
-     "anim": "ANIMATED BEAT: the bags onto the scale (Eevee)"
+     "move": "tilt_up",
+     "anim": "ANIMATED BEAT: the bags onto the scale (Eevee)",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.745
     },
     {
      "id": "00-03",
      "at": "00.02",
      "plate": "checkin_hall/shoulder",
-     "move": "in",
-     "pct": 0.04,
+     "move": "drift",
      "sfx": [
       {
        "name": "sfx_booklet_slide",
        "at": "00.02@0.5"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.204
     },
     {
      "id": "00-04",
      "at": "00.02@0.6",
      "plate": "checkin_hall/shoulder",
-     "zoom": [
-      1.75,
-      1.82
-     ],
      "c": [
       0.43,
       0.74
      ],
-     "angle": "checkin_hall insert: her hand sliding the booklet across the desk (fern's prop insert)"
+     "angle": "checkin_hall insert: her hand sliding the booklet across the desk (fern's prop insert)",
+     "z": 1.75,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-05",
      "at": "00.03",
      "plate": "checkin_hall/wide",
-     "move": "in",
+     "move": "pan_right",
      "type": [
       {
        "mode": "place_2014",
        "t0": 0.1
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-06",
      "at": "00.03@0.45",
      "plate": "checkin_hall/profile",
-     "move": "in"
+     "move": "truck_left",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.812
     },
     {
      "id": "00-06b",
      "at": "00.03@0.75",
      "plate": "departure_gate/wide",
-     "move": "in",
-     "pct": 0.03
+     "move": "truck_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-07",
      "at": "00.04",
      "plate": "departure_gate/window",
-     "move": "in",
-     "pct": 0.03
+     "move": "truck_left",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.23
     },
     {
      "id": "00-08",
      "at": "00.04@0.4",
      "plate": "departure_gate/seated_called",
-     "move": "in",
+     "move": "push_in",
      "sfx": [
       {
        "name": "sfx_tannoy_near",
        "at": "00.04@0.3"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-09",
      "at": "00.05",
      "plate": "inspection_room/enter",
-     "move": "in",
+     "move": "pull_out",
      "sfx": [
       {
        "name": "sfx_door_steel",
        "at": "00.05+0.1"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-10",
      "at": "00.05@0.5",
      "plate": "inspection_room/two_shot_pre",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-11",
      "at": "00.T1",
      "plate": "inspection_room/wide_pre",
-     "move": "in",
-     "card": true
+     "move": "crane_down",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.16
     },
     {
      "id": "00-11b",
      "at": "00.T1@0.3",
      "plate": "inspection_room/tag",
-     "move": "in",
-     "card": true
+     "move": "drift",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.812
     },
     {
      "id": "00-12",
      "at": "00.T1@0.55",
      "plate": "inspection_room/dawn_close",
-     "move": "in",
-     "card": true
+     "move": "drift",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-13",
@@ -759,16 +786,16 @@
      "id": "00-14",
      "at": "00.T2",
      "plate": "inspection_room/two_shot_pre",
-     "zoom": [
-      1.5,
-      1.58
-     ],
      "c": [
       0.66,
       0.42
      ],
      "card": true,
-     "angle": "inspection_room: the officers asking, close (reaction/OTS from behind Dawn)"
+     "angle": "inspection_room: the officers asking, close (reaction/OTS from behind Dawn)",
+     "z": 1.5,
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-14b",
@@ -781,16 +808,17 @@
      "id": "00-14c",
      "at": "00.T2+3.22",
      "plate": "inspection_room/dawn_close",
-     "zoom": [
-      1.45,
-      1.52
-     ],
      "c": [
       0.55,
       0.38
      ],
      "card": true,
-     "angle": "inspection_room: Dawn's face, close (fern's reaction)"
+     "angle": "inspection_room: Dawn's face, close (fern's reaction)",
+     "z": 1.45,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.7
     },
     {
      "id": "00-15",
@@ -804,8 +832,10 @@
      "id": "00-16",
      "at": "00.T2+5.67",
      "plate": "inspection_room/handbags",
-     "move": "in",
-     "card": true
+     "move": "truck_right",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-17",
@@ -824,39 +854,55 @@
      "id": "00-18",
      "at": "00.T2+8.02",
      "plate": "evidence_table/seam",
-     "move": "in",
-     "pct": 0.05,
-     "card": true
+     "move": "push_in",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.795
     },
     {
      "id": "00-18b",
      "at": "00.06",
      "plate": "inspection_room/overhead",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.214
     },
     {
      "id": "00-19",
      "at": "00.07",
      "plate": "void_stage/dawn",
-     "move": "in"
+     "move": "tilt_up",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.7
     },
     {
      "id": "00-19b",
      "at": "00.07@0.55",
      "plate": "void_stage/divide",
-     "move": "in"
+     "move": "pan_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-20",
      "at": "00.08",
      "plate": "hotel_room/overhead_pre",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.129
     },
     {
      "id": "00-21",
      "at": "00.08@0.55",
      "plate": "hongkong_street/window",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.836
     },
     {
      "id": "00-22",
@@ -864,7 +910,7 @@
      "plate": "inspection_room/match",
      "zoom": [
       1.0,
-      1.03
+      1.09
      ]
     },
     {
@@ -877,19 +923,24 @@
      "id": "00-24",
      "at": "00.11",
      "plate": "courtroom/wide",
-     "move": "lock"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.196
     },
     {
      "id": "00-24b",
      "at": "00.11@0.25",
      "plate": "courtroom/bench",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-25",
      "at": "00.11@0.5",
      "plate": "void_stage/dawn_high",
-     "move": "in",
+     "move": "crane_down",
      "type": [
       {
        "mode": "death_2017",
@@ -901,33 +952,40 @@
        "name": "sfx_impact_low",
        "at": "00.11@0.5"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.206
     },
     {
      "id": "00-26",
      "at": "00.12",
      "plate": "void_stage/cell_dawn",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-27",
      "at": "00.13",
      "plate": "prison_exterior/tower",
-     "move": "in"
+     "move": "crane_down",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-28",
      "at": "00.13@0.45",
      "plate": "hearing_room/witness",
-     "zoom": [
-      1.18,
-      1.24
-     ],
      "c": [
       0.5,
       0.36
      ],
-     "angle": "hearing_room witness_match: the Tim statue framed exactly as the official 2026 feed frames him (IN-1), for the match cut"
+     "angle": "hearing_room witness_match: the Tim statue framed exactly as the official 2026 feed frames him (IN-1), for the match cut",
+     "z": 1.18,
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "00-29",
@@ -1053,7 +1111,7 @@
     },
     {
      "id": "01.03",
-     "text": "Her brother describes her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters."
+     "text": "Her brother describes her as intelligent, and trusting. She loved entering sweepstakes with their mother, he told Reuters."
     },
     {
      "id": "01.04",
@@ -1361,8 +1419,7 @@
      "id": "01-02",
      "at": "01.T1@0.48",
      "plate": "chicago_night/wide",
-     "move": "in",
-     "pct": 0.03,
+     "move": "pan_right",
      "card": {
       "ya": 760
      },
@@ -1372,21 +1429,28 @@
        "hash": "n=01&title=It+all+started",
        "t0": 0.0
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-03",
      "at": "01.01",
      "plate": "chicago_night/window",
-     "move": "in"
+     "move": "truck_left",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.425
     },
     {
      "id": "01-04",
      "at": "01.01@0.55",
      "plate": "chicago_night/profile",
-     "move": "in",
+     "move": "drift",
      "parallax": false,
-     "angle": "chicago_night profile_match: Dawn's statue at the glass, her head where it sits in the family photograph, for the match cut"
+     "angle": "chicago_night profile_match: Dawn's statue at the glass, her head where it sits in the family photograph, for the match cut",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-05",
@@ -1420,75 +1484,86 @@
      "id": "01-07",
      "at": "01.02@0.56",
      "plate": "evidence_table/motifs",
-     "move": "in"
+     "move": "pan_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-08",
      "at": "01.02@0.8",
      "plate": "evidence_table/motifs",
-     "zoom": [
-      1.8,
-      1.9
-     ],
      "c": [
       0.36,
       0.42
      ],
-     "angle": "evidence_table motifs insert: the pencils and the fashion sketches, close"
+     "angle": "evidence_table motifs insert: the pencils and the fashion sketches, close",
+     "z": 1.8,
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-09",
      "at": "01.03",
      "plate": "tim_desk/desk",
-     "move": "in"
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.27
     },
     {
      "id": "01-09b",
      "at": "01.03@0.22",
      "plate": "tim_desk/window",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-10",
      "at": "01.03@0.45",
      "plate": "evidence_table/entries",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-11",
      "at": "01.03@0.75",
      "plate": "evidence_table/entries",
-     "zoom": [
-      1.7,
-      1.78
-     ],
      "c": [
       0.45,
       0.52
      ],
-     "angle": "evidence_table entries insert: the entry forms and the pen, close"
+     "angle": "evidence_table entries insert: the entry forms and the pen, close",
+     "z": 1.7,
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-12",
      "at": "01.04",
      "plate": "home/dining_family",
-     "move": "in",
-     "pct": 0.03,
-     "sound": "the domestic tick (Gene's clock) for the first time"
+     "move": "truck_left",
+     "sound": "the domestic tick (Gene's clock) for the first time",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-12b",
      "at": "01.04@0.15",
      "plate": "home/dining_family",
-     "zoom": [
-      1.55,
-      1.6
-     ],
      "c": [
       0.48,
       0.62
      ],
-     "angle": "home dining_family insert: the hands and the plates on the warm table"
+     "angle": "home dining_family insert: the hands and the plates on the warm table",
+     "z": 1.55,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.7
     },
     {
      "id": "01-13",
@@ -1499,34 +1574,37 @@
      "id": "01-14",
      "at": "01.04@0.62",
      "plate": "home/dining_family",
-     "zoom": [
-      1.7,
-      1.78
-     ],
      "c": [
       0.66,
       0.45
      ],
-     "angle": "home dining_family: close on Gene at the head of the table (and a reverse on Tim)"
+     "angle": "home dining_family: close on Gene at the head of the table (and a reverse on Tim)",
+     "z": 1.7,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-15",
      "at": "01.04@0.82",
      "plate": "home/dining_family",
-     "zoom": [
-      1.6,
-      1.66
-     ],
      "c": [
       0.3,
       0.42
-     ]
+     ],
+     "z": 1.6,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.165
     },
     {
      "id": "01-16",
      "at": "01.05",
      "plate": "home/kitchen",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-17",
@@ -1569,8 +1647,10 @@
      "id": "01-18b",
      "at": "01.T2@0.25",
      "plate": "evidence_table/laptop",
-     "move": "in",
-     "card": true
+     "move": "push_in",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-18c",
@@ -1589,9 +1669,11 @@
      "id": "01-20",
      "at": "01.T2+9.90",
      "plate": "home/kitchen_over",
-     "move": "in",
+     "move": "drift",
      "card": true,
-     "anim": "ANIMATED BEAT: the hand typing (Cycles close-up)"
+     "anim": "ANIMATED BEAT: the hand typing (Cycles close-up)",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-21",
@@ -1648,7 +1730,10 @@
      "id": "01-26",
      "at": "01.08",
      "plate": "evidence_table/passport",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.291
     },
     {
      "id": "01-26b",
@@ -1659,25 +1744,32 @@
      "id": "01-27",
      "at": "01.08@0.55",
      "plate": "evidence_table/tickets",
-     "move": "in",
+     "move": "pan_right",
      "sfx": [
       {
        "name": "sfx_boarding_chime",
        "at": "01.08@0.85"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-28",
      "at": "01.09",
      "plate": "aircraft_cabin/window",
-     "move": "in"
+     "move": "truck_left",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-29",
      "at": "01.09@0.55",
      "plate": "aircraft_cabin/over",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.7
     },
     {
      "id": "01-30",
@@ -1688,24 +1780,26 @@
      "id": "01-30b",
      "at": "01.T3+3.74",
      "plate": "hongkong_street/dawn",
-     "zoom": [
-      1.2,
-      1.25
-     ],
      "c": [
       0.55,
       0.5
      ],
      "parallax": false,
      "card": true,
-     "anim": "ANIMATED BEAT: Dawn walking in the Hong Kong rain (hongkong_street)"
+     "anim": "ANIMATED BEAT: Dawn walking in the Hong Kong rain (hongkong_street)",
+     "z": 1.2,
+     "move": "pan_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "01-31",
      "at": "01.T3+4.66",
      "plate": "hongkong_street/wide",
-     "move": "in",
-     "card": true
+     "move": "push_in",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast"
     }
    ]
   },
@@ -2156,7 +2250,7 @@
      "id": "02-01",
      "at": "02.T1",
      "plate": "hongkong_street/dawn",
-     "move": "in",
+     "move": "truck_right",
      "parallax": false,
      "card": true,
      "type": [
@@ -2166,14 +2260,18 @@
        "t0": 0.0
       }
      ],
-     "anim": "ANIMATED BEAT: Dawn walking in the Hong Kong rain"
+     "anim": "ANIMATED BEAT: Dawn walking in the Hong Kong rain",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-02",
      "at": "02.T1@0.5",
      "plate": "hongkong_street/window",
-     "move": "in",
-     "card": true
+     "move": "truck_left",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-02b",
@@ -2186,8 +2284,11 @@
      "id": "02-03",
      "at": "02.T2",
      "plate": "hotel_room/window",
-     "move": "in",
-     "card": true
+     "move": "truck_left",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.833
     },
     {
      "id": "02-04",
@@ -2200,16 +2301,17 @@
      "id": "02-05",
      "at": "02.T3",
      "plate": "aircraft_cabin/window",
-     "zoom": [
-      1.35,
-      1.4
-     ],
      "c": [
       0.62,
       0.42
      ],
      "card": true,
-     "angle": "aircraft_cabin: Dawn at the window, close (a second cabin angle)"
+     "angle": "aircraft_cabin: Dawn at the window, close (a second cabin angle)",
+     "z": 1.35,
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.45
     },
     {
      "id": "02-06",
@@ -2228,34 +2330,36 @@
      "id": "02-08",
      "at": "02.01@0.3",
      "plate": "evidence_table/tickets",
-     "move": "in"
+     "move": "pan_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-09",
      "at": "02.01@0.6",
      "plate": "hongkong_street/wide",
-     "zoom": [
-      1.3,
-      1.36
-     ],
      "c": [
       0.5,
       0.5
-     ]
+     ],
+     "z": 1.3,
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-10",
      "at": "02.01@0.82",
      "plate": "hongkong_street/dawn",
-     "zoom": [
-      1.35,
-      1.4
-     ],
      "c": [
       0.58,
       0.5
      ],
-     "parallax": false
+     "parallax": false,
+     "z": 1.35,
+     "move": "pan_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-11",
@@ -2274,19 +2378,26 @@
      "id": "02-13",
      "at": "02.02",
      "plate": "train/rack",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.7
     },
     {
      "id": "02-14",
      "at": "02.02@0.45",
      "plate": "train/aisle",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-15",
      "at": "02.02@0.82",
      "plate": "inspection_room/empty",
-     "move": "lock"
+     "move": "pull_out",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "02-16",
@@ -2299,16 +2410,21 @@
      "id": "02-16b",
      "at": "02.T5@0.25",
      "plate": "hotel_room/overhead",
-     "move": "in",
-     "card": true
+     "move": "pan_left",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.832
     },
     {
      "id": "02-17",
      "at": "02.T5+3.64",
      "plate": "evidence_table/purses",
-     "move": "in",
-     "pct": 0.04,
-     "card": true
+     "move": "truck_right",
+     "card": true,
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.132
     }
    ]
   },
@@ -2515,7 +2631,7 @@
      "id": "03-01",
      "at": "03.T1",
      "plate": "hotel_room/overhead_pre",
-     "move": "in",
+     "move": "pan_left",
      "card": true,
      "type": [
       {
@@ -2523,28 +2639,34 @@
        "hash": "n=03&title=Trusting+the+organizers",
        "t0": 0.0
       }
-     ]
+     ],
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.87
     },
     {
      "id": "03-02",
      "at": "03.T1@0.5",
      "plate": "hotel_room/pack",
-     "move": "in",
+     "move": "drift",
      "card": true,
-     "angle": "hotel_room accept, re-rendered: Dawn with the tote in her hands; the plate in hand shows the tote mustard (the cognac tote never reads mustard), so the packing plate stands in"
+     "angle": "hotel_room accept, re-rendered: Dawn with the tote in her hands; the plate in hand shows the tote mustard (the cognac tote never reads mustard), so the packing plate stands in",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.185
     },
     {
      "id": "03-03",
      "at": "03.01",
      "plate": "hotel_room/overhead_pre",
-     "zoom": [
-      1.5,
-      1.56
-     ],
      "c": [
       0.55,
       0.45
-     ]
+     ],
+     "z": 1.5,
+     "move": "pan_left",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "03-04",
@@ -2555,46 +2677,55 @@
      "id": "03-04b",
      "at": "03.01@0.5",
      "plate": "leather_market/stall",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "03-05",
      "at": "03.01@0.75",
      "plate": "leather_market/stall",
-     "zoom": [
-      1.5,
-      1.56
-     ],
      "c": [
       0.72,
       0.35
      ],
-     "angle": "leather_market purchase insert: the extra bag and the hands only (the purchase plate shows an organizer's face, which the script rules out)"
+     "angle": "leather_market purchase insert: the extra bag and the hands only (the purchase plate shows an organizer's face, which the script rules out)",
+     "z": 1.5,
+     "move": "truck_left",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.45
     },
     {
      "id": "03-06",
      "at": "03.02",
      "plate": "hotel_room/pack",
-     "move": "in",
+     "move": "drift",
      "sfx": [
       {
        "name": "sfx_zip",
        "at": "03.02@0.2"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "03-07",
      "at": "03.02@0.5",
      "plate": "baggage_belt/overhead",
-     "move": "in",
-     "anim": "ANIMATED BEAT: the bags along the belt"
+     "move": "pan_right",
+     "anim": "ANIMATED BEAT: the bags along the belt",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "03-08",
      "at": "03.03",
      "plate": "checkin_hall/wide",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "03-09",
@@ -2612,8 +2743,10 @@
      "id": "03-10",
      "at": "03.04@0.5",
      "plate": "checkin_hall/shoulder",
-     "move": "in",
-     "pct": 0.04
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.201
     },
     {
      "id": "03-11",
@@ -2637,14 +2770,14 @@
      "id": "03-14",
      "at": "03.06@0.3",
      "plate": "hotel_room/pack",
-     "zoom": [
-      1.4,
-      1.45
-     ],
      "c": [
       0.45,
       0.5
-     ]
+     ],
+     "z": 1.4,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "03-15",
@@ -2697,9 +2830,12 @@
      "id": "03-18",
      "at": "03.T2@0.45",
      "plate": "baggage_belt/curtain",
-     "move": "in",
+     "move": "push_in",
      "card": true,
-     "anim": "ANIMATED BEAT: the bags ride into the dark"
+     "anim": "ANIMATED BEAT: the bags ride into the dark",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.311
     }
    ]
   },
@@ -2819,7 +2955,7 @@
     },
     {
      "id": "04.11",
-     "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
+     "text": "What her brother and the authorities both say: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
     },
     {
      "id": "04.12",
@@ -2831,8 +2967,7 @@
      "id": "04-01",
      "at": "04.T1",
      "plate": "departure_gate/seated_called",
-     "move": "in",
-     "pct": 0.03,
+     "move": "pull_out",
      "card": true,
      "type": [
       {
@@ -2840,31 +2975,40 @@
        "hash": "n=04&title=Yes",
        "t0": 0.0
       }
-     ]
+     ],
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "04-02",
      "at": "04.01",
      "plate": "inspection_room/enter",
-     "move": "in",
+     "move": "push_in",
      "sfx": [
       {
        "name": "sfx_door_steel",
        "at": "04.01+0.05"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "04-03",
      "at": "04.01@0.35",
      "plate": "inspection_room/wide_pre",
-     "move": "in"
+     "move": "crane_down",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.163
     },
     {
      "id": "04-04",
      "at": "04.01@0.7",
      "plate": "inspection_room/two_shot_pre",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "04-05",
@@ -2876,20 +3020,28 @@
      "id": "04-06",
      "at": "04.03",
      "plate": "inspection_room/dawn_close",
-     "move": "in"
+     "move": "drift",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.26
     },
     {
      "id": "04-07",
      "at": "04.03@0.6",
      "plate": "inspection_room/tag",
-     "move": "in"
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.853
     },
     {
      "id": "04-08",
      "at": "04.04",
      "plate": "inspection_room/handbags_touch",
-     "move": "lock",
-     "anim": "ANIMATED BEAT: the officer lifting the tote (Cycles close-up)"
+     "move": "drift",
+     "anim": "ANIMATED BEAT: the officer lifting the tote (Cycles close-up)",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "04-09",
@@ -2900,20 +3052,24 @@
      "id": "04-10",
      "at": "04.06",
      "plate": "inspection_room/empty_ch05",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 5.5,
+     "pace": "fast"
     },
     {
      "id": "04-11",
      "at": "04.06@0.4",
      "plate": "inspection_room/match",
-     "move": "in",
-     "pct": 0.02,
+     "move": "push_in",
      "type": [
       {
        "mode": "yes",
        "at": "04.06@0.52"
       }
-     ]
+     ],
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 0.732
     },
     {
      "id": "04-12",
@@ -2926,15 +3082,20 @@
      "id": "04-13",
      "at": "04.07",
      "plate": "inspection_room/overhead",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.203
     },
     {
      "id": "04-14",
      "at": "04.h4",
      "plate": "detention_corridor/envelope_high",
-     "move": "in",
+     "move": "pan_right",
      "parallax": false,
-     "angle": "evidence_table folder (NEW prop and camera): a plain grey card folder, closed, no text, no seal; the envelope stands in"
+     "angle": "evidence_table folder (NEW prop and camera): a plain grey card folder, closed, no text, no seal; the envelope stands in",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "04-16",
@@ -2950,20 +3111,21 @@
      "id": "04-18",
      "at": "04.11",
      "plate": "inspection_room/empty_ch05",
-     "zoom": [
-      1.3,
-      1.35
-     ],
      "c": [
       0.5,
       0.55
-     ]
+     ],
+     "z": 1.3,
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.856
     },
     {
      "id": "04-18b",
      "at": "04.11@0.32",
      "plate": "detention_corridor/corridor",
-     "move": "in",
+     "move": "truck_right",
      "type": [
       {
        "mode": "place",
@@ -2971,7 +3133,10 @@
        "t0": 0.2
       }
      ],
-     "anim": "ANIMATED BEAT: dust in the corridor light"
+     "anim": "ANIMATED BEAT: dust in the corridor light",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.7
     },
     {
      "id": "04-19",
@@ -2982,20 +3147,24 @@
      "id": "04-20",
      "at": "04.12",
      "plate": "inspection_room/empty",
-     "move": "lock"
+     "move": "pull_out",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "04-21",
      "at": "04.12@0.5",
      "plate": "detention_corridor/door",
-     "move": "in",
+     "move": "push_in",
      "sfx": [
       {
        "name": "sfx_door_far",
        "at": "04.12@0.7"
       }
      ],
-     "anim": "ANIMATED BEAT: the cell door closing"
+     "anim": "ANIMATED BEAT: the cell door closing",
+     "speed": 3.2,
+     "pace": "story"
     }
    ]
   },
@@ -3136,10 +3305,6 @@
      "id": "05-01",
      "at": "05.01",
      "plate": "detention_corridor/door",
-     "zoom": [
-      1.25,
-      1.3
-     ],
      "c": [
       0.5,
       0.5
@@ -3150,13 +3315,20 @@
        "hash": "n=05&title=It+wasn%27t+enough",
        "t0": 0.0
       }
-     ]
+     ],
+     "z": 1.25,
+     "move": "pull_out",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "05-02",
      "at": "05.01@0.55",
      "plate": "detention_corridor/chair",
-     "move": "in"
+     "move": "truck_left",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.155
     },
     {
      "id": "05-03",
@@ -3167,28 +3339,34 @@
      "id": "05-04",
      "at": "05.h2",
      "plate": "void_stage/pool",
-     "move": "in",
-     "parallax": false
+     "move": "tilt_down",
+     "parallax": false,
+     "speed": 2.0,
+     "pace": "hold"
     },
     {
      "id": "05-05",
      "at": "05.03@0.34",
      "plate": "visiting_room/empty",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.748
     },
     {
      "id": "05-06",
      "at": "05.03@0.84",
      "plate": "void_stage/pool",
-     "zoom": [
-      1.3,
-      1.36
-     ],
      "c": [
       0.5,
       0.62
      ],
-     "parallax": false
+     "parallax": false,
+     "z": 1.3,
+     "move": "tilt_down",
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 1.242
     },
     {
      "id": "05-07",
@@ -3200,13 +3378,17 @@
      "id": "05-08",
      "at": "05.04@0.4",
      "plate": "baggage_belt/overhead",
-     "move": "in"
+     "move": "pan_right",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "05-09",
      "at": "05.05",
      "plate": "hongkong_street/wide",
-     "move": "in"
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "05-10",
@@ -3482,7 +3664,7 @@
      "id": "06-01",
      "at": "06.T1",
      "plate": "courtroom/wide",
-     "move": "lock",
+     "move": "push_in",
      "card": true,
      "type": [
       {
@@ -3490,14 +3672,16 @@
        "hash": "n=06&title=Found+guilty",
        "t0": 0.0
       }
-     ]
+     ],
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 1.45
     },
     {
      "id": "06-02",
      "at": "06.T1+4.24",
      "plate": "void_stage/dawn_close",
-     "move": "in",
-     "pct": 0.03,
+     "move": "drift",
      "type": [
       {
        "mode": "death_2017",
@@ -3509,7 +3693,10 @@
        "name": "sfx_impact_low",
        "at": "06.T1+4.34"
       }
-     ]
+     ],
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 0.7
     },
     {
      "id": "06-03",
@@ -3550,8 +3737,10 @@
      "id": "06-05b",
      "at": "06.01",
      "plate": "void_stage/dawn_close",
-     "move": "in",
-     "pct": 0.02
+     "move": "drift",
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 0.7
     },
     {
      "id": "06-06",
@@ -3564,72 +3753,92 @@
      "id": "06-07",
      "at": "06.01@0.92",
      "plate": "courtroom/dock",
-     "move": "in"
+     "move": "push_in",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.153
     },
     {
      "id": "06-08",
      "at": "06.02",
      "plate": "prison_exterior/wall",
-     "move": "in"
+     "move": "truck_left",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.7
     },
     {
      "id": "06-09",
      "at": "06.02@0.5",
      "plate": "prison_exterior/wall",
-     "zoom": [
-      1.4,
-      1.46
-     ],
      "c": [
       0.55,
       0.45
      ],
-     "angle": "prison_exterior: the wall close, the rain on concrete"
+     "angle": "prison_exterior: the wall close, the rain on concrete",
+     "z": 1.4,
+     "move": "truck_right",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.172
     },
     {
      "id": "06-10",
      "at": "06.03",
      "plate": "baggage_belt/belt",
-     "move": "in"
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.448
     },
     {
      "id": "06-10b",
      "at": "06.03@0.55",
      "plate": "baggage_belt/overhead",
-     "zoom": [
-      1.4,
-      1.46
-     ],
      "c": [
       0.4,
       0.45
-     ]
+     ],
+     "z": 1.4,
+     "move": "pan_left",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "06-11",
      "at": "06.04",
      "plate": "courtroom/bench",
-     "move": "in"
+     "move": "pan_right",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "06-12",
      "at": "06.04@0.55",
      "plate": "detention_corridor/envelope_high",
-     "move": "in",
+     "move": "pan_left",
      "parallax": false,
-     "angle": "evidence_table folder (NEW prop and camera), its second use; the envelope stands in"
+     "angle": "evidence_table folder (NEW prop and camera), its second use; the envelope stands in",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "06-13",
      "at": "06.05",
      "plate": "void_stage/dawn_close",
-     "move": "lock"
+     "move": "drift",
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 0.7
     },
     {
      "id": "06-14",
      "at": "06.07",
      "plate": "prison_exterior/tower",
-     "move": "in"
+     "move": "crane_down",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.155
     }
    ]
   },
@@ -4521,34 +4730,44 @@
      "id": "07-01",
      "at": "07.01",
      "plate": "prison_exterior/gate",
-     "move": "in",
+     "move": "crane_up",
      "type": [
       {
        "mode": "chapter",
        "hash": "n=07&title=Locked+up+as+well",
        "t0": 0.0
       }
-     ]
+     ],
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "07-02",
      "at": "07.02",
      "plate": "visiting_room/wide",
-     "move": "in",
-     "note": "Known problem: the visiting room plates still have the short-sleeved top."
+     "move": "pan_right",
+     "note": "Known problem: the visiting room plates still have the short-sleeved top.",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "07-03",
      "at": "07.02@0.5",
      "plate": "visiting_room/glass",
-     "move": "in"
+     "move": "drift",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.872
     },
     {
      "id": "07-04",
      "at": "07.03",
      "plate": "void_stage/cell_floor",
-     "move": "in",
-     "parallax": false
+     "move": "tilt_up",
+     "parallax": false,
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.7
     },
     {
      "id": "07-05",
@@ -4559,14 +4778,18 @@
      "id": "07-05b",
      "at": "07.03@0.5",
      "plate": "void_stage/cell_dawn",
-     "move": "in",
-     "parallax": false
+     "move": "push_in",
+     "parallax": false,
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "07-06",
      "at": "07.03@0.78",
      "plate": "void_stage/cell_close",
-     "move": "in"
+     "move": "pan_left",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "07-07",
@@ -4584,10 +4807,12 @@
      "id": "07-08",
      "at": "07.T1@0.45",
      "plate": "home/dining_gene",
-     "move": "in",
-     "pct": 0.04,
+     "move": "truck_right",
      "card": true,
-     "sound": "the domestic tick"
+     "sound": "the domestic tick",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.397
     },
     {
      "id": "07-09",
@@ -4600,16 +4825,17 @@
      "id": "07-10",
      "at": "07.T2@0.5",
      "plate": "home/dining_gene",
-     "zoom": [
-      1.6,
-      1.68
-     ],
      "c": [
       0.66,
       0.4
      ],
      "card": true,
-     "angle": "home dining_gene: Gene alone in the cold light, a second angle (never close on his face)"
+     "angle": "home dining_gene: Gene alone in the cold light, a second angle (never close on his face)",
+     "z": 1.6,
+     "move": "drift",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.28
     },
     {
      "id": "07-11",
@@ -4622,8 +4848,10 @@
      "id": "07-11b",
      "at": "07.T3@0.3",
      "plate": "home/chair_gene",
-     "move": "lock",
-     "card": true
+     "move": "push_in",
+     "card": true,
+     "speed": 2.0,
+     "pace": "hold"
     },
     {
      "id": "07-12",
@@ -4657,13 +4885,15 @@
      "id": "07-14",
      "at": "07.T4+9.04",
      "plate": "void_stage/pool",
-     "move": "in",
-     "pct": 0.03,
+     "move": "tilt_down",
      "parallax": false,
      "card": {
       "x": 140,
       "ya": 760
-     }
+     },
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 1.45
     },
     {
      "id": "07-15",
@@ -4705,27 +4935,29 @@
      "id": "07-18",
      "at": "07.05",
      "plate": "prison_exterior/gate",
-     "zoom": [
-      1.3,
-      1.36
-     ],
      "c": [
       0.5,
       0.6
-     ]
+     ],
+     "z": 1.3,
+     "move": "crane_down",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.8
     },
     {
      "id": "07-19",
      "at": "07.05@0.6",
      "plate": "evidence_table/passport",
-     "zoom": [
-      1.3,
-      1.36
-     ],
      "c": [
       0.55,
       0.45
-     ]
+     ],
+     "z": 1.3,
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.45
     },
     {
      "id": "07-20",
@@ -4846,8 +5078,7 @@
      "id": "08-01",
      "at": "08.01",
      "plate": "home/dining_gene",
-     "move": "in",
-     "pct": 0.04,
+     "move": "truck_right",
      "type": [
       {
        "mode": "chapter",
@@ -4855,27 +5086,34 @@
        "t0": 0.0
       }
      ],
-     "note": "Gene's photograph (P07) is not in hand: its fallback, home dining_gene."
+     "note": "Gene's photograph (P07) is not in hand: its fallback, home dining_gene.",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.373
     },
     {
      "id": "08-02",
      "at": "08.01@0.4",
      "plate": "home/blinds",
-     "move": "in",
-     "parallax": false
+     "move": "tilt_down",
+     "parallax": false,
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.766
     },
     {
      "id": "08-03",
      "at": "08.01@0.7",
      "plate": "home/chair_gene",
-     "zoom": [
-      1.3,
-      1.36
-     ],
      "c": [
       0.62,
       0.45
-     ]
+     ],
+     "z": 1.3,
+     "move": "drift",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.159
     },
     {
      "id": "08-04",
@@ -4886,15 +5124,20 @@
      "id": "08-05",
      "at": "08.03",
      "plate": "void_stage/dawn_high",
-     "move": "in"
+     "move": "crane_down",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.7
     },
     {
      "id": "08-06",
      "at": "08.R1",
      "plate": "home/chair_gene",
-     "move": "lock",
+     "move": "drift",
      "card": true,
-     "sound": "his room; the domestic tick"
+     "sound": "his room; the domestic tick",
+     "speed": 2.0,
+     "pace": "hold"
     },
     {
      "id": "08-07",
@@ -4920,22 +5163,23 @@
      "id": "08-08",
      "at": "08.R1+7.78",
      "plate": "home/dining_gene",
-     "zoom": [
-      1.45,
-      1.5
-     ],
      "c": [
       0.62,
       0.42
      ],
      "card": true,
-     "deviation": "NBC's report cuts to the photograph of Dawn with an unidentified man (photo 05) at 143.7 s, under 'to me': the film cuts away to Gene's statue at 143.55 s, so that man is never shown as anyone."
+     "deviation": "NBC's report cuts to the photograph of Dawn with an unidentified man (photo 05) at 143.7 s, under 'to me': the film cuts away to Gene's statue at 143.55 s, so that man is never shown as anyone.",
+     "z": 1.45,
+     "move": "drift",
+     "speed": 5.5,
+     "pace": "fast",
+     "gain": 1.316
     },
     {
      "id": "08-09",
      "at": "08.04",
      "plate": "tim_desk/letters",
-     "move": "in",
+     "move": "push_in",
      "type": [
       {
        "mode": "place",
@@ -4948,34 +5192,44 @@
        "name": "sfx_pen_paper",
        "at": "08.04+0.4"
       }
-     ]
+     ],
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.368
     },
     {
      "id": "08-10",
      "at": "08.04@0.45",
      "plate": "tim_desk/desk",
-     "move": "in",
-     "angle": "evidence_table page with H.R. 5491's first page (a U.S. government work: fetch the PDF), both names lit as printed"
+     "move": "drift",
+     "angle": "evidence_table page with H.R. 5491's first page (a U.S. government work: fetch the PDF), both names lit as printed",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.41
     },
     {
      "id": "08-11",
      "at": "08.04@0.75",
      "plate": "tim_desk/window",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "08-12",
      "at": "08.05",
      "plate": "detention_corridor/door",
-     "move": "in",
-     "pct": 0.03
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "08-13",
      "at": "08.06",
      "plate": "home/dining_gene",
-     "move": "in",
-     "pct": 0.03
+     "move": "truck_right",
+     "speed": 2.0,
+     "pace": "hold"
     },
     {
      "id": "08-14",
@@ -4983,7 +5237,7 @@
      "plate": "home/chair_gene",
      "zoom": [
       1.0,
-      1.02
+      1.08
      ],
      "parallax": false
     },
@@ -5004,17 +5258,15 @@
      "id": "08-16",
      "at": "08.07",
      "plate": "void_stage/chair",
-     "move": "in",
-     "pct": 0.03
+     "move": "push_in",
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 0.7
     },
     {
      "id": "08-16b",
      "at": "08.R3",
      "plate": "void_stage/chair",
-     "zoom": [
-      1.12,
-      1.2
-     ],
      "c": [
       0.52,
       0.5
@@ -5022,7 +5274,12 @@
      "card": {
       "maxw": 900
      },
-     "note": "Tim's promise begins while Reuters shows family photographs (one of them photo 05): his voice plays over the empty chair until Reuters cuts to him."
+     "note": "Tim's promise begins while Reuters shows family photographs (one of them photo 05): his voice plays over the empty chair until Reuters cuts to him.",
+     "z": 1.12,
+     "move": "push_in",
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 0.7
     },
     {
      "id": "08-16c",
@@ -5048,14 +5305,16 @@
      "id": "08-17",
      "at": "08.08",
      "plate": "prison_exterior/gate",
-     "move": "in",
+     "move": "crane_down",
      "type": [
       {
        "mode": "place",
        "hash": "a=2026&pre=JULY",
        "at": "08.08@0.2"
       }
-     ]
+     ],
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "08-18",
@@ -5156,7 +5415,7 @@
     },
     {
      "id": "09.10",
-     "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
+     "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family, and the State Department, are still calling for her release on humanitarian grounds."
     },
     {
      "id": "09.R2",
@@ -5240,30 +5499,35 @@
      "id": "09-03",
      "at": "09.03",
      "plate": "visiting_room/reverse",
-     "move": "in",
-     "parallax": false
+     "move": "drift",
+     "parallax": false,
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "09-04",
      "at": "09.03@0.55",
      "plate": "visiting_room/reverse",
-     "zoom": [
-      1.55,
-      1.62
-     ],
      "c": [
       0.42,
       0.42
      ],
      "parallax": false,
-     "angle": "visiting_room: Tim through the glass, close, the handset at his ear (never Dawn's face)"
+     "angle": "visiting_room: Tim through the glass, close, the handset at his ear (never Dawn's face)",
+     "z": 1.55,
+     "move": "drift",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 1.139
     },
     {
      "id": "09-05",
      "at": "09.04",
      "plate": "home/dining",
-     "move": "in",
-     "pct": 0.03
+     "move": "pan_left",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.755
     },
     {
      "id": "09-06",
@@ -5293,7 +5557,9 @@
      "id": "09-07",
      "at": "09.05",
      "plate": "visiting_room/glass",
-     "move": "lock"
+     "move": "drift",
+     "speed": 3.2,
+     "pace": "story"
     },
     {
      "id": "09-08",
@@ -5358,35 +5624,40 @@
      "id": "09-09",
      "at": "09.h2",
      "plate": "visiting_room/empty",
-     "zoom": [
-      1.6,
-      1.64
-     ],
      "c": [
       0.78,
       0.42
      ],
-     "angle": "visiting_room clock (NEW camera on the ticks-only prop): no numerals, the second hand as a black overlay"
+     "angle": "visiting_room clock (NEW camera on the ticks-only prop): no numerals, the second hand as a black overlay",
+     "z": 1.6,
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.7
     },
     {
      "id": "09-10",
      "at": "09.07",
      "plate": "visiting_room/empty",
-     "move": "in"
+     "move": "truck_right",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.812
     },
     {
      "id": "09-11",
      "at": "09.07@0.7",
      "plate": "visiting_room/empty",
-     "zoom": [
-      1.9,
-      1.95
-     ],
      "c": [
       0.8,
       0.45
      ],
-     "angle": "visiting_room insert: the handset on its hook"
+     "angle": "visiting_room insert: the handset on its hook",
+     "z": 1.9,
+     "move": "push_in",
+     "speed": 3.2,
+     "pace": "story",
+     "gain": 0.7
     },
     {
      "id": "09-12",
@@ -5414,7 +5685,7 @@
      "plate": "inspection_room/match",
      "zoom": [
       1.0,
-      1.035
+      1.14
      ],
      "type": [
       {
@@ -5519,7 +5790,7 @@
      "id": "09-20",
      "at": "09.h4",
      "plate": "void_stage/bags",
-     "move": "lock",
+     "move": "push_in",
      "type": [
       {
        "mode": "yes_when",
@@ -5527,7 +5798,10 @@
        "tin": 3.0
       }
      ],
-     "row": "WHEN? held; the end screen sits beside the bags"
+     "row": "WHEN? held; the end screen sits beside the bags",
+     "speed": 2.0,
+     "pace": "hold",
+     "gain": 0.7
     }
    ]
   }
@@ -5722,6 +5996,8 @@
   ]
  },
  "changes": [
+  "v3.1 camera (28 Nov 2026, the author: 'the blender scene is still an image without the camera tilting'): every 3D shot has a `move` chosen by its content (push_in, pull_out, pan, tilt, truck, pedestal, crane, drift) and a `speed` in % of the frame's width a second as shot_motion.py measures it (`pace`: fast 5.5 in the first three minutes and the fast montages, story 3.2, hold 2.0 on the verdict, Gene's death and the empty chair), planned by tools/assemble.py plan_move on the depth parallax, eased with no stall; neighbouring shots go opposite ways. The match-cut sources keep a plain push carried over the cut.",
+  "v3.1 narration (28 Nov 2026, new sources): 1:24 'She loved entering sweepstakes with their mother, he told Reuters.'; 5:17 'What her brother and the authorities both say: ...'; 13:13 'As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family, and the State Department, are still calling for her release on humanitarian grounds.' Re-voiced with Kokoro am_michael at their chapters' speeds and ASR-checked.",
   "v3.1 (28 Nov 2026): the 2024 lines are read by the narrator as quotes (see the fallbacks); Tim's promise from the Reuters report (IN-16) plays at 11:10 after 'He never saw Dawn come home.' and 1.5 s of silence, over the empty chair until Reuters cuts to him, then on him in a medium close-up. Every changed slot moved the rest of the film by whole frames, so unchanged shots kept their renders.",
   "Third pass (28 Nov 2026, the author's outside review) applied: 2:00 is one line ('His written statement calls the prize cash.') over the lit page, and the cut goes straight back to the ticket; the spoken 'Even.' is cut and the lit word holds 1.6 s in silence; 4:57-5:21 is one explanation named as unresolved (a 0.6 s beat on the folder, then Australia against Qingdao on his page, 'He doesn't know why. Neither do we.'); 'We won't recreate it.' is cut; Gene's death is the date alone, without the 494 days; the airport line is tightened; the relay line is cut, so Tim's ending comes about 11 s sooner and nothing follows him but YES turning to WHEN?.",
   "Real media inside the cut, not only in its slots: S1 (Tim's 2024 written statement) is lit on the evidence table wherever the narration says 'Tim wrote' or 'he said' of something he wrote (the passport and ticket, the Baiyun market, the fee, the denial, the doctors' findings, the work, the fire), so the documents carry their own share of the runtime.",

@@ -281,48 +281,64 @@ def anchor_time(a, segs):
 MOVES = ("push_in", "pull_out", "pan_left", "pan_right", "tilt_up", "tilt_down", "truck_left", "truck_right",
          "pedestal_up", "pedestal_down", "crane_down", "crane_up", "drift")
 CORNER = 0.574        # a corner's distance from the centre of a 16:9 frame, in frame widths (a zoom moves it by dz x this)
+MOVE_GAIN = {("push", True): 0.69, ("drift", True): 0.69, ("pull", True): 0.79, ("pan", True): 1.18, ("pan", False): 1.14,
+             ("tilt", True): 1.3, ("tilt", False): 1.39, ("truck", True): 1.39, ("pedestal", True): 1.3, ("crane", True): 1.04}
 
 
 def plan_move(s, dur, has_depth):
     """A 3D shot's 2.5D camera, from its `move` (MOVES) and `speed` (how far the frame's corners travel, in % of its width
-    a second: fern's 3D shots median 3.2 %/s), over its length. Every move carries a little push so nothing reads as a
-    still; it starts from at least `z` (default 1.10) so no move shows an edge, and plans its travel inside the plate.
-    Returns {zoom, centre, centre1, slide (output px at the nearest layer), drift, ease, move, speed}."""
+    a second, as shot_motion.py measures it: fern's 3D shots median 3.2 %/s), over its length. Every move carries some
+    push so nothing reads as a still. It starts from at least `z` (default 1.10) so no move shows an edge; a pan or a
+    tilt plans its travel inside the plate (never clamped mid-move, so it never stalls), up to a start zoom of 1.32, and
+    what the plate has no room for goes to the push. A truck, a pedestal or a crane is a pan or a tilt of the frame plus
+    a depth slide (near layers travel further); a pull-out halves the depth push (k 0.5) so the near layers keep inside.
+    Returns {zoom, centre, centre1, slide (output px at the nearest layer), k, drift, ease, move, speed}."""
     move, speed = s.get("move", "push_in"), max(1.2, float(s["speed"]))
-    D = speed / 100.0 * dur                                # corner travel over the shot, in frame widths
+    kind = move.split("_")[0]
+    if kind in ("truck", "pedestal", "crane") and not has_depth:
+        kind = "pan" if kind == "truck" else "tilt"
+    # what shot_motion.py reads of each kind of move, measured on this film's plates (sampled frames, 28 Nov 2026): a
+    # push on the depth layers reads faster than its frame's corners (the near layers lead), a pan or a truck slower
+    gain = MOVE_GAIN.get((kind, has_depth), 1.0) * s.get("gain", 1.0)
+    D = speed / 100.0 * dur * gain                         # corner travel over the shot, in frame widths
     zb = max(1.10, s.get("z", 1.10))
     cx, cy = s.get("c", [0.5, 0.5])
-    lnz = lambda share: share * D / CORNER                 # a push carrying `share` of the travel
     out = {"move": move, "speed": round(speed, 2), "ease": True}
     if move in ("push_in", "pull_out", "drift"):
-        z0, z1 = zb, zb * math.exp(lnz(1.0))
-        if move == "pull_out":
-            z0, z1 = z1, z0
+        r = math.exp(D / CORNER)
         c0 = c1 = [cx, cy]
+        if move == "pull_out":
+            if has_depth:                                  # the near layers shrink faster: keep them inside the plate
+                out["k"] = 0.5
+                zb = max(zb, 1.02 / (1 + 0.5 * (1 / r - 1)))
+            z0, z1 = zb * r, zb
+        else:
+            z0, z1 = zb, zb * r
         if move == "drift":
             out["drift"] = {"amp": 0.0015, "seed": zlib_seed(s["id"])}
     else:
-        horiz = move.split("_")[0] in ("pan", "truck")
+        horiz = kind in ("pan", "truck")
         sign = 1 if move.endswith(("_right", "_down")) else -1
-        kind = move.split("_")[0]
-        if kind in ("truck", "pedestal", "crane") and not has_depth:
-            kind = "pan" if horiz else "tilt"           # no depth map: the move is a pan or a tilt
-        share = {"pan": 0.75, "tilt": 0.6, "truck": 0.4, "pedestal": 0.4, "crane": 0.45}[kind]
-        P = share * D                                     # the centre's travel, in frame widths
-        span = P if horiz else P * 16 / 9                 # ... in frame widths or heights
-        z0 = max(zb, 1 + span + 0.04)
-        z1 = z0 * math.exp(lnz(1 - share if kind in ("pan", "tilt") else 0.25))
-        d = span / z0                                     # in plate fractions
+        share = {"pan": 0.8, "tilt": 0.7, "truck": 0.5, "pedestal": 0.45, "crane": 0.55}[kind]
+        span = share * D * (1 if horiz else 16 / 9)       # the frame's travel, in frame widths (or heights)
+        z0 = min(max(zb, 1 + span + 0.04), max(zb, 1.32))
+        d = min(span / z0, 1 - 1 / z0 - 0.012)           # ... in plate fractions, inside the plate
+        P = d * z0 * (1 if horiz else 9 / 16)            # what the frame really travels, in frame widths
+        S = 0.0
+        if kind in ("truck", "pedestal", "crane"):         # the parallax slide: the nearest layer's extra travel
+            S = min(0.45 * D, 0.06 if horiz else 0.05 * 9 / 16)
+            out["slide"] = [round(-sign * S * W, 1), 0] if horiz else [0, round(-sign * S * W, 1)]
+        rem = max(0.15 * D, D - P - 0.5 * S)
+        z1 = z0 * math.exp(rem / CORNER)
         h = 0.5 / z0
-        if horiz:
-            a, b = min(max(cx - sign * d / 2, h), 1 - h), min(max(cx + sign * d / 2, h), 1 - h)
-            c0, c1 = [a, cy], [b, cy]
-        else:
-            a, b = min(max(cy - sign * d / 2, h), 1 - h), min(max(cy + sign * d / 2, h), 1 - h)
-            c0, c1 = [cx, a], [cx, b]
-        if kind in ("truck", "pedestal", "crane"):          # the parallax slide: near layers travel, far ones less
-            sl = (0.75 - share) * D * W if kind != "crane" else 0.4 * D * W
-            out["slide"] = [round(-sign * sl, 1), 0] if horiz else [0, round(-sign * sl * (1 if kind != "crane" else -1), 1)]
+        mid = (cx if horiz else cy)
+        lo = min(max(mid - d / 2, h), 1 - h - d)
+        a, b = (lo, lo + d) if sign > 0 else (lo + d, lo)
+        c0, c1 = ([a, cy], [b, cy]) if horiz else ([cx, a], [cx, b])
+    zcap = max(1.8, zb * 1.25)                              # a long move stops pushing at 1.8 (or a quarter past an insert)
+    if max(z0, z1) > zcap:
+        r = zcap / max(z0, z1)
+        z0, z1 = (z0 * r, z1) if z0 > z1 else (z0, z1 * r)
     out["zoom"] = [round(z0, 5), round(z1, 5)]
     out["centre"] = [round(c0[0], 4), round(c0[1], 4)]
     if c1 != c0:
@@ -418,8 +434,8 @@ def time_cmd(args):
                 src.update({k: mv[k] for k in ("centre1", "ease", "drift", "move", "speed") if k in mv})
                 src["push"] = f"{mv['move']} at {mv['speed']:.1f} % of the frame a second (eased)"
             par = s.get("parallax", par_default)
-            if "speed" in s and "slide" in mv and par is not False and par is not None:
-                par = {**(par if isinstance(par, dict) else {}), "slide": mv["slide"]}
+            if "speed" in s and "continue" not in s and "zoom" not in s and par:
+                par = {**(par if isinstance(par, dict) else {}), **{k: mv[k] for k in ("slide", "k") if k in mv}}
             if par and s["id"] not in matched and not (ROOT / f"out/depth/{stage}/{cam}.png").exists():
                 warnings.append(f"{s['id']}: no depth map for {stage}/{cam} (a plate published after the depth pass): a flat push")
                 par = None
@@ -1205,7 +1221,7 @@ def ease_move(u):
     return 0.8 * u + 0.2 * u * u * (3 - 2 * u)
 
 
-def plate_frames(path, n, z0, z1, cx, cy, parallax=None, image=None, centre1=None, ease=False, drift=None):
+def plate_frames(path, n, z0, z1, cx, cy, parallax=None, image=None, centre1=None, ease=False, drift=None, only=None):
     """gfx/montage.py plate_shot's move, frame by frame (the same constant speed in log space, the same clamp so no
     edge is ever pulled in, the same cubic resampling), warped in 8 bits so the grade, the type and the encode can run
     in one ffmpeg pass instead of three.
@@ -1219,7 +1235,7 @@ def plate_frames(path, n, z0, z1, cx, cy, parallax=None, image=None, centre1=Non
     Animatic v3's camera (all off by default, so v2's shots are unchanged): `centre1` moves the crop's centre from
     (cx, cy) to it over the shot (a pan or a tilt; with a slide, a truck, a pedestal or a crane); `ease` runs every part
     of the move on ease_move; `drift` ({"amp": fraction of the frame width, "seed"}) adds a slow handheld float: two
-    sines under 0.5 Hz, no jitter, eased in and out."""
+    sines under 0.5 Hz, no jitter, eased in and out. `only` yields just those frame numbers (to measure a move)."""
     import cv2
     import numpy as np
     img = cv2.cvtColor(cv2.imread(str(image or (ROOT / "frames/raw" / (path + ".png"))), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
@@ -1235,7 +1251,7 @@ def plate_frames(path, n, z0, z1, cx, cy, parallax=None, image=None, centre1=Non
     if drift:
         rs = np.random.RandomState(drift.get("seed", 0))
         ph1, ph2, ph3, ph4 = rs.rand(4) * 2 * np.pi
-    for i in range(n):
+    for i in (range(n) if only is None else only):
         u = i / max(1, n - 1)
         if ease:
             u = ease_move(u)
@@ -1249,7 +1265,7 @@ def plate_frames(path, n, z0, z1, cx, cy, parallax=None, image=None, centre1=Non
             a = drift["amp"] * W * env / s
             ox += a * (0.65 * np.sin(2 * np.pi * 0.17 * t + ph1) + 0.35 * np.sin(2 * np.pi * 0.41 * t + ph2)) / pw
             oy += a * (0.65 * np.sin(2 * np.pi * 0.13 * t + ph3) + 0.35 * np.sin(2 * np.pi * 0.37 * t + ph4)) / ph
-        x = min(max(ox * pw, hx), pw - hx); y = min(max(oy * ph, hy), ph - hy)
+        x = float(min(max(ox * pw, hx), pw - hx)); y = float(min(max(oy * ph, hy), ph - hy))
         if not parallax:
             M = np.float32([[s, 0, W / 2 - s * x], [0, s, H / 2 - s * y]])
             yield cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE).tobytes()

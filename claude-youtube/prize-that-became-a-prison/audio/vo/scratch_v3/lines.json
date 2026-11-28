@@ -194,14 +194,16 @@
  {
   "chapter": "01",
   "index": 3,
-  "text": "Her brother describes her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters.",
+  "text": "Her brother describes her as intelligent, and trusting. She loved entering sweepstakes with their mother, he told Reuters.",
   "file": "01_03.wav",
-  "duration": 7.522,
+  "duration": 7.685,
   "pause_after": 0.35,
-  "words": 19,
+  "words": 18,
   "speed": 1.0,
   "voice": "am_michael",
-  "phonemes": "hˌɜɹ bɹˈʌðəɹ dəskɹˈIbz hɜɹ æz ɪntˈɛləʤᵊnt, ænd tɹˈʌstɪŋ. ʃˌi ænd ðɛɹ mˈʌðəɹ lˈIkt tʊ ˈɛntəɹ swˈipstˌAks, hi tˈOld ɹˈYTəɹz."
+  "phonemes": "hˌɜɹ bɹˈʌðəɹ dəskɹˈIbz hɜɹ æz ɪntˈɛləʤᵊnt, ænd tɹˈʌstɪŋ. ʃˌi lˈʌvd ˈɛntəɹɪŋ swˈipstˌAks wɪð ðɛɹ mˈʌðəɹ, hi tˈOld ɹˈYTəɹz.",
+  "note": "v3.1: new wording from new sources. duration_s is its slot: the take rounded up so that every later cut moves by whole frames (+4 frames)",
+  "duration_s": 7.688667
  },
  {
   "chapter": "01",
@@ -509,14 +511,16 @@
  {
   "chapter": "04",
   "index": 11,
-  "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
+  "text": "What her brother and the authorities both say: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
   "file": "04_11.wav",
-  "duration": 10.06,
+  "duration": 11.269,
   "pause_after": 0.35,
-  "words": 28,
+  "words": 31,
   "speed": 1.0,
   "voice": "am_michael",
-  "phonemes": "“ˌI dˈOnt nˈO ðə ɹˈizᵊn fɔɹ ðɪs dəskɹˈɛpənsi.” nˈiðəɹ dˈu wi."
+  "phonemes": "wˌʌt hɜɹ bɹˈʌðəɹ ænd ði əθˈɔɹəTiz bˈOθ sˈA: dɹˈʌɡz wɜɹ fˈWnd ɪn lˈʌɡɪʤ ʃi hæd ʧˈɛkt. ʃˌi wʌz əɹˈɛstᵻd ænd ʧˈɑɹʤd wɪð smˈʌɡᵊlɪŋ, ɐ ʧˈɑɹʤ hɜɹ bɹˈʌðəɹ sˈɛz ʃi vˈiəməntli dənˈIz.",
+  "note": "v3.1: new wording from new sources. duration_s is its slot: the take rounded up so that every later cut moves by whole frames (+30 frames)",
+  "duration_s": 11.31
  },
  {
   "chapter": "04",
@@ -941,13 +945,15 @@
  {
   "chapter": "09",
   "index": 10,
-  "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.",
+  "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family, and the State Department, are still calling for her release on humanitarian grounds.",
   "file": "09_10.wav",
-  "duration": 12.264,
+  "duration": 14.227,
   "pause_after": 0.35,
-  "words": 24,
+  "words": 28,
   "speed": 0.81,
   "voice": "am_michael",
-  "phonemes": "hˌɜɹ jˈɛs. hˌɜɹ lˈɛTəɹ. hˌɜɹ kwˈɛsʧᵊn. ˈɛvəɹi wˈɜɹd ʌv dˈɔnz ɪn ðɪs fˈɪlm hæz ɹˈiʧt ju ðə sˈAm wˈA: θɹu hɜɹ fˈæmᵊli."
+  "phonemes": "ˌæz ʌv nOvˈɛmbəɹ twˈɛnti twˈɛnti sˈɪks, dˈɔn mɪʃˈɛl hˈʌnt ɪz stˈɪl ɪn pɹˈɪzᵊn ɪn ʧˈInə. hˌɜɹ fˈæmᵊli, ænd ðə stˈAt dəpˈɑɹtmənt, ɑɹ stˈɪl kˈɔlɪŋ fɔɹ hɜɹ ɹəlˈis ˌɔn hjumˌænətˈɛɹiən ɡɹˈWndz.",
+  "note": "v3.1: new wording from new sources. duration_s is its slot: the take rounded up so that every later cut moves by whole frames (+48 frames)",
+  "duration_s": 14.264
  }
 ]
