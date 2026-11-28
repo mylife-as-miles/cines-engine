@@ -303,7 +303,7 @@ def main():
     draft = draft or cs_path.endswith('cues_draft.json')
     cs = normalise(json.load(open(cs_path))); plan = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
     M = json.load(open(os.path.join(ROOT, 'audio', 'sound_map.json'))); MX = M['mix']
-    T = float(cs['total']); N = int(round(T * SR)); missing = set(); report = {'cuesheet': os.path.relpath(cs_path, ROOT), 'draft': draft}
+    T = float(cs['total']); N = int(round(T * SR)); missing = set(); report = {'cuesheet': os.path.relpath(cs_path, ROOT), 'draft': draft, 'total': T}
     os.makedirs(os.path.join(OUT, 'stems'), exist_ok=True)
 
     # ---------------- 1. voice ----------------

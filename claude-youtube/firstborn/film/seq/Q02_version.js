@@ -53,14 +53,14 @@
     shots: [
       { at: T.start, name: 'the life path: milestones along a winding road; the grown hero walks onto it', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06, x: 700, y: 760 },
         draw(c) {
-          const t = c.t; STAGE.lifePath(c, { lit: 5 });
+          const t = c.t; STAGE.lifePath(c, { progress: 0.12 + 0.88 * seg(t, T.start, T.start + 2.6) });
           const u = lerp(0, 0.13, ease.inOutSine(seg(t, T.start + 0.3, T.stay))), p = STAGE.pathAt(c, u), wk = walk(t, T.start + 0.3, T.stay, 0, 1, { s: 1 });
           c.fig('hero', { x: p.x, y: p.y + 10, s: p.s, face: 1, pose: wk.moving ? 'walk' : 'stand', walk: (t - T.start) * 1.6, expr: 'happy' });
           STAGE.chapterCard(c, T.start + 0.25, T.start + 2.15, 'VERSION 1.0', { x: 1260, y: 190 });
         } },
       { at: T.stay, name: 'on the path: he turns to us; "call you": his phone rings', push: { from: 1, to: 1.08, x: 960, y: 420 },
         draw(c) {
-          const t = c.t, p = STAGE.pathAt(c, 0.13); c.camera({ x: p.x + 80, y: p.y - 230, zoom: 2.2 }); STAGE.lifePath(c, { lit: 5 });
+          const t = c.t; STAGE.lifePath(c, {}); const p = STAGE.pathAt(c, 0.13); c.camera({ x: p.x + 60, y: p.y - 330 * p.s, zoom: 2.0 }); STAGE.lifePath(c, {});
           const ring = t > T.call - 0.1; const h = c.fig('hero', { x: p.x, y: p.y + 10, s: p.s, face: 1, pose: ring ? 'hold_phone' : 'stand', mode: 'front', expr: ring ? 'surprised' : 'happy', turn: ring ? 0.2 : 0, look: ring ? [0.4, 0.6] : [0, 0] });
           if (ring) { const hn = ART.hand('hero', h); c.prop('buzz', { x: hn.x, y: hn.y - 10, rx: 40, t }); STAGE.notify(c, hn.x + 60, hn.y - 120, T.call, 'call', { s: 0.8, bg: '#77CC81' }); }
         } },
