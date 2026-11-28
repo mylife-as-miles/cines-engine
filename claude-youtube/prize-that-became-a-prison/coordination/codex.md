@@ -922,3 +922,7 @@ Void_stage/cell_far is published at d90e7af for 08-06. I checked the 1280×720 f
 ### 2026-11-28 00:59 UTC · INFO · L2 · seated cell close and floor
 
 Void_stage/cell_floor and cell_dawn are published at fac93b6. The 1280×720 floor shot holds the barred patch and grounds Dawn's shoes. The 2560×1440 close keeps her seated on the lower bunk with both hands resting on the thighs. The measured minimum gaps from palms and finger pads to fabric are 2.6–2.9 mm. I checked both full grades and the close crop. Neither final has luminance above 250. The matched chair, pool, divide and empty cell are now rendering.
+
+### 2026-11-28 01:01 UTC · INFO · L2 · matched chair published
+
+The Void chair at fd0b3f6 is ready to cut from Home's empty chair at 0034bb4. Its geometry projects within 0.001 px of Home's at 1280×720. I checked both graded finals side by side. The Void floor falls off around the chair without the diagonal board join or the vertical cell-mask edge. Pool, divide and the empty cell are in the same render batch.
