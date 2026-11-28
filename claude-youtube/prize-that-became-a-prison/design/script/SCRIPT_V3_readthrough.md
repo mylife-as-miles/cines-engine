@@ -57,7 +57,7 @@ A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by
 
 **1:17** NARRATOR: Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and travel.
 
-**1:24** NARRATOR: Her brother describes her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters.
+**1:24** NARRATOR: Her brother describes her as intelligent, and trusting. She loved entering sweepstakes with their mother, he told Reuters.
 
 **1:32** NARRATOR: She came from a family of Chicago police officers. Her father, Gene, served thirty-two years. Tim served twenty-eight. Their mother and three uncles had been officers too, the commission was told.
 
@@ -153,7 +153,7 @@ A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by
 
 **5:13** NARRATOR: He doesn't know why. Neither do we.
 
-**5:17** NARRATOR: What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.
+**5:17** NARRATOR: What her brother and the authorities both say: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.
 
 **5:32** NARRATOR: The trip ended in that room. The case was only beginning.
 
@@ -257,6 +257,8 @@ A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by
 
 **11:10** TIM HUNT (real recording): "My dad passed in January and I promised him that I was going to bring her home. And I want to keep that promise to him so he can rest in peace."
 
+**↳ if IN-16 is not licensed** NARRATOR: "I made a promise to him to bring her home," he told the New York Post that May.
+
 **11:24** NARRATOR: That July, though he had told the commission it wouldn't be advisable, Tim went back.
 
 **11:31** TIM HUNT (real recording): "I visited her two years ago and I was shocked two years ago. And I visited her a couple months ago and I'm even more shocked."
@@ -293,7 +295,7 @@ A plain read-through of `SCRIPT_V3.md`: only what the audience hears, chapter by
 
 **12:56** NARRATOR: Now she's the one asking. And no one has given her a date.
 
-**13:13** NARRATOR: As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.
+**13:13** NARRATOR: As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family, and the State Department, are still calling for her release on humanitarian grounds.
 
 **13:24** TIM HUNT (real recording): "There are no happy stories I can tell you about reunification. There is no story about our father caring for my sister after she came home. There is no story about Dawn rebuilding her life. There is no story about Dawn getting better and moving forward because she is not home. It has been 12 years. 12 years."
 
