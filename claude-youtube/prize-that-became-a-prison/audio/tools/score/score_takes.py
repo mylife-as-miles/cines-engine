@@ -27,6 +27,9 @@ TAKES = {
     'G2': {'take': 'G2_t1', 'transpose_cents': 200, 'pulse_bpm': 76.0, 'why_key': 'C2 -> D2 (the title chord in D minor, the plan)'},
     'G3': {'take': 'G3_t1'}, 'G4': {'take': 'G4_t1'}, 'G5': {'take': 'G5_t1'}, 'G8': {'take': 'G8_t1'},
     'G9': {'take': 'G9_t1'}, 'G10': {'take': 'G10_t1'}, 'G11': {'take': 'G11_t1'},
+    'G7': {'take': 'G7_t1'},   # optional, for SC04b (G8's opening pulses at 76 bpm: not sparse enough)
+    # G12 (optional, the last note): neither take is one A (t1 a melody in E-flat, t2 a piece in C): not used;
+    # SC09c takes a lone A2 from G11 instead (score_window.py).
 }
 
 
