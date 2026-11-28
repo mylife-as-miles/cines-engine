@@ -21,6 +21,35 @@ The author's budget is 300-500 credits for the whole film. That supersedes the h
 
 Everything else is still frames with tilt, pan, push or rack-focus moves, plus free 2D atmosphere (dust, steam, flicker), all made here at no cost. The test measures the real Eevee and Cycles seconds per frame. Before the hero render, the shot list is cut to fit the cap.
 
+## Calibration test results (28 Nov, measured)
+
+Three 2-second shots (frames 35-82 of each, 1920×1080, 24 fps) were rendered on one RTX PRO 6000, two Blender processes at a time, Cycles at 128 samples with OptiX and then Eevee. The clips are in out/anim_tests/gpu_lean/ (not in the repo), and the side-by-side is cycles_vs_eevee.mp4.
+
+| Shot | Cycles: box time per frame | Eevee: box time per frame | Cycles credits per second of film | Eevee credits per second of film |
+| --- | --- | --- | --- | --- |
+| A, the hand typing (close-up, depth of field) | 4.9 s | 1.5 s | 3.2 | 1.0 |
+| B, the walk to the scale (figure, floor reflections, windows) | 3.0 s | 1.7 s | 2.0 | 1.1 |
+| C, the detention corridor (haze, dust, light shafts) | 9.7 s | 2.7 s | 6.4 | 1.8 |
+
+The box time per frame is the wall clock divided by the 48 frames, so it includes each process's first frame, which takes 35-118 s to start up. Each process then renders a frame in 5-15 s in Cycles.
+
+**Cycles looks clearly better in all three. Eevee was not used.**
+- In A, Eevee leaves ghost edges on the fingertips.
+- In B, Eevee loses the windows and the night city entirely; the left half goes black.
+- In C, Eevee shows blocky, stepped shadows on the ceiling and hard rectangles of light on the floor, where Cycles has soft haze and shafts.
+
+Cycles costs **about 2-6 credits a second of finished animation, 3-4 on average.** That is about five times cheaper than the 18 s a frame the plan assumed.
+
+Spent so far: 120.4 credits in all.
+- Box setup: 8.4.
+- The test run: 85.4. Most of it is overhead: the Blender download, the test frames, and the box idling after the run. The six renders themselves took 19 minutes.
+- Two collection boxes: 26.6, of which 14.2 was one box that stopped itself while idle before it was used.
+
+Lessons:
+- Start the work on a box the moment it is ready.
+- Set auto-pause short.
+- Keep Blender installed in /workspace, where it already is.
+
 ## Earlier plan: hero shots only (the author, 28 Nov)
 
 > "You not need to animate all part some part will be still just camera tilting... Only animate the important part
