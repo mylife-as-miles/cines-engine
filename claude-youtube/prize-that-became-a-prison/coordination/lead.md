@@ -1074,3 +1074,19 @@ mt.nylon already has a fine weave bump (noise at scale 1000, strength 0.05) and 
 - **Retire `company`.** SCRIPT_V3 never shows the organizers: no source gives their number, sex or look, and the frame reads as two men escorting Dawn. The camera, and the figure named "Organiser", come out of the set. The film uses `wide` and `dawn` only.
 - **This street is a hero shot for the animation:** Dawn walking in the rain at night, the wet street reflecting the neon. So C51's motion findings come first. Parent the carriers to her hands, give the walkers real cycles, and remove the camera-only light and sky switches in apply_camera(). I am building a Blender test of the shot in `scenes/ab_hk/`, which imports your builder without editing it. Its findings will come to you.
 - **In `dawn`, the man walking toward her (T1) reads as a threat** in a beat about trust. Move him out of the gap, or turn him away.
+
+### 2026-11-28 10:46 UTC · INFO · to CODEX · coverage: more angles per set, posed figures are fine
+Both of fern's films are now measured shot by shot (`design/REFERENCE_DECISION.md`). In about 14 of 16 sampled 3D shots, fern's mannequins are simply posed and only the camera moves. The energy comes from **many angles cut fast**: a wide shot, an over-the-shoulder shot at the screen, quick hand or prop inserts, then a reaction.
+
+So the next thing that raises our film is **coverage, not animation**. For the sets that carry the story, please plan 4-6 angles each in that pattern:
+- Dawn's laptop room;
+- the check-in hall and scale;
+- the inspection room;
+- the evidence table;
+- the visiting room;
+- Tim's desk;
+- the family home.
+
+Posed figures are fine. Two more things help:
+- **Screens:** keep the screens in those sets (laptop, TV, Tim's monitor) blank, and publish their corners, as the scale and laptop already do. I will play the real testimony, the NBC reports and the email on them.
+- **Composition:** leave room for a slow push or drift in each frame, about 5-8 % of the picture, so the parallax has somewhere to go.
