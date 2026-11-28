@@ -49,7 +49,7 @@ The reference animatic's register is warm, playful and music-box. Every take use
 
 ## Effects
 
-Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 12–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13, the shutter at −12. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 15:32 (fix round 2) has 136 cues (25 pops, 28 whooshes, 8 card lands, 13 stamps: 4 YES, 9 NO); 131 play.
+Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 12–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13, the shutter at −12. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 15:56 (fix round 3) has 136 cues (25 pops, 28 whooshes, 8 card lands, 13 stamps: 4 YES, 9 NO); 131 play.
 
 | Sound | Source |
 |---|---|
@@ -57,7 +57,7 @@ Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the n
 | stamp (the red NO) | One Too Many's rubber stamp (CC0) over a soft synthetic thump |
 | stamp_yes (a stamp cue whose `p.kind` is `yes`, or that is spoken on "yes" or the cold open's "say") | One Too Many's shorter stamp (CC0), a light thump and a small C7 ping: brighter (centroid 2.5 kHz against 2.0) and friendlier, 2 dB softer |
 | card_land ×3 (cycled) | One Too Many's card slaps (CC0), trimmed and lightened; 23 dB under the voice |
-| shout_no | Synthesised: a cartoon boing, a whoosh outward, and a thud 0.42 s in (in the pause after the narrator's "no") |
+| shout_no | Synthesised: a tight 0.58 s comic hit (a whoosh outward, a thud at 0.15 s, a cartoon boing over it). It is the hook's punchline, so it plays near the voice's level (−3 dB re voice, peak −7.9 dBFS). It is started where the narrator's "no" ends (`after_speech`), filling the 0.65 s pause (11.05–11.65 s) before "So". earshot hears it as 97% "a cartoon boing", and the spoken "no" stays 96% clear |
 | pile_topple | Stable Audio 3.0 Small SFX (earshot: strong, "a stack of papers falling over") |
 | footsteps, step_1–4 | One Too Many's wood-floor steps (CC0). The cue's `n` and `gap` lay the steps |
 | door, run, typing, camera_shutter, plate_slide | Stable Audio 3.0 Small SFX, generated locally. `typing` is stretched to the cue's `n` taps |
@@ -88,8 +88,10 @@ Three fails are accepted, and the ear should decide (see below):
 | Loudness range | 4.1 LU |
 | Voice | High-pass at 70 Hz; gentle 2:1 compression (at most 4 dB); about −14 LUFS in the mix |
 | Master | +1.67 dB of gain; a look-ahead true-peak limiter (4× oversampled) doing at most 2.2 dB; the same gain curve applied to the stems, so they sum to the mix |
-| Music under the voice | Median 15.0 dB under (3 s windows); main and closing beds about 14.5–15 dB under, the hush about 18, the lift about 18 (integrated) |
-| End screen | Music at −18.1 LUFS, about 4 LU under the speech, then the final chord dies away |
+| Stereo | The voice is centred. The music beds stay stereo as Lyria made them; nothing is summed. Their side is raised up to 3 dB where they are already well correlated, and narrowed where a passage opposes (T5's wide last chord). The effects are placed toward their source on screen from the cue's `x` (at most ±0.3); this cue sheet carries no `x` yet, so they are centred |
+| Mono compatibility | Mix L/R correlation 0.98 (lowest audible 400 ms window +0.12); music 0.72 (lowest +0.00, so no phase opposition). Mono downmix: −14.02 LUFS against −14.0 stereo. The end screen loses 1.4 dB in mono (a wide bed), with no cancellation |
+| Music under the voice | Median 14.7 dB under (3 s windows); main and closing beds about 14.5 dB under, the hush about 18, the lift about 17.5 (integrated) |
+| End screen | Music at −17.5 LUFS, about 3.5 LU under the speech, then the final chord dies away |
 
 - **Ducking.** Speech regions come from the narration's own envelope, with pauses under 1.2 s merged so the music does not pump between sentences. Inside them, the music is held about 12 dB under the voice (15 dB for the lift), ridden down only, with a 0.35 s attack and a 0.9 s release. The music's level is read as the louder of its 1 s and 3 s loudness, so a bed that enters at full level after a stop-down is ducked at once. Where no one speaks (the stop-down, the end screen), the bed plays at its own level. Under the voice, the music also takes a 3 dB presence dip at 2.5 kHz.
 - **Sample peaks are held** at −1.5 dBFS before the encode.
@@ -100,7 +102,7 @@ Three fails are accepted, and the ear should decide (see below):
 |---|---|---|
 | Whole hook, 0–16 s | 92% | 5% |
 | Montage, 2–7 s | 91% | 6% |
-| NO! burst and topple, 10–13 s | 82% | 17% |
+| NO! burst and topple, 10–13 s | 74% | 25% |
 | "yes, yes, yes", 7–10.5 s | 76% | 24% |
 | The question, 11.5–16 s | 76% | 23% |
 | Cards, 0–4 s | 69% | 30% |
@@ -118,9 +120,9 @@ The lift sections, held 3 dB deeper since the first mix:
 
 | Lift window | "drowning a voice" | Music re voice | 1–4 kHz music re voice |
 |---|---|---|---|
-| Q06, 117–130.8 s | 10% | −18.1 dB | −20.6 dB |
-| Q10, 176.5–187.5 s | 8% | −18.0 dB | −17.2 dB |
-| Q10 after the freeze, 190–198.4 s | 9% | −17.8 dB | −18.4 dB |
+| Q06, 117–130.8 s | 12% | −17.5 dB | −19.7 dB |
+| Q10, 176.5–187.5 s | 9% | −17.6 dB | −16.5 dB |
+| Q10 after the freeze, 190–198.4 s | 8% | −17.3 dB | −17.5 dB |
 | Busiest 8 s windows: Friday's stop-down into the run (112.5–120 s) and Q10 179–187 s | 27% and 27–33% (it varies between runs) | | |
 
 The busiest windows were 29–33% before the change.
