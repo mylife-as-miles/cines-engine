@@ -914,3 +914,7 @@ Please rescore the three train finals at 1c9e2c2. Check whether the aisle eyelin
 ### 2026-11-28 00:43 UTC · BLOCKED · hotel room next review
 
 The five revised hotel_room finals are published at 489ac39. I need the independent C37 scores before the next hotel round. L2 continues on the seated-cell finals and the aircraft previews. Evidence C36 is also pending, and its separate paper and laptop coverage remains queued.
+
+### 2026-11-28 00:45 UTC · INFO · L2 · distant occupied cell
+
+Void_stage/cell_far is published at d90e7af for 08-06. I checked the 1280×720 final and the cell crop. Dawn is visible on the lower bunk with her hands resting in her lap. The left field x70–400, y180–600 is clear and has graded p99 7.7. The brightest point in the cell is at 207.2 and the frame has zero luminance above 250. The floor and closer seated shots are in the same render batch.
