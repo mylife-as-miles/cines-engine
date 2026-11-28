@@ -408,8 +408,27 @@
     const [tx, ty, ta, tl, tc] = sh.t, TB = [tx, ty], TM = along(TB, ta, tl * 0.55);
     return (handCache[name] = { fingers, thumb: [TB, TM, along(TM, ta - tc * 1.2, tl * 0.5)] });
   }
+  // 'thumb' is drawn upright in body space whatever the forearm does: a fist with the knuckles toward the viewer, the curled
+  // fingers stacked on the outer side, the thumb pointing straight up off the top (ref 04). Facing -1 mirrors it, up stays up.
+  function drawThumbsUp(F, Wr, a, s) {
+    const g = F.g, lw = F.lw * 0.9, k = (s || 1) * HAND_K * 1.3, d = dir(a), sx = d[0] >= 0 ? 1 : -1;   // drawn big, as the ref does
+    g.save(); g.translate(Wr[0] + d[0] * 15 * k, Wr[1] + d[1] * 15 * k); g.scale(sx * k, k);
+    const fist = new Path2D();   // outer (+x) edge scalloped by the four curled fingers
+    fist.moveTo(-16, -16); fist.quadraticCurveTo(-21, -15, -21, -6); fist.lineTo(-20, 12); fist.quadraticCurveTo(-19, 21, -9, 21);
+    fist.lineTo(10, 21); [[15, 9], [15, -1], [15, -10], [14, -18]].forEach(([x, y], i) => fist.arc(x, y + 0.5, 5.6 - (i === 3 ? 0.6 : 0), PI / 2, -PI / 2, true));
+    fist.lineTo(8, -23); fist.quadraticCurveTo(-4, -24, -16, -16); fist.closePath();
+    const th = [[-9, -12], [-8, -30], [-5, -40]];
+    g.strokeStyle = INK; g.lineWidth = lw * 2 / k; g.stroke(fist);
+    g.lineWidth = 12.5 + 2 * lw / k; g.stroke(P(th, false));
+    g.fillStyle = F.skinC; g.fill(fist); g.strokeStyle = F.skinC; g.lineWidth = 12.5; g.stroke(P(th, false));
+    g.lineWidth = F.ld * 0.8 / k; g.strokeStyle = INK;
+    [4.5, -5, -14].forEach(y => g.stroke(P([[17, y], [5, y + 0.5]], false)));          // the gaps between the curled fingers
+    g.stroke(P([[-2, -19], [-1, -9], [5, -4]], false));                                    // the thumb's base crease over the index
+    g.restore();
+  }
   function drawHand(F, Wr, a, shape, flip, s) {
     if (!shape || shape === 'pocket' || shape === 'none') return;
+    if (shape === 'thumb') return drawThumbsUp(F, Wr, a, s);
     const g = F.g, pr = handParts(shape), lw = F.lw * 0.9;
     const k = (s || 1) * HAND_K;
     g.save(); g.translate(Wr[0], Wr[1]); g.rotate(-a); g.scale((flip || 1) * k, k);
@@ -557,7 +576,7 @@
       armL: { a: -0.16, e: -1.62, fl: 0.62, hand: 'open', flip: -1, hrot: -0.2 }, armR: { a: 0.16, e: 1.62, fl: 0.62, hand: 'open', flip: 1, hrot: 0.2 } }, STAND_LEGS),
     hands_clasped: o => Object.assign({ stance: 'front', head: { tilt: 0.05 },
       armL: { ik: [-6, 22], bend: 1, hand: 'flat', flip: 1, hrot: 0.2 }, armR: { ik: [8, 30], bend: -1, hand: 'clasp', flip: -1, hrot: -0.5 } }, { legL: { a: -0.005, k: 0 }, legR: { a: 0.005, k: 0 } }),
-    thumbs_up: o => Object.assign({ stance: 'front', armL: STAND_ARML, armR: { a: 0.55, e: 2.15, hand: 'thumb', flip: -1 } }, STAND_LEGS),
+    thumbs_up: o => Object.assign({ stance: 'front', armL: STAND_ARML, armR: { ik: [168, -156], bend: 1, ul: 0.92, fl: 0.82, hand: 'thumb', flip: -1 } }, STAND_LEGS),
     hand_mouth: o => Object.assign({ stance: 'front', armL: { ik: [-2, -268], bend: 1, ul: 0.6, hand: 'flat', flip: -1, hrot: 0.15 }, armR: STAND_ARMR }, STAND_LEGS),
     hold_phone: o => Object.assign({ stance: 'front', armL: STAND_ARML }, STAND_LEGS, phoneArms(o.mode || 'ear')),
     // a run: long strides, a flight phase, arms pumping with bent elbows, leaning in (the reference animatic's 0:26)
@@ -612,6 +631,7 @@
   }
   const HOLD_ARMS = {
     peace: () => ({ armR: { a: 2.05, e: 0.85, hand: 'peace', flip: 1, hrot: -0.1, hs: 1.05 } }),   // V sign raised beside the head, palm out
+    thumbs_up: () => ({ armR: { ik: [168, -156], bend: 1, ul: 0.92, fl: 0.82, hand: 'thumb', flip: -1 } }),
   };
   const armsOnly = p => { const o = {}; ['armL', 'armR', 'prop', 'head'].forEach(k => { if (p[k]) o[k] = p[k]; }); return o; };
   // the arms a held prop takes over (merged after the pose, so `holding` works with walk, run, stand, sit, sit_sofa...)
@@ -622,6 +642,7 @@
     phone: (p, o) => p.prop && p.prop.k === 'phone' ? {} : phoneArms((o && (o.phoneMode || (o.pose !== 'hold_phone' && o.mode))) || 'front'),
     phone_ear: p => phoneArms('ear'), phone_front: p => phoneArms('front'), phone_show: p => phoneArms('show'), phone_out: p => phoneArms('out'),
     peace: p => HOLD_ARMS.peace(),
+    thumbs_up: p => HOLD_ARMS.thumbs_up(),
     // the cup held in front of the chest by the near hand, handle toward the hand, the cup itself clear of the fingers (ref 03)
     mug: p => ({ armL: { ik: [-18, -100], bend: 1, fl: 0.58, hand: 'fist', flip: -1, hrot: -0.25, hs: 0.95 }, prop: { k: 'mug', hand: 'L', along: 0, off: [48, -26], s: 1.25, steam: 0.15, handle: -1, over: true } }),
     // raised to the mouth by the far hand, elbow out to the side, forearm up (ref 07)

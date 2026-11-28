@@ -113,6 +113,12 @@
   "how": "Stable Audio 3.0 Small SFX take plate_sa (0.2-1.3 s), finished (onset trim, fade): prompt \"a ceramic plate pushed and sliding across a wooden table, short scrape, close, quiet room\", seed 73",
   "dur_s": 0.874
  },
+ "pile_topple": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take pile_sa (0.3-2.4 s), finished (onset trim, fade): prompt \"a tall stack of paper sheets and cards toppling over and sliding onto a wooden desk, papers fluttering, close, quiet room\", seed 81",
+  "dur_s": 1.856
+ },
  "step_1": {
   "source": "otm/step1 (as footsteps)",
   "licence": "CC0",
@@ -202,5 +208,35 @@
   "licence": "made for this video (no licence needed)",
   "how": "a round blip falling A5 -> D5 in 80 ms",
   "dur_s": 0.16
+ },
+ "card_land_1": {
+  "source": "otm/card_slap1: \"Cards Sounds\" by uEffects, https://freesound.org/people/uEffects/sounds/208790/",
+  "licence": "CC0",
+  "how": "One Too Many's card_slap1, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+  "dur_s": 0.22
+ },
+ "card_land_2": {
+  "source": "otm/card_slap2: \"Cards Sounds\" by uEffects, https://freesound.org/people/uEffects/sounds/208790/",
+  "licence": "CC0",
+  "how": "One Too Many's card_slap2, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+  "dur_s": 0.22
+ },
+ "card_land_3": {
+  "source": "otm/card_slap3: \"Cards Sounds\" by uEffects, https://freesound.org/people/uEffects/sounds/208790/",
+  "licence": "CC0",
+  "how": "One Too Many's card_slap3, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+  "dur_s": 0.22
+ },
+ "stamp_yes": {
+  "source": "otm/stamp2: \"Stamp\" by kermite607, https://freesound.org/people/kermite607/sounds/362624/",
+  "licence": "CC0",
+  "how": "One Too Many's stamp2 (high-passed at 200 Hz), a light 230->150 Hz thump and a small C7 glass ping",
+  "dur_s": 0.45
+ },
+ "shout_no": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a 220 Hz cartoon boing (a 9 Hz spring wobble), a whoosh outward (400 Hz-2.6 kHz) and a low thud at 0.42 s",
+  "dur_s": 0.95
  }
 }

@@ -119,7 +119,15 @@
   "stamp": {
    "file": "stamp",
    "rel_db": -13,
-   "align": "peak"
+   "align": "peak",
+   "variants": [
+    {
+     "if_kind": "yes",
+     "if_word": "^(yes|say)$",
+     "file": "stamp_yes",
+     "rel_db": -15
+    }
+   ]
   },
   "camera_shutter": {
    "file": "camera_shutter",
@@ -255,14 +263,35 @@
   },
   "shrug": null,
   "flash": null,
-  "sip": null
+  "sip": null,
+  "card_land": {
+   "cycle": [
+    "card_land_1",
+    "card_land_2",
+    "card_land_3"
+   ],
+   "rel_db": -23,
+   "align": "peak"
+  },
+  "shout_no": {
+   "file": "shout_no",
+   "rel_db": -14,
+   "align": "start"
+  },
+  "pile_topple": {
+   "file": "pile_topple",
+   "rel_db": -17,
+   "align": "start"
+  }
  },
  "cues_why": {
   "shrug": "silent: the shrug is a picture gag, the narration lands it",
   "flash": "silent: the camera_shutter at the same moment is the sound of the flash",
   "sip": "silent: mouth sounds under the narrator's voice read badly",
   "blink, twitch": "a tiny pop, 25 dB under the voice: felt more than heard",
-  "freeze": "the pause is a button press (a soft click) and the music's stop (the cue sheet's silence); a synthesised tape-stop read as an explosion or a door"
+  "freeze": "the pause is a button press (a soft click) and the music's stop (the cue sheet's silence); a synthesised tape-stop read as an explosion or a door",
+  "stamp": "the red NO stamp is the rubber stamp over a low thump; a YES stamp (the cue's p.kind 'yes', or a stamp spoken on 'yes' or the cold open's 'say') is stamp_yes, brighter and friendlier, 2 dB softer",
+  "card_land": "eight request cards land under the opening line: light, 23 dB under the voice"
  },
  "aliases": {
   "buzz": "phone_buzz",

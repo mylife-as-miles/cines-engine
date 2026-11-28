@@ -169,7 +169,7 @@ def normalise(cs):
     g = lambda d, a, b: d[a] if a in d else d[b]
     return {'total': float(cs['total']), 'seqs': cs['seqs'],
             'beds': [{'name': b['name'], 'seq': b['seq'], 't0': float(g(b, 't0g', 't0')), 't1': float(g(b, 't1g', 't1')), 'p': b.get('p') or {}} for b in cs['beds']],
-            'cues': [{'name': c['name'], 'seq': c['seq'], 't': float(g(c, 'tg', 't')), 'p': c.get('p') or {}} for c in cs['cues']],
+            'cues': [{'name': c['name'], 'seq': c['seq'], 't': float(g(c, 'tg', 't')), 'p': c.get('p') or {}, 'word': c.get('word') or ''} for c in cs['cues']],
             'silences': [{'t0': float(g(x, 't0g', 't0')), 't1': float(g(x, 't1g', 't1'))} for x in cs.get('silences', [])],
             'ducks': [{'t0': float(g(x, 't0g', 't0')), 't1': float(g(x, 't1g', 't1')), 'level': x['level']} for x in cs.get('ducks', [])]}
 
@@ -355,6 +355,10 @@ def main():
         if e is None: continue
         if c['t'] - last.get(name, -9) < MX['same_cue_min_gap_s']: dropped.append([c['name'], c['t']]); continue
         last[name] = c['t']; k = occ[name] = occ.get(name, -1) + 1; p = c.get('p', {}) or {}
+        wd = re.sub(r"[^a-z0-9']", '', c.get('word', '').lower())
+        for var in e.get('variants', []):                                      # e.g. a YES stamp rather than the red NO
+            if (var.get('if_kind') and p.get('kind') == var['if_kind']) or (var.get('if_word') and re.match(var['if_word'], wd)):
+                e = dict(e, **{kk: vv for kk, vv in var.items() if not kk.startswith('if_')}); e.pop('cycle', None) if 'file' in var else None; break
         if 'steps' in e:                                                        # n steps at the cue's own gap
             nst, gap = int(p.get('n', e['n'])), float(p.get('gap', e['gap'])); parts = []
             for j in range(nst):

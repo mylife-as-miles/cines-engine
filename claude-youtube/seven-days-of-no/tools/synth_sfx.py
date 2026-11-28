@@ -38,6 +38,10 @@ grow            a sprout growing: three quick round plucks rising (C5, E5, G5) w
 click           a soft button click: a small clean tick with a low body
 dim             a light going down: a soft round blip falling a fifth (A5 -> D5)
 plate_slide     a Stable Audio take of a plate pushed across a table
+card_land_1..3  a light card slap as a request card lands on the pile: One Too Many's card slaps (CC0), trimmed and lightened
+stamp_yes       the YES stamp, brighter and friendlier than the red NO: the shorter rubber stamp (CC0), a light thump, a small C7 ping
+shout_no        the red "NO!" bursting out of the hero: a cartoon boing, a whoosh outward and a thud after the spoken "no"
+pile_topple     a Stable Audio take of a stack of papers toppling onto a desk
 
 Every pick was ranked with earshot against its description and alternatives (audio/sfx/check.json; the variants that
 lost are listed in audio/README.md). The chosen Stable Audio takes (tools/sfx_gen.py, audio/gen_plan.json) are kept
@@ -56,7 +60,8 @@ OTM = os.path.normpath(os.path.join(ROOT, '..', '..', 'claude-film', 'one-too-ma
 GEN = os.path.join(ROOT, 'audio', 'gen')
 T = lambda d: np.arange(int(d * SR)) / SR
 TAKES = {'door': ('door_b', 1.15, 3.0, False), 'run': ('run_a', 0.0, 1.6, False), 'typing': ('typing_sa', 0.25, 2.1, True),
-         'camera_shutter': ('shutter_sa', 0.47, 1.3, True), 'plate_slide': ('plate_sa', 0.2, 1.3, False)}   # name: (audio/gen take, from s, to s, gate its hiss)
+         'camera_shutter': ('shutter_sa', 0.47, 1.3, True), 'plate_slide': ('plate_sa', 0.2, 1.3, False),
+         'pile_topple': ('pile_sa', 0.3, 2.4, False)}   # name: (audio/gen take, from s, to s, gate its hiss)
 NOTE = {'C5': 523.25, 'E5': 659.26, 'G5': 783.99, 'A5': 880.0, 'C6': 1046.50, 'D6': 1174.66, 'E6': 1318.51, 'G6': 1567.98,
         'C7': 2093.00, 'E7': 2637.02}
 
@@ -300,6 +305,30 @@ def main():
     W('click', fade(x, 0.0003, 0.005), 'a 2.4 kHz tick over a 260 Hz body, 40 ms')
     # dim: a falling blip
     y, _ = glide(880, 587.33, 0.16, 0.08, 14); W('dim', fade(y, 0.002, 0.04), 'a round blip falling A5 -> D5 in 80 ms')
+
+
+    # ---- fix round 2: the request cards, the YES stamp, the shouted NO ----
+    def onset_trim(x, keep):
+        a = np.abs(x); i = int(np.argmax(a > a.max() * 0.1)); s0 = max(0, i - int(0.003 * SR)); return fade(x[s0:s0 + int(keep * SR)], 0.001, 0.04)
+    for i in (1, 2, 3):
+        W(f'card_land_{i}', hp(lp(onset_trim(otm(f'card_slap{i}'), 0.22), 7000), 150),
+          f"One Too Many's card_slap{i}, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+          f'otm/card_slap{i}: "Cards Sounds" by uEffects, https://freesound.org/people/uEffects/sounds/208790/', 'CC0')
+    # stamp_yes (ranked over a woodblock-tok version: this one reads more as a stamp, less as a bell)
+    t = T(0.45); s2 = otm('stamp2'); s2 = s2 / np.max(np.abs(s2))
+    th = np.sin(2 * np.pi * np.cumsum(150 + 80 * np.exp(-t / 0.01)) / SR) * np.exp(-30 * t) * 0.4
+    x = np.zeros(int(0.45 * SR)); place(x, hp(s2, 200), 0.0); place(x, th, 0.003); place(x, glass(NOTE['C7'], 0.35, 10) * 0.18, 0.012)
+    W('stamp_yes', fade(x, 0.0005, 0.06), "One Too Many's stamp2 (high-passed at 200 Hz), a light 230->150 Hz thump and a small C7 glass ping",
+      'otm/stamp2: "Stamp" by kermite607, https://freesound.org/people/kermite607/sounds/362624/', 'CC0')
+    # shout_no: boing + whoosh + thud; the thud lands 0.42 s in, after the narrator's "no"
+    def boing(f0, d, wob=9, depth=0.25):
+        t = T(d); f = f0 * (1 + 0.6 * np.exp(-t / 0.04)) * (1 + depth * np.exp(-t / 0.25) * np.sin(2 * np.pi * wob * t))
+        ph = 2 * np.pi * np.cumsum(f) / SR; return (np.sin(ph) + 0.3 * np.sin(2 * ph)) * np.exp(-4.5 * t) * np.minimum(1, t / 0.006)
+    t = T(0.4)
+    thud = np.sin(2 * np.pi * np.cumsum(60 + 90 * np.exp(-t / 0.02)) / SR) * np.exp(-12 * t) + 0.3 * bp(rng(5).standard_normal(len(t)), 200, 1500) * np.exp(-t / 0.015)
+    x = np.zeros(int(0.95 * SR)); place(x, boing(220, 0.7), 0.0, 0.8)
+    place(x, swept_air(0.4, [400, 1200, 2600, 1500], 1.7, 93, 0.8) * 0.7, 0.04); place(x, thud * 1.2, 0.42)
+    W('shout_no', fade(x, 0.002, 0.1), 'a 220 Hz cartoon boing (a 9 Hz spring wobble), a whoosh outward (400 Hz-2.6 kHz) and a low thud at 0.42 s')
 
     json.dump(plan, open(os.path.join(OUT, 'plan.json'), 'w'), indent=1)
     print('wrote', ', '.join(f"{k} ({v['dur_s']} s)" for k, v in plan.items()))
