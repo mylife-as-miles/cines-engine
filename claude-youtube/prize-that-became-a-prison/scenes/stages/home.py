@@ -734,7 +734,7 @@ def family_member(name, chair, age, height, weight, tone):
     holder.location.z += dz
     bpy.context.view_layer.update()
     rig = rigged.rig_of(holder)
-    glass_point = None
+    cup_point = None
     for side, k in ((1, "L"), (-1, "R")):
         shoulder = rig.matrix_world @ rig.pose.bones[f"upper_arm_fk.{k}"].head
         bone = rig.pose.bones[f"upper_arm_fk.{k}"]
@@ -751,9 +751,9 @@ def family_member(name, chair, age, height, weight, tone):
             _, wrist_point, tip = arm_to(holder, side, elbow, wrist, hand_pitch=0.0, palm_tilt=85.0)
             forward = (tip - wrist_point).xy.normalized()
             inward = Vector((-forward.y, forward.x))
-            # The raised glass clears the left hand from the dining camera.
-            xy = wrist_point.xy + forward * 0.064 + inward * 0.031 + Vector((0.025, 0.025))
-            glass_point = Vector((*xy, st.D_TOP + lift))
+            # Centre the cup between the opposing thumb and finger pads.
+            xy = wrist_point.xy + forward * 0.064 + inward * 0.031 + Vector((0.025, 0.024))
+            cup_point = Vector((*xy, st.D_TOP + lift))
             continue
         if older and k == "L":
             rigged.articulate_hand(holder, k, {"f_index": (14, 16, 10), "f_middle": (18, 18, 12),
@@ -774,18 +774,20 @@ def family_member(name, chair, age, height, weight, tone):
             joints = ({"f_index": (2, 3, 2), "f_middle": (3, 4, 2), "f_ring": (4, 5, 3), "f_pinky": (4, 6, 4)}
                       if tim else {"f_index": (4, 6, 3), "f_middle": (5, 7, 4),
                                    "f_ring": (6, 8, 5), "f_pinky": (7, 10, 6)})
+        if tim:
+            joints["thumb"] = (40, 22, 10, -12)
         rigged.articulate_hand(holder, k, joints)
         rest_hand_on_top(holder, side, k, elbow, wrist, st.D_TOP, gap=0.001,
-                         pitch_limit=8.0 if tim else 25.0 if reach else 16.0,
-                         palm_tilt=5.0 if tim else PALM_TILT)
+                         pitch_limit=25.0 if tim or reach else 16.0,
+                         palm_tilt=32.0 if tim else PALM_TILT)
     holder.rotation_euler.z = math.radians(turn + 90.0)
     rotation = holder.rotation_euler.to_matrix()
     shift = rotation @ Vector((hip.x, hip.y + (0 if tim else 0.01) - seat_rear, 0.0))
     holder.location.x, holder.location.y = x - shift.x, y - shift.y
-    if glass_point is not None:
-        glass = bpy.data.objects["d_glass_tim"]
-        glass.location.xy = holder.location.xy + (rotation @ glass_point).xy
-        glass.location.z = glass_point.z
+    if cup_point is not None:
+        cup = bpy.data.objects["d_cup_tim"]
+        cup.location.xy = holder.location.xy + (rotation @ cup_point).xy
+        cup.location.z = cup_point.z
     bpy.context.view_layer.update()
     return holder
 

@@ -1086,14 +1086,18 @@ def dining_service():
         box("d_napkin_" + name, (0.115, 0.085, 0.008), (*napkin_place, D_TOP + 0.004), napkin,
             bevel=0.003, rot=(0, 0, math.radians(cloth_turn)), parent=dinner)
     lathe("d_glass_gene", tumbler, (3.22, -0.247, D_TOP), glass).parent = dinner
-    held = lathe("d_glass_tim", tumbler, (3.03, 0.16, D_TOP), glass)
+    cup = mt.ceramic("cream glazed cup", (0.44, 0.35, 0.23), rough=0.42, speck=0.22)
+    cup_profile = [(0.0, 0.004), (0.022, 0.004), (0.026, 0.0), (0.028, 0.0), (0.029, 0.005),
+                   (0.033, 0.087), (0.034, 0.113), (0.037, 0.134), (0.036, 0.139), (0.033, 0.139),
+                   (0.032, 0.135), (0.031, 0.109), (0.026, 0.014), (0.022, 0.008), (0.0, 0.008)]
+    held = lathe("d_cup_tim", cup_profile, (3.03, 0.16, D_TOP), cup)
     held.parent = dinner
-    drink = mt.pbr("tea in raised tumbler", (0.44, 0.23, 0.10), rough=(0.09, 0.09), cvar=0.0)
+    drink = mt.pbr("tea in raised cup", (0.44, 0.23, 0.10), rough=(0.09, 0.09), cvar=0.0)
     shader = drink.node_tree.nodes["Principled BSDF"]
     shader.inputs["Transmission Weight"].default_value = 1.0
     shader.inputs["IOR"].default_value = 1.33
-    liquid = [(0, 0.009), (0.024, 0.009), (0.027, 0.055), (0.026, 0.057), (0, 0.056)]
-    lathe("d_glass_tim_tea", liquid, (0, 0, 0), drink).parent = held
+    liquid = [(0, 0.009), (0.024, 0.009), (0.029, 0.081), (0.028, 0.083), (0, 0.082)]
+    lathe("d_cup_tim_tea", liquid, (0, 0, 0), drink).parent = held
     serving = [(0.0, 0.001), (0.086, 0.001), (0.092, 0.007), (0.113, 0.024), (0.132, 0.041),
                (0.133, 0.044), (0.129, 0.047), (0.119, 0.042), (0.095, 0.015), (0.0, 0.011)]
     lid = [(0.0, 0.047), (0.126, 0.047), (0.126, 0.051), (0.115, 0.055), (0.085, 0.074),
