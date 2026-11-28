@@ -235,6 +235,7 @@ def materials():
         pull=mt.satin_metal("drawer pull brass", (0.23, 0.16, 0.075), 0.42),
         paper=mt.paper("letter paper", (0.72, 0.63, 0.48), 0.86, 0.05, 0.04, translucency=0.2, edge_tone=(0.216, 0.279)),
         paper2=mt.paper("letter paper 2", (0.70, 0.64, 0.51), 0.86, 0.05, 0.06, edge_tone=(0.216, 0.279)),
+        folded=mt.folded_letter("unfolded reply", 0.216, 0.279),
         ruled=mt.ruled("ruled sheet", 0.215, 0.274, rgb=(0.71, 0.63, 0.51)),
         block=mt.page_block("pad block", (0.7, 0.67, 0.6)),
         board=mt.manila("pad chipboard", (0.2, 0.18, 0.15)),
@@ -242,10 +243,11 @@ def materials():
         airmail=mt.airmail("airmail envelope", 0.19, 0.11),
         airmail_uv=mt.airmail("airmail envelope stacked", 0.19, 0.11, uv=True),
         cream=mt.paper("envelope paper", (0.66, 0.61, 0.5), 0.82, 0.06, 0.05),
-        white_env=mt.paper("white envelope", (0.7, 0.7, 0.67), 0.82, 0.05, 0.05),
+        white_env=mt.paper("white envelope", (0.79, 0.79, 0.76), 0.82, 0.05, 0.04),
+        aged_env=mt.paper("aged envelope", (0.48, 0.43, 0.32), 0.90, 0.07, 0.09, edge_tone=(0.23, 0.16)),
         window_env=mt.window_envelope("window envelope", 0.241, 0.105),
         manila=mt.manila("manila"),
-        band=mt.plastic("rubber band", (0.3, 0.2, 0.1), 0.6, 0.3),
+        band=mt.plastic("rubber band", (0.081, 0.034, 0.025), 0.63, 0.3),
         pen=mt.plastic("pen plastic", (0.012, 0.012, 0.014), 0.38, 0.5),
         pen_metal=mt.satin_metal("pen metal", (0.62, 0.62, 0.6), 0.25),
         glaze=mt.glaze("mug glaze", (0.40, 0.35, 0.26), rough=0.25),
@@ -563,13 +565,13 @@ def room():
     bd.visible_shadow = False
     bd.visible_diffuse = False
     # the right wall (-X): the radiator and a dark picture over it
-    on_wall("right_wall", (x0, 0.7, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", -0.2, 1.5)))
+    on_wall("right_wall", (x0, 0.7, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", 1.8, 1.35)))
     # left of the window: a bookcase against the same wall, its books facing the room
     on_wall("bookcase", (1.31, y0, 0.0), math.pi, bookcase, "case", w=0.8)
     rg = box("rug", (RUG[2], RUG[3], 0.012), (RUG[0], RUG[1], 0.006), M["rug"], bevel=0.004, seg=2)
     # twelve years of paperwork: file boxes on the floor to the right of the desk, one open
-    group("boxes", file_box("filebox_a", -1.22, -0.1, 4.0, seed=1))
-    group("boxes", file_box("filebox_b", -1.215, -0.095, -5.0, z=0.262, seed=2))
+    group("boxes", file_box("filebox_a", -1.07, 0.49, 4.0, seed=1))
+    group("boxes", file_box("filebox_b", -1.065, 0.495, -5.0, z=0.262, seed=2))
     group("boxes", file_box("filebox_c", -1.63, 0.2, 68.0, lid=False, lid_off=(-1.56, 0.52, 152.0, 74.0), folders=14, seed=3))
     return rg
 
@@ -950,13 +952,19 @@ def letter_tray(x, y):
         tray.append(box("letter tray end", (width - 2 * gauge, gauge, height),
                         (x, y + side * (depth - gauge) / 2, TOP + height / 2), M["card"], bevel=0.0007))
     rng = random.Random(72)
+    divider_y = y - 0.064 + 20 * 0.00265 + 0.0025
+    tray.append(box("letter tray divider", (0.236, 0.0018, 0.116),
+                    (x, divider_y + 0.008, TOP + gauge + 0.057), M["manila"], bevel=0.00055,
+                    rot=(-math.radians(8), 0, 0)))
     for i in range(43):
         w, h = rng.uniform(0.194, 0.227), rng.uniform(0.091, 0.106)
-        pitch = math.radians(8 + 3 * math.sin(i / 6))
-        row_y = y - 0.064 + i * 0.00265
+        pitch = math.radians(8 + 4 * math.sin(i / 6))
+        row_y = y - 0.064 + i * 0.00265 + (0.005 if i > 20 else 0)
+        if i in (2, 13, 18, 29, 38):
+            h += 0.010
         center = (x + rng.uniform(-0.003, 0.003), row_y + h * math.sin(pitch) / 2,
                   TOP + gauge + h * math.cos(pitch) / 2)
-        stock = M["white_env"] if i % 5 < 2 else M["cream"]
+        stock = M[("white_env", "cream", "aged_env", "cream", "white_env")[i % 5]]
         tray.append(box("filed envelope", (w, 0.00125, h), center, stock,
                         bevel=0.0004, rot=(-pitch, 0, rng.uniform(-0.002, 0.002))))
     return tray
@@ -975,13 +983,15 @@ def papers(pad=PAD):
     parts, top = pp.writing_pad("pad", m["ruled"], m["block"], m["board"], m["tape"], px, py, pt)
     group("papers", parts)
     # to his right (the camera's foreground in `desk`): two official replies in window envelopes with one letter
-    # unfolded across them, a banded bundle of airmail letters in the back corner, a loose pile of them near the
-    # front edge
-    group("papers", pp.envelope_front("reply_env_a", m["window_env"], -0.635, 0.0, 97.0, seed=2))
-    group("papers", pp.envelope_front("reply_env_b", m["window_env"], -0.6, 0.07, 84.0, seed=5))
-    group("papers", pp.sheet("reply_letter", m["paper"], 0.216, 0.279, -0.47, -0.02, 100.0, shape="trifold"))
-    group("papers", letter_tray(-0.54, -0.245))
-    b, _ = pp.bundle("bundle", [m["airmail_uv"], m["airmail_uv"], m["cream"], m["airmail_uv"]], m["band"], -0.54, 0.22, -6.0, n=17, seed=4)
+    # unfolded near them, a banded bundle of airmail and larger old manila replies.
+    stack, _ = pp.loose_stack("older replies", [m["manila"], m["aged_env"], m["manila"]],
+                              -0.235, -0.155, 11.0, n=3, w=0.225, h=0.156, seed=11, slip=0.011, twist=7.0)
+    group("papers", [stack])
+    group("papers", pp.envelope_front("reply_env_a", m["window_env"], -0.555, 0.0, 97.0, puff=0.0008, seed=2))
+    group("papers", pp.sheet("reply_letter", m["folded"], 0.216, 0.279, -0.429, -0.037, 104.0, shape="trifold"))
+    group("papers", pp.envelope_front("reply_env_b", m["window_env"], -0.530, 0.046, 71.0, puff=0.0008, seed=5))
+    group("papers", letter_tray(-0.47, -0.20))
+    b, _ = pp.bundle("bundle", [m["airmail_uv"], m["airmail_uv"], m["cream"], m["airmail_uv"]], m["band"], -0.439, 0.107, -6.0, n=17, seed=4)
     group("papers", b)
     return top
 

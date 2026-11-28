@@ -720,6 +720,21 @@ def cast_iron(name, rgb=(0.2, 0.2, 0.19)):
 
 # ---------------------------------------------------------------- stationery made for this desk
 
+def folded_letter(name, w, h):
+    m = paper(name, (0.72, 0.63, 0.48), 0.86, 0.05, 0.04, translucency=0.2, edge_tone=(w, h))
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    _, y, _ = _xyz(nt, _obj(nt))
+    dist = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", y), h / 6))
+    crease = _maprange(nt, dist, 0.00015, 0.00075, 0.20, 0.0)
+    base = b.inputs["Base Color"].links[0].from_socket
+    _link(nt, _mix(nt, crease, base, (0.30, 0.25, 0.19)), b.inputs["Base Color"])
+    roughness = b.inputs["Roughness"]
+    rough = roughness.links[0].from_socket if roughness.is_linked else roughness.default_value
+    _link(nt, _math(nt, "ADD", rough, crease, clamp=True), roughness)
+    return m
+
+
 def ruled(name, w, h, rgb=(0.74, 0.72, 0.65), pitch=0.0087, head=0.032, margin=0.032, rule_rgb=(0.3, 0.38, 0.52),
           margin_rgb=(0.5, 0.2, 0.18)):
     """A ruled writing-pad sheet, w x h, blank: letter paper with faint blue rules every `pitch` below a clear head

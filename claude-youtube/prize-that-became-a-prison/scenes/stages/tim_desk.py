@@ -66,17 +66,17 @@ SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
 ARM_IN = {"R": 50.0, "L": 30.0}
 ELBOW_Z = TOP + 0.05
 HAND_REST = {"R": TOP + st.PAD_H + 0.0005, "L": TOP + 0.0015}    # what each hand rests on
-PALM_TILT = {"R": 40.0, "L": 12.0}       # degrees the knuckle line dips to the little-finger side: the writing
+PALM_TILT = {"R": 41.0, "L": 12.0}       # degrees the knuckle line dips to the little-finger side: the writing
                                          # hand lies on its edge, the other nearly flat
-PITCHES = {"R": (0, -4, -8, -12, -16, -20), "L": (8, 4, 0, -4, -8, -12, -16)}   # hand pitch candidates (degrees
+PITCHES = {"R": tuple(range(0, -37, -4)), "L": tuple(range(8, -25, -4))}        # hand pitch candidates (degrees
                                          # down from level): the one that rests the heel and the fingers both is kept
 # finger joints (knuckle, middle, end, in degrees, on top of the body's relaxed rest curl): the right hand's index
-# and middle fingers lie along the pen, the other two tuck under; the left hand loosely flat
-CURLS = {"R": {"f_index": (20, 36, 19), "f_middle": (18, 28, 15), "f_ring": (27, 36, 19), "f_pinky": (30, 40, 22)},
-         "L": {"f_index": (-12, -12, -6), "f_middle": (-12, -12, -6), "f_ring": (-10, -10, -5), "f_pinky": (-8, -10, -5)}}
-THUMB_CURL = {"R": 15.0, "L": 8.0}
+# and middle fingers hold the pen, the other two tuck under; the free hand rests on the corner of the pad
+CURLS = {"R": {"f_index": (20, 36, 19), "f_middle": (18, 28, 15), "f_ring": (42, 58, 33), "f_pinky": (49, 64, 37)},
+         "L": {"f_index": (10, 14, 8), "f_middle": (12, 16, 9), "f_ring": (14, 18, 10), "f_pinky": (16, 20, 12)}}
+THUMB_CURL = {"R": 15.0, "L": 15.0}
 FINGERS = ("f_index", "f_middle", "f_ring", "f_pinky")
-SPREAD = (2.0, 2.5, 4.5)            # degrees between neighbours: fingers together
+SPREAD = (1.0, 1.0, 1.5)            # degrees between neighbours: fingers together
 HAND_GROUPS = ("DEF-hand", "DEF-palm", "DEF-f_", "DEF-thumb")
 PEN_R = 0.0046
 
@@ -84,22 +84,22 @@ FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01), "fx_p
 
 CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
-    "desk": dict(loc=(1.33, 0.08, 1.42), aim=(0.01, 0.21, 1.02), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
+    "desk": dict(loc=(1.33, 0.23, 1.42), aim=(0.01, 0.21, 1.02), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
-    "letters": dict(loc=(-0.30, 0.009, TOP + 3.1), aim=(-0.30, 0.005, TOP), lens=100, focus="fx_letters", fstop=11.0, beat="ch09",
+    "letters": dict(loc=(-0.20, -0.040, TOP + 3.1), aim=(-0.20, -0.044, TOP), lens=120, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
     # Ch 09 (and Ch 01 'Tim himself'): from behind the letter side, with the lit desktop clear of Tim's shoulder
-    "window": dict(loc=(-1.68, 1.62, 2.09), aim=(0.10, -0.25, 0.83), lens=22, focus="fx_tim", fstop=4.0,
-                   beat="ch09", exposure=-0.6, final_res=(1920, 1080)),
+    "window": dict(loc=(-1.68, 1.62, 2.09), aim=(-0.18, -0.22, 0.92), lens=30, focus="fx_tim", fstop=4.0,
+                   beat="ch09", exposure=-1.3, final_res=(1920, 1080)),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
-# the wide is exposed most of a stop over the others (the room has to read round the island): there the room's
-# own dark, the screen's spill behind the desk and the street light's stripes are each brought up to show
-TRIMS = {"desk": {"night_glow": 1.5, "lamp_spot": 0.9, "letter return": 0.0},
+# In the elevated frame, the lamp carries the desk while the street light carries the background.
+TRIMS = {"desk": {"night_glow": 1.5, "lamp_spot": 0.9, "letter return": 0.0,
+                   "laptop_screen_light": 0.0, "lamp wall return": 1.5, "room_fill": 9.0},
          "letters": {"tim_bounce": 0.0, "lamp_spill": 2.5, "street": 3.0},
-         "window": {"room_fill": 9.0, "night_glow": 3.0, "lamp_spill": 3.0,
-                    "laptop_screen_light": 1.02, "street": 1.6, "letter return": 0.62}}
+         "window": {"room_fill": 15.0, "night_glow": 1.0, "lamp_spill": 4.0, "lamp_spot": 2.5,
+                    "laptop_screen_light": 0.25, "street": 1.6, "letter return": 0.62}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -656,13 +656,16 @@ def arms_on_desk(holder):
             print(f"TIMDESK arm {k}: shoulder {tuple(round(v, 3) for v in s)}, elbow {tuple(round(v, 3) for v in e)}, wrist "
                   f"{tuple(round(v, 3) for v in w)}, hand tip {tuple(round(v, 3) for v in tip)}; hand pitch {best[1]} deg, lowest point "
                   f"{low * 1000:+.1f} mm and heel {heel * 1000:+.1f} mm over the pad", flush=True)
+            if abs(heel) > 0.0035:
+                print(f"TIMDESK heel fit failed for {k}: closest candidate {heel * 1000:+.1f} mm over the surface",
+                      flush=True)
             out[k] = (e, w, tip)
     with fast_body(holder, skin=False):
         out["pen"] = grip_pen(holder)
     return out
 
 
-INDEX_UP = 0.026          # the index fingertip's bone end this far above the paper when it holds the pen
+INDEX_UP = 0.028          # the index fingertip's bone end this far above the paper when it holds the pen
 
 
 def grip_pen(holder):
@@ -677,13 +680,14 @@ def grip_pen(holder):
     paper = HAND_REST[k]
     reach = PEN_R + 0.007                              # pen radius plus the flesh over a fingertip's bone end
     im = pb[f"f_index.01_master.{k}"]
+    pb[f"f_index.02.{k}"].rotation_euler.x = math.radians(40)
+    pb[f"f_index.03.{k}"].rotation_euler.x = math.radians(25)
 
     def tip_z(deg):
         im.rotation_euler.x = math.radians(deg)
         upd()
         return _wpos(rig, f"f_index.03.{k}", tail=True).z - paper
-    a0 = math.degrees(im.rotation_euler.x)
-    a1 = a0 + 6.0
+    a0, a1 = 50.0, 55.0
     z0, z1 = tip_z(a0), tip_z(a1)
     for _ in range(6):                                 # secant on the knuckle's bend
         if abs(z1 - INDEX_UP) < 0.0008 or abs(z1 - z0) < 1e-6:
@@ -693,9 +697,9 @@ def grip_pen(holder):
     y_h, x_h, n_p, idx, itip = hand_frame(rig, k)
     # Incline the barrel back across the thumb web. Its nib meets the sheet and its
     # upper surface touches the index pad even when the seated pose changes.
-    back = _wpos(rig, "upper_arm_fk.R") - itip
+    back = idx - itip
     back.z = 0.0
-    tilt = math.radians(53.0)
+    tilt = math.radians(45.0)
     zax = Vector((0, 0, 1))
     axis = back.normalized() * math.cos(tilt) + zax * math.sin(tilt)
     up = (zax - axis * axis.z).normalized()
@@ -847,6 +851,12 @@ def lights():
     fill = st.area("room_fill", ((R["x0"] + R["x1"]) / 2, 2.2, R["h"] - 0.05), (3.0, 3.4), 2.4, (0.6, 0.72, 1.0), spread=170)
     fill.visible_camera = False
     fill.visible_glossy = False
+    slats = bpy.data.collections.new("exclude slats from cool fill in the window shot")
+    for name in ("blind0_slats", "blind1_slats"):
+        slats.objects.link(bpy.data.objects[name])
+    for link in slats.collection_objects:
+        link.light_linking.link_state = "EXCLUDE"
+    _STATE["slat_exclusion"] = slats
     wall = bpy.data.objects["room_wall-x"]
     glow = st.area("lamp wall return", (R["x0"] + 0.60, 0.73, 1.49), (0.62, 0.60),
                    5.2, st.WARM, spread=135, aim=(R["x0"], 0.50, 1.40))
@@ -880,6 +890,13 @@ def tim_lights(holder):
         li.light_linking.receiver_collection = recv
     except AttributeError:
         li.data.energy = 0.0
+    # A soft return from the room side catches the ear and shoulder as the camera looks past him.
+    bulb = st.lamp_bulb()
+    rim = st.area("Tim lamp rim", bulb + Vector((-0.40, 0.49, 0.20)), (0.19, 0.16), 2.7, st.WARM,
+                  spread=82, aim=face_points(holder)["eyes"] + Vector((-0.085, 0.09, -0.08)))
+    rim.light_linking.receiver_collection = recv
+    rim.visible_camera = rim.visible_glossy = rim.visible_volume_scatter = False
+    rim.hide_render = True
     return li
 
 
@@ -935,10 +952,16 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * TRIMS.get(name, {}).get(n, 1.0)
+    for key in ("room_fill", "night_glow"):
+        st.LIGHTS[key].light_linking.receiver_collection = _STATE["slat_exclusion"] if name == "window" else None
+    room_fill_colour = {"desk": (0.83, 0.75, 0.67), "window": (0.80, 0.75, 0.67)}
+    st.LIGHTS["room_fill"].data.color = room_fill_colour.get(name, (0.6, 0.72, 1.0))
+    if rim := st.LIGHTS.get("Tim lamp rim"):
+        rim.hide_render = name != "window"
     st.LIGHTS["lamp_spot"].data.color = (1.0, 0.195, 0.013) if name == "desk" else st.WARM
     panel = bpy.data.objects["laptop_screen"].active_material.node_tree.nodes
-    # Reduce the screen itself in the elevated view, where it would outweigh the pen and folded reply.
-    panel["Screen backlight power"].inputs[1].default_value = 0.49 if name == "window" else st.LAPTOP_EMISSION
+    # The screen is idle in the writing angles.
+    panel["Screen backlight power"].inputs[1].default_value = {"desk": 0.08, "window": 0.0}.get(name, st.LAPTOP_EMISSION)
     screen_colour = (0.29, 0.51, 1.0) if name == "window" else st.COOL
     panel["Principled BSDF"].inputs["Emission Color"].default_value = (*screen_colour, 1)
     hz = bpy.data.objects.get("room_haze")
@@ -1003,16 +1026,17 @@ def report_frame(holder):
     of Tim's head, the lamp, the laptop and the chair's feet, so a cut head or foot shows in the log."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
+    bpy.context.view_layer.update()
+    picture_end = bpy.data.objects["pic_frameR"].matrix_world.translation
+    box_top = bpy.data.objects["filebox_b_lid"].matrix_world @ Vector((0, 0, 0.07))
     marks = {"lamp head": st.lamp_bulb() + Vector((0, 0, 0.1)), "lamp base": Vector((st.LAMP[0], st.LAMP[1], TOP)),
              "laptop": Vector((st.LAPTOP[0], st.LAPTOP[1], TOP + 0.12)), "pad": Vector((st.PAD[0], st.PAD[1], TOP)),
              "window top": Vector((0, st.R["y0"], st.WIN["z1"] + 0.15)), "ceiling line": Vector((0, st.R["y0"], st.R["h"])),
              "chair foot L": Vector((0.24, CHAIR[1] + 0.26, 0.0)), "chair foot R": Vector((-0.24, CHAIR[1] + 0.26, 0.0)),
              "phone": Vector((-0.245, -0.03, TOP + 0.02)), "radiator end": Vector((st.R["x0"] + 0.1, 1.15, 0.7)),
-             "picture end": Vector((st.R["x0"], 0.86, 1.5)), "bookcase": Vector((1.31, st.R["y0"] + 0.3, 1.2)),
-             "boxes": Vector((-1.22, -0.1, 0.55))}
+             "picture end": picture_end, "bookcase": Vector((1.31, st.R["y0"] + 0.3, 1.2)), "boxes": box_top}
     fr = bpy.data.objects.get("photo_frame")
     if fr is not None:
-        bpy.context.view_layer.update()
         for tag, loc in (("frame top L", (-0.075, 0.01, 0.2)), ("frame top R", (0.075, 0.01, 0.2)), ("frame foot", (0.0, 0.0, 0.01))):
             marks[tag] = fr.matrix_world @ Vector(loc)
     if holder is not None:

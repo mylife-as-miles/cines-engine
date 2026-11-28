@@ -210,7 +210,7 @@ def sheet_shape(w, h, seed, corners=(0.0, 0.0, 0.0, 0.0), edge=None, wave=0.0006
     return f
 
 
-def trifold_shape(w, h, seed, up=(14.0, 10.0)):
+def trifold_shape(w, h, seed, up=(1.3, 1.8)):
     """A letter folded in three and opened out: the middle panel flat, the outer panels rising from the creases
     (degrees), a slight ridge along each crease."""
     rng = random.Random(seed)
@@ -223,7 +223,7 @@ def trifold_shape(w, h, seed, up=(14.0, 10.0)):
             z += a_top * (y - h / 6) * (1.0 + 0.25 * x / w)
         if y < -h / 6:
             z += a_bot * (-h / 6 - y) * (1.0 - 0.3 * x / w)
-        z += 0.0007 * math.exp(-((abs(y) - h / 6) / 0.0035) ** 2)
+        z += 0.00065 * math.exp(-((abs(y) - h / 6) / 0.0035) ** 2)
         return z
     return f
 
