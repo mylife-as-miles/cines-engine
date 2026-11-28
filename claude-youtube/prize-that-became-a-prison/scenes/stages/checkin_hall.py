@@ -806,7 +806,7 @@ def desk(x0, idx, open_):
                        (x0 + 0.345, 0.260, LEDGE + 0.0525), m["plastic"], bevel=0.006,
                        rot=(0, 0, math.radians(-9)))
         screen_colour = (0.33, 0.45, 0.53)
-        blank = screen_mat("terminal blank glass", screen_colour, 3.0)
+        blank = screen_mat("terminal blank glass", screen_colour, 7.5)
         child(box(p + "terminal glass", (0.050, 0.038, 0.0012), (0, 0.033, 0.0178), blank,
                   bevel=0.0018, rot=(math.radians(2), 0, 0)), terminal)
         spill = light(p + "terminal spill", (0, 0.028, 0.030), (0.06, 0.05), 0.30, colour=screen_colour,
