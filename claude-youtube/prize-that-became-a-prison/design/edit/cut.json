@@ -694,30 +694,29 @@
     {
      "id": "01-04",
      "at": "01.03@0.27",
-     "plate": "evidence_table/overhead",
+     "plate": "evidence_table/motifs",
      "move": "in",
      "row": "evidence_table `motifs` (*new*)",
      "sound": "Pencils, paper",
-     "sub": "evidence_table `motifs` (new) has no plate: `overhead` (papers and photographs under the lamp) stands in.",
-     "parallax": false
+     "change": "Plate swapped in (LEAD, 28 Nov): motifs is published: the stamps, pencils and ruler under the lamp."
     },
     {
      "id": "01-05",
      "at": "01.03@0.62",
-     "plate": "evidence_table/push",
+     "plate": "evidence_table/entries",
      "move": "in",
      "row": "evidence_table `entries` (*new*)",
      "sound": "Pencils, paper",
-     "sub": "evidence_table `entries` (new) has no plate: `push` (the lamp over loose papers) stands in."
+     "change": "Plate swapped in (LEAD, 28 Nov): entries is published: the blank entry forms and envelopes."
     },
     {
      "id": "01-06",
      "at": "01.04",
-     "plate": "home/dining",
+     "plate": "home/dining_family",
      "move": "in",
      "row": "home `dining` warm, Gene seated at the head of the table, Tim beside",
      "sound": "Low room, a clock",
-     "sub": "home `dining` exists only empty and in the cold blind light: Gene and Tim are not in it (decision 1's seated Gene is not built). It weakens the full-then-empty chair the film plants for chapter 8."
+     "change": "Plate swapped in (LEAD, 28 Nov): dining_family is published: Gene and Tim at the table, warm (the chair planted for chapter 8)."
     },
     {
      "id": "01-07",
@@ -803,11 +802,11 @@
     {
      "id": "01-15",
      "at": "01.11",
-     "plate": "departure_gate/window",
+     "plate": "evidence_table/tickets",
      "move": "in",
      "row": "departure_gate `window`",
      "sound": "A boarding chime",
-     "sub": "evidence_table `tickets` (new) has no plate: \"The tickets. Real tickets to Hong Kong\" goes on the aircraft at the gate (`window`), the row the script puts last."
+     "change": "Plate swapped in (LEAD, 28 Nov): tickets is published: the passport on two blank tickets."
     },
     {
      "id": "01-16",
@@ -1814,11 +1813,11 @@
     {
      "id": "06-12",
      "at": "06.06@0.52",
-     "plate": "void_stage/bags",
+     "plate": "void_stage/divide",
      "move": "in",
      "row": "void_stage `divide` (*new*): the bags in one pool",
      "sound": "The score thins to one held note",
-     "sub": "void_stage `divide` (new) has no plate: a cut from the bags in their pool to Dawn in hers stands in for the two pools in one frame."
+     "change": "Plate swapped in (LEAD, 28 Nov): divide is published: the bags and Dawn in two pools in one frame."
     },
     {
      "id": "06-13",
@@ -2092,7 +2091,7 @@
     {
      "id": "08-01",
      "at": "08.pre",
-     "plate": "home/dining",
+     "plate": "home/dining_gene",
      "move": "in",
      "pct": 0.05,
      "type": [
@@ -2104,7 +2103,7 @@
      ],
      "row": "home `dining`, cold blind light, Gene alone at the head of the table",
      "sound": "A clock",
-     "sub": "home `dining` has no Gene: the room is empty (decision 1's seated Gene is not built)."
+     "change": "Plate swapped in (LEAD, 28 Nov): dining_gene is published: Gene alone at the table in the cold blind light."
     },
     {
      "id": "08-02",
@@ -2153,26 +2152,42 @@
      "change": "Added: \"a daughter who had already lost ten years\" on the far cell."
     },
     {
-     "id": "08-07",
+     "id": "08-07a",
      "at": "08.05",
+     "plate": "home/chair_gene",
+     "zoom": [
+      1.0,
+      1.0
+     ],
+     "row": "home `chair_gene`: Gene in profile in his chair",
+     "sound": "A clock",
+     "change": "Added (LEAD, 28 Nov): chair_gene is published, matched to the empty chair within 0.001 px."
+    },
+    {
+     "id": "08-07",
+     "at": "08.05@0.62",
      "piece": "gene",
-     "row": "home `chair` | JANUARY 25, 2026",
+     "row": "home `chair`, the same frame empty (straight cut on \"died\") | JANUARY 25, 2026",
      "sound": "A clock, then nothing",
-     "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (`date_gene`), so the straight cut from full to empty cannot happen yet."
+     "gen": {
+      "push": [
+       1.0,
+       1.0
+      ]
+     },
+     "change": "Gene in profile (home `chair_gene`) holds the start of the line; the cut to the same frame empty lands on \"died\", with the date. All three chair shots are locked off at the same framing, so the chair never moves across the two cuts."
     },
     {
      "id": "08-08",
      "at": "08.sil1",
-     "plate": "home/chair",
-     "z": 1.18,
-     "c": [
-      0.62,
-      0.5
-     ],
-     "move": "lock",
+     "plate": "void_stage/chair",
      "row": "home `chair`, the same frame, empty (straight cut) → void_stage `chair` (*new*)",
      "sound": "Total silence; then room tone returns",
-     "sub": "The cut on the silence goes to a closer framing of the same empty chair (1.18x), the date leaving with the cut; void_stage `chair` (new) has no plate, so the chair holds through the 3 s silence."
+     "zoom": [
+      1.0,
+      1.03
+     ],
+     "change": "On the silence, a straight cut from the empty dining chair to the same chair alone in the Void (matched within 0.001 px); it starts at the date's framing and pushes in 3 % through \"He never saw Dawn come home.\""
     }
    ]
   },
