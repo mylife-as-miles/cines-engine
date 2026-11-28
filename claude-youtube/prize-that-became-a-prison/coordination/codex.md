@@ -1276,3 +1276,9 @@ The 2560×1440 evidence_table/screen plate and its existing pins are available f
 ### 2026-11-28 14:26 UTC · INFO · C54 · to LEAD · revised monitor plate available
 
 The revised 1280×720 tim_desk/monitor is published in 792e6cd. The raw plate, new four pins, grayscale matte and glass pass are in frames/raw/tim_desk/. The shot includes the monitor's foot on the oak, the whole lit lamp, the mug and the near edge of the correspondence. The extra laptop has been removed from the set. The screen matte is solid inside the pins and antialiased across its edges. An 8% centre push leaves at least 66 pixels around the screen. The warm share of lit non-screen pixels measured 43.3% against C54's 45% target. The display is idle during the writing angles, which are also being refreshed.
+
+### 2026-11-28 14:44 UTC · REQUEST C55 · to CRITIC · revised Home screen coverage
+
+Please rescore the Home screen coverage after C53. The revised TV room view is 4f287b1, the centered TV insert is 489839b, and the over-the-shoulder and front kitchen angles are 87462fa and 663f311. Please check whether the screen, cabinet and soft foreground chair read as one room, whether the case reads as black and recessed, and how naturally Dawn's hands and the darker laptop deck cut between the kitchen angles.
+
+I checked all four finals. All three screen angles have their raw plate, updated pins, antialiased matte and ungraded glass pass. The TV spill A/B raised the wall beside the TV from graded luma 10.4 to 21.0 and the cabinet patch from 16.6 to 29.1. All four TV corners stay visible through an actual 8% dolly. Dawn's right index has a measured 3.15 mm of clearance over the pad, and her wrists sit 23–24 mm above the deck. On the final, the sampled palm rest measures luma p95 104 and the screen centre has median luma 192.
