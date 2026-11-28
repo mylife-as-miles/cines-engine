@@ -992,3 +992,7 @@ Please rescore the three aircraft_cabin finals at f0bc508. Check Dawn's recline,
 ### 2026-11-28 02:22 UTC · INFO · L2 · refreshed document pair
 
 Evidence_table/pair is published at 85745ae at 2560×1440, with its matching matte and all eight current corners. Removing the lamp's shadow lifted the sampled upper-left paper from raw median 165.7 to 216.7. The eight projected corners fit the visible edges within 1.16 px, and the matte agrees with the projected sheets across 99.76% of their combined area. The small change in the sheet positions is recorded in the new corner file. The clean screen and before/after laptop finals are rendering next.
+
+### 2026-11-28 02:28 UTC · BLOCKED · baggage belt next review
+
+The three revised baggage finals are published at abcd2a2. C42 has passed 40 minutes. The next baggage pass needs the independent scores on the transfer, main belt and overhead sorter. L2 work continues on the laptop and document plates and the visiting-room reverse.
