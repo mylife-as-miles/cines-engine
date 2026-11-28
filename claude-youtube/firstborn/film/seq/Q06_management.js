@@ -30,7 +30,7 @@
     else if (kind === 'naming') { [[200, 300, '#E37F78'], [380, 220, '#F4BF54'], [1540, 260, '#7BAFE1'], [1720, 330, '#77CC81']].forEach(([x, y, cc], i) => { g.beginPath(); g.moveTo(x, y + 90); g.lineTo(x + 10, y + 300); g.lineWidth = 3; g.strokeStyle = '#1c1c1c'; g.stroke(); g.beginPath(); g.ellipse(x, y + Math.sin(t * 2 + i) * 8, 62, 78, 0, 0, Math.PI * 2); GFX.inked(g, cc, 4.5); }); }
   }
   // the occasion's name, a pill in the empty top-right corner (the kinds change on their words)
-  const occasion = (c, kind, t0) => STAGE.tag(c, 1640, 150, kind.toUpperCase(), { t0, size: 56, fill: kind === 'funeral' ? '#6E4C8C' : kind === 'naming' ? '#7BAFE1' : '#F4BF54', color: kind === 'funeral' ? '#FFFFFF' : '#1c1c1c' });
+  const occasion = (c, kind, t0) => STAGE.tag(c, 1640, 150, kind.toUpperCase(), { t0, anim: 'slide', size: 56, fill: kind === 'funeral' ? '#6E4C8C' : kind === 'naming' ? '#7BAFE1' : '#F4BF54', color: kind === 'funeral' ? '#FFFFFF' : '#1c1c1c' });
   const riceAt = c => c.anchor('partyHall', 'rice', [1300, 700]), riceSide = c => c.anchor('partyHall', 'riceSide', [1080, 985]);
   // the hero with a clipboard (and a headset) running the event
   function boss(c, o) { const h = c.fig('hero', Object.assign({ x: 960, y: 985, s: 1.02, face: 1, pose: 'hold_clipboard', expr: 'neutral' }, o)); const hd = ART.head('hero', h); const g = c.g; g.save(); g.lineWidth = hd.r * 0.12; g.strokeStyle = '#3D3F48'; g.beginPath(); g.arc(hd.x, hd.y, hd.r * 1.05, Math.PI * 1.1, Math.PI * 1.9); g.stroke(); g.beginPath(); g.arc(hd.x + (o.face || 1) * hd.r * 0.95, hd.y + hd.r * 0.15, hd.r * 0.16, 0, Math.PI * 2); GFX.inked(g, '#3D3F48', 3); g.beginPath(); g.moveTo(hd.x + (o.face || 1) * hd.r * 0.95, hd.y + hd.r * 0.3); g.quadraticCurveTo(hd.x + (o.face || 1) * hd.r * 0.8, hd.y + hd.r * 0.7, hd.x + (o.face || 1) * hd.r * 0.35, hd.y + hd.r * 0.62); g.lineWidth = 4; g.stroke(); g.restore(); return h; }
@@ -102,7 +102,7 @@
           c.fig('cousin', { x: 760, y: 985, s: 1, face: 1, pose: jab ? 'point' : 'stand', expr: 'angry', turn: EYE.turn, look: EYE.look, talk: [T.cousins, T.un] });
           c.fig('cousin2', { x: 1160, y: 985, s: 1, face: -1, pose: !jab ? 'point' : 'stand', expr: 'angry', turn: EYE.turn, look: EYE.look });
         } },
-      { at: T.un, name: '"you are the United Nations": the hero at a podium between them, plain coloured flags', in: 'pop', push: { from: 1, to: 1.05, x: 960, y: 520 },
+      { at: T.un, name: '"you are the United Nations": the hero at a podium between them, plain coloured flags', in: { type: 'wipe', dir: 'down' }, push: { from: 1, to: 1.05, x: 960, y: 520 },
         draw(c) {
           const t = c.t; c.set('podium', { t }); const kit = ART.hasSet('podium'); if (!kit) GFX.flags(c.g, 960, 700, 1, t);
           const sp = c.anchor('podium', 'speaker', [960, 990]);

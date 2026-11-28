@@ -73,7 +73,7 @@
       { at: T.say, name: '"Say it out loud to the family": the family at the dining table, the hero standing, speaking', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) {
           const t = c.t; c.set('home', DIN); const seats = ['seat1', 'seat2', 'seat3', 'seatL'], who = [['mum'], ['dad'], ['sister'], ['brother']];
-          who.forEach(([w], i) => { const a = c.anchor('home', seats[i], [640 + i * 320, 691]); c.fig(w, { x: a.x, seatAt: { x: a.x, y: a.y }, s: a.s || 0.92, face: a.facing || 1, pose: 'sit', view: a.facing ? 'side' : 'front', expr: 'neutral', turn: 0.6, look: [1, -0.1] }); });
+          who.forEach(([w], i) => { const a = c.anchor('home', seats[i], [640 + i * 320, 691]); c.fig(w, { age: w === 'sister' || w === 'brother' ? 'grown' : undefined, x: a.x, seatAt: { x: a.x, y: a.y }, s: a.s || 0.92, face: a.facing || 1, pose: 'sit', view: a.facing ? 'side' : 'front', expr: 'neutral', turn: 0.6, look: [1, -0.1] }); });
           c.setFront('home', DIN);
           const st = c.anchor('home', 'standR', [1720, 985]);
           c.fig('hero', { x: st.x - 40, y: st.y, s: st.s || 1.02, face: -1, pose: 'point', expr: 'neutral', talk: T.sayLine, turn: 0.4, look: [1, 0] });
@@ -81,7 +81,7 @@
       { at: T.shared, name: '"This is now shared": the plan board; not a fight (crossed out), a plan (a tick)', in: 'cut', push: { from: 1, to: 1.05, x: 1100, y: 520 },
         draw(c) {
           const t = c.t; c.set('home', DIN); const seats = ['seat1', 'seat2', 'seat3'], who = ['mum', 'dad', 'sister'];
-          who.forEach((w, i) => { const a = c.anchor('home', seats[i], [640 + i * 320, 691]); c.fig(w, { x: a.x - 200, seatAt: { x: a.x - 200, y: a.y }, s: a.s || 0.92, face: 1, pose: 'sit', view: 'front', expr: t > T.plan ? 'happy' : 'neutral', look: [0.9, -0.1], turn: 0.4 }); });
+          who.forEach((w, i) => { const a = c.anchor('home', seats[i], [640 + i * 320, 691]); c.fig(w, { age: w === 'sister' ? 'grown' : undefined, x: a.x - 200, seatAt: { x: a.x - 200, y: a.y }, s: a.s || 0.92, face: 1, pose: 'sit', view: 'front', expr: t > T.plan ? 'happy' : 'neutral', look: [0.9, -0.1], turn: 0.4 }); });
           c.setFront('home', DIN);
           const k = ease.outBack(seg(t, T.shared, T.shared + 0.45)); c.g.save(); c.g.translate(1480, 600); c.g.scale(k, k); c.g.translate(-1480, -600);
           planBoard(c, 1480, 600, { fightK: seg(t, T.fight - 0.2, T.fight + 0.5), planK: seg(t, T.plan, T.plan + 0.5) }); c.g.restore();
@@ -95,7 +95,7 @@
       { at: T.surprised, name: '"waiting to be asked": siblings and cousins throw their hands up', in: 'cut', push: { from: 1, to: 1.06, x: 960, y: 520 },
         draw(c) {
           const t = c.t; c.set('home', { tod: 'day' });
-          [['sister', 420], ['brother', 720], ['cousin', 1200], ['cousin2', 1500]].forEach(([w, x], i) => { const up = t > T.waiting - 0.2 + i * 0.15; c.fig(w, { x, y: 990, s: 1, face: x < 960 ? 1 : -1, pose: up ? 'handup' : 'stand', expr: up ? 'happy' : 'surprised', turn: 0.5, look: [1, 0], dy: up ? -Math.abs(Math.sin(t * 7 + i)) * 14 : 0 }); });
+          [['sister', 420], ['brother', 720], ['cousin', 1200], ['cousin2', 1500]].forEach(([w, x], i) => { const up = t > T.waiting - 0.2 + i * 0.15; c.fig(w, { age: w === 'sister' || w === 'brother' ? 'grown' : undefined, x, y: 990, s: 1, face: x < 960 ? 1 : -1, pose: up ? 'handup' : 'stand', expr: up ? 'happy' : 'surprised', turn: 0.5, look: [1, 0], dy: up ? -Math.abs(Math.sin(t * 7 + i)) * 14 : 0 }); });
           c.fig('hero', { x: 960, y: 1000, s: 1.02, face: 1, pose: 'stand', expr: t > T.waiting ? 'surprised' : 'neutral', turn: 0.3, look: [Math.sin(t * 1.5), 0] });
         } },
     ],

@@ -42,7 +42,7 @@
           card(2, T.promoted, q => GFX.starBadge(q, 0, -20, 1.2, 'PROMOTED'));
           card(3, T.paidW, q => { GFX.rr(q, -130, -170, 260, 340, 12); GFX.inked(q, '#FFFFFF', 4); GFX.text(q, 'PAYSLIP', 0, -120, { size: 40, weight: 900, color: '#5A6670' }); GFX.text(q, GFX.money(0), 0, 10, { size: 72, weight: 900, color: '#D9443B' }); q.fillStyle = '#C9D3DC'; q.fillRect(-90, 80, 180, 12); q.fillRect(-90, 110, 120, 12); });
         } },
-      { at: T.comments, name: '"tell me in the comments": a comment bubble writes itself in, a heart; a second under it', in: 'pop', push: { from: 1, to: 1.06, x: 960, y: 520 },
+      { at: T.comments, name: '"tell me in the comments": a comment bubble writes itself in, a heart; a second under it', in: { type: 'slide', dir: 'up' }, push: { from: 1, to: 1.06, x: 960, y: 520 },
         draw(c) {
           const t = c.t; c.set('plain', {});
           GFX.comment(c.g, 960, 400, 1240, 420, { k: seg(t, T.tell + 0.1, T.what - 0.4), lines: ['Firstborn here.', 'School fees at 19!'], heart: seg(t, T.what - 0.3, T.what + 0.1), t });
@@ -57,25 +57,25 @@
       { at: T.baby, name: 'the baby of the family laughing on the sofa at her phone', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06, x: 900, y: 560 },
         draw(c) {
           const t = c.t; c.set('home', DAY); const a = c.anchor('home', 'sofaM', [935, 738]);
-          c.fig('sister', { x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: 'sit_sofa', hold: 'phone', expr: 'happy', mouth: t > T.laughing ? 0.4 + 0.4 * Math.abs(Math.sin(t * 8)) : 0, dy: t > T.laughing ? -Math.abs(Math.sin(t * 8)) * 6 : 0, look: [0.3, 0.8] });
+          c.fig('sister', { age: 'grown', x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: 'sit_sofa', hold: 'phone', expr: 'happy', mouth: t > T.laughing ? 0.4 + 0.4 * Math.abs(Math.sin(t * 8)) : 0, dy: t > T.laughing ? -Math.abs(Math.sin(t * 8)) * 6 : 0, look: [0.3, 0.8] });
           c.setFront('home', DAY);
         } },
       { at: T.iKnow, name: '"I know that is the problem": the laugh fades, sheepish', in: 'cut', push: { from: 1.25, to: 1.35, x: 935, y: 440 },
         draw(c) {
           const t = c.t; c.set('home', DAY); const a = c.anchor('home', 'sofaM', [935, 738]); const sh = t > T.problem - 0.3;
-          c.fig('sister', { x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: 'sit_sofa', hold: 'phone', expr: sh ? 'guilty' : 'happy', mouth: !sh ? 0.3 * Math.abs(Math.sin(t * 8)) : 0, look: sh ? [-0.6, 0.2] : [0.3, 0.8], turn: sh ? -0.2 : 0.35 });
+          c.fig('sister', { age: 'grown', x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: 'sit_sofa', hold: 'phone', expr: sh ? 'guilty' : 'happy', mouth: !sh ? 0.3 * Math.abs(Math.sin(t * 8)) : 0, look: sh ? [-0.6, 0.2] : [0.3, 0.8], turn: sh ? -0.2 : 0.35 });
           c.setFront('home', DAY);
         } },
       { at: T.call, name: '"Call your elder sibling today": she dials', in: 'cut', push: { from: 1.1, to: 1.18, x: 935, y: 460 },
         draw(c) {
           const t = c.t; c.set('home', DAY); const a = c.anchor('home', 'sofaM', [935, 738]); const ear = t > T.dont - 0.1;
-          c.fig('sister', { x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: ear ? 'sit_phone' : 'sit_sofa', hold: ear ? undefined : 'phone', expr: 'neutral', look: ear ? [0.6, 0] : [0.3, 0.8] });
+          c.fig('sister', { age: 'grown', x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: ear ? 'sit_phone' : 'sit_sofa', hold: ear ? undefined : 'phone', expr: 'neutral', look: ear ? [0.6, 0] : [0.3, 0.8] });
           c.setFront('home', DAY);
         } },
       { at: T.just, name: '"Just say, how are you?": the split screen, he answers', in: 'cut',
         draw(c) {
           const t = c.t;
-          STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 935, y: 520, zoom: 1.35 }); cc.set('home', DAY); const a = cc.anchor('home', 'sofaM', [935, 738]); cc.fig('sister', { x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: 'sit_phone', expr: 'happy', talk: T.how, look: [0.6, 0] }); cc.setFront('home', DAY); },
+          STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 935, y: 520, zoom: 1.35 }); cc.set('home', DAY); const a = cc.anchor('home', 'sofaM', [935, 738]); cc.fig('sister', { age: 'grown', age: 'grown', x: a.x, y: 990, seatAt: { x: a.x, y: a.y }, s: a.s || 1, face: 1, pose: 'sit_phone', expr: 'happy', talk: T.how, look: [0.6, 0] }); cc.setFront('home', DAY); },
             (cc, r) => { STAGE.fit(cc, r, { x: 960, y: 560, zoom: 1.25 }); cc.set('office', {}); cc.fig('hero', { x: 960, y: 962, s: 1, face: -1, pose: 'hold_phone', mode: 'ear', expr: t > T.how[1] ? 'surprised' : 'neutral', turn: 0.3 }); },
             { k: seg(t, T.just, T.just + 0.5) });
         } },

@@ -8,7 +8,7 @@ function draw(g, o, q) {
   const fig = (a, extra) => { if (!a) return; try { POV.figure(g, 'hero', Object.assign({ x: a.x, y: a.y, scale: a.s }, extra || {})); } catch (e) { console.log(e.message); } };
   const sit = (a, extra) => { if (!a) return; try { POV.figure(g, 'hero', Object.assign({ seatAt: { x: a.x, y: a.y }, scale: a.s, pose: 'sit_sofa' }, extra || {})); } catch (e) { console.log(e.message); } };
   const S = SETS.home(g, o), A = S.anchors;
-  if (q.get('fig')) { if (o.view === 'dining') { sit(A.seat2); sit(A.seatL, { facing: 1, pose: 'sit' }); fig(A.standR, { facing: -1 }); } else { sit(A.sofaL); sit(A.armchair); fig(A.right, { facing: -1 }); fig(A.door, { facing: -1 }); } }
+  if (q.get('fig')) { if (o.view === 'dining') { sit(A.seat2); sit(A.seatL, { facing: 1, pose: 'sit' }); fig(A.standR, { facing: -1 }); } else { sit(A.sofaL); sit(A.armchair); fig(A.right, { facing: -1 }); if (o.doorOpen) fig(A.doorway, { facing: -1 }); else fig(A.door, { facing: -1 }); } }
   SETS.homeFront(g, o);
   return S;
 }

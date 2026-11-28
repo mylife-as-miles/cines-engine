@@ -65,18 +65,17 @@
       { at: T.also, name: 'maternity: "hired": a job-offer card slides in beside the cot', push: { from: 1.04, to: 1.1, x: 1100, y: 560 },
         draw(c) {
           c.camera({ x: 1040, y: 560, zoom: 1.4 }); c.set('maternity', {}); const t = c.t; babyFig(c, { expr: t > T.hired + 0.3 ? 'surprised' : 'neutral', look: t > T.hired + 0.2 ? [1, -0.3] : [0, -0.2] });
-          const dx = FILM.slide(t, T.hired - 0.05, 1100, 0.5, 'outCubic'); c.g.save(); c.g.translate(1290 + dx, 520); c.g.rotate(0.05); GFX.jobCard(c.g, 0, 0, 0.36, { rows: ROWS.map(r => ({ label: r[0] })) }); c.g.restore();
+          const dx = FILM.slide(t, T.hired - 0.05, 1100, 0.5, 'outCubic'); STAGE.jobCard(c, 1290 + dx, 520, 0.36, { rot: 0.05, rows: ROWS.map(r => ({ label: r[0] })) });
         } },
       { at: T.no1, name: 'the job card fills the frame: each perk crossed out on its word', in: { type: 'slide', dir: 'left' }, push: { from: 1, to: 1.05, x: 960, y: 600 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
           STAGE.jobCard(c, 960, 548, 1.08, { rows: ROWS.map(([label, t0]) => ({ label, k: seg(t, t0 + 0.08, t0 + 0.5) })) });
-          GFX.badge(c.g, 1340, 900, 0.95, 'FIRSTBORN', { cord: 0, rot: 0.08 + 0.02 * Math.sin(t * 1.3) });
         } },
       { at: T.because, name: 'the baby eyes the card in the cot, puzzled: this job has no way out', push: { from: 1.02, to: 1.12, x: 900, y: 600 },
         draw(c) {
           c.camera({ x: 1000, y: 540, zoom: 1.55 }); c.set('maternity', {}); const t = c.t; const b = babyFig(c, { expr: 'confused', look: [1, -0.4], blinks: [T.because + 1.4] });
-          c.g.save(); c.g.translate(1230, 470); c.g.rotate(0.06); GFX.jobCard(c.g, 0, 0, 0.3, { rows: ROWS.map(r => ({ label: r[0], k: 1 })) }); c.g.restore();
+          STAGE.jobCard(c, 1230, 470, 0.3, { rot: 0.06, badge: false, rows: ROWS.map(r => ({ label: r[0], k: 1 })) });
           const hd = ART.head('hero', b); GFX.at(c.g, hd.x + 40, hd.y - hd.r - 70, pop(t, T.one - 0.1, 0.34), q => GFX.text(q, '?', 0, 0, { size: 120, weight: 900, color: '#3A8594', stroke: 10, strokeColor: '#FFFFFF' }));
         } },
       { at: T.first, name: 'close: the FIRSTBORN badge flies in and pins on the swaddle', in: 'cut', push: { from: 1, to: 1.05 },

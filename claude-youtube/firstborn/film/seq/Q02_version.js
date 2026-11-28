@@ -54,15 +54,15 @@
       { at: T.start, name: 'the life path: milestones along a winding road; the grown hero walks onto it', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06, x: 700, y: 760 },
         draw(c) {
           const t = c.t; STAGE.lifePath(c, { progress: 0.12 + 0.88 * seg(t, T.start, T.start + 2.6) });
-          const u = lerp(0, 0.13, ease.inOutSine(seg(t, T.start + 0.3, T.stay))), p = STAGE.pathAt(c, u), wk = walk(t, T.start + 0.3, T.stay, 0, 1, { s: 1 });
+          const u = lerp(0.07, 0.17, ease.inOutSine(seg(t, T.start + 0.3, T.stay))), p = STAGE.pathAt(c, u), wk = walk(t, T.start + 0.3, T.stay, 0, 1, { s: 1 });
           c.fig('hero', { x: p.x, y: p.y + 10, s: p.s, face: 1, pose: wk.moving ? 'walk' : 'stand', walk: (t - T.start) * 1.6, expr: 'happy' });
           STAGE.chapterCard(c, T.start + 0.25, T.start + 2.15, 'VERSION 1.0', { x: 1260, y: 190 });
         } },
       { at: T.stay, name: 'on the path: he turns to us; "call you": his phone rings', push: { from: 1, to: 1.08, x: 960, y: 420 },
         draw(c) {
-          const t = c.t; STAGE.lifePath(c, {}); const p = STAGE.pathAt(c, 0.13); c.camera({ x: p.x + 60, y: p.y - 330 * p.s, zoom: 2.0 }); STAGE.lifePath(c, {});
+          const t = c.t; STAGE.lifePath(c, {}); const p = STAGE.pathAt(c, 0.17); c.camera({ x: p.x + 80, y: p.y - 470 * p.s, zoom: 1.6 }); STAGE.lifePath(c, {});
           const ring = t > T.call - 0.1; const h = c.fig('hero', { x: p.x, y: p.y + 10, s: p.s, face: 1, pose: ring ? 'hold_phone' : 'stand', mode: 'front', expr: ring ? 'surprised' : 'happy', turn: ring ? 0.2 : 0, look: ring ? [0.4, 0.6] : [0, 0] });
-          if (ring) { const hn = ART.hand('hero', h); c.prop('buzz', { x: hn.x, y: hn.y - 10, rx: 40, t }); STAGE.notify(c, hn.x + 60, hn.y - 120, T.call, 'call', { s: 0.8, bg: '#77CC81' }); }
+          if (ring) { const hn = ART.hand('hero', h); c.prop('buzz', { x: hn.x, y: hn.y - 10, rx: 40, t }); STAGE.notify(c, hn.x + 60, hn.y - 120, T.call, 'call', { s: 0.8, bg: '#77CC81', anim: 'drop' }); }
         } },
       { at: T.rightNow, name: 'maternity: the young parents panic over the crying cot; "Zero."', in: 'fade', push: { from: 1.15, to: 1.22, x: 860, y: 600 },
         draw(c) {
@@ -107,7 +107,7 @@
           const sn = T.sneezes + 0.1, ph = seg(t, sn - 0.7, sn + 0.15), k = t > sn && t < sn + 0.6;
           c.fig('brother', { age: 'toddler', x: 1250, y: 1000, s: 1, face: -1, pose: t > sn - 0.7 && t < sn + 0.7 ? 'sneeze' : 'stand', phase: ph, expr: k ? 'sneeze' : 'neutral', dy: k ? -12 : 0, tint });
           c.fig('hero', { age: 'toddler', x: 1530, y: 1000, s: 1, face: -1, pose: 'stand', expr: 'neutral', turn: EYE.turn, look: [1, 0.3], tint });
-          STAGE.tag(c, 1480, 200, '3 YEARS LATER', { t0: T.three + 0.1, t1: T.three + 2.0, size: 60, fill: '#FFF4E3' });
+          STAGE.tag(c, 1480, 200, '3 YEARS LATER', { t0: T.three + 0.1, t1: T.three + 2.0, size: 60, fill: '#FFF4E3', anim: 'slide' });
         } },
       { at: T.water, name: '"Give him water": Mum hands a cup sideways without looking up; the little hero side-eyes us', push: { from: 1.3, to: 1.38, x: 1060, y: 640 },
         draw(c) {
@@ -120,26 +120,26 @@
           c.setFront('home', { tod: 'evening' });
           c.fig('hero', { age: 'toddler', x: 1330, y: 1000, s: 1, face: -1, pose: 'stand', tint, expr: t > T.water + 0.6 ? 'confused' : 'neutral', turn: t > T.water + 0.6 ? 0 : 0.5, look: t > T.water + 0.6 ? [-0.2, 0] : [1, 0.2] });
         } },
-      { at: T.version, name: 'the update window over the baby: FIRSTBORN v1.0; bugs crawl out', in: 'pop', push: { from: 1, to: 1.08, x: 960, y: 520 },
+      { at: T.version, name: 'the update window over the baby: FIRSTBORN v1.0; bugs crawl out', in: { type: 'slide', dir: 'left' }, push: { from: 1, to: 1.08, x: 960, y: 520 },
         draw(c) {
           const t = c.t; c.set('plain', {}); const p = 0.1 + 0.25 * seg(t, T.version, T.andParents);
           GFX.updateWindow(c.g, 960, 520, 1.15, { title: 'FIRSTBORN v1.0', progress: p, draw: (g) => { GFX.babyIcon(g, 0, -20, 1.3, { t, expr: t > T.bugs ? 'confused' : 'neutral', look: [0.3, -0.2] }); } });
           [[640, 300, 0], [1300, 380, 0.2], [700, 720, 0.45], [1220, 760, 0.65], [1420, 560, 0.85]].forEach(([x, y, d], i) => {
-            const st = pop(t, T.bugs + d * 0.6, 0.3); if (!st.on) return; const dx = 30 * Math.sin(t * 2 + i), dy = 20 * Math.cos(t * 1.7 + i);
-            GFX.at(c.g, x + dx, y + dy, st, q => GFX.bug(q, 0, 0, 2.0, t + i, Math.sin(t + i) * 0.5)); });
+            const t0 = T.bugs + d * 0.6; if (t < t0) return; const k = seg(t, t0, t0 + 0.6, 'outCubic'), dx = 30 * Math.sin(t * 2 + i) + (1 - k) * (x < 960 ? -220 : 220), dy = 20 * Math.cos(t * 1.7 + i);
+            GFX.at(c.g, x + dx, y + dy, { s: 1, a: k }, q => GFX.bug(q, 0, 0, 2.0, t + i, Math.sin(t + i) * 0.5)); });
         } },
       { at: T.andParents, name: 'the parents typing at laptops either side of the baby, fixing it live: LIVE', push: { from: 1.1, to: 1.18, x: 860, y: 600 },
         draw(c) {
           const t = c.t; c.set('maternity', {}); const typ = Math.sin(t * 22) * 0.04;
           parents(c, { mum: { pose: 'hold_laptop', expr: 'worried', look: [0.6, 0.7], tremble: 1 }, dad: { pose: 'hold_laptop', expr: 'worried', look: [0.6, 0.7], tremble: 1, nod: 0.2 + typ } });
           const b = cot(c, { expr: 'neutral', look: [0.4 * Math.sin(t * 2), -0.4] });
-          [[700, 380], [1010, 330]].forEach(([x, y], i) => GFX.at(c.g, x, y, pop(t, T.andParents + 0.6 + i * 0.4, 0.3), q => GFX.bug(q, 0, 0, 0.8, t + i, i)));
+          [[700, 380], [1010, 330]].forEach(([x, y], i) => GFX.at(c.g, x + 20 * Math.sin(t * 2 + i), y, { s: 1, a: 1 }, q => GFX.bug(q, 0, 0, 0.8, t + i, i)));
           if (t > T.live - 0.05) { const on = Math.floor((t - T.live) * 2) % 2 === 0; c.screen(); c.g.save(); GFX.rr(c.g, 70, 70, 210, 86, 20); GFX.inked(c.g, on ? '#E5534B' : '#B33A33', 5); c.g.beginPath(); c.g.arc(118, 113, 14, 0, Math.PI * 2); c.g.fillStyle = '#FFFFFF'; c.g.fill(); GFX.text(c.g, 'LIVE', 196, 115, { size: 50, weight: 900, color: '#FFFFFF' }); c.g.restore(); c.reset(); }
         } },
       { at: T.rules, name: 'the house rules board; "Oh, the rules": a punch; each rule on its words; the little hero beside it', in: { type: 'wipe', dir: 'left' },
         draw(c) {
           const t = c.t; c.camera({ x: 960, y: 540, zoom: punch(t, [T.oh], 0.06, 0.3) * (1 + 0.04 * seg(t, T.rules, T.sibling)), free: true }); c.set('home', { tod: 'evening' });
-          STAGE.rulesBoard(c, 1060, 470, 0.95, { rules: [{ icon: 'sweet', text: 'NO SWEETS', k: seg(t, T.sweets, T.sweets + 0.35) }, { icon: 'biscuit', text: 'NO BISCUITS', k: seg(t, T.biscuits, T.biscuits + 0.35) }, { icon: 'clock', text: 'BED AT 7', k: seg(t, T.bed, T.bed + 0.35) }] });
+          STAGE.rulesBoard(c, 1060, 470, 0.95, { rules: [{ icon: 'sweet', text: 'No sweets', k: seg(t, T.sweets, T.sweets + 0.35) }, { icon: 'biscuit', text: 'No biscuits before dinner', k: seg(t, T.biscuits, T.biscuits + 0.35) }, { icon: 'clock', text: 'Bed at 7', k: seg(t, T.bed, T.bed + 0.35) }] });
           c.fig('hero', { age: 'kid', x: 300, y: 1000, s: 1, face: 1, pose: 'stand', expr: t > T.biscuits ? 'sad' : 'worried', turn: 0.5, look: [1, -0.6] });
         } },
       { at: T.sibling, name: 'midnight: the younger brother munching biscuits in front of the glowing TV; the parents asleep', in: 'fade', push: { from: 1, to: 1.06, x: 900, y: 650 },
@@ -178,7 +178,7 @@
           const d = c.fig('dad', { x: R.x, y: R.y, s: R.s || 1, face: -1, pose: 'hold_clipboard', outfit: 'labcoat', expr: 'firm', turn: 0.5, look: [0.9, 0.7], young: true });
           goggles(c.g, ART.head('mum', m), 1); goggles(c.g, ART.head('dad', d), -1);
         } },
-      { at: T.stable, name: 'the siblings get the stable release: the brother in a shiny box; the little hero side-eyes it', in: 'pop', push: { from: 1, to: 1.06, x: 1000, y: 560 },
+      { at: T.stable, name: 'the siblings get the stable release: the brother in a shiny box; the little hero side-eyes it', in: 'cut', push: { from: 1, to: 1.06, x: 1000, y: 560 },
         draw(c) {
           const t = c.t; c.set('plain', {}); const st = pop(t, T.stableW - 0.1, 0.36);
           GFX.at(c.g, 1120, 960, st.on ? st : { s: 0.0001, a: 0, on: false }, q => GFX.releaseBox(q, 0, 0, 1.15, { label: 'STABLE RELEASE', ver: 'v2.0', draw: (g, x, y, w, h) => { g.fillStyle = '#FFF6E6'; g.fillRect(x, y, w, h); } }));

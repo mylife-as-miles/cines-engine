@@ -42,7 +42,7 @@
           GFX.spotlight(c.g, 520, 1000, 420, lit); c.g.save(); c.g.beginPath(); c.g.ellipse(520, 1000, 190, 36, 0, 0, Math.PI * 2); GFX.inked(c.g, lit > 0.5 ? '#FFE38A' : '#BFE3E0', 5); c.g.restore();
           QUEUE.forEach(([w, age], i) => c.fig(w, { age, x: 880 + i * 260, y: 1000, s: 1.05, face: -1, pose: 'stand', expr: 'neutral', turn: 0.3, look: [1, 0] }));
           c.fig('hero', { x: 520, y: 1000, s: 1.02, face: 1, pose: 'stand', expr: lit > 0.5 ? 'surprised' : 'neutral', turn: 0.2 });
-          GFX.at(c.g, 230, 430, FILM.popInOut(t, T.strongest - 0.2, T.firstW - 0.1, 0.3), q => { q.save(); q.lineCap = 'round'; q.lineWidth = 46; q.strokeStyle = '#1c1c1c'; q.beginPath(); q.moveTo(-90, 60); q.lineTo(0, 40); q.lineTo(30, -50); q.stroke(); q.lineWidth = 34; q.strokeStyle = '#FCEBCB'; q.stroke(); q.beginPath(); q.arc(0, 30, 40, Math.PI, 0); GFX.inked(q, '#FCEBCB', 5); q.restore(); GFX.cross(q, 0, 0, 220, seg(t, T.strongest + 0.3, T.strongest + 0.6)); });
+          GFX.at(c.g, 230, 430, { s: 1, a: seg(t, T.strongest - 0.2, T.strongest + 0.1) * (1 - seg(t, T.firstW - 0.4, T.firstW - 0.1)), on: t >= T.strongest - 0.2 && t < T.firstW }, q => { q.save(); q.lineCap = 'round'; q.lineWidth = 46; q.strokeStyle = '#1c1c1c'; q.beginPath(); q.moveTo(-90, 60); q.lineTo(0, 40); q.lineTo(30, -50); q.stroke(); q.lineWidth = 34; q.strokeStyle = '#FCEBCB'; q.stroke(); q.beginPath(); q.arc(0, 30, 40, Math.PI, 0); GFX.inked(q, '#FCEBCB', 5); q.restore(); GFX.cross(q, 0, 0, 220, seg(t, T.strongest + 0.3, T.strongest + 0.6)); });
         } },
       { at: T.thatAll, name: 'push in on him in the spotlight: "Position, not talent"', in: 'cut', push: { from: 1.1, to: 1.35, x: 620, y: 520 },
         draw(c) {
@@ -95,13 +95,13 @@
         draw(c) {
           const t = c.t; c.set('plain', {}); const k = seg(t, T.means1, T.means1 + 0.5);
           c.fig('mum', { x: 520, y: 1060, s: 1.12, face: 1, pose: k > 0.5 ? 'hands_clasped' : 'finger_up', expr: k > 0.5 ? 'worried' : 'firm', turn: 0.3, talk: [T.resp, Wend('responsible')] });
-          GFX.at(c.g, 1180, 400, pop(t, T.resp, 0.32), q => GFX.flipBubble(q, 0, 0, 900, 340, 'BE RESPONSIBLE', 'WE ARE AFRAID', k, { rough: true, size: 78, tail: [-420, 220], hearts: true }));
+          GFX.at(c.g, 1180, 400, pop(t, T.resp, 0.32), q => GFX.flipBubble(q, 0, 0, 940, 420, 'BE RESPONSIBLE', 'WE ARE AFRAID', k, { rough: true, size: 76, tail: [-430, 260], hearts: true }));
         } },
       { at: T.disappoint, name: '"Don\'t disappoint us" flips to WE ARE COUNTING ON YOU; Dad softens', in: 'cut', push: { from: 1, to: 1.06, x: 1020, y: 520 },
         draw(c) {
           const t = c.t; c.set('plain', {}); const k = seg(t, T.means2, T.means2 + 0.5);
           c.fig('dad', { x: 1400, y: 1060, s: 1.14, face: -1, pose: k > 0.5 ? 'hands_clasped' : 'point', expr: k > 0.5 ? 'sad' : 'firm', turn: 0.3, talk: [T.disappoint, Wend('us', { after: FILM.W("don't disappoint") })] });
-          GFX.at(c.g, 720, 400, pop(t, T.disappoint, 0.32), q => GFX.flipBubble(q, 0, 0, 980, 360, "DON'T DISAPPOINT US", 'WE ARE COUNTING ON YOU', k, { rough: true, size: 74, tail: [440, 230], hearts: true }));
+          GFX.at(c.g, 720, 400, pop(t, T.disappoint, 0.32), q => GFX.flipBubble(q, 0, 0, 1040, 440, "DON'T DISAPPOINT US", 'WE ARE COUNTING ON YOU', k, { rough: true, size: 70, tail: [450, 270], hearts: true }));
         } },
       { at: T.heavy, name: '"this is too heavy": the whole house on his back; he sinks on "heavy"', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06, x: 960, y: 560 },
         draw(c) {

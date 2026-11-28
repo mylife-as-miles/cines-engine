@@ -450,7 +450,10 @@
   };
   // a label pill in world space (names on screen); pops in at t0 when given
   STAGE.tag = function (c, x, y, label, o) {
-    o = o || {}; const st = o.t0 != null ? FILM.popInOut(c.t, o.t0, o.t1, 0.3) : { s: 1, a: 1, on: true }; if (!st.on) return;
+    o = o || {}; let st = o.t0 != null ? FILM.popInOut(c.t, o.t0, o.t1, 0.3) : { s: 1, a: 1, on: true };
+    // o.anim 'slide': it slides in from the side (o.from px, default 300 from the right) and fades; no squash pop
+    if (o.t0 != null && o.anim === 'slide') { const k = seg(c.t, o.t0, o.t0 + 0.4, 'outCubic'), out = o.t1 == null ? 0 : seg(c.t, o.t1 - 0.3, o.t1); st = { s: 1, a: clamp(k * 2, 0, 1) * (1 - out), dx: (1 - k) * (o.from || 300), on: c.t >= o.t0 && (o.t1 == null || c.t < o.t1) }; }
+    if (!st.on) return;
     GFX.at(c.g, x, y, st, () => STAGE.pill(c, 0, 0, label, { size: o.size || 54, fill: o.fill, color: o.color }));
   };
   // the life path with its milestones (cot, school bag, cap and gown, office, the wedding rice): the kit's lifePath (o.progress 0..1:
@@ -517,7 +520,8 @@
   STAGE.bankPhone = function (c, o) {
     o = o || {}; const f = SK('phoneScreen');
     const hasBank = !!(f && /['"]bank['"]/.test(Function.prototype.toString.call(f)));
-    if (hasBank) return STAGE.phone(c, Object.assign({ mode: 'bank' }, o));
+    if (hasBank) return STAGE.phone(c, { mode: 'bank', app: o.bank, balance: Math.round(o.balance || 0), balanceK: o.balanceK, title: o.title, amount: o.amount, creditK: o.creditK, banner: o.banner, newestFirst: true,
+      rows: (o.rows || []).map(r => ({ label: r.label, amount: Math.abs(r.amount), out: r.amount < 0, k: r.k })) });
     ART.placeholders.set['phone bank mode'] = 1;
     c.screen(); let r = null;
     if (f) { c.g.save(); r = f(c.g, Object.assign({ t: c.t, mode: 'chat', messages: [], contact: null }, o, { mode: 'chat' })); c.g.restore(); }
@@ -525,10 +529,24 @@
     if (r && r.screen) GFX.bankApp(c.g, r.screen, o);
     c.reset(); return r;
   };
-  // kit overlays with engine fallbacks
-  STAGE.jobCard = (c, x, y, s, o) => STAGE.kitDraw(c, 'jobCard', Object.assign({ x, y, scale: s }, o), g => GFX.jobCard(g, x, y, s, o));
-  STAGE.rulesBoard = (c, x, y, s, o) => STAGE.kitDraw(c, 'rulesBoard', Object.assign({ x, y, scale: s }, o), g => GFX.rulesBoard(g, x, y, s, o));
-  STAGE.bill = (c, x, y, s, o) => STAGE.kitDraw(c, 'billCard', Object.assign({ x, y, scale: s, world: true }, o), g => GFX.bill(g, x, y, s, o));
+  // an incoming call, full frame: the kit's call mode when it has one, else the lock screen with a call note
+  STAGE.callPhone = function (c, o) {
+    const f = SK('phoneScreen'); if (f && /['"]call['"]/.test(Function.prototype.toString.call(f))) return STAGE.phone(c, Object.assign({ mode: 'call' }, o));
+    return STAGE.phone(c, { mode: 'lock', time: o.time || '9:45', notes: [{ icon: 'call', title: o.contact, body: o.status || 'Incoming call', time: 'now' }], notesK: 1, buzz: o.buzz });
+  };
+  // kit overlays with engine fallbacks, drawn in the current (world) transform; (x, y) the card's centre, s the engine card's scale
+  // jobCard: o.rows [{label, k (crossed out 0..1)}], o.title, o.badge (text, false hides), o.badgeK, o.rot, o.k (pop in 0..1, out 1..2)
+  STAGE.jobCard = (c, x, y, s, o) => STAGE.kitDraw(c, 'jobCard', { x, y, scale: s * 1.2, rot: o.rot, k: o.k, t: c.t, title: o.title, badge: o.badge == null ? 'FIRSTBORN' : o.badge, badgeK: o.badgeK, sign: o.sign,
+    lines: (o.rows || []).map(r => ({ text: r.label, strike: r.k || 0 })) }, g => { GFX.jobCard(g, x, y, s, o); if (o.badge !== false) GFX.badge(g, x + 380 * s, y + 352 * s, 0.9 * s, o.badge || 'FIRSTBORN', { cord: 0, rot: 0.08 }); });
+  // rulesBoard: o.rules [{icon, text, k}], o.title
+  STAGE.rulesBoard = (c, x, y, s, o) => STAGE.kitDraw(c, 'rulesBoard', { x, y, scale: s * 1.3, title: o.title, rules: (o.rules || []).map(r => ({ text: r.text, k: r.k == null ? 1 : r.k, strike: r.strike })), t: c.t, k: o.k },
+    g => GFX.rulesBoard(g, x, y, s, o));
+  // a bill: o.title, o.amount, o.color, o.due, o.rot
+  STAGE.bill = (c, x, y, s, o) => STAGE.kitDraw(c, 'billCard', { x, y, scale: (s || 1) * 0.93, kind: 'bill', title: o.title, amount: o.amount, color: o.color, sub: o.due ? 'DUE' : o.sub, rot: o.rot || 0, k: o.k, t: c.t },
+    g => GFX.bill(g, x, y, s, o));
+  // the invoice: the kit's invoice card (o.items, o.total, o.stamp, o.stampK, o.k) when it has one, else the engine's unrolling one (o.len)
+  STAGE.invoice = (c, x, y, s, o) => STAGE.kitDraw(c, 'billCard', { x, y, scale: s, kind: 'invoice', title: o.title || 'INVOICE', lines: (o.items || []).map(it => typeof it === 'string' ? { label: it, amount: '' } : it), total: o.total, stamp: o.stamp, stampK: o.stampK, k: o.k, t: c.t },
+    g => GFX.invoice(g, x, y - 300 * s, s, o.len || 900, o));
   // the doors of the career choice: o.doors = [{label, icon, lit, k (slid in 0..1), flip}], o.y the threshold line
   STAGE.doors = function (c, o) {
     const f = SK('doorTrio'); if (f) return STAGE.kitDraw(c, 'doorTrio', o, () => { });

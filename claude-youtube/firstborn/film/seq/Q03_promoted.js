@@ -227,7 +227,7 @@
           c.fig('mum', { x: 560, y: 990, s: 1.02, face: 1, pose: 'point', expr: 'firm', talk: [T.didHe, Wend('this')], turn: EYE.turn, look: EYE.look });
           c.fig('hero', KID({ x: 960, y: 1000, face: -1, pose: 'stand', expr: 'worried', breath: false, turn: 0.2, look: [0.4, 0], blinks: [T.standing + 0.6] }));
         } },
-      { at: T.poster, name: '"You are now a poster": the hero framed on the wall, a ROLE MODEL plate', in: 'pop', push: { from: 1, to: 1.06, x: 960, y: 500 },
+      { at: T.poster, name: '"You are now a poster": the hero framed on the wall, a ROLE MODEL plate', in: 'cut', push: { from: 1, to: 1.06, x: 960, y: 500 },
         draw(c) {
           const t = c.t; c.set('home', DAY); const k = ease.outBack(seg(t, T.posterW - 0.1, T.posterW + 0.3));
           c.g.save(); GFX.rr(c.g, 760, 160, 400, 560, 10); c.g.fillStyle = '#FFF6E6'; c.g.fill(); c.g.restore();

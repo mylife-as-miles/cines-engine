@@ -68,7 +68,7 @@
           const a = c.fig('auntie2', { x: 820, y: 990, s: 1, face: 1, pose: 'hold_phone', mode: 'front', expr: 'surprised', turn: 0.5, look: [0.6, 0.7], nod: 0.2 * Math.sin(t * 6) });
           c.fig('uncle2', { x: 1080, y: 990, s: 1.02, face: -1, pose: 'hand_mouth', expr: 'happy', turn: 0.6, look: [1, 0.4] });
           c.fig('hero', TEEN({ x: 1500, y: 1000, face: -1, expr: 'confused', turn: EYE.turn, look: EYE.look }));
-          GFX.at(c.g, 950, 360, pop(t, T.results, 0.3), q => { GFX.bubble(q, 0, 0, 300, 160, { tail: [-60, 140] }); GFX.text(q, 'A A A A', 0, 4, { size: 54, weight: 900, color: '#3E8A5A' }); });
+          GFX.at(c.g, 950, 360, { s: 1, a: seg(t, T.results, T.results + 0.35), on: t >= T.results }, q => { GFX.bubble(q, 0, 0, 300, 160, { tail: [-60, 140] }); GFX.text(q, 'A A A A', 0, 4, { size: 54, weight: 900, color: '#3E8A5A' }); });
         } },
       { at: T.auntie, name: 'the call: an auntie from another state, "I heard you came first"', in: 'cut',
         draw(c) {
@@ -85,12 +85,12 @@
         } },
       { at: T.careers, name: 'three doors: DOCTOR, LAWYER, ENGINEER, each lighting on its word', in: { type: 'wipe', dir: 'left' }, push: { from: 1, to: 1.05, x: 960, y: 520 },
         draw(c) {
-          const t = c.t; const n = seg(t, T.doctor - 0.25, T.doctor + 0.15) + seg(t, T.lawyer - 0.25, T.lawyer + 0.15) + seg(t, T.engineer - 0.25, T.engineer + 0.15);
+          const t = c.t; const n = 3 * seg(t, T.careers + 0.2, T.three + 0.4);
           const lit = t > T.engineer ? 2 : t > T.lawyer ? 1 : t > T.doctor ? 0 : -1;
           if (STAGE.kit('doorTrio')) c.set('doorTrio', { labels: ['Doctor', 'Lawyer', 'Engineer'], n, glow: lit, t });
           else { c.set('plain', {}); const d = (label, icon, t0) => ({ label, icon, k: seg(t, t0 - 0.25, t0 + 0.25), lit: seg(t, t0, t0 + 0.2) * (1 - 0.6 * seg(t, t0 + 0.6, t0 + 1.0)) });
             STAGE.doors(c, { y: 930, spacing: 430, s: 0.95, doors: [d('DOCTOR', 'doctor', T.doctor), d('LAWYER', 'lawyer', T.lawyer), d('ENGINEER', 'engineer', T.engineer)] }); }
-          c.fig('hero', TEEN({ x: 960, y: 1180, s: 1.1, face: 1, expr: 'worried', turn: 0.1, look: [Math.sin(t * 1.2) * 0.8, -0.6] }));
+          c.fig('hero', TEEN({ x: 1225, y: 1200, s: 1.1, face: -1, expr: 'worried', turn: 0.1, look: [Math.sin(t * 1.2) * 0.8, -0.6] }));
         } },
       { at: T.four, name: 'a fourth door slides in; its sign flips to DOCTOR', in: 'cut', push: { from: 1, to: 1.04, x: 1100, y: 520 },
         draw(c) {
@@ -98,7 +98,7 @@
           if (STAGE.kit('doorTrio')) c.set('doorTrio', { labels: ['Doctor', 'Lawyer', 'Engineer', flip > 0.5 ? 'Doctor' : '?'], n: 3 + seg(t, T.four, T.four + 0.45), glow: t > T.doctor2 ? 3 : -1, t });
           else { c.set('plain', {}); STAGE.doors(c, { y: 930, spacing: 400, s: 0.88, cx: 960, doors: [{ label: 'DOCTOR', icon: 'doctor' }, { label: 'LAWYER', icon: 'lawyer' }, { label: 'ENGINEER', icon: 'engineer' },
             { label: flip > 0.5 ? 'DOCTOR' : '???', icon: flip > 0.5 ? 'doctor' : null, k: seg(t, T.four, T.four + 0.45), lit: seg(t, T.doctor2, T.doctor2 + 0.2), plate: flip > 0.5 ? '#FFE38A' : '#FFF6E6' }] }); }
-          c.fig('hero', TEEN({ x: 760, y: 1180, s: 1.1, face: 1, expr: t > T.doctor2 + 0.3 ? 'firm' : 'surprised', turn: t > T.doctor2 + 0.3 ? 0 : 0.5, look: t > T.doctor2 + 0.3 ? [0, 0] : [1, -0.5] }));
+          c.fig('hero', TEEN({ x: 540, y: 1200, s: 1.1, face: 1, expr: t > T.doctor2 + 0.3 ? 'firm' : 'surprised', turn: t > T.doctor2 + 0.3 ? 0 : 0.5, look: t > T.doctor2 + 0.3 ? [0, 0] : [1, -0.5] }));
         } },
       { at: T.creative, name: '"something creative": the hero with a paintbrush and palette before the family', in: 'cut', push: { from: 1, to: 1.05, x: 900, y: 560 },
         draw(c) {

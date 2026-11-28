@@ -52,22 +52,22 @@
       { at: T.start, name: 'the graduation stage: the hero in cap and gown, his diploma; the cap tossed', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.05, x: 960, y: 520 },
         draw(c) {
           const t = c.t; STAGE.gradStage(c); const st = c.anchor('school', 'stage', [960, 760]);
-          const h = c.fig('hero', { x: 900, y: st.y + 10, s: 1, face: 1, pose: 'cheer', expr: 'happy', outfit: KITGOWN() ? 'gown' : undefined }); h.who = 'hero';
+          const h = c.fig('hero', { x: 1000, y: st.y + 10, s: 0.78, face: 1, pose: 'cheer', expr: 'happy', outfit: KITGOWN() ? 'gown' : undefined }); h.who = 'hero';
           if (!KITGOWN()) { const toss = seg(t, T.grad + 0.2, T.job); gradOutfit(c, h, { lift: Math.sin(toss * Math.PI) * 300, rot: -0.06 + toss * 6 }); }
           GFX.diploma(c.g, ART.hand('hero', h).x, ART.hand('hero', h).y, 0.7, -0.4);
-          STAGE.chapterCard(c, T.start + 0.15, T.start + 1.95, 'THE FIRST SALARY', { x: 1400, y: 240 });
+          STAGE.chapterCard(c, T.start + 0.15, T.start + 1.95, 'THE FIRST SALARY', { x: 1450, y: 900, scale: 0.55 });
         } },
       { at: T.job, name: 'the office: his first job, the lanyard on', in: 'cut', push: { from: 1, to: 1.05 },
         draw(c) { const o = { clock: '9:05' }; c.set('office', o); const sa = STAGE.sitAt(c, 'office', 'chair'); c.fig('hero', Object.assign(sa, { face: -1, pose: 'type', expr: 'happy' })); c.setFront('office', Object.assign({ parts: ['desk'] }, o)); } },
-      { at: T.alert, name: 'the phone, full frame: SALARY CREDITED', in: 'pop',
+      { at: T.alert, name: 'the phone, full frame: SALARY CREDITED', in: { type: 'slide', dir: 'up' },
         draw(c) { const t = c.t; STAGE.phone(c, { mode: 'lock', time: '9:41', date: 'Friday 28', notes: [{ icon: 'msg', title: 'MY BANK', body: 'Salary credited: ' + GFX.money(350000), time: 'now' }], notesK: seg(t, T.alert + 0.1, T.alert + 0.5), buzz: t < T.alert + 0.6 ? 1 : 0 }); } },
       { at: T.champion, name: '"a champion": arms up in the office, gold confetti', in: 'cut', push: { from: 1, to: 1.08, x: 960, y: 480 },
         draw(c) {
           const t = c.t; c.set('office', {}); c.fig('hero', { x: 960, y: 962, s: 1.08, face: 1, pose: 'cheer', expr: 'happy', dy: -Math.abs(Math.sin(t * 6)) * 16 });
           const R = FILM.rng('conf'); for (let i = 0; i < 40; i++) { const x = R() * 1920, sp = 200 + R() * 200, y = -40 + ((t - T.champion) * sp + R() * 300) % 1100; c.g.save(); c.g.translate(x, y); c.g.rotate(t * 3 + i); c.g.fillStyle = ['#F4BF54', '#F5A454', '#FFE38A'][i % 3]; c.g.fillRect(-9, -5, 18, 10); c.g.restore(); }
         } },
-      { at: T.open, name: 'the bank app: the balance counts up; SALARY +', in: 'pop',
-        draw(c) { const t = c.t, k = ease.outCubic(seg(t, T.open + 0.2, T.open + 1.0)); STAGE.bankPhone(c, { balance: 350000 * k, rows: [{ label: 'SALARY', amount: 350000, k: seg(t, T.open + 0.6, T.open + 1.0) }] }); } },
+      { at: T.open, name: 'the bank app: the balance counts up; SALARY +', in: 'cut',
+        draw(c) { const t = c.t, k = ease.outCubic(seg(t, T.open + 0.2, T.open + 1.0)); STAGE.bankPhone(c, { balance: 350000 * k, balanceK: seg(t, T.open + 0.9, T.open + 1.2), title: 'Salary credited', amount: 350000, creditK: seg(t, T.open + 0.1, T.open + 0.5), rows: [] }); } },
       { at: T.four, name: '"exactly four minutes": a 4:00 timer races down while he dances', in: 'cut', push: { from: 1, to: 1.05 },
         draw(c) {
           const t = c.t; c.set('office', {}); const sec = Math.max(0, 240 * (1 - seg(t, T.four + 0.3, T.calls - 0.1)));
@@ -75,7 +75,7 @@
           GFX.timer(c.g, 520, 480, 1.4 + 0.05 * Math.sin(t * 8), sec, { color: sec < 40 ? '#E5534B' : '#F5A454' });
         } },
       { at: T.calls, name: '"Then the calls start": MUM calling', in: 'cut',
-        draw(c) { const t = c.t; STAGE.phone(c, { mode: 'lock', time: '9:45', date: 'Friday 28', notes: [{ icon: 'call', title: 'MUM', body: 'Incoming call', time: 'now' }], notesK: seg(t, T.calls + 0.2, T.calls + 0.6), buzz: 0.6 + 0.4 * Math.sin(t * 9) }); } },
+        draw(c) { const t = c.t; STAGE.callPhone(c, { contact: 'MUM', status: 'incoming call', avatarColor: '#E2A33B', t, buzz: 0.6 + 0.4 * Math.sin(t * 9) }); } },
       { at: T.dear, name: 'the call: "My dear, I don\'t want to disturb you", sweetly', in: 'cut',
         draw(c) {
           const t = c.t;
@@ -88,7 +88,7 @@
       { at: T.disturb, name: 'then the disturbance arrives: calls and messages pop up all around him', in: 'cut', push: { from: 1, to: 1.06 },
         draw(c) {
           const t = c.t; c.set('office', {}); c.fig('hero', { x: 960, y: 962, s: 1.05, face: 1, pose: 'hold_phone', mode: 'front', expr: t > T.arrives ? 'scared' : 'neutral', look: [0.3, 0.6] });
-          [[500, 300, 'call', '#77CC81'], [1420, 280, 'chat'], [380, 620, 'mail'], [1560, 600, 'call', '#77CC81'], [700, 160, 'chat'], [1240, 140, 'call', '#77CC81']].forEach(([x, y, k, bg], i) => STAGE.notify(c, x, y, T.arrives + i * 0.22, k, { s: 1.6, bg }));
+          [[500, 300, 'call', '#77CC81'], [1420, 280, 'chat'], [380, 620, 'mail'], [1560, 600, 'call', '#77CC81'], [700, 160, 'chat'], [1240, 140, 'call', '#77CC81']].forEach(([x, y, k, bg], i) => STAGE.notify(c, x, y, T.arrives + i * 0.22, k, { s: 1.6, bg, anim: 'drop' }));
         } },
       { at: T.fees, name: 'the bills fly in one by one: SCHOOL FEES, RENT, HOSPITAL, then the "small thing", the biggest', in: 'cut', push: { from: 1, to: 1.04 },
         draw(c) {
@@ -105,7 +105,8 @@
       { at: T.invoice, name: '"the invoice is real": a giant invoice unrolls to the floor', in: 'cut', push: { from: 1, to: 1.05, x: 960, y: 400 },
         draw(c) {
           const t = c.t; c.set('plain', {}); const len = 160 + 1000 * ease.outCubic(seg(t, T.invoiceW - 0.1, T.real + 0.6));
-          GFX.invoice(c.g, 760, 60, 1.0, len, { items: ['SCHOOL FEES', 'RENT', 'HOSPITAL', 'A SMALL THING', 'GENERATOR FUEL', 'WEDDING ASO-EBI', 'DATA BUNDLE', 'TRANSPORT'] });
+          STAGE.invoice(c, 760, 540, 1.0, { len, k: seg(t, T.invoice, T.invoiceW + 0.2), items: [{ label: 'School fees', amount: 180000 }, { label: 'Rent', amount: 250000 }, { label: 'Hospital', amount: 95000 }, { label: 'A small thing', amount: 400000 }],
+            total: { label: 'TOTAL', amount: 925000 }, stamp: 'DUE', stampK: seg(t, T.real, T.real + 0.3) });
           c.fig('hero', { x: 1450, y: 1000, s: 1.05, face: -1, pose: 'hand_mouth', expr: 'surprised', turn: 0.4, look: [1, -0.6 + 0.8 * seg(t, T.invoiceW, T.real + 0.6)] });
         } },
       { at: T.budget, name: '"nobody asked if you have a budget": his empty wallet, a moth flies out', in: 'cut', push: { from: 1.05, to: 1.15, x: 960, y: 440 },
@@ -117,14 +118,14 @@
         draw(c) {
           const t = c.t; c.set('bankCounter', {}); const tl = c.anchor('bankCounter', 'teller', [960, 900, 0.95]);
           const Q = ['mum', 'dad', 'auntie', 'uncle', 'brother'];
-          Q.slice().reverse().forEach((w, j) => { const i = Q.length - 1 - j, q = c.anchor('bankCounter', 'q' + (i + 1), [1060 - 230 * i, 985]); c.fig(w, { x: q.x, y: q.y, s: q.s || 1, face: 1, age: w === 'brother' ? 'kid' : undefined, pose: i === 0 ? 'hold_card' : 'stand', expr: 'happy', turn: 0.3, look: [1, -0.1], dy: -Math.abs(Math.sin(t * 2 + i)) * 5 }); });
+          Q.slice().reverse().forEach((w, j) => { const i = Q.length - 1 - j, q = c.anchor('bankCounter', 'q' + (i + 1), [1060 - 230 * i, 985]); c.fig(w, { x: q.x, y: q.y, s: q.s || 1, face: 1, age: w === 'brother' ? 'teen' : undefined, pose: i === 0 ? 'hold_card' : 'stand', expr: 'happy', turn: 0.3, look: [1, -0.1], dy: -Math.abs(Math.sin(t * 2 + i)) * 5 }); });
           c.fig('hero', { x: tl.x, y: tl.y, s: tl.s, face: -1, pose: 'hands_clasped', expr: 'happy', turn: 0.4, look: [1, 0] });
           c.setFront('bankCounter', {}); if (!ART.hasSet('bankCounter')) { GFX.rr(c.g, 300, 640, 1320, 50, 8); GFX.inked(c.g, '#C98E5A', 6); GFX.rr(c.g, 320, 690, 1280, 295, 0); GFX.inked(c.g, '#A8723F', 5); }
-          if (ART.hasSet('bankCounter')) STAGE.tag(c, 1300, 150, 'FAMILY BANK', { t0: T.bank, size: 60, fill: '#3A8594', color: '#FFFFFF' });
+          if (ART.hasSet('bankCounter')) STAGE.tag(c, 1300, 150, 'FAMILY BANK', { t0: T.bank, size: 60, fill: '#3A8594', color: '#FFFFFF', anim: 'slide' });
         } },
       { at: T.interest, name: 'three signs on the counter: 0% INTEREST, NO COLLATERAL, CUSTOMER CARE: CLOSED', in: 'cut', push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) {
-          const t = c.t; c.camera({ x: 1300, y: 520, zoom: 1.5 }); c.set('bankCounter', {}); const tl = c.anchor('bankCounter', 'teller', [960, 900, 0.95]);
+          const t = c.t; c.camera({ x: 1340, y: 560, zoom: 1.3 }); c.set('bankCounter', {}); const tl = c.anchor('bankCounter', 'teller', [960, 900, 0.95]);
           c.fig('hero', { x: tl.x, y: tl.y, s: tl.s, face: -1, pose: 'shrug', expr: 'neutral', turn: 0, look: [0, 0] });
           const SIGNS = [[T.interest, '0% INTEREST'], [T.collateral, 'NO COLLATERAL'], [T.care, 'CUSTOMER CARE: CLOSED']];
           if (ART.hasSet('bankCounter')) c.setFront('bankCounter', { signs: SIGNS.map(([t0, text]) => ({ text, k: seg(t, t0, t0 + 0.35) })) });
@@ -144,20 +145,20 @@
       { at: T.does, name: '"And he does": a transfer pings on Mum\'s phone; she beams', in: 'cut', push: { from: 1.05, to: 1.12, x: 960, y: 440 },
         draw(c) {
           const t = c.t; c.set('home', DAY); const m = c.fig('mum', { x: 900, y: 990, s: 1.08, face: 1, pose: 'hold_phone', mode: 'front', expr: 'happy', look: [0.4, 0.6] });
-          const hn = ART.hand('mum', m); STAGE.notify(c, hn.x + 100, hn.y - 160, T.does + 0.2, 'chat', { s: 1.8 });
+          const hn = ART.hand('mum', m); STAGE.notify(c, hn.x + 100, hn.y - 160, T.does + 0.2, 'chat', { s: 1.8, anim: 'drop' });
           GFX.at(c.g, hn.x + 330, hn.y - 230, pop(t, T.does + 0.3, 0.3), () => STAGE.pill(c, 0, 0, '+' + GFX.money(50000), { size: 50, fill: '#77CC81', color: '#FFFFFF' }));
         } },
-      { at: T.account, name: '"he keeps using your account": transfers out of his account, one after another', in: 'pop',
+      { at: T.account, name: '"he keeps using your account": transfers out of his account, one after another', in: { type: 'slide', dir: 'up' },
         draw(c) {
           const t = c.t, rows = [{ label: 'TO MUM', amount: -50000, t0: T.accountW - 0.2 }, { label: 'TO AUNTIE', amount: -20000, t0: T.accountW + 0.3 }, { label: 'TO UNCLE', amount: -35000, t0: T.accountW + 0.8 }];
           const out = rows.reduce((s, r) => s + (t > r.t0 ? -r.amount * seg(t, r.t0, r.t0 + 0.4) : 0), 0);
-          STAGE.bankPhone(c, { balance: 245000 - out, rows: rows.map(r => ({ label: r.label, amount: r.amount, k: seg(t, r.t0, r.t0 + 0.35) })) });
+          STAGE.bankPhone(c, { balance: 245000 - out, creditK: 0, rows: rows.map(r => ({ label: r.label, amount: r.amount, k: seg(t, r.t0, r.t0 + 0.35) })) });
         } },
       { at: T.funny, name: '"you do it": he taps send, a rueful smile', in: 'cut', push: { from: 1.05, to: 1.12, x: 960, y: 440 },
         draw(c) {
           const t = c.t; c.set('home', { tod: 'evening' }); const tint = ART.tintFor(c, 'home');
           const h = c.fig('hero', { x: 960, y: 990, s: 1.1, face: 1, pose: 'hold_phone', mode: 'front', expr: t > T.doIt ? 'happy' : 'neutral', look: [0.3, 0.7], tint, nod: t > T.doIt && t < T.doIt + 0.3 ? 0.4 : 0.2 });
-          if (t > T.doIt) { const hn = ART.hand('hero', h); STAGE.notify(c, hn.x + 80, hn.y - 150, T.doIt + 0.05, 'chat', { s: 1.4 }); }
+          if (t > T.doIt) { const hn = ART.hand('hero', h); STAGE.notify(c, hn.x + 80, hn.y - 150, T.doIt + 0.05, 'chat', { s: 1.4, anim: 'drop' }); }
         } },
       { at: T.love, name: '"because you love them": a soft smile at the family photo on the wall', in: 'fade', push: { from: 1, to: 1.1, x: 935, y: 360 },
         draw(c) {
@@ -167,18 +168,18 @@
       { at: T.sister, name: 'the sister crosses the graduation stage; the hero claps in the front row', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) {
           const t = c.t; STAGE.gradStage(c); const st = c.anchor('school', 'stage', [960, 760]);
-          const wk = walk(t, T.walks, T.paid + 0.6, 520, 1200, { s: 0.95 });
-          const sis = c.fig('sister', { age: 'grown', x: wk.x, y: st.y + 10, s: 0.95, face: 1, pose: wk.moving ? 'walk' : 'wave', walk: wk.walk, phase: wk.moving ? undefined : t * 1.4, expr: 'happy', outfit: KITGOWN() ? 'gown' : undefined }); sis.who = 'sister';
+          const wk = walk(t, T.walks, T.paid + 0.6, 420, 1000, { s: 0.72 });
+          const sis = c.fig('sister', { age: 'grown', x: wk.x, y: st.y + 10, s: 0.72, face: 1, pose: wk.moving ? 'walk' : 'wave', walk: wk.walk, phase: wk.moving ? undefined : t * 1.4, expr: 'happy', outfit: KITGOWN() ? 'gown' : undefined }); sis.who = 'sister';
           if (!KITGOWN()) gradOutfit(c, sis, { gown: '#3E3A6E' });
-          c.fig('hero', { x: 760, y: 1260, s: 1.15, face: 1, pose: 'clap', expr: 'happy', turn: 0.6, look: [0.6, -1] });
+          c.fig('hero', { x: 1560, y: 1300, s: 1.15, face: -1, pose: 'clap', expr: 'happy', turn: 0.6, look: [0.8, -1] });
         } },
-      { at: T.cry, name: 'he cries harder than she does, still clapping', in: 'cut', push: { from: 1.1, to: 1.18, x: 960, y: 420 },
-        draw(c) { const t = c.t; STAGE.gradStage(c); const h = c.fig('hero', { x: 960, y: 1080, s: 1.25, face: 1, pose: 'clap', expr: KE('happy_cry') ? 'happy_cry' : 'sad', turn: 0.3, look: [0.5, -0.8] }); GFX.tears(c.g, ART.head('hero', h), t, KE('happy_cry') ? 0.6 : 1); } },
+      { at: T.cry, name: 'he cries harder than she does, still clapping', in: 'cut', push: { from: 1.1, to: 1.18, x: 1300, y: 420 },
+        draw(c) { const t = c.t; STAGE.gradStage(c); const h = c.fig('hero', { x: 1380, y: 1080, s: 1.25, face: -1, pose: 'clap', expr: KE('happy_cry') ? 'happy_cry' : 'sad', turn: 0.3, look: [0.5, -0.8] }); GFX.tears(c.g, ART.head('hero', h), t, KE('happy_cry') ? 0.6 : 1); } },
       { at: T.dust, name: '"dust in your eye": he wipes it and points at it, deadpan', in: 'cut', push: { from: 1.1, to: 1.16, x: 960, y: 420 },
         draw(c) {
           const t = c.t; STAGE.gradStage(c);
           const wipe = t < T.dustW + 0.1 && KP('wipe_eye');
-          const h = c.fig('hero', { x: 960, y: 1080, s: 1.25, face: 1, pose: wipe ? 'wipe_eye' : 'point', expr: t > T.dustW ? 'firm' : (KE('happy_cry') ? 'happy_cry' : 'sad'), turn: 0, look: [0, 0], override: wipe ? null : { armR: { ik: [40, -390], bend: 1, ul: 0.6, hand: 'point', flip: 1, hrot: 2.4 } } });
+          const h = c.fig('hero', { x: 1380, y: 1080, s: 1.25, face: -1, pose: wipe ? 'wipe_eye' : 'point', expr: t > T.dustW ? 'firm' : (KE('happy_cry') ? 'happy_cry' : 'sad'), turn: 0, look: [0, 0], override: wipe ? null : { armR: { ik: [40, -390], bend: 1, ul: 0.6, hand: 'point', flip: 1, hrot: 2.4 } } });
           const hd = ART.head('hero', h); if (t < T.dustW + 0.6) GFX.tears(c.g, hd, t, 1 - seg(t, T.dustW, T.dustW + 0.6));
           if (t > T.dustW) { c.g.fillStyle = 'rgba(200,170,120,.8)'; for (let i = 0; i < 9; i++) { const ph = ((t - T.dustW) * 0.4 + i * 0.11) % 1; c.g.beginPath(); c.g.arc(hd.x - hd.r * 1.4 + Math.sin(i * 3 + t) * 60, hd.y - hd.r + ph * 200, 4, 0, Math.PI * 2); c.g.fill(); } }
         } },

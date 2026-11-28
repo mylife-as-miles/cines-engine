@@ -1410,8 +1410,13 @@
     g.restore();
   };
 
-  // ================================================================ FIRSTBORN IN AN AFRICAN HOME: shared helpers for the new sets
-  // The sets below follow the same contract as the ones above (result(), anchors, ...Front, cached static layers).
+  // ================================================================ FIRSTBORN IN AN AFRICAN HOME: the second video's sets
+  // Rooms (same contract as above: SETS.<name>(g, o) -> {floorY, anchors, tint, ...}, SETS.<name>Front, cached static layers):
+  //   maternity, home (view 'lounge' | 'dining', tod 'day' | 'evening' | 'night', tv), kitchen, shop, school (view 'class' | 'board'),
+  //   partyHall (also SETS.party(g, {hall: true})).
+  // Graphic stages: lifePath (milestones, progress; result.at(u)), lab, courtroom, podium, bankCounter (signs), doorTrio (labels).
+  // Screens and cards: phoneScreen modes 'bank' and 'call' and o.banner; badge, jobCard, rulesBoard, billCard; SETS.icon (milestone icons).
+  // Test pages: src/SETS_<name>.html (?o={...}&fig=1&anchors=1&bench=1); renders in frames/SET_<name>.png.
   const SKIN = ['#A9714F', '#8E5B3E', '#C08A63', '#7A4B32'];   // brown skin tones for photo busts (blank faces)
   const NIGHT = [[0, '#F2D2A6'], [0.22, '#B49AB0'], [0.6, '#7B7AA6'], [1, '#5C5F90']];
   const EVE = [[0, '#FFF6EA'], [0.45, '#F6DCC6'], [1, '#DDB2A6']];
@@ -1653,6 +1658,14 @@
   }
   // text that shrinks to fit a width (never under min px)
   function fitFont(g, text, weight, px, maxW, min) { let p = px; g.font = font(weight, p); while (p > (min || 40) && g.measureText(String(text)).width > maxW) { p -= 2; g.font = font(weight, p); } return p; }
+  // a soft-edged ellipse without a blur filter (cheap enough for live drawing): a radial gradient squashed to the ellipse
+  function softEll(g, cx, cy, rx, ry, col) {
+    const m = /rgba?\(([^)]+)\)/.exec(col), parts = m ? m[1].split(',').map(Number) : hex(col).concat([1]);
+    const c0 = 'rgba(' + parts[0] + ',' + parts[1] + ',' + parts[2] + ',' + (parts[3] == null ? 1 : parts[3]) + ')', c1 = 'rgba(' + parts[0] + ',' + parts[1] + ',' + parts[2] + ',0)';
+    g.save(); g.translate(cx, cy); g.scale(1, ry / rx);
+    const gr = g.createRadialGradient(0, 0, 0, 0, 0, rx); gr.addColorStop(0, c0); gr.addColorStop(0.6, c0.replace(/,([\d.]+)\)$/, (a, v) => ',' + (v * 0.8).toFixed(3) + ')')); gr.addColorStop(1, c1);
+    g.fillStyle = gr; g.beginPath(); g.arc(0, 0, rx, 0, TAU); g.fill(); g.restore();
+  }
 
   // ================================================================ MATERNITY (Q01 "born", Q02 the young parents): a bright hospital room
   // SETS.maternity(g, o): o.sky ('morning' default | day | sunset | evening | night), o.bed (false hides the hospital bed), o.t (monitor pulse),
@@ -1688,11 +1701,11 @@
   function cotFront(g) {
     const K = MT.cot, cx = K.cx;
     const basin = () => polyP(g, [cx - K.wt / 2, K.top, cx + K.wt / 2, K.top, cx + K.wb / 2, K.bot, cx - K.wb / 2, K.bot]);
-    basin(); g.fillStyle = 'rgba(214,238,242,0.26)'; g.fill();
+    basin(); g.fillStyle = 'rgba(214,238,242,0.16)'; g.fill();
     clipDo(g, basin, () => {
       g.fillStyle = 'rgba(255,255,255,0.5)';
-      polyP(g, [cx + 70, K.top, cx + 104, K.top, cx + 64, K.bot, cx + 30, K.bot]); g.fill();
-      polyP(g, [cx + 120, K.top, cx + 134, K.top, cx + 94, K.bot, cx + 80, K.bot]); g.fill();
+      polyP(g, [cx + 96, K.top, cx + 124, K.top, cx + 92, K.bot, cx + 64, K.bot]); g.fill();
+      polyP(g, [cx + 136, K.top, cx + 148, K.top, cx + 116, K.bot, cx + 104, K.bot]); g.fill();
     });
     basin(); paint(g, null, LW.small);
     shape(g, () => rrP(g, cx - K.wt / 2 - 6, K.top - 8, K.wt + 12, 16, 8), '#E6F4F7', LW.small);
@@ -1805,7 +1818,7 @@
   function hmSideFloor(x) { return HM.FY + (x - HM.CX) * (66 / (W - HM.CX)); }
   function hmDoorQuads() {
     const q = (xl, xr, tl, tr) => [xl, tl, xr, tr, xr, hmSideFloor(xr), xl, hmSideFloor(xl)];
-    return { outer: q(1668, 1878, 150, 128), inner: q(1696, 1850, 176, 157) };
+    return { outer: q(1668, 1878, 104, 80), inner: q(1696, 1850, 130, 110) };
   }
   // sofa or armchair, frontal: back, seat, front, flared arms, lace covers, two cushions. Returns seat anchors.
   function homeSofa(g, x0, x1, P, n) {
@@ -2132,13 +2145,18 @@
   SETS.homeFront = function (g, o) {
     o = o || {};
     const tod = HOME_TOD[o.tod] ? o.tod : 'day', dining = o.view === 'dining', xf = camXf(o.cam);
+    const doorPart = !dining && !!o.doorOpen, tablePart = dining || o.table !== false;
     const piece = (t) => (lg) => {
-      if (dining) diningTable(lg, HM, o, true); else centreTable(lg, HM, true);
-      if (t !== 'day') maskedPass(lg, (g2) => dining ? homeDiningLight(g2, o, t) : homeLoungeLight(g2, o, t));
+      if (tablePart) {
+        if (dining) diningTable(lg, HM, o, true); else centreTable(lg, HM, true);
+        if (t !== 'day') maskedPass(lg, (g2) => dining ? homeDiningLight(g2, o, t) : homeLoungeLight(g2, o, t));
+      }
+      // the open front door: the side wall around the opening and its frame, so a figure in the doorway stands inside it
+      if (doorPart) clipDo(lg, () => { const i = hmDoorQuads().inner; polyP(lg, [HM.CX, 0, W, 0, W, hmSideFloor(W) + 2, HM.CX, hmSideFloor(HM.CX) + 2]); lg.moveTo(i[0], i[1]); lg.lineTo(i[6], i[7] + 60); lg.lineTo(i[4], i[5] + 60); lg.lineTo(i[2], i[3]); lg.closePath(); }, () => homeLounge(lg, Object.assign({}, o, { table: false }), t), true);
     };
-    if (dining || o.table !== false) {
-      const bb = dining ? { x: 450, y: 470, w: 1020, h: 470 } : { x: 740, y: 820, w: 390, h: 170 };
-      const key = (t) => 'homeFront|' + homeKey(o, t);
+    if (tablePart || doorPart) {
+      const bb = dining ? { x: 450, y: 470, w: 1020, h: 470 } : doorPart ? { x: 740, y: 0, w: 1180, h: 990 } : { x: 740, y: 820, w: 390, h: 170 };
+      const key = (t) => 'homeFront|' + homeKey(o, t) + (doorPart ? 'd' : '');
       blit(g, xf, layer(key(tod), devRes(g, xf), piece(tod)), null, bb);
       if (o.todTo && HOME_TOD[o.todTo] && o.todK > 0) blit(g, xf, layer(key(o.todTo), devRes(g, xf), piece(o.todTo)), Math.min(1, o.todK), bb);
     }
@@ -2500,7 +2518,8 @@
 
   // ================================================================ PARTY HALL (weddings, naming ceremonies: Q06)
   // SETS.partyHall(g, o) (also SETS.party(g, { hall: true, ... })): o.theme 'wedding' (default: gold, cream, teal, coral) | 'naming'
-  // (sky blue, cream, yellow, green); o.heart (a heart on the rice); o.t.
+  // (sky blue, cream, yellow, green) | 'funeral' (white, silver, charcoal, lilac; no balloons, a framed portrait on an easel on the high
+  // table); o.heart (a heart on the rice); o.t.
   // Draped ceiling swags and side drapes, a backdrop with flower pillars, a stage with the high table and two throne chairs, balloon
   // columns, rows of covered guest chairs (left), a serving table with food warmers and the giant pot of jollof rice (right).
   // Anchors: highSeat1, highSeat2 (the couple's seats behind the high table, s ~0.48), stage (standing on the stage), rice (top of the
@@ -2510,6 +2529,7 @@
   const PARTY_THEMES = {
     wedding: { a: '#F4BF54', aSh: '#DCA640', b: '#FFF4E3', bSh: '#EBDCC6', c: '#3A8594', cSh: '#2F7280', d: '#E37F78', dSh: '#C9665F' },
     naming: { a: '#7BAFE1', aSh: '#6497C9', b: '#FFF4E3', bSh: '#EBDCC6', c: '#F4BF54', cSh: '#DCA640', d: '#77CC81', dSh: '#62B26C' },
+    funeral: { a: '#E4E4EA', aSh: '#C8C8D2', b: '#FFF8EE', bSh: '#ECE2D2', c: '#3B3B4C', cSh: '#2E2E3C', d: '#9A8FC0', dSh: '#8276AC', quiet: true },
   };
   function flowerBall(g, x, y, r, T, seed) {
     const rr = rng(seed || 1), cols = [T.d, T.b, T.a, T.d];
@@ -2557,8 +2577,8 @@
     shape(g, () => { g.beginPath(); g.moveTo(606, 546); g.lineTo(1314, 546); g.lineTo(1320, 700); g.lineTo(600, 700); g.closePath(); }, T.c, LW.small, T.cSh, () => { g.beginPath(); for (let i = 0; i < 6; i++) g.rect(640 + i * 120, 546, 20, 160); });
     for (let i = 0; i < 6; i++) { const x0 = 606 + i * 118; g.beginPath(); g.moveTo(x0, 552); g.quadraticCurveTo(x0 + 59, 620, x0 + 118, 552); g.lineWidth = 14 + 2 * LW.detail; g.strokeStyle = INK; g.stroke(); g.lineWidth = 14; g.strokeStyle = T.a; g.stroke(); }
     for (let i = 0; i <= 6; i++) { const bx = 606 + i * 118; ellP(g, bx, 556, 12, 12); paint(g, T.d, LW.detail); }
-    flowerBall(g, 960, 494, 40, T, 7);
-    shape(g, () => { g.beginPath(); g.moveTo(940, 528); g.lineTo(980, 528); g.lineTo(972, 500); g.lineTo(948, 500); g.closePath(); }, T.a, LW.detail);
+    if (T.quiet) { for (const sx of [-1, 1]) line(g, 960 + sx * 30, 528, 960 + sx * 12, 420, 5); line(g, 960, 528, 960, 440, 5); photo(g, 908, 412, 104, 116, 'elders', { frame: '#3B3B4C', bg: '#E7E2EE' }); flowerBall(g, 960, 520, 26, T, 7); }
+    else { flowerBall(g, 960, 494, 40, T, 7); shape(g, () => { g.beginPath(); g.moveTo(940, 528); g.lineTo(980, 528); g.lineTo(972, 500); g.lineTo(948, 500); g.closePath(); }, T.a, LW.detail); }
     for (const gx of [840, 1080]) { shape(g, () => { g.beginPath(); g.moveTo(gx - 14, 470); g.lineTo(gx + 14, 470); g.quadraticCurveTo(gx + 14, 498, gx, 500); g.quadraticCurveTo(gx - 14, 498, gx - 14, 470); g.closePath(); }, 'rgba(236,246,248,0.95)', LW.detail); line(g, gx, 500, gx, 522, 3); line(g, gx - 10, 526, gx + 10, 526, 3); line(g, gx - 14, 472, gx + 14, 472, 3, T.a); }
   }
   function partyHallStatic(g, o) {
@@ -2608,7 +2628,8 @@
     for (const lx of [400, 1500]) softFill(g, 26, 'rgba(255,240,210,0.3)', () => ellP(g, lx, 930, 260, 60), 'screen');
     line(g, 0, FY, 400, FY, LW.arch); line(g, 1520, FY, W, FY, LW.arch);
     // balloon columns beside the stage
-    balloonColumn(g, 300, 830, 250, T); balloonColumn(g, 1610, 830, 250, T);
+    if (!T.quiet) { balloonColumn(g, 300, 830, 250, T); balloonColumn(g, 1610, 830, 250, T); }
+    else for (const px of [300, 1610]) { shape(g, () => rrP(g, px - 40, 690, 80, 140, 8), T.b, LW.small, T.bSh, () => rectP(g, px + 10, 690, 30, 140)); flowerBall(g, px, 660, 46, T, px); }
     // guests' chairs (left), serving table and the rice (right)
     for (const [fy, s, xs] of [[850, 0.66, [100, 240, 380, 520, 660]], [925, 0.78, [70, 236, 402, 568]]]) xs.forEach((x, i) => eventChair(g, x, fy, s, T, i % 2 ? T.c : T.d));
     floorShadow(g, 1660, 912, 260, 14, PT.floorSh, 6);
@@ -2625,12 +2646,12 @@
       left: { x: 420, y: 990, s: 1.02 }, center: { x: 900, y: 990, s: 1.02 }, right: { x: 1640, y: 990, s: 1.02 } };
   }
   SETS.partyHall = function (g, o) {
-    o = o || {}; const xf = camXf(o.cam), th = PARTY_THEMES[o.theme] ? o.theme : 'wedding';
+    o = o || {}; const xf = camXf(o.cam), th = PARTY_THEMES[o.theme] ? o.theme : 'wedding';   // themes: wedding | naming | funeral
     blit(g, xf, layer('partyHall|' + th + '|' + (o.heart ? 1 : 0), devRes(g, xf), (lg) => partyHallStatic(lg, Object.assign({}, o, { theme: th }))));
     return result(xf, partyHallAnchors(), 990, PT.FY);
   };
   SETS.partyHallFront = function (g, o) {
-    o = o || {}; const xf = camXf(o.cam), th = PARTY_THEMES[o.theme] ? o.theme : 'wedding';
+    o = o || {}; const xf = camXf(o.cam), th = PARTY_THEMES[o.theme] ? o.theme : 'wedding';   // wedding | naming | funeral
     if (o.table !== false) blit(g, xf, layer('partyHallFront|' + th, devRes(g, xf), (lg) => highTable(lg, PARTY_THEMES[th])), null, { x: 590, y: 440, w: 740, h: 270 });
     return result(xf, partyHallAnchors(), 990, PT.FY);
   };
@@ -3102,11 +3123,11 @@
     if (k <= 0) return;
     const e = easeOutBack(k), cx = d.x + d.w / 2;
     g.save(); g.translate(cx, d.bot); g.scale(0.5 + 0.5 * e, 0.5 + 0.5 * e); g.translate(-cx, -d.bot); g.globalAlpha *= clamp(k * 3);
-    if (glow) softFill(g, 30, 'rgba(255,226,120,' + (0.7 * glow).toFixed(2) + ')', () => rrP(g, d.x - 40, d.top - 140, d.w + 80, d.bot - d.top + 180, 40));
-    floorShadow(g, cx, d.bot + 6, d.w * 0.62, 14, 'rgba(110,50,20,0.25)', 6);
+    if (glow) softEll(g, cx, (d.top + d.bot) / 2 - 40, d.w * 0.95, (d.bot - d.top) * 0.75, 'rgba(255,226,120,' + (0.8 * glow).toFixed(2) + ')');
+    softEll(g, cx, d.bot + 6, d.w * 0.66, 18, 'rgba(110,50,20,0.3)');
     shape(g, () => rectP(g, d.x - 22, d.top - 22, d.w + 44, d.bot - d.top + 22), '#B07446', LW.big, '#965E35', () => rectP(g, d.x - 22, d.top - 22, d.w + 44, 18));
     rectP(g, d.x, d.top, d.w, d.bot - d.top); paint(g, '#FFF4D0', 0);
-    if (openK > 0) softFill(g, 20, 'rgba(255,255,255,0.8)', () => rectP(g, d.x + 20, d.top + 20, d.w - 40, d.bot - d.top - 20));
+    if (openK > 0) { rectP(g, d.x + 14, d.top + 14, d.w - 28, d.bot - d.top - 14); g.fillStyle = 'rgba(255,255,255,' + (0.85 * clamp(openK)).toFixed(2) + ')'; g.fill(); }
     // the leaf: shrinks toward its hinge as it opens
     const lw2 = d.w * (1 - 0.82 * clamp(openK || 0)), sk = 30 * clamp(openK || 0);
     shape(g, () => polyP(g, [d.x, d.top, d.x + lw2, d.top - sk, d.x + lw2, d.bot + sk * 0.3, d.x, d.bot]), col, LW.big, dark(col, 0.86), () => polyP(g, [d.x + lw2 * 0.8, d.top, d.x + lw2, d.top - sk, d.x + lw2, d.bot + sk * 0.3, d.x + lw2 * 0.8, d.bot]));
@@ -3393,7 +3414,7 @@
     rrP(g, x0 + 14, y0 + 18, w, h, 22); g.fillStyle = 'rgba(70,32,16,0.28)'; g.fill();
     shape(g, () => rrP(g, x0, y0, w, h, 22), '#B0703F', LW.frame, '#965E35', () => rectP(g, x0, y0 + h - 30, w, 30));
     shape(g, () => rectP(g, x0 + 30, y0 + 30, w - 60, h - 60), '#2F5E57', LW.small, '#294F4A', () => polyP(g, [x0 + 30, y0 + 30, x0 + w - 30, y0 + 30, x0 + w - 30, y0 + 48, x0 + 48, y0 + 48, x0 + 48, y0 + h - 30, x0 + 30, y0 + h - 30]));
-    softFill(g, 16, 'rgba(255,255,255,0.07)', () => polyP(g, [x0 + w * 0.55, y0 + 30, x0 + w * 0.7, y0 + 30, x0 + w * 0.45, y0 + h - 30, x0 + w * 0.3, y0 + h - 30]));
+    polyP(g, [x0 + w * 0.55, y0 + 30, x0 + w * 0.7, y0 + 30, x0 + w * 0.45, y0 + h - 30, x0 + w * 0.3, y0 + h - 30]); g.fillStyle = 'rgba(255,255,255,0.06)'; g.fill();
     const title = o.title == null ? 'HOUSE RULES' : String(o.title);
     g.fillStyle = '#FFF8E6'; g.textAlign = 'center'; g.textBaseline = 'middle'; if ('letterSpacing' in g) g.letterSpacing = '3px';
     fitFont(g, title, 1000, 64, w - 120, 44); g.fillText(title, 0, y0 + 100); if ('letterSpacing' in g) g.letterSpacing = '0px';

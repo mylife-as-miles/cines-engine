@@ -294,10 +294,10 @@
   "dur_s": 0.828
  },
  "party_murmur": {
-  "source": "otm/beds/walla: \"restaurant ambience.wav\" by sarahmariealice, https://freesound.org/people/sarahmariealice/sounds/265870/",
-  "licence": "CC0",
-  "how": "One Too Many's beds/walla (40 s), low-passed at 1.5 kHz (4th order)",
-  "dur_s": 40.0
+  "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",
+  "licence": "free for any use (earshot renders belong to whoever renders them; sources CC0 / public domain)",
+  "how": "two takes of earshot cafe/busy (seed 11, takes 1 and 2; a seamless 20 s loop) summed, low-passed at 1.5 kHz (4th order)",
+  "dur_s": 20.0
  },
  "swoon": {
   "source": "earshot make (github.com/Leonxlnx/earshot, v1.0.0), learned from public-domain recordings",

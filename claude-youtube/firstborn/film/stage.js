@@ -137,7 +137,9 @@
   STAGE.speech = function (c, who, op, text, t0, t1, o) { STAGE.say(c, who, op, text, t0, t1, o); };
   // a notification popping near a point: kind 'chat' (POV chatBubble) | 'call' | 'mail' | 'bell'
   STAGE.notify = function (c, x, y, t0, kind, o) {
-    o = o || {}; const st = FILM.pop(c.t, t0, 0.3); if (!st.on) return;
+    o = o || {}; let st = FILM.pop(c.t, t0, 0.3); if (!st.on) return;
+    // o.anim 'drop': it slides down into place and fades in (no squash pop)
+    if (o.anim === 'drop') { const k = FILM.seg(c.t, t0, t0 + 0.35, 'outCubic'); st = { s: 1, a: FILM.clamp(k * 2, 0, 1), dy: -70 * (1 - k), on: true }; }
     GFX.at(c.g, x, y, st, q => {
       if (kind === 'chat' && PR('chatBubble')) PR('chatBubble')(q, 0, 0, { s: o.s || 1.6, tail: o.tail });
       else if (kind === 'bell' && PR('bell')) PR('bell')(q, 0, 0, { s: o.s || 1.6, a: Math.sin(c.t * 18) * 0.2 });
