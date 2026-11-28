@@ -23,6 +23,7 @@ import random
 import bpy
 import bmesh
 from mathutils import Matrix, Vector
+from mathutils.geometry import intersect_line_line_2d
 
 import setkit as sk
 import hongkong_street_mats as mt
@@ -44,7 +45,8 @@ SIGNS = []        # (y0, y1, z0, z1, x_end) of every projecting sign, for the ca
 LIT = []          # (frame, a mid, width, colour, spill energy) of every lit shop, for the street bounce
 RECENT = {}       # side -> the last sign colours used there
 # where the cast stands on the pavements (side, y): no spill-out display or standing sign within a metre or so
-KEEP = [(1, 14.0), (1, 17.9), (1, 27.5), (1, 29.5), (-1, 21.1), (-1, 26.1), (-1, 33.5), (1, 43.0), (1, 41.0)]
+KEEP = [(1, 14.0), (1, 16.6), (1, 17.9), (1, 29.5), (-1, 21.1), (-1, 26.1), (-1, 27.5), (-1, 33.5), (1, 43.0), (1, 41.0)]
+KEEP += [(1, 23.8), (1, 35.5), (-1, 39.3)]  # the distant pairs in the wide
 rng = random.Random(1997)
 
 BOUTIQUE = dict(y0=15.75, y1=23.25, disp=(16.25, 19.95), door=(20.2, 21.75), glass_x=7.25, back_x=8.55)
@@ -623,7 +625,8 @@ def shop(G, fr, side, s0, s1, kind, b):
     W = s1 - s0
     if kind == "boutique":
         return
-    warm = trade == "eatery" or (trade == "clothes" and kind.endswith("warm"))
+    near_boutique = side > 0 and 12 < fr.p(am, 0, 0).y < 30
+    warm = near_boutique or trade == "eatery" or (trade == "clothes" and kind.endswith("warm"))
     col = (1.0, 0.8, 0.58) if warm else (0.82, 0.92, 1.0)
     lit = kind not in ("shutter",)
     # the interior box
@@ -863,27 +866,40 @@ def bar_tube(G, fr, aa, w0, w1, z, col, strength):
     G["neon"].box((aa - r, w0, z - r), (aa + r, w1, z + r), 0, fr=fr, scol=col, sstr=strength)
 
 
-def separated_sign(fr, side, a, near, far, low, high, kind):
-    """Reject overlaps between blank panels that would form a stepped glyph in the wide shot."""
-    inv, origin = _BASE["wide_view"]
-    corners = [inv @ (fr.p(a, w, z) - origin) for w in (near, far) for z in (low, high)]
-    if any(p.z >= -0.1 for p in corners):
-        return True
-    xs = [-p.x / p.z for p in corners]
-    ys = [-p.y / p.z for p in corners]
-    x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
-    if x1 < -0.75 or x0 > 0.75 or y1 < -0.45 or y0 > 0.65:
-        return True
-    depth = fr.p(a, near, low).y
-    size = (x1-x0)*(y1-y0)
-    for left, right, bottom, top, area0, depth0, side0, kind0 in _BASE["sign_rectangles"]:
-        overlap = max(0, min(x1, right)-max(x0, left)) * max(0, min(y1, top)-max(y0, bottom))
-        gap = abs(depth-depth0)
-        if overlap > 0.15 * min(size, area0):
-            return False
-        if overlap and gap < 6 and side == side0 and "dead" in (kind, kind0) and kind != kind0:
-            return False
-    _BASE["sign_rectangles"].append((x0,x1,y0,y1,size,depth,side,kind))
+def projected_bounds(points, view):
+    inverse, origin = view
+    corners = [inverse @ (point - origin) for point in points]
+    if any(point.z >= -0.1 for point in corners):
+        return None
+    xs = [-point.x / point.z for point in corners]
+    ys = [-point.y / point.z for point in corners]
+    return min(xs), max(xs), min(ys), max(ys), max(-point.z for point in corners)
+
+
+def register_lit_sign(points):
+    for view, half_width, elevation, panels in _BASE["cable_views"]:
+        rect = projected_bounds(points, view)
+        if rect is None:
+            continue
+        x0, x1, y0, y1, _ = rect
+        half_height = half_width * 9 / 16
+        if x1 > -half_width and x0 < half_width and y1 > elevation - half_height and y0 < elevation + half_height:
+            panels.append(rect)
+
+
+def separated_sign(points, kind):
+    """Keep the blank sign silhouettes separate in the wide."""
+    bounds = projected_bounds(points, _BASE["wide_view"])
+    if bounds is not None:
+        x0, x1, y0, y1, _ = bounds
+        if x1 > -0.75 and x0 < 0.75 and y1 > -0.45 and y0 < 0.65:
+            for left, right, bottom, top, other in _BASE["sign_rectangles"]:
+                gap = 12.8 / _BASE["wide_projection"][0] if "dead" not in (kind, other) else 0.0
+                if min(x1, right) - max(x0, left) > -gap and min(y1, top) - max(y0, bottom) > -gap:
+                    return False
+            _BASE["sign_rectangles"].append((x0, x1, y0, y1, kind))
+    if kind != "dead":
+        register_lit_sign(points)
     return True
 
 
@@ -928,6 +944,8 @@ def signs(G, fr, side, W, H, b):
             h2 = h if 6.85 - zb < 1.2 else 6.85 - zb
         h, reach = h2, reach2
         zt = min(zb + h, H - 0.6)
+        if side < 0 and 11.5 < yw < 12.2:
+            zt = max(zb + 1.4, zt - 0.98)
         x_end = XF - 0.3 - reach
         kind = pick([("box", 6), ("neon", 3.5), ("dead", 1.2)])
         cname = pick(SIGN_W)
@@ -959,6 +977,8 @@ def signs(G, fr, side, W, H, b):
         else:
             strength = rng.uniform(20.0, 32.0)
         strength *= b.get("sign_gain", 1.0)
+        if side < 0 and yw < 14 and kind == "box":
+            strength = min(strength, 0.35)
         field = None
         if kind == "box" and col2 is not None:
             field = pick([((0.12, 0.12, 0.88, 0.88), 3), ((0.0, 0.5, 1.0, 1.0), 2), ((0.08, 0.06, 0.92, 0.4), 2)])
@@ -972,6 +992,8 @@ def signs(G, fr, side, W, H, b):
             extension = 1.0
         elif side < 0 and 32 < yw < 33:
             extension = 1.5
+        elif (side > 0 and 115 < yw < 116) or (side < 0 and 149 < yw < 150):
+            extension = 0.75
         wn += extension
         if XF - wn - reach < RW:
             zmin = max(zmin, 5.6)
@@ -997,7 +1019,8 @@ def signs(G, fr, side, W, H, b):
         # The two adjacent shop bays at the boutique share one projecting
         # lightbox. A second panel hides all but two edges of the turquoise one.
         shared_bay = side > 0 and 18.9 < yw < 19.1 and kind == "neon"
-        if not shared_bay and not in_title(reach, zb, zt) and separated_sign(fr, side, a, wn, wn + reach, zb, zt, kind):
+        corners = [fr.p(a + da, w, z) for da in (-0.15, 0.15) for w in (wn, wn + reach) for z in (zb, zt)]
+        if not shared_bay and not in_title(reach, zb, zt) and separated_sign(corners, kind):
             sign_box(G, fr, a, wn, wn + reach, zb, zt, kind, col, strength, col2, field)
             if kind != "dead" and 0 < yw < 90 and zt < 20 and _BASE["sign_lights"] < 60:
                 power = 14 * reach * (zt-zb) * strength * (0.06 if kind == "neon" else 1)
@@ -1013,7 +1036,9 @@ def signs(G, fr, side, W, H, b):
         S.box((0.4, 0.0, 3.62), (W - 0.4, 0.2, 4.3), 0, fr=fr)
         if rng.random() < 0.65:
             c = SIGN_COL[pick(SIGN_W)]
-            S.face([fr.p(0.5, 0.205, 3.68), fr.p(W - 0.5, 0.205, 3.68), fr.p(W - 0.5, 0.205, 4.24), fr.p(0.5, 0.205, 4.24)], 1,
+            face = [fr.p(0.5, 0.205, 3.68), fr.p(W - 0.5, 0.205, 3.68), fr.p(W - 0.5, 0.205, 4.24), fr.p(0.5, 0.205, 4.24)]
+            register_lit_sign(face)
+            S.face(face, 1,
                    n=fr.W, corner={"suv": [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]}, scol=c,
                    sstr=b.get("sign_gain", 1.0) * rng.uniform(2.0, 3.6))
 
@@ -1097,9 +1122,9 @@ def boutique(G, props):
     # interior
     # (a spot's watts spread over the whole sphere: 450 W puts about 9 W/m2 on a bag 2 m below, the window's
     # brightest thing)
-    spot("bq_spot_shoulder", (7.58, 19.09, 3.17), (8.22, 19.21, 1.26), 150.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
-    spot("bq_spot_satchel", (7.58, 18.60, 3.17), (8.06, 18.72, 1.26), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
-    spot("bq_spot_tote", (7.58, 18.17, 3.17), (7.90, 18.29, 1.26), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    spot("bq_spot_shoulder", (7.58, 19.09, 3.17), (8.22, 19.21, 1.26), 280.0, (1.0, 0.90, 0.76), 14, 0.2, 0.02)
+    spot("bq_spot_satchel", (7.58, 18.60, 3.17), (8.06, 18.72, 1.26), 280.0, (1.0, 0.90, 0.76), 14, 0.2, 0.02)
+    spot("bq_spot_tote", (7.58, 18.17, 3.17), (7.90, 18.29, 1.26), 280.0, (1.0, 0.90, 0.76), 14, 0.2, 0.02)
     shelf_light = area("bq_top", (8.0, 18.1, 3.25), (0.8, 3.4), 22.0, (1.0, 0.86, 0.7), (0, 0, -1), spread=100)
     # The shelf light is flagged off the felt returns. They pick up falloff
     # from the three existing spots, keeping depth in the window close-up.
@@ -1119,7 +1144,7 @@ def boutique(G, props):
     # so the display keeps its own slate, stone and olive finishes.
     dyes = {
         "handbag-tote": ((0.034, 0.054, 0.085), (0.092, 0.141, 0.208)),     # slate blue
-        "handbag-satchel": ((0.066, 0.059, 0.046), (0.162, 0.150, 0.126)),  # warm stone
+        "handbag-satchel": ((0.20, 0.185, 0.16), (0.34, 0.32, 0.28)),      # warm stone
         "handbag-shoulder": ((0.046, 0.060, 0.031), (0.130, 0.155, 0.081)), # olive
     }
     out = {}
@@ -1221,6 +1246,27 @@ def lamps(G):
         spot(f"lamp_{y:.0f}", (hx, y, 9.3), (hx + side * 0.6, y, 0.0), e, (1.0, 0.86, 0.68), 110, 0.6, 0.15)
 
 
+def crosses_lit_sign(points):
+    for (inverse, origin), _, _, panels in _BASE["cable_views"]:
+        projected = [inverse @ (point - origin) for point in points]
+        for p, q in zip(projected, projected[1:]):
+            if max(p.z, q.z) >= -0.1:
+                continue
+            a, b = Vector((-p.x / p.z, -p.y / p.z)), Vector((-q.x / q.z, -q.y / q.z))
+            for left, right, bottom, top, far in panels:
+                if -max(p.z, q.z) > far:
+                    continue
+                if max(a.x, b.x) < left or min(a.x, b.x) > right or max(a.y, b.y) < bottom or min(a.y, b.y) > top:
+                    continue
+                if any(left <= end.x <= right and bottom <= end.y <= top for end in (a, b)):
+                    return True
+                corners = [Vector(k) for k in ((left, bottom), (right, bottom), (right, top), (left, top))]
+                if any(intersect_line_line_2d(a, b, c, d) is not None
+                       for c, d in zip(corners, corners[1:] + corners[:1])):
+                    return True
+    return False
+
+
 def wires(G):
     """Tram contact wires on span wires across the street, and the tangle of utility cables."""
     C = G["cable"]
@@ -1250,10 +1296,20 @@ def wires(G):
             continue
         dy = rng.uniform(-3.0, 3.0)
         count = rng.choice((1, 1, 2, 3))
-        for k in range(count):
+        bundle = []
+        for _ in range(count):
             off = Vector((0, rng.uniform(-0.05, 0.05), rng.uniform(-0.06, 0.06)))
             pts = catenary(Vector((-XF + 0.1, y, za)) + off, Vector((XF - 0.1, y + dy, zb)) + off, rng.uniform(0.3, 0.9), 16)
-            tube(C, pts, rng.uniform(0.006, 0.011), segs=5)
+            bundle.append((pts, rng.uniform(0.006, 0.011)))
+        for forward, lift in ((0, 0), (0.6, 0.25), (-0.6, 0.25), (0, 0.55), (0, -0.55)):
+            if abs(forward) > 0 and any(abs(y + forward - ys) < 0.8 for ys in SPANS):
+                continue
+            delta = Vector((0, forward, lift))
+            moved = [([point + delta for point in pts], radius) for pts, radius in bundle]
+            if not any(crosses_lit_sign(pts) for pts, _ in moved):
+                for pts, radius in moved:
+                    tube(C, pts, radius, segs=5)
+                break
         n += 1
     # cables festooned along both facades at the fascia, between brackets
     for s in (-1, 1):
@@ -1264,7 +1320,8 @@ def wires(G):
             for k in range(rng.choice((1, 2, 3))):
                 pts = catenary((s * (XF - 0.12), y, z + k * 0.04), (s * (XF - 0.12), y + L, z + k * 0.04 + rng.uniform(-0.1, 0.1)),
                                rng.uniform(0.08, 0.25), 10)
-                tube(C, pts, 0.008, segs=5)
+                if not crosses_lit_sign(pts):
+                    tube(C, pts, 0.008, segs=5)
             y += L
 
 
@@ -1299,6 +1356,9 @@ def end_building(G):
     fac.face([fr.p(0, 0, PZ), fr.p(W, 0, PZ), fr.p(W, 0, GF), fr.p(0, 0, GF)], 0, n=fr.W)
     for a, z, w, h, c, s in ((10.0, 6.0, 3.0, 5.0, "violet", 2.2), (17.0, 9.5, 5.5, 2.0, "warm", 1.8), (26.0, 5.5, 2.4, 6.5, "teal", 1.8),
                              (12.5, 12.0, 4.0, 1.6, "cream", 1.6)):
+        corners = [fr.p(x, 0.255, y) for x in (a, a + w) for y in (z, z + h)]
+        if not separated_sign(corners, "box"):
+            continue
         G["sign"].box((a, 0.0, z), (a + w, 0.25, z + h), 0, fr=fr)
         G["sign"].face([fr.p(a + 0.08, 0.255, z + 0.08), fr.p(a + w - 0.08, 0.255, z + 0.08), fr.p(a + w - 0.08, 0.255, z + h - 0.08),
                         fr.p(a + 0.08, 0.255, z + h - 0.08)], 1, n=fr.W, corner={"suv": [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]},
@@ -1340,6 +1400,14 @@ def dressing(G):
     for (x, y) in ((4.9, 51.0), (4.9, 56.0), (-4.9, 51.0), (-4.9, 56.0)):
         tube(D, [(x, y, PZ), (x, y, PZ + 0.9)], 0.06, 2, segs=10)
     tube(D, [(5.1, 3.0, PZ), (5.1, 3.0, PZ + 0.95)], 0.22, 2, segs=14)
+    tube(D, [(6.89, 30.7, PZ), (6.89, 30.7, PZ + 0.83)], 0.20, 2, segs=16)
+    tube(D, [(6.89, 30.7, PZ + 0.80), (6.89, 30.7, PZ + 0.86)], 0.215, 2, segs=16)
+    # An unmarked folding board beside the open shop, angled in from the kerb.
+    for yy in (-0.20, 0.20):
+        tube(D, [(-6.91, 36.4 + yy, PZ), (-6.76, 36.4 + yy, PZ + 0.75),
+                 (-6.61, 36.4 + yy, PZ)], 0.018, 2, segs=6)
+    D.face([(-6.61, 36.2, PZ + 0.06), (-6.61, 36.6, PZ + 0.06),
+            (-6.75, 36.6, PZ + 0.72), (-6.75, 36.2, PZ + 0.72)], 3, n=(1, 0, 0))
     # standing lightboxes on the pavement by the shop doors: blank glowing slabs on a weighted foot, their faces
     # along the pavement, the walkers' practicals
     S = G["sign"]
@@ -1417,7 +1485,7 @@ def shop_kinds(b):
     return out
 
 
-def build(props, wide=None):
+def build(props, wide=None, cable_views=()):
     mt.materials()
     SIGNS.clear()
     LIT.clear()
@@ -1428,9 +1496,15 @@ def build(props, wide=None):
     wide = wide or {"loc": (1.4, 0, 1.5), "aim": (2.45, 60, 1.5)}
     origin = Vector(wide["loc"])
     inverse = (Vector(wide["aim"])-origin).to_track_quat("-Z", "Y").to_matrix().transposed()
+    close_projections = []
+    for cfg in cable_views:
+        eye = Vector(cfg["loc"])
+        view = (Vector(cfg["aim"]) - eye).to_track_quat("-Z", "Y").to_matrix().transposed(), eye
+        half_width = 18 / cfg["lens"]
+        close_projections.append((view, half_width, 2 * half_width * cfg.get("shift_y", 0.0), []))
     _BASE.update(wide_view=(inverse, origin),
                  wide_projection=(1280 * wide.get("lens", 24) / 36, 360 + 1280 * wide.get("shift_y", 0.12)),
-                 sign_rectangles=[], sign_lights=0,
+                 sign_rectangles=[], sign_lights=0, cable_views=close_projections,
                  shop_index={1: 0, -1: 0}, shopkeepers={1: [], -1: []})
     G = {
         "fac": MB("facades", [M["facade"]], merge=True),

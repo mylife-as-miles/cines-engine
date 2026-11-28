@@ -49,7 +49,7 @@ WORLD = 0.0
 BLOCK = {
     "walk": {
         "Dawn": ((5.5, 16.30), (5.5, 30.0), "walk_bags"),
-        "T1": ((6.35, 27.5), (6.2, 10.0), "walk_up"),
+        "T1": ((-6.34, 27.5), (-5.18, 19.0), "walk_up"),
         "M2": ((-5.55, 21.2), (-5.4, 5.0), "walk_talk"),
         "W1": ((-6.2, 21.0), (-6.3, 5.0), "walk_talk_w"),
         "M3": ((-6.55, 33.5), (-7.4, 33.9), "stand_look"),
@@ -57,11 +57,17 @@ BLOCK = {
         "ShopNear": ((8.1, 11.0), (5.6, 9.8), "at_counter"),
         "ShopFar": ((-8.2, 24.5), (-5.7, 23.1), "at_counter"),
         "M4": ((5.25, 43.0), (5.3, 60.0), "walk_away"),
+        "W2": ((5.44, 23.6), (5.52, 40.0), "walk_away"),
+        "M5": ((6.14, 24.0), (6.32, 42.0), "walk_away"),
+        "W3": ((6.31, 35.2), (6.17, 27.0), "walk_away"),
+        "M6": ((5.53, 35.7), (5.41, 26.0), "walk_away"),
+        "W4": ((-5.47, 39.0), (-5.39, 60.0), "walk_away"),
+        "M7": ((-6.20, 39.5), (-6.33, 60.0), "walk_away"),
     },
     "company": {
-        "Dawn": ((5.64, 16.4), (5.62, 32.0), "walk_away"),
-        "Organiser": ((6.31, 17.22), (6.25, 30.5), "walk_away"),
-        "T1": ((4.95, 15.70), (5.01, 31.0), "walk_away"),
+        "Dawn": ((5.55, 16.60), (5.53, 32.0), "walk_away"),
+        "Organiser": ((6.12, 16.75), (6.08, 30.5), "walk_away"),
+        "T1": ((6.55, 17.45), (6.52, 31.0), "walk_away"),
     },
     "window": {
         "Dawn": ((6.55, 17.9), (8.0, 18.9), "stand_bags"),
@@ -93,23 +99,24 @@ CAMERAS = {
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
     "window": dict(loc=(6.75, 18.04, 1.41), aim=(8.05, 18.73, 1.32), lens=36, focus="fx_bags", fstop=8.0, beat="reflect",
-                   shift_y=0.0, haze=0.0, exposure=-1.15, only=("Dawn",), glass_refl=0.017, glass_grazing=0.36,
+                   shift_y=0.0, haze=0.0, exposure=-1.15, only=("Dawn",), glass_refl=0.028, glass_grazing=0.36,
                    hide_glossy=("shop_interiors", "tubes")),
 }
 CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
                           fstop=4.0, beat="company", shift_y=0.0, haze=0.0022, exposure=-1.65)
 TRIMS = {
-    "dawn": {"boutique door spill": 0, "display shelf return": 12 / 28},
+    "wide": {"boutique door spill": 0.45},
+    "dawn": {"boutique door spill": 0, "display shelf return": 0.80},
     "window": {"bq_glow": 0.55, "boutique door spill": 0},
-    "company": {"boutique door spill": 0.26},
+    "company": {"boutique door spill": 0.12, "left pavement return": 0.25},
 }
 WIDE_VIEW = CAMERAS["wide"]
+CABLE_VIEWS = (WIDE_VIEW, CAMERAS["company"], CAMERAS["dawn"])
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
 if os.environ.get("HK_CAMS"):
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["HK_CAMS"].split(",")}
 
 _STATE = {"holders": {}, "cast": [], "cache": {}, "bags": {}}
-rng = random.Random(3)
 
 
 # ---------------------------------------------------------------- finishing the cast
@@ -247,11 +254,11 @@ def dawn():
         c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
         for v in me.vertices:
             d = v.co - c
-            v.co = c + Vector((d.x * 0.82, d.y * 0.72, d.z * 0.8)) + Vector((0.0, -0.012, -0.034))
+            v.co = c + Vector((d.x * 0.82, d.y * 0.72, d.z * 0.8)) + Vector((0.0, -0.022, -0.059))
         me.update()
     plain_shoes(h)
     tights(h)
-    hands_stone(h)
+    hands_stone(h, 0.30)
     print(f"HK Dawn: blouse {n} vertices, bun lowered, shoes plain, tights", flush=True)
     return h
 
@@ -262,6 +269,39 @@ def woman(name, height_cm, age, weight, tone, hair="short"):
     people._dress(h, ["female_casualsuit01", "shoes04"], tint={"female_casualsuit01": tone, "shoes04": people.BLACK_SHOE},
                   flat=("female_casualsuit01", "shoes04"))
     return h
+
+
+def finish_cast(name, holder):
+    modifiers = _STATE["subdivisions"][name] = []
+    meshes = list(holder.children_recursive)
+    if name != "Dawn":
+        for ob in meshes:
+            if ob.type == "MESH" and ob.name.startswith(name + "_") and "shoes" not in ob.name and "_body" not in ob.name:
+                cloth(holder, ob.name[len(name) + 1:])
+        plain_shoes(holder)
+        hands_stone(holder, 0.33 if name in ("M2", "M3") else 0.37)
+    _STATE["cast"] += [holder] + meshes
+    # Pose with subdivision off, then keep the detail appropriate to screen size.
+    for ob in [holder] + meshes:
+        for modifier in getattr(ob, "modifiers", []):
+            if modifier.type == "SUBSURF":
+                modifier.show_viewport = False
+                modifiers.append((modifier, modifier.render_levels))
+
+
+def background_walkers():
+    """The distant pairs appear only in the street establishing shot."""
+    crowd = {
+        "W2": woman("W2", 166, 0.28, 0.58, (0.13, 0.13, 0.15)),
+        "W3": woman("W3", 172, 0.53, 0.49, (0.13, 0.109, 0.08)),
+        "W4": woman("W4", 158, 0.64, 0.71, (0.075, 0.09, 0.087)),
+        "M5": people.man("M5", 180, 0.31, 0.47, "male_casualsuit01", (0.088, 0.094, 0.114), "shoes04"),
+        "M6": people.man("M6", 176, 0.56, 0.72, "male_casualsuit05", (0.10, 0.087, 0.076), "shoes04"),
+        "M7": people.man("M7", 184, 0.48, 0.62, "male_casualsuit06", (0.12, 0.113, 0.098), "shoes04"),
+    }
+    _STATE["holders"].update(crowd)
+    for name, holder in crowd.items():
+        finish_cast(name, holder)
 
 
 def build_cast():
@@ -281,22 +321,8 @@ def build_cast():
     holders["ShopNear"] = people.staff("ShopNear", 0)
     holders["ShopFar"] = people.staff("ShopFar", 1)
     _STATE["subdivisions"] = {}
-    for n, h in holders.items():
-        _STATE["subdivisions"][n] = []
-        if n != "Dawn":
-            for o in h.children_recursive:
-                if o.type == "MESH" and o.name.startswith(n + "_") and "shoes" not in o.name and "_body" not in o.name:
-                    cloth(h, o.name[len(n) + 1:])
-            plain_shoes(h)
-            hands_stone(h, 0.33 if n in ("M2", "M3") else 0.37)
-        _STATE["cast"] += [h] + list(h.children_recursive)
-        # Python-side evaluation (posing, grounding, clearances) without the subdivision: several times faster; the
-        # render uses each modifier's render switch, so the figures still render smooth
-        for o in [h] + list(h.children_recursive):
-            for md in getattr(o, "modifiers", []):
-                if md.type == "SUBSURF":
-                    md.show_viewport = False
-                    _STATE["subdivisions"][n].append((md, md.render_levels))
+    for name, holder in holders.items():
+        finish_cast(name, holder)
     _STATE["dawn_glossy"] = [o for o in holders["Dawn"].children_recursive if o.type == "MESH" and o.visible_glossy]
     _STATE["holders"] = holders
     return holders
@@ -640,6 +666,10 @@ def act(name, h, action, beat):
             else:
                 kb, f = 0.0, 0.0
                 stance(h, free="L")
+            if beat == "window":
+                forearm = rigged.rig_of(h).pose.bones["forearm_fk.R"]
+                forearm.matrix = forearm.matrix @ Matrix.Rotation(math.radians(24), 4, "Y")
+                bpy.context.view_layer.update()
             curl(h, "L", CURL_GRIP)
             curl(h, "R", CURL_GRIP)
             ground(h)
@@ -671,12 +701,13 @@ def act(name, h, action, beat):
             look = e + fwd * 6.0 + Vector((1.2, 0, -0.3))
         else:
             look = e + fwd * 8.0 + Vector((0, 0, -0.4))
-        if beat == "company" and name in ("Organiser", "Dawn"):
-            # A small glance toward one another, still seen from behind.
-            turn = 12 if name == "Organiser" else -7
+        if beat == "company":
+            # The pair glance toward one another while the leader looks at the shops.
+            turn = {"Organiser": 24.0, "Dawn": -12.0, "T1": -18.0}[name]
             look = e + Matrix.Rotation(math.radians(turn), 3, "Z") @ fwd * 6
         hd, err = solve_head(h, pose, look)
-        front, back = rng.uniform(17.0, 21.0), rng.uniform(11.0, 14.0)
+        stride_rng = random.Random(f"3:{beat}:{name}")
+        front, back = stride_rng.uniform(17.0, 21.0), stride_rng.uniform(11.0, 14.0)
         if beat == "company" and name == "T1":
             front, back = 13.0, 8.0
         kb, f = legs_walk(h, lead, tf=front, tb=back)
@@ -732,9 +763,9 @@ def pose_cast(beat):
             _STATE["bags"][k].matrix_world = mw
         bpy.context.view_layer.update()
         return
-    order = ["W1", "M2", "T1", "M3", "M4", "Organiser", "ShopNear", "ShopFar", "Dawn"]
-    for n in order:
-        if n not in H or n not in BLOCK[beat]:
+    # Set W1 before M2 so his conversation gaze uses her current mark.
+    for n in ("W1", *(name for name in H if name != "W1")):
+        if n not in BLOCK[beat]:
             continue
         (x, y), tgt, action = BLOCK[beat][n]
         h = H[n]
@@ -761,6 +792,8 @@ def apply_camera(name, width=1280):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "walk")
     H = _STATE["holders"]
+    if H and name == "wide" and "W2" not in H:
+        background_walkers()
     if H:
         pose_cast(beat)
         only = cfg.get("only")
@@ -819,7 +852,7 @@ def apply_camera(name, width=1280):
         fresnel.inputs["To Max"].default_value = cfg.get("glass_grazing", 1.0)
         smudge = gl.node_tree.nodes["glass smudges"]
         smudge.inputs["To Min"].default_value = 0.025 if name == "window" else 0.02
-        smudge.inputs["To Max"].default_value = 0.06 if name == "window" else 0.09
+        smudge.inputs["To Max"].default_value = 0.095 if name == "window" else 0.09
     for key in ("shop_interiors", "tubes", "signboards"):
         o = st.OBJ.get(key)
         if o is not None:
@@ -856,7 +889,7 @@ def install_hook():
 
 
 def build(cast=True):
-    st.build(props, wide=WIDE_VIEW)
+    st.build(props, wide=WIDE_VIEW, cable_views=CABLE_VIEWS)
     # A shop doorway just behind the walking group throws warm light across
     # the nearer shoulder, carry handles and a short patch of wet sidewalk.
     door = Vector((7.15, 15.00, 1.94))
