@@ -12,7 +12,8 @@
     "a door knock",
     "a drum hit",
     "footsteps"
-   ]
+   ],
+   "chosen": false
   },
   "door_b": {
    "prompt": "a wooden interior door closing gently, a soft thud and a clean latch click, small quiet carpeted room, close",
@@ -24,7 +25,8 @@
     "a door knock",
     "a drum hit",
     "footsteps"
-   ]
+   ],
+   "chosen": "door"
   },
   "run_a": {
    "prompt": "quick light running footsteps of sneakers on a pavement, a person running past, close, clean and dry",
@@ -36,7 +38,8 @@
     "a horse galloping",
     "a drum roll",
     "clapping"
-   ]
+   ],
+   "chosen": "run"
   },
   "run_b": {
    "prompt": "quick light running footsteps of sneakers on a pavement, a person running past, close, clean and dry",
@@ -48,7 +51,8 @@
     "a horse galloping",
     "a drum roll",
     "clapping"
-   ]
+   ],
+   "chosen": false
   },
   "typing_sa": {
    "prompt": "a thumb typing quickly on a smartphone touchscreen, soft light taps on glass, close, quiet room",
@@ -60,7 +64,8 @@
     "typing on a keyboard",
     "rain",
     "footsteps"
-   ]
+   ],
+   "chosen": "typing"
   },
   "shutter_sa": {
    "prompt": "a camera shutter click, a single photo being taken with a small digital camera, crisp mechanical click, close, quiet room",
@@ -72,7 +77,34 @@
     "a stapler",
     "typing on a keyboard",
     "a door closing"
-   ]
+   ],
+   "chosen": "camera_shutter"
+  },
+  "rain_sa": {
+   "prompt": "light gentle rain falling softly, a few soft drops, calm, close, quiet",
+   "dur": 3,
+   "seed": 71,
+   "match": "light rain",
+   "alts": [
+    "frying bacon",
+    "applause",
+    "a stream of water",
+    "static noise"
+   ],
+   "chosen": false
+  },
+  "plate_sa": {
+   "prompt": "a ceramic plate pushed and sliding across a wooden table, short scrape, close, quiet room",
+   "dur": 2,
+   "seed": 73,
+   "match": "something sliding across a table",
+   "alts": [
+    "a door closing",
+    "footsteps",
+    "paper tearing",
+    "a whoosh"
+   ],
+   "chosen": false
   }
  }
 }

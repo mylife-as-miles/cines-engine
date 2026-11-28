@@ -14,19 +14,18 @@
   };
   const EVE = { tod: 'evening' };
   // the hero on the sofa in the living room (pose and expression vary)
-  function heroSofa(c, o) {
-    c.set('living', EVE); const sa = STAGE.sitAt(c, 'living', 'sofa_seat_r', { floor: 990 });
-    const h = c.fig('hero', Object.assign(sa, { face: 1, pose: 'sit_front', expr: 'neutral', tint: ART.tintFor(c, 'living') }, o || {}));
-    c.setFront('living', EVE); return h;
-  }
+  const heroSofa = (c, o) => STAGE.heroSofa(c, EVE, o);
+  // the friend in his flat mid-move (SETS.friendFlat, the boxes in front)
   function friendSide(c, o) {
-    GFX.movingFlat(c.g);
-    return c.fig('friend', Object.assign({ x: 980, y: 962, s: 1, face: -1, pose: 'hold_phone', mode: 'ear', talk: T.ask }, o || {}));
+    c.set('friendFlat', {}); const a = c.anchor('friendFlat', 'center');
+    const f = c.fig('friend', Object.assign({ x: a.x, y: a.y, s: a.s, face: -1, pose: 'hold_phone', mode: 'ear', talk: T.ask }, o || {}));
+    c.setFront('friendFlat', {}); return f;
   }
   function call(c, o) {
     o = o || {}; const t = c.t;
-    STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 840, y: 560 }); heroSofa(cc, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
-      (cc, r) => { STAGE.fit(cc, r, { x: 980, y: 560 }); const f = friendSide(cc, o.friend || {}); if (o.dots) { const hd = ART.head('friend', f); const st = pop(t, o.dots, 0.3); GFX.at(cc.g, hd.x - hd.r * 1.5, hd.y - hd.r * 1.7, st, q => GFX.dots(q, 0, 0, 1.1, t - o.dots)); } },
+    const z = o.zoom || 1;
+    STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 900, y: 600 - 60 * (z - 1) * 4, zoom: z }); heroSofa(cc, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
+      (cc, r) => { STAGE.fit(cc, r, { x: 960, y: 600 - 60 * (z - 1) * 4, zoom: z }); const f = friendSide(cc, o.friend || {}); if (o.dots) { const hd = ART.head('friend', f); const st = pop(t, o.dots, 0.3); GFX.at(cc.g, hd.x - hd.r * 1.5, hd.y - hd.r * 1.7, st, q => GFX.dots(q, 0, 0, 1.1, t - o.dots)); } },
       { k: seg(t, T.friend, T.friend + 0.55), dropL: o.dropL, badgeK: o.badgeK });
   }
 
@@ -44,7 +43,7 @@
       { at: T.friend, name: 'call: the friend asks, "No."',
         draw(c) { const t = c.t; call(c, { friend: { expr: t > T.no[1] + 0.1 ? 'surprised' : 'happy' }, hero: { expr: 'neutral' } }); } },
       { at: T.small, name: 'call: the small pause, "…", his face falls',
-        draw(c) { const t = c.t; call(c, { dots: T.pause, friend: { expr: t > T.theOne ? 'sad' : 'surprised', talk: null, blinks: [T.theOne - 0.2] }, hero: { expr: 'worried', talk: null } }); } },
+        draw(c) { const t = c.t; call(c, { zoom: 1 + 0.25 * ease.inOutSine(seg(t, T.small, T.small + 0.8)), dots: T.pause, friend: { expr: t > T.theOne ? 'sad' : 'surprised', talk: null, blinks: [T.theOne - 0.2] }, hero: { expr: 'worried', talk: null } }); } },
       { at: T.now, name: 'call: your stomach drops (the hero\'s panel drops)',
         draw(c) { const t = c.t; call(c, { dropL: 26 * ease.outBack(seg(t, T.drops, T.drops + 0.25)), friend: { expr: 'sad', talk: null }, hero: { pose: t > T.drops - 0.2 ? 'sit_stomach' : 'sit_phone', expr: t > T.drops - 0.2 ? 'scared' : 'worried', talk: null } }); } },
       { at: T.nobody, name: 'living: alone on the sofa under a small grey cloud', in: 'fade', push: { from: 1, to: 1.04, x: 860, y: 420 },

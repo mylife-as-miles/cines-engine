@@ -76,5 +76,32 @@
    "a door closing"
   ],
   "chosen": "camera_shutter"
+ },
+ "rain_sa": {
+  "prompt": "light gentle rain falling softly, a few soft drops, calm, close, quiet",
+  "dur": 3,
+  "seed": 71,
+  "match": "light rain",
+  "alts": [
+   "frying bacon",
+   "applause",
+   "a stream of water",
+   "static noise"
+  ],
+  "chosen": false,
+  "rejected": "read as static noise (98 %); the synthesised rain is used"
+ },
+ "plate_sa": {
+  "prompt": "a ceramic plate pushed and sliding across a wooden table, short scrape, close, quiet room",
+  "dur": 2,
+  "seed": 73,
+  "match": "something sliding across a table",
+  "alts": [
+   "a door closing",
+   "footsteps",
+   "paper tearing",
+   "a whoosh"
+  ],
+  "chosen": "plate_slide"
  }
 }

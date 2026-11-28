@@ -34,7 +34,9 @@
     living: { sofa: A(670, 742), sofa_seat_l: A(500, 742), sofa_seat_r: A(840, 742), table: A(1075, 848), tablePhone: A(1180, 846), door: A(1619, 975), window: A(527, 307), lamp: A(120, 326), plant: A(1275, 866), left: A(330, 990), right: A(1560, 990), center: A(960, 990), floor: A(960, 990) },
     street: { left: A(640, 975), right: A(1280, 975), center: A(960, 975), floor: A(960, 975), tree: A(380, 640), post: A(150, 700) },
     plain: { center: A(960, 540), floor: A(960, 1080) },
-    party: { center: A(960, 960), floor: A(960, 960) }, kitchen: { center: A(1300, 965), floor: A(960, 965), counter: A(530, 640) }, boxes: { center: A(960, 965), floor: A(960, 965) },
+    party: { left: A(480, 985), center: A(800, 985), right: A(1560, 985), table: A(1310, 636), behindTable: A(1310, 930, 0.95), floor: A(960, 985) },
+    mumKitchen: { center: A(960, 985), left: A(600, 985), right: A(1320, 985), counter: A(960, 620), window: A(1000, 285), island: A(960, 836), floor: A(960, 985) },
+    friendFlat: { center: A(960, 985), left: A(640, 985), right: A(1300, 985), window: A(1510, 335), boxes: A(280, 600), floor: A(960, 985) },
   };
   // c.anchor(set, name) -> {x, y, s} in world px: the set's own anchors (as it last reported them) or the defaults above
   ART.anchor = function (set, name, fb, c) {
@@ -71,6 +73,9 @@
   const TOD = { day: 0, morning: 0.05, evening: 0.18, dusk: 0.3, night: 0.5 };
   function placeholderSet(c, name, o) {
     const g = c.g, P = PAL();
+    if (name === 'mumKitchen' && global.GFX) return global.GFX.kitchen(g);
+    if (name === 'friendFlat' && global.GFX) return global.GFX.movingFlat(g);
+    if (name === 'party') name = 'party';
     const key = 'ph|set|' + name + '|' + (o.tod || '') + '|' + (o.night ? 'n' : '') + '|' + (o.view || '');
     const cv = FILM.cache(key, (q) => {
       const box = (x, y, w, h, fill, lw) => { q.fillStyle = fill; q.fillRect(x, y, w, h); if (lw !== 0) { q.lineWidth = lw || 3.5; q.strokeStyle = INK; q.strokeRect(x, y, w, h); } };
@@ -121,13 +126,14 @@
     finger_up: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.25, e: 0.95, hand: 'point', flip: 1 } }),
     push_away: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 1.45, e: 0.15, hand: 'open', flip: 1 }, armL: { a: 1.3, e: 0.25, hand: 'open', flip: 1, z: 'back' } }),
     hold_card: (P, o) => Object.assign(P.POSES.hold_box(o), { prop: null }),
-    // seated variants (the sofa: view 'front' unless given)
-    sit_phone: (P, o) => { const b = P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), h = P.POSES.hold_phone({ mode: 'ear' }); return Object.assign(b, { armR: h.armR, prop: h.prop, head: h.head }); },
-    sit_laptop: (P, o) => { const b = P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), h = P.POSES.hold_laptop({}); return Object.assign(b, { armL: h.armL, armR: h.armR, prop: h.prop }); },
-    sit_stomach: (P, o) => Object.assign(P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), { head: { tilt: 0.06, sink: 4 }, armR: { ik: [-6, -104], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.4 } }),
-    sit_handup: (P, o) => Object.assign(P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), { armR: { a: 1.0, e: 1.75, hand: 'open', flip: 1 } }),
-    sit_front: (P, o) => P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })),
+    // seated on the sofa: POV's three-quarter sofa sit (refs 03, 07), with the props' arms from POV.HOLD
+    sit_front: (P, o) => sofa(P, o),
+    sit_phone: (P, o) => { const b = sofa(P, o); return Object.assign(b, P.HOLD.phone_ear ? P.HOLD.phone_ear(b, o) : {}); },
+    sit_laptop: (P, o) => { const b = sofa(P, o); return Object.assign(b, P.HOLD.laptop ? P.HOLD.laptop(b, o) : {}); },
+    sit_stomach: (P, o) => Object.assign(sofa(P, o), { head: { tilt: 0.08, sink: 6, turn: 0.2 }, armR: { ik: [40, -100], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.6 } }),
+    sit_handup: (P, o) => Object.assign(sofa(P, o), { armR: { a: 1.0, e: 1.75, hand: 'open', flip: 1 } }),
   };
+  const sofa = (P, o) => P.POSES.sit_sofa ? P.POSES.sit_sofa(o) : P.POSES.sit(Object.assign({}, o, { view: 'front' }));
   ART.fig = function (c, who, o) {
     const t = c.t, g = c.g; const op = Object.assign({}, o); op.t = t; op.s = op.s || 1; op.face = op.face === -1 ? -1 : 1;
     if (op.x == null) op.x = W / 2; if (op.y == null) op.y = 962;
@@ -176,7 +182,7 @@
   }
   const CAST = {
     hero: { body: '#3A8594', legs: '#FFFFFF', head: '#FCEBCB', top: null, label: 'HERO' }, boss: { body: '#FFFFFF', legs: '#7B7C7C', head: '#FCEBCB', top: '#A6A6A6', label: 'BOSS' },
-    friend: { body: '#D14A44', legs: '#5D8FAE', head: '#FCEBCB', top: '#3A3A3A', label: 'FRIEND' }, mum: { body: '#EC9547', legs: '#7E5C43', head: '#FCEBCB', top: '#755438', label: 'MUM' },
+    friend: { body: '#D14A44', legs: '#5D8FAE', head: '#FCEBCB', top: '#3A3A3A', label: 'FRIEND' }, mum: { body: '#EC9547', legs: '#7E5C43', head: '#FCEBCB', top: '#755438', label: 'MOM' },
     coworker: { body: '#6EA179', legs: '#DBC39E', head: '#CBA17C', top: '#2E2420', label: 'COWORKER' }, stranger: { body: '#6E5893', legs: '#6191AF', head: '#FCEBCB', top: '#DAC7A2', label: 'STRANGER' },
   };
   // the placeholder: a capsule body, a round head with dot eyes (lines when blinking) and a mouth that opens, the name on the chest

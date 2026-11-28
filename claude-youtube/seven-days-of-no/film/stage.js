@@ -15,9 +15,10 @@
   // feet y that puts a standing figure of scale s with its head centre at hy (POV: head centre 700 px * s above the soles)
   STAGE.feetFor = (hy, s) => hy + 700 * s;
   // a seated figure on a set's seat anchor (hips at the anchor, feet on the floor): {x, y, s, seat} for c.fig(..., pose 'sit')
+  // (POV: the pelvis sits seat + 24 above the soles for 'sit', seat + 28 for 'sit_sofa'; o.sofa picks the second)
   STAGE.sitAt = function (c, set, name, o) {
     o = o || {}; const a = c.anchor(set, name); const floor = o.floor || (STAGE.MARK[set] ? STAGE.MARK[set].y : 962); const s = o.s || a.s || 1;
-    return { x: a.x + (o.dx || 0), y: floor, s, seat: (floor - a.y) / s - 24 };
+    return { x: a.x + (o.dx || 0), y: floor, s, seat: (floor - a.y) / s - (o.sofa ? 28 : 24) };
   };
 
   // the day card: pops in at t0 over the shot, holds, pops out at t1; a veil dims the set behind it; seven dots mark the week
@@ -143,8 +144,10 @@
   };
   // the plain teal ground with the hero on the set's centre mark (a bust, ref 08); returns the figure opts
   STAGE.plainHero = function (c, o) {
-    c.set('plain', (o && o.plain) || {}); const a = c.anchor('plain', (o && o.mark) || 'center', { x: 960, y: 1180, s: 1.15 });
-    return c.fig('hero', Object.assign({ x: a.x, y: a.y, s: a.s, pose: 'stand', expr: 'neutral' }, o || {}));
+    o = o || {}; c.set('plain', o.plain || {}); const a = c.anchor('plain', o.mark || 'center', { x: 960, y: 1180, s: 1.15 }); const t = c.t;
+    const idle = { dx: 10 * FILM.wob(t, 0.22, 17), dy: -FILM.breath(t, 1) * a.s, nod: 0.1 * FILM.wob(t, 0.35, 23), turn: 0.12 * FILM.wob(t, 0.18, 29) };
+    if (o.nod != null) idle.nod = o.nod; if (o.still) { idle.dx = 0; idle.turn = 0; }
+    return c.fig('hero', Object.assign({ x: a.x, y: a.y, s: a.s, pose: 'stand', expr: 'neutral' }, idle, o));
   };
 })(window);
 
@@ -153,7 +156,7 @@
   const STAGE = global.STAGE, ART = global.ART;
   STAGE.heroSofa = function (c, so, fo) {
     so = Object.assign({ tod: 'evening' }, so || {}); c.set('living', so);
-    const sa = STAGE.sitAt(c, 'living', (fo && fo.seat_at) || 'sofa_seat_r', { floor: 990 });
+    const sa = STAGE.sitAt(c, 'living', (fo && fo.seat_at) || 'sofa_seat_r', { floor: 990, sofa: true });
     const h = c.fig('hero', Object.assign(sa, { face: 1, pose: 'sit_front', expr: 'neutral', tint: ART.tintFor(c, 'living') }, fo || {}));
     if (!(fo && fo.noFront)) c.setFront('living', so);
     return h;

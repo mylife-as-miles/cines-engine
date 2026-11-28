@@ -129,13 +129,14 @@
     return { x, walk: Math.abs(xb - xa) * pw / stride, moving: t > t0 && t < t1 && d > 0, face: xb >= xa ? 1 : -1, u: p };
   };
   // squash pop-in for icons and bubbles: {s, sx, sy, a, on}. popOut(t, t1, d) shrinks away ending at t1.
+  // it starts at 35% scale (never a speck in a sampled frame), overshoots and settles, fading in over its first quarter
   FILM.pop = function (t, t0, d) {
     d = d || 0.32; if (t < t0) return { s: 0, sx: 0, sy: 0, a: 0, on: false };
-    const u = clamp((t - t0) / d, 0, 1), s = u >= 1 ? 1 : ease.outBack(u, 2.2);
-    const q = u >= 1 ? 0 : Math.sin(u * Math.PI * 2) * (1 - u) * 0.16;    // squash then stretch, decaying
+    const u = clamp((t - t0) / d, 0, 1), s = u >= 1 ? 1 : 0.35 + 0.65 * ease.outBack(u, 2.2);
+    const q = u >= 1 ? 0 : Math.sin(u * Math.PI * 2) * (1 - u) * 0.14;    // squash then stretch, decaying
     return { s, sx: s * (1 + q), sy: s * (1 - q), a: clamp(u * 4, 0, 1), on: true };
   };
-  FILM.popOut = function (t, t1, d) { d = d || 0.22; const u = seg(t, t1 - d, t1); const s = 1 - ease.inBack(u, 1.8); return { s: Math.max(0, s), sx: Math.max(0, s), sy: Math.max(0, s), a: 1 - u * u, on: t < t1 }; };
+  FILM.popOut = function (t, t1, d) { d = d || 0.22; const u = seg(t, t1 - d, t1); const s = 1 - 0.65 * ease.inBack(u, 1.8); return { s, sx: s, sy: s, a: 1 - u * u, on: t < t1 }; };
   // pop in at t0 and out at t1: the product of both
   FILM.popInOut = (t, t0, t1, d) => { const a = FILM.pop(t, t0, d), b = t1 == null ? { s: 1, sx: 1, sy: 1, a: 1, on: true } : FILM.popOut(t, t1); return { s: a.s * b.s, sx: a.sx * b.sx, sy: a.sy * b.sy, a: a.a * b.a, on: a.on && b.on }; };
   // a stamp: comes down from big to its size in 0.12 s, lands with a little shake. {s, a, dx, dy, rot, hit (landed), on}

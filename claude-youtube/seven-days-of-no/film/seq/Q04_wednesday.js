@@ -1,7 +1,7 @@
-/* Q04 · WEDNESDAY: MUM ("Wednesday" to "Thursday")
-   Card WEDNESDAY. The call: the hero on the sofa; Mum in her kitchen. "Sunday lunch?" "No." "She says, fine": a tight smile;
+/* Q04 · WEDNESDAY: MOM ("Wednesday" to "Thursday")
+   Card WEDNESDAY. The call: the hero on the sofa; Mom in her kitchen. "Sunday lunch?" "No." "She says, fine": a tight smile;
    "not fine": one eye twitches. "she calls again": the phone buzzing on the coffee table (ref 07), the hero sipping tea,
-   side-eye; "And again": more bubbles. "By evening": the window goes to dusk; the phone screen full frame: Mum, 9 missed calls,
+   side-eye; "And again": more bubbles. "By evening": the window goes to dusk; the phone screen full frame: Mom, 9 missed calls,
    and one text, "Are you alive?". "Day three. The world has not ended": the window, a calm sunset, a bird. "your phone is
    exhausted": the phone on the table with a tired face, a sweat drop, a low battery. */
 (function () {
@@ -16,12 +16,17 @@
     end: FILM.W('Thursday'),
   };
   const EVE = { tod: 'evening' };
-  function mumSide(c, o) { GFX.kitchen(c.g); return c.fig('mum', Object.assign({ x: 1080, y: 962, s: 1, face: -1, pose: 'hold_phone', mode: 'ear', talk: [T.ask, T.fine] }, o || {})); }
+  // Mom in her kitchen (SETS.mumKitchen, its front piece over her)
+  function mumSide(c, o) {
+    c.set('mumKitchen', {}); const a = c.anchor('mumKitchen', 'center');
+    const m = c.fig('mum', Object.assign({ x: a.x + 40, y: a.y, s: a.s, face: -1, pose: 'hold_phone', mode: 'ear', talk: [T.ask, T.fine] }, o || {}));
+    c.setFront('mumKitchen', {}); return m;
+  }
   function call(c, o) {
     o = o || {}; const t = c.t;
-    STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 840, y: 560 }); STAGE.heroSofa(cc, EVE, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
+    STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 900, y: 600 }); STAGE.heroSofa(cc, EVE, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
       (cc, r) => {
-        STAGE.fit(cc, r, { x: 1040, y: 560 }); const m = mumSide(cc, o.mum || {});
+        STAGE.fit(cc, r, { x: 1000, y: 600 }); const m = mumSide(cc, o.mum || {});
         if (t > T.notFine) { const hd = ART.head('mum', m), k = Math.floor((t - T.notFine) * 12) % 3; cc.g.save(); cc.g.lineWidth = 5; cc.g.strokeStyle = '#1c1c1c'; cc.g.lineCap = 'round';
           for (let i = 0; i < 3; i++) { const a = -0.9 + i * 0.45; cc.g.beginPath(); cc.g.moveTo(hd.x - hd.r * 0.95 + Math.cos(a + Math.PI) * (10 + k * 3), hd.y - hd.r * 0.1 + Math.sin(a + Math.PI) * (10 + k * 3)); cc.g.lineTo(hd.x - hd.r * 0.95 + Math.cos(a + Math.PI) * (34 + k * 3), hd.y - hd.r * 0.1 + Math.sin(a + Math.PI) * (34 + k * 3)); cc.g.stroke(); } cc.g.restore(); }
       },
@@ -37,7 +42,7 @@
   }
 
   FILM.seq({
-    id: 'Q04', title: 'Wednesday: Mum', chapter: 'Wednesday: Mum', from: T.card,
+    id: 'Q04', title: 'Wednesday: Mom', chapter: 'Wednesday: Mom', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'warm, a little comic' }); S.bed('living_room_evening', T.card, T.nine);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2); S.cue('whoosh', T.mom + 0.05);
@@ -48,7 +53,7 @@
     shots: [
       { at: T.card, name: 'living, evening: the day card over the hero with his tea', in: { type: 'wipe', dir: 'right' }, push: 1.04,
         draw(c) { STAGE.heroSofa(c, EVE, { hold: 'mug' }); STAGE.dayCard(c, T.card + 0.05, T.mom - 0.05, 'WEDNESDAY'); } },
-      { at: T.mom, name: 'call: Mum asks about Sunday lunch, "No."',
+      { at: T.mom, name: 'call: Mom asks about Sunday lunch, "No."',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.no[1] ? 'surprised' : 'happy' }, hero: { expr: 'neutral' } }); } },
       { at: T.argue, name: 'call: "fine", a tight smile; "not fine", one eye twitches',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.says ? 'neutral' : 'surprised', faceOver: t > T.says ? { mouth: { k: 'flat', w: 0.2 } } : null, blinks: [T.notFine, T.notFine + 0.14, T.notFine + 0.28], tremble: t > T.notFine ? 1.5 : 0 }, hero: { expr: 'worried', talk: null } }); } },
@@ -57,9 +62,9 @@
           tablePhone(c, [T.calls2, T.again2], [[T.calls2 + 0.05, -40, 0, 'call', '#77CC81'], [T.again2 + 0.05, 70, 90, 'call', '#77CC81'], [T.again2 + 0.35, -120, 150, 'mail']]); } },
       { at: T.evening, name: 'living: the window goes to dusk',
         draw(c) { const k = seg(c.t, T.evening, T.evening + 0.6); STAGE.heroSofa(c, { tod: 'evening', todTo: 'dusk', todK: k }, { pose: 'sit_front', hold: 'mug', expr: 'tired' }); tablePhone(c, [T.evening], []); } },
-      { at: T.nine, name: 'phone screen: Mum, 9 missed calls; "Are you alive?"', in: 'pop',
+      { at: T.nine, name: 'phone screen: Mom, 9 missed calls; "Are you alive?"', in: 'pop',
         draw(c) { const t = c.t; STAGE.phone(c, { mode: 'lock', time: '8:47', date: 'Wednesday', battery: 0.12, buzz: (t > T.alive && t < T.alive + 0.5) ? 1 : 0,
-          notes: [{ icon: 'call', title: 'Mum', body: '9 missed calls', count: 9, time: '8:41' }, { icon: 'msg', title: 'Mum', body: 'Are you alive?', time: 'now' }],
+          notes: [{ icon: 'call', title: 'Mom', body: '9 missed calls', count: 9, time: '8:41' }, { icon: 'msg', title: 'Mom', body: 'Are you alive?', time: 'now' }],
           notesK: seg(t, T.nine, T.nine + 0.4) + seg(t, T.alive - 0.05, T.alive + 0.35) }); } },
       { at: T.day3, name: 'the window: a calm sunset, a bird', in: 'fade',
         draw(c) { c.camera({ x: 527, y: 300, zoom: 2.3 }); c.set('living', { tod: 'evening', bird: seg(c.t, T.day3 + 0.3, T.phone) }); } },

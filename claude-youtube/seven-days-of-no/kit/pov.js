@@ -13,8 +13,14 @@
    More figure opts: face (per-expression overrides, e.g. {brows:{lift:.1}, mouth:{k:'flat'}}), nod (-1..1 features down), marks
    (confused '??', sheet only), light (1|-1: side the light comes from; shade strips go opposite), lw (screen px), override
    ({armR:{ik:[x,y]}, head:{tilt}} merged into the pose), drawProp(g, joints, F) (custom prop in the hand layer), prop:false.
-   holding: clipboard | phone | mug | sip | laptop | box (takes over the arms the prop needs; works with walk/stand/sit).
-   Returns world anchors {head, headTop, headR, mouth, handL, handR, elbowL, elbowR, pelvis, scale} for bubbles and props.
+   holding: clipboard | phone (+ mode or phoneMode: ear|front|show|out) | phone_ear | phone_front | phone_show | phone_out | mug | sip
+     | laptop | box | peace (takes over only the arms/prop/head, never the legs; works with stand, walk, run, sit, sit_sofa).
+   Poses added: run (phase 0..1, stride), peace (V sign beside the head; hand shape 'peace' is also usable in any arm), sit_sofa
+     (three-quarter, deep in a sofa; also reached by pose 'sit' with turn >= 0.45 or view 'sofa'; opts seat (px above the floor,
+     default 224), thigh (default 150), q (torso three-quarter 0..1)). seatAt: [x, y] or a set anchor {x, y} puts the seat contact
+     exactly there (feet on y, default 224 px * scale below it). Expressions added: rude (side-eye, one brow up, tongue out), smug.
+   Sitting returns extra anchors: seat (contact point), lap, knee/kneeL/kneeR, feet.
+   Returns world anchors {head, headTop, headR, mouth, handL, handR, elbowL, elbowR, pelvis, knee, kneeL, kneeR, feet, seat, lap, scale}.
    Props (world space): POV.phone, phoneFlat, laptop, laptopSide, clipboard, box, mug, notif (kind mail|chat|bell|call|missed),
    chatBubble, bell, buzz, thought (plate icon), plateIcon, bulb (rays, glow, sparkle), clock, flash, shadow.
    In a tinted set (living-room evening) pass the set's tint to figure() so skin and clothes take the same multiply. */
@@ -568,7 +574,7 @@
     // seated deep in a sofa, three-quarter: thighs forward along the seat, shins down, feet on the floor (refs 03, 07, 10)
     sit_sofa: o => {
       const seat = o.seat == null ? 224 : o.seat, py = -(seat + 28), floorY = -54 - py, th = o.thigh || 150;
-      return { stance: 'side', ground: false, pelvis: { y: py }, lean: -0.06, sit: 'sofa', torso3q: o.q == null ? 1 : o.q, head: { turn: 0.35 },
+      return { stance: 'side', ground: false, pelvis: { y: py }, seatH: seat, lean: -0.06, sit: 'sofa', torso3q: o.q == null ? 1 : o.q, head: { turn: 0.35 },
         legR: { pts: [[14, -6], [14 + th, -14], [th + 34, floorY]], z: 'back', foot: 0.04 },
         legL: { pts: [[-8, 4], [-8 + th, 2], [th - 4, floorY]], foot: 0 },
         armL: { ik: [96, -12], bend: 1, ul: 0.95, hand: 'flat', flip: -1, hrot: 0.75 },
@@ -583,7 +589,7 @@
     sit: o => {
       if (o.view === 'sofa' || (o.view == null && (o.turn || 0) >= 0.45)) return POSES.sit_sofa(o);
       const seat = o.seat == null ? 200 : o.seat, view = o.view || 'side', py = -(seat + 24), floorY = -54 - py;
-      const pose = { stance: view === 'side' ? 'side' : 'front', ground: false, pelvis: { y: py }, lean: -0.03, sit: view };
+      const pose = { stance: view === 'side' ? 'side' : 'front', ground: false, pelvis: { y: py }, seatH: seat, lean: -0.03, sit: view };
       if (view === 'side') {
         const kneeY = 6;
         pose.legR = { pts: [[12, -4], [168, kneeY - 6], [184, floorY]], z: 'back', foot: 0 };
@@ -890,8 +896,13 @@
       if (B.fly && stance === 'front' && !pose.sit) polyline(g, quadPts([2, -4], [3, 22], [-8, 32], 6), F.ld);
     }
     ['L', 'R'].forEach(s => { if (front(legs[s])) legEnd(legs[s]); });
-    if (isSkirt) {
-      const sw = pose.sit ? 0 : (legs.R.A[0] + legs.L.A[0]) * 0.25;
+    if (isSkirt && pose.sit) {   // seated: the skirt drapes from the waist over the thighs to the knees
+      const K = (stance === 'side' ? legs.L : legs.R).K, sk = new Path2D();
+      if (stance === 'side') { sk.moveTo(-62, -28); sk.lineTo(54, -28); sk.quadraticCurveTo(K[0] * 0.6, K[1] - 36, K[0] + 12, K[1] - 30); sk.quadraticCurveTo(K[0] + 26, K[1], K[0] + 16, K[1] + 32); sk.quadraticCurveTo(K[0] * 0.5, K[1] + 44, -40, 42); sk.quadraticCurveTo(-66, 20, -62, -28); }
+      else { sk.moveTo(-60, -28); sk.lineTo(60, -28); sk.lineTo(80, 60); sk.quadraticCurveTo(0, 72, -80, 60); sk.closePath(); }
+      sk.closePath(); fs(g, sk, c(B.c), F.lw); polyline(g, quadPts([10, 10], [K[0] * 0.45, K[1] - 4], [K[0] - 10, K[1] + 4], 6), F.ld);
+    } else if (isSkirt) {
+      const sw = (legs.R.A[0] + legs.L.A[0]) * 0.25;
       const sk = new Path2D(); sk.moveTo(-60, -28); sk.lineTo(60, -28); sk.quadraticCurveTo(76, 90, 86 + sw, 214); sk.quadraticCurveTo(sw, 226, -86 + sw, 214); sk.quadraticCurveTo(-76, 90, -60, -28); sk.closePath();
       fs(g, sk, c(B.c), 0); g.save(); g.clip(sk); g.fillStyle = c(B.sh); g.fill(P([[light > 0 ? -90 : 90, -30], [light > 0 ? -50 : 50, -30], [light > 0 ? -60 + sw : 60 + sw, 230], [light > 0 ? -100 : 100, 230]])); g.restore();
       strokeP(g, sk, F.lw); polyline(g, quadPts([-20, 60], [-26, 140], [-30, 210], 6), F.ld); polyline(g, quadPts([30, 80], [36, 150], [40, 214], 6), F.ld);
@@ -948,7 +959,7 @@
     const near = stance === 'side' ? legs.L : legs.R, thW = (pose.sit ? legW * 1.22 : legW) / 2;
     const out = { head: hw([0, 0]), headTop: hw([0, -100]), headR: 100 * sc, mouth: hw([0, 50]), handL: wp(arms.L.Wr), handR: wp(arms.R.Wr), elbowL: wp(arms.L.E), elbowR: wp(arms.R.E), pelvis: wp([0, 0]), scale: sc,
       knee: wp(near.K), kneeL: wp(legs.L.K), kneeR: wp(legs.R.K), feet: wp([(legs.L.A[0] + legs.R.A[0]) / 2, Math.max(legs.L.A[1], legs.R.A[1]) + 54]),
-      seat: pose.sit ? wp([0, RIG.hipY + thW]) : null, lap: pose.sit ? wp([(near.H[0] + near.K[0]) / 2, (near.H[1] + near.K[1]) / 2 - thW]) : null };
+      seat: pose.sit ? wp([0, pose.seatH != null ? -pel[1] - pose.seatH : RIG.hipY + thW]) : null, lap: pose.sit ? wp([(near.H[0] + near.K[0]) / 2, (near.H[1] + near.K[1]) / 2 - thW]) : null };
     g.restore();
     return out;
   }

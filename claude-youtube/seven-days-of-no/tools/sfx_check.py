@@ -38,7 +38,6 @@ CHECKS = {
     'swell': ('a rising whoosh', ['a falling whoosh', 'an explosion', 'wind blowing', 'a car passing']),
     'rain': ('light rain', ['frying bacon', 'applause', 'a stream of water', 'static noise']),
     'grow': ('a happy ascending chime', ['a descending tone', 'an error sound', 'a doorbell', 'a gong']),
-    'freeze': ('a tape slowing down to a stop', ['a rising tone', 'an explosion', 'a door closing', 'a car engine']),
     'click': ('a button click', ['a gunshot', 'a door knock', 'a water drop', 'a bell']),
     'dim': ('a descending blip', ['a rising blip', 'a doorbell', 'a gunshot', 'a bird chirping']),
     'plate_slide': ('something sliding across a table', ['a door closing', 'footsteps', 'paper tearing', 'a whoosh']),
