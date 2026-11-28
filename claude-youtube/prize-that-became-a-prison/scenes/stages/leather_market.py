@@ -416,14 +416,17 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, *, curl, contact
         if f"thumb.01_master.{k}" in pb:
             thumb = pb[f"thumb.01_master.{k}"]
             thumb.rotation_mode = "XYZ"
-            thumb.rotation_euler.x = math.radians(36 if curl > 45 else 10)
-            thumb.rotation_euler.z = math.radians(-12 if curl > 45 else -20)
+            thumb.rotation_euler.x = math.radians(10)
+            thumb.rotation_euler.z = math.radians(-20)
         bpy.context.view_layer.update()
         if curl > 45:
-            # The buyer closes the middle joints around the padded sleeve;
-            # the thumb keeps its opposing contact on the near side.
-            rigged.articulate_hand(holder, k, {digit: (48 + (curl - 78) * 0.6, 62, 36) for digit in
-                                               ("f_index", "f_middle", "f_ring", "f_pinky")})
+            # Bring the thumb down to oppose the fingers against the padded sleeve.
+            wrapped = {digit: (48 + (curl - 78) * 0.6, 62, 36)
+                       for digit in ("f_index", "f_middle", "f_ring", "f_pinky")}
+            wrapped["thumb"] = (26, 65, 46.8)
+            rigged.articulate_hand(holder, k, wrapped)
+            pb[f"thumb.01_master.{k}"].rotation_euler.z = math.radians(-22)
+            bpy.context.view_layer.update()
         hv = _hand_verts(holder, k)
         centre = sum(hv["palm"], Vector()) / len(hv["palm"])
         correction = contact - centre
@@ -487,8 +490,16 @@ def pose_buy():
                    palm_normal=(-0.85, 0.20, -0.35), follow_forearm=True)
     rep.append(f"organiser head {go[1]} err {go[0]:.1f}; r_arm {tuple(round(v) for v in ho['arm'])} fit {ho['fit'] * 1000:.0f} mm "
                f"palm {ho['palm_low'] * 1000:.0f} fingers {ho['finger_low'] * 1000:.0f} mm")
-    # Dawn: a step back in the lane, weight on one hip, hands loosely together in front, watching the bag change hands
-    dp = {"chest": (3, 2), "l_arm": (12, -15, 70), "r_arm": (12, -18, 70), "fingers": 30}
+    # Dawn waits behind the organiser with her hands loosely gathered at her waist.
+    dp = {
+        "chest": (3, 2), "l_arm": (12, -21, 62), "r_arm": (12, -20, 53),
+        "hands": {
+            "L": {"f_index": (14, 24, 18, -1), "f_middle": (19, 26, 17, -2),
+                  "f_ring": (24, 30, 21, -2), "f_pinky": (29, 34, 24, 2), "thumb": (20, 16, 8, -6)},
+            "R": {"f_index": (13, 22, 12, 0), "f_middle": (15, 24, 15, 0),
+                  "f_ring": (20, 29, 18, 1), "f_pinky": (24, 34, 21, 4), "thumb": (18, 14, 8, -7)},
+        },
+    }
     gd = aim_head_iter(d, dp, Vector((BX - 0.1, BY, TOP + 0.3)))
     rep.append(f"Dawn head {gd[1]} err {gd[0]:.1f}")
     print("MARKET pose buy: " + "; ".join(rep), flush=True)

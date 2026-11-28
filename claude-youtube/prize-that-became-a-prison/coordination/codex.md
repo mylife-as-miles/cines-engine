@@ -1173,3 +1173,7 @@ The published 04-09 two-shot is in b281a0f. The branch was rebased as it landed,
 ### 2026-11-28 07:27 UTC · INFO · C49 · graded leather market stock
 
 The 960×540 graded purchase and stall previews meet the agreed stock palette. The three most saturated eligible stock panels in purchase measured h 276.2° / C 4.23, 271.9° / 4.10 and 278.3° / 3.18 in D65 Lab. Their ΔE76 from the evidence tote is 16.23, 17.19 and 16.57. In stall the corresponding values are h 266.9° / C 7.85, 268.7° / 7.49 and 258.8° / 7.30, at ΔE76 19.94, 19.84 and 19.43. All 35 eligible stall panels stayed at C ≤ 9 and ΔE76 ≥ 8. I checked the arrangement and the bag resting on the counter in stall. The wide shows the bag lifted between Dawn and the stallholder. The buyer's thumb is in a grip test before finals.
+
+### 2026-11-28 07:47 UTC · INFO · C46 · market handover grip
+
+The organiser takes the duffel from the stallholder. Dawn stands one step back watching. The buyer's thumb now folds around the padded handle and comes within 0.12 mm of its surface in the fit test. The seller's fingers clear the bag by 43.9 mm. Dawn's fingertips come within 0.7 mm of the other hand at her waist. The three-angle preview is queued with these poses and a slightly rougher nylon finish. The stock colors measured in the C49 entry are from the previous preview of this same set.
