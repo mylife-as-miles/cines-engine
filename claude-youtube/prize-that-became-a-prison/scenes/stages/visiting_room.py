@@ -60,12 +60,9 @@ TIM_DX, DAWN_DX = 0.08, -0.12               # each sits toward their own phone (
 FOCUS = {"fx_wide": (BXO, -0.3, 1.05),
          "fx_empty": (st.BX[EMPTY] + 0.5 - st.BAF_T / 2 - 0.06, -st.PHONE_Y + 0.02, st.PHONE_Z + 0.2)}
 CAMERAS = {
-    # Ch 08: from the back of the visitors' room, a little high: the row of booths along the glass, the one lit
-    # booth with Tim at the counter and Dawn beyond the glass, the empty booths falling off into the dark either side.
-    # Aimed so the lit fitting and the next one sit wholly inside the top of the frame and the last one wholly out
-    # (round-1 critique: a fitting cut by the top edge)
-    "wide": dict(loc=(1.38, -3.3, 1.9), aim=(-0.42, 0.35, 1.55), lens=20, focus="fx_wide", fstop=5.6, beat="ch08",
-                 exposure=-1.85),
+    # A level lens keeps the baffles vertical. The shift holds the lit fixture and the row of waiting chairs.
+    "wide": dict(loc=(1.8, -3.34, 1.46), aim=(-0.25, 0.35, 1.46), lens=24, focus="fx_wide", fstop=5.6, beat="ch08",
+                 exposure=-1.85, shift_y=0.023),
     # Ch 08: over Tim's left shoulder, through the glass to Dawn with the handset at her ear (set by glass_camera());
     # no haze (it grained the reflection) and twice the samples, so his ghost in the glass comes out smooth
     "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=50, focus="fx_dawn", fstop=2.8, beat="ch08", haze=False,
@@ -74,7 +71,7 @@ CAMERAS = {
                     haze=False, beat="ch08", spp_k=2.0, refl=0.7, film=1.3),
     # Ch 08: an empty booth from a visitor's seat, a little behind it: the near phone with its handset on the hook
     # in the right third, the glass and its marks across the middle (the night light on the back wall reflecting in
-    # it), the other side's phone in its own pool of light in the left third, the empty stool beyond (cast hidden)
+    # it), and the other side's phone in its own pool of light in the left third (cast hidden)
     "empty": dict(loc=(st.BX[EMPTY] - 0.32, -1.6, 1.24), aim=(st.BX[EMPTY] + 0.15, 0.5, 1.17), lens=38,
                   focus="fx_empty", fstop=2.8, beat="ch08", cast=False, exposure=-1.6, film=1.6, refl=3.0,
                   film_diffuse=2.5),
@@ -92,7 +89,7 @@ TRIMS = {
                 f"fiti{st.OCC}": 0.35, f"fitv{st.OCC}_down": 0.55, "bounce_Tim": 1.0},
     # over Tim's shoulder: his own fitting turned down so the back of his head in the foreground falls darker than
     # Dawn's face, the counter's bounce into his face raised so his reflection in the glass still reads
-    "glass": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35, f"fitv{st.OCC}": 0.5,
+    "glass": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35, f"fitv{st.OCC}": 0.27,
               "bounce_Tim": 2.4},
 }
 _STATE = {"cast": [], "holders": {}, "base": {}, "lens_base": {}}
@@ -889,6 +886,7 @@ def apply_camera(name):
     cam = bpy.context.scene.camera
     if cam is not None:
         cam.data.clip_start, cam.data.clip_end = 0.03, 100.0
+        cam.data.shift_y = cfg.get("shift_y", 0.0)
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 4.0
     sc.cycles.blur_glossy = 0.5
