@@ -1,0 +1,28 @@
+{
+ "round": "round2",
+ "http": "200",
+ "character_cost": null,
+ "request_id": null,
+ "description": "A deep, resonant male baritone in his forties, American. Slow and deliberate, leaving long pauses between sentences. Close to the microphone and intimate, with a soft husk and a warm, full low end, like someone speaking quietly late at night. Grave and steady, sincere, never preachy and never theatrical. A distinctive, memorable narrator for a true-crime documentary.",
+ "text": "The bags are overweight. Only slightly. There's a small fee, and she pays it without a second thought. It's 2014, at an airport in China. Not long after, security staff call her aside. The officers want to know one thing. Are these bags hers? She says yes. Three years later, a court sentences her to death, with a two-year reprieve.",
+ "chars": 333,
+ "model_id": "eleven_ttv_v3",
+ "seed": null,
+ "previews": [
+  {
+   "file": "audio/vo/design/round2/preview_1.mp3",
+   "generated_voice_id": "5qVOCTy2wGeetrUanU6E",
+   "duration_secs": 29.232833333333332
+  },
+  {
+   "file": "audio/vo/design/round2/preview_2.mp3",
+   "generated_voice_id": "f0CEYx5vmmFjX67Ot3Dn",
+   "duration_secs": 33.15120833333334
+  },
+  {
+   "file": "audio/vo/design/round2/preview_3.mp3",
+   "generated_voice_id": "xeyFwHINDsrivTg7x8PN",
+   "duration_secs": 33.22958333333333
+  }
+ ]
+}

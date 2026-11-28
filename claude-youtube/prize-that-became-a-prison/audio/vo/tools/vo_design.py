@@ -19,8 +19,9 @@ TEXT = ("The bags are overweight. Only slightly. There's a small fee, and she pa
 
 def main():
     rnd = sys.argv[1]; seed = int(sys.argv[sys.argv.index('--seed') + 1]) if '--seed' in sys.argv else None
+    desc = open(sys.argv[sys.argv.index('--desc') + 1]).read().strip() if '--desc' in sys.argv else DESC   # a round's own brief
     out = os.path.join(ROOT, 'audio/vo/design', rnd); os.makedirs(out, exist_ok=True)
-    body = {'voice_description': DESC, 'text': TEXT, 'model_id': 'eleven_ttv_v3', 'auto_generate_text': False,
+    body = {'voice_description': desc, 'text': TEXT, 'model_id': 'eleven_ttv_v3', 'auto_generate_text': False,
             'loudness': 0.5, 'guidance_scale': 5}
     if seed is not None: body['seed'] = seed
     hdr, res = tempfile.mktemp(), tempfile.mktemp()
@@ -29,7 +30,7 @@ def main():
                            '--data-binary', json.dumps(body), '-o', res, '-w', '%{http_code}'], capture_output=True, text=True).stdout
     h = {k.strip().lower(): v.strip() for k, _, v in (l.partition(':') for l in open(hdr).read().splitlines()) if v}
     log = {'round': rnd, 'http': code, 'character_cost': h.get('character-cost'), 'request_id': h.get('request-id'),
-           'description': DESC, 'text': TEXT, 'chars': len(TEXT), 'model_id': body['model_id'], 'seed': seed}
+           'description': desc, 'text': TEXT, 'chars': len(TEXT), 'model_id': body['model_id'], 'seed': seed}
     if code != '200':
         log['error'] = open(res, errors='ignore').read()[:600]
     else:
