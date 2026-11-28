@@ -7,7 +7,7 @@
   const { W, Wend } = FILM.from(FILM.W('sunday so what'));
   const { seg, pop, popOut } = FILM;
   const T = {
-    card: W('Sunday'), so: W('so what'), few: W('a few'), annoyed: W('annoyed'), quiet: W('one went'), oneOrTwo: W('one or two'), respected: W('respected'),
+    card: W('Sunday'), so: W('so what'), happened: W('happened'), few: W('a few'), annoyed: W('annoyed'), quiet: W('one went'), oneOrTwo: W('one or two'), respected: W('respected'),
     nobody: W("nobody's"), life: W('life'), ended: Wend('ended'), end: FILM.W("here's"),
   };
   const EVE = { tod: 'evening' };
@@ -37,9 +37,9 @@
     },
     shots: [
       { at: T.card, name: 'living, warm evening: the day card over the hero with coffee', in: { type: 'wipe', dir: 'right' }, push: 1.04,
-        draw(c) { STAGE.heroSofa(c, EVE, { hold: 'mug', expr: 'happy' }); STAGE.dayCard(c, T.card + 0.05, T.so - 0.05, 'SUNDAY'); } },
+        draw(c) { STAGE.heroSofa(c, EVE, { hold: 'mug', expr: 'happy' }); STAGE.dayCard(c, T.card + 0.05, T.happened - 0.1, 'SUNDAY', null, STAGE.CARD_LIVING); } },
       // the tally in three framings: wide (annoyed), closer on the portraits (quiet, respected), close on him (nobody's life ended)
-      { at: T.so, name: 'living: the tally: a few annoyed (portraits pop up)', push: { from: 1, to: 1.05, x: 1100, y: 480 }, draw: tally },
+      { at: T.happened, name: 'living: the tally: a few annoyed (portraits pop up)', push: { from: 1, to: 1.05, x: 1100, y: 480 }, draw: tally },
       { at: T.quiet, name: 'living, closer: one went quiet; two respected you more', push: { from: 1.18, to: 1.24, x: 1250, y: 470 }, draw: tally },
       { at: T.nobody, name: 'living, close: nobody\'s life ended; the portraits shrink away; he sips', push: { from: 1.45, to: 1.52, x: 900, y: 420 }, draw: tally },
     ],

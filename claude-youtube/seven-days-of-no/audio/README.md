@@ -49,12 +49,16 @@ The reference animatic's register is warm, playful and music-box. Every take use
 
 ## Effects
 
-Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 12–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13, the shutter at −12. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 16:06 (fix round 3, with on-screen `x`) has 136 cues (25 pops, 28 whooshes, 8 card lands, 13 stamps: 4 YES, 9 NO); 131 play.
+Each effect is cartoon-clean and levelled from its loudest 100 ms relative to the narration.
+
+- **Story effects** sit about 12–15 dB under the voice as heard (their loudest 400 ms against the voice's 3 s loudness around them), so they carry on phone speakers: the red NO stamps 13–14 dB, the clang 15, the shutter 12.7, the dings 11–16 (the heart's ding, under speech, 17.7), the phone buzz about 13. The NO! burst plays in a pause at 5.7 dB under.
+- **Third review:** these were raised (NO stamps +4, clang +6.5, shutter +4, dings +4, YES stamps +3, since they land on spoken words). The NO stamp's weight moved from a sub thump into the low mids, where phones can carry it.
+- **Pops, whooshes, card lands and UI ticks** stay 20–26 dB under. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 16:16 (final polish) has 136 cues (25 pops, 28 whooshes, 8 card lands, 13 stamps: 4 YES, 9 NO); 131 play.
 
 | Sound | Source |
 |---|---|
 | phone_buzz, notify, pop ×3, send, receive, ding, bulb, cloud, whoosh ×2, wrong, clang, stomach_drop (also used for `deflate`), wobble, bird, battery_low, swell, rain, grow, click (also used for `button_click` and `freeze`), dim | Synthesised in `tools/synth_sfx.py`, pitched in C major at A = 440 |
-| stamp (the red NO) | One Too Many's rubber stamp (CC0) over a soft synthetic thump |
+| stamp (the red NO) | One Too Many's rubber stamp (CC0) over a small synthetic thump at 180→110 Hz, high-passed at 90 Hz |
 | stamp_yes (a stamp cue whose `p.kind` is `yes`, or that is spoken on "yes" or the cold open's "say") | One Too Many's shorter stamp (CC0), a light thump and a small C7 ping: brighter (centroid 2.5 kHz against 2.0) and friendlier, 2 dB softer |
 | card_land ×3 (cycled) | One Too Many's card slaps (CC0), trimmed and lightened; 23 dB under the voice |
 | shout_no | Synthesised: a tight 0.58 s comic hit (a whoosh outward, a thud at 0.15 s, a cartoon boing over it). It is the hook's punchline, so it plays near the voice's level (−3 dB re voice, peak −7.9 dBFS). The cue sheet now puts it at 11.06 s, on the picture's slam; `after_speech` would hold it back to where the narrator's "no" ends if it ever came earlier. It fills the 0.65 s pause (11.05–11.65 s) before "So". earshot hears it as 97% "a cartoon boing", and the spoken "no" stays 96% clear |
@@ -88,7 +92,7 @@ Three fails are accepted, and the ear should decide (see below):
 | Loudness range | 4.1 LU |
 | Voice | High-pass at 70 Hz; gentle 2:1 compression (at most 4 dB); about −14 LUFS in the mix |
 | Master | +1.67 dB of gain; a look-ahead true-peak limiter (4× oversampled) doing at most 2.2 dB; the same gain curve applied to the stems, so they sum to the mix |
-| Stereo | The voice is centred. The music beds stay stereo as Lyria made them; nothing is summed. Their side is raised up to 3 dB where they are already well correlated, and narrowed where a passage opposes (T5's wide last chord). The effects are placed toward their source on screen from the cue's `x` (0–1, at most ±0.3). In the cue sheet of 16:06, 20 effects with an on-screen source are panned, between −0.21 and +0.21 (phone buzzes, footsteps, typing, the run, the shutter, the stomach drop, the plate); graphics and UI cues sit in the centre |
+| Stereo | The voice is centred. The music beds stay stereo as Lyria made them; nothing is summed. Their side is raised up to 3 dB where they are already well correlated, and narrowed where a passage opposes (T5's wide last chord). The effects are placed toward their source on screen from the cue's `x` (0–1, at most ±0.3). In the cue sheet of 16:16, 20 effects with an on-screen source are panned, between −0.21 and +0.21 (phone buzzes, footsteps, typing, the run, the shutter, the stomach drop, the plate); graphics and UI cues sit in the centre |
 | Mono compatibility | Mix L/R correlation 0.98 (lowest audible 400 ms window +0.12); music 0.72 (lowest +0.00, so no phase opposition); effects 0.99 (lowest 0.997). Mono downmix: −14.02 LUFS against −14.0 stereo. The end screen loses 1.4 dB in mono (a wide bed), with no cancellation |
 | Music under the voice | Median 14.7 dB under (3 s windows); main and closing beds about 14.5 dB under, the hush about 18, the lift about 17.5 (integrated) |
 | End screen | Music at −17.5 LUFS, about 3.5 LU under the speech, then the final chord dies away |
@@ -106,6 +110,8 @@ Three fails are accepted, and the ear should decide (see below):
 | "yes, yes, yes", 7–10.5 s | 76% | 24% |
 | The question, 11.5–16 s | 76% | 23% |
 | Cards, 0–4 s | 69% | 30% |
+
+The seven NO stamps after the third review's raise (16.5–19.5 s) read 50% "music drowning". The run of thuds 0.2 s apart reads as percussion, not masking: "effects drowning" is under 1%, and without the effects the window reads 78% clear. The two Q05 stamps read 77% clear.
 
 The short windows' "music drowning" share does not follow level: with the music 3 dB lower it reads 27%, 22% and 27%. With no effects at all, it reads the same.
 

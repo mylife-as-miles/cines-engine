@@ -105,13 +105,14 @@
       { at: T.notRude, name: 'plain: not rude, not angry: each face crossed out', push: { from: 1, to: 1.05 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
-          [[620, 'rude', 'stand', T.notRude + 0.05, T.not2], [1300, 'angry', 'stand', T.angry, T.just - 0.25]].forEach(([x, expr, pose, t0, tx]) => {
+          const slideL = ease.inOutCubic(seg(t, T.angry - 0.1, T.angry + 0.25));   // centred while alone, then the pair
+          [[960 - 340 * slideL, 'rude', 'stand', T.notRude + 0.05, T.not2], [1300, 'angry', 'stand', T.angry, T.just - 0.25]].forEach(([x, expr, pose, t0, tx]) => {
             const st = pop(t, t0 - 0.05, 0.32); if (!st.on) return;
             GFX.at(c.g, x, 520, st, () => { c.g.translate(-x, -520); GFX.portrait(c, 'hero', x, 520, 270, { expr, fig: { pose } }); });
             GFX.cross(c.g, x, 520, 380, seg(t, tx, tx + 0.25));
           });
         } },
-      { at: T.just, name: 'plain: just no: calm, the flat palm out', in: 'pop', push: { from: 1.08, to: 1.02, x: 960, y: 420 },
+      { at: T.just, name: 'plain: just no: calm, the flat palm out', in: 'pop', push: { from: 1, to: 1.12, x: 960, y: 420 },
         draw(c) { STAGE.plainHero(c, Object.assign({ talk: T.justNo }, c.t > T.justNo[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); } },
       { at: T.lets, name: "plain: let's see: he walks out of frame",
         draw(c) { c.set('plain', {}); const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 }); const wk = walk(c.t, T.see - 0.05, T.end + 0.3, a.x, 2250); c.fig('hero', { x: wk.x, y: a.y, s: a.s, face: 1, pose: wk.moving ? 'walk' : 'stand', walk: wk.walk, expr: 'happy' }); } },

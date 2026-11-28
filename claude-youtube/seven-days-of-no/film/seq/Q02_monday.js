@@ -44,7 +44,7 @@
           STAGE.dayCard(c, T.card + 0.05, T.boss - 0.1, 'MONDAY', '5:30 PM'); } },
       { at: T.boss, name: 'office: the boss walks over and asks', push: { from: 1, to: 1.05, x: 960, y: 560 },
         draw(c) { c.set('office', OFF); hero(c, { blinks: [T.ask[1] + 0.2] }); boss(c); } },
-      { at: T.normally, name: 'memory: normally you say "of course"', in: 'pop',
+      { at: T.normally, name: 'memory: normally you say "of course"', in: 'pop', push: { from: 1, to: 1.07, x: 820, y: 470 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
           GFX.memory(c.g, 210, 110, 1500, 860, () => {
@@ -55,7 +55,7 @@
             c.g.restore();
           });
         } },
-      { at: T.today, name: 'office: today you say, no',
+      { at: T.today, name: 'office: today you say, no (a slow push in on the no)', push: { from: 1, to: 1.12, x: 760, y: 420, delay: T.no[0] - 0.4 - T.today, ease: 'inOutSine' },
         draw(c) { c.set('office', OFF); hero(c, Object.assign({ talk: T.no }, c.t > T.no[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); boss(c); } },
       { at: T.blinks - 0.25, name: 'close on the boss: two blinks',
         draw(c) { c.camera({ x: BOSS_STOP, y: 330, zoom: 2.4 }); c.set('office', OFF); boss(c, { blinks: [T.blinks + 0.05, T.blinks + 0.42], expr: 'surprised' }); } },

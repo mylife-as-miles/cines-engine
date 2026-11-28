@@ -25,18 +25,20 @@
     id: 'Q07', title: 'Saturday: the real answer', chapter: 'Saturday: the real answer', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'calm, confident' }); S.bed('living_room_morning', T.card, T.texts);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1, { x: 0.61 }); S.cue('receive', T.need);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1, { x: 0.61 }); S.cue('receive', T.need + 0.05);
       S.cue('pop', T.doNot + 0.1); S.cue('dim', T.no + 0.1); S.cue('dim', T.panic + 0.05);
       S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12), x: 0.47 }); S.cue('send', T.canSend); S.cue('receive', T.perfect); S.cue('ding', T.perfect + 0.3);
       S.cue('pop', T.works + 0.1); S.cue('ding', T.real);
     },
     shots: [
-      { at: T.card, name: 'living, morning: the day card over the hero with his laptop', in: { type: 'wipe', dir: 'right' }, push: 1.04,
-        draw(c) { STAGE.heroSofa(c, MORN, { pose: 'sit_laptop', expr: 'happy' }); STAGE.dayCard(c, T.card + 0.05, T.boss - 0.05, 'SATURDAY'); } },
-      { at: T.boss, name: 'living: the phone buzzes on the table',
-        draw(c) { const t = c.t; STAGE.heroSofa(c, MORN, { pose: 'sit_laptop', expr: 'surprised', look: [0.8, 0.5] }); const a = c.anchor('living', 'tablePhone'); c.prop('phoneFlat', { x: a.x + Math.sin(t * 90) * 3, y: a.y - 6, s: 1.25, glow: 1 }); c.prop('buzz', { x: a.x, y: a.y - 10, rx: 80, t }); } },
-      { at: T.texts + 0.1, name: 'phone: the boss: "Need that report tonight."', in: 'pop',
-        draw(c) { STAGE.phone(c, { mode: 'chat', contact: 'Boss', avatarColor: '#A6A6A6', time: '10:12', messages: [Object.assign({ k: seg(c.t, T.need, T.need + 0.35) }, BOSS_MSG)] }); } },
+      { at: T.card, name: 'living, morning: the day card on the wall; the phone buzzes on the table', in: { type: 'wipe', dir: 'right' }, push: 1.04,
+        draw(c) {
+          const t = c.t; STAGE.heroSofa(c, MORN, { pose: 'sit_laptop', expr: t > T.boss ? 'surprised' : 'happy', look: t > T.boss ? [0.8, 0.5] : null });
+          if (t > T.boss) { const a = c.anchor('living', 'tablePhone'); c.prop('phoneFlat', { x: a.x + Math.sin(t * 90) * 3, y: a.y - 6, s: 1.25, glow: 1 }); c.prop('buzz', { x: a.x, y: a.y - 10, rx: 80, t }); }
+          STAGE.dayCard(c, T.card + 0.05, T.need - 0.1, 'SATURDAY', null, STAGE.CARD_LIVING);
+        } },
+      { at: T.need, name: 'phone: the boss: "Need that report tonight."', in: 'pop',
+        draw(c) { STAGE.phone(c, { mode: 'chat', contact: 'Boss', avatarColor: '#A6A6A6', time: '10:12', messages: [Object.assign({ k: seg(c.t, T.need + 0.05, T.need + 0.4) }, BOSS_MSG)] }); } },
       { at: T.doNot, name: 'plain: two buttons, NO and YES!!, each dimming', in: 'pop',
         draw(c) {
           c.set('plain', {}); const t = c.t;

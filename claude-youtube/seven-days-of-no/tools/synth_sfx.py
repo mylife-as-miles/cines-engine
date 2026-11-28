@@ -185,9 +185,12 @@ def main():
 
     # stamp: a friendly thud. One Too Many's rubber stamp over a soft thump (a synthetic thump alone read as a kick drum,
     # which would fight the music's own kick; this reads as an impact, a thud)
-    t = T(0.35); thump = np.sin(2 * np.pi * np.cumsum(70 + 50 * np.exp(-t / 0.015)) / SR) * np.exp(-22 * t)
-    s1 = otm('stamp1'); x = np.zeros(int(0.4 * SR)); place(x, s1 / np.max(np.abs(s1)), 0.0); place(x, 0.5 * thump, 0.004)
-    W('stamp', fade(x, 0.0005, 0.05), "One Too Many's sfx/stamp1 (a rubber stamp) over a soft 120->70 Hz thump at -6 dB",
+    # The thump is small and sits at 180->110 Hz: a sub thump read as a kick drum when the seven NO stamps run in a row,
+    # and phone speakers do not play it anyway; the stamp's weight is in the low mids, where phones can carry it.
+    t = T(0.35); thump = np.sin(2 * np.pi * np.cumsum(110 + 70 * np.exp(-t / 0.012)) / SR) * np.exp(-28 * t)
+    s1 = otm('stamp1'); x = np.zeros(int(0.4 * SR)); place(x, s1 / np.max(np.abs(s1)), 0.0); place(x, 0.28 * thump, 0.004)
+    x = hp(x, 90)
+    W('stamp', fade(x, 0.0005, 0.05), "One Too Many's sfx/stamp1 (a rubber stamp) over a small 180->110 Hz thump at -11 dB, high-passed at 90 Hz",
       'otm/stamp1: "Stamp.wav" by abstraktgeneriert, https://freesound.org/people/abstraktgeneriert/sounds/213003/', 'CC0')
 
     # send: a round upward glide to C6 (the airy swish read as a snare; without it, 98 % 'a message sent')

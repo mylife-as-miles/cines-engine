@@ -32,7 +32,7 @@
  "stamp": {
   "source": "otm/stamp1: \"Stamp.wav\" by abstraktgeneriert, https://freesound.org/people/abstraktgeneriert/sounds/213003/",
   "licence": "CC0",
-  "how": "One Too Many's sfx/stamp1 (a rubber stamp) over a soft 120->70 Hz thump at -6 dB",
+  "how": "One Too Many's sfx/stamp1 (a rubber stamp) over a small 180->110 Hz thump at -11 dB, high-passed at 90 Hz",
   "dur_s": 0.4
  },
  "send": {

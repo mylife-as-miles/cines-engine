@@ -23,14 +23,14 @@
     c.setFront('mumKitchen', {}); return m;
   }
   function call(c, o) {
-    o = o || {}; const t = c.t;
-    STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 900, y: 600 }); STAGE.heroSofa(cc, EVE, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
+    o = o || {}; const t = c.t, z = 1 + 0.12 * ease.inOutSine(seg(t, T.ask[0], T.says)), zy = 600 - 160 * (z - 1);
+    STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 900, y: zy, zoom: z }); STAGE.heroSofa(cc, EVE, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
       (cc, r) => {
-        STAGE.fit(cc, r, { x: 1000, y: 600 }); const m = mumSide(cc, o.mum || {});
+        STAGE.fit(cc, r, { x: 1000, y: zy, zoom: z }); const m = mumSide(cc, o.mum || {});
         if (t > T.notFine) { const hd = ART.head('mum', m), k = Math.floor((t - T.notFine) * 12) % 3; cc.g.save(); cc.g.lineWidth = 5; cc.g.strokeStyle = '#1c1c1c'; cc.g.lineCap = 'round';
           for (let i = 0; i < 3; i++) { const a = -0.9 + i * 0.45; cc.g.beginPath(); cc.g.moveTo(hd.x - hd.r * 0.95 + Math.cos(a + Math.PI) * (10 + k * 3), hd.y - hd.r * 0.1 + Math.sin(a + Math.PI) * (10 + k * 3)); cc.g.lineTo(hd.x - hd.r * 0.95 + Math.cos(a + Math.PI) * (34 + k * 3), hd.y - hd.r * 0.1 + Math.sin(a + Math.PI) * (34 + k * 3)); cc.g.stroke(); } cc.g.restore(); }
       },
-      { k: seg(t, T.mom, T.mom + 0.55) });
+      { k: seg(t, T.ask[0], T.ask[0] + 0.5) });
   }
   // the phone lying on the coffee table, buzzing, with notifications rising over it
   function tablePhone(c, buzzAt, notes) {
@@ -45,15 +45,15 @@
     id: 'Q04', title: 'Wednesday: Mom', chapter: 'Wednesday: Mom', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'warm, a little comic' }); S.bed('living_room_evening', T.card, T.nine);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2, { x: 0.27 }); S.cue('whoosh', T.mom + 0.05);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2, { x: 0.27 }); S.cue('whoosh', T.ask[0]);
       S.cue('twitch', T.notFine + 0.05); S.cue('phone_buzz', T.calls2, { x: 0.63 }); S.cue('notify', T.calls2 + 0.1, { x: 0.62 }); S.cue('phone_buzz', T.again2, { x: 0.63 }); S.cue('notify', T.again2 + 0.1, { x: 0.66 }); S.cue('notify', T.again2 + 0.4, { x: 0.58 });
       S.cue('whoosh', T.nine - 0.05); S.cue('notify', T.nine + 0.1); S.cue('receive', T.alive);
       S.cue('bird', T.day3 + 0.6); S.bed('evening_birds', T.day3, T.phone); S.cue('battery_low', T.exhausted); S.cue('sigh', T.exhausted + 0.4);
     },
     shots: [
       { at: T.card, name: 'living, evening: the day card over the hero with his tea', in: { type: 'wipe', dir: 'right' }, push: 1.04,
-        draw(c) { STAGE.heroSofa(c, EVE, { hold: 'mug' }); STAGE.dayCard(c, T.card + 0.05, T.mom - 0.05, 'WEDNESDAY'); } },
-      { at: T.mom, name: 'call: Mom asks about Sunday lunch, "No."',
+        draw(c) { STAGE.heroSofa(c, EVE, c.t > T.calls ? { pose: 'sit_phone' } : { hold: 'mug', look: [0.8, 0.4] }); STAGE.dayCard(c, T.card + 0.05, T.ask[0] - 0.2, 'WEDNESDAY', null, STAGE.CARD_LIVING); } },
+      { at: T.ask[0], name: 'call: Mom asks about Sunday lunch, "No." (a slow push in)',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.no[1] ? 'surprised' : 'happy' }, hero: { expr: 'firm' } }); } },
       { at: T.argue, name: 'call: she does not argue',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.says ? 'neutral' : 'surprised', faceOver: t > T.says ? { mouth: { k: 'flat', w: 0.2 } } : null, blinks: [T.notFine, T.notFine + 0.14, T.notFine + 0.28], tremble: t > T.notFine ? 1.5 : 0 }, hero: { expr: 'worried', talk: null } }); } },

@@ -233,7 +233,7 @@
     o = o || {}; const g = c.g; g.save();
     if (o.alpha != null) g.globalAlpha *= FILM.clamp(o.alpha, 0, 1);
     g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fillStyle = o.bg || '#FFF1DC'; g.fill(); g.save(); g.clip();
-    const s = (R * 0.6) / 100; c.fig(who, Object.assign({ x: cx, y: cy + 700 * s + R * 0.1, s, pose: 'stand', expr: o.expr || 'neutral', shadow: false }, o.fig || {}));
+    const s = (R * (o.fill || 0.6)) / 100; c.fig(who, Object.assign({ x: cx, y: cy + 700 * s + R * 0.1 * (o.fill ? 0.6 / o.fill : 1), s, pose: 'stand', expr: o.expr || 'neutral', shadow: false }, o.fig || {}));
     if (o.grey) { g.globalCompositeOperation = 'saturation'; g.fillStyle = '#888'; g.fillRect(cx - R, cy - R, 2 * R, 2 * R); g.globalCompositeOperation = 'source-over'; g.fillStyle = `rgba(240,240,240,${0.35 * o.grey})`; g.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
     g.restore(); g.beginPath(); g.arc(cx, cy, R, 0, TAU); inked(g, null, LW() + 1); g.restore();
   };
@@ -407,4 +407,26 @@
   };
   // a big question mark (the question), with a squash pop applied by the caller
   GFX.bigQuestion = function (g, cx, cy, s) { g.save(); g.translate(cx, cy); g.scale(s || 1, s || 1); g.beginPath(); g.arc(0, 0, 110, 0, TAU); g.fillStyle = '#FFF4E3'; g.fill(); g.lineWidth = 8; g.strokeStyle = INK; g.stroke(); GFX.text(g, '?', 0, 10, { size: 170, weight: 900, color: '#3A8594' }); g.restore(); };
+})(window);
+
+// ---------------------------------------------------------------- a hand pointing straight at the viewer (foreshortened, Uncle-Sam style)
+(function (global) {
+  const GFX = global.GFX, TAU = Math.PI * 2, INK = '#1c1c1c';
+  const C = k => (global.POV && global.POV.C && global.POV.C[k]) || { skin: '#FCEBCB', skinSh: '#EED8B4', hoodie: '#3A8594', hoodieSh: '#2F7280' }[k];
+  GFX.pointAtYou = function (g, x, y, s, o) {
+    o = o || {}; s = s || 1; g.save(); g.translate(x, y); g.scale(s, s); g.lineJoin = 'round'; g.lineCap = 'round';
+    const lw = 5.5 / Math.max(0.5, s) * s;
+    // the sleeve's cuff behind the fist
+    g.beginPath(); g.ellipse(14, 46, 78, 62, 0.1, 0, TAU); g.fillStyle = o.sleeve || C('hoodie'); g.fill(); g.lineWidth = lw; g.strokeStyle = INK; g.stroke();
+    g.beginPath(); g.ellipse(14, 46, 54, 42, 0.1, 0, TAU); g.fillStyle = C('hoodieSh'); g.fill();
+    // the fist, the folded fingers' knuckles on its lower half
+    g.beginPath(); g.ellipse(0, 6, 74, 64, 0, 0, TAU); g.fillStyle = C('skin'); g.fill(); g.stroke();
+    for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(-34 + i * 30, 40, 16, Math.PI * 0.05, Math.PI * 0.95); g.lineWidth = lw * 0.7; g.stroke(); }
+    // the thumb across the side
+    g.beginPath(); g.ellipse(-58, 0, 22, 40, 0.35, 0, TAU); g.fillStyle = C('skinSh'); g.fill(); g.lineWidth = lw * 0.8; g.stroke();
+    // the index finger aimed at the lens: a short foreshortened tube ending in a round tip with its nail toward us
+    g.beginPath(); g.ellipse(10, -26, 36, 34, 0, 0, TAU); g.fillStyle = C('skin'); g.fill(); g.lineWidth = lw; g.stroke();
+    g.beginPath(); g.ellipse(12, -30, 20, 16, 0, 0, TAU); g.fillStyle = '#FFF6EC'; g.fill(); g.lineWidth = lw * 0.6; g.stroke();
+    g.restore();
+  };
 })(window);

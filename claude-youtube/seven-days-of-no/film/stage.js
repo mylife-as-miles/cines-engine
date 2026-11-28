@@ -6,6 +6,7 @@
   const STAGE = global.STAGE = {};
   const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
   STAGE.DAYS = DAYS;
+  STAGE.CARD_LIVING = { x: 1390, y: 250, scale: 0.78, veil: 0.12 };
   // two-shot eyelines: the head turned three-quarters toward the other person, the pupils fully on them (facing-relative)
   STAGE.EYE = { turn: 0.6, look: [1, 0] };   // POV: turn/look are relative to facing (positive = toward where the figure faces)
   // the "No." beat: the flat palm out, a neutral (unsmiling) mouth
@@ -74,11 +75,9 @@
     o = o || {}; const f = S('dayCard'); if (!f) return _gfxDay(c, t0, t1, day, sub, o);
     const t = c.t; if (t < t0 || t > t1) return;
     const k = t < t1 - 0.32 ? seg(t, t0, t0 + 0.7) : 1 + seg(t, t1 - 0.32, t1);
-    const g = c.g; c.screen(); const veil = 0.22 * Math.min(seg(t, t0, t0 + 0.25), 1 - seg(t, t1 - 0.25, t1));
+    const g = c.g; c.screen(); const veil = (o.veil == null ? 0.22 : o.veil) * Math.min(seg(t, t0, t0 + 0.25), 1 - seg(t, t1 - 0.25, t1));
     if (veil > 0) { g.fillStyle = `rgba(40,20,10,${veil})`; g.fillRect(0, 0, W, H); }
-    g.save(); f(g, day, sub, k, { x: o.x, y: o.y == null ? 430 : o.y, color: o.color }); g.restore();
-    const di = STAGE.DAYS.indexOf(day), a = Math.min(seg(t, t0 + 0.25, t0 + 0.5), 1 - seg(t, t1 - 0.3, t1));
-    if (di >= 0 && a > 0) { g.save(); g.globalAlpha = a; for (let i = 0; i < 7; i++) { g.beginPath(); g.arc(W / 2 + (i - 3) * 48, (o.y == null ? 430 : o.y) + (sub ? 250 : 170), 15, 0, Math.PI * 2); g.fillStyle = i < di ? '#F5A454' : i === di ? '#E5534B' : '#FFF4E3'; g.fill(); g.lineWidth = 4.5; g.strokeStyle = '#1c1c1c'; g.stroke(); } g.restore(); }
+    g.save(); f(g, day, sub, k, { x: o.x, y: o.y == null ? 430 : o.y, color: o.color, scale: o.scale }); g.restore();
     c.reset();
   };
   // the NO stamp landing at t0 (it falls for 0.15 s before)

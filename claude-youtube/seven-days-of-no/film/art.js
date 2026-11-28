@@ -68,7 +68,11 @@
     return null;
   };
   // the figure tint a set suggests for its light (the living room's evening multiply), or null
-  ART.tintFor = function (c, name) { const r = c.sets[name]; return r && r.tint ? r.tint : null; };
+  ART.tintFor = function (c, name, k) {
+    const r = c.sets[name]; if (!r || !r.tint) return null; k = k == null ? 0.2 : k;
+    const n = parseInt(r.tint.slice(1), 16), m = v => Math.round(255 - (255 - v) * k);
+    return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(v => m(v).toString(16).padStart(2, '0')).join('');
+  };
 
   const TOD = { day: 0, morning: 0.05, evening: 0.18, dusk: 0.3, night: 0.5 };
   function placeholderSet(c, name, o) {
@@ -148,6 +152,7 @@
     if (op.tremble) { const tr = FILM.tremble(t, op.tremble, SEED[who] || 3); dx += tr.dx; dy += tr.dy; }
     if (dx || dy) g.translate(dx, dy);
     if (op.rot) { g.translate(op.x, op.y); g.rotate(op.rot); g.translate(-op.x, -op.y); }
+    if (op.breath !== false) { const k = 1 + (op.breath || 0.006) * Math.sin((t + (SEED[who] || 0) * 0.83) * Math.PI * 2 * 0.27); g.translate(op.x, op.y); g.scale(1, k); g.translate(-op.x, -op.y); }
     const P = pov(); let out = null;
     if (P) {
       let pose = op.pose || 'stand';

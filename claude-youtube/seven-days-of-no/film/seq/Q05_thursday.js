@@ -12,6 +12,7 @@
     know: W('you know'), wanted: W('you wanted'), been: W('you have been'), weeks: Wend('weeks'), problem: W('here is the problem'),
     no1: W('no', { after: FILM.W('here is the problem') }), also: W('also'), no2: W('no', { after: FILM.W('also') }), end: FILM.W('Friday'),
   };
+  const THU_CARD = { x: 760, y: 165, scale: 0.72, veil: 0.12 };   // above, between the doorway and the hero: clear of both heads
   const DOOR = { view: 'door', clock: '12:30', chair: true };
   function coworker(c) {
     const t = c.t, d = c.anchor('office', 'doorway'); let x = d.x, face = 1, pose = 'wave', wk = null, alpha = 1;
@@ -33,9 +34,9 @@
     shots: [
       { at: T.card, name: 'office: the day card over the hero at his desk', in: { type: 'wipe', dir: 'right' }, push: 1.04,
         draw(c) { const o = { clock: '12:30', chair: true }; c.set('office', o); const sa = STAGE.sitAt(c, 'office', 'chair'); c.fig('hero', Object.assign(sa, { face: -1, pose: 'type' })); c.setFront('office', Object.assign({ parts: ['desk'] }, o));
-          STAGE.dayCard(c, T.card + 0.05, T.pops - 0.05, 'THURSDAY'); } },
-      { at: T.pops, name: 'office door: the coworker pops in, waving: "Lunch?" "No."', push: { from: 1, to: 1.04, x: 700, y: 560 },
-        draw(c) { c.set('office', DOOR); coworker(c); c.setFront('office', DOOR); c.fig('hero', Object.assign({ x: 1180, y: 962, face: -1, talk: T.no, turn: STAGE.EYE.turn, look: STAGE.EYE.look }, c.t > T.no[0] - 0.15 && c.t < T.no[1] + 0.6 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); } },
+          STAGE.dayCard(c, T.card + 0.05, T.lunch[0] - 0.3, 'THURSDAY', null, THU_CARD); } },
+      { at: T.pops, name: 'office door: the coworker pops in, waving: "Lunch?" "No."', push: { from: 1, to: 1.09, x: 1150, y: 420, delay: T.no[0] - 0.2 - T.pops, d: T.know - T.pops },
+        draw(c) { c.set('office', DOOR); coworker(c); c.setFront('office', DOOR); c.fig('hero', Object.assign({ x: 1180, y: 962, face: -1, talk: T.no, turn: STAGE.EYE.turn, look: STAGE.EYE.look }, c.t > T.no[0] - 0.15 && c.t < T.no[1] + 0.6 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); STAGE.dayCard(c, T.card + 0.05, T.lunch[0] - 0.3, 'THURSDAY', null, THU_CARD); } },
       { at: T.know, name: 'the hero, hand to mouth: the thought of the plate; it swells, he sags', push: { from: 1, to: 1.08, x: 1200, y: 400 },
         draw(c) {
           const t = c.t; c.set('office', DOOR); c.setFront('office', DOOR);

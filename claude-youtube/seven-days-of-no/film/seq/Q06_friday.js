@@ -15,6 +15,7 @@
     end: FILM.W('saturday your boss'),
   };
   const L = 760, R = 1240, FLOOR = 962;
+  const FRI_CARD = { x: 1240, y: 230, scale: 0.8, veil: 0.1 };   // the day card in the sky above the street, clear of the hero
   function stranger(c, o) {
     const t = c.t; let x = R, face = -1, pose = 'hold_phone', wk = null, expr = 'happy';
     if (t < T.ask[0]) { wk = walk(t, T.tourist - 0.2, T.ask[0] - 0.1, 2200, R); x = wk.x; pose = 'walk'; }
@@ -34,19 +35,19 @@
     },
     shots: [
       { at: T.card, name: 'street: the day card', in: { type: 'wipe', dir: 'right' }, push: 1.04,
-        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand' }); STAGE.dayCard(c, T.card + 0.05, T.tourist - 0.05, 'FRIDAY'); } },
-      { at: T.tourist, name: 'street: the stranger asks for a photo, "No."',
-        draw(c) { c.set('street', {}); c.fig('hero', Object.assign({ x: L, y: FLOOR, face: 1, talk: T.no, turn: STAGE.EYE.turn, look: STAGE.EYE.look }, c.t > T.no[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); c.setFront('street', {}); stranger(c); } },
+        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand' }); STAGE.dayCard(c, T.card + 0.05, T.ask[0] - 0.4, 'FRIDAY', null, FRI_CARD); } },
+      { at: T.tourist, name: 'street: the stranger asks for a photo, "No." (a push in on the no)', push: { from: 1, to: 1.08, x: 900, y: 430, delay: T.no[0] - 0.2 - T.tourist },
+        draw(c) { c.set('street', {}); c.fig('hero', Object.assign({ x: L, y: FLOOR, face: 1, talk: T.no, turn: STAGE.EYE.turn, look: STAGE.EYE.look }, c.t > T.no[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); c.setFront('street', {}); stranger(c); STAGE.dayCard(c, T.card + 0.05, T.ask[0] - 0.4, 'FRIDAY', null, FRI_CARD); } },
       { at: T.hurt, name: 'street: they look hurt and turn away',
         draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand', expr: 'surprised', turn: STAGE.EYE.turn, look: STAGE.EYE.look }); c.setFront('street', {}); stranger(c); } },
       { at: T.feel, name: 'the hero, hands clasped, sad (ref 05)', push: { from: 1, to: 1.05 },
         draw(c) { c.camera({ x: L + 120, y: 420, zoom: 1.75 }); c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'hands_clasped', expr: c.t > T.terrible ? 'sad' : 'guilty' }); stranger(c); } },
       { at: T.run, name: 'street: the hero runs after them',
-        draw(c) { c.set('street', {}); const wk = walk(c.t, T.run, T.take, -200, R - 380, { stride: 220, acc: 0.05 }); c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: 'stand', expr: 'surprised' }); c.fig('hero', { x: wk.x, y: FLOOR, face: 1, pose: 'run', walk: wk.walk, expr: 'happy' }); } },
+        draw(c) { c.set('street', {}); const wk = walk(c.t, T.run, T.take, -200, R - 380, { stride: 220, acc: 0.05 }); c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: 'stand', expr: 'surprised' }); c.fig('hero', { x: wk.x, y: FLOOR, face: 1, pose: 'run', walk: wk.walk, expr: 'worried' }); } },
       { at: T.take, name: 'street: the photo, a flash; the happiest all week',
         draw(c) {
           const t = c.t, happy = t >= T.happiest - 0.1; c.set('street', {});
-          const h = c.fig('hero', { x: L + 40, y: FLOOR, face: 1, pose: happy ? 'peace' : 'hold_phone', mode: 'out', expr: happy ? 'beaming' : 'happy', turn: happy ? 0.25 : STAGE.EYE.turn, look: happy ? [0.2, 0] : STAGE.EYE.look });
+          const h = c.fig('hero', { x: L + 40, y: FLOOR, face: 1, pose: happy ? 'peace' : 'hold_phone', mode: 'out', expr: happy ? 'beaming' : t > T.photo + 0.1 ? 'happy' : 'worried', turn: happy ? 0.25 : STAGE.EYE.turn, look: happy ? [0.2, 0] : STAGE.EYE.look });
           c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: happy ? 'thumbs_up' : 'stand', expr: 'happy', turn: STAGE.EYE.turn, look: STAGE.EYE.look });
           if (!happy) { const hn = ART.hand('hero', h, 'front'); const st = pop(t, T.photo, 0.15); if (t < T.photo + 0.5) GFX.at(c.g, hn.x + 30, hn.y - 30, { s: st.s * (1 - seg(t, T.photo + 0.25, T.photo + 0.5)) }, q => c.prop('flash', { x: 0, y: 0, r: 70 })); }
           c.flash(0.9 * flash(t, T.photo, 0.4));

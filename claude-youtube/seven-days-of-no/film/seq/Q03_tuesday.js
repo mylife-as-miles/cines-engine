@@ -26,24 +26,24 @@
     const z = o.zoom || 1;
     STAGE.call(c, (cc, r) => { STAGE.fit(cc, r, { x: 900, y: 600 - 60 * (z - 1) * 4, zoom: z }); heroSofa(cc, Object.assign({ pose: 'sit_phone', talk: T.no }, o.hero || {})); },
       (cc, r) => { STAGE.fit(cc, r, { x: 960, y: 600 - 60 * (z - 1) * 4, zoom: z }); const f = friendSide(cc, o.friend || {}); if (o.dots) { const hd = ART.head('friend', f); const st = pop(t, o.dots, 0.3); GFX.at(cc.g, hd.x - hd.r * 2.1, hd.y - hd.r * 0.45, st, q => GFX.dots(q, 0, 0, 1.1, t - o.dots)); } },
-      { k: seg(t, T.friend, T.friend + 0.55), dropL: o.dropL, badgeK: o.badgeK });
+      { k: seg(t, T.ask[0], T.ask[0] + 0.5), dropL: o.dropL, badgeK: o.badgeK });
   }
 
   FILM.seq({
     id: 'Q03', title: 'Tuesday: a friend', chapter: 'Tuesday: a friend', from: T.card,
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'gentle, then hollow at the pause' }); S.bed('living_room_evening', T.card, T.end);
-      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2, { x: 0.27 }); S.cue('whoosh', T.friend + 0.05);
+      S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.calls - 0.2, { x: 0.27 }); S.cue('whoosh', T.ask[0]);
       S.duck(T.small, T.now, 0.25); S.cue('pop', T.pause); S.cue('stomach_drop', T.drops, { x: 0.27 });
       S.cue('cloud', T.nobody + 0.4); S.cue('whoosh', T.comes + 0.2);
     },
     shots: [
       { at: T.card, name: 'living, evening: the day card over the hero on the sofa', in: { type: 'wipe', dir: 'right' }, push: 1.04,
-        draw(c) { heroSofa(c, { pose: 'sit_front', hold: 'mug' }); STAGE.dayCard(c, T.card + 0.05, T.friend - 0.05, 'TUESDAY'); } },
-      { at: T.friend, name: 'call: the friend asks, "No."',
-        draw(c) { const t = c.t; call(c, { friend: { expr: t > T.no[1] + 0.1 ? 'surprised' : 'happy' }, hero: { expr: 'firm' } }); } },
+        draw(c) { heroSofa(c, c.t > T.calls ? { pose: 'sit_phone', expr: 'neutral' } : { pose: 'sit_front', hold: 'mug', look: [0.8, 0.4] }); STAGE.dayCard(c, T.card + 0.05, T.ask[0] - 0.2, 'TUESDAY', null, STAGE.CARD_LIVING); } },
+      { at: T.ask[0], name: 'call: the friend asks, "No." (a slow push in on the no)',
+        draw(c) { const t = c.t; call(c, { zoom: 1 + 0.1 * ease.inOutSine(seg(t, T.no[0] - 0.2, T.small)), friend: { expr: t > T.no[1] + 0.1 ? 'surprised' : 'happy' }, hero: { expr: 'firm' } }); } },
       { at: T.small, name: 'call: the small pause, "…", his face falls',
-        draw(c) { const t = c.t; call(c, { zoom: 1 + 0.25 * ease.inOutSine(seg(t, T.small, T.small + 0.8)), dots: T.pause, friend: { expr: t > T.theOne ? 'sad' : 'surprised', talk: null, blinks: [T.theOne - 0.2] }, hero: { expr: 'worried', talk: null } }); } },
+        draw(c) { const t = c.t; call(c, { zoom: 1.1 + 0.15 * ease.inOutSine(seg(t, T.small, T.small + 0.8)), dots: T.pause, friend: { expr: t > T.theOne ? 'sad' : 'surprised', talk: null, blinks: [T.theOne - 0.2] }, hero: { expr: 'worried', talk: null } }); } },
       { at: T.theOne, name: 'close on the friend: his face falls ("I thought we were close")', in: 'pop', push: { from: 1, to: 1.05, x: 900, y: 420 },
         draw(c) {
           const t = c.t; const a = c.anchor('friendFlat', 'center'); c.camera({ x: a.x - 60, y: 360, zoom: 2.15 }); c.set('friendFlat', {});

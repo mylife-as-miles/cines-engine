@@ -120,20 +120,20 @@
   },
   "stamp": {
    "file": "stamp",
-   "rel_db": -13,
+   "rel_db": -9,
    "align": "peak",
    "variants": [
     {
      "if_kind": "yes",
      "if_word": "^(yes|say)$",
      "file": "stamp_yes",
-     "rel_db": -15
+     "rel_db": -12
     }
    ]
   },
   "camera_shutter": {
    "file": "camera_shutter",
-   "rel_db": -12,
+   "rel_db": -8,
    "align": "start"
   },
   "typing": {
@@ -154,7 +154,7 @@
   },
   "ding": {
    "file": "ding",
-   "rel_db": -16,
+   "rel_db": -12,
    "align": "start"
   },
   "bulb": {
@@ -179,7 +179,7 @@
   },
   "clang": {
    "file": "clang",
-   "rel_db": -15,
+   "rel_db": -8.5,
    "align": "start"
   },
   "stomach_drop": {
@@ -294,7 +294,8 @@
   "freeze": "the pause is a button press (a soft click) and the music's stop (the cue sheet's silence); a synthesised tape-stop read as an explosion or a door",
   "stamp": "the red NO stamp is the rubber stamp over a low thump; a YES stamp (the cue's p.kind 'yes', or a stamp spoken on 'yes' or the cold open's 'say') is stamp_yes, brighter and friendlier, 2 dB softer",
   "card_land": "eight request cards land under the opening line: light, 23 dB under the voice",
-  "shout_no": "the hook's punchline: a clear comic hit near the voice's level, started where the narrator's \"no\" ends (after_speech: within 0.6 s of the cue) so it fills the pause and leaves the word clear"
+  "shout_no": "the hook's punchline: a clear comic hit near the voice's level, started where the narrator's \"no\" ends (after_speech: within 0.6 s of the cue) so it fills the pause and leaves the word clear",
+  "story_levels": "Story effects (the stamps, the NO! burst, the shutter, the ding, the phone buzz, the clang) sit about 12-15 dB under the voice as heard (their loudest 400 ms against the voice's 3 s loudness around them), loud enough for phone speakers; pops, whooshes, card lands and UI ticks stay 20-26 dB under. Raised after the third review: NO stamps +4 (their weight moved from a sub thump into the low mids, where phone speakers carry it), clang +6.5, shutter +4, ding +4, YES stamps +3 (they land on spoken words)."
  },
  "aliases": {
   "buzz": "phone_buzz",
