@@ -72,8 +72,16 @@
   function anchor(phrase, a, after0, end) {
     const { n, after } = anchorArgs(a, after0); const m = findPhrase(phrase, n, after);
     if (!m) { warn(`anchor not found: "${phrase}"${n > 1 ? ' #' + n : ''}${after ? ' after ' + after.toFixed(2) : ''}`); return after; }
-    return end ? m[1].t1 : m[0].t0;
+    return end ? spokenEnd(m[1]) : m[0].t0;
   }
+  // a word's t1 often runs on through the pause after it (Whisper gives the gap to the word before it): the spoken end is the
+  // last moment inside the word where the narration is still loud (film/vo_env.js); without the envelope, t1 capped at 0.7 s
+  function spokenEnd(w) {
+    const E = global.FILM_VOENV; if (!E) return Math.min(w.t1, w.t0 + 0.7);
+    for (let i = Math.floor(w.t1 * E.hz); i > Math.floor(w.t0 * E.hz); i--) if ((E.data.charCodeAt(i) - 48) / 61 >= 0.55) return Math.min(w.t1, (i + 1) / E.hz + 0.04);
+    return Math.min(w.t1, w.t0 + 0.3);
+  }
+  FILM.spokenEnd = spokenEnd;
   // W('Monday') -> start of the first "Monday"; W('no', 3) -> the third "no"; W('no', {after: 45.8}) -> the first "no" after 45.8 s
   FILM.W = (phrase, a) => anchor(phrase, a, 0, false);
   // Wend('tonight') -> the end of that word (of the last word of a phrase)

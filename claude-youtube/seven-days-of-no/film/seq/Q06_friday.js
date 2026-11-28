@@ -42,7 +42,7 @@
       { at: T.feel, name: 'the hero, hands clasped, sad (ref 05)', push: { from: 1, to: 1.05 },
         draw(c) { c.camera({ x: L + 120, y: 420, zoom: 1.75 }); c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'hands_clasped', expr: c.t > T.terrible ? 'sad' : 'guilty' }); stranger(c); } },
       { at: T.run, name: 'street: the hero runs after them',
-        draw(c) { c.set('street', {}); const wk = walk(c.t, T.run + 0.1, T.take, -250, R - 420, { stride: 220, acc: 0.05 }); c.fig('stranger', { x: R + 300, y: FLOOR, face: -1, pose: 'stand', expr: 'surprised' }); c.fig('hero', { x: wk.x, y: FLOOR, face: 1, pose: 'run', walk: wk.walk, expr: 'happy' }); c.setFront('street', {}); } },
+        draw(c) { c.set('street', {}); const wk = walk(c.t, T.run, T.take, -200, R - 380, { stride: 220, acc: 0.05 }); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: 'stand', expr: 'surprised' }); c.fig('hero', { x: wk.x, y: FLOOR, face: 1, pose: 'run', walk: wk.walk, expr: 'happy' }); c.setFront('street', {}); } },
       { at: T.take, name: 'street: the photo, a flash; the happiest all week',
         draw(c) {
           const t = c.t, happy = t >= T.happiest - 0.1; c.set('street', {});
@@ -61,7 +61,7 @@
           [[620, T.same, true], [1300, T.different, false]].forEach(([x, t0, shaky]) => {
             const st = pop(t, t0, 0.34); if (!st.on) return; const tr = shaky ? FILM.tremble(t, 9, 11) : { dx: 0, dy: 0 };
             c.g.save(); c.g.globalAlpha = shaky ? fade * 0.85 + 0.15 * fade : 1;
-            GFX.at(c.g, x + tr.dx, 450 + tr.dy + (1 - st.s) * 200, { a: st.a }, q => { GFX.arm(q, 0, 230, { from: 60 }); GFX.wordCard(q, 0, 0, 440, 330, 'YES', { size: 150 }); });
+            GFX.at(c.g, x + tr.dx, 450 + tr.dy + (1 - st.s) * 200, { a: st.a }, q => { GFX.wordCard(q, 0, 0, 440, 330, 'YES', { size: 150 }); GFX.arm(q, 0, 178, { from: 60 }); });
             if (shaky && fade > 0.05) { c.g.globalAlpha = fade * 0.9; GFX.shakeLines(c.g, x, 720, 1.4, t); }
             c.g.restore();
           });

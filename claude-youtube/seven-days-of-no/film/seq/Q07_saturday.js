@@ -27,7 +27,7 @@
       S.bed('music', T.card, T.end, { mood: 'calm, confident' }); S.bed('living_room_morning', T.card, T.texts);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1); S.cue('receive', T.need);
       S.cue('pop', T.doNot + 0.1); S.cue('pop', T.doNot + 0.35); S.cue('dim', T.no + 0.1); S.cue('dim', T.either - 0.1);
-      S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12) }); S.cue('send', T.replyEnd + 0.1); S.cue('receive', T.perfect); S.cue('ding', T.perfectEnd + 0.2);
+      S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12) }); S.cue('send', T.replyEnd + 0.1); S.cue('receive', T.perfect); S.cue('ding', Math.min(T.perfectEnd + 0.2, T.works - 0.55));
       S.cue('pop', T.works + 0.1); S.cue('pop', T.works + 0.4); S.cue('pop', T.works + 0.7); S.cue('ding', T.real);
     },
     shots: [
@@ -50,7 +50,7 @@
       { at: T.heSays, name: 'phone: "Perfect 👍"',
         draw(c) { const t = c.t; STAGE.phone(c, { mode: 'chat', contact: 'Boss', avatarColor: '#A6A6A6', time: '10:14',
           messages: [BOSS_MSG, { from: 'me', text: REPLY }].concat(t > T.perfect - 0.3 ? [{ from: 'them', text: 'Perfect 👍', k: seg(t, T.perfect, T.perfect + 0.35) }] : []), typing: t < T.perfect && t > T.heSays + 0.1 ? 'them' : null }); } },
-      { at: T.perfectEnd + 0.15, name: 'office: the boss, thumbs up (ref 04)', in: 'pop',
+      { at: Math.min(T.perfectEnd + 0.15, T.works - 0.6), name: 'office: the boss, thumbs up (ref 04)', in: 'pop',
         draw(c) { c.camera({ x: 1300, y: 500, zoom: 1.35 }); c.set('office', { clock: '10:14' }); c.fig('boss', { x: 1350, y: 962, face: -1, pose: 'thumbs_up', expr: 'happy' }); } },
       { at: T.works, name: 'plain: flat no, panic yes, a real answer: the last lights', in: 'pop',
         draw(c) {
