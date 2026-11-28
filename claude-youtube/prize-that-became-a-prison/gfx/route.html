@@ -132,6 +132,18 @@ function camKeys(ctx, t, keys) {                      // a camera through keyfra
   const [cx, cy, z] = keysAt(t, keys);
   ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy);
 }
+function camAt(ctx, [cx, cy, z]) { ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy); }
+// The mainland and split cameras. Under every hold runs one slow push, PUSH (3 % in 5 s, a constant rate in log zoom),
+// and each move is added on top of it, so a move lands into the push instead of stopping. A move pans evenly on screen
+// (the centre travels in proportion to 1/zoom, so a zoom-in does not race across the map at the end) and is timed by
+// glide(): velocity 12x(1-x)^2, rising from rest and then easing out as a cubic over the last two thirds of the move.
+const PUSH = Math.log(1.03) / 5;
+const glide = x => { x = cl(x); return x * x * (6 - 8 * x + 3 * x * x); };
+function moveTo(a, b, u) {                            // the framing [x, y, zoom] a fraction u of the way from a to b
+  const k = Math.log(b[2] / a[2]), z = a[2] * Math.exp(k * u);
+  const g = Math.abs(k) < 1e-6 ? u : (1 / a[2] - 1 / z) / (1 / a[2] - 1 / b[2]);
+  return [a[0] + (b[0] - a[0]) * g, a[1] + (b[1] - a[1]) * g, z];
+}
 function solid(ctx, pts, f, a = 1) {
   if (GROUND || f <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.lineWidth = 2.6; const h = path(ctx, pts, f); ctx.stroke();
   if (f < 1) {                                       // the travelling head: a small bright point with a soft halo
@@ -143,17 +155,20 @@ function solid(ctx, pts, f, a = 1) {
 // Dashes are 12 on, 8 off in map px. `phase` (a lineDashOffset, from dashPhase) puts the line's end DASH_END px into a
 // dash, so every dashed line runs into its arrowhead on a dash, never on a gap. The phase is taken from the line's length
 // at the zoom where it finishes drawing and held, so the dashes never crawl while the camera moves.
-const DASH_END = 10;
+const DASH = [12, 8], DASH_P = DASH[0] + DASH[1], DASH_END = 10;
 const plen = L => { let s = 0; for (let i = 1; i < L.length; i++) s += Math.hypot(L[i][0] - L[i - 1][0], L[i][1] - L[i - 1][1]); return s; };
-const dashPhase = L => ((DASH_END - plen(L)) % 20 + 20) % 20;
-function dashed(ctx, pts, f, a = 1, fade = 0, phase = 0) {   // the arc's weight: 4 px on screen, near white, a dark under-stroke and a soft glow
+const dashPhase = L => ((DASH_END - plen(L)) % DASH_P + DASH_P) % DASH_P;
+// The disputed lines' weight, in screen px: DASH_W wide, near white, on a dark under-stroke EDGE px wider each side,
+// with a GLOW px soft glow (a blur of that radius in the line's own ink).
+const DASH_W = 5.5, EDGE = 1.5, GLOW = 2;
+function dashed(ctx, pts, f, a = 1, fade = 0, phase = 0) {
   // `fade`: the first part of the line (a fraction of it) rises from nothing, so a line can leave a region with no
   // marked start. Widths are screen pixels (divided by ZOOM); the dashes stay on the map, so they never crawl in a zoom.
   if (GROUND || f <= 0) return; ctx.save(); ctx.lineCap = 'round';
   const fill = (rgb, al) => { if (!fade) return `rgba(${rgb},${al})`; const k = Math.max(1, Math.floor((pts.length - 1) * fade));
     const g = ctx.createLinearGradient(...pts[0], ...pts[k]); g.addColorStop(0, `rgba(${rgb},0)`); g.addColorStop(1, `rgba(${rgb},${al})`); return g; };
-  ctx.setLineDash([12, 8]); ctx.lineDashOffset = phase; ctx.strokeStyle = fill('3,5,9', 0.7); ctx.lineWidth = 7 / ZOOM; path(ctx, pts, f); ctx.stroke();
-  ctx.shadowColor = 'rgba(236,232,225,0.3)'; ctx.shadowBlur = 8; ctx.strokeStyle = fill('236,232,225', 0.95 * a); ctx.lineWidth = 4 / ZOOM;
+  ctx.setLineDash(DASH); ctx.lineDashOffset = phase; ctx.strokeStyle = fill('3,5,9', 0.7); ctx.lineWidth = (DASH_W + 2 * EDGE) / ZOOM; path(ctx, pts, f); ctx.stroke();
+  ctx.shadowColor = 'rgba(236,232,225,0.5)'; ctx.shadowBlur = 2 * GLOW; ctx.strokeStyle = fill('236,232,225', 0.95 * a); ctx.lineWidth = DASH_W / ZOOM;
   const h = path(ctx, pts, f); ctx.stroke(); ctx.setLineDash([]);
   if (f < 1) { const g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 20); g.addColorStop(0, 'rgba(236,232,225,0.6)'); g.addColorStop(1, 'rgba(236,232,225,0)');
     // the head's glow grows in as the line leaves, so it never sits on the (unmarked) start point as a marker, and
@@ -209,9 +224,17 @@ const RISE = 32;   // map px over which each disputed line rises out of the lit 
 // One label system: place names at 48 px semibold (cap height about 30 px), the day counts at 68 px; labels sit on open
 // water or inside the lit land, never across another country, with no leader lines; every named point has a dot.
 const NAME = 48, DAYS = 68;
-// mainland: in on the mainland while it is named, then back and south as the Australia line draws; split: a slow push
-const MAIN_C = PU(34.5, 99.5), SPLIT_Z = [1.12, 1.16, 6];
-const MAIN_KEYS = [[0, W * 0.47, H * 0.41, 1.04], [2.4, MAIN_C[0], MAIN_C[1], 2.5], [4.4, MAIN_C[0], MAIN_C[1], 2.56], [6.0, W * 0.40, H * 0.56, 1.12], [7.5, W * 0.40, H * 0.56, 1.13]];
+// mainland: in on the mainland while it is named (0-2.4 s), then back and south as the Australia line draws (4.4-6.0 s),
+// landing on the split's framing and pushing on into it. split: the two disputed lines fill the frame, centred on
+// 120 E, 15 N, with the slow push. The pull-back's target is the split's opening frame with the push still to come taken
+// out, so mainland's last frame (7.5 s) is split's first.
+const MAIN_C = PU(34.5, 99.5), SPLIT_C = PU(15, 120), SPLIT_Z = 1.79, MAIN_END = 7.5;
+const M0 = [W * 0.47, H * 0.41, 1.04], M1 = [MAIN_C[0], MAIN_C[1], 2.5], M2 = [SPLIT_C[0], SPLIT_C[1], SPLIT_Z * Math.exp(-PUSH * MAIN_END)];
+const mainCam = t => { const [x, y, z] = t < 4.4 ? moveTo(M0, M1, glide(t / 2.4)) : moveTo(M1, M2, glide((t - 4.4) / 1.6)); return [x, y, z * Math.exp(PUSH * t)]; };
+const splitCam = t => [SPLIT_C[0], SPLIT_C[1], SPLIT_Z * Math.exp(PUSH * t)];
+// AUSTRALIA in the split's framing: only the continent's top end is in frame, too narrow at this zoom for the name, so
+// the name sits on open water just west of it (the Indian Ocean below Timor), right-aligned short of the Kimberley coast.
+const AUS_L = PU(-14.3, 124.2);
 const MODES = {
   leg1(ctx, t) {
     camera(ctx, t, [W / 2, H * 0.41], [W * 0.47, H * 0.41], 1.0, 1.04, 6);   // framed low enough that the arc's top stays below y 110
@@ -225,26 +248,27 @@ const MODES = {
   mainland(ctx, t) {
     // two moves: in on the mainland while it is named (the label sits inside the lit land), then back and south as the
     // Australia line draws, ending on the split's opening frame
-    camKeys(ctx, t, MAIN_KEYS);
-    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [ax, ay] = PU(...CITY.australia);
+    camAt(ctx, mainCam(t));
+    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [ax, ay] = AUS_L;
     solid(ctx, leg1(), 1, 1 - span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 0.2, 1.2), 1);
     region(ctx, span(t, 0.4, 1.6));
     const [lx, ly] = PU(38.2, 99.5);         // inside the lit mainland where it is widest (about 37 N), no leader; it leaves before the camera pulls back
     label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.7, 'center', 600, 0.2, 4.2);
     label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 74 / ZOOM, DAYS, t, 2.2, 'center', 500, 0.0, 4.25);
     const A = legA(), fA = span(t, 4.6, 6.2);                           // rises out of the lit land, unmarked
-    dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(keysAt(6.2, MAIN_KEYS)[2]))); arrowEnd(ctx, A, fA);
-    region(ctx, 0.8 * span(t, 6.0, 6.7), 'AUS'); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'center', 600);
+    dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(mainCam(6.2)[2]))); arrowEnd(ctx, A, fA);
+    region(ctx, 0.8 * span(t, 6.0, 6.7), 'AUS'); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'right', 600);
   },
   split(ctx, t) {
-    camera(ctx, t, [W * 0.40, H * 0.56], [W * 0.40, H * 0.57], ...SPLIT_Z);
-    base(ctx); const [ax, ay] = PU(...CITY.australia), [qx, qy] = PU(...CITY.qingdao);
+    camAt(ctx, splitCam(t));
+    base(ctx); const [ax, ay] = AUS_L, [qx, qy] = PU(...CITY.qingdao);
     region(ctx, 0.7); region(ctx, 0.55, 'AUS');
-    const A = legA(), Q = legQ(), fA = span(t, 0.4, 2.4), fQ = span(t, 1.0, 2.4), zEnd = camZ(2.4, ...SPLIT_Z);   // two unmarked starts
-    dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(zEnd))); arrowEnd(ctx, A, fA); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'center', 600);
+    const A = legA(), Q = legQ(), fA = span(t, 0.4, 2.4), fQ = span(t, 1.0, 2.4), zEnd = splitCam(2.4)[2];   // two unmarked starts
+    dashed(ctx, A, fA, 1, RISE / plen(A), dashPhase(legA(zEnd))); arrowEnd(ctx, A, fA); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'right', 600);
     dashed(ctx, Q, fQ, 1, RISE / plen(Q), dashPhase(legQ(zEnd))); arrowEnd(ctx, Q, fQ);
     pin(ctx, qx, qy, sm((t - 2.3) / 0.3));                               // Qingdao, named in the sources: the line stops GAP px short of it
-    label(ctx, 'QINGDAO', qx - 14, qy - 40, NAME, t, 2.4, 'right', 600);   // above and left of the dot, on the lit mainland, never in line with it
+    // above and left of the dot, on the lit mainland, never in line with it (offsets in screen px)
+    label(ctx, 'QINGDAO', qx - 16 / ZOOM, qy - 46 / ZOOM, NAME, t, 2.4, 'right', 600);
   },
 };
 function grain(ctx, t) {                  // fresh grain each frame (sigma about 1.2 luma), so a map is never a dead still
