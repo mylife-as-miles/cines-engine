@@ -222,6 +222,61 @@ def close_hands(holder, curl=CURL, converge=3.5, min_gap=0.0012, thumb_gap=THUMB
 ARM_BONES = ("DEF-upper_arm", "DEF-forearm", "DEF-hand", "DEF-elbow", "DEF-thumb", "DEF-palm", "DEF-f_")
 
 
+def rest_seated_palms(holder, garment):
+    """Set the palms and finger pads against the two posed trouser legs before placing Dawn on the bunk."""
+    from aircraft_cabin import weighted_surface
+    from hotel_room import ik_arm
+    from visiting_room import palm_side, set_hand
+
+    rig = rigged.rig_of(holder)
+    suit = bpy.data.objects[f"{holder.name}_{garment}"]
+    thigh_groups = {g.index for g in suit.vertex_groups if g.name.startswith(("DEF-thigh", "DEF-pelvis"))}
+    cloth = weighted_surface(suit, thigh_groups, 0.45)
+    down = Vector((0, 0, -1))
+
+    def thigh_height(x, y):
+        hit, _, _, _ = cloth.ray_cast(Vector((x, y, 1.2)), down, 1.5)
+        return hit.z if hit is not None else None
+
+    def cloth_gap(points):
+        return min((p.z - z for p in points if (z := thigh_height(p.x, p.y)) is not None), default=None)
+
+    # Put the left hand a little ahead of the right so the fingers do not stack in profile.
+    for sign, side, station in ((1, "L", 0.61), (-1, "R", 0.56)):
+        thigh = rig.pose.bones[f"thigh_fk.{side}"]
+        point = rig.matrix_world @ thigh.head.lerp(thigh.tail, station)
+        top = thigh_height(point.x, point.y)
+        ahead = thigh_height(point.x - sign * 0.012, point.y - 0.060)
+        if top is None or ahead is None:
+            raise RuntimeError(f"Dawn's seated {side} hand target misses the trouser leg")
+        forward = Vector((-sign * 0.16, -1, 0)).normalized()
+        pitch = math.atan2(ahead - top, 0.060)
+        target = Vector((point.x, point.y, top + 0.021))
+        for _ in range(15):
+            fingers = forward * math.cos(pitch) - down * math.sin(pitch)
+            ik_arm(holder, sign, target, pole=(0.52, 0.32, -1))
+            set_hand(holder, side, down, fingers)
+            normal, _ = palm_side(holder, side)
+            if normal.dot(down) <= 0:
+                key = f"palm_flip_{side}"
+                holder[key] = not holder.get(key, False)
+                set_hand(holder, side, down, fingers)
+            skin = rigged.hand_surface(holder, side)
+            palm_gap = cloth_gap(skin["palm"])
+            pad_gap = cloth_gap(skin["thumb"] + skin["fingers"])
+            if palm_gap is None or pad_gap is None:
+                raise RuntimeError(f"Dawn's seated {side} hand no longer overlaps the trouser leg")
+            lift = 0.002 - min(palm_gap, pad_gap)
+            tilt = palm_gap - pad_gap
+            if abs(lift) < 0.001 and abs(tilt) < 0.006:
+                break
+            pitch += max(-0.12, min(0.12, 0.7 * math.atan2(tilt, 0.095)))
+            target.z += max(-0.025, min(0.025, 0.8 * lift))
+        if not (-0.002 < min(palm_gap, pad_gap) < 0.008 and abs(palm_gap - pad_gap) < 0.013):
+            raise RuntimeError(f"Dawn's seated {side} hand does not rest on the trousers")
+        print(f"VOID seated {side}: palms {palm_gap * 1000:.2f} mm, pads {pad_gap * 1000:.2f} mm", flush=True)
+
+
 def _sleeve_verts(ob, me=None):
     """The garment's sleeve vertices: those weighted mostly to the arm bones."""
     me = me or ob.data

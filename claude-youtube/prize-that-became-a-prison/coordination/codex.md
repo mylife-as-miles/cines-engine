@@ -830,3 +830,177 @@ The next rounds for these stages need independent scores. C33 covers the four ch
 ### 2026-11-27 23:06 UTC · INFO · L2 · native evidence lineup for the cold open
 
 Evidence_table/purses is published at 8d47b04 with its raw PNG, graded JPEG, seam track and corner metadata. The 2560×1440 final has a single stitch row on the tote and a quieter receipt and clasp. The clasp crop's graded p95 dropped from 79.1 to 49.4 and the receipt roll from 131.9 to 79.4. The three bag positions are unchanged. The new track differs from the previous track by at most 0.033 px vertically, with matching tab boundaries. I checked the full plate and the leather and hardware crops. The 2560 seam close-up is still rendering.
+
+### 2026-11-27 23:16 UTC · INFO · L2 · native evidence seam close-up
+
+Evidence_table/seam is published at 03dcdd7 alongside purses at 8d47b04. Both are 2560×1440 at 64 samples with the current seam and corner sidecars. The close-up has one visible row of stitches and the kink below the lip is gone. The stitch track has three visible sections. Relative to the old track scaled to native, the largest vertical difference is 0.284 px and the largest change in a tab boundary is 1.50 px. The native plates are ready for the red trace and the cut into the tote.
+
+### 2026-11-27 23:16 UTC · REQUEST C36 · to CRITIC · evidence table lineup and seam
+
+Please rescore evidence_table at 03dcdd7 using the published graded JPEGs and raw PNGs for purses and seam. Please check whether one real stitch line now reads across the tabs, whether any remaining leather creases compete with it, and whether the three bag materials lead the receipt and satchel clasp in the lineup. Both plates have fresh native tracking metadata. The document and laptop inserts are separate render tickets.
+
+### 2026-11-27 23:22 UTC · INFO · L2 · hotel packing close-up
+
+Hotel_room/pack is published at ef74f4f for 00-14 and 03-08. The 1280×720 final shows the burgundy hobo entering the open duffel with both hands visible. I checked the grip and the duffel mouth at full resolution. The final has 5.46% of graded luminance below 8 and zero above 250. The distinct packed overhead is rendering next, and I held the accept plate for a small exposure correction because the title box reached 43 at native size.
+
+### 2026-11-27 23:29 UTC · INFO · L2 · the separate hotel overheads and the window
+
+The 1280×720 hotel_room overhead_pre, overhead and window are published at e2d42b1. Overhead_pre has the closed case and Dawn's supporting palm on the bed for 03-02. Overhead has a separate packed beat and a partly closed duffel for 03-04. Both lampshades are in frame, with four pixels of top clearance on overhead_pre. The window for 02-10 keeps the warm wall apart from the cool city. All three finals have zero graded luminance above 250. Pack remains at ef74f4f and the accept title-area preview is running.
+
+### 2026-11-27 23:43 UTC · INFO · L2 · hotel acceptance stage final
+
+Hotel_room/accept is published at 489ac39 for 03-01. The 1280×720 title box has graded 8-bit maximum 41 and p99 35.3. The cheek and nearer tote grip measure 135.8 and 125.0 at p95. I checked both grips, the mattress edge and the clean title area. All five finals are on the branch. The three overhead and window shots are at e2d42b1 and the packing close-up is at ef74f4f.
+
+### 2026-11-27 23:43 UTC · REQUEST C37 · to CRITIC · hotel room
+
+Please rescore the five current hotel_room finals at 489ac39. Check whether pack clearly shows the hobo entering the duffel, whether the partly zipped packed overhead reads as a later moment, and whether the leather and textile cases remain distinct. Please check the weight on the mattress in accept, both bracing hands in overhead_pre, and the distance between the warm room and the cool city. The accept title rectangle peaks at 41 and both overhead shades are fully in frame.
+
+### 2026-11-27 23:51 UTC · INFO · L2 · Gene alone at the dining table
+
+Home/dining_gene is published at 6b3007f for 08-01. It uses the cold blind light, with Gene alone at the head of the table. The 1280×720 final holds the tabletop at median RGB 32/33/39, and zero graded luminance is above 250. I checked Gene's face, hands and shadow at native size. The profile and matching empty chair are rendering, and the warm family shot is queued with Gene looking toward Tim.
+
+### 2026-11-28 00:05 UTC · INFO · L2 · Gene’s matched chair and the seated-cell fit
+
+Home/chair_gene at 40cf11e and home/chair at 0034bb4 are published at 1280×720. I checked the occupied-to-empty cut. The chair geometry matches the Void chair to within 0.001 px, and all four feet are inside the frame. The empty dining and warm family finals are in production.
+
+The seated-cell source is at c020daf. The previous palms were 136–138 mm above the trousers. On the normal stage build, the fitted left palm and fingertips are 2.83 mm from the cloth and the right are 2.58 and 2.71 mm. I checked the private preview and the pale strip under the cuff is gone in the new pose. The seated cell previews will check the three camera angles before publication.
+
+### 2026-11-28 00:05 UTC · INFO · STATUS
+
+Latest independent scores. C33, C34 and C35 are waiting for review. C36 covers the evidence lineup and macro, and C37 covers all five hotel finals.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Four finals at d9fa391 with the three bags in evidence order. C34 is open. |
+| hotel_room | 5.50 (5) | All five finals are published. Accept at 489ac39 keeps the title area at 41. C37 is open. |
+| inspection_room | 5.50 (4.5) | The 2560 handbag pair and both reverse angles are published. C35 is open. |
+| evidence_table | 5.63 (5) | Purses at 8d47b04 and seam at 03dcdd7 are native 2560 with one stitch row and fresh tracks. C36 is open. New document and laptop coverage follows. |
+| train | 5.63 (5) | The revised full-cast aisle and rack previews are checked. The plain keeper covers the numeral-shaped pull. The three finals are queued. |
+| aircraft_cabin | 5.69 (4.5) | Check the full-cast previews for the wing, Dawn's reclined profile and the lap pose. |
+| baggage_belt | 5.69 (5) | Check the transfer curtain, the main belt and the four cases in the overhead sorter. |
+| tim_desk | 5.69 (5) | Check the planted pen, blank correspondence and the two pools of light. |
+| void_stage | 5.75 (4) | Standing and portrait finals are published. The seated-cell preview verifies both palms and fingertips within 3 mm of the cloth. Check the final source through the full cell sequence. |
+| leather_market | 5.88 (5) | Check the intact duffel during the lift, the seller's release and the darker satin stock in the wide preview. |
+| chicago_night | 6.00 (5) | Check the window profile, plain mug, white skyline lights and suitcase in the four previews. |
+| checkin_hall | 6.13 (5) | Scale, wide, payment and profile are published with scale pins and the clear title floor. C33 is open. |
+| courtroom | 6.13 (5) | Check the contact at the dock and the judge's light before native renders. |
+| departure_gate | 6.13 (5.5) | The two boarding-call finals are published as a match. The checked wide and window finals are queued. |
+| hearing_room | 6.13 (5) | The wide and witness are published. The corrected microphone insert and dais are queued for native renders. |
+| visiting_room | 6.25 (5) | Check Tim's build and the two eyelines through the glass. |
+| home | 6.69 (6) | Gene alone is published at 6b3007f. The profile at 40cf11e cuts to the empty chair at 0034bb4. The chair geometry matches the Void camera within 0.001 px. The empty dining and warm family finals are in production. |
+| prison_exterior | 6.75 (6) | The tower final is published. Verify the softer rain against the gate and wall. |
+| detention_corridor | 7.00 (6) | Check the sealed envelope, tabletop, chair and shut door across the corridor sequence. |
+
+### 2026-11-28 00:19 UTC · INFO · L2 · warm family dining and the matched empty room
+
+Home/dining_family is published at 5006b88 for 01-06. Gene turns toward Tim under the pendant, with both seated hands in the shot. At 1280×720, the tabletop median is RGB 124/91/73. The same tabletop crop in the solitary and empty rooms reads 32/33/39. The cold solitary plate is at 6b3007f and the empty dining room is at 34de543. The profile at 40cf11e and empty chair at 0034bb4 complete the matched chair coverage.
+
+### 2026-11-28 00:19 UTC · REQUEST C38 · to CRITIC · home dining and chair cuts
+
+Please score the revised home dining and chair set at 5006b88. Check whether Gene and Tim read as sharing a moment under the pendant, whether the cold solitary shot feels like the same room later, and whether Gene's disappearance reads clearly across the matched chair cut. Please check the seated hand contact and blind-light stripes at native size. The new kitchen angles are still in the preview queue.
+
+### 2026-11-28 00:29 UTC · REQUEST C39 · to CRITIC · departure gate
+
+Please rescore the four current departure_gate finals at 68535d2, including wide and window at that commit, seated_called at 7f58c27 and seated at 8fb9078. Check whether Dawn's eyeline and armrest brace make the boarding call read, and whether the case stays in place across the cut. Its graded medians are 24.0 and 25.2. The new 1280×720 wide and window are on the branch and have no luminance above 250. Please check the apron through the glass, the blank gate panels and the floor reflections.
+
+### 2026-11-28 00:43 UTC · INFO · L2 · train aisle, window reflection and rack
+
+The train finals for 02-06, 02-07 and 02-13 are published at 1c9e2c2. In the aisle, Dawn now looks out of the pane and the near lit linen reads at 0.53 of the face median. In the window reflection the crown and face read at 44.7 and 44.4, with the bun at 28.9. The close rack keeps the case on the two rails and shows the carriage receding behind it. The plain fabric keeper covers the rounded pull. I checked the full 1280×720 frames and the hardware crop.
+
+### 2026-11-28 00:43 UTC · REQUEST C40 · to CRITIC · train
+
+Please rescore the three train finals at 1c9e2c2. Check whether the aisle eyeline reads as looking out, whether the reflection reads as Dawn through the moving lights, and whether the rack shot feels part of the carriage. Please inspect the plain case hardware in both angles. All three frames have zero luminance above 250.
+
+### 2026-11-28 00:43 UTC · BLOCKED · hotel room next review
+
+The five revised hotel_room finals are published at 489ac39. I need the independent C37 scores before the next hotel round. L2 continues on the seated-cell finals and the aircraft previews. Evidence C36 is also pending, and its separate paper and laptop coverage remains queued.
+
+### 2026-11-28 00:45 UTC · INFO · L2 · distant occupied cell
+
+Void_stage/cell_far is published at d90e7af for 08-06. I checked the 1280×720 final and the cell crop. Dawn is visible on the lower bunk with her hands resting in her lap. The left field x70–400, y180–600 is clear and has graded p99 7.7. The brightest point in the cell is at 207.2 and the frame has zero luminance above 250. The floor and closer seated shots are in the same render batch.
+
+### 2026-11-28 00:59 UTC · INFO · L2 · seated cell close and floor
+
+Void_stage/cell_floor and cell_dawn are published at fac93b6. The 1280×720 floor shot holds the barred patch and grounds Dawn's shoes. The 2560×1440 close keeps her seated on the lower bunk with both hands resting on the thighs. The measured minimum gaps from palms and finger pads to fabric are 2.6–2.9 mm. I checked both full grades and the close crop. Neither final has luminance above 250. The matched chair, pool, divide and empty cell are now rendering.
+
+### 2026-11-28 01:01 UTC · INFO · L2 · matched chair published
+
+The Void chair at fd0b3f6 is ready to cut from Home's empty chair at 0034bb4. Its geometry projects within 0.001 px of Home's at 1280×720. I checked both graded finals side by side. The Void floor falls off around the chair without the diagonal board join or the vertical cell-mask edge. Pool, divide and the empty cell are in the same render batch.
+
+### 2026-11-28 01:11 UTC · INFO · L2 · Void coverage is on the branch
+
+Use the clean 2560×1440 pool from c675a6d, divide and the empty cell from 8a75b83, and the matched chair from fd0b3f6. The divide frame keeps Dawn and the bags in separate pools with a centre-field p99 of 9.1. The empty cell shows the window beam and barred patch with graded mean 36.3. Both 1280×720 finals have zero luminance above 250. All three seated-cell distances and the earlier portrait are also published.
+
+### 2026-11-28 01:11 UTC · REQUEST C41 · to CRITIC · Void sequence
+
+Please rescore all 11 void_stage finals at 8a75b83. Check the prison uniform, lowered hands and hair in the standing pair (685a801) and portrait (36aba8e), the bags match (e524326), the stage pools and chair (c675a6d, fd0b3f6, 8a75b83), and the occupied far, floor and close (d90e7af and fac93b6) against the empty cell (8a75b83). Please check the suitcase grip's visibility, the clean floor falloff, whether the cell now feels like the same space at all distances, and whether the blank final frames reach professional level.
+
+### 2026-11-28 01:11 UTC · BLOCKED · departure gate next review
+
+All four revised finals are on the branch at 68535d2. C39 has passed 40 minutes and the next departure-gate pass needs the independent scores on the seating, boarding call, apron and window. The aircraft and baggage reviews are moving through the render queue, and the L2 evidence inserts are underway.
+
+### 2026-11-28 01:23 UTC · BLOCKED · train next review
+
+The three train finals for 02-06, 02-07 and 02-13 are on the branch at 1c9e2c2. C40 has passed 40 minutes. The next train round needs the independent scores on Dawn's eyeline, the reflection and the rack. The baggage finals are rendering, and the three full-cast aircraft previews are checked and queued for final render.
+
+### 2026-11-28 01:48 UTC · INFO · L2 · revised baggage sequence
+
+Use the three baggage finals at abcd2a2. Curtain (7e17f56), belt (4560447) and overhead (abcd2a2) are 1600×900 at 160 samples, and none has luminance above 250. The suitcase carries the plain keeper from the train. The overhead separates Dawn's case and duffel (graded medians 88.8 and 65.9) from the shell and navy cases (24.4 and 22.8). The dividers, control panel and luggage tags are blank.
+
+### 2026-11-28 01:48 UTC · REQUEST C42 · to CRITIC · baggage belt
+
+Please rescore all three baggage_belt finals at abcd2a2. Check whether the case and duffel read as the same pair through the backlit transfer, down the guarded belt and at the sorter. Please inspect the tag and keeper, the two distinct surrounding cases in the overhead, and the readability of the left service area and brushed steel.
+
+### 2026-11-28 01:51 UTC · BLOCKED · Void next review
+
+All eleven Void finals are on the branch at 8a75b83. C41 has passed 40 minutes. The next pass needs independent scores for the wardrobe, pools, chair match and the cell sequence. The aircraft finals are rendering and the remaining L2 home and Chicago coverage is in preview.
+
+### 2026-11-28 02:04 UTC · INFO · STATUS
+
+Latest independent scores. C33–C42 are waiting for review. L2 continues on the evidence inserts and the remaining chapter coverage.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Four finals at d9fa391. Waiting for C34 on the shop colour, title area and matching bags. |
+| hotel_room | 5.50 (5) | Five revised finals at 489ac39. Waiting for C37 on the title margin and packing sequence. |
+| inspection_room | 5.50 (4.5) | Two reverse angles and the clean, tracked 2560 handbag plates are published. Waiting for C35. |
+| evidence_table | 5.63 (5) | Waiting for C36 on the 2560 lineup and macro. The current blank screen, matched laptop pair, tickets, forms and tools are checked in preview and queued for finals. |
+| train | 5.63 (5) | Three finals at 1c9e2c2. Waiting for C40 on Dawn's eyeline, reflection and rack. |
+| aircraft_cabin | 5.69 (4.5) | Window at 72b46c2 and wing at f9d2536 are published. Check the aisle final before the next critique. |
+| baggage_belt | 5.69 (5) | All three finals at abcd2a2. Waiting for C42 on the bag continuity, sorter light and brushed steel. |
+| tim_desk | 5.69 (5) | All three warm previews are checked. Verify the pen, reply and light pool in the queued finals. |
+| void_stage | 5.75 (4) | All eleven finals are published at 8a75b83. Waiting for C41 on the uniform, luggage match, cell and light pools. |
+| leather_market | 5.88 (5) | Check the intact duffel during the lift, the seller's release and the darker satin stock in the wide preview. |
+| chicago_night | 6.00 (5) | The revised profile and mug grip are checked. Render the chapter-one final, then check the other three angles. |
+| checkin_hall | 6.13 (5) | Four finals at 5d38cc3 with scale pins and a clear title floor. Waiting for C33. |
+| courtroom | 6.13 (5) | Check the contact at the dock and the judge's light before rendering finals. |
+| departure_gate | 6.13 (5.5) | Four current finals at 68535d2. Waiting for C39 on the matched boarding call, apron and wide. |
+| hearing_room | 6.13 (5) | Wide and witness are published. The corrected microphone insert and dais are in the queue. |
+| visiting_room | 6.25 (5) | Check Tim through the glass for L2, then check the other booth angles. |
+| home | 6.69 (6) | Five dining and chair finals are published. Waiting for C38. The kitchen shoulder and blinds are checked and queued for final render. |
+| prison_exterior | 6.75 (6) | Tower published. Check the softer rain on the gate and wall. |
+| detention_corridor | 7.00 (6) | The raised sealed envelope is checked and queued for L2. The shut door and other corridor angles follow. |
+
+### 2026-11-28 02:08 UTC · INFO · L2 · revised night aircraft finals
+
+Use aircraft_cabin/window at 72b46c2 for 00-21 and 02-01, aisle at f0bc508 for 01-16, and over at f9d2536 for 03-03. All three are 1280×720 at 64 samples, with no luminance above 250. In window, Dawn's cheek p95 is 139.9 and her top hand's is 98.1. The two screens in the aisle are blank, the reading pool finds her bun and shoulder, and the unmarked wing and white strobe are clear of the top and left of the pane.
+
+### 2026-11-28 02:08 UTC · REQUEST C43 · to CRITIC · aircraft cabin
+
+Please rescore the three aircraft_cabin finals at f0bc508. Check Dawn's recline, gaze and hand contact in window, whether the aisle practical and linen keep attention on her, and the wing, strobe and cloud separation in over. Please look at the unlettered full frames at native size.
+
+### 2026-11-28 02:22 UTC · INFO · L2 · refreshed document pair
+
+Evidence_table/pair is published at 85745ae at 2560×1440, with its matching matte and all eight current corners. Removing the lamp's shadow lifted the sampled upper-left paper from raw median 165.7 to 216.7. The eight projected corners fit the visible edges within 1.16 px, and the matte agrees with the projected sheets across 99.76% of their combined area. The small change in the sheet positions is recorded in the new corner file. The clean screen and before/after laptop finals are rendering next.
+
+### 2026-11-28 02:28 UTC · BLOCKED · baggage belt next review
+
+The three revised baggage finals are published at abcd2a2. C42 has passed 40 minutes. The next baggage pass needs the independent scores on the transfer, main belt and overhead sorter. L2 work continues on the laptop and document plates and the visiting-room reverse.
+
+### 2026-11-28 02:30 UTC · INFO · L2 · matte laptop screen plate
+
+Evidence_table/screen is published at cc1581d at 2560×1440. Its corner file is identical to the prior screen's, so the existing email and search pins carry across. I measured a raw panel mean of 193.0 with standard deviation 0.66, and inspected the blank bezel, hinge and keys. The old glossy hinge and palm-rest strip are subdued. Their raw p95 values in the checked regions are 52.2 and 48.4. The laptop views before and after the passes are rendering with the same source.
+
+### 2026-11-28 02:37 UTC · INFO · L2 · matched ticket-arrival cut
+
+Evidence_table/laptop_before and laptop are published together at 1517872. Both are 1280×720 with the same lens and layout, and neither clips above luma 250. Between grades the sampled display has zero change at p95, while the ticket region changes by 100 at p95. The closed booklet shifts naturally as it sits on the two passes. The separate tickets, entries and motifs finals are next.

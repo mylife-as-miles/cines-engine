@@ -779,6 +779,7 @@ def build_seated_dawn():
     for side in ("L", "R"):
         rigged.articulate_hand(h, side, {"f_index": (9, 12, 7), "f_middle": (11, 14, 9),
                                         "f_ring": (15, 17, 11, 5), "f_pinky": (17, 19, 12, 8)})
+    fit.rest_seated_palms(h, GARMENT)
     seat_place(h, 140.0, (C[0] - st.CX + 0.03 + vc.BUNK_W - 0.12, C[1] + 0.51), dz + st.SLAB)
     fill = st.area("bunk_floor_return", _p(C, 0.58, -0.56, 0.61), _p(C, -0.52, 0.5, 1.03),
                    (0.7, 0.5), 14.0, (0.76, 0.80, 0.88), spread_deg=85)
@@ -861,7 +862,7 @@ def build(cast=True):
     st.LIGHTS.clear()
     _STATE.update(groups={}, with_cast=cast, originally_hidden=set())
     _STATE["cast"] = []
-    st.materials(cell=C, bags=G, dawn=D)
+    st.materials(cell=C, bags=G, dawn=D, chair=CHAIR)
     st.floor()
     _island("dawn", build_dawn_island)
     _island("cell", build_cell_island)

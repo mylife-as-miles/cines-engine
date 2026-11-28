@@ -41,6 +41,7 @@ import bpy  # noqa: E402
 import numpy as np  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
+import cast as castkit  # noqa: E402
 import people  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
@@ -634,6 +635,7 @@ def build_cast():
     # Tim: on the visitors' side, facing the glass (+Y), leaning in; the handset in his right hand (his right is +X,
     # toward the phone on the booth's +X baffle), his left hand flat on the counter
     t = people.tim()
+    castkit.relax_sculpted_hair(t)
     d = people.dawn_prison(uniform=True)
     matt_cloth(t, "male_elegantsuit01", folds=0.35)
     # Keep the shared grey of the long-sleeved shirt and trousers under the visiting booth lights.
