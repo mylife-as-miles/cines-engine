@@ -3829,5 +3829,1110 @@
   "used_at": [
    "07.04 @ 571.0 s"
   ]
+ },
+ "kit/boom-hit-medium": {
+  "file": "audio/sfx/kit/boom-hit-medium.flac",
+  "kind": "shot",
+  "what": "One low boom under the score's peak as the title lands (00-30).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/booms-and-bass/boom-hit-medium.wav",
+  "kit_id": "boom-hit-medium",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "8b5774f14c230aad4b7e826e60bfaca0af04d2ff285f3954418661a040781a4f",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Boom hit, medium",
+   "description": "A deep, rounded boom with a warm hall.",
+   "use_for": [
+    "A title card or logo landing with weight",
+    "A big statement or a key number",
+    "A scene change with impact"
+   ],
+   "avoid_for": [
+    "On top of speech: its low end masks it",
+    "Small elements and UI"
+   ],
+   "duration": 1.301,
+   "channels": 2,
+   "sync": {
+    "at": 0.038,
+    "meets": "instant",
+    "how": "Sync point on the frame of the reveal or the landing (it's at the very start). Leave the tail to ring out: the hall is part of it."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.038,
+    "body_end": 0.622,
+    "audible_end": 1.233
+   },
+   "level": {
+    "lufs": -24.5,
+    "true_peak_dbtp": -15.1,
+    "tier": "medium"
+   },
+   "under_voiceover_db": -8,
+   "adapt": {
+    "rate": [
+     0.9,
+     1.1
+    ],
+    "notes": "Slower sounds deeper and longer; faster lighter. For a shorter boom, fade the tail out over 300 ms or more rather than cutting it."
+   },
+   "character": "deep, rounded boom"
+  },
+  "in_the_mix": "rate 1.028 (its 53.5 Hz body to A1, 55 Hz, the fifth of the score's D minor); low-passed at 2.5 kHz",
+  "earshot": {
+   "check": "a deep cinematic boom in a large hall",
+   "z": 3.4,
+   "verdict": "strong",
+   "p_vs_alts": 0.546,
+   "best_alt": [
+    "a bass drum",
+    0.45
+   ],
+   "pass": true,
+   "closest": [
+    "a big drum hit (z +4.2)",
+    "a deep cinematic boom (z +3.5)",
+    "a kick drum (z +2.7)"
+   ],
+   "audioset": [
+    "Timpani 0.70",
+    "Music 0.38",
+    "Sound effect 0.12",
+    "Drum 0.12"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "boom-hit-soft (on C, against the score's D), boom-drop-soft, impact-deep-soft, cinematic-drum-big (its stick crack would fight the music)",
+  "status": "done",
+  "used_at": [
+   "00-30-title_boom @ 89.083 s (-13.0 dB re voice)"
+  ]
+ },
+ "kit/click-latch-soft": {
+  "file": "audio/sfx/kit/click-latch-soft.flac",
+  "kind": "shot",
+  "what": "A quiet mechanical tick on each year's roll: the counter 2014 -> 2026 (07-05) and the calendar 2014 -> 2017 (05-10).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/interface/click-latch-soft.wav",
+  "kit_id": "click-latch-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "9be52bdbef1acf987d666b520820c7bb8c339b8e52eb6c00e25a0771db0d0bc3",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Push latch, soft",
+   "description": "A soft push button latching, like a pen clicking.",
+   "use_for": [
+    "A push button locking in: record, power, select",
+    "A pen click: writing, signing, noting",
+    "Something set and held"
+   ],
+   "avoid_for": [
+    "Moments that need to be noticed over music"
+   ],
+   "duration": 0.038,
+   "channels": 1,
+   "sync": {
+    "at": 0.011,
+    "meets": "instant",
+    "how": "Put the sync point on the frame the press lands."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.011,
+    "body_end": 0.037,
+    "audible_end": 0.038
+   },
+   "level": {
+    "lufs": -29,
+    "true_peak_dbtp": -8.7,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -1,
+   "adapt": {
+    "rate": [
+     0.9,
+     1.15
+    ],
+    "notes": "Rate changes shift the pitch a little: faster sounds lighter, slower heavier."
+   },
+   "character": "crisp, push latch"
+  },
+  "in_the_mix": "low-passed at 5 kHz; the counter's ticks at rate 0.97-1.03 and +-1 dB (seeded)",
+  "earshot": {
+   "check": "a single soft mechanical click",
+   "z": 2.57,
+   "verdict": "plausible",
+   "p_vs_alts": 0.208,
+   "best_alt": [
+    "a bubble pop",
+    0.664
+   ],
+   "pass": false,
+   "closest": [
+    "a wooden block hit (z +4.1)",
+    "a snare hit (z +3.7)",
+    "a suction cup pop (z +2.9)"
+   ],
+   "audioset": [
+    "Sound effect 0.13",
+    "Whoosh, swoosh, swish 0.06"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "one_click-latch-soft (the processed take)"
+  },
+  "alternatives_heard": "data-tick, mechanical-switch-light, mechanical-ratchet-light (tagged burping and grunt), click-toggle-soft, impact-light-hard",
+  "status": "chosen by its data; wants the ear",
+  "used_at": [
+   "05-10-year_2015 @ 411.617 s (-25.0 dB re voice)",
+   "05-10-year_2016 @ 413.317 s (-25.0 dB re voice)",
+   "05-10-year_2017 @ 415.017 s (-25.0 dB re voice)",
+   "07-05-year_2015 @ 504.867 s (-24.8 dB re voice)",
+   "07-05-year_2016 @ 505.417 s (-24.7 dB re voice)",
+   "07-05-year_2017 @ 506.012 s (-23.2 dB re voice)",
+   "07-05-year_2018 @ 506.652 s (-24.6 dB re voice)",
+   "07-05-year_2019 @ 507.337 s (-23.3 dB re voice)",
+   "07-05-year_2020 @ 508.067 s (-23.1 dB re voice)",
+   "07-05-year_2021 @ 508.842 s (-23.3 dB re voice)",
+   "07-05-year_2022 @ 509.662 s (-23.1 dB re voice)",
+   "07-05-year_2023 @ 510.527 s (-25.0 dB re voice)",
+   "07-05-year_2024 @ 511.437 s (-25.0 dB re voice)",
+   "07-05-year_2025 @ 512.392 s (-24.8 dB re voice)",
+   "07-05-year_2026 @ 513.392 s (-23.9 dB re voice)"
+  ]
+ },
+ "kit/impact-heavy-soft": {
+  "file": "audio/sfx/kit/impact-heavy-soft.flac",
+  "kind": "shot",
+  "what": "One low hit as YES lands (00-12, 04-05) and a touch heavier on the second YES (00-13, 04-06).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/impacts/impact-heavy-soft.wav",
+  "kit_id": "impact-heavy-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "7e2d91a2ebccc3be2d82f5293ec442c8490548e0823c22f73eddaa43f74b8076",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Impact, heavy, on a soft surface",
+   "description": "A heavy, muffled thump: weight landing on something soft.",
+   "use_for": [
+    "Big elements landing",
+    "A product or device set down with weight",
+    "Section openers and emphatic beats",
+    "Gentle, friendly landings"
+   ],
+   "avoid_for": [
+    "Small elements",
+    "Moments that need a crisp edge"
+   ],
+   "duration": 0.32,
+   "channels": 1,
+   "sync": {
+    "at": 0.018,
+    "meets": "instant",
+    "how": "Put the sync point (the moment of contact) exactly where the thing lands: usually the last frame of its move, or the first frame it's at rest."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.018,
+    "body_end": 0.117,
+    "audible_end": 0.252
+   },
+   "level": {
+    "lufs": -19,
+    "true_peak_dbtp": -8.1,
+    "tier": "heavy"
+   },
+   "under_voiceover_db": -4,
+   "adapt": {
+    "rate": [
+     0.92,
+     1.1
+    ],
+    "notes": "Small rate changes only: faster sounds lighter and slower heavier, so for a different weight use the next weight instead."
+   },
+   "character": "deep, muffled"
+  },
+  "in_the_mix": "rate 1.028 (tuned from 71.4 Hz to D2, 73.4 Hz, the drone's D); low-passed at 1.2 kHz (first) and 0.9 kHz (second, +2.5 dB)",
+  "earshot": {
+   "check": "a heavy thud",
+   "z": 2.68,
+   "verdict": "plausible",
+   "p_vs_alts": 0.082,
+   "best_alt": [
+    "a kick drum",
+    0.664
+   ],
+   "pass": false,
+   "closest": [
+    "a big drum hit (z +3.1)",
+    "a punchy kick drum pattern (z +3.1)",
+    "a knock on a door (z +3.1)"
+   ],
+   "audioset": [
+    "Sound effect 0.29",
+    "Bang 0.10",
+    "Knock 0.07"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "yes_impact-heavy-soft_lp (the processed take)"
+  },
+  "alternatives_heard": "impact-deep-soft, boom-hit-soft, bass-sub-drop-short, impact-medium-soft, impact-heavy-firm, impact-deep-firm",
+  "status": "done; ear check",
+  "used_at": [
+   "00-12-yes_hit_1 @ 32.667 s (-21.0 dB re voice)",
+   "00-13-yes_hit_2 @ 34.917 s (-18.5 dB re voice)",
+   "04-05-yes_hit_1 @ 300.208 s (-21.0 dB re voice)",
+   "04-06-yes_hit_2 @ 302.750 s (-18.5 dB re voice)"
+  ]
+ },
+ "kit/keyboard-letter-soft": {
+  "file": "audio/sfx/kit/keyboard-letter-soft.flac",
+  "kind": "shot",
+  "what": "The search typed on the laptop (01-12): one soft keypress per letter, on gfx/screen.html's own rhythm.",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/keyboard/keyboard-letter-soft.wav",
+  "kit_id": "keyboard-letter-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "9df40ea662c67e9543f740834d0bd7b5be10812c62364da60bacc6405d0d7c2a",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Letter key, soft",
+   "description": "A soft keypress and its quiet release.",
+   "use_for": [
+    "One character appearing",
+    "A keyboard shortcut being pressed",
+    "Building your own typing to match on-screen text"
+   ],
+   "avoid_for": [
+    "Long runs of typing (use a typing run)"
+   ],
+   "duration": 0.089,
+   "channels": 1,
+   "sync": {
+    "at": 0.009,
+    "meets": "instant",
+    "how": "Put the sync point on the frame the character appears."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.009,
+    "body_end": 0.087,
+    "audible_end": 0.089
+   },
+   "level": {
+    "lufs": -30,
+    "true_peak_dbtp": -11.3,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -1,
+   "adapt": {
+    "rate": [
+     0.92,
+     1.08
+    ],
+    "notes": "For your own typing, place single keys per character with uneven gaps (\u00b130%) and a little gain variation (\u00b11.5 dB)."
+   },
+   "character": "soft, low-profile key"
+  },
+  "in_the_mix": "one per letter, rate 0.95-1.05 and +-1.5 dB per key (seeded), as the kit's notes advise",
+  "earshot": {
+   "check": "a single soft key press on a laptop keyboard",
+   "z": 1.9,
+   "verdict": "no match",
+   "p_vs_alts": 0.855,
+   "best_alt": [
+    "a clock tick",
+    0.106
+   ],
+   "pass": true,
+   "closest": [
+    "a crisp interface click (z +3.2)",
+    "a snare hit (z +2.8)",
+    "a chat message pop (z +2.7)"
+   ],
+   "audioset": [
+    "Speech 0.07",
+    "Music 0.06",
+    "Sound effect 0.06"
+   ],
+   "speech_p": 0.07,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "keyboard-letter-medium",
+  "status": "done",
+  "used_at": [
+   "01.12-key_00 @ 158.042 s (-22.9 dB re voice)",
+   "01.12-key_01 @ 158.167 s (-22.5 dB re voice)",
+   "01.12-key_02 @ 158.250 s (-23.2 dB re voice)",
+   "01.12-key_03 @ 158.333 s (-24.2 dB re voice)",
+   "01.12-key_04 @ 158.500 s (-22.8 dB re voice)",
+   "01.12-key_06 @ 158.875 s (-23.8 dB re voice)",
+   "01.12-key_07 @ 158.958 s (-22.8 dB re voice)",
+   "01.12-key_08 @ 159.208 s (-24.2 dB re voice)",
+   "01.12-key_09 @ 159.292 s (-24.5 dB re voice)",
+   "01.12-key_10 @ 159.417 s (-23.7 dB re voice)",
+   "01.12-key_11 @ 159.500 s (-22.7 dB re voice)",
+   "01.12-key_12 @ 159.583 s (-24.9 dB re voice)",
+   "01.12-key_14 @ 159.958 s (-22.7 dB re voice)",
+   "01.12-key_15 @ 160.042 s (-22.5 dB re voice)",
+   "01.12-key_16 @ 160.208 s (-23.0 dB re voice)",
+   "01.12-key_17 @ 160.292 s (-22.9 dB re voice)",
+   "01.12-key_18 @ 160.417 s (-23.0 dB re voice)",
+   "01.12-key_19 @ 160.500 s (-24.7 dB re voice)",
+   "01.12-key_20 @ 160.750 s (-23.3 dB re voice)",
+   "01.12-key_21 @ 160.833 s (-23.4 dB re voice)",
+   "01.12-key_22 @ 160.958 s (-24.9 dB re voice)",
+   "01.12-key_23 @ 161.042 s (-23.6 dB re voice)"
+  ]
+ },
+ "kit/keyboard-return-soft": {
+  "file": "audio/sfx/kit/keyboard-return-soft.flac",
+  "kind": "shot",
+  "what": "Enter, as the results page replaces the search home page (01-12, 3.53 s into the piece).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/keyboard/keyboard-return-soft.wav",
+  "kit_id": "keyboard-return-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "f2e0508b12535a2b1ea7096b4bef0f080035bb43b81393daa655bd0eab41d074",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Return key, soft",
+   "description": "A soft press of the Return key, a little fuller than a letter.",
+   "use_for": [
+    "Pressing Enter to send, submit or search",
+    "The end of a typed line",
+    "A decisive keyboard moment"
+   ],
+   "avoid_for": [
+    "Long runs of typing (use a typing run)"
+   ],
+   "duration": 0.106,
+   "channels": 1,
+   "sync": {
+    "at": 0.009,
+    "meets": "instant",
+    "how": "Put the sync point on the frame the character appears."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.009,
+    "body_end": 0.105,
+    "audible_end": 0.105
+   },
+   "level": {
+    "lufs": -30,
+    "true_peak_dbtp": -12.2,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -1,
+   "adapt": {
+    "rate": [
+     0.92,
+     1.08
+    ],
+    "notes": "For your own typing, place single keys per character with uneven gaps (\u00b130%) and a little gain variation (\u00b11.5 dB)."
+   },
+   "character": "soft, low-profile key"
+  },
+  "in_the_mix": "as it is",
+  "earshot": {
+   "check": "a single soft key press on a laptop keyboard",
+   "z": 3.01,
+   "verdict": "strong",
+   "p_vs_alts": 0.997,
+   "best_alt": [
+    "a finger snap",
+    0.002
+   ],
+   "pass": true,
+   "closest": [
+    "a crisp interface click (z +2.7)",
+    "a soft key release click (z +2.6)",
+    "a single mechanical keyboard key press (z +2.6)"
+   ],
+   "audioset": [
+    "Sound effect 0.08",
+    "Speech 0.06"
+   ],
+   "speech_p": 0.06,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "keyboard-letter-medium",
+  "status": "done",
+  "used_at": [
+   "01.12-key_enter @ 161.492 s (-22.0 dB re voice)"
+  ]
+ },
+ "kit/keyboard-space-soft": {
+  "file": "audio/sfx/kit/keyboard-space-soft.flac",
+  "kind": "shot",
+  "what": "The two spaces in the typed search (01-12).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/keyboard/keyboard-space-soft.wav",
+  "kit_id": "keyboard-space-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "31040db580365aa892f31ba5ccdb3970f438ca3fc8aa89f537062ecb460ca642",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Space bar, soft",
+   "description": "A soft space bar press, a little lower and wider than a key.",
+   "use_for": [
+    "A word finishing in a typing animation",
+    "The gap between typed words",
+    "Single key moments with weight"
+   ],
+   "avoid_for": [
+    "Long runs of typing (use a typing run)"
+   ],
+   "duration": 0.116,
+   "channels": 1,
+   "sync": {
+    "at": 0.009,
+    "meets": "instant",
+    "how": "Put the sync point on the frame the character appears."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.009,
+    "body_end": 0.114,
+    "audible_end": 0.116
+   },
+   "level": {
+    "lufs": -30,
+    "true_peak_dbtp": -11.3,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -1,
+   "adapt": {
+    "rate": [
+     0.92,
+     1.08
+    ],
+    "notes": "For your own typing, place single keys per character with uneven gaps (\u00b130%) and a little gain variation (\u00b11.5 dB)."
+   },
+   "character": "soft, low-profile key"
+  },
+  "in_the_mix": "rate 0.95-1.05, +-1.5 dB",
+  "earshot": {
+   "check": "a single soft key press on a laptop keyboard",
+   "z": 2.2,
+   "verdict": "weak",
+   "p_vs_alts": 0.883,
+   "best_alt": [
+    "a clock tick",
+    0.086
+   ],
+   "pass": true,
+   "closest": [
+    "a mouth pop (z +3.0)",
+    "a bubble pop (z +3.0)",
+    "a wooden block hit (z +2.9)"
+   ],
+   "audioset": [
+    "Sound effect 0.06",
+    "Music 0.06",
+    "Speech 0.05"
+   ],
+   "speech_p": 0.05,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "keyboard-letter-medium",
+  "status": "done",
+  "used_at": [
+   "01.12-key_05 @ 158.583 s (-23.5 dB re voice)",
+   "01.12-key_13 @ 159.708 s (-24.7 dB re voice)"
+  ]
+ },
+ "kit/mechanical-lock-heavy": {
+  "file": "audio/sfx/kit/mechanical-lock-heavy.flac",
+  "kind": "shot",
+  "what": "The far cell door's lock in the detention corridor (04-19), 0.35 s after sfx_door_far's slam.",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/mechanical/mechanical-lock-heavy.wav",
+  "kit_id": "mechanical-lock-heavy",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "4293822c820c270ad4ad0d8e291c195a294881f4533e32ce10d99c742ef11ccb",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Lock, heavy",
+   "description": "A deadbolt locking: pins turning, then a heavy clunk.",
+   "use_for": [
+    "Security and privacy moments: data locked, account secured",
+    "Unlocking a feature",
+    "A padlock icon closing"
+   ],
+   "avoid_for": [
+    "Small, delicate UI (use light)"
+   ],
+   "duration": 0.464,
+   "channels": 1,
+   "sync": {
+    "at": 0.331,
+    "meets": "instant",
+    "how": "Sync point (the bolt's clunk) on the frame the lock closes; the pins lead into it."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.331,
+    "body_end": 0.392,
+    "audible_end": 0.445
+   },
+   "level": {
+    "lufs": -22.5,
+    "true_peak_dbtp": -10.5,
+    "tier": "heavy"
+   },
+   "under_voiceover_db": -3,
+   "adapt": {
+    "rate": [
+     0.9,
+     1.12
+    ],
+    "notes": "Faster sounds smaller and lighter, slower bigger: keep changes small."
+   },
+   "character": "heavy, pins and bolt"
+  },
+  "in_the_mix": "low-passed at 1.4 kHz, in a 1.2 s room at -8 dB (far)",
+  "earshot": {
+   "check": "a cell door slamming shut and locking",
+   "z": 4.89,
+   "verdict": "strong",
+   "p_vs_alts": 1.0,
+   "best_alt": [
+    "a gunshot far away",
+    0.0
+   ],
+   "pass": true,
+   "closest": [
+    "a door slam (z +3.3)",
+    "an old typewriter (z +2.6)",
+    "a drawer closing (z +2.5)"
+   ],
+   "audioset": [
+    "Door 0.52",
+    "Slam 0.28",
+    "Sliding door 0.20",
+    "Knock 0.07"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "door_mechanical-lock-heavy (the processed take)"
+  },
+  "alternatives_heard": "mechanical-latch-heavy, mechanical-lock-light",
+  "status": "done; ear check",
+  "used_at": [
+   "04.08-door_far_lock @ 351.668 s (-24.0 dB re voice)"
+  ]
+ },
+ "kit/mechanical-switch-heavy": {
+  "file": "audio/sfx/kit/mechanical-switch-heavy.flac",
+  "kind": "shot",
+  "what": "A low, dry click as the cut-away's gap closes (03-15, 4.05 s): replaces sfx_seam_click (a bright tink).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/mechanical/mechanical-switch-heavy.wav",
+  "kit_id": "mechanical-switch-heavy",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "8efa3f5ffb984eb05f381f39c21d6588c841f13941673657f0648e6511e81e17",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Switch, heavy",
+   "description": "A heavy switch thrown: a deep, solid clack.",
+   "use_for": [
+    "A setting switched on",
+    "Lights or power coming on",
+    "A physical-feeling toggle"
+   ],
+   "avoid_for": [
+    "Small, delicate UI (use light)"
+   ],
+   "duration": 0.099,
+   "channels": 1,
+   "sync": {
+    "at": 0.021,
+    "meets": "instant",
+    "how": "Sync point on the frame it switches."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.021,
+    "body_end": 0.046,
+    "audible_end": 0.084
+   },
+   "level": {
+    "lufs": -22.5,
+    "true_peak_dbtp": -6.1,
+    "tier": "heavy"
+   },
+   "under_voiceover_db": -3,
+   "adapt": {
+    "rate": [
+     0.9,
+     1.12
+    ],
+    "notes": "Faster sounds smaller and lighter, slower bigger: keep changes small."
+   },
+   "character": "heavy, snap"
+  },
+  "in_the_mix": "low-passed at 4 kHz",
+  "earshot": {
+   "check": "a small dry click",
+   "z": 2.41,
+   "verdict": "weak",
+   "p_vs_alts": 0.848,
+   "best_alt": [
+    "a cork pop",
+    0.127
+   ],
+   "pass": true,
+   "closest": [
+    "a wooden block hit (z +4.2)",
+    "a wooden knock (z +3.0)",
+    "a hammer hitting a nail (z +2.5)"
+   ],
+   "audioset": [
+    "Sound effect 0.22"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "click_mechanical-switch-heavy (the processed take)"
+  },
+  "alternatives_heard": "click-latch-medium, click-latch-firm, mechanical-latch-light, impact-light-firm, impact-light-soft, foley-wood-touch, click-clip-soft, the plan's sfx_seam_click",
+  "status": "done",
+  "used_at": [
+   "03.04-seam_click @ 286.508 s (-16.0 dB re voice)"
+  ]
+ },
+ "kit/money-card-tap": {
+  "file": "audio/sfx/kit/money-card-tap.flac",
+  "kind": "shot",
+  "what": "A quiet card payment as \"She paid the fee.\" ends (03-12).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/money/money-card-tap.wav",
+  "kit_id": "money-card-tap",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "2d74db4e7ee6d32ff8b7fa305e1ebf9188deaa284e525c04f9ac459412f89671",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Card payment tap",
+   "description": "A contactless card tapped on a reader, and its beep.",
+   "use_for": [
+    "Paying by card or phone",
+    "Checkout and payments",
+    "A transaction approved"
+   ],
+   "avoid_for": [
+    "Abstract money moments that are better as a chart or a number (use data sounds)"
+   ],
+   "duration": 0.274,
+   "channels": 1,
+   "sync": {
+    "at": 0.113,
+    "meets": "instant",
+    "how": "Put the beep (about 0.11 s in, after the card's tap) on the frame the payment is confirmed."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.01,
+    "body_end": 0.267,
+    "audible_end": 0.273
+   },
+   "level": {
+    "lufs": -24,
+    "true_peak_dbtp": -7.6,
+    "tier": "card-tap"
+   },
+   "under_voiceover_db": -3,
+   "adapt": {
+    "rate": [
+     0.9,
+     1.12
+    ],
+    "notes": "Small rate changes only: the beep's pitch moves with the rate."
+   },
+   "character": "tap and beep"
+  },
+  "in_the_mix": "low-passed at 6 kHz",
+  "earshot": {
+   "check": "a contactless card payment beep at a till",
+   "z": 2.04,
+   "verdict": "weak",
+   "p_vs_alts": 0.728,
+   "best_alt": [
+    "a microwave beep",
+    0.256
+   ],
+   "pass": true,
+   "closest": [
+    "an error buzz (z +2.6)",
+    "an alarm clock beeping (z +2.5)",
+    "a digital glitch (z +2.5)"
+   ],
+   "audioset": [
+    "Beep, bleep 0.70",
+    "Smoke detector, smoke alarm 0.10"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "none in the kit fits better",
+  "status": "done",
+  "used_at": [
+   "03.12-card_payment @ 269.757 s (-22.0 dB re voice)"
+  ]
+ },
+ "kit/notification-message-in-soft": {
+  "file": "audio/sfx/kit/notification-message-in-soft.flac",
+  "kind": "shot",
+  "what": "The one muted chime: the prize email arriving (just before 01-10).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/notifications/notification-message-in-soft.wav",
+  "kit_id": "notification-message-in-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "1ded331dcb7a44c658f4f56692ec33eea5820f1c4d0442574e7cd6aea50ed460",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Message arriving, soft",
+   "description": "A little bubble and a warm note: a new message.",
+   "use_for": [
+    "A message or email arriving",
+    "A chat bubble appearing",
+    "A new notification on a phone"
+   ],
+   "avoid_for": [
+    "Sending (use message out)",
+    "Moments that must cut through loud music (use clear)"
+   ],
+   "duration": 0.423,
+   "channels": 1,
+   "sync": {
+    "at": 0.046,
+    "meets": "instant",
+    "how": "Sync point on the frame the notification, tick or message appears."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0.046,
+    "peak": 0.061,
+    "body_end": 0.235,
+    "audible_end": 0.387
+   },
+   "level": {
+    "lufs": -24,
+    "true_peak_dbtp": -16.5,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -3,
+   "adapt": {
+    "rate": [
+     1,
+     1
+    ],
+    "notes": "Don't change the rate: it detunes the notes."
+   },
+   "tuning": "C major pentatonic",
+   "character": "warm marimba, A5"
+  },
+  "in_the_mix": "low-passed at 2.5 kHz (muted)",
+  "earshot": {
+   "check": "a soft single notification ding",
+   "z": 2.36,
+   "verdict": "weak",
+   "p_vs_alts": 0.101,
+   "best_alt": [
+    "a success chime",
+    0.44
+   ],
+   "pass": false,
+   "closest": [
+    "a glass ting (z +2.7)",
+    "a chat message pop (z +2.5)",
+    "an error buzz (z +2.4)"
+   ],
+   "audioset": [
+    "Ding 0.20",
+    "Sound effect 0.14",
+    "Beep, bleep 0.12",
+    "Clang 0.06"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "mail_notification-message-in-soft_lp2500 (the processed take)"
+  },
+  "alternatives_heard": "notification-attention-clear, tone-ding-low, tone-ding-mid, digital-blip-subtle, the plan's sfx_mail_chime (all heard as a success chime, 0.88-1.00)",
+  "status": "done; ear check",
+  "used_at": [
+   "01.04-mail_chime @ 142.953 s (-22.0 dB re voice)"
+  ]
+ },
+ "kit/reverse-whoosh-long-soft": {
+  "file": "audio/sfx/kit/reverse-whoosh-long-soft.flac",
+  "kind": "shot",
+  "what": "A soft, tense air-pull under the red trace (03-14), stopping as the seam completes.",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/reverse-whooshes/reverse-whoosh-long-soft.wav",
+  "kit_id": "reverse-whoosh-long-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "f619338ddc12bf552a14a443e47bff0b9a374bfef35c631df405c4665b5bc088",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Reverse whoosh, long and soft",
+   "description": "A long soft reverse whoosh: air drawn in, building to a sudden stop.",
+   "use_for": [
+    "Something collapsing or shrinking into a point",
+    "The build into a hard cut, a hit or a reveal",
+    "An element pulled back into a button or icon",
+    "A slow pull before a big moment"
+   ],
+   "avoid_for": [
+    "Moments that should land softly (it stops dead)",
+    "Big, energetic moments (use strong)"
+   ],
+   "duration": 1.353,
+   "channels": 2,
+   "sync": {
+    "at": 1.192,
+    "meets": "arrival",
+    "how": "Place it so its end (the sync point) lands on the moment of collapse, the cut or the hit: start = that moment \u2212 sync.at."
+   },
+   "timing": {
+    "audible_start": 0.148,
+    "onset": 0.607,
+    "peak": 1.192,
+    "body_end": 1.209,
+    "audible_end": 1.332
+   },
+   "span_seconds": 1.044,
+   "fits_seconds": [
+    0.91,
+    1.23
+   ],
+   "level": {
+    "lufs": -24,
+    "true_peak_dbtp": -17.7,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -3,
+   "adapt": {
+    "rate": [
+     0.85,
+     1.15
+    ],
+    "notes": "For other lengths, pick the nearest one and trim its quiet start rather than changing the rate."
+   },
+   "character": "soft, airy pull to a stop"
+  },
+  "in_the_mix": "rate 0.85 (1.23 s to fit the 1.8 s draw)",
+  "earshot": {
+   "check": "air being drawn in, a soft reverse whoosh",
+   "z": 3.85,
+   "verdict": "strong",
+   "p_vs_alts": 1.0,
+   "best_alt": [
+    "a wind gust",
+    0.0
+   ],
+   "pass": true,
+   "closest": [
+    "a fast whoosh (z +3.9)",
+    "a short swish (z +3.6)",
+    "a reverse cymbal swell (z +3.4)"
+   ],
+   "audioset": [
+    "Whip 0.19",
+    "Whoosh, swoosh, swish 0.17",
+    "Static 0.10"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "reverse-whoosh-short-soft",
+  "status": "done",
+  "used_at": [
+   "03-14-seam_air @ 280.050 s (-20.0 dB re voice)"
+  ]
+ },
+ "kit/reverse-whoosh-medium-soft": {
+  "file": "audio/sfx/kit/reverse-whoosh-medium-soft.flac",
+  "kind": "shot",
+  "what": "A soft, tense air-pull under the red flash (00-17), stopping as the seam completes.",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/reverse-whooshes/reverse-whoosh-medium-soft.wav",
+  "kit_id": "reverse-whoosh-medium-soft",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "200b74d413d51459fa3274b82616f70dc8ba6dc93430912a18d611e03dd5ae6d",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Reverse whoosh, medium and soft",
+   "description": "A soft reverse whoosh: air drawn in, building to a sudden stop.",
+   "use_for": [
+    "Something collapsing or shrinking into a point",
+    "The build into a hard cut, a hit or a reveal",
+    "An element pulled back into a button or icon",
+    "A quick suck-in transition"
+   ],
+   "avoid_for": [
+    "Moments that should land softly (it stops dead)",
+    "Big, energetic moments (use strong)"
+   ],
+   "duration": 0.861,
+   "channels": 2,
+   "sync": {
+    "at": 0.679,
+    "meets": "arrival",
+    "how": "Place it so its end (the sync point) lands on the moment of collapse, the cut or the hit: start = that moment \u2212 sync.at."
+   },
+   "timing": {
+    "audible_start": 0.076,
+    "onset": 0.367,
+    "peak": 0.679,
+    "body_end": 0.706,
+    "audible_end": 0.839
+   },
+   "span_seconds": 0.603,
+   "fits_seconds": [
+    0.52,
+    0.71
+   ],
+   "level": {
+    "lufs": -24,
+    "true_peak_dbtp": -15.9,
+    "tier": "soft"
+   },
+   "under_voiceover_db": -3,
+   "adapt": {
+    "rate": [
+     0.85,
+     1.15
+    ],
+    "notes": "For other lengths, pick the nearest one and trim its quiet start rather than changing the rate."
+   },
+   "character": "soft, airy pull to a stop"
+  },
+  "in_the_mix": "as it is",
+  "earshot": {
+   "check": "air being drawn in, a soft reverse whoosh",
+   "z": 3.67,
+   "verdict": "strong",
+   "p_vs_alts": 1.0,
+   "best_alt": [
+    "a wind gust",
+    0.0
+   ],
+   "pass": true,
+   "closest": [
+    "a fast whoosh (z +4.3)",
+    "a short swish (z +3.6)",
+    "a quick swipe (z +3.2)"
+   ],
+   "audioset": [
+    "Whoosh, swoosh, swish 0.15",
+    "Whip 0.10"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "the kit file as it is"
+  },
+  "alternatives_heard": "reverse-whoosh-short-soft",
+  "status": "done",
+  "used_at": [
+   "00-17-seam_air @ 46.142 s (-22.0 dB re voice)"
+  ]
+ },
+ "kit/writing-highlighter": {
+  "file": "audio/sfx/kit/writing-highlighter.flac",
+  "kind": "shot",
+  "what": "A soft marker stroke for each lit line on Tim's statement pages (01-07, 03-13, 04-04, 05-03, 07-15).",
+  "source": "wyzowl/sfx-kit 1.0.0 (huggingface.co/datasets/wyzowl/sfx-kit), a local copy at /home/user/wyzowl/sfx-kit",
+  "kit_path": "sounds/writing-and-drawing/writing-highlighter.wav",
+  "kit_id": "writing-highlighter",
+  "made_by": "copied from the kit unchanged (24-bit 48 kHz WAV to 24-bit FLAC, lossless); every change is made in the mix",
+  "sha256_source_wav": "28318b5850d79b0e881580aff172e4e7fc845e44af89be81c79d8f8cb5a5e5ae",
+  "licence": "CC0 1.0 Universal (wyzowl/sfx-kit): no rights reserved, commercial use allowed, no credit required (credit welcome: \"SFX Kit by Wyzowl\")",
+  "kit": {
+   "name": "Highlighter",
+   "description": "A highlighter swept across a line of text.",
+   "use_for": [
+    "Highlighting a key line or number",
+    "Marking what matters"
+   ],
+   "avoid_for": [
+    "Typed text (use keyboard)",
+    "Loud moments: it's a quiet, close sound"
+   ],
+   "duration": 0.381,
+   "channels": 1,
+   "sync": {
+    "at": 0,
+    "meets": "action-start",
+    "how": "Start it as the highlight starts to draw; trim or fade to its length."
+   },
+   "timing": {
+    "audible_start": 0,
+    "onset": 0,
+    "peak": 0.164,
+    "body_end": 0.36,
+    "audible_end": 0.377
+   },
+   "span_seconds": 0.36,
+   "fits_seconds": [
+    0.3,
+    0.42
+   ],
+   "level": {
+    "lufs": -27,
+    "true_peak_dbtp": -20.3,
+    "tier": "highlighter"
+   },
+   "under_voiceover_db": -1,
+   "adapt": {
+    "rate": [
+     0.85,
+     1.2
+    ],
+    "notes": "For longer writing, chain two runs with a short gap; for shorter, fade the end at a gap between strokes."
+   },
+   "character": "highlighter"
+  },
+  "in_the_mix": "rate 0.85 (0.45 s), centred in each line's stroke",
+  "earshot": {
+   "check": "a felt pen writing",
+   "z": -0.32,
+   "verdict": "no match",
+   "p_vs_alts": 0.001,
+   "best_alt": [
+    "a whoosh",
+    0.965
+   ],
+   "pass": false,
+   "closest": [
+    "a snare roll (z +3.8)",
+    "a snare hit (z +3.7)",
+    "a downlifter falling sweep (z +3.1)"
+   ],
+   "audioset": [
+    "Whoosh, swoosh, swish 0.23",
+    "Sound effect 0.20"
+   ],
+   "speech_p": 0.0,
+   "heard_as": "marker_writing-highlighter (the processed take)"
+  },
+  "alternatives_heard": "writing-marker-draw, writing-marker-write, writing-pen-draw",
+  "status": "chosen by its data; wants the ear",
+  "used_at": [
+   "01-07-marker_1 @ 126.330 s (-24.0 dB re voice)",
+   "01-07-marker_2 @ 127.030 s (-24.0 dB re voice)",
+   "03-13-marker_1 @ 271.041 s (-24.0 dB re voice)",
+   "03-13-marker_2 @ 271.841 s (-24.0 dB re voice)",
+   "04-04-marker_1 @ 298.708 s (-24.0 dB re voice)",
+   "05-03-marker_1 @ 371.123 s (-24.0 dB re voice)",
+   "07-15-marker_1 @ 562.742 s (-24.0 dB re voice)"
+  ]
  }
 }
