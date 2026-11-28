@@ -787,6 +787,7 @@ def counter():
                           (0.84, 0.91, 1.0), spread_deg=110)
     graze.rotation_euler = (Vector((x0, 4.85, 0.60)) - graze.location).to_track_quat("-Z", "Y").to_euler()
     graze.visible_glossy = False
+    LIGHTS["counter_face_reflection"] = graze
     # on top, away from the bag: a roll of tape, a stack of folded black carrier bags, a bundle of blank tags
     # (in the strip of counter between the bag and the close-up's lens)
     tx, ty = x0 + 0.55, y0 + 0.33
