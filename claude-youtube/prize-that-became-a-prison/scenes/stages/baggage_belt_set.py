@@ -348,7 +348,7 @@ def galvanised(name, scuff=False):
     cell = nt.nodes.new("ShaderNodeRGBToBW")
     nt.links.new(_out(vo, "Color"), cell.inputs[0])
     base = (0.36, 0.37, 0.38)
-    col = _mix(nt, _range(nt, cell.outputs[0], 0.0, 1.0, 0.0, 1.0), tuple(c * 0.96 for c in base), tuple(c * 1.04 for c in base))
+    col = _mix(nt, cell.outputs[0], tuple(c * 0.86 for c in base), tuple(c * 1.14 for c in base))
     r = _range(nt, cell.outputs[0], 0.0, 1.0, 0.44, 0.56)
     r = _fmix(nt, _range(nt, _noise(nt, p, 2.0, 5.0), 0.4, 0.7, 0.0, 1.0), r, 0.64)
     x, y, z = _xyz(nt, p)
@@ -360,7 +360,9 @@ def galvanised(name, scuff=False):
         scr = _range(nt, _noise(nt, _scale(nt, p, (6.0, 1.0, 40.0)), 1.0, 3.0, 0.6), 0.66, 0.74, 0.0, 1.0)
         pol = _math(nt, "MULTIPLY", band, scr)
         col = _mix(nt, _math(nt, "MULTIPLY", pol, 0.15), col, (0.5, 0.51, 0.52))
-        r = _fmix(nt, pol, r, 0.36)
+        r = _fmix(nt, pol, r, 0.28)
+        nt.links.new(_math(nt, "MULTIPLY", band, 0.50), b.inputs["Anisotropic"])
+        nt.links.new(_comb(nt, 1.0, 0.0, 0.0), b.inputs["Tangent"])
         # black rubber rub marks: longer, softer, sparse
         rub = _math(nt, "MULTIPLY", band,
                     _range(nt, _noise(nt, _scale(nt, p, (1.1, 1.0, 36.0)), 1.0, 4.0), 0.6, 0.74, 0.0, 0.7))
@@ -388,7 +390,7 @@ def belt_mat():
     scuff = _range(nt, _noise(nt, _scale(nt, p, (2.2, 70.0, 1.0)), 2.0, 3.0, 0.6), 0.62, 0.74, 0.0, 1.0)
     mott = _range(nt, _noise(nt, p, 5.0, 6.0, 0.65), 0.3, 0.7, 0.0, 1.0)
     col = _mix(nt, lanes, (0.017, 0.017, 0.018), (0.027, 0.027, 0.029))
-    col = _mix(nt, _math(nt, "MULTIPLY", mott, 0.7), col, (0.042, 0.043, 0.045))
+    col = _mix(nt, _math(nt, "MULTIPLY", mott, 0.3), col, (0.042, 0.043, 0.045))
     col = _mix(nt, _math(nt, "MULTIPLY", scuff, 0.30), col, (0.045, 0.045, 0.046))
     dust = _math(nt, "MULTIPLY", edge, _range(nt, _noise(nt, p, 3.0, 6.0), 0.3, 0.7, 0.5, 1.0))
     col = _mix(nt, dust, col, (0.06, 0.06, 0.058))
@@ -408,14 +410,16 @@ def strip_mat():
     """Smoky PVC with a shallow abrasion band around luggage height."""
     m, nt, b = _new("smoke PVC")
     p = _pos(nt)
-    z = _xyz(nt, p)[2]
+    _, y, z = _xyz(nt, p)
     wear = _range(nt, _noise(nt, p, 16, 3), 0.4, 0.7, 0.0, 1.0)
     wear = _math(nt, "MULTIPLY", wear, _range(nt, z, BZ + 0.08, BZ + 0.5, 1, 0))
     col = _mix(nt, wear, (0.085, 0.099, 0.107), (0.12, 0.13, 0.135))
     nt.links.new(col, b.inputs["Base Color"])
-    nt.links.new(_fmix(nt, wear, 0.245, 0.36), b.inputs["Roughness"])
-    b.inputs["Transmission Weight"].default_value = 0.60
+    nt.links.new(_fmix(nt, wear, 0.12, 0.18), b.inputs["Roughness"])
+    b.inputs["Transmission Weight"].default_value = 0.85
     b.inputs["IOR"].default_value = 1.51
+    ribs = _math(nt, "SINE", _math(nt, "MULTIPLY", y, math.tau / 0.0045))
+    _bump(nt, b, ribs, 0.16, 0.00022)
     return m
 
 
@@ -516,8 +520,8 @@ def materials():
         steel=pbr("brushed steel", (0.58, 0.59, 0.6), (0.24, 0.38), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08,
                   aniso=0.4, world=True),
         # the slide is brushed down its slope (along Y), worn duller where the bags run
-        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.52, 0.62), metal=1.0, nscale=2, stretch=(36, 0.20, 1),
-                      cvar=0.035, aniso=0.0),
+        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.30, 0.40), metal=1.0, nscale=2, stretch=(24, 1.0, 12),
+                      cvar=0.055, aniso=0.5),
         dark_steel=pbr("dark steel", (0.2, 0.205, 0.21), (0.35, 0.55), metal=1.0, nscale=7, cvar=0.2, world=True),
         motor=pbr("motor paint", (0.045, 0.06, 0.075), (0.3, 0.45), nscale=8, cvar=0.15, coat=0.3, world=True,
                   chips=((0.3, 0.3, 0.31), 0.3)),
@@ -542,7 +546,7 @@ def materials():
         sign_blue=pbr("sign blue", (0.02, 0.07, 0.2), (0.4, 0.55), nscale=9, cvar=0.08, world=True),
         sign_white=pbr("sign white", (0.5, 0.5, 0.48), (0.45, 0.6), nscale=9, cvar=0.06, world=True),
         exit=screen_mat("exit glow", (0.3, 1.0, 0.55), 2.2, 0.4),
-        hmi=screen_mat("hmi blank", (0.55, 0.72, 1.0), 10.0, 0.45),
+        hmi=screen_mat("hmi blank", (0.55, 0.72, 1.0), 10.0, 0.8),
         led_green=sk.emission("led green", (0.25, 1.0, 0.4), 18.0),
         led_amber=sk.emission("led amber", (1.0, 0.55, 0.12), 14.0),
         led_off=pbr("led off", (0.05, 0.03, 0.02), (0.15, 0.25), nscale=10, cvar=0.05),
@@ -893,7 +897,7 @@ def strip_curtain(name, xc, y0, y1, ztop, zbot, n, w, drape=True, gaps=0.0):
     for i in range(n):
         yc = y0 + w / 2 + i * pitch + (rnd.uniform(-gaps, gaps) if 0 < i < n - 1 else 0.0)
         xp = xc + (0.009 if i % 2 else 0.0)
-        rows, cols = 40, 5
+        rows, cols = 40, 9
         verts = [(xp, yc - w / 2 + w * j / (cols - 1), ztop - (ztop - zbot) * r / (rows - 1))
                  for r in range(rows) for j in range(cols)]
         faces = [(r * cols + j, r * cols + j + 1, (r + 1) * cols + j + 1, (r + 1) * cols + j)
@@ -984,18 +988,38 @@ def _column(s, y, bvh):
 def hang(s, bvh):
     rows, cols = s["rows"], s["cols"]
     me = s["ob"].data
-    for j in range(cols):
-        y = s["y"] - s["w"] / 2 + s["w"] * j / (cols - 1)
-        swing = 0.0
-        if bvh and _height(bvh, s["x"] + 0.08, s["y"]) is None:
-            for sign in (-1, 1):
-                if _height(bvh, s["x"] + 0.08, s["y"] - sign * s["w"]) is not None:
-                    swing = sign * 0.12
-                    break
-        pts = _column(s, y, bvh)
+    ys = [s["y"] + s["w"] * (j / (cols - 1) - 0.5) for j in range(cols)]
+    profiles = [_column(s, y, bvh) for y in ys]
+    supported = [j for j, y in enumerate(ys) if _height(bvh, s["x"], y) is not None]
+    swing = 0.0
+    if supported:
+        # The tape bends as one piece. Unsupported edges follow the nearest
+        # supported folds instead of falling vertically beside the case.
+        for j, y in enumerate(ys):
+            if j in supported:
+                continue
+            nearest = min(supported, key=lambda k: abs(j - k))
+            profiles[j] = [Vector((p.x, y, p.z)) for p in profiles[nearest]]
+        for _ in range(2):
+            profiles = [[
+                (profiles[max(j - 1, 0)][r] + profiles[min(j + 1, cols - 1)][r]) * 0.25 + profiles[j][r] * 0.5
+                for r in range(rows)
+            ] for j in range(cols)]
+    elif bvh and _height(bvh, s["x"] + 0.08, s["y"]) is None:
+        for sign in (-1, 1):
+            if _height(bvh, s["x"] + 0.08, s["y"] - sign * s["w"]) is not None:
+                swing = sign * 0.12
+                break
+    for j, pts in enumerate(profiles):
         for r, p in enumerate(pts):
             ripple = 0.0015 * math.sin(r * 0.9 + j * 0.7) + s["twist"] * (j / (cols - 1) - 0.5) * (r / rows)
-            me.vertices[r * cols + j].co = (p.x + ripple, p.y + swing * (r / (rows - 1)) ** 1.6, p.z)
+            x, y = p.x + ripple, ys[j] + swing * (r / (rows - 1)) ** 1.6
+            z = p.z
+            if supported:
+                height = _height(bvh, x, y)
+                if height is not None:
+                    z = max(z, height + 0.0045)
+            me.vertices[r * cols + j].co = (x, y, z)
     me.update()
 
 
@@ -1055,9 +1079,9 @@ def conveyor():
     # lacing seams across the belt: a row of dull steel clips (bright steel read as a white dashed line)
     for i, x in enumerate(LACING):
         lace = Batch()
-        for k in range(36):
-            y = -BW / 2 + 0.03 + k * (BW - 0.06) / 35
-            lace.box((0.022, 0.016, 0.003), (0.0, y, BZ + 0.0008))
+        for k in range(100):
+            y = -BW / 2 + 0.03 + k * (BW - 0.06) / 99
+            lace.box((0.017, 0.007, 0.003), (0.0, y, BZ + 0.0008))
         ob = lace.done(f"lacing_{i}", m["dark_steel"], bevel=0.0008)
         ob.location.x = x
         LACING_OBS.append(ob)
@@ -1209,6 +1233,8 @@ def chute():
     # the +Y guard has a gap over the mouth: hide the continuous guard there with the chute's own side walls
     # (the guard is cut by a void-coloured box would look wrong; instead the chute walls rise above the guard)
     slope = math.radians(20)
+    steel = m["stainless"].node_tree
+    steel.links.new(_comb(steel, 0.0, math.cos(slope), -math.sin(slope)), steel.nodes["Principled BSDF"].inputs["Tangent"])
     y0, y1 = GY - 0.02, 1.45
     run = y1 - y0
     drop = run * math.tan(slope)
