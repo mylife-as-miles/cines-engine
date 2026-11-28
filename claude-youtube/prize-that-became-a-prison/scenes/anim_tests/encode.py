@@ -55,6 +55,7 @@ def main():
     ap.add_argument("--crf", type=int, default=16)
     ap.add_argument("--ext", default="png")
     ap.add_argument("--nograde", action="store_true", help="BT.709 conversion only (for clay or Eevee/Cycles A-B)")
+    ap.add_argument("--threads", type=int, default=0, help="ffmpeg threads (0 = automatic)")
     a = ap.parse_args()
     here = os.path.dirname(os.path.abspath(__file__))
     if a.grade:
@@ -78,7 +79,7 @@ def main():
                    os.path.join(tmp, f"{i:05d}.{a.ext}"))
     vf = TO_YUV if a.nograde else grade_filter_yuv(grade)
     cmd = ["ffmpeg", "-loglevel", "error", "-y", "-framerate", str(a.fps), "-i", os.path.join(tmp, f"%05d.{a.ext}"),
-           "-vf", vf, "-c:v", "libx264", "-preset", "slow", "-crf", str(a.crf), "-pix_fmt", "yuv420p", *TAGS,
+           "-vf", vf, *(["-threads", str(a.threads)] if a.threads else []), "-c:v", "libx264", "-preset", "slow", "-crf", str(a.crf), "-pix_fmt", "yuv420p", *TAGS,
            "-color_range", "tv", "-movflags", "+faststart", a.out]
     subprocess.run(cmd, check=True)
     shutil.rmtree(tmp)
