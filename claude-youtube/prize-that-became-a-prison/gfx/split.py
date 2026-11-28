@@ -79,10 +79,16 @@ def fit_match(left, right, lbox, rbox):
 # upper) side and less toward the far corner, so the tote and table are modelled by the lamp rather than brightened flat;
 # and a gentle warm pool where the lamp lands on the table at the tote's foot. Positions are fractions of the half (x of
 # its width, y of its height) at the shot's first frame, held in plate pixels so the light stays put under the push. The
-# film's grade (A fixed) runs over both halves unchanged after it, so it is the light that differs, not the grade.
+# lamp's extra light is only a little warmer than the tungsten gain already is (it multiplies an image that gain has
+# already warmed), so the lift goes into the tote's brightness rather than piling into its red. The tungsten gain alone
+# already brings the leather's red near the top, and the lamp would push a third of the tote past 255 and clip it flat; a
+# soft shoulder on each channel from `knee` rolls the red off toward 255 as film does, while green and blue keep rising,
+# so the lit side of the tote goes a little toward amber and keeps its modelling (a shoulder that kept the hue flattened
+# it: its lit and far sides came out equal). The film's grade (A fixed) runs over both halves unchanged after it, so it
+# is the light that differs, not the grade.
 WARM = dict(gain=(1.42, 1.06, 0.66), lift=1.30, glow=dict(x=0.06, y=0.04, r=0.75, amt=0.20, col=(1.0, 0.64, 0.32)),
-            lamp=dict(x=-0.14, y=-0.10, r=0.62, at=(0.50, 0.58), stops=0.75, col=(1.16, 0.97, 0.66)),
-            pool=dict(x=0.50, y=0.88, rx=0.40, ry=0.085, stops=0.55, col=(1.16, 0.97, 0.66)))
+            lamp=dict(x=-0.22, y=-0.16, r=0.48, at=(0.50, 0.58), stops=0.90, col=(1.04, 0.99, 0.84)),
+            pool=dict(x=0.50, y=0.93, rx=0.40, ry=0.07, stops=0.55, col=(1.08, 0.98, 0.76)), knee=210.0)
 
 
 def warm_light(img, h):
@@ -106,7 +112,8 @@ def warm_light(img, h):
     gx, gy = x0 + g["x"] * HW / h["s"], y0 + g["y"] * H / h["s"]
     d2 = ((xx - gx) ** 2 + (yy - gy) ** 2) / (g["r"] * HW / h["s"]) ** 2
     out += (255 * g["amt"] * np.exp(-d2 * 2.2))[..., None] * np.float32(g["col"])
-    return out
+    k = np.float32(WARM["knee"])
+    return np.where(out > k, k + (255 - k) * (1 - np.exp(-(out - k) / (255 - k))), out)
 
 
 def match_tote(img, s, hue, sat, gamma):
