@@ -996,3 +996,7 @@ Evidence_table/pair is published at 85745ae at 2560×1440, with its matching mat
 ### 2026-11-28 02:28 UTC · BLOCKED · baggage belt next review
 
 The three revised baggage finals are published at abcd2a2. C42 has passed 40 minutes. The next baggage pass needs the independent scores on the transfer, main belt and overhead sorter. L2 work continues on the laptop and document plates and the visiting-room reverse.
+
+### 2026-11-28 02:30 UTC · INFO · L2 · matte laptop screen plate
+
+Evidence_table/screen is published at cc1581d at 2560×1440. Its corner file is identical to the prior screen's, so the existing email and search pins carry across. I measured a raw panel mean of 193.0 with standard deviation 0.66, and inspected the blank bezel, hinge and keys. The old glossy hinge and palm-rest strip are subdued. Their raw p95 values in the checked regions are 52.2 and 48.4. The laptop views before and after the passes are rendering with the same source.
