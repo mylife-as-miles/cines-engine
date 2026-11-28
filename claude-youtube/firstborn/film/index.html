@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seven Days of No</title>
+<style>
+  /* The development player: one screen, the controls and the chapters beneath it. The narration drives the clock. */
+  :root { --ink: #17171a; --panel: #232327; --line: #3a3a40; --paper: #F4EBDD; --mute: #9a948a; --accent: #F5A454; --teal: #3A8594; color-scheme: dark;
+          --ui: "Inter", system-ui, sans-serif; }
+  html, body { margin: 0; background: var(--ink); color: var(--paper); font-family: var(--ui); }
+  #film { max-width: min(1600px, calc((100vh - 190px) * 16 / 9)); margin: 0 auto; padding-block: 16px 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; flex-wrap: wrap; }
+  h1 { font-weight: 900; font-size: clamp(22px, 3vw, 34px); margin: 0; letter-spacing: -0.5px; }
+  header p { margin: 0; color: var(--mute); font-size: 14px; }
+  .screen { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+  .screen canvas { width: 100%; height: 100%; display: block; }
+  .screen:fullscreen { display: grid; place-items: center; background: #000; }
+  .screen:fullscreen canvas { width: min(100vw, 177.78vh); height: auto; aspect-ratio: 16 / 9; }
+  #note { position: absolute; left: 14px; bottom: 12px; font-size: 13px; color: #fff; background: rgba(0,0,0,.5); padding: 4px 8px; border-radius: 6px; }
+  .controls { display: grid; grid-template-columns: auto auto 1fr auto auto auto; align-items: center; gap: 10px; margin-top: 10px; }
+  button { font: inherit; font-size: 14px; font-weight: 600; color: var(--paper); background: var(--panel); border: 1px solid var(--line); padding: 7px 12px; border-radius: 8px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button:focus-visible, #bar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #play { background: var(--accent); color: var(--ink); border-color: var(--accent); min-width: 76px; font-weight: 800; }
+  #time { font-variant-numeric: tabular-nums; color: var(--mute); min-width: 96px; font-size: 14px; }
+  #bar { position: relative; height: 30px; cursor: pointer; min-width: 0; touch-action: none; }
+  #track { position: absolute; left: 0; right: 0; top: 12px; height: 6px; background: #34343a; border-radius: 3px; }
+  #fill { position: absolute; left: 0; top: 12px; height: 6px; background: var(--accent); border-radius: 3px; pointer-events: none; }
+  #head { position: absolute; top: 5px; width: 3px; height: 20px; background: var(--paper); border-radius: 2px; pointer-events: none; transform: translateX(-1px); }
+  .mark { position: absolute; top: 8px; width: 2px; height: 14px; background: var(--paper); opacity: .55; pointer-events: none; transform: translateX(-1px); }
+  #chapters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding: 0; list-style: none; }
+  #chapters button { font-size: 13px; font-weight: 500; padding: 5px 9px; }
+  #chapters button[aria-current="true"] { border-color: var(--accent); color: var(--accent); }
+  #chapters .ts { color: var(--mute); margin-right: 6px; font-variant-numeric: tabular-nums; }
+  #shot { color: var(--mute); font-size: 13px; margin-top: 8px; min-height: 18px; }
+  .keys { color: #6f6a62; font-size: 12px; margin-top: 8px; }
+  @media (max-width: 700px) { .controls { grid-template-columns: auto 1fr auto; } #time { grid-column: 1 / -1; order: 5; } #full, #dbg { display: none; } }
+</style>
+</head>
+<body>
+<main id="film">
+  <header><h1>What If You Said No to Everyone for 7 Days?</h1><p>Osita Miles · development player</p></header>
+  <div class="screen"><div id="note" hidden></div></div>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <span id="time">0:00 / 0:00</span>
+    <div id="bar" role="slider" aria-label="Timeline" aria-valuemin="0" tabindex="0"><div id="track"></div><div id="marks"></div><div id="fill"></div><div id="head"></div></div>
+    <button id="cues" type="button" aria-pressed="true" title="Development stand-ins for the named sound cues">Cues on</button>
+    <button id="dbg" type="button" aria-pressed="false" title="Show the shot name and time on the frame">Labels</button>
+    <button id="full" type="button">Full screen</button>
+  </div>
+  <ul id="chapters" aria-label="Chapters"></ul>
+  <div id="shot"></div>
+  <div class="keys">Space play / pause · ← → 2 s (shift: 10 s) · , . one frame · [ ] chapter · L labels · audio: ?audio=../out/mix.wav</div>
+</main>
+<script src="load.js"></script>
+<script>
+(async function () {
+  const FILM = await FILM_LOAD('../');
+  const W = FILM.WIDTH, H = FILM.HEIGHT, TOTAL = FILM.total;
+  const $ = s => document.querySelector(s);
+  const cv = FILM.makeCanvas(W, H); $('.screen').appendChild(cv); FILM.mount(cv);
+  const q = new URLSearchParams(location.search);
+  const src = q.get('audio') || window.FILM_PLAYER_AUDIO || '../out/vo/narration.wav';
+  const audio = new Audio(src); audio.preload = 'auto';
+  let t = 0, playing = false, raf = 0, wall0 = 0, wallT0 = 0, cuesOn = true, ac = null, nextCue = 0;
+  const cues = FILM.cuesheet().flatMap(s => s.cues).sort((a, b) => a.t - b.t);
+  const fmt = s => { s = Math.max(0, s); const m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + String(r).padStart(2, '0'); };
+  // chapters: a mark on the bar and a button each
+  const chapters = FILM.chapters();
+  chapters.forEach(ch => {
+    const m = document.createElement('div'); m.className = 'mark'; m.style.left = (100 * ch.t / TOTAL) + '%'; $('#marks').appendChild(m);
+    const li = document.createElement('li'); const b = document.createElement('button'); b.type = 'button'; b.dataset.t = ch.t;
+    b.innerHTML = `<span class="ts">${fmt(ch.t)}</span>`; b.appendChild(document.createTextNode(ch.title)); b.onclick = () => seek(ch.t + 0.001);
+    li.appendChild(b); $('#chapters').appendChild(li);
+  });
+  function draw() {
+    FILM.renderAt(t); const sh = FILM.shotAt(t);
+    $('#time').textContent = fmt(t) + ' / ' + fmt(TOTAL);
+    $('#shot').textContent = sh ? `${sh.seq.id} · ${sh.name || ''} · ${t.toFixed(2)} s` : '';
+    const p = 100 * t / TOTAL; $('#fill').style.width = p + '%'; $('#head').style.left = p + '%'; $('#bar').setAttribute('aria-valuenow', t.toFixed(1)); $('#bar').setAttribute('aria-valuemax', TOTAL.toFixed(1));
+    let cur = null; chapters.forEach(ch => { if (t >= ch.t - 1e-6) cur = ch; });
+    document.querySelectorAll('#chapters button').forEach(b => b.setAttribute('aria-current', String(cur && +b.dataset.t === cur.t)));
+  }
+  // the clock: the narration's currentTime while it plays; past its end (the end screen) the wall clock
+  function now() { if (!audio.paused && !audio.ended && audio.currentTime > 0) return audio.currentTime; return wallT0 + (performance.now() - wall0) / 1000; }
+  function resetCues() { nextCue = 0; while (nextCue < cues.length && cues[nextCue].t < t - 1e-3) nextCue++; }
+  function scheduleCues() {
+    if (!cuesOn || !ac) return;
+    while (nextCue < cues.length && cues[nextCue].t < t + 0.12) { const c = cues[nextCue++]; if (c.t >= t - 0.05) SOUND.play(ac, ac.destination, c, ac.currentTime + Math.max(0, c.t - t)); }
+  }
+  function loop() {
+    if (!playing) return;
+    t = now();
+    if (t >= TOTAL) { t = TOTAL - 0.001; pause(); draw(); return; }
+    scheduleCues(); draw(); raf = requestAnimationFrame(loop);
+  }
+  async function play() {
+    if (playing) return; playing = true; $('#play').textContent = 'Pause';
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); ac.resume();
+    wallT0 = t; wall0 = performance.now(); resetCues();
+    if (audio.duration && t < audio.duration - 0.05) {
+      try { audio.currentTime = t; await audio.play(); $('#note').hidden = true; }
+      catch (e) { $('#note').textContent = 'No narration audio (' + src + '): playing silent'; $('#note').hidden = false; }
+    } else if (!audio.duration) { try { audio.currentTime = t; await audio.play(); } catch (e) { $('#note').textContent = 'No narration audio: playing silent'; $('#note').hidden = false; } }
+    audio.onended = () => { wallT0 = audio.duration; wall0 = performance.now(); };
+    raf = requestAnimationFrame(loop);
+  }
+  function pause() { playing = false; $('#play').textContent = 'Play'; cancelAnimationFrame(raf); audio.pause(); }
+  function seek(nt) { const was = playing; if (was) pause(); t = FILM.clamp(nt, 0, TOTAL - 0.001); draw(); if (was) play(); }
+  $('#play').onclick = () => playing ? pause() : play();
+  const fromX = e => { const r = $('#bar').getBoundingClientRect(); return TOTAL * FILM.clamp((e.clientX - r.left) / r.width, 0, 1); };
+  let drag = false;
+  $('#bar').addEventListener('pointerdown', e => { drag = true; $('#bar').setPointerCapture(e.pointerId); seek(fromX(e)); });
+  $('#bar').addEventListener('pointermove', e => { if (drag) seek(fromX(e)); });
+  $('#bar').addEventListener('pointerup', () => { drag = false; });
+  $('#cues').onclick = () => { cuesOn = !cuesOn; $('#cues').textContent = cuesOn ? 'Cues on' : 'Cues off'; $('#cues').setAttribute('aria-pressed', String(cuesOn)); };
+  const dbg = () => { FILM.debug = !FILM.debug; $('#dbg').setAttribute('aria-pressed', String(!!FILM.debug)); draw(); };
+  $('#dbg').onclick = dbg;
+  $('#full').onclick = () => { const el = $('.screen'); (el.requestFullscreen ? el.requestFullscreen() : Promise.reject()).catch(() => { }); };
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    const step = e.shiftKey ? 10 : 2;
+    if (e.code === 'Space') { e.preventDefault(); playing ? pause() : play(); }
+    else if (e.code === 'ArrowRight') seek(t + step); else if (e.code === 'ArrowLeft') seek(t - step);
+    else if (e.code === 'Period') seek(Math.round(t * 24 + 1) / 24); else if (e.code === 'Comma') seek(Math.round(t * 24 - 1) / 24);
+    else if (e.code === 'KeyL') dbg();
+    else if (e.code === 'BracketRight') { const n = chapters.find(c => c.t > t + 0.01); if (n) seek(n.t + 0.001); }
+    else if (e.code === 'BracketLeft') { const p = chapters.filter(c => c.t < t - 1).pop(); seek(p ? p.t + 0.001 : 0); }
+  });
+  const h = location.hash.replace('#', ''); const js = FILM.seqs.find(s => s.id.toLowerCase() === h.toLowerCase()); if (js) t = js.start + 0.001;
+  if (q.get('t')) t = +q.get('t');
+  draw();
+  window.PLAYER = { play, pause, seek, get t() { return t; } };
+})();
+</script>
+</body>
+</html>

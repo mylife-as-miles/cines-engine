@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>SF3 · Street, Friday</title>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* SEVEN DAYS OF NO · STYLE FRAME 3 · FRIDAY (ref 05)
+   "A tourist asks, sorry, could you take our photo? No. They look hurt. And you feel terrible."
+   The stranger, phone held out toward you; you, hands clasped in front, looking down and away. No words anywhere. */
+window.addEventListener('load', async () => {
+  const g = POV.stage('#000');
+  const hasSets = typeof SETS !== 'undefined' && SETS.street;
+  if (hasSets && SETS.ready) await SETS.ready();
+  let S;
+  if (hasSets) S = SETS.street(g, {});
+  else { g.fillStyle = POV.C.stOrange; g.fillRect(0, 0, 1920, 760); g.fillStyle = POV.C.stPave; g.fillRect(0, 760, 1920, 320); S = { anchors: { left: { x: 765, y: 962 }, right: { x: 1220, y: 962 } } }; }
+  const A = S.anchors, sh = POV.C.stShadow;
+  POV.figure(g, 'stranger', { x: A.right.x, y: A.right.y, facing: -1, pose: 'hold_phone', mode: 'out', override: { armR: { ik: [166, -150] } }, expr: 'guilty', face: { eyes: { lid: 0.32, lidTilt: 0.3 } },
+    look: [0.2, 0.55], turn: 0.25, nod: 0.15, shadow: sh });
+  POV.figure(g, 'hero', { x: A.left.x, y: A.left.y, facing: 1, pose: 'hands_clasped', override: { head: { tilt: 0.09 } }, expr: 'guilty', look: [0.65, 0.7], turn: 0.3, nod: 0.25, shadow: sh });
+  if (hasSets && SETS.streetFront) SETS.streetFront(g, {});
+  window.FRAME_READY = true;
+});
+</script>

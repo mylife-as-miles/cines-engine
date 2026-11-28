@@ -1,0 +1,6 @@
+<!doctype html><meta charset="utf-8"><title>Seven Days headless</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+<script src="load.js"></script>
+<script>
+  FILM_LOAD('../', { placeholders: new URLSearchParams(location.search).has('placeholders') }).then(() => { FILM.mountHeadless(); window.FILM_READY = true; });
+</script>

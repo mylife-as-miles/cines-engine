@@ -1,0 +1,242 @@
+{
+ "phone_buzz": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two 0.34 s vibration-motor pulses, 0.5 s apart, with a clean table rattle",
+  "dur_s": 0.95
+ },
+ "notify": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two soft glass notes rising a fifth, C6 then G6, 60 ms apart",
+  "dur_s": 0.5
+ },
+ "pop": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding 330->880 Hz in 35 ms, decaying in 90 ms",
+  "dur_s": 0.09
+ },
+ "pop_2": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding 392->1047 Hz in 35 ms, decaying in 90 ms",
+  "dur_s": 0.09
+ },
+ "pop_3": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding 294->784 Hz in 35 ms, decaying in 90 ms",
+  "dur_s": 0.09
+ },
+ "stamp": {
+  "source": "otm/stamp1: \"Stamp.wav\" by abstraktgeneriert, https://freesound.org/people/abstraktgeneriert/sounds/213003/",
+  "licence": "CC0",
+  "how": "One Too Many's sfx/stamp1 (a rubber stamp) over a small 180->110 Hz thump at -11 dB, high-passed at 90 Hz",
+  "dur_s": 0.4
+ },
+ "send": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a sine gliding up to C6 in 60 ms, with its octave, 0.16 s",
+  "dur_s": 0.16
+ },
+ "receive": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two soft glass notes falling a third, E6 then C6, 90 ms apart",
+  "dur_s": 0.75
+ },
+ "ding": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a glockenspiel-like note on C7 (partials 1, 2.76, 5.40, 8.93), 1.0 s",
+  "dur_s": 1.0
+ },
+ "bulb": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "five high bell notes rising C6-E6-G6-C7-E7, 45 ms apart, over a faint 6-14 kHz shimmer",
+  "dur_s": 1.4
+ },
+ "cloud": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "warm air through a band-pass falling 1.2 kHz -> 300 Hz, a faint 85->60 Hz body, 30 ms onset, 0.6 s",
+  "dur_s": 0.6
+ },
+ "whoosh": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "air through a band-pass sweeping 500 Hz -> 2.6 kHz -> 700 Hz, 0.45 s, peak at mid-point",
+  "dur_s": 0.45
+ },
+ "whoosh_2": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a quicker swish, 700 Hz -> 3.2 kHz -> 1.2 kHz, 0.3 s",
+  "dur_s": 0.3
+ },
+ "footsteps": {
+  "source": "otm/step1-3: \"WoodType_1_Footstep_MensDressShoe_.wav\" by monte32 (https://freesound.org/people/monte32/sounds/405115/); otm/step4: \"Wood Floor Classic Shoe Footstep 1_10\" by Joao_Janz (https://freesound.org/people/Joao_Janz/sounds/504020/)",
+  "licence": "CC0",
+  "how": "One Too Many's step1-step4 (wood floor, CC0), 0.5 s apart, low-passed at 5.5 kHz",
+  "dur_s": 2.0
+ },
+ "door": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take door_b (1.15-3.0 s), finished (onset trim, fade): prompt \"a wooden interior door closing gently, a soft thud and a clean latch click, small quiet carpeted room, close\", seed 1007",
+  "dur_s": 1.093
+ },
+ "run": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take run_a (0.0-1.6 s), finished (onset trim, fade): prompt \"quick light running footsteps of sneakers on a pavement, a person running past, close, clean and dry\", seed 11",
+  "dur_s": 1.536
+ },
+ "typing": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take typing_sa (0.25-2.1 s), finished (onset trim, hiss gate, fade): prompt \"a thumb typing quickly on a smartphone touchscreen, soft light taps on glass, close, quiet room\", seed 21",
+  "dur_s": 1.85
+ },
+ "camera_shutter": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take shutter_sa (0.47-1.3 s), finished (onset trim, hiss gate, fade): prompt \"a camera shutter click, a single photo being taken with a small digital camera, crisp mechanical click, close, quiet room\", seed 31",
+  "dur_s": 0.72
+ },
+ "plate_slide": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take plate_sa (0.2-1.3 s), finished (onset trim, fade): prompt \"a ceramic plate pushed and sliding across a wooden table, short scrape, close, quiet room\", seed 73",
+  "dur_s": 0.874
+ },
+ "pile_topple": {
+  "source": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production",
+  "licence": "Stability AI Community License",
+  "how": "Stable Audio 3.0 Small SFX take pile_sa (0.3-2.4 s), finished (onset trim, fade): prompt \"a tall stack of paper sheets and cards toppling over and sliding onto a wooden desk, papers fluttering, close, quiet room\", seed 81",
+  "dur_s": 1.856
+ },
+ "step_1": {
+  "source": "otm/step1 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step1, low-passed at 5.5 kHz",
+  "dur_s": 0.17
+ },
+ "step_2": {
+  "source": "otm/step2 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step2, low-passed at 5.5 kHz",
+  "dur_s": 0.202
+ },
+ "step_3": {
+  "source": "otm/step3 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step3, low-passed at 5.5 kHz",
+  "dur_s": 0.207
+ },
+ "step_4": {
+  "source": "otm/step4 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step4, low-passed at 5.5 kHz",
+  "dur_s": 0.17
+ },
+ "wrong": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two square-ish notes falling, B-flat3 (0.14 s) then G3 (0.22 s), low-passed at 2.5 kHz",
+  "dur_s": 0.45
+ },
+ "clang": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a struck pan: six inharmonic partials (310-3990 Hz) dying fast and a 10 ms bright strike, 0.6 s",
+  "dur_s": 0.6
+ },
+ "stomach_drop": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a round tone gliding 700 -> 160 Hz over 0.5 s",
+  "dur_s": 0.6
+ },
+ "wobble": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a 180 Hz tone with a 9 Hz vibrato and tremble, 0.6 s",
+  "dur_s": 0.6
+ },
+ "bird": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "four 55 ms chirps falling from ~6 to ~3.6 kHz with a 38 Hz flutter, 80 ms apart",
+  "dur_s": 0.6
+ },
+ "battery_low": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "three square-ish beeps, C6, C6 and a longer F5 below",
+  "dur_s": 0.7
+ },
+ "swell": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "air through a band-pass rising 300 Hz -> 2.4 kHz, 0.8 s",
+  "dur_s": 0.8
+ },
+ "rain": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "pink noise band-passed 400 Hz-7 kHz with 60 soft 0.7-1.6 kHz drips, 1.8 s",
+  "dur_s": 1.8
+ },
+ "grow": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "three round plucks rising C5-E5-G5, 80 ms apart, each with a little upward glide",
+  "dur_s": 0.6
+ },
+ "click": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a 2.4 kHz tick over a 260 Hz body, 40 ms",
+  "dur_s": 0.04
+ },
+ "dim": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a round blip falling A5 -> D5 in 80 ms",
+  "dur_s": 0.16
+ },
+ "card_land_1": {
+  "source": "otm/card_slap1: \"Cards Sounds\" by uEffects, https://freesound.org/people/uEffects/sounds/208790/",
+  "licence": "CC0",
+  "how": "One Too Many's card_slap1, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+  "dur_s": 0.22
+ },
+ "card_land_2": {
+  "source": "otm/card_slap2: \"Cards Sounds\" by uEffects, https://freesound.org/people/uEffects/sounds/208790/",
+  "licence": "CC0",
+  "how": "One Too Many's card_slap2, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+  "dur_s": 0.22
+ },
+ "card_land_3": {
+  "source": "otm/card_slap3: \"Cards Sounds\" by uEffects, https://freesound.org/people/uEffects/sounds/208790/",
+  "licence": "CC0",
+  "how": "One Too Many's card_slap3, from its onset, 0.22 s, band-limited 150 Hz-7 kHz",
+  "dur_s": 0.22
+ },
+ "stamp_yes": {
+  "source": "otm/stamp2: \"Stamp\" by kermite607, https://freesound.org/people/kermite607/sounds/362624/",
+  "licence": "CC0",
+  "how": "One Too Many's stamp2 (high-passed at 200 Hz), a light 230->150 Hz thump and a small C7 glass ping",
+  "dur_s": 0.45
+ },
+ "shout_no": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a 0.22 s whoosh outward (700 Hz-3.4 kHz), a low thud at 0.15 s and a 240 Hz cartoon boing (9 Hz spring wobble) over it, 0.58 s",
+  "dur_s": 0.58
+ }
+}

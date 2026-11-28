@@ -1,0 +1,46 @@
+<!doctype html><meta charset="utf-8"><title>Poses 2 · Seven Days of No</title>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* SEVEN DAYS OF NO · POSE SHEET 2 (reference, labels allowed).
+   Top: pose 'sit_sofa' on SETS.living at the sofa_seat_l / sofa_seat_r anchors (seatAt), with holding phone_ear and sip.
+   Bottom: sit_sofa + mug and the cast seated, hand 'peace' / pose 'peace' / holding 'peace', the run cycle, expr 'rude' and 'smug'. 1920 x 2500. */
+window.addEventListener('load', async () => {
+  const W = 1920, H = 2500;
+  document.documentElement.style.cssText = 'margin:0;background:#222'; document.body.style.cssText = 'margin:0;background:#222';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.style.cssText = 'display:block;width:100vw'; document.body.appendChild(cv);
+  const g = cv.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
+  const label = (txt, x, y, size, col) => { g.fillStyle = col || '#1c1c1c'; g.font = `800 ${size || 26}px "Inter", "Helvetica Neue", Arial, sans-serif`; g.textAlign = 'center'; g.fillText(txt, x, y); };
+  const hasSets = typeof SETS !== 'undefined' && SETS.living;
+  if (hasSets && SETS.ready) await SETS.ready();
+  // ---- top: the living room, two seats
+  let S = { anchors: { sofa_seat_l: { x: 500, y: 742 }, sofa_seat_r: { x: 840, y: 742 } }, tint: POV.C.tintEvening };
+  if (hasSets) S = SETS.living(g, { tod: 'evening', table: false }); else { g.fillStyle = POV.C.livWall; g.fillRect(0, 0, W, 1080); }
+  const tint = S.tint || POV.C.tintEvening, A = S.anchors;
+  const jL = POV.figure(g, 'hero', { pose: 'sit_sofa', seatAt: A.sofa_seat_l, y: 968, holding: 'phone_ear', tint, expr: 'worried', mouth: 0.35, look: [0.6, 0.1] });
+  const jR = POV.figure(g, 'hero', { pose: 'sit_sofa', seatAt: A.sofa_seat_r, y: 968, holding: 'sip', tint, expr: 'neutral', look: [0.7, 0.2] });
+  if (hasSets && SETS.livingFront) SETS.livingFront(g, { tod: 'evening' });
+  // the anchors the figure returns (seat contact, knee, lap, feet), marked for checking
+  [jL, jR].forEach(j => [['seat', '#E5534B'], ['knee', '#3E6FA6'], ['lap', '#6FA35A'], ['feet', '#F4BF54']].forEach(([k, col]) => { const p = j[k]; if (!p) return; g.fillStyle = col; g.strokeStyle = '#1c1c1c'; g.lineWidth = 2; g.beginPath(); g.arc(p[0], p[1], 7, 0, 7); g.fill(); g.stroke(); }));
+  g.fillStyle = 'rgba(255,255,255,0.82)'; g.fillRect(0, 1020, W, 60);
+  label("pose: 'sit_sofa', seatAt: S.anchors.sofa_seat_l, holding: 'phone_ear'", 520, 1060, 24);
+  label("pose: 'sit_sofa', seatAt: S.anchors.sofa_seat_r, holding: 'sip'", 1400, 1060, 24);
+  // ---- bottom
+  g.fillStyle = '#F4EFE6'; g.fillRect(0, 1080, W, 1420);
+  const fy = 1960, sofa = (x, w) => { g.fillStyle = '#B57456'; g.strokeStyle = '#1c1c1c'; g.lineWidth = 3.4; g.beginPath(); g.roundRect(x - 70, fy - 224, w, 224 - 40, 10); g.fill(); g.stroke(); g.beginPath(); g.roundRect(x - 90, fy - 420, w + 20, 200, 14); g.fill(); g.stroke(); };
+  sofa(170, 230); POV.figure(g, 'hero', { pose: 'sit_sofa', seatAt: [170, fy - 224], y: fy, holding: 'mug', expr: 'happy' }); label("sit_sofa · holding:'mug'", 210, fy + 46, 22);
+  sofa(530, 230); POV.figure(g, 'mum', { pose: 'sit_sofa', seatAt: [530, fy - 224], y: fy, holding: 'phone_ear', expr: 'worried', mouth: 0.4 }); label("mum · sit_sofa · 'phone_ear'", 570, fy + 46, 22);
+  sofa(890, 230); POV.figure(g, 'friend', { pose: 'sit', turn: 0.6, seatAt: [890, fy - 224], y: fy, expr: 'surprised' }); label("pose:'sit', turn:0.6", 930, fy + 46, 22);
+  POV.figure(g, 'hero', { x: 1250, y: fy, pose: 'peace', expr: 'happy', shadow: '#E3D9C8' }); label("pose:'peace'", 1260, fy + 46, 22);
+  POV.figure(g, 'hero', { x: 1650, y: fy, pose: 'run', phase: 0.3, holding: 'peace', expr: 'happy', shadow: '#E3D9C8' }); label("run · holding:'peace'", 1660, fy + 46, 22);
+  // run cycle
+  const ry = 2440;
+  for (let i = 0; i < 6; i++) POV.figure(g, 'hero', { x: 140 + i * 215, y: ry, scale: 0.5, pose: 'run', phase: i / 6, expr: 'neutral', shadow: '#E3D9C8' });
+  label("pose:'run', phase 0 .. 5/6", 680, ry + 46);
+  // rude and smug, as busts
+  [['rude', 1500], ['smug', 1780]].forEach(([e, x]) => {
+    g.save(); g.beginPath(); g.rect(x - 150, 2050, 300, 340); g.clip();
+    POV.figure(g, 'hero', { x, y: 2060 + 800 * 0.95, scale: 0.95, expr: e }); g.restore(); label("expr:'" + e + "'", x, ry + 46);
+  });
+  window.FRAME_READY = true;
+});
+</script>

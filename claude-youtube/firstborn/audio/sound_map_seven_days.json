@@ -1,0 +1,324 @@
+{
+ "note": "Maps every bed and cue name in the cue sheet (out/cuesheet.json from tools/cuesheet.js, or audio/cues_draft.json until it exists) to sound. Cues: rel_db is the sound's loudest 100 ms (K-weighted) relative to the narration's integrated loudness, so every effect sits under the voice (the author wants few, quiet effects); align peak puts the sound's loudest point on the cue time (impacts, whooshes at the cut), start puts its onset there; pan: from the cue's x on screen (p.x or x: pixels of a 1920 frame, or 0..1), at most \u00b10.3, else centre (a cue's p.pan wins); after_speech S: start the sound where the narration's current word ends, if that is within S seconds; cycle rotates files by occurrence; steps lays a cue's p.n steps at its p.gap; per_n_s makes a cue's length p.n x per_n_s (typing); a cue's p.gain_db or p.level adds to rel_db. Beds: music beds map, sequence by sequence, to a variation in audio/score_plan.json beds (a list splits one engine bed at spoken words: `until` a phrase, the next segment `from` it); null is silent on purpose. aliases map other names. Same-name cues closer than 150 ms play once.",
+ "mix": {
+  "target_lufs": -14.0,
+  "true_peak_ceiling_dbtp": -1.5,
+  "music_under_voice_db": 12.0,
+  "speech_gap_merge_s": 1.2,
+  "duck_attack_s": 0.35,
+  "duck_release_s": 0.9,
+  "presence_dip_db": 3.0,
+  "presence_hz": 2500,
+  "crossfade_s": 1.0,
+  "resume_gap_s": 4.0,
+  "same_cue_min_gap_s": 0.15,
+  "voice": {
+   "hp_hz": 70,
+   "comp_threshold_dbfs": -15.0,
+   "comp_ratio": 2.0,
+   "comp_attack_s": 0.005,
+   "comp_release_s": 0.12,
+   "offset_s": 0.0
+  },
+  "air_floor_lufs": -62,
+  "pan_max": 0.3,
+  "screen_width_px": 1920,
+  "music_side_db": 3.0
+ },
+ "beds": {
+  "music": {
+   "default": "music_main",
+   "by_seq": {
+    "Q01": "music_main",
+    "Q02": "music_main",
+    "Q03": "music_hush",
+    "Q04": "music_main",
+    "Q05": "music_main",
+    "Q06": [
+     {
+      "var": "music_main",
+      "until": "They look hurt",
+      "fo": 0.5
+     },
+     {
+      "var": null,
+      "from": "They look hurt",
+      "until": "So you run after them"
+     },
+     {
+      "var": "music_lift",
+      "from": "So you run after them",
+      "fi": 0.05
+     }
+    ],
+    "Q07": "music_main",
+    "Q08": "music_main",
+    "Q09": "music_hush",
+    "Q10": "music_lift",
+    "Q11": "music_end"
+   },
+   "why": "Q03 (Tuesday's guilt) and Q09 (the insight) take the hush; Friday (Q06) stops down for \"They look hurt. And you feel terrible.\" and lifts on \"So you run after them\"; the advice (Q10) takes the lift (its freeze, a cue-sheet silence, pauses the music and it resumes where it stopped); the wrap (Q11) starts the closing bed, which carries into the end screen and ends on its own final chord."
+  },
+  "music_main": "music_main",
+  "music_hush": "music_hush",
+  "music_lift": "music_lift",
+  "music_end": "music_end",
+  "office_room": null,
+  "living_room_evening": null,
+  "living_room_morning": null,
+  "street_ambience": null,
+  "evening_birds": null,
+  "party_murmur": null,
+  "rooms_why": "Silent on purpose: under continuous narration and a music bed, room tones only add mud; the cartoon world is clean. The party murmur is out for the reason sound.md gives (crowd walla read as chanting). The bird at the window is its own cue."
+ },
+ "cues": {
+  "phone_buzz": {
+   "file": "phone_buzz",
+   "rel_db": -13,
+   "align": "start"
+  },
+  "notify": {
+   "file": "notify",
+   "rel_db": -16,
+   "align": "start"
+  },
+  "door": {
+   "file": "door",
+   "rel_db": -15,
+   "align": "peak"
+  },
+  "footsteps": {
+   "steps": [
+    "step_1",
+    "step_2",
+    "step_3",
+    "step_4"
+   ],
+   "n": 4,
+   "gap": 0.42,
+   "rel_db": -17,
+   "align": "start"
+  },
+  "whoosh": {
+   "file": "whoosh",
+   "rel_db": -20,
+   "align": "peak"
+  },
+  "whoosh_2": {
+   "file": "whoosh_2",
+   "rel_db": -20,
+   "align": "peak"
+  },
+  "pop": {
+   "cycle": [
+    "pop",
+    "pop_2",
+    "pop_3"
+   ],
+   "rel_db": -19,
+   "align": "start"
+  },
+  "stamp": {
+   "file": "stamp",
+   "rel_db": -9,
+   "align": "peak",
+   "variants": [
+    {
+     "if_kind": "yes",
+     "if_word": "^(yes|say)$",
+     "file": "stamp_yes",
+     "rel_db": -12
+    }
+   ]
+  },
+  "camera_shutter": {
+   "file": "camera_shutter",
+   "rel_db": -8,
+   "align": "start"
+  },
+  "typing": {
+   "file": "typing",
+   "per_n_s": 0.115,
+   "rel_db": -19,
+   "align": "start"
+  },
+  "send": {
+   "file": "send",
+   "rel_db": -16,
+   "align": "start"
+  },
+  "receive": {
+   "file": "receive",
+   "rel_db": -15,
+   "align": "start"
+  },
+  "ding": {
+   "file": "ding",
+   "rel_db": -12,
+   "align": "start"
+  },
+  "bulb": {
+   "file": "bulb",
+   "rel_db": -15,
+   "align": "start"
+  },
+  "cloud": {
+   "file": "cloud",
+   "rel_db": -16,
+   "align": "start"
+  },
+  "run": {
+   "file": "run",
+   "rel_db": -16,
+   "align": "start"
+  },
+  "wrong": {
+   "file": "wrong",
+   "rel_db": -18,
+   "align": "start"
+  },
+  "clang": {
+   "file": "clang",
+   "rel_db": -8.5,
+   "align": "start"
+  },
+  "stomach_drop": {
+   "file": "stomach_drop",
+   "rel_db": -17,
+   "align": "start"
+  },
+  "deflate": {
+   "file": "stomach_drop",
+   "rel_db": -21,
+   "align": "start"
+  },
+  "wobble": {
+   "file": "wobble",
+   "rel_db": -19,
+   "align": "start"
+  },
+  "bird": {
+   "file": "bird",
+   "rel_db": -20,
+   "align": "start"
+  },
+  "battery_low": {
+   "file": "battery_low",
+   "rel_db": -17,
+   "align": "start"
+  },
+  "sigh": {
+   "file": "cloud",
+   "rel_db": -22,
+   "align": "start"
+  },
+  "swell": {
+   "file": "swell",
+   "rel_db": -20,
+   "align": "start"
+  },
+  "rain": {
+   "file": "rain",
+   "rel_db": -20,
+   "align": "start"
+  },
+  "grow": {
+   "file": "grow",
+   "rel_db": -17,
+   "align": "start"
+  },
+  "freeze": {
+   "file": "click",
+   "rel_db": -15,
+   "align": "start"
+  },
+  "button_click": {
+   "file": "click",
+   "rel_db": -18,
+   "align": "start"
+  },
+  "dim": {
+   "file": "dim",
+   "rel_db": -21,
+   "align": "start"
+  },
+  "scared": {
+   "file": "wrong",
+   "rel_db": -19,
+   "align": "start"
+  },
+  "plate_slide": {
+   "file": "plate_slide",
+   "rel_db": -17,
+   "align": "start"
+  },
+  "blink": {
+   "file": "pop_3",
+   "rel_db": -26,
+   "align": "start"
+  },
+  "twitch": {
+   "file": "pop_3",
+   "rel_db": -25,
+   "align": "start"
+  },
+  "shrug": null,
+  "flash": null,
+  "sip": null,
+  "card_land": {
+   "cycle": [
+    "card_land_1",
+    "card_land_2",
+    "card_land_3"
+   ],
+   "rel_db": -23,
+   "align": "peak"
+  },
+  "shout_no": {
+   "file": "shout_no",
+   "rel_db": -3,
+   "align": "start",
+   "after_speech": 0.6
+  },
+  "pile_topple": {
+   "file": "pile_topple",
+   "rel_db": -17,
+   "align": "start"
+  }
+ },
+ "cues_why": {
+  "shrug": "silent: the shrug is a picture gag, the narration lands it",
+  "flash": "silent: the camera_shutter at the same moment is the sound of the flash",
+  "sip": "silent: mouth sounds under the narrator's voice read badly",
+  "blink, twitch": "a tiny pop, 25 dB under the voice: felt more than heard",
+  "freeze": "the pause is a button press (a soft click) and the music's stop (the cue sheet's silence); a synthesised tape-stop read as an explosion or a door",
+  "stamp": "the red NO stamp is the rubber stamp over a low thump; a YES stamp (the cue's p.kind 'yes', or a stamp spoken on 'yes' or the cold open's 'say') is stamp_yes, brighter and friendlier, 2 dB softer",
+  "card_land": "eight request cards land under the opening line: light, 23 dB under the voice",
+  "shout_no": "the hook's punchline: a clear comic hit near the voice's level, started where the narrator's \"no\" ends (after_speech: within 0.6 s of the cue) so it fills the pause and leaves the word clear",
+  "story_levels": "Story effects (the stamps, the NO! burst, the shutter, the ding, the phone buzz, the clang) sit about 12-15 dB under the voice as heard (their loudest 400 ms against the voice's 3 s loudness around them), loud enough for phone speakers; pops, whooshes, card lands and UI ticks stay 20-26 dB under. Raised after the third review: NO stamps +4 (their weight moved from a sub thump into the low mids, where phone speakers carry it), clang +6.5, shutter +4, ding +4, YES stamps +3 (they land on spoken words)."
+ },
+ "aliases": {
+  "buzz": "phone_buzz",
+  "vibrate": "phone_buzz",
+  "ping": "notify",
+  "notification": "notify",
+  "steps": "footsteps",
+  "walk": "footsteps",
+  "swish": "whoosh",
+  "wipe": "whoosh",
+  "card": "whoosh",
+  "bubble": "pop",
+  "icon": "pop",
+  "shutter": "camera_shutter",
+  "type": "typing",
+  "message_send": "send",
+  "message_receive": "receive",
+  "text": "receive",
+  "twinkle": "bulb",
+  "lightbulb": "bulb",
+  "puff": "cloud",
+  "running": "run",
+  "click": "button_click",
+  "tick": "button_click"
+ }
+}

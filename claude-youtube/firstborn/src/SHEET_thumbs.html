@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><title>Thumbs up · Seven Days of No</title>
+<script src="../kit/pov.js"></script>
+<script>
+/* SEVEN DAYS OF NO · THUMBS-UP CHECK (reference, labels allowed). 1920 x 1080.
+   pose 'thumbs_up' on the boss and the hero at facing 1 and -1; holding 'thumbs_up' on walk / sit_sofa; override hand 'thumb';
+   and the boss with a clipboard under the other arm (pose thumbs_up + holding clipboard), as in the 141 s beat. */
+window.addEventListener('load', () => {
+  const g = POV.stage('#222'); g.fillStyle = '#FBEABF'; g.fillRect(0, 0, 1920, 1080); g.fillStyle = '#FDB569'; g.fillRect(0, 900, 1920, 180);
+  const label = (t, x) => { g.fillStyle = '#1c1c1c'; g.font = '800 21px "Inter", Arial, sans-serif'; g.textAlign = 'center'; g.fillText(t, x, 1060); };
+  const fy = 990, s = 0.82, sh = '#DC9967';
+  const L = [
+    ['boss', { pose: 'thumbs_up', facing: 1, expr: 'happy' }, "boss · thumbs_up · facing 1"],
+    ['boss', { pose: 'thumbs_up', facing: -1, expr: 'happy', mouth: 0.5 }, "boss · facing -1"],
+    ['boss', { pose: 'thumbs_up', holding: 'clipboard', facing: -1, expr: 'neutral', mouth: 0.4 }, "+ holding:'clipboard'"],
+    ['hero', { pose: 'thumbs_up', facing: 1, expr: 'happy' }, "hero · thumbs_up · facing 1"],
+    ['hero', { pose: 'thumbs_up', facing: -1, expr: 'neutral' }, "hero · facing -1"],
+    ['hero', { pose: 'walk', phase: 0.25, holding: 'thumbs_up', facing: -1, expr: 'happy' }, "walk + holding:'thumbs_up'"],
+    ['hero', { pose: 'stand', override: { armL: { a: -2.4, e: -0.4, hand: 'thumb' } }, expr: 'happy' }, "override armL hand:'thumb'"],
+  ];
+  L.forEach(([who, o, t], i) => { const x = 150 + i * 270; POV.figure(g, who, Object.assign({ x, y: fy, scale: s, shadow: sh }, o)); label(t, x); });
+  window.FRAME_READY = true;
+});
+</script>
