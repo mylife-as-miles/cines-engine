@@ -268,5 +268,200 @@
   "best_alt_pct": 9.0,
   "pass": true,
   "summary": "door.flac: 'a door closing' -> plausible (z +2.7; would rank #3 among 322 vocabulary descriptions; cosine 0.23). Forced choice vs your alternatives: 'a door closing' 90%, 'a door knock' <1%, 'a gunshot' <1%, 'a drum hit' 9%, 'footsteps' <1%. It sounds most like: 'a door slam' (z +3.2), 'a punchy impact hit' (z +3.0), 'a heavy thud' (z +2.6), 'a fast whoosh' (z +2.4). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "wrong": {
+  "query": "an error sound",
+  "alts": [
+   "a doorbell",
+   "a success chime",
+   "a car horn",
+   "a dog barking"
+  ],
+  "verdict": "strong",
+  "z": 3.3,
+  "forced_choice_pct": 3.0,
+  "best_alt_pct": 96.0,
+  "pass": false,
+  "summary": "wrong.flac: 'an error sound' -> strong (z +3.3; would rank #4 among 322 vocabulary descriptions; cosine 0.24). Forced choice vs your alternatives: 'an error sound' 3%, 'a doorbell' 1%, 'a success chime' 96%, 'a car horn' <1%, 'a dog barking' <1%. It sounds most like: 'a success chime' (z +3.5), 'an alarm clock beeping' (z +3.1), 'a phone ringing' (z +2.7), 'a notification ding' (z +2.6). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "clang": {
+  "query": "a metal pan clang",
+  "alts": [
+   "a church bell",
+   "glass breaking",
+   "a gunshot",
+   "a door knock"
+  ],
+  "verdict": "no match",
+  "z": 1.67,
+  "forced_choice_pct": 63.0,
+  "best_alt_pct": 35.0,
+  "pass": false,
+  "summary": "clang.flac: 'a metal pan clang' -> no match (z +1.6; would rank #25 among 322 vocabulary descriptions; cosine 0.11). Forced choice vs your alternatives: 'a metal pan clang' 63%, 'a church bell' 35%, 'glass breaking' <1%, 'a gunshot' <1%, 'a door knock' 2%. It sounds most like: 'a success chime' (z +3.4), 'a kalimba note' (z +3.3), 'a ukulele' (z +2.7), 'a glass ting' (z +2.6)."
+ },
+ "stomach_drop": {
+  "query": "a descending slide whistle",
+  "alts": [
+   "a rising tone",
+   "a car horn",
+   "a siren",
+   "a bird chirping"
+  ],
+  "verdict": "plausible",
+  "z": 2.65,
+  "forced_choice_pct": 98.0,
+  "best_alt_pct": 1.0,
+  "pass": true,
+  "summary": "stomach_drop.flac: 'a descending slide whistle' -> plausible (z +2.6; would rank #6 among 322 vocabulary descriptions; cosine 0.18). Forced choice vs your alternatives: 'a descending slide whistle' 98%, 'a rising tone' <1%, 'a car horn' <1%, 'a siren' 1%, 'a bird chirping' <1%. It sounds most like: 'an error buzz' (z +2.7), 'a sub bass drop' (z +2.5), 'an explosion' (z +2.1), 'a ratchet clicking' (z +2.0). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "wobble": {
+  "query": "a wobbly cartoon sound",
+  "alts": [
+   "a car engine",
+   "a siren",
+   "a dog growling",
+   "a phone ringing"
+  ],
+  "verdict": "strong",
+  "z": 4.14,
+  "forced_choice_pct": 99.5,
+  "best_alt_pct": 0.5,
+  "pass": true,
+  "summary": "wobble.flac: 'a wobbly cartoon sound' -> strong (z +4.1; would rank #1 among 322 vocabulary descriptions; cosine 0.25). Forced choice vs your alternatives: 'a wobbly cartoon sound' >99%, 'a car engine' <1%, 'a siren' <1%, 'a dog growling' <1%, 'a phone ringing' <1%. It sounds most like: 'bubbles underwater' (z +3.2), 'an error buzz' (z +3.1), 'a sub bass drop' (z +3.0), 'a deep sub bass' (z +2.9). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "bird": {
+  "query": "a bird chirping",
+  "alts": [
+   "a phone ringing",
+   "a whistle",
+   "a squeaky door",
+   "a mouse squeaking"
+  ],
+  "verdict": "weak",
+  "z": 2.23,
+  "forced_choice_pct": 13.0,
+  "best_alt_pct": 75.0,
+  "pass": false,
+  "summary": "bird.flac: 'a bird chirping' -> weak (z +2.2; would rank #9 among 322 vocabulary descriptions; cosine 0.13). Forced choice vs your alternatives: 'a bird chirping' 13%, 'a phone ringing' <1%, 'a whistle' 75%, 'a squeaky door' 1%, 'a mouse squeaking' 11%. It sounds most like: 'an alarm clock beeping' (z +3.1), 'a digital glitch' (z +2.6), 'an error buzz' (z +2.4). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "battery_low": {
+  "query": "a low battery warning beep",
+  "alts": [
+   "a doorbell",
+   "a success chime",
+   "a car horn",
+   "a microwave beep"
+  ],
+  "verdict": "strong",
+  "z": 3.16,
+  "forced_choice_pct": 1.0,
+  "best_alt_pct": 98.0,
+  "pass": false,
+  "summary": "battery_low.flac: 'a low battery warning beep' -> strong (z +3.1; would rank #3 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a low battery warning beep' 1%, 'a doorbell' 1%, 'a success chime' 98%, 'a car horn' <1%, 'a microwave beep' <1%. It sounds most like: 'a success chime' (z +3.8), 'a doorbell' (z +2.9), 'an alarm clock beeping' (z +2.8), 'a phone ringing' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "swell": {
+  "query": "a rising whoosh",
+  "alts": [
+   "a falling whoosh",
+   "an explosion",
+   "wind blowing",
+   "a car passing"
+  ],
+  "verdict": "strong",
+  "z": 4.27,
+  "forced_choice_pct": 99.5,
+  "best_alt_pct": 0.5,
+  "pass": true,
+  "summary": "swell.flac: 'a rising whoosh' -> strong (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.41). Forced choice vs your alternatives: 'a rising whoosh' >99%, 'a falling whoosh' <1%, 'an explosion' <1%, 'wind blowing' <1%, 'a car passing' <1%. It sounds most like: 'a fast whoosh' (z +3.7), 'a downlifter falling sweep' (z +3.6), 'a whip pan transition' (z +3.6), 'a quick swipe' (z +3.4). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "rain": {
+  "query": "light rain",
+  "alts": [
+   "frying bacon",
+   "applause",
+   "a stream of water",
+   "static noise"
+  ],
+  "verdict": "no match",
+  "z": 0.32,
+  "forced_choice_pct": 2.0,
+  "best_alt_pct": 62.0,
+  "pass": false,
+  "summary": "rain.flac: 'light rain' -> no match (z +0.3; would rank #108 among 322 vocabulary descriptions; cosine 0.05). Forced choice vs your alternatives: 'light rain' 2%, 'frying bacon' 62%, 'applause' <1%, 'a stream of water' 17%, 'static noise' 19%. It sounds most like: 'a snare roll' (z +2.8), 'crisp hi-hats' (z +2.6), 'a magic sparkle chime' (z +2.5), 'bubbles underwater' (z +2.3)."
+ },
+ "grow": {
+  "query": "a happy ascending chime",
+  "alts": [
+   "a descending tone",
+   "an error sound",
+   "a doorbell",
+   "a gong"
+  ],
+  "verdict": "strong",
+  "z": 3.49,
+  "forced_choice_pct": 99.0,
+  "best_alt_pct": 1.0,
+  "pass": true,
+  "summary": "grow.flac: 'a happy ascending chime' -> strong (z +3.4; would rank #2 among 322 vocabulary descriptions; cosine 0.34). Forced choice vs your alternatives: 'a happy ascending chime' 99%, 'a descending tone' <1%, 'an error sound' 1%, 'a doorbell' <1%, 'a gong' <1%. It sounds most like: 'a success chime' (z +3.9), 'a notification ding' (z +3.1), 'a chat message pop' (z +3.0), 'a magic sparkle chime' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "freeze": {
+  "query": "a tape slowing down to a stop",
+  "alts": [
+   "a rising tone",
+   "an explosion",
+   "a door closing",
+   "a car engine"
+  ],
+  "verdict": "no match",
+  "z": -0.16,
+  "forced_choice_pct": 8.0,
+  "best_alt_pct": 60.0,
+  "pass": false,
+  "summary": "freeze.flac: 'a tape slowing down to a stop' -> no match (z -0.2; would rank #193 among 322 vocabulary descriptions; cosine -0.01). Forced choice vs your alternatives: 'a tape slowing down to a stop' 8%, 'a rising tone' 1%, 'an explosion' 60%, 'a door closing' 30%, 'a car engine' 1%. It sounds most like: 'a snare roll' (z +3.6), 'an error buzz' (z +2.8), 'a snare hit' (z +2.8), 'a record scratch' (z +2.4)."
+ },
+ "click": {
+  "query": "a button click",
+  "alts": [
+   "a gunshot",
+   "a door knock",
+   "a water drop",
+   "a bell"
+  ],
+  "verdict": "no match",
+  "z": 1.35,
+  "forced_choice_pct": 81.0,
+  "best_alt_pct": 19.0,
+  "pass": true,
+  "summary": "click.flac: 'a button click' -> no match (z +1.3; would rank #37 among 322 vocabulary descriptions; cosine 0.18). Forced choice vs your alternatives: 'a button click' 81%, 'a gunshot' <1%, 'a door knock' <1%, 'a water drop' 19%, 'a bell' <1%. It sounds most like: 'an error buzz' (z +2.8), 'a wooden block hit' (z +2.6), 'a digital glitch' (z +2.4), 'a bubble pop' (z +2.4)."
+ },
+ "dim": {
+  "query": "a descending blip",
+  "alts": [
+   "a rising blip",
+   "a doorbell",
+   "a gunshot",
+   "a bird chirping"
+  ],
+  "verdict": "strong",
+  "z": 3.35,
+  "forced_choice_pct": 65.0,
+  "best_alt_pct": 35.0,
+  "pass": true,
+  "summary": "dim.flac: 'a descending blip' -> strong (z +3.3; would rank #2 among 322 vocabulary descriptions; cosine 0.32). Forced choice vs your alternatives: 'a descending blip' 65%, 'a rising blip' 35%, 'a doorbell' <1%, 'a gunshot' <1%, 'a bird chirping' <1%. It sounds most like: 'an alarm clock beeping' (z +2.9), 'an error buzz' (z +2.7), 'a chat message pop' (z +2.4), 'a bubble pop' (z +2.3). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "plate_slide": {
+  "query": "something sliding across a table",
+  "alts": [
+   "a door closing",
+   "footsteps",
+   "paper tearing",
+   "a whoosh"
+  ],
+  "verdict": "weak",
+  "z": 2.02,
+  "forced_choice_pct": 2.0,
+  "best_alt_pct": 96.0,
+  "pass": false,
+  "summary": "plate_slide.flac: 'something sliding across a table' -> weak (z +2.0; would rank #14 among 322 vocabulary descriptions; cosine 0.20). Forced choice vs your alternatives: 'something sliding across a table' 2%, 'a door closing' <1%, 'footsteps' <1%, 'paper tearing' 96%, 'a whoosh' 2%. It sounds most like: 'a fast whoosh' (z +2.6), 'a spray can hissing' (z +2.5), 'a box lid closing' (z +2.4), 'a quick swipe' (z +2.3). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then)."
  }
 }
