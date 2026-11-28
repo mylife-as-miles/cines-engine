@@ -104,6 +104,7 @@ CLIPS = {
     "IN-13": ("archive/media/cecc2026_tim_cspan_long.mp4", "archive/media_cecc2026_tim_cspan_transcript.json"),
     "IN-14": ("archive/media/nbc2024_gene.mp4", "archive/media_nbc2024_gene_transcript.json"),
     "IN-15": ("archive/media/nbc2026_tim.mp4", "archive/media_nbc2026_tim_transcript.json"),
+    "IN-16": ("archive/media/reuters2026_families.mp4", "archive/media_reuters2026_transcript.json"),
 }
 ASR_FIX = {"don": "Dawn", "don.": "Dawn."}      # the C-SPAN transcript's speech recogniser spells Dawn "Don"
 PHOTOS = "archive/media/photos"
@@ -248,9 +249,9 @@ def build_clock(cut):
                 s["speech"] = round(s["out"] - s["in"], 3)
                 s["timing"] = "real"
                 s["end"] = t + s["speech"] + s.get("after", gap if spoken(nxt) else 0.0)
-            elif "t24" in s:                     # 2024 testimony not in hand (V01): its estimated length, shown as words
-                s["speech"] = s["dur"]
-                s["timing"] = "estimated (V01 not in hand)"
+            elif "t24" in s:                     # 2024 testimony not in hand (V01): the narrator's quoted read (v3.1), or
+                s["speech"] = s.get("dur_read", s["dur"])   # its estimated length when unread; shown as words either way
+                s["timing"] = "read by the narrator, quoting (V01 not in hand)" if "read" in s else "estimated (V01 not in hand)"
                 s["end"] = t + s["speech"] + s.get("after", gap if spoken(nxt) else 0.0)
             else:
                 s["speech"] = 0.0
@@ -439,7 +440,8 @@ def time_cmd(args):
             return {"real": v["real"], "file": CLIPS[v["real"]][0], "in": v["in"], "out": v["out"], "say": v.get("say", ""),
                     "who": v.get("who", ""), "timing": "real"}
         if "t24" in v:
-            return {"t24": True, "say": v.get("say", ""), "who": v.get("who", ""), "timing": v["timing"]}
+            return {"t24": True, "say": v.get("say", ""), "who": v.get("who", ""), "timing": v["timing"],
+                    **({"read": v["read"], "lead": v.get("read_lead", ""), "read_dur": v["read_dur"]} if "read" in v else {})}
         return {"hold": v["hold"], "note": v.get("note", ""), **({"silence": v["silence"]} if "silence" in v else {})}
     voice = [{"id": v["id"], "chapter": v.get("_ch", ""), "start": round(v["start"], 3), "speech": round(v["speech"], 3),
               "end": round(v["end"], 3), **vrow(v)} for v in segs.values()]
@@ -609,6 +611,8 @@ def card_plan(v, opts):
     c = {**v.get("card", {}), **opts}
     if "real" in v:
         words = clip_words(v["real"], v["in"], v["out"])
+    elif v.get("words_t"):                       # the narrator's read, word by word as it is heard
+        words = [list(w) for w in v["words_t"]]
     else:
         words = spread_words(v["say"], v["speech"])
     rec_at = None
@@ -872,7 +876,8 @@ def write_md_v3(edl, cut):
             return (f"`{src['stage']}` `{src['camera']}`, push {src['push'].split(' (')[0]}"
                     + (f", framed {src['zoom'][0]:.2f}x" if min(src["zoom"]) > 1.12 else ""))
         if k == "clip":
-            what = {"IN-1": "CECC 2026 official feed", "IN-13": "C-SPAN 2026", "IN-14": "NBC 5 Chicago 2024", "IN-15": "NBC 5 Chicago 2026"}[src["clip"]]
+            what = {"IN-1": "CECC 2026 official feed", "IN-13": "C-SPAN 2026", "IN-14": "NBC 5 Chicago 2024", "IN-15": "NBC 5 Chicago 2026",
+                    "IN-16": "Reuters 2026"}[src["clip"]]
             how = "still" if src.get("freeze_frame") == 0 else f"from {src['src_in']:.2f} s" + (" (freezes)" if src.get("freeze_frame") else "")
             return f"REAL {src['clip']} ({what}) {how}, crop {src['crop'][2]} px wide, grade {src['grade']}"
         if k == "photo":

@@ -183,9 +183,9 @@ def main():
     # before it (0.2 s), so another narrator can drop in without a re-cut (the drift is reported)
     prev_end, drift = 0.0, []
     for v in edl["voice"]:
-        if "text" in v:
+        if "text" in v or v.get("read"):         # a narrator line, or Tim's 2024 line read by the narrator as a quote
             ch, k = v["id"].split(".")
-            f = os.path.join(a.voice, f"{ch}_{int(k):02d}.wav")
+            f = os.path.join(ROOT, v["read"]) if v.get("read") else os.path.join(a.voice, f"{ch}_{int(k):02d}.wav")
             x = edges(ff_read(f, af="highpass=f=70"))
             t = max(v["start"], prev_end + 0.2) if prev_end > v["start"] else v["start"]
             if t - v["start"] > 0.02:
@@ -210,7 +210,7 @@ def main():
     # the voices' envelope, for the ducks: on wherever anyone speaks (lines closer than 0.8 s merge)
     spk = np.zeros(N, bool)
     for v in edl["voice"]:
-        if "text" in v or v.get("timing") == "real":
+        if "text" in v or v.get("timing") == "real" or v.get("read"):
             spk[int(v["start"] * SR):int((v["start"] + v["speech"]) * SR)] = True
     def env(mask, down_s, up_s, depth_db, hop=480):
         m = mask[::hop].astype(np.float32)

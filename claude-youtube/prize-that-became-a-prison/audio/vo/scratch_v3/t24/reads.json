@@ -1,0 +1,2156 @@
+{
+ "00.T1": {
+  "file": "audio/vo/scratch_v3/t24/00_T1.wav",
+  "duration": 4.321,
+  "lead": "",
+  "say": "She was asked if the luggage belonged to her, to which she responded 'yes.'",
+  "speed": 1.0,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "She",
+    0.0
+   ],
+   [
+    "was",
+    0.14
+   ],
+   [
+    "asked",
+    0.24
+   ],
+   [
+    "if",
+    0.6
+   ],
+   [
+    "the",
+    0.8
+   ],
+   [
+    "luggage",
+    0.96
+   ],
+   [
+    "belonged",
+    1.3
+   ],
+   [
+    "to",
+    1.72
+   ],
+   [
+    "her,",
+    2.0
+   ],
+   [
+    "to",
+    2.54
+   ],
+   [
+    "which",
+    2.7
+   ],
+   [
+    "she",
+    2.86
+   ],
+   [
+    "responded",
+    3.04
+   ],
+   [
+    "'yes.'",
+    3.54
+   ]
+  ],
+  "heard": "She was asked if the luggage belonged to her, to which she responded yes.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "00.T2": {
+  "file": "audio/vo/scratch_v3/t24/00_T2.wav",
+  "duration": 8.4,
+  "lead": "",
+  "say": "She stated that she was asked multiple times, and each time she stated 'yes,' not knowing drugs were in the lining of the purses.",
+  "speed": 1.0,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "She",
+    0.0
+   ],
+   [
+    "stated",
+    0.16
+   ],
+   [
+    "that",
+    0.5
+   ],
+   [
+    "she",
+    0.76
+   ],
+   [
+    "was",
+    0.92
+   ],
+   [
+    "asked",
+    1.06
+   ],
+   [
+    "multiple",
+    1.5
+   ],
+   [
+    "times,",
+    1.88
+   ],
+   [
+    "and",
+    2.96
+   ],
+   [
+    "each",
+    3.12
+   ],
+   [
+    "time",
+    3.38
+   ],
+   [
+    "she",
+    3.7
+   ],
+   [
+    "stated",
+    3.9
+   ],
+   [
+    "'yes,'",
+    4.72
+   ],
+   [
+    "not",
+    5.66
+   ],
+   [
+    "knowing",
+    5.88
+   ],
+   [
+    "drugs",
+    6.24
+   ],
+   [
+    "were",
+    6.66
+   ],
+   [
+    "in",
+    6.92
+   ],
+   [
+    "the",
+    7.02
+   ],
+   [
+    "lining",
+    7.12
+   ],
+   [
+    "of",
+    7.42
+   ],
+   [
+    "the",
+    7.64
+   ],
+   [
+    "purses.",
+    7.76
+   ]
+  ],
+  "heard": "She stated that she was asked multiple times, and each time she stated, yes, not knowing drugs were in the lining of the purses.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "01.T1": {
+  "file": "audio/vo/scratch_v3/t24/01_T1.wav",
+  "duration": 6.719,
+  "lead": "Her brother told the commission:",
+  "say": "It all started when my sister was tricked into believing she had won a contest.",
+  "speed": 1.0,
+  "quote_start": 2.0,
+  "words": [
+   [
+    "It",
+    2.0
+   ],
+   [
+    "all",
+    2.14
+   ],
+   [
+    "started",
+    2.36
+   ],
+   [
+    "when",
+    2.78
+   ],
+   [
+    "my",
+    3.06
+   ],
+   [
+    "sister",
+    3.26
+   ],
+   [
+    "was",
+    3.6
+   ],
+   [
+    "tricked",
+    3.9
+   ],
+   [
+    "into",
+    4.22
+   ],
+   [
+    "believing",
+    4.6
+   ],
+   [
+    "she",
+    5.0
+   ],
+   [
+    "had",
+    5.34
+   ],
+   [
+    "won",
+    5.46
+   ],
+   [
+    "a",
+    5.66
+   ],
+   [
+    "contest.",
+    5.86
+   ]
+  ],
+  "heard": "Her brother told the commission, it all started when my sister was tricked into believing she had won a contest.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "01.T2": {
+  "file": "audio/vo/scratch_v3/t24/01_T2.wav",
+  "duration": 11.58,
+  "lead": "He said:",
+  "say": "She received an email stating that she had won an all-expenses-paid trip to Hong Kong. She didn't believe it at first, but checked on the company and believed they were legitimate.",
+  "speed": 1.0,
+  "quote_start": 0.9,
+  "words": [
+   [
+    "She",
+    0.9
+   ],
+   [
+    "received",
+    1.1
+   ],
+   [
+    "an",
+    1.48
+   ],
+   [
+    "email",
+    1.72
+   ],
+   [
+    "stating",
+    2.14
+   ],
+   [
+    "that",
+    2.6
+   ],
+   [
+    "she",
+    2.92
+   ],
+   [
+    "had",
+    3.1
+   ],
+   [
+    "won",
+    3.24
+   ],
+   [
+    "an",
+    3.46
+   ],
+   [
+    "all-expenses-paid",
+    4.18
+   ],
+   [
+    "trip",
+    4.9
+   ],
+   [
+    "to",
+    5.26
+   ],
+   [
+    "Hong",
+    5.46
+   ],
+   [
+    "Kong.",
+    5.68
+   ],
+   [
+    "She",
+    6.84
+   ],
+   [
+    "didn't",
+    6.98
+   ],
+   [
+    "believe",
+    7.22
+   ],
+   [
+    "it",
+    7.48
+   ],
+   [
+    "at",
+    7.64
+   ],
+   [
+    "first,",
+    7.78
+   ],
+   [
+    "but",
+    8.26
+   ],
+   [
+    "checked",
+    8.58
+   ],
+   [
+    "on",
+    8.86
+   ],
+   [
+    "the",
+    9.06
+   ],
+   [
+    "company",
+    9.18
+   ],
+   [
+    "and",
+    9.52
+   ],
+   [
+    "believed",
+    9.9
+   ],
+   [
+    "they",
+    10.26
+   ],
+   [
+    "were",
+    10.62
+   ],
+   [
+    "legitimate.",
+    10.78
+   ]
+  ],
+  "heard": "He said, she received an email stating that she had won an all expenses paid trip to Hong Kong. She didn't believe it at first, but checked on the company and believed they were legitimate.",
+  "wer": 0.03,
+  "diffs": [
+   [
+    "replace",
+    "all-expenses-paid",
+    "all expenses paid"
+   ]
+  ]
+ },
+ "01.T3": {
+  "file": "audio/vo/scratch_v3/t24/01_T3.wav",
+  "duration": 6.478,
+  "lead": "He told them:",
+  "say": "She was in Hong Kong for 9 days and she told me that the organizers treated her well.",
+  "speed": 1.0,
+  "quote_start": 1.18,
+  "words": [
+   [
+    "She",
+    1.18
+   ],
+   [
+    "was",
+    1.36
+   ],
+   [
+    "in",
+    1.5
+   ],
+   [
+    "Hong",
+    1.72
+   ],
+   [
+    "Kong",
+    1.98
+   ],
+   [
+    "for",
+    2.38
+   ],
+   [
+    "9",
+    2.65
+   ],
+   [
+    "days",
+    2.92
+   ],
+   [
+    "and",
+    3.76
+   ],
+   [
+    "she",
+    3.84
+   ],
+   [
+    "told",
+    4.0
+   ],
+   [
+    "me",
+    4.24
+   ],
+   [
+    "that",
+    4.46
+   ],
+   [
+    "the",
+    4.64
+   ],
+   [
+    "organizers",
+    4.76
+   ],
+   [
+    "treated",
+    5.28
+   ],
+   [
+    "her",
+    5.78
+   ],
+   [
+    "well.",
+    5.98
+   ]
+  ],
+  "heard": "He told them, she was in Hong Kong for nine days, and she told me that the organizers treated her well.",
+  "wer": 0.048,
+  "diffs": [
+   [
+    "replace",
+    "9",
+    "nine"
+   ]
+  ]
+ },
+ "02.T1": {
+  "file": "audio/vo/scratch_v3/t24/02_T1.wav",
+  "duration": 6.286,
+  "lead": "He went on:",
+  "say": "She went sightseeing, shopping, and started to trust the organizers who put together her trip.",
+  "speed": 1.0,
+  "quote_start": 1.16,
+  "words": [
+   [
+    "She",
+    1.16
+   ],
+   [
+    "went",
+    1.3
+   ],
+   [
+    "sightseeing,",
+    1.48
+   ],
+   [
+    "shopping,",
+    2.32
+   ],
+   [
+    "and",
+    3.08
+   ],
+   [
+    "started",
+    3.12
+   ],
+   [
+    "to",
+    3.44
+   ],
+   [
+    "trust",
+    3.7
+   ],
+   [
+    "the",
+    3.92
+   ],
+   [
+    "organizers",
+    4.12
+   ],
+   [
+    "who",
+    4.62
+   ],
+   [
+    "put",
+    5.02
+   ],
+   [
+    "together",
+    5.22
+   ],
+   [
+    "her",
+    5.6
+   ],
+   [
+    "trip.",
+    5.8
+   ]
+  ],
+  "heard": "He went on. She went sightseeing, shopping, and started to trust the organizers who put together her trip. Thank you for watching! If you enjoyed this video, feel free to subscribe to my channel for more content! Thanks for watching!",
+  "wer": 0.0,
+  "diffs": [
+   [
+    "insert",
+    "",
+    "Thank you for watching! If you enjoyed this video, feel free to subscribe to my channel for more content! Thanks for watching!"
+   ]
+  ]
+ },
+ "02.T2": {
+  "file": "audio/vo/scratch_v3/t24/02_T2.wav",
+  "duration": 9.31,
+  "lead": "",
+  "say": "After exploring Hong Kong, she was asked if she wanted to visit mainland China. After her positive experience in Hong Kong, she agreed.",
+  "speed": 1.0,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "After",
+    0.0
+   ],
+   [
+    "exploring",
+    0.34
+   ],
+   [
+    "Hong",
+    0.92
+   ],
+   [
+    "Kong,",
+    1.24
+   ],
+   [
+    "she",
+    2.22
+   ],
+   [
+    "was",
+    2.32
+   ],
+   [
+    "asked",
+    2.46
+   ],
+   [
+    "if",
+    2.82
+   ],
+   [
+    "she",
+    3.06
+   ],
+   [
+    "wanted",
+    3.22
+   ],
+   [
+    "to",
+    3.44
+   ],
+   [
+    "visit",
+    3.64
+   ],
+   [
+    "mainland",
+    3.88
+   ],
+   [
+    "China.",
+    4.34
+   ],
+   [
+    "After",
+    5.68
+   ],
+   [
+    "her",
+    5.86
+   ],
+   [
+    "positive",
+    6.08
+   ],
+   [
+    "experience",
+    6.46
+   ],
+   [
+    "in",
+    7.0
+   ],
+   [
+    "Hong",
+    7.42
+   ],
+   [
+    "Kong,",
+    7.72
+   ],
+   [
+    "she",
+    8.5
+   ],
+   [
+    "agreed.",
+    8.68
+   ]
+  ],
+  "heard": "After exploring Hong Kong, she was asked if she wanted to visit mainland China. After her positive experience in Hong Kong, she agreed.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "02.T3": {
+  "file": "audio/vo/scratch_v3/t24/02_T3.wav",
+  "duration": 4.307,
+  "lead": "",
+  "say": "She went to mainland China and traveled around for another 9 days.",
+  "speed": 1.0,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "She",
+    0.0
+   ],
+   [
+    "went",
+    0.14
+   ],
+   [
+    "to",
+    0.32
+   ],
+   [
+    "mainland",
+    0.48
+   ],
+   [
+    "China",
+    0.84
+   ],
+   [
+    "and",
+    1.4
+   ],
+   [
+    "traveled",
+    1.98
+   ],
+   [
+    "around",
+    2.36
+   ],
+   [
+    "for",
+    2.74
+   ],
+   [
+    "another",
+    3.02
+   ],
+   [
+    "9",
+    3.32
+   ],
+   [
+    "days.",
+    3.62
+   ]
+  ],
+  "heard": "She went to mainland China and traveled around for another nine days.",
+  "wer": 0.083,
+  "diffs": [
+   [
+    "replace",
+    "9",
+    "nine"
+   ]
+  ]
+ },
+ "02.T4": {
+  "file": "audio/vo/scratch_v3/t24/02_T4.wav",
+  "duration": 6.069,
+  "lead": "He said:",
+  "say": "The organizers then asked if she wanted to visit Australia. Once again, she agreed.",
+  "speed": 1.0,
+  "quote_start": 0.46,
+  "words": [
+   [
+    "The",
+    0.46
+   ],
+   [
+    "organizers",
+    0.9
+   ],
+   [
+    "then",
+    1.42
+   ],
+   [
+    "asked",
+    1.8
+   ],
+   [
+    "if",
+    2.2
+   ],
+   [
+    "she",
+    2.42
+   ],
+   [
+    "wanted",
+    2.58
+   ],
+   [
+    "to",
+    2.78
+   ],
+   [
+    "visit",
+    3.0
+   ],
+   [
+    "Australia.",
+    3.24
+   ],
+   [
+    "Once",
+    4.56
+   ],
+   [
+    "again,",
+    4.72
+   ],
+   [
+    "she",
+    5.26
+   ],
+   [
+    "agreed.",
+    5.44
+   ]
+  ],
+  "heard": "He said the organizers then asked if she wanted to visit Australia. Once again, she agreed.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "02.T5": {
+  "file": "audio/vo/scratch_v3/t24/02_T5.wav",
+  "duration": 6.784,
+  "lead": "He told them:",
+  "say": "Before she left for her Australia trip, she was told that she also won some designer purses.",
+  "speed": 1.0,
+  "quote_start": 1.12,
+  "words": [
+   [
+    "Before",
+    1.12
+   ],
+   [
+    "she",
+    1.48
+   ],
+   [
+    "left",
+    1.68
+   ],
+   [
+    "for",
+    1.9
+   ],
+   [
+    "her",
+    2.12
+   ],
+   [
+    "Australia",
+    2.22
+   ],
+   [
+    "trip,",
+    2.74
+   ],
+   [
+    "she",
+    3.74
+   ],
+   [
+    "was",
+    3.76
+   ],
+   [
+    "told",
+    3.92
+   ],
+   [
+    "that",
+    4.28
+   ],
+   [
+    "she",
+    4.54
+   ],
+   [
+    "also",
+    4.7
+   ],
+   [
+    "won",
+    5.06
+   ],
+   [
+    "some",
+    5.3
+   ],
+   [
+    "designer",
+    5.56
+   ],
+   [
+    "purses.",
+    6.0
+   ]
+  ],
+  "heard": "He told them, before she left for her Australia trip, she was told that she also won some designer purses.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "03.T1": {
+  "file": "audio/vo/scratch_v3/t24/03_T1.wav",
+  "duration": 7.122,
+  "lead": "He went on:",
+  "say": "Trusting the organizers, she took the purses and packed them in luggage given to her by the organizers.",
+  "speed": 1.0,
+  "quote_start": 1.12,
+  "words": [
+   [
+    "Trusting",
+    1.12
+   ],
+   [
+    "the",
+    1.42
+   ],
+   [
+    "organizers,",
+    1.64
+   ],
+   [
+    "she",
+    2.76
+   ],
+   [
+    "took",
+    2.92
+   ],
+   [
+    "the",
+    3.12
+   ],
+   [
+    "purses",
+    3.32
+   ],
+   [
+    "and",
+    3.8
+   ],
+   [
+    "packed",
+    4.06
+   ],
+   [
+    "them",
+    4.34
+   ],
+   [
+    "in",
+    4.62
+   ],
+   [
+    "luggage",
+    4.78
+   ],
+   [
+    "given",
+    5.1
+   ],
+   [
+    "to",
+    5.44
+   ],
+   [
+    "her",
+    5.7
+   ],
+   [
+    "by",
+    5.84
+   ],
+   [
+    "the",
+    6.04
+   ],
+   [
+    "organizers.",
+    6.16
+   ]
+  ],
+  "heard": "He went on, trusting the organizers. She took the purses and packed them in luggage given to her by the organizers.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "03.T2": {
+  "file": "audio/vo/scratch_v3/t24/03_T2.wav",
+  "duration": 5.092,
+  "lead": "He told the commission:",
+  "say": "It was at the airport, waiting to board her Australia flight,",
+  "speed": 1.0,
+  "quote_start": 0.94,
+  "words": [
+   [
+    "It",
+    0.94
+   ],
+   [
+    "was",
+    1.64
+   ],
+   [
+    "at",
+    1.8
+   ],
+   [
+    "the",
+    1.98
+   ],
+   [
+    "airport,",
+    2.1
+   ],
+   [
+    "waiting",
+    2.56
+   ],
+   [
+    "to",
+    3.14
+   ],
+   [
+    "board",
+    3.46
+   ],
+   [
+    "her",
+    3.74
+   ],
+   [
+    "Australia",
+    3.94
+   ],
+   [
+    "flight,",
+    4.48
+   ]
+  ],
+  "heard": "He told the commission it was at the airport waiting to board her Australia flight.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "04.T1": {
+  "file": "audio/vo/scratch_v3/t24/04_T1.wav",
+  "duration": 2.271,
+  "lead": "",
+  "say": "that she was called by airport security.",
+  "speed": 1.0,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "that",
+    0.0
+   ],
+   [
+    "she",
+    0.12
+   ],
+   [
+    "was",
+    0.28
+   ],
+   [
+    "called",
+    0.42
+   ],
+   [
+    "by",
+    0.74
+   ],
+   [
+    "airport",
+    1.0
+   ],
+   [
+    "security.",
+    1.42
+   ]
+  ],
+  "heard": "that she was called by airport security.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "05.T1": {
+  "file": "audio/vo/scratch_v3/t24/05_T1.wav",
+  "duration": 5.231,
+  "lead": "He told the commission:",
+  "say": "I hope you can see that something like this could happen to a lot of people.",
+  "speed": 1.0,
+  "quote_start": 1.54,
+  "words": [
+   [
+    "I",
+    1.54
+   ],
+   [
+    "hope",
+    1.76
+   ],
+   [
+    "you",
+    1.96
+   ],
+   [
+    "can",
+    2.14
+   ],
+   [
+    "see",
+    2.3
+   ],
+   [
+    "that",
+    2.52
+   ],
+   [
+    "something",
+    2.72
+   ],
+   [
+    "like",
+    3.06
+   ],
+   [
+    "this",
+    3.36
+   ],
+   [
+    "could",
+    3.6
+   ],
+   [
+    "happen",
+    3.8
+   ],
+   [
+    "to",
+    4.14
+   ],
+   [
+    "a",
+    4.34
+   ],
+   [
+    "lot",
+    4.46
+   ],
+   [
+    "of",
+    4.62
+   ],
+   [
+    "people.",
+    4.76
+   ]
+  ],
+  "heard": "He told the commission, I hope you can see that something like this could happen to a lot of people.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "06.T1": {
+  "file": "audio/vo/scratch_v3/t24/06_T1.wav",
+  "duration": 6.576,
+  "lead": "He told them:",
+  "say": "After her trial she was found guilty and received the 'death penalty with 2-year reprieve.'",
+  "speed": 1.0,
+  "quote_start": 1.3,
+  "words": [
+   [
+    "After",
+    1.3
+   ],
+   [
+    "her",
+    1.5
+   ],
+   [
+    "trial",
+    1.66
+   ],
+   [
+    "she",
+    2.22
+   ],
+   [
+    "was",
+    2.3
+   ],
+   [
+    "found",
+    2.44
+   ],
+   [
+    "guilty",
+    2.76
+   ],
+   [
+    "and",
+    3.22
+   ],
+   [
+    "received",
+    3.72
+   ],
+   [
+    "the",
+    4.08
+   ],
+   [
+    "'death",
+    4.34
+   ],
+   [
+    "penalty",
+    4.58
+   ],
+   [
+    "with",
+    5.04
+   ],
+   [
+    "2-year",
+    5.39
+   ],
+   [
+    "reprieve.'",
+    5.74
+   ]
+  ],
+  "heard": "He told them. After her trial, she was found guilty and received the death penalty with two year reprieve.",
+  "wer": 0.056,
+  "diffs": [
+   [
+    "replace",
+    "2-year",
+    "two year"
+   ]
+  ]
+ },
+ "06.T2": {
+  "file": "audio/vo/scratch_v3/t24/06_T2.wav",
+  "duration": 8.822,
+  "lead": "",
+  "say": "She was duped. She was scammed! She trusted the wrong people! She doesn't deserve this! My sister is trusting and believes that people are good.",
+  "speed": 1.0,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "She",
+    0.0
+   ],
+   [
+    "was",
+    0.16
+   ],
+   [
+    "duped.",
+    0.32
+   ],
+   [
+    "She",
+    1.06
+   ],
+   [
+    "was",
+    1.12
+   ],
+   [
+    "scammed!",
+    1.26
+   ],
+   [
+    "She",
+    2.32
+   ],
+   [
+    "trusted",
+    2.42
+   ],
+   [
+    "the",
+    2.74
+   ],
+   [
+    "wrong",
+    2.96
+   ],
+   [
+    "people!",
+    3.2
+   ],
+   [
+    "She",
+    4.02
+   ],
+   [
+    "doesn't",
+    4.16
+   ],
+   [
+    "deserve",
+    4.48
+   ],
+   [
+    "this!",
+    4.8
+   ],
+   [
+    "My",
+    5.68
+   ],
+   [
+    "sister",
+    5.84
+   ],
+   [
+    "is",
+    6.12
+   ],
+   [
+    "trusting",
+    6.46
+   ],
+   [
+    "and",
+    6.88
+   ],
+   [
+    "believes",
+    7.14
+   ],
+   [
+    "that",
+    7.48
+   ],
+   [
+    "people",
+    7.82
+   ],
+   [
+    "are",
+    8.08
+   ],
+   [
+    "good.",
+    8.36
+   ]
+  ],
+  "heard": "She was duped, she was scammed. She trusted the wrong people. She doesn't deserve this. My sister is trusting and believes that people are good.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "07.T1": {
+  "file": "audio/vo/scratch_v3/t24/07_T1.wav",
+  "duration": 10.185,
+  "lead": "He told the commission:",
+  "say": "After my visit to her, I updated my father on her condition. I had to leave out some details of her physical appearance",
+  "speed": 0.88,
+  "quote_start": 1.76,
+  "words": [
+   [
+    "After",
+    1.76
+   ],
+   [
+    "my",
+    2.04
+   ],
+   [
+    "visit",
+    2.28
+   ],
+   [
+    "to",
+    2.54
+   ],
+   [
+    "her,",
+    2.8
+   ],
+   [
+    "I",
+    3.46
+   ],
+   [
+    "updated",
+    3.5
+   ],
+   [
+    "my",
+    4.04
+   ],
+   [
+    "father",
+    4.32
+   ],
+   [
+    "on",
+    4.74
+   ],
+   [
+    "her",
+    5.02
+   ],
+   [
+    "condition.",
+    5.16
+   ],
+   [
+    "I",
+    6.36
+   ],
+   [
+    "had",
+    6.54
+   ],
+   [
+    "to",
+    6.74
+   ],
+   [
+    "leave",
+    6.9
+   ],
+   [
+    "out",
+    7.14
+   ],
+   [
+    "some",
+    7.38
+   ],
+   [
+    "details",
+    7.66
+   ],
+   [
+    "of",
+    8.32
+   ],
+   [
+    "her",
+    8.66
+   ],
+   [
+    "physical",
+    8.78
+   ],
+   [
+    "appearance",
+    9.24
+   ]
+  ],
+  "heard": "He told the commission, after my visit to her, I updated my father on her condition. I had to leave out some details of her physical appearance.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "07.T2": {
+  "file": "audio/vo/scratch_v3/t24/07_T2.wav",
+  "duration": 8.997,
+  "lead": "",
+  "say": "because my dad is 91 and has recently been diagnosed with cancer. I wanted to avoid giving him an additional shock.",
+  "speed": 0.88,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "because",
+    0.0
+   ],
+   [
+    "my",
+    0.26
+   ],
+   [
+    "dad",
+    0.54
+   ],
+   [
+    "is",
+    0.94
+   ],
+   [
+    "91",
+    1.24
+   ],
+   [
+    "and",
+    2.0
+   ],
+   [
+    "has",
+    2.72
+   ],
+   [
+    "recently",
+    2.86
+   ],
+   [
+    "been",
+    3.3
+   ],
+   [
+    "diagnosed",
+    3.68
+   ],
+   [
+    "with",
+    4.32
+   ],
+   [
+    "cancer.",
+    4.76
+   ],
+   [
+    "I",
+    6.04
+   ],
+   [
+    "wanted",
+    6.16
+   ],
+   [
+    "to",
+    6.4
+   ],
+   [
+    "avoid",
+    6.58
+   ],
+   [
+    "giving",
+    7.0
+   ],
+   [
+    "him",
+    7.32
+   ],
+   [
+    "an",
+    7.66
+   ],
+   [
+    "additional",
+    7.82
+   ],
+   [
+    "shock.",
+    8.26
+   ]
+  ],
+  "heard": "because my dad is 91 and has recently been diagnosed with cancer. I wanted to avoid giving him an additional shock.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "07.T3": {
+  "file": "audio/vo/scratch_v3/t24/07_T3.wav",
+  "duration": 10.113,
+  "lead": "",
+  "say": "In a strange way, my dad is locked up as well. He is worried that with all this, he's not going to live long enough to see his daughter free and safe.",
+  "speed": 0.88,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "In",
+    0.0
+   ],
+   [
+    "a",
+    0.2
+   ],
+   [
+    "strange",
+    0.36
+   ],
+   [
+    "way,",
+    0.72
+   ],
+   [
+    "my",
+    1.54
+   ],
+   [
+    "dad",
+    1.7
+   ],
+   [
+    "is",
+    2.04
+   ],
+   [
+    "locked",
+    2.32
+   ],
+   [
+    "up",
+    2.64
+   ],
+   [
+    "as",
+    2.9
+   ],
+   [
+    "well.",
+    3.04
+   ],
+   [
+    "He",
+    4.08
+   ],
+   [
+    "is",
+    4.24
+   ],
+   [
+    "worried",
+    4.38
+   ],
+   [
+    "that",
+    4.8
+   ],
+   [
+    "with",
+    5.08
+   ],
+   [
+    "all",
+    5.24
+   ],
+   [
+    "this,",
+    5.54
+   ],
+   [
+    "he's",
+    6.18
+   ],
+   [
+    "not",
+    6.48
+   ],
+   [
+    "going",
+    6.68
+   ],
+   [
+    "to",
+    6.88
+   ],
+   [
+    "live",
+    7.06
+   ],
+   [
+    "long",
+    7.24
+   ],
+   [
+    "enough",
+    7.52
+   ],
+   [
+    "to",
+    7.74
+   ],
+   [
+    "see",
+    7.96
+   ],
+   [
+    "his",
+    8.18
+   ],
+   [
+    "daughter",
+    8.38
+   ],
+   [
+    "free",
+    8.74
+   ],
+   [
+    "and",
+    9.16
+   ],
+   [
+    "safe.",
+    9.46
+   ]
+  ],
+  "heard": "In a strange way, my dad is locked up as well. He is worried that with all this, he's not going to live long enough to see his daughter free and safe.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "07.T4": {
+  "file": "audio/vo/scratch_v3/t24/07_T4.wav",
+  "duration": 22.925,
+  "lead": "",
+  "say": "And in this handwritten letter, she refused the surgery. And she said, and I'm going to quote this to bring some of her own words to this hearing: 'I, Dawn Michelle, refuse to take the surgery and will hold China liable for all the consequences from August 11, 2021, in regard to my tumor and safety of my life.'",
+  "speed": 0.88,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "And",
+    0.0
+   ],
+   [
+    "in",
+    0.2
+   ],
+   [
+    "this",
+    0.32
+   ],
+   [
+    "handwritten",
+    0.52
+   ],
+   [
+    "letter,",
+    1.0
+   ],
+   [
+    "she",
+    1.78
+   ],
+   [
+    "refused",
+    1.92
+   ],
+   [
+    "the",
+    2.46
+   ],
+   [
+    "surgery.",
+    2.7
+   ],
+   [
+    "And",
+    3.9
+   ],
+   [
+    "she",
+    4.02
+   ],
+   [
+    "said,",
+    4.2
+   ],
+   [
+    "and",
+    5.14
+   ],
+   [
+    "I'm",
+    5.24
+   ],
+   [
+    "going",
+    5.44
+   ],
+   [
+    "to",
+    5.58
+   ],
+   [
+    "quote",
+    5.74
+   ],
+   [
+    "this",
+    5.96
+   ],
+   [
+    "to",
+    6.2
+   ],
+   [
+    "bring",
+    6.4
+   ],
+   [
+    "some",
+    6.58
+   ],
+   [
+    "of",
+    6.84
+   ],
+   [
+    "her",
+    6.96
+   ],
+   [
+    "own",
+    7.1
+   ],
+   [
+    "words",
+    7.42
+   ],
+   [
+    "to",
+    7.78
+   ],
+   [
+    "this",
+    8.04
+   ],
+   [
+    "hearing:",
+    8.22
+   ],
+   [
+    "'I,",
+    9.44
+   ],
+   [
+    "Dawn",
+    10.22
+   ],
+   [
+    "Michelle,",
+    10.4
+   ],
+   [
+    "refuse",
+    11.15
+   ],
+   [
+    "to",
+    11.9
+   ],
+   [
+    "take",
+    12.22
+   ],
+   [
+    "the",
+    12.4
+   ],
+   [
+    "surgery",
+    12.6
+   ],
+   [
+    "and",
+    13.04
+   ],
+   [
+    "will",
+    13.24
+   ],
+   [
+    "hold",
+    13.4
+   ],
+   [
+    "China",
+    13.68
+   ],
+   [
+    "liable",
+    14.1
+   ],
+   [
+    "for",
+    14.58
+   ],
+   [
+    "all",
+    14.92
+   ],
+   [
+    "the",
+    15.2
+   ],
+   [
+    "consequences",
+    15.42
+   ],
+   [
+    "from",
+    16.06
+   ],
+   [
+    "August",
+    16.48
+   ],
+   [
+    "11,",
+    16.9
+   ],
+   [
+    "2021,",
+    18.0
+   ],
+   [
+    "in",
+    18.76
+   ],
+   [
+    "regard",
+    19.78
+   ],
+   [
+    "to",
+    20.16
+   ],
+   [
+    "my",
+    20.4
+   ],
+   [
+    "tumor",
+    20.62
+   ],
+   [
+    "and",
+    21.04
+   ],
+   [
+    "safety",
+    21.36
+   ],
+   [
+    "of",
+    21.76
+   ],
+   [
+    "my",
+    22.04
+   ],
+   [
+    "life.'",
+    22.24
+   ]
+  ],
+  "heard": "And in this handwritten letter, she refused the surgery. And she said, and I'm going to quote this to bring some of her own words to this hearing, I, Dawn Michelle, refused to take the surgery and will hold China liable for all the consequences from August 11, 2021 in regard to my tumor and safety of my life.",
+  "wer": 0.017,
+  "diffs": [
+   [
+    "replace",
+    "refuse",
+    "refused"
+   ]
+  ]
+ },
+ "07.T5": {
+  "file": "audio/vo/scratch_v3/t24/07_T5.wav",
+  "duration": 11.115,
+  "lead": "",
+  "say": "Gentlemen, this isn't political for me and my family. I'm just asking you, as a brother, just bring my sister home. Do whatever it takes; just bring her home.",
+  "speed": 0.88,
+  "quote_start": 0.0,
+  "words": [
+   [
+    "Gentlemen,",
+    0.0
+   ],
+   [
+    "this",
+    0.84
+   ],
+   [
+    "isn't",
+    0.92
+   ],
+   [
+    "political",
+    1.36
+   ],
+   [
+    "for",
+    1.7
+   ],
+   [
+    "me",
+    2.06
+   ],
+   [
+    "and",
+    2.3
+   ],
+   [
+    "my",
+    2.5
+   ],
+   [
+    "family.",
+    2.7
+   ],
+   [
+    "I'm",
+    3.98
+   ],
+   [
+    "just",
+    4.12
+   ],
+   [
+    "asking",
+    4.28
+   ],
+   [
+    "you,",
+    4.8
+   ],
+   [
+    "as",
+    5.2
+   ],
+   [
+    "a",
+    5.46
+   ],
+   [
+    "brother,",
+    5.66
+   ],
+   [
+    "just",
+    6.14
+   ],
+   [
+    "bring",
+    6.26
+   ],
+   [
+    "my",
+    6.62
+   ],
+   [
+    "sister",
+    6.86
+   ],
+   [
+    "home.",
+    7.18
+   ],
+   [
+    "Do",
+    8.48
+   ],
+   [
+    "whatever",
+    8.66
+   ],
+   [
+    "it",
+    8.88
+   ],
+   [
+    "takes;",
+    9.18
+   ],
+   [
+    "just",
+    9.88
+   ],
+   [
+    "bring",
+    9.98
+   ],
+   [
+    "her",
+    10.28
+   ],
+   [
+    "home.",
+    10.54
+   ]
+  ],
+  "heard": "Gentlemen, this isn't political for me and my family. I'm just asking you as a brother, just bring my sister home. Do whatever it takes, just bring her home.",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "07.T6": {
+  "file": "audio/vo/scratch_v3/t24/07_T6.wav",
+  "duration": 7.41,
+  "lead": "He answered:",
+  "say": "After this hearing I don't believe it would be advisable for me to go and visit my sister again.",
+  "speed": 0.88,
+  "quote_start": 1.38,
+  "words": [
+   [
+    "After",
+    1.38
+   ],
+   [
+    "this",
+    1.68
+   ],
+   [
+    "hearing",
+    1.94
+   ],
+   [
+    "I",
+    2.66
+   ],
+   [
+    "don't",
+    2.74
+   ],
+   [
+    "believe",
+    3.02
+   ],
+   [
+    "it",
+    3.32
+   ],
+   [
+    "would",
+    3.52
+   ],
+   [
+    "be",
+    3.66
+   ],
+   [
+    "advisable",
+    3.78
+   ],
+   [
+    "for",
+    4.3
+   ],
+   [
+    "me",
+    4.66
+   ],
+   [
+    "to",
+    4.84
+   ],
+   [
+    "go",
+    5.06
+   ],
+   [
+    "and",
+    5.36
+   ],
+   [
+    "visit",
+    5.8
+   ],
+   [
+    "my",
+    6.04
+   ],
+   [
+    "sister",
+    6.32
+   ],
+   [
+    "again.",
+    6.66
+   ]
+  ],
+  "heard": "He answered, After this hearing, I don't believe it would be advisable for me to go and visit my sister again.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}
