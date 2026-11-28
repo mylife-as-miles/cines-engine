@@ -31,7 +31,7 @@ W, H, HW, GUT = 1920, 1080, 958, 4
 # Right: inspection_room `handbags` (2560 x 1440): the same tote on the inspection table. Its rim at the cut, on the
 # output, is gfx/seam.html cutaway_half's tA, tB (re-measure both when the plate or its framing changes).
 HALVES = [
-    dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0, panel=(1800, 2200, 650, 950)),
+    dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0, panel=(1800, 2200, 650, 950), warm=True),
     dict(plate="frames/raw/inspection_room/handbags.png", cx=1974, cy=600, s=0.92, x0=HW + GUT, match=True,   # the native 2560 render (aec9820)
          panel=(1800, 2200, 600, 950)),
 ]
@@ -69,6 +69,24 @@ def fit_match(left, right, lbox, rbox):
     return best[1], best[0]
 
 
+# The gift half's light: the evidence plate is lit neutral, so the two halves read dark against bright rather than warm
+# against cold. The left plate is warmed before the film's grade, as a warmer lamp would warm it in Blender: a tungsten
+# gain (about 3200 K against the plates' neutral) and a soft practical glow from the top left, out of frame. The film's
+# grade (A fixed) runs over both halves unchanged after it, so it is the light that differs, not the grade.
+WARM = dict(gain=(1.42, 1.06, 0.66), lift=1.30, glow=dict(x=0.06, y=0.04, r=0.75, amt=0.20, col=(1.0, 0.64, 0.32)))
+
+
+def warm_light(img, h):
+    out = img * np.float32(WARM["gain"]) * WARM["lift"]
+    g = WARM["glow"]; hh, ww = img.shape[:2]
+    # the glow sits in plate pixels at the half's top left (the window's corner), so it holds still with the push
+    gx, gy = h["cx"] - HW / 2 / h["s"] + g["x"] * HW / h["s"], h["cy"] - H / 2 / h["s"] + g["y"] * H / h["s"]
+    yy, xx = np.mgrid[0:hh, 0:ww].astype(np.float32)
+    d2 = ((xx - gx) ** 2 + (yy - gy) ** 2) / (g["r"] * HW / h["s"]) ** 2
+    out += (255 * g["amt"] * np.exp(-d2 * 2.2))[..., None] * np.float32(g["col"])
+    return out
+
+
 def match_tote(img, s, hue, sat, gamma):
     rgb = img / 255.0
     hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)                          # float: hue in degrees
@@ -94,7 +112,7 @@ def main():
     raw = [cv2.cvtColor(cv2.imread(h["plate"], cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32) for h in HALVES]
     match, de = fit_match(raw[0], raw[1], HALVES[0]["panel"], HALVES[1]["panel"])
     print(f"tote match {match}: raw dE {de:.1f}" + ("  (over 3: the plates have drifted, check them)" if de > 3 else ""))
-    plates = [match_tote(img, h["s"], **match) if h.get("match") else img for h, img in zip(HALVES, raw)]
+    plates = [match_tote(img, h["s"], **match) if h.get("match") else warm_light(img, h) if h.get("warm") else img for h, img in zip(HALVES, raw)]
 
     def frame(t):
         out = np.zeros((H, W, 3), np.float32)
