@@ -1,0 +1,343 @@
+<!doctype html><meta charset="utf-8"><title>THUMB · YouTube thumbnails · Seven days of no</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* SEVEN DAYS OF NO · YouTube thumbnails (Test & Compare), drawn as illustrated posters with the production's kits.
+   One idea each, 2 to 4 words in heavy outlined type at the top, nothing important in the bottom-right corner (timestamp).
+   Drawn at 1920x1080, delivered 1280x720.
+     ?v=a  9 MISSED CALLS    the hero calmly sipping tea on the sofa, side-eye at a huge buzzing phone (Mom calling),
+                             red missed-call badges popping off it.                       (pairs with title 1)
+     ?v=b  PREPARED FOR WAR  the hero in a cooking-pot helmet behind a frying-pan shield, wooden spoon raised;
+                             the boss, small, in the doorway, shrugging.                  (pairs with title 2)
+     ?v=c  BODY SAYS NO      a forced, too-wide grin and a thumbs-up on a big head; the body trembling, sweating,
+                             knees knocking, on the plain teal ground.                    (pairs with title 3)
+   node tools/shoot.js "src/THUMB_youtube.html?v=a" thumbs/thumb_a.png 1280 720 1500, then JPG (quality 92) and delete the PNG.
+   The thumbs-up in ?v=c is drawn here: the kit's 'thumb' hand points the thumb down when the forearm is raised. */
+window.addEventListener('load', async () => {
+  const v = (new URLSearchParams(location.search).get('v') || 'a').toLowerCase();
+  if (SETS.ready) await SETS.ready();
+  const W = 1920, H = 1080, TAU = Math.PI * 2, PI = Math.PI;
+  const C = POV.C, INK = POV.C.ink;
+  const work = document.createElement('canvas'); work.width = W; work.height = H;
+  const g = work.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
+
+  // ------------------------------------------------------------------ helpers
+  const rr = (x, y, w, h, r) => { const p = new Path2D(); p.roundRect(x, y, w, h, r); return p; };
+  const circ = (x, y, r) => { const p = new Path2D(); p.arc(x, y, r, 0, TAU); return p; };
+  const fs = (p, fill, lw, ink) => { if (fill) { g.fillStyle = fill; g.fill(p); } if (lw) { g.lineWidth = lw; g.strokeStyle = ink || INK; g.stroke(p); } };
+  const line = (pts, lw, col) => { const p = new Path2D(); pts.forEach((q, i) => i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); g.lineWidth = lw; g.strokeStyle = col || INK; g.stroke(p); };
+  const rgba = POV.rgba, mix = POV.mix;
+
+  // a sunburst: alternating wedges from (cx, cy)
+  function burst(cx, cy, c1, c2, n, rot) {
+    g.fillStyle = c1; g.fillRect(0, 0, W, H);
+    g.fillStyle = c2; const R = 3200, st = TAU / n;
+    for (let i = 0; i < n; i++) { const a = (rot || 0) + i * st; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.lineTo(cx + Math.cos(a + st / 2) * R, cy + Math.sin(a + st / 2) * R); g.closePath(); g.fill(); }
+  }
+  function glow(cx, cy, r, col, a) { const gr = g.createRadialGradient(cx, cy, 0, cx, cy, r); gr.addColorStop(0, rgba(col, a)); gr.addColorStop(1, rgba(col, 0)); g.fillStyle = gr; g.fillRect(cx - r, cy - r, 2 * r, 2 * r); }
+  function vignette(col, a) { const gr = g.createRadialGradient(W / 2, H * 0.48, H * 0.42, W / 2, H * 0.5, H * 1.05); gr.addColorStop(0, rgba(col, 0)); gr.addColorStop(1, rgba(col, a)); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+
+  // heavy hook type: the production's Nunito at its heaviest, a thick ink outline and a flat ink drop (no blur: the film's flat look)
+  function hookFont(size) { g.font = SETS.font(1000, size); if ('letterSpacing' in g) g.letterSpacing = Math.round(size * 0.015) + 'px'; }
+  function measure(str, size) { g.save(); hookFont(size); const w = g.measureText(str).width; g.restore(); return w; }
+  function hook(str, x, y, size, fill, o) {
+    o = o || {};
+    g.save(); g.translate(x, y); g.rotate(o.rot || 0); hookFont(size);
+    g.textAlign = o.align || 'left'; g.textBaseline = 'alphabetic'; g.lineJoin = 'round';
+    const lw = size * (o.stroke || 0.21), d = size * 0.085;
+    g.lineWidth = lw; g.strokeStyle = g.fillStyle = o.drop || 'rgba(50,20,10,0.5)'; g.strokeText(str, d * 0.25, d); g.fillText(str, d * 0.25, d);
+    g.strokeStyle = INK; g.strokeText(str, 0, 0);
+    g.fillStyle = fill; g.fillText(str, 0, 0);
+    g.restore();
+  }
+  // a red notification badge with a number, at type size
+  function badge(cx, cy, r, num, o) {
+    o = o || {};
+    g.save(); g.translate(cx, cy); g.rotate(o.rot || 0);
+    fs(circ(r * 0.06, r * 0.16, r), o.drop || 'rgba(50,20,10,0.5)');
+    fs(circ(0, 0, r), C.badgeRed, r * 0.12);
+    g.save(); g.clip(circ(0, 0, r)); g.fillStyle = 'rgba(255,255,255,0.18)'; g.beginPath(); g.ellipse(-r * 0.25, -r * 0.55, r * 0.7, r * 0.32, -0.3, 0, TAU); g.fill(); g.restore();
+    fs(circ(0, 0, r), null, r * 0.12);
+    g.font = SETS.font(1000, r * 1.38); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#FFFFFF';
+    g.fillText(num, r * 0.02, r * 0.1);
+    g.restore();
+  }
+  // short motion ticks pointing away from a centre
+  function ticks(cx, cy, list, lw) {
+    list.forEach(([a, r0, r1]) => line([[cx + Math.cos(a) * r0, cy + Math.sin(a) * r0], [cx + Math.cos(a) * r1, cy + Math.sin(a) * r1]], lw));
+  }
+  // vibration arcs either side of a rect (in its local frame)
+  function shakeArcs(hw, ys, lw, n) {
+    [-1, 1].forEach(s => ys.forEach(y => { for (let k = 0; k < (n || 2); k++) { const p = new Path2D(), r = 40 + k * 26; p.arc(s * (hw + 10 + k * 30) - s * r, y, r, s > 0 ? -0.55 : PI - 0.55, s > 0 ? 0.55 : PI + 0.55); g.lineWidth = lw; g.strokeStyle = INK; g.stroke(p); } }));
+  }
+  // a face-only head (any size) with the kit's face: skin disc, ink outline, POV.face
+  function bigHead(cx, cy, R, who, faceOpts, o) {
+    o = o || {};
+    const ch = POV.CAST[who] || POV.CAST.hero, lw = (o.lw || 9.5) * 100 / R;
+    const F = { g, ch, c: h => h, lw, ld: lw * POV.LW.detail / POV.LW.figure, skinC: ch.skin, browC: ch.brow || INK, tint: null };
+    g.save(); g.translate(cx, cy); g.rotate(o.tilt || 0); g.scale(R / 100, R / 100); g.lineCap = 'round'; g.lineJoin = 'round';
+    fs(circ(0, 0, 100), ch.skin, lw);
+    POV.face(g, 100, faceOpts, F);
+    const M = g.getTransform();
+    g.restore();
+    return { M, lw };
+  }
+  // a sweat drop, point up
+  function sweat(x, y, r, a) {
+    g.save(); g.translate(x, y); g.rotate(a || 0);
+    const p = new Path2D(); p.moveTo(0, -r * 1.9); p.bezierCurveTo(r * 0.5, -r * 0.9, r * 1.05, -r * 0.3, r, r * 0.25); p.arc(0, r * 0.25, r, 0, PI); p.bezierCurveTo(-r * 1.05, -r * 0.3, -r * 0.5, -r * 0.9, 0, -r * 1.9); p.closePath();
+    fs(p, C.sweat, Math.max(3, r * 0.2)); g.fillStyle = 'rgba(255,255,255,0.85)'; g.beginPath(); g.ellipse(-r * 0.35, -r * 0.05, r * 0.2, r * 0.34, 0.3, 0, TAU); g.fill();
+    g.restore();
+  }
+  // a phone handset glyph, centred, white with an ink edge
+  function handset(x, y, s, a, col) {
+    g.save(); g.translate(x, y); g.rotate(a); g.scale(s, s);
+    const arc = new Path2D(); arc.arc(0, 12, 22, PI * 1.1, PI * 1.9);
+    const e1 = rr(-33, 0, 20, 22, 8), e2 = rr(13, 0, 20, 22, 8);
+    g.lineCap = 'round'; g.strokeStyle = col || '#FFFFFF'; g.lineWidth = 14; g.stroke(arc); g.fillStyle = col || '#FFFFFF'; g.fill(e1); g.fill(e2);
+    g.restore();
+  }
+
+  // ================================================================== A · 9 MISSED CALLS
+  function drawA() {
+    const PX = 1395, PY = 640, PS = 0.66, PR = 0.13;          // the phone: centre, scale, tilt
+    burst(PX, PY, '#F3A262', '#F7B678', 30, 0.04);
+    glow(PX, PY, 760, '#FFF0D2', 0.6);
+    vignette('#8A3E1E', 0.35);
+
+    // the sofa behind the hero (living-room palette, drawn at the poster's zoom)
+    const S = { sofa: '#A9684C', mid: '#915647', sh: '#7E4A42', pillow: '#DA9855', pillowSh: '#BC8157' }, slw = 8;
+    fs(rr(-60, 720, 1110, 520, 70), S.sofa, slw);                                // back
+    g.save(); g.clip(rr(-60, 720, 1110, 520, 70)); g.fillStyle = S.mid; g.fillRect(-60, 950, 1200, 400); g.restore();
+    fs(rr(-60, 720, 1110, 520, 70), null, slw);
+    line([[-60, 950], [1050, 950]], slw * 0.7);
+    // pillow at the left, leaning
+    g.save(); g.translate(170, 860); g.rotate(-0.16);
+    const pil = new Path2D(); pil.moveTo(-150, -110); pil.quadraticCurveTo(0, -150, 150, -112); pil.quadraticCurveTo(170, 20, 140, 140); pil.quadraticCurveTo(0, 110, -150, 150); pil.quadraticCurveTo(-180, 20, -150, -110); pil.closePath();
+    fs(pil, S.pillow, slw); g.save(); g.clip(pil); g.fillStyle = S.pillowSh; g.beginPath(); g.moveTo(-200, 60); g.quadraticCurveTo(0, 20, 200, 70); g.lineTo(200, 200); g.lineTo(-200, 200); g.fill(); g.restore(); fs(pil, null, slw);
+    g.restore();
+    // arm of the sofa, front left
+    fs(rr(-80, 900, 190, 300, 60), S.sofa, slw); g.save(); g.clip(rr(-80, 900, 190, 300, 60)); g.fillStyle = S.sh; g.fillRect(40, 880, 100, 340); g.restore(); fs(rr(-80, 900, 190, 300, 60), null, slw);
+
+    // the hero, close: calm, sipping, side-eye at the phone
+    const hx = 600, hsc = 2.15;
+    POV.figure(g, 'hero', { x: hx, y: 560 + 700 * hsc, scale: hsc, pose: 'stand', holding: 'sip', turn: 0.32, look: [1, 0.32],
+      override: { prop: { steam: undefined } },
+      expr: 'smug', face: { browL: { lift: 0.1, tilt: -0.02, arch: 0.3 }, browR: { lift: 0.02, tilt: -0.06, arch: 0.2 }, eyes: { lid: 0.5, lidTilt: -0.04, pupil: 1.05 } } });
+
+    // the phone: huge, upright, buzzing; Mom calling
+    g.save(); g.translate(PX, PY); g.rotate(PR);
+    // ghost outlines (it is shaking)
+    [[-26, -0.035], [24, 0.03]].forEach(([dx, da]) => { g.save(); g.rotate(da); g.translate(dx, 0); g.globalAlpha = 0.28; fs(rr(-310 * PS, -525 * PS, 620 * PS, 1050 * PS, 84 * PS), null, 7); g.restore(); });
+    g.save(); g.scale(PS, PS);
+    SETS.phoneScreen(g, { mode: 'lock', bg: false, x: 0, y: 0, scale: 1, time: ' ', notes: [], battery: 0.08 });
+    callScreen();
+    g.restore();
+    shakeArcs(310 * PS + 8, [-180, 60], 8, 2);
+    g.restore();
+
+    // red missed-call badges popping off the phone
+    const nb = [[1045, 345, 2.2, -0.16, 1], [915, 575, 1.9, 0.14, 1], [1060, 790, 1.7, -0.1, 1], [1770, 420, 1.9, 0.16, -1], [1755, 690, 1.6, -0.12, -1]];
+    nb.forEach(([x, y, s, a, t]) => {
+      POV.notif(g, x, y, { kind: 'missed', bg: C.bubRed, s, a, tail: t, lw: 7 });
+      const ang = Math.atan2(y - PY, x - PX), r0 = 44 * s;
+      ticks(x, y, [[ang - 0.6, r0 + 18, r0 + 48], [ang + 0.6, r0 + 18, r0 + 48], [ang, r0 + 28, r0 + 64]], 7);
+    });
+
+    // title
+    const size = 178, words = 'MISSED CALLS', bw = 170, gap = 34, tw = measure(words, size), x0 = (W - (bw + gap + tw)) / 2;
+    badge(x0 + bw / 2, 128, bw / 2, '9', { rot: -0.06 });
+    hook(words, x0 + bw + gap, 196, size, '#FFFFFF');
+  }
+  // the incoming-call screen, in the phone's local frame (screen: x -288..288, y -503..503)
+  function callScreen() {
+    const sx = -288, sy = -503, sw = 576, sh = 1006;
+    g.save(); g.clip(rr(sx, sy, sw, sh, 60));
+    const gr = g.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#2C6E7B'); gr.addColorStop(1, '#7FC2C3'); g.fillStyle = gr; g.fillRect(sx, sy, sw, sh);
+    g.fillStyle = 'rgba(214,240,232,0.16)'; g.beginPath(); g.arc(0, -230, 330, 0, TAU); g.fill();
+    g.fillStyle = 'rgba(214,240,232,0.12)'; g.beginPath(); g.arc(0, -230, 250, 0, TAU); g.fill();
+    // notch
+    g.fillStyle = '#121216'; g.fill(rr(-72, sy + 18, 144, 42, 21));
+    // Mum's portrait in the avatar circle
+    const ay = -250, ar = 165;
+    fs(circ(0, ay, ar), '#F6E3C4');
+    g.save(); g.clip(circ(0, ay, ar));
+    const ms = 1.35, msc = ms * POV.CAST.mum.h;
+    POV.figure(g, 'mum', { x: 0, y: ay + 15 + 700 * msc, scale: ms, pose: 'stand', expr: 'worried', look: [0, 0], face: { brows: { lift: 0.06, tilt: 0.16 }, mouth: { k: 'frown', w: 0.12, c: 0.05 } } });
+    g.restore();
+    fs(circ(0, ay, ar), null, 7, '#FFFFFF');
+    // name
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = '#FFFFFF';
+    g.font = SETS.font(1000, 124); g.fillText('Mom', 0, 60);
+    g.font = SETS.font(800, 44); g.fillStyle = 'rgba(255,255,255,0.85)'; g.fillText('calling…', 0, 124);
+    // decline / accept
+    fs(circ(-150, 340, 82), C.badgeRed, 6); handset(-150, 346, 1.45, PI + 0.0, '#FFFFFF');
+    fs(circ(150, 340, 82), C.bubGreen, 6); handset(150, 336, 1.45, -0.6, '#FFFFFF');
+    g.restore();
+    fs(rr(sx, sy, sw, sh, 60), null, 4);
+  }
+
+  // ================================================================== B · PREPARED FOR WAR
+  function drawB() {
+    const HX = 1335, HY = 548;
+    burst(HX, HY, '#EE6A3C', '#F4874B', 26, 0.1);
+    glow(HX, HY, 650, '#FFD9A0', 0.45);
+    vignette('#5A1A0C', 0.45);
+
+    // the doorway at the left: calm office light, the boss shrugging in it
+    const dx = 110, dy = 455, dw = 400, dh = 720;
+    fs(rr(dx - 48, dy - 48, dw + 96, dh + 96, 6), '#CC8A5C', 8);
+    g.save(); g.clip(rr(dx - 48, dy - 48, dw + 96, dh + 96, 6)); g.fillStyle = '#B87650'; g.fillRect(dx - 52, dy - 52, 40, dh + 100); g.restore();
+    fs(rr(dx - 48, dy - 48, dw + 96, dh + 96, 6), null, 8);
+    fs(rr(dx, dy, dw, dh, 2), '#FFF1D2', 7);
+    g.save(); g.clip(rr(dx, dy, dw, dh, 2));
+    g.fillStyle = '#F7D9A4'; g.fillRect(dx, dy + 500, dw, 300); line([[dx, dy + 500], [dx + dw, dy + 500]], 4);
+    const bs = 0.72, bx = dx + dw / 2 + 4, by = dy + 690;
+    const boss = POV.figure(g, 'boss', { x: bx, y: by, scale: bs, pose: 'shrug', turn: 0.2, look: [0.6, 0.05], expr: 'neutral', shadow: 'rgba(150,90,40,0.25)',
+      face: { brows: { lift: 0.12, tilt: 0.0, arch: 0.32 }, eyes: { lid: 0.36, pupil: 1 }, mouth: { k: 'flat', w: 0.14 } } });
+    g.restore();
+    fs(rr(dx, dy, dw, dh, 2), null, 7);
+    // little shrug marks over his shoulders
+    [[-1, boss.handL], [1, boss.handR]].forEach(([s, h]) => { const x = h[0], y = h[1] - 46; line([[x - s * 4, y - 6], [x + s * 10, y - 26]], 5); line([[x + s * 22, y + 2], [x + s * 40, y - 10]], 5); });
+
+    // the hero, braced: pot helmet, frying-pan shield, wooden spoon up
+    const sc = 1.85, fy = HY + 700 * sc;
+    const pose = { stance: 'front', head: { tilt: -0.04 },
+      armR: { ik: [244, -116], bend: 1, ul: 1, fl: 1, hand: 'fist', flip: -1, hrot: 0.2, hs: 1.15, z: 'back' },
+      armL: { a: -2.62, e: -0.25, hand: 'fist', flip: 1, hrot: 1.6, hs: 1.15 },
+      legL: { a: -0.02, k: 0 }, legR: { a: 0.02, k: 0 } };
+    const hero = POV.figure(g, 'hero', { x: HX, y: fy, scale: sc, facing: -1, pose, turn: 0.3, look: [0.95, 0.1],
+      expr: { brows: { lift: -0.03, tilt: -0.16, arch: 0.02, thick: 1.35 }, eyes: { r: 1.16, pupil: 0.68 }, sweat: 1, crease: 1, mouth: { k: 'grit', w: 0.25, h: 0.13 } },
+      drawProp: (gg, J, F) => {
+        // wooden spoon held up like a sword: up and a little back from the far fist
+        const A = J.armL, dl = Math.hypot(0.28, 1), d = [-0.28 / dl, -1 / dl];
+        const t = [A.Wr[0] - d[0] * 34, A.Wr[1] - d[1] * 34], b = [A.Wr[0] + d[0] * 170, A.Wr[1] + d[1] * 170], bowl = [A.Wr[0] + d[0] * 205, A.Wr[1] + d[1] * 205];
+        gg.save(); gg.lineCap = 'round';
+        gg.lineWidth = 20 + 2 * F.lw; gg.strokeStyle = INK; gg.beginPath(); gg.moveTo(t[0], t[1]); gg.lineTo(b[0], b[1]); gg.stroke();
+        gg.lineWidth = 20; gg.strokeStyle = '#E0A868'; gg.stroke();
+        gg.translate(bowl[0], bowl[1]); gg.rotate(Math.atan2(d[1], d[0]) + PI / 2);
+        const p = new Path2D(); p.ellipse(0, 0, 34, 50, 0, 0, TAU); gg.fillStyle = '#E0A868'; gg.fill(p); gg.lineWidth = F.lw; gg.strokeStyle = INK; gg.stroke(p);
+        gg.fillStyle = '#C48A52'; gg.beginPath(); gg.ellipse(3, 4, 20, 33, 0, 0, TAU); gg.fill();
+        gg.restore();
+        POV.drawHand(F, A.Wr, A.ha, A.hand, A.flip, A.hs);
+        // the frying pan as a shield, in front of the chest; its handle runs down to the near fist (the arm behind the pan)
+        const R = J.armR, pc = [146, -226], pr = 108, hv = [R.Wr[0] - pc[0], R.Wr[1] - pc[1]], hl = Math.hypot(hv[0], hv[1]), hu = [hv[0] / hl, hv[1] / hl];
+        const h0 = [pc[0] + hu[0] * (pr - 6), pc[1] + hu[1] * (pr - 6)], h1 = [R.Wr[0] + hu[0] * 44, R.Wr[1] + hu[1] * 44];
+        gg.save(); gg.lineCap = 'round';
+        gg.lineWidth = 26 + 2 * F.lw; gg.strokeStyle = INK; gg.beginPath(); gg.moveTo(h0[0], h0[1]); gg.lineTo(h1[0], h1[1]); gg.stroke();
+        gg.lineWidth = 26; gg.strokeStyle = '#2E3036'; gg.stroke();
+        const pan = new Path2D(); pan.arc(pc[0], pc[1], pr, 0, TAU);
+        gg.fillStyle = '#3A3D45'; gg.fill(pan); gg.lineWidth = F.lw * 1.1; gg.strokeStyle = INK; gg.stroke(pan);
+        const inner = new Path2D(); inner.arc(pc[0] + 4, pc[1] + 4, pr * 0.8, 0, TAU); gg.fillStyle = '#4C5059'; gg.fill(inner); gg.lineWidth = F.lw * 0.5; gg.stroke(inner);
+        gg.strokeStyle = 'rgba(255,255,255,0.55)'; gg.lineWidth = 9; gg.beginPath(); gg.arc(pc[0] + 4, pc[1] + 4, pr * 0.62, PI * 1.08, PI * 1.42); gg.stroke();
+        gg.lineWidth = 6; gg.beginPath(); gg.arc(pc[0] + 4, pc[1] + 4, pr * 0.62, PI * 1.52, PI * 1.6); gg.stroke();
+        gg.restore();
+        POV.drawHand(F, R.Wr, R.ha, R.hand, R.flip, R.hs);   // the fist on the handle, over it
+      } });
+    // pot helmet on the head
+    helmet(hero.head[0], hero.head[1], hero.headR, -1);
+
+    // the title, top-left, in two lines
+    hook('PREPARED', 70, 205, 196, '#FFFFFF', { rot: -0.035 });
+    hook('FOR WAR', 92, 405, 196, '#FFD447', { rot: -0.035 });
+  }
+  // a cooking pot worn upside down as a helmet: two loop handles, the base on top; facing: -1 = facing left
+  function helmet(cx, cy, R, facing) {
+    g.save(); g.translate(cx + facing * 0.04 * R, cy); g.rotate(facing * -0.12); g.scale(R / 100, R / 100); g.lineCap = 'round'; g.lineJoin = 'round';
+    const lw = 9.5 * 100 / R, steel = '#BCC5CF', steelSh = '#9BA6B3';
+    // loop handles either side
+    [-1, 1].forEach(s => { const p = new Path2D(); p.moveTo(s * 98, -112); p.bezierCurveTo(s * 150, -118, s * 152, -66, s * 102, -70);
+      g.lineWidth = 15 + 2 * lw; g.strokeStyle = INK; g.stroke(p); g.lineWidth = 15; g.strokeStyle = '#3A3D45'; g.stroke(p); });
+    // pot body (open end down on the head)
+    const body = new Path2D(); body.moveTo(-106, -46); body.lineTo(-98, -140); body.quadraticCurveTo(-96, -154, -80, -156); body.lineTo(80, -156); body.quadraticCurveTo(96, -154, 98, -140); body.lineTo(106, -46); body.closePath();
+    fs(body, steel, lw);
+    g.save(); g.clip(body); g.fillStyle = steelSh; g.fillRect(-facing * 40 - 30, -170, 90, 140); g.fillStyle = 'rgba(255,255,255,0.75)'; g.fillRect(facing * 58 - 8, -150, 15, 96); g.fillRect(facing * 34 - 4, -150, 7, 96); g.restore();
+    fs(body, null, lw);
+    // the base, seen as a slightly domed top edge
+    line([[-80, -148], [80, -148]], lw * 0.45);
+    // rim
+    fs(rr(-118, -60, 236, 30, 13), '#A9B3BE', lw);
+    g.restore();
+  }
+
+  // ================================================================== C · BODY SAYS NO
+  function drawC() {
+    const cx = 960, headR = 224, bsc = 0.78, feetY = 1098, headY = feetY - 610 * bsc - 0.9 * headR;
+    burst(cx, headY, '#94CBC1', '#A9D7CE', 28, 0.0);
+    glow(cx, headY, 640, '#E8FFF7', 0.4);
+    vignette('#1F5C57', 0.35);
+
+    // the body, small under the big head: two thumbs? one thumbs-up, the other a clenched fist; knees knocking
+    const pose = { stance: 'front', shoulders: 6,
+      armR: { a: 0.98, e: 1.72, hand: 'none', flip: -1 },
+      armL: { a: -0.2, e: -0.34, hand: 'fist', flip: 1, hs: 1.35 },
+      legL: { a: 0.15, k: 0.34 }, legR: { a: -0.15, k: -0.34 } };
+    const opts = { x: cx, y: feetY, scale: bsc, pose, expr: 'neutral', shadow: 'rgba(30,90,85,0.25)' };
+    // trembling: a faint double image first, offset
+    g.save(); g.globalAlpha = 0.28; const G1 = POV.figure(g, 'hero', Object.assign({}, opts, { x: cx - 16, shadow: false })); thumbUp(G1, bsc * 1.9); g.restore();
+    g.save(); g.globalAlpha = 0.22; const G2 = POV.figure(g, 'hero', Object.assign({}, opts, { x: cx + 14, shadow: false })); thumbUp(G2, bsc * 1.9); g.restore();
+    const B = POV.figure(g, 'hero', opts);
+    thumbUp(B, bsc * 1.9);
+    // shake marks: either side of the body and at the knees
+    const neckY = B.head[1] + B.headR * 0.9;
+    [[-1, 0.46], [1, 0.46], [-1, 0.74], [1, 0.74]].forEach(([s, k]) => {
+      const y = neckY + (feetY - neckY) * k, x = cx + s * 150;
+      for (let j = 0; j < 3; j++) line([[x + s * j * 18, y - 30 + j * 6], [x + s * (j * 18 + 10), y - 10 + j * 6], [x + s * j * 18, y + 10 + j * 6], [x + s * (j * 18 + 10), y + 30 + j * 6]], 6);
+    });
+    // knock-knock at the knees
+    const K = [(B.kneeL[0] + B.kneeR[0]) / 2, (B.kneeL[1] + B.kneeR[1]) / 2];
+    ticks(K[0], K[1], [[PI * 1.15, 40, 74], [PI * 1.5, 34, 66], [PI * 1.85, 40, 74], [PI * 0.85, 40, 70], [PI * 0.15, 40, 70]], 6);
+
+    // the big head: wide-open panicked eyes over a huge forced grin; sweat flying
+    const hcx = cx, hcy = neckY - headR * 0.9;
+    // a ghost outline of the head (trembling)
+    g.save(); g.globalAlpha = 0.3; fs(circ(hcx - 18, hcy, headR), null, 8); fs(circ(hcx + 16, hcy - 4, headR), null, 8); g.restore();
+    const face = { expr: { brows: { lift: 0.13, tilt: 0.17, arch: 0.1, thick: 1.1 }, eyes: { r: 1.2, pupil: 0.55 }, mouth: { k: 'none' } }, look: [0, -0.05] };
+    const Hd = bigHead(hcx, hcy, headR, 'hero', face);
+    // the forced grin, in head space
+    g.save(); g.setTransform(Hd.M); const lw = Hd.lw;
+    const my = 0.04 * 100 + 0.47 * 100 - 8, mw = 58;
+    const m = new Path2D(); m.moveTo(-mw, my - 18); m.quadraticCurveTo(0, my - 4, mw, my - 18); m.quadraticCurveTo(mw * 0.88, my + 34, 0, my + 36); m.quadraticCurveTo(-mw * 0.88, my + 34, -mw, my - 18); m.closePath();
+    g.fillStyle = '#FFFFFF'; g.fill(m);
+    g.save(); g.clip(m);
+    line([[-mw, my + 9], [mw, my + 9]], lw * 0.5);
+    [-40, -20, 0, 20, 40].forEach(x => line([[x, my - 24], [x, my + 44]], lw * 0.42));
+    g.restore();
+    g.lineWidth = lw * 0.85; g.strokeStyle = INK; g.stroke(m);
+    // strain at the corners
+    [-1, 1].forEach(s => { line([[s * (mw + 3), my - 22], [s * (mw + 9), my - 8]], lw * 0.6); line([[s * (mw + 8), my - 26], [s * (mw + 18), my - 20]], lw * 0.5); });
+    g.restore();
+    // sweat: drops on the head and flying off it
+    [[-0.8, -0.5, -0.5, 27], [0.84, -0.44, 0.5, 25], [-1.22, 0.02, -0.95, 21], [1.24, -0.06, 0.95, 23], [-1.12, -0.5, -0.7, 16], [1.1, -0.56, 0.7, 17]].forEach(([x, y, a, r]) => sweat(hcx + x * headR, hcy + y * headR, r, a));
+    // shake lines beside the head
+    [-1, 1].forEach(s => { for (let j = 0; j < 3; j++) { const p = new Path2D(), r = headR + 34 + j * 24; p.arc(hcx, hcy, r, s > 0 ? -0.35 : PI - 0.35, s > 0 ? 0.35 : PI + 0.35); g.lineWidth = 7; g.strokeStyle = INK; g.stroke(p); } });
+
+    // title
+    const size = 180, a = 'BODY SAYS ', b = 'NO', wa = measure(a, size), wb = measure(b, size), x0 = (W - wa - wb) / 2;
+    hook(a, x0, 180, size, '#FFFFFF');
+    hook(b, x0 + wa, 180, size, '#FF5A4E');
+  }
+
+  // a thumbs-up fist, upright, at a figure's right wrist (the kit's 'thumb' hand points the thumb down when raised)
+  function thumbUp(A, s) {
+    const wr = A.handR, el = A.elbowR, dl = Math.hypot(wr[0] - el[0], wr[1] - el[1]) || 1, d = [(wr[0] - el[0]) / dl, (wr[1] - el[1]) / dl];
+    const lw = 4.6 * 0.9;
+    g.save(); g.translate(wr[0] + d[0] * 20 * s, wr[1] + d[1] * 20 * s); g.rotate(0.12); g.scale(s, s); g.lineCap = 'round'; g.lineJoin = 'round';
+    const fist = rr(-24, -16, 52, 46, 15), thumb = new Path2D(); thumb.moveTo(-14, -8); thumb.lineTo(-11, -46);
+    g.strokeStyle = INK; g.lineWidth = lw * 2; g.stroke(fist); g.lineWidth = 19 + 2 * lw; g.stroke(thumb);
+    g.fillStyle = C.skin; g.fill(fist); g.strokeStyle = C.skin; g.lineWidth = 19; g.stroke(thumb);
+    // curled fingers stacked on the front, a knuckle line, the thumbnail
+    g.strokeStyle = INK; g.lineWidth = lw * 0.62;
+    [-2, 9, 20].forEach(y => { g.beginPath(); g.moveTo(6, y); g.lineTo(27, y); g.stroke(); });
+    g.beginPath(); g.moveTo(-3, -16); g.quadraticCurveTo(-2, -4, 6, -2); g.stroke();
+    g.beginPath(); g.moveTo(-17, -42); g.quadraticCurveTo(-11, -36, -6, -42); g.stroke();
+    g.restore();
+  }
+
+  ({ a: drawA, b: drawB, c: drawC }[v] || drawA)();
+
+  const out = document.createElement('canvas'); out.width = 1280; out.height = 720; document.body.appendChild(out);
+  const o = out.getContext('2d'); o.imageSmoothingEnabled = true; o.imageSmoothingQuality = 'high'; o.drawImage(work, 0, 0, 1280, 720);
+  window.FRAME_READY = true;
+});
+</script>

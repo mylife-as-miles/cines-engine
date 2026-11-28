@@ -103,5 +103,18 @@
    "a whoosh"
   ],
   "chosen": "plate_slide"
+ },
+ "pile_sa": {
+  "prompt": "a tall stack of paper sheets and cards toppling over and sliding onto a wooden desk, papers fluttering, close, quiet room",
+  "dur": 3,
+  "seed": 81,
+  "match": "a stack of papers falling over",
+  "alts": [
+   "a door closing",
+   "applause",
+   "a book dropped on a table",
+   "rain"
+  ],
+  "chosen": false
  }
 }

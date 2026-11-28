@@ -17,8 +17,8 @@
   // the office exchange, drawn at time tt (the freeze draws it at the instant of "pause")
   function exchange(c, tt) {
     const cf = Object.assign({}, c, { t: tt }); c.set('office', { clock: '2:10' });
-    ART.fig(cf, 'coworker', { x: 1450, y: 962, face: -1, pose: tt > T.asks[1] + 0.2 ? 'stand' : 'point', expr: 'happy', talk: T.asks });
-    const h = ART.fig(cf, 'hero', { x: 640, y: 962, face: 1, pose: tt > T.letMe[0] - 0.2 ? 'handup' : 'stand', expr: tt > T.letMe[0] - 0.2 ? 'neutral' : 'surprised', talk: T.letMe });
+    ART.fig(cf, 'coworker', { x: 1450, y: 962, face: -1, pose: tt > T.asks[1] + 0.2 ? 'stand' : 'wave', phase: 0.15, expr: 'happy', talk: T.asks, turn: 0.6, look: [0.75, 0.05] });
+    const h = ART.fig(cf, 'hero', { x: 640, y: 962, face: 1, pose: tt > T.letMe[0] - 0.2 ? 'handup' : 'stand', expr: tt > T.letMe[0] - 0.2 ? 'neutral' : 'surprised', talk: T.letMe, turn: 0.6, look: [0.75, 0.05] });
     return h;
   }
   // the bubble beside the hero's head, between him and the coworker
@@ -42,7 +42,7 @@
       S.bed('music', T.start, T.gives + 0.6, { mood: 'upbeat, practical' }); S.silence(T.pause - 0.05, T.choose - 0.1); S.bed('music', T.choose - 0.1, T.end, { mood: 'upbeat, resolving' });
       S.cue('whoosh', T.start - 0.1); S.cue('whoosh', T.forWeek - 0.05); S.bed('office_room', T.forWeek, T.choose);
       S.cue('pop', T.letMe[0]); S.cue('freeze', T.pause);
-      S.cue('pop', BUTTONS[0][1]); S.cue('pop', BUTTONS[2][1]); /* the first button and the third (the answer) */ S.cue('button_click', T.purpose); S.cue('ding', T.purpose + 0.15);
+      S.cue('pop', BUTTONS[2][1]); /* the third button (the answer) */ S.cue('button_click', T.purpose); S.cue('ding', T.purpose + 0.15);
     },
     shots: [
       { at: T.start, name: 'plain: do not say no to everyone: pointing at the viewer (ref 02)', in: { type: 'wipe', dir: 'right', color: '#3A8594' }, push: { from: 1, to: 1.06 },

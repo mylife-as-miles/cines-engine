@@ -8,13 +8,16 @@
   const { seg, pop, ease } = FILM;
   const T = {
     start: W("here's"), noticed: W('noticed'), most: W('most of'), kindness: W('kindness'), fear: W('fear'), fearThat: W('fear that'), liking: W('liking'),
-    guilty: W('that guilty'), tuesday: W('tuesday'), itWas: W('it was not'), proof: W('proof'), changing: W('changing'), habit: W('habit'), like: Wend('like'),
+    guilty: W('that guilty'), tuesday: W('tuesday'), itWas: W('it was not'), proof: W('proof'), wrong: W('wrong'), changing: W('changing'), habit: W('habit'), like: Wend('like'),
     end: FILM.W('so do not'),
   };
   const CAST = [['boss', 330, 300, 'angry'], ['friend', 1590, 300, 'angry'], ['mum', 360, 790, 'sad'], ['coworker', 1560, 790, 'confused'], ['stranger', 1290, 135, 'sad']];
 
   function cloudBack(c) {
-    const t = c.t, h = STAGE.plainHero(c, { expr: t > T.itWas ? 'worried' : 'guilty', look: [0.7, -0.5] }); const hd = ART.head('hero', h);
+    const t = c.t;
+    // he looks up at it, his head sinks; then hands clasped on "proof" and a small shrug on "wrong"
+    const pose = t > T.wrong - 0.1 ? 'shrug' : t > T.proof - 0.1 ? 'hands_clasped' : 'stand';
+    const h = STAGE.plainHero(c, { pose, expr: t > T.wrong ? 'neutral' : t > T.itWas ? 'worried' : 'guilty', look: [0.7, -0.6 + 0.4 * seg(t, T.tuesday, T.itWas)], override: { head: { sink: 10 * seg(t, T.guilty + 0.5, T.tuesday + 0.5), tilt: 0.06 * Math.sin(t * 1.3) } } }); const hd = ART.head('hero', h);
     const x = 1500 + 520 * (1 - ease.outCubic(seg(t, T.guilty, T.guilty + 1.6))), y = hd.y - hd.r * 1.6 + Math.sin(t * 1.8) * 8;
     GFX.cloud(c.g, x, y, 1.1);
   }

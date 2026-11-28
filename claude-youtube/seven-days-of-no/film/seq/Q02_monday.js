@@ -23,9 +23,9 @@
     else { wk = walk(t, T.okay[1] + 0.25, T.okay[1] + 2.6, BOSS_STOP, 2300); x = wk.x; }
     const shrug = t >= T.okay[0] - 0.1 && t < T.okay[1] + 0.35;
     return c.fig('boss', Object.assign({ x, y: FLOOR, s: 1, face: wk.moving ? wk.face : -1, pose: wk.moving ? 'walk' : shrug ? 'shrug' : 'hold_clipboard', walk: wk.walk,
-      hold: wk.moving ? 'clipboard' : undefined, talk: [T.ask, T.okay] }, o || {}));
+      hold: wk.moving ? 'clipboard' : undefined, talk: [T.ask, T.okay], turn: wk.moving ? undefined : 0.6, look: wk.moving ? undefined : [0.75, 0.05] }, o || {}));
   }
-  function hero(c, o) { return c.fig('hero', Object.assign({ x: HERO_X, y: FLOOR, s: 1, face: 1, pose: 'stand', expr: 'neutral' }, o || {})); }
+  function hero(c, o) { return c.fig('hero', Object.assign({ x: HERO_X, y: FLOOR, s: 1, face: 1, pose: 'stand', expr: 'neutral', turn: 0.6, look: [0.75, 0.05] }, o || {})); }
 
   FILM.seq({
     id: 'Q02', title: 'Monday: the boss', chapter: 'Monday: the boss', from: T.card,

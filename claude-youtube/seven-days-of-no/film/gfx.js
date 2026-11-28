@@ -260,9 +260,16 @@
     // the name and a little time stamp
     rr(g, ax + 100, ay - 36, 250, 34, 17); g.fillStyle = '#3A8594'; g.fill(); rr(g, ax + 370, ay - 30, 90, 22, 11); g.fillStyle = '#D5DCE2'; g.fill();
     // two lines writing themselves in, with a caret
-    const L = [[ax + 100, ay + 40, w - 330], [ax + 100, ay + 100, (w - 330) * 0.68]];
-    L.forEach(([x, y, lw2], i) => { const u = FILM.clamp(k * 2 - i, 0, 1); if (u <= 0) return; rr(g, x, y, Math.max(26, lw2 * u), 28, 14); g.fillStyle = '#C9D3DC'; g.fill();
-      if (u < 1 && Math.floor((o.t || 0) * 3) % 2 === 0) { g.fillStyle = '#3A8594'; g.fillRect(x + lw2 * u + 8, y - 4, 6, 36); } });
+    if (o.lines) {
+      // the comment's words, in big type, written in letter by letter as k goes 0..1, with a caret
+      const all = o.lines.join('\n'), n = Math.round(all.length * k); let used = 0;
+      o.lines.forEach((line, i) => { const shown = line.slice(0, Math.max(0, Math.min(line.length, n - used))); used += line.length + 1;
+        const y = -h / 2 + 248 + i * 100; text(g, shown, ax - 50, y, { size: i ? 84 : 66, weight: i ? 900 : 800, align: 'left', color: i ? '#E5534B' : INK, maxW: w - 140 });
+        if (shown.length < line.length && shown.length > 0 && Math.floor((o.t || 0) * 3) % 2 === 0) { g.save(); g.font = `${i ? 900 : 800} ${i ? 84 : 66}px ${FONT}`; const tw = g.measureText(shown).width; g.restore(); g.fillStyle = '#3A8594'; g.fillRect(ax - 50 + tw + 8, y - 34, 6, 64); } });
+    } else {
+      const L = [[ax + 100, ay + 40, w - 330], [ax + 100, ay + 100, (w - 330) * 0.68]];
+      L.forEach(([x, y, lw2], i) => { const u = FILM.clamp(k * 2 - i, 0, 1); if (u <= 0) return; rr(g, x, y, Math.max(26, lw2 * u), 28, 14); g.fillStyle = '#C9D3DC'; g.fill(); });
+    }
     // the heart (and a soft burst when it lands)
     const hk = o.heart || 0; if (hk > 0) { const st = 0.35 + 0.65 * FILM.ease.outBack(Math.min(1, hk), 2.4); const hx = w / 2 - 110, hy = h / 2 - 90;
       g.save(); g.translate(hx, hy); g.scale(st, st); g.beginPath(); g.moveTo(0, 34); g.bezierCurveTo(-62, -6, -40, -62, 0, -28); g.bezierCurveTo(40, -62, 62, -6, 0, 34); g.closePath(); inked(g, '#E5534B', lw); g.restore();
@@ -364,4 +371,40 @@
     for (let i = -1; i <= 1; i++) { g.beginPath(); g.ellipse(x + i * 22, y - 18, 11, 22, 0, 0, TAU); inked(g, col('skin', '#FCEBCB'), lw * 0.8); }
     g.restore();
   };
+})(window);
+
+// ---------------------------------------------------------------- the hook's pile of requests and the body's NO
+(function (global) {
+  'use strict';
+  const FILM = global.FILM, GFX = global.GFX, INK = '#1c1c1c', TAU = Math.PI * 2;
+  const PR = n => (global.POV && global.POV.PROPS && typeof global.POV.PROPS[n] === 'function') ? global.POV.PROPS[n] : null;
+  // a request card: a cream card with one icon (what was asked), cx/cy its centre
+  GFX.taskCard = function (g, cx, cy, kind, rot, s) {
+    s = s || 1; g.save(); g.translate(cx, cy); g.rotate(rot || 0); g.scale(s, s);
+    GFX.card(g, 0, 0, 300, 180, { fill: '#FFF4E3', r: 24, lw: 5, shadow: false, band: '#F5A454', bandH: 34 });
+    g.translate(0, 18);
+    if (kind === 'late') global.ART.clock(g, 0, 0, 56, '9:20');
+    else if (kind === 'money') GFX.banknote(g, 0, 0, 0.85, -0.1);
+    else if (kind === 'party') GFX.partyHat(g, 0, 50, 0.75, 0.1);
+    else if (kind === 'phone' && PR('notif')) PR('notif')(g, 0, 0, { s: 1.6, kind: 'call', bg: '#77CC81' });
+    else if (kind === 'mail' && PR('notif')) PR('notif')(g, 0, 0, { s: 1.6, kind: 'mail' });
+    else if (kind === 'box' && PR('box')) PR('box')(g, -10, 10, { s: 0.75 });
+    else if (kind === 'clip' && PR('clipboard')) PR('clipboard')(g, 0, 0, { s: 0.75, front: true });
+    else if (kind === 'mug' && PR('mug')) PR('mug')(g, 0, 0, { s: 1.6 });
+    else if (kind === 'plate' && PR('plateIcon')) PR('plateIcon')(g, 0, 0, { s: 0.9 });
+    else GFX.text(g, '?', 0, 0, { size: 80, weight: 900 });
+    g.restore();
+  };
+  // a jagged shout burst with a word in it (the body's NO): s scale, k 0..1 how far it has grown
+  GFX.burst = function (g, cx, cy, s, word, o) {
+    o = o || {}; g.save(); g.translate(cx, cy); g.scale(s, s); g.rotate(o.rot || -0.06);
+    const n = 14, R1 = 260, R2 = 190, R = FILM.rng('burst' + word); g.beginPath();
+    for (let i = 0; i < n * 2; i++) { const a = i / (n * 2) * TAU, r = (i % 2 ? R2 : R1) * (0.92 + 0.16 * R()); const x = Math.cos(a) * r * 1.25, y = Math.sin(a) * r * 0.82; i ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.closePath(); g.fillStyle = 'rgba(28,28,28,0.18)'; g.save(); g.translate(14, 16); g.fill(); g.restore();
+    g.fillStyle = o.fill || '#E5534B'; g.fill(); g.lineWidth = 9; g.strokeStyle = INK; g.lineJoin = 'round'; g.stroke();
+    GFX.text(g, word, 0, 10, { size: o.size || 190, weight: 900, color: '#FFFFFF', stroke: 14, strokeColor: INK });
+    g.restore();
+  };
+  // a big question mark (the question), with a squash pop applied by the caller
+  GFX.bigQuestion = function (g, cx, cy, s) { g.save(); g.translate(cx, cy); g.scale(s || 1, s || 1); g.beginPath(); g.arc(0, 0, 110, 0, TAU); g.fillStyle = '#FFF4E3'; g.fill(); g.lineWidth = 8; g.strokeStyle = INK; g.stroke(); GFX.text(g, '?', 0, 10, { size: 170, weight: 900, color: '#3A8594' }); g.restore(); };
 })(window);

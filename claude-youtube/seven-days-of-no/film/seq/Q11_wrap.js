@@ -20,7 +20,7 @@
     sound(S) {
       S.bed('music', T.start, T.last, { mood: 'warm recap, then playful' });
       S.cue('whoosh', T.start - 0.1); S.cue('pop', T.tired);
-      S.cue('whoosh', T.now - 0.05); S.cue('pop', T.now + 0.15); S.cue('typing', T.comments, { n: 10 });
+      S.cue('whoosh', T.now - 0.05); S.cue('pop', T.now + 0.15); S.cue('typing', T.comments, { n: 16 }); S.cue('ding', T.comments + 2.3);
       S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food);
     },
     shots: [
@@ -28,8 +28,8 @@
         draw(c) {
           c.set('plain', {}); const t = c.t;
           DAYS3.forEach((d, i) => {
-            const x = 960 + (i - 3) * 250; GFX.at(c.g, x, 520, pop(t, POP7[i], 0.32), q => GFX.card(q, 0, 0, 220, 300, { fill: '#FFF4E3', band: '#3A8594', bandH: 64, r: 26, rot: (i % 2 ? 0.03 : -0.03),
-              draw: g2 => { GFX.text(g2, d, 0, -118, { size: 40, weight: 900, color: '#FFFFFF' }); g2.save(); g2.translate(0, 30); GFX.portrait(c, 'hero', 0, 0, 82, { expr: FACES[i], bg: '#BFE3E0' }); g2.restore(); } }));
+            const x = 960 + (i - 3) * 266; GFX.at(c.g, x, 540, pop(t, POP7[i], 0.32), q => GFX.card(q, 0, 0, 250, 420, { fill: '#FFF4E3', band: '#3A8594', bandH: 74, r: 30, rot: (i % 2 ? 0.025 : -0.025),
+              draw: g2 => { GFX.text(g2, d, 0, -170, { size: 46, weight: 900, color: '#FFFFFF' }); g2.save(); g2.translate(0, 40); GFX.portrait(c, 'hero', 0, 0, 108, { expr: FACES[i], bg: '#BFE3E0' }); g2.restore(); } }));
           });
         } },
       { at: T.would, name: 'plain: tired, a little guilty, a lot more honest', push: { from: 1.06, to: 1 + 0.0001 },
@@ -40,9 +40,9 @@
       { at: T.now, name: 'plain: tell me in the comments: a friendly comment bubble', in: 'pop', push: { from: 1, to: 1.08, x: 1100, y: 480 },
         draw(c) {
           c.set('plain', {}); const t = c.t; const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 });
-          c.fig('hero', { x: 330, y: a.y, s: a.s * 0.9, face: 1, pose: 'point', expr: 'happy', nod: 0.1 * FILM.wob(t, 0.4, 3) });
-          const n = seg(t, T.comments, T.go - 0.9);
-          GFX.at(c.g, 1180, 470, pop(t, T.now + 0.15, 0.36), q => GFX.comment(q, 0, 0, 1040, 440, { k: n, heart: seg(t, T.go - 0.8, T.go - 0.5), t, tail: [-330, 330] }));
+          c.fig('hero', { x: 330, y: a.y, s: a.s * 0.9, face: 1, pose: 'stand', expr: 'happy', nod: 0.1 * FILM.wob(t, 0.4, 3), turn: 0.4, look: [0.8, -0.2], override: { armR: { a: 1.15, e: 0.55, hand: 'open', flip: 1, hrot: -0.3 } } });
+          const n = seg(t, T.comments - 0.1, T.comments + 2.1);
+          GFX.at(c.g, 1180, 470, pop(t, T.now + 0.15, 0.36), q => GFX.comment(q, 0, 0, 1080, 460, { k: n, heart: seg(t, T.comments + 2.3, T.comments + 2.6), t, tail: [-330, 340], lines: ['Said yes to a 7am meeting.', 'Regret.'] }));
         } },
       { at: T.go, name: "close: I'll go first; I said no to food: his hand pushes the plate away", in: 'pop',
         draw(c) {

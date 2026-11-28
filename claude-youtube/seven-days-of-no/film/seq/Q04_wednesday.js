@@ -55,8 +55,17 @@
         draw(c) { STAGE.heroSofa(c, EVE, { hold: 'mug' }); STAGE.dayCard(c, T.card + 0.05, T.mom - 0.05, 'WEDNESDAY'); } },
       { at: T.mom, name: 'call: Mom asks about Sunday lunch, "No."',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.no[1] ? 'surprised' : 'happy' }, hero: { expr: 'neutral' } }); } },
-      { at: T.argue, name: 'call: "fine", a tight smile; "not fine", one eye twitches',
+      { at: T.argue, name: 'call: she does not argue',
         draw(c) { const t = c.t; call(c, { mum: { expr: t > T.says ? 'neutral' : 'surprised', faceOver: t > T.says ? { mouth: { k: 'flat', w: 0.2 } } : null, blinks: [T.notFine, T.notFine + 0.14, T.notFine + 0.28], tremble: t > T.notFine ? 1.5 : 0 }, hero: { expr: 'worried', talk: null } }); } },
+      { at: T.says, name: 'close on Mom: "fine", a tight smile; "not fine", one eye twitches', in: 'pop', push: { from: 1, to: 1.06, x: 1000, y: 400 },
+        draw(c) {
+          const t = c.t, a = c.anchor('mumKitchen', 'center'); c.camera({ x: a.x - 20, y: 360, zoom: 2.15 }); c.set('mumKitchen', {});
+          const m = c.fig('mum', { x: a.x + 40, y: a.y, s: a.s, face: -1, pose: 'hold_phone', mode: 'ear', talk: T.fine, expr: 'neutral', faceOver: { mouth: { k: 'flat', w: 0.24 } },
+            blinks: [T.notFine + 0.3, T.notFine + 0.42, T.notFine + 0.54], tremble: t > T.notFine + 0.3 ? 1.2 : 0, nod: t > T.notFine + 0.3 ? 0.08 * Math.sin(t * 40) : 0 });
+          c.setFront('mumKitchen', {});
+          if (t > T.notFine + 0.3) { const hd = ART.head('mum', m), k = Math.floor((t - T.notFine) * 12) % 3; c.g.save(); c.g.lineWidth = 6; c.g.strokeStyle = '#1c1c1c'; c.g.lineCap = 'round';
+            for (let i = 0; i < 3; i++) { const ang = Math.PI + (-0.5 + i * 0.5); const r0 = hd.r * 1.05 + k * 4; c.g.beginPath(); c.g.moveTo(hd.x - hd.r * 0.1 + Math.cos(ang) * r0, hd.y - hd.r * 0.15 + Math.sin(ang) * r0); c.g.lineTo(hd.x - hd.r * 0.1 + Math.cos(ang) * (r0 + 36), hd.y - hd.r * 0.15 + Math.sin(ang) * (r0 + 36)); c.g.stroke(); } c.g.restore(); }
+        } },
       { at: T.again, name: 'living: the phone buzzing on the table, the hero sips, side-eye', push: { from: 1.15, to: 1.22, x: 1000, y: 620 },
         draw(c) { const t = c.t; STAGE.heroSofa(c, EVE, { pose: 'sit_front', hold: 'sip', expr: 'worried', look: [0.9, 0.4] });
           tablePhone(c, [T.calls2, T.again2], [[T.calls2 + 0.05, -40, 0, 'call', '#77CC81'], [T.again2 + 0.05, 70, 90, 'call', '#77CC81'], [T.again2 + 0.35, -120, 150, 'mail']]); } },
