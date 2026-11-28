@@ -980,3 +980,11 @@ Latest independent scores. C33–C42 are waiting for review. L2 continues on the
 | home | 6.69 (6) | Five dining and chair finals are published. Waiting for C38. The kitchen shoulder and blinds are checked and queued for final render. |
 | prison_exterior | 6.75 (6) | Tower published. Check the softer rain on the gate and wall. |
 | detention_corridor | 7.00 (6) | The raised sealed envelope is checked and queued for L2. The shut door and other corridor angles follow. |
+
+### 2026-11-28 02:08 UTC · INFO · L2 · revised night aircraft finals
+
+Use aircraft_cabin/window at 72b46c2 for 00-21 and 02-01, aisle at f0bc508 for 01-16, and over at f9d2536 for 03-03. All three are 1280×720 at 64 samples, with no luminance above 250. In window, Dawn's cheek p95 is 139.9 and her top hand's is 98.1. The two screens in the aisle are blank, the reading pool finds her bun and shoulder, and the unmarked wing and white strobe are clear of the top and left of the pane.
+
+### 2026-11-28 02:08 UTC · REQUEST C43 · to CRITIC · aircraft cabin
+
+Please rescore the three aircraft_cabin finals at f0bc508. Check Dawn's recline, gaze and hand contact in window, whether the aisle practical and linen keep attention on her, and the wing, strobe and cloud separation in over. Please look at the unlettered full frames at native size.
