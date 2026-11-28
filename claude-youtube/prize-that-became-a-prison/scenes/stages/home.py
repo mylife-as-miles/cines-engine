@@ -37,7 +37,7 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import bpy  # noqa: E402
 import bmesh  # noqa: E402
-from mathutils import Vector  # noqa: E402
+from mathutils import Matrix, Vector  # noqa: E402
 
 import cast as castkit  # noqa: E402
 import people  # noqa: E402
@@ -92,8 +92,10 @@ CAMERAS.update({
                      exposure=-0.75, spp_final=128),
     "kitchen_over": dict(loc=(KT[0] - 0.39, 1.13, 1.41), aim=(KT[0] - 0.05, 0.13, 0.89),
                          lens=55, focus="fx_screen", fstop=3.5, beat="ch02", exposure=-1.3),
-    "tv": dict(loc=(1.98, -0.41, 1.62), aim=(1.73, st.TV[1], 1.54), lens=48,
-               focus="fx_tv", fstop=5.6, beat="ch09", framing="dining", exposure=-0.85, final_res=(1280, 720)),
+    "tv": dict(loc=(2.71, -0.10, 1.02), aim=(2.4, -2.16, 1.33), lens=26,
+               focus="fx_tv", fstop=4.0, beat="ch09", framing="tv", exposure=-0.85),
+    "tv_insert": dict(loc=(1.98, -0.41, 1.62), aim=st.TV, lens=53,
+                      focus="fx_tv", fstop=5.6, beat="ch09", framing="tv", exposure=-0.85),
     "blinds": dict(loc=(3.28, -1.97, 1.34), aim=(3.3, 2.24, 1.18), lens=40,
                    focus="fx_blinds", fstop=5.6, beat="ch10", exposure=-0.85),
 })
@@ -101,6 +103,8 @@ FOCUS.update(fx_gene=(4.1, -0.03, 1.27), fx_screen=(KT[0], 0.15, 0.89),
              fx_blinds=(3.3, 2.21, 1.53), fx_table=(*st.DT, st.D_TOP), fx_tv=st.TV)
 TRIMS = {
     "kitchen": {},
+    "tv": {"tv_spill": 1.0, "tv_return": 1.0, "d_sky": 0.18, "d_sky_end": 0.22,
+           "street": 0.18, "street_side": 0.16, "street_hero": 0.0},
     "dining": {"d_sky": 0.3, "street_hero": 1.5},                         # less side-window glow on the end wall beside the head chair
     # the close-up keeps round 1's foot-end glow (36 W); its floor stripes round the feet and the chair's own share
     # of the street light a little stronger than in the wide, where they would compete with the end-wall patch
@@ -108,7 +112,7 @@ TRIMS = {
 }
 # the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
 # the chair close-up, where the shafts lay a striped veil between the lens and the chair
-HAZE = {"kitchen": None, "dining": 0.012, "chair": 0.0}
+HAZE = {"kitchen": None, "dining": 0.012, "chair": 0.0, "tv": 0.0}
 ONLY = [c for c in os.environ.get("HOME_ONLY", "").split(",") if c in CAMERAS]
 if ONLY:                       # a working shortcut: HOME_ONLY=dining,chair renders just those with `--cam all`
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in ONLY}
@@ -316,24 +320,22 @@ def seat_height(x, y):
 # reading the email: leaning in a little over the table, neck and head bowed to the screen
 UPPER = {"chest": (16, 0), "neck": (8, 0), "head": (17, 3), "fingers": 12}     # neck and head 8 deg further down than
                                                                                 # the first cut: she bows to the screen
-# A relaxed Rigify hand already curls with zero control rotation. Extend the middle joints
-# slightly to lay the finger pads along the trackpad without raising the heel of the hand.
-CURL = {"R": {"f_index": (-8, -5), "f_middle": (-9, -7), "f_ring": (-11, -8),
-              "f_pinky": (-14, -9), "thumb": (-4, -4)},
-        "L": {"f_index": (-6, -4), "f_middle": (-8, -6), "f_ring": (-9, -7),
-              "f_pinky": (-12, -8), "thumb": (-3, -4)}}
+# Curl the resting fingers and bring their natural fan in. Dawn's right index reaches the trackpad.
+CURL = {"R": {"f_index": (15, 27, 12, -8), "f_middle": (8, 12, 6, 0), "f_ring": (10, 14, 8, 6),
+              "f_pinky": (13, 17, 9, 11), "thumb": (-18, -30, -15)},
+        "L": {"f_index": (5, 8, 6, -8), "f_middle": (8, 12, 7, 0), "f_ring": (11, 15, 8, 5),
+              "f_pinky": (13, 17, 9, 10), "thumb": (-15, -32, -10)}}
 # each hand's wrist: x out from the chair's centre line, the wrist bone's height over the table top, and the hand's
 # starting tip down from the forearm. Round 2's right wrist sat 52 mm up and the clearance loop cocked the hand 28 deg
 # up off the deck with the fingers straight (it read as waving at the screen): now the right wrist rests low, just
 # off the laptop's front edge, the hand tipped down onto the trackpad with the fingers curled, and if the fingers
 # still touch the deck the wrist rises rather than the hand cocking back
-HANDS = {"R": dict(wx=-0.075, wz=0.028, pitch=12.0), "L": dict(wx=0.12, wz=0.045, pitch=1.0)}
+HANDS = {"R": dict(wx=-0.075, wz=0.040, pitch=8.0), "L": dict(wx=0.084, wz=0.040, pitch=0.0)}
 
 
 def curl_fingers(holder):
     for side, fingers in CURL.items():
-        rigged.articulate_hand(holder, side, {digit: (base, outer, outer)
-                                             for digit, (base, outer) in fingers.items()})
+        rigged.articulate_hand(holder, side, fingers)
 
 
 SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
@@ -535,13 +537,17 @@ def arms_on_table(holder):
     deck = K_TOP + st.LAP_T + 0.002
     for side, k in ((-1, "R"), (1, "L")):
         e, w, tip, et, wt = out[k]
-        e, w, tip, surface = rest_hand_on_top(holder, side, k, et, wt, deck)
-        pads = min(p.z for p in surface["fingers"] + surface["thumb"])
+        e, w, tip, surface = rest_hand_on_top(holder, side, k, et, wt, deck, gap=0.0005, pitch_limit=32.0,
+                                             palm_tilt=14.0 if k == "R" else 15.0)
         palm = min(p.z for p in surface["palm"])
         if k == "R":
-            touching = [p for p in surface["fingers"] if p.z <= pads + 0.006]
-            out["trackpad"] = sum(touching, Vector()) / len(touching) if touching else tip
-            out["heel"] = max(p.y for p in surface["palm"] if p.z <= palm + 0.006)
+            index = rigged.hand_surface(holder, k, by_digit=True)["f_index"]
+            pad_z = min(p.z for p in index)
+            tip_y = min(p.y for p in index)
+            touching = [p for p in index if p.z <= pad_z + 0.006 and p.y <= tip_y + 0.022]
+            out["trackpad"] = sum(touching, Vector()) / len(touching) if touching else min(index, key=lambda p: p.z)
+            heel = [p.y for p in surface["palm"] if p.z <= palm + 0.006]
+            out["heel"] = sum(heel) / len(heel)
         out[k] = (e, w, tip)
     return out
 
@@ -594,10 +600,11 @@ def table_things(hands):
         pad = hands["trackpad"]
         tp_off = st.LAP_D / 2 - 0.012 - 0.042
         lx = pad.x
-        ly = max(pad.y - tp_off, hands["heel"] + 0.004 - st.LAP_D / 2)
+        ly = max(pad.y - tp_off - 0.010, hands["heel"] + 0.002 - st.LAP_D / 2)
         front = ly + st.LAP_D / 2
         print(f"HOME laptop at ({lx:.3f}, {ly:.3f}), front edge y {front:.3f}; wrists y R {wr.y:.3f} L {wl.y:.3f}, "
-              f"wrist heights over the top R {(wr.z - K_TOP) * 1000:.0f} L {(wl.z - K_TOP) * 1000:.0f} mm, "
+              f"wrist heights over the deck R {(wr.z - K_TOP - st.LAP_T - 0.002) * 1000:.0f} "
+              f"L {(wl.z - K_TOP - st.LAP_T - 0.002) * 1000:.0f} mm, "
               f"hand tips R {(tr.z - K_TOP) * 1000:.0f} L {(tl.z - K_TOP) * 1000:.0f} mm", flush=True)
     else:
         lx, ly = tx - 0.04, ty + 0.2
@@ -617,24 +624,14 @@ def table_things(hands):
     return lap, scr
 
 
-def screen_light(scr):
+def screen_light(scr, name, size, energy, colour=(0.78, 0.86, 1.0), spread=150, offset=0.004):
     """The screen's spill: an area light the size of the screen just in front of it, facing where it faces."""
     mw = scr.matrix_world
     n = (mw.to_3x3() @ Vector((0, 0, 1))).normalized()
-    c = mw.translation + n * 0.004
-    li = sk.area_light("screen_spill", c, (st.LAP_W - 0.028, st.LID_H - 0.034), 2.6, (0.78, 0.86, 1.0), spread_deg=150)
-    li.rotation_euler = n.to_track_quat("-Z", "Y").to_euler()
-    # keep the screen's long side horizontal: turn about the normal until local X lies along the screen's X
-    q = li.rotation_euler.to_quaternion()
-    xs = (mw.to_3x3() @ Vector((1, 0, 0))).normalized()
-    xl = q @ Vector((1, 0, 0))
-    ang = xl.angle(xs)
-    if (xl.cross(xs)).dot(n) < 0:
-        ang = -ang
-    from mathutils import Quaternion
-    li.rotation_euler = (Quaternion(n, ang) @ q).to_euler()
+    li = sk.area_light(name, mw.translation + n * offset, size, energy, colour, spread_deg=spread)
+    li.rotation_euler = (mw.to_3x3().normalized() @ Matrix.Rotation(math.pi, 3, "X")).to_euler()
     li.visible_camera = False
-    st.LIGHTS["screen_spill"] = li
+    st.LIGHTS[name] = li
     return li
 
 
@@ -871,7 +868,11 @@ def apply_camera(name):
     framing = spec.get("framing", name)
     layout = spec.get("layout")
     family_layout(layout)
-    trims = dict(TRIMS.get(framing, {}), family_pendant=0.0)
+    trims = {"family_pendant": 0.0, "tv_spill": 0.0, "tv_return": 0.0, **TRIMS.get(framing, {})}
+    for part in _STATE["tv_chair"].children_recursive:
+        part.hide_render = framing != "tv"
+    bpy.data.objects["television_screen"].active_material.node_tree.nodes["Emission"].inputs["Strength"].default_value = (
+        0.68 if framing == "tv" else 0.004)
     cold_table = name in ("dining", "dining_gene")
     trims.update(d_table_stripes=float(cold_table), d_table_sky=float(cold_table))
     st.LIGHTS["d_sky_end"].light_linking.receiver_collection = _STATE["table_sky_exclusion"] if cold_table else None
@@ -897,7 +898,7 @@ def apply_camera(name):
 
 
 def frame_metadata(name, scene, resolution):
-    screen = {"kitchen_over": "lap_screen", "tv": "television_screen"}.get(name)
+    screen = SCREEN_OBJECTS.get(name)
     if screen is not None:
         return sk.screen_frame_metadata(name, scene, resolution, bpy.data.objects[screen])
 
@@ -938,12 +939,19 @@ def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=No
     print(f"RENDER {res[0]}x{res[1]} {spp} samples (asked {samples}): {time.time() - t0:.1f} s")
 
 
+SCREEN_OBJECTS = {"kitchen_over": "lap_screen", "tv": "television_screen", "tv_insert": "television_screen"}
+
+
 def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=None):
         name = which_camera()
         apply_camera(name)
+        if name in SCREEN_OBJECTS and os.path.basename(out).startswith("final"):
+            screen = bpy.data.objects[SCREEN_OBJECTS[name]]
+            return sk.render_screen_layers(_render, out, screen, 0.07, samples, res, exposure, world, name,
+                                           noise_threshold, specular=0.20)
         return _render(out, samples, res, exposure, world, name, noise_threshold)
     render._orig = orig
     sk.render = render
@@ -960,7 +968,8 @@ def build(cast=True):
     st.dining_chair("chair_dawn", cx, cy, ct, sat=0.7, val=0.85, size=CHAIR_SIZE)
     st.dining_chair("chair_k2", KT[0] - 0.74, KT[1] - 0.05, 0.0 - 8.0, sat=0.7, val=0.85)   # pushed up on her left
     st.dining()
-    st.television()
+    tv = st.television()
+    _STATE["tv_chair"] = st.dining_chair("tv foreground chair", 2.30, -0.90, -77.0, sat=0.72, val=0.78, size=0.99)
     _STATE["dinner"], _STATE["gene_mug"] = st.dining_service()
     st.dining_table()
     st.dining_chairs()
@@ -992,7 +1001,14 @@ def build(cast=True):
         lo = min(p.z for p in body_points(d))
         print(f"HOME Dawn lowest point {lo * 1000:+.1f} mm", flush=True)
     lap, scr = table_things(hands)
-    screen_light(scr)
+    screen_light(scr, "screen_spill", (st.LAP_W - 0.028, st.LID_H - 0.034), 2.6)
+    tv_light = screen_light(tv, "tv_spill", (0.86, 0.48), 28.0, offset=0.012)
+    tv_light.visible_glossy = False
+    tv_light.data.specular_factor = 0.0
+    returned = st.area("tv_return", (2.03, -1.55, 1.36), (0.65, 0.46), 2.3, (0.72, 0.82, 1.0),
+                       spread=110, aim=(2.61, -2.03, 1.04))
+    returned.visible_camera = returned.visible_glossy = False
+    returned.data.specular_factor = 0.0
     bpy.data.objects["fx_screen"].location = scr.matrix_world.translation
     # haze: a trace in the kitchen, more in the dining room so the street light's stripes show in the air
     sk.haze((st.K["x1"] - st.K["x0"] - 0.1, st.K["y1"] - st.K["y0"] - 0.1, st.K["h"] - 0.05),

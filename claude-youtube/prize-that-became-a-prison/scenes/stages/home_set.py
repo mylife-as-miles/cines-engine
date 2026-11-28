@@ -44,6 +44,7 @@ DT = (2.8, 0.0)                      # dining table centre, long axis X, 1.8 x 0
                                      # room at the head for the chair to stand well off the end wall)
 D_TOP = 0.753
 TV = (1.62, D["y0"] + 0.055, 1.57)   # wall-mounted, beside the sideboard and its framed picture
+TV_SIZE = (0.90, 0.90 * 9 / 16)
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
 D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
                                                      # (a cottage sash: short lower sash, tall upper one)
@@ -251,14 +252,16 @@ def materials():
     mt.pbr("fruit_bowl", (0.05, 0.03, 0.018), rough=(0.3, 0.4), stretch=(1.0, 12.0, 12.0), nscale=3.0, cvar=0.25, coat=0.3)
     mt.contact("contact", 1.0, alpha=0.3)
     mt.contact("contact_body", 1.0, alpha=0.2)
-    mt.aluminium("alu")
+    mt.aluminium("alu", (0.155, 0.163, 0.175), rough=0.51)
+    mt.pbr("laptop deck", (0.070, 0.078, 0.088), rough=(0.57, 0.65), metal=0.34, spec=0.23, nscale=45.0)
     mt.plastic("key", (0.018, 0.018, 0.02), rough=0.55, spec=0.4)
     mt.pbr("bezel", (0.004, 0.004, 0.005), rough=(0.08, 0.14), nscale=10.0, spec=0.5)
-    mt.pbr("trackpad", (0.2, 0.205, 0.215), rough=(0.25, 0.32), metal=0.6, nscale=40.0)
+    mt.pbr("trackpad", (0.075, 0.083, 0.093), rough=(0.53, 0.60), metal=0.18, nscale=40.0, spec=0.25)
     mt.pbr("phone", (0.012, 0.012, 0.014), rough=(0.18, 0.3), nscale=20.0, coat=0.5)
     mt.pbr("pen", (0.02, 0.03, 0.06), rough=(0.25, 0.35), nscale=20.0)
     mt.pbr("frame_wood", (0.03, 0.02, 0.014), rough=(0.35, 0.5), stretch=(1.0, 14.0, 14.0), nscale=3.0, cvar=0.2)
-    mt.pbr("canvas", (0.14, 0.15, 0.15), rough=(0.7, 0.85), nscale=3.0, cvar=0.35, bump=0.15, bscale=300.0)
+    mt.landscape("canvas")
+    mt.paper("picture mat", (0.27, 0.236, 0.198), rough=0.91)
     mt.pbr("plaster_med", (0.46, 0.46, 0.44), rough=(0.6, 0.75), nscale=6.0)
     mt.pbr("dark_void", (0.005, 0.005, 0.006), rough=(0.6, 0.8))
     # the screen: a blank cool white glow, a little brighter in the middle
@@ -522,9 +525,24 @@ def shaker(p, x0, x1, z0, z1, y_face, m, rails=0.06, knob=None, knob_m=None, nor
 def kitchen():
     R = K
     win = K_WIN
-    _walls("k", R, M["k_wall"], {"+y": [(win["cx"] - win["w"] / 2, win["cx"] + win["w"] / 2, win["z0"], win["z1"])]})
+    hall_x, hall_width, hall_height = 8.17, 0.78, 2.04
+    left, right = hall_x - hall_width / 2, hall_x + hall_width / 2
+    _walls("k", R, M["k_wall"], {"+y": [(win["cx"] - win["w"] / 2, win["cx"] + win["w"] / 2, win["z0"], win["z1"])],
+                               "-y": [(left, right, 0.0, hall_height)]})
     _floor_ceiling("k", R, M["lino"], M["k_ceiling"])
-    _mouldings("k", R, [("base", BASE), ("crown", _crown(R["h"]))])
+    _mouldings("k", R, [("base", BASE), ("crown", _crown(R["h"]))],
+               skip=[("-y", left - 0.055, right + 0.055)])
+    y0 = R["y0"]
+    for side, x in (("left", left - 0.026), ("right", right + 0.026)):
+        box(f"hall {side} jamb", (0.052, 0.13, hall_height + 0.015), (x, y0 - 0.019, hall_height / 2),
+            M["trim"], bevel=0.003)
+    box("hall head jamb", (hall_width + 0.10, 0.13, 0.052), (hall_x, y0 - 0.019, hall_height), M["trim"], bevel=0.003)
+    box("hall threshold", (hall_width, 0.36, 0.024), (hall_x, y0 - 0.15, -0.012), M["oak"], bevel=0.003)
+    box("hall partly closed door", (hall_width - 0.052, 0.039, hall_height - 0.036),
+        (hall_x - 0.020, y0 - 0.09, hall_height / 2), M["k_cab"], bevel=0.006)
+    hall = mt.glow("hall light through the door gap", (1.0, 0.63, 0.37), 0.22)
+    box("hall beyond the doorway", (hall_width + 0.04, 0.014, hall_height),
+        (hall_x, y0 - 0.215, hall_height / 2), hall)
     y1 = R["y1"]
     units, _ = window("k_win", win["cx"], win["w"], win["z0"], win["z1"], y1)
     kitchen_outside()
@@ -842,7 +860,7 @@ def laptop(loc, turn_deg, open_deg=112.0):
     hold = bpy.data.objects.new("laptop", None)
     bpy.context.scene.collection.objects.link(hold)
     parts = []
-    base = box("lap_base", (LAP_W, LAP_D, LAP_T), (0, 0, LAP_T / 2 + 0.002), M["alu"], bevel=0.0045, seg=4)
+    base = box("lap_base", (LAP_W, LAP_D, LAP_T), (0, 0, LAP_T / 2 + 0.002), M["laptop deck"], bevel=0.0045, seg=4)
     parts.append(base)
     for i, (fx, fy) in enumerate(((-0.13, -0.09), (0.13, -0.09), (-0.13, 0.09), (0.13, 0.09))):
         parts.append(cyl(f"lap_foot{i}", 0.006, 0.002, (fx, fy, 0.001), M["key"], verts=16))
@@ -917,12 +935,19 @@ def laptop(loc, turn_deg, open_deg=112.0):
 
 def television():
     """A wall-mounted, unbranded television with a separate 16:9 display face."""
-    width, height = 0.90, 0.90 * 9 / 16
+    width, height = TV_SIZE
     x, y, z = TV
-    case = sk.mat("TV charcoal case", (0.016, 0.017, 0.019), 0.51)
+    case = mt.pbr("TV charcoal case", (0.0045, 0.0047, 0.005), rough=(0.27, 0.31), spec=0.18)
     box("television wall mount", (0.34, 0.026, 0.18), (x, y - 0.040, z), case, bevel=0.004)
     box("television cabinet", (width + 0.036, 0.044, height + 0.048), (x, y - 0.024, z - 0.005),
         case, bevel=0.008)
+    # The lip is 6 mm in front of the panel. A small gap preserves the full aperture from the room camera.
+    for side in (-1, 1):
+        box(f"television side bezel {side}", (0.014, 0.010, height + 0.006),
+            (x + side * (width / 2 + 0.010), y + 0.001, z), case, bevel=0.0015)
+    for edge, side, border in (("top", 1, 0.014), ("bottom", -1, 0.023)):
+        box(f"television {edge} bezel", (width + 0.034, 0.010, border),
+            (x, y + 0.001, z + side * (height / 2 + 0.003 + border / 2)), case, bevel=0.0015)
     material = mt.glow("TV blank panel", (0.70, 0.76, 0.85), 0.68)
     bm = bmesh.new()
     bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5,
@@ -1076,9 +1101,9 @@ def dining():
         cyl(f"d_candleWax{i}", 0.011, 0.16, (sx + dx, sy, 0.87 + 0.25 + 0.08), M["wax"], verts=16)
     fx0, fz = sx, 1.62
     for nm, s, l in (("T", (0.92, 0.04, 0.05), (fx0, y0 + 0.02, fz + 0.335)), ("B", (0.92, 0.04, 0.05), (fx0, y0 + 0.02, fz - 0.335)),
-                     ("L", (0.05, 0.04, 0.72), (fx0 - 0.435, y0 + 0.02, fz)), ("R", (0.05, 0.04, 0.72), (fx0 + 0.435, y0 + 0.02, fz))):
+                     ("L", (0.05, 0.04, 0.62), (fx0 - 0.435, y0 + 0.02, fz)), ("R", (0.05, 0.04, 0.62), (fx0 + 0.435, y0 + 0.02, fz))):
         box(f"d_frame{nm}", s, l, M["frame_wood"], bevel=0.008)
-    box("d_mat", (0.83, 0.006, 0.63), (fx0, y0 + 0.01, fz), M["shade_inside"])
+    box("d_mat", (0.83, 0.006, 0.63), (fx0, y0 + 0.01, fz), M["picture mat"])
     box("d_canvas", (0.62, 0.01, 0.42), (fx0, y0 + 0.012, fz), M["canvas"], bevel=0.002)
 
 

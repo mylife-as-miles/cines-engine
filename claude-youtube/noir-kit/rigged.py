@@ -200,8 +200,8 @@ def shoulder_world(holder, side):
     return rig.matrix_world @ pb.head
 
 
-def hand_surface(holder, side):
-    """World positions of one hand's vertices (rig deformation, no subdivision), split palm / fingers / thumb."""
+def hand_surface(holder, side, *, by_digit=False):
+    """World positions of posed hand vertices, grouped by palm, thumb and fingers or by individual digit."""
     body = bpy.data.objects[holder["body"]]
     subs = [m for m in body.modifiers if m.type in ("SUBSURF", "MASK") and m.show_viewport]
     for m in subs:
@@ -211,7 +211,8 @@ def hand_surface(holder, side):
     ev = body.evaluated_get(dg)
     me = ev.to_mesh()
     names = {g.index: g.name for g in body.vertex_groups if g.name.startswith("DEF-")}
-    out = {"palm": [], "fingers": [], "thumb": []}
+    fingers = ("f_index", "f_middle", "f_ring", "f_pinky") if by_digit else ("fingers",)
+    out = {part: [] for part in ("palm", *fingers, "thumb")}
     for v, vo in zip(me.vertices, body.data.vertices):
         gs = [e for e in vo.groups if e.group in names]
         if not gs:
@@ -222,7 +223,9 @@ def hand_surface(holder, side):
             continue
         key = ("thumb" if "thumb" in n else "fingers" if n.startswith("DEF-f_") else
                "palm" if n.startswith(("DEF-hand", "DEF-palm")) else None)
-        if key:
+        if by_digit and key == "fingers":
+            key = n[4:].split(".", 1)[0]
+        if key in out:
             out[key].append(ev.matrix_world @ v.co)
     ev.to_mesh_clear()
     for m in subs:
