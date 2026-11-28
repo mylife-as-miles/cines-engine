@@ -28,7 +28,7 @@ import numpy as np
 GROUND = -82.0
 SEA = GROUND - 2.5
 FOG_D = 2600.0
-FOG_BUILDINGS = 1500.0
+FOG_BUILDINGS = 700.0
 # levels for the stage exposure (-1.4 .. -1.6, AgX): about twice Chicago's (tuned at -0.5)
 K = 2.0
 # The same violet and cool-blue tubing seen from street level.
@@ -295,7 +295,7 @@ def building_mat():
     ey = nb.math("MINIMUM", ly, nb.math("SUBTRACT", depth, ly))
     lip = nb.lt(nb.math("MINIMUM", ex, ey), 0.6)
     roof = nb.gt(nz, 0.5)
-    roof_light = nb.mul(roof, nb.add(0.018 * K, nb.mul(lip, 0.038 * K)))
+    roof_light = nb.mul(roof, nb.add(0.004 * K, nb.mul(lip, 0.010 * K)))
     emit = nb.vadd(emit, nb.scale((0.42, 0.48, 0.60), roof_light))
     street = nb.math("SUBTRACT", 1.0, nb.math("DIVIDE", lz, 27.0), clamp=True)
     emit = nb.vadd(emit, nb.scale((1.0, 0.55, 0.30), nb.mul(nb.mul(street, side), 0.18 * K)))
@@ -568,7 +568,7 @@ def rooftop_signs(b_lo, b_hi, b_data, seed=21):
     rng = random.Random(seed)
     lo, hi, rot, col, size = [], [], [], [], []
     frame_lo, frame_hi = [], []
-    pal = [(0.92, 0.95, 1.0), (0.3, 0.85, 1.0), VIOLET_SIGN, (1.0, 0.6, 0.2), (0.4, 1.0, 0.7)]
+    pal = [(0.92, 0.95, 1.0), (0.3, 0.85, 1.0), VIOLET_SIGN, (0.4, 1.0, 0.7)]
     idx = [i for i in range(len(b_lo)) if 200 < b_lo[i][1] < 1250 and b_hi[i][2] - b_lo[i][2] > 35 and
            b_data[i][1] < 0.6 and (b_hi[i][0] - b_lo[i][0]) > 12 and in_view(b_lo[i][0], b_lo[i][1])]
     rng.shuffle(idx)

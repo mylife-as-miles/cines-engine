@@ -71,24 +71,25 @@ FOCUS = {"fx_window": (WIN_SPOT[0], WIN_SPOT[1], 1.5), "fx_overhead": (-0.95, -0
 CAMERAS = {
     # Ch 03: from the dim room behind her right shoulder at a standing eye line: the bed and the lamp island on the
     # left, Dawn at the glass drawing the sheer back, the city across the window
-    "window": dict(loc=(0.95, -1.7, 1.55), aim=(-0.83, 1.46, 1.2), lens=33, focus="fx_window", fstop=4.0,
+    "window": dict(loc=(0.95, -1.7, 1.70), aim=(-0.83, 1.46, 0.89), lens=33, focus="fx_window", fstop=4.0,
                    beat="window", exposure=-1.2),
     # Ch 04: straight down onto the bed through the ceiling (image top = the head of the bed)
     "overhead": dict(loc=(-1.074, -0.42, 5.0), aim=(-1.08, -0.42, 0.6), lens=42, focus="fx_overhead", fstop=8.0,
                      beat="packed", exposure=-1.0, above_ceiling=True, shift_x=0.060, shift_y=0.019),
     # Ch 04: close, from behind her right side, a little above the bag: the shoulder bag going into the open extra
     # bag's mouth, her arm and hand on its strap coming in from the left, the lamp warm beyond (f/2.8)
-    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.47, 0.966), lens=50, focus="fx_pack", fstop=2.8,
-                 beat="pack", exposure=-0.56),
-    "accept": dict(loc=(0.66, -2.27, 1.36), aim=(-1.0, -0.60, 0.94), lens=37,
+    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.47, 0.966), lens=48, focus="fx_pack", fstop=2.8,
+                 beat="pack", exposure=-0.56, shift_x=0.060),
+    "accept": dict(loc=(0.66, -2.27, 1.36), aim=(-1.15, -0.60, 0.94), lens=37,
                    focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.26),
     "overhead_pre": dict(loc=(-1.025, -0.28, 4.75), aim=(-1.031, -0.28, 0.66), lens=46,
-                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True, shift_x=0.060, shift_y=0.045),
+                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True, shift_x=0.060, shift_y=0.055),
 }
-TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.55, "wall_return": 1.0},
-         "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15, "lamp_light": 0.74}, "pack": {"lamp_spill": 1.8, "duvet_bounce": 1.25, "ceiling_bounce": 0.72},
+TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.90, "room-side return": 0.0},
+         "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15, "lamp_light": 0.74},
+         "pack": {"lamp_spill": 1.8, "duvet_bounce": 1.25, "ceiling_bounce": 0.72, "room-side return": 0.0},
          "overhead_pre": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15, "lamp_light": 0.74},
-         "accept": {"duvet_bounce": 1.2, "ceiling_bounce": 0.24}}
+         "accept": {"duvet_bounce": 1.2, "ceiling_bounce": 0.24, "room-side return": 0.60}}
 DEFAULT_HAND_TONE = 0.28
 HAND_TONES = {"accept": 0.165, "pack": 0.10}
 _STATE = {"cast": [], "dawn": None, "poses": {}, "base": {}, "hobo": None, "sheers": {}}
@@ -161,6 +162,7 @@ def hands_stone(holder):
 
 def dawn():
     h = people.dawn()
+    castkit.relax_sculpted_hair(h)
     castkit.blouse_v(h, rgb=(0.2, 0.19, 0.18), depth=0.42, width=0.14)
     bl = bpy.data.materials.get(f"blouse_{h.name}")
     if bl is not None:
@@ -443,7 +445,7 @@ def premarket_props(duvet):
 def premarket_poses(h, duvet, case, tote, tote_mesh):
     from home import sit_legs, _feet
     place(h, (PACK_SPOT[0], -1.055, PACK_SPOT[2]))
-    pose = {"chest": (30, 3), "neck": (4, 0), "fingers": 14, "l_arm": (4, 6, 11)}
+    pose = {"chest": (30, 3), "neck": (4, 0), "fingers": 23, "l_arm": (4, 6, 11)}
     palm = Vector((-1.08, -0.59, hp.surface_z([case], -1.08, -0.59) + 0.024))
     look_at(h, pose, palm, d=20)
     stance(h)
@@ -462,13 +464,14 @@ def premarket_poses(h, duvet, case, tote, tote_mesh):
     turn_palm(h, -1, (0, 0, -1))
     rigged.articulate_hand(h, "R", {"f_index": (15, 16, 6), "f_middle": (18, 18, 7),
                                      "f_ring": (20, 22, 8), "f_pinky": (24, 24, 10), "thumb": (9, 7, 5)})
-    x, y = -1.37, -0.80
-    left_target = Vector((x, y, _on_duvet(duvet, x, y) + 0.022))
+    x, y = -1.28, -0.88
+    left_target = Vector((x, y, _on_duvet(duvet, x, y) + 0.036))
     reach = left_target.copy()
     hand = rig.pose.bones["hand_fk.L"]
     frame = rig.matrix_world.to_3x3().normalized().inverted()
-    forward = (frame @ Vector((0.12, 1, 0))).normalized()
+    forward = (frame @ Vector((0.12, 1, math.tan(math.radians(28))))).normalized()
     down = (frame @ Vector((0, 0, -1))).normalized()
+    down = (down - forward * down.dot(forward)).normalized()
     flat = Matrix((down, forward, down.cross(forward))).transposed().to_4x4()
     # Changing the wrist angle also moves the palm centre. Refit the reach
     # after turning the pads against the fabric.
@@ -478,8 +481,22 @@ def premarket_poses(h, duvet, case, tote, tote_mesh):
         hand.matrix = flat
         bpy.context.view_layer.update()
         reach += left_target - palm_centre(h, 1)
-    rigged.articulate_hand(h, "L", {"f_index": (4, 6, 3), "f_middle": (6, 8, 4),
-                                     "f_ring": (8, 12, 4), "f_pinky": (12, 13, 5), "thumb": (8, 7, 5)})
+    rigged.articulate_hand(h, "L", {"f_index": (14, 16, 6, -2), "f_middle": (16, 18, 7),
+                                     "f_ring": (17, 19, 8, 4), "f_pinky": (16, 18, 8, 8), "thumb": (-22, 6, 6, 1)})
+    # The thumb opens over the duvet instead of going through it at this wrist angle.
+    thumb = rig.pose.bones["thumb.01_master.L"]
+    thumb_tip = rig.matrix_world @ rig.pose.bones["DEF-thumb.03.L"].tail
+    thumb_root = rig.matrix_world @ thumb.head
+    direction = thumb_tip - thumb_root
+    horizontal = Vector((direction.x, direction.y, 0))
+    lift_axis = (frame @ horizontal.cross(Vector((0, 0, 1)))).normalized()
+    cloth_z = _on_duvet(duvet, thumb_tip.x, thumb_tip.y)
+    elevation = math.atan2(direction.z, horizontal.length)
+    target = math.asin(max(-1.0, min(1.0, (cloth_z + 0.017 - thumb_root.z) / direction.length)))
+    lift = max(0.0, min(math.radians(48), target - elevation))
+    pivot = Matrix.Translation(thumb.head)
+    thumb.matrix = pivot @ Matrix.Rotation(lift, 4, lift_axis) @ pivot.inverted() @ thumb.matrix
+    bpy.context.view_layer.update()
     _STATE["poses"]["pre"] = snapshot(h)
     place(h, (0, 0, 0))
     x, y = -1.00, -0.77
@@ -606,6 +623,8 @@ def apply_camera(name):
                 o.data.energy = 0
             if n == "duffel zip return" and name != "overhead":
                 o.data.energy = 0
+            if n == "duffel mouth return" and name != "pack":
+                o.data.energy = 0
     print(f"HOTEL camera {name}: beat {cfg.get('beat')}, ceiling {'see-through' if cfg.get('above_ceiling') else 'solid'}",
           flush=True)
 
@@ -636,11 +655,22 @@ def build(cast=True):
         wall.objects.link(bpy.data.objects[name])
     pos = Vector((-1.49, 0.96, 1.27))
     target = Vector((-2.02, 0.7, 1.52))
-    return_light = sk.area_light("wall_return", pos, (0.30, 0.47), 15.0, (1.0, 0.41, 0.17), spread_deg=116,
+    return_light = sk.area_light("wall_return", pos, (0.30, 0.47), 22.0, (1.0, 0.41, 0.17), spread_deg=116,
                                  rot=(target - pos).to_track_quat("-Z", "Y").to_euler())
     return_light.visible_camera = False
     return_light.visible_glossy = False
     return_light.light_linking.receiver_collection = wall
+    corner = bpy.data.collections.new("Room-side carpet and nightstand")
+    corner.objects.link(bpy.data.objects["floor"])
+    for o in bpy.data.objects:
+        if o.name.startswith("night_r_"):
+            corner.objects.link(o)
+    pos = Vector((-1.2, -1.7, 2.4))
+    target = Vector((-1.45, -1.35, 0.10))
+    return_light = sk.area_light("room-side return", pos, (1.5, 1.5), 3.0, (0.55, 0.62, 0.80), spread_deg=93,
+                                 rot=(target - pos).to_track_quat("-Z", "Y").to_euler())
+    return_light.visible_camera = return_light.visible_glossy = False
+    return_light.light_linking.receiver_collection = corner
     bpy.context.view_layer.update()
     rest = duvet.shape_key_add(name="Basis")
     seat = duvet.shape_key_add(name="Dawn at the bed edge")
@@ -687,7 +717,7 @@ def build(cast=True):
     for part in [bag, *zip_parts]:
         zip_receivers.objects.link(part)
     pos = Vector((-1.64, -0.34, 1.40))
-    zip_return = sk.area_light("duffel zip return", pos, (0.34, 0.24), 9.0, (1.0, 0.75, 0.51), spread_deg=72,
+    zip_return = sk.area_light("duffel zip return", pos, (0.34, 0.24), 14.0, (1.0, 0.75, 0.51), spread_deg=72,
                                rot=(pull - pos).to_track_quat("-Z", "Y").to_euler())
     zip_return.visible_camera = zip_return.visible_glossy = False
     zip_return.light_linking.receiver_collection = zip_receivers
@@ -728,6 +758,12 @@ def build(cast=True):
     hobo_h = hp.holder("hobo_held", (bx, by - 0.03, 1.0), HOBO_TURN, [hobo])
     _STATE.update(cast=[], dawn=None, hand_tone=None, poses={}, hobo=hobo_h, sheers={})
     mouth = bag_h.matrix_world @ Vector((-0.018, 0.002, 0.25))
+    lip = bag_h.matrix_world @ Vector((-0.025, 0.087, 0.22))
+    pos = lip + Vector((0.25, -0.31, 0.25))
+    mouth_return = sk.area_light("duffel mouth return", pos, (0.16, 0.022), 2.2, (1.0, 0.75, 0.51), spread_deg=41,
+                                   rot=(lip - pos).to_track_quat("-Z", "Y").to_euler())
+    mouth_return.visible_camera = False
+    mouth_return.light_linking.receiver_collection = zip_receivers
     if cast:
         h = dawn()
         _STATE["dawn"] = h
@@ -743,7 +779,7 @@ def build(cast=True):
         _STATE["sheers"]["held"] = st.curtains(hand=tuple(pinch))
         bpy.data.objects["fx_window"].location = eye_centre(h)
         # the packing beat: the strap's apex under her closed fingers, the bag's base just entering the mouth
-        grip = mouth + Vector((0, 0.015, hobo_apex.z - 0.039))
+        grip = mouth + Vector((0, 0.015, hobo_apex.z - 0.085))
         steady = bag_h.matrix_world @ Vector((0.255, -0.09, 0.0))
         steady.z = hp.surface_z([bag], steady.x, steady.y) + 0.023
         _STATE["poses"]["pack"] = pose_pack(h, grip, steady)

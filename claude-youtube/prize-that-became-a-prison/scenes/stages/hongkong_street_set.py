@@ -1144,8 +1144,8 @@ def boutique(G, props):
     # so the display keeps its own slate, stone and olive finishes.
     dyes = {
         "handbag-tote": ((0.034, 0.054, 0.085), (0.092, 0.141, 0.208)),     # slate blue
-        "handbag-satchel": ((0.20, 0.185, 0.16), (0.34, 0.32, 0.28)),      # warm stone
-        "handbag-shoulder": ((0.046, 0.060, 0.031), (0.130, 0.155, 0.081)), # olive
+        "handbag-satchel": ((0.063, 0.049, 0.032), (0.133, 0.111, 0.074)),  # warm stone under the downlight
+        "handbag-shoulder": ((0.089, 0.119, 0.038), (0.189, 0.239, 0.106)), # olive
     }
     out = {}
     spec = {"handbag-tote": ((7.90, 18.29, 1.12), 0.35, 55.0, dict(sat=1.0, val=0.85, hue=0.515, rough_add=0.25)),
