@@ -1337,8 +1337,8 @@ def render_screen(src, n, work, tmp):
 
 def render_shot(e):
     global ENC
-    if VERSION != "animatic_v1":            # the v3 cache: the same encoder, CRF 17 (disk is tight; the join re-encodes)
-        ENC = [("17" if x == "14" else x) for x in ENC]
+    if VERSION != "animatic_v1" and "-threads" not in ENC:   # the v3 cache: CRF 17 (disk is tight; the join re-encodes),
+        ENC = [("17" if x == "14" else x) for x in ENC] + ["-threads", "2"]   # two threads (the machine is shared)
     sys.path.insert(0, str(GFX))
     # scenes/shoot.py GRADE, its grain made temporal (as plate_shot uses it), and the named BT.709 conversion to YUV
     from doc_composite import TO_YUV, grade_filter, grade_filter_yuv

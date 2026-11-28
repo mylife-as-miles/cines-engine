@@ -244,7 +244,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_cash.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "doc_foot": {
    "file": null,
@@ -253,7 +253,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_footnote.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "doc_market": {
    "file": null,
@@ -262,7 +262,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_market.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "doc_passport": {
    "file": null,
@@ -271,7 +271,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_passport.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "doc_denies": {
    "file": null,
@@ -280,7 +280,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_denies.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "doc_health": {
    "file": null,
@@ -289,7 +289,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_health.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "doc_work": {
    "file": null,
@@ -298,7 +298,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_work.json"
    },
-   "len": 8.5
+   "len": 9.0
   },
   "casefile": {
    "file": null,
@@ -318,7 +318,7 @@
     "tool": "doc",
     "shot": "design/edit/shots/s1_fire.json"
    },
-   "len": 8.5
+   "len": 9.0
   }
  },
  "chapters": [
@@ -846,7 +846,7 @@
     },
     {
      "id": "01.06",
-     "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother."
+     "text": "His written statement calls the prize cash."
     },
     {
      "id": "01.07",
@@ -1138,34 +1138,6 @@
      "id": "01-21",
      "at": "01.06",
      "piece": "doc_cash"
-    },
-    {
-     "id": "01-22",
-     "at": "01.06@0.36",
-     "clip": "IN-14",
-     "src": 103.6,
-     "crop": [
-      560,
-      70,
-      800
-     ],
-     "grade": "testimony",
-     "card": false,
-     "note": "'Out loud, it's a trip': the man who said it aloud, at the 2024 hearing (NBC's frame, muted).",
-     "still": true
-    },
-    {
-     "id": "01-23",
-     "at": "01.06@0.6",
-     "plate": "evidence_table/pair",
-     "move": "in",
-     "pct": 0.03
-    },
-    {
-     "id": "01-23b",
-     "at": "01.06@0.8",
-     "piece": "doc_cash",
-     "in": 3.0
     },
     {
      "id": "01-24",
@@ -1551,19 +1523,15 @@
     },
     {
      "id": "03.h1",
-     "hold": 0.8,
-     "note": "(beat)"
+     "hold": 1.6,
+     "note": "the highlighted word does the work (third pass: the spoken 'Even.' is cut)"
     },
     {
      "id": "03.06",
-     "text": "Even."
-    },
-    {
-     "id": "03.07",
      "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother."
     },
     {
-     "id": "03.08",
+     "id": "03.07",
      "text": "Whatever was sewn into those linings was now checked in her name."
     },
     {
@@ -1696,20 +1664,20 @@
     },
     {
      "id": "03-12",
-     "at": "03.07",
+     "at": "03.06",
      "piece": "scale",
      "in": 2.0
     },
     {
      "id": "03-13",
-     "at": "03.07@0.14",
+     "at": "03.06@0.14",
      "piece": "yes",
      "in": 0.4,
      "max": 2.5
     },
     {
      "id": "03-14",
-     "at": "03.07@0.3",
+     "at": "03.06@0.3",
      "plate": "hotel_room/pack",
      "zoom": [
       1.4,
@@ -1722,24 +1690,24 @@
     },
     {
      "id": "03-15",
-     "at": "03.07@0.48",
+     "at": "03.06@0.48",
      "plate": "tim_desk/letters",
      "move": "in"
     },
     {
      "id": "03-16",
-     "at": "03.08",
+     "at": "03.07",
      "piece": "trace",
      "sfx": [
       {
        "name": "sfx_seam_click",
-       "at": "03.08@0.9"
+       "at": "03.07@0.9"
       }
      ]
     },
     {
      "id": "03-17",
-     "at": "03.08@0.55",
+     "at": "03.07@0.55",
      "piece": "cutaway",
      "max": 4.6
     },
@@ -1824,27 +1792,28 @@
      "text": "More than two kilograms of methamphetamine, about four and a half pounds, authorities say."
     },
     {
+     "id": "04.h4",
+     "hold": 0.6,
+     "note": "a beat on the closed folder (third pass)"
+    },
+    {
      "id": "04.08",
-     "text": "We haven't seen the court's record of the case."
+     "text": "One detail is unresolved."
     },
     {
      "id": "04.09",
-     "text": "And one word in his account is disputed. He put the dispute on the record himself."
+     "text": "Dawn told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao."
     },
     {
      "id": "04.10",
-     "text": "Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao."
+     "text": "He doesn't know why. Neither do we."
     },
     {
      "id": "04.11",
-     "text": "\"I don't know the reason for this discrepancy.\" Neither do we."
+     "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
     },
     {
      "id": "04.12",
-     "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
-    },
-    {
-     "id": "04.13",
      "text": "The trip ended in that room. The case was only beginning."
     }
    ],
@@ -1952,31 +1921,25 @@
     },
     {
      "id": "04-14",
-     "at": "04.08",
+     "at": "04.h4",
      "plate": "detention_corridor/envelope_high",
      "move": "in",
      "parallax": false,
      "angle": "evidence_table folder (NEW prop and camera): a plain grey card folder, closed, no text, no seal; the envelope stands in"
     },
     {
-     "id": "04-15",
-     "at": "04.09",
-     "plate": "detention_corridor/envelope",
-     "move": "in"
-    },
-    {
      "id": "04-16",
-     "at": "04.10",
+     "at": "04.09",
      "piece": "doc_foot"
     },
     {
      "id": "04-17",
-     "at": "04.11",
+     "at": "04.10",
      "piece": "route_split"
     },
     {
      "id": "04-18",
-     "at": "04.12",
+     "at": "04.11",
      "plate": "inspection_room/empty_ch05",
      "zoom": [
       1.3,
@@ -1989,7 +1952,7 @@
     },
     {
      "id": "04-18b",
-     "at": "04.12@0.32",
+     "at": "04.11@0.32",
      "plate": "detention_corridor/corridor",
      "move": "in",
      "type": [
@@ -2003,24 +1966,24 @@
     },
     {
      "id": "04-19",
-     "at": "04.12@0.56",
+     "at": "04.11@0.56",
      "piece": "doc_denies"
     },
     {
      "id": "04-20",
-     "at": "04.13",
+     "at": "04.12",
      "plate": "inspection_room/empty",
      "move": "lock"
     },
     {
      "id": "04-21",
-     "at": "04.13@0.5",
+     "at": "04.12@0.5",
      "plate": "detention_corridor/door",
      "move": "in",
      "sfx": [
       {
        "name": "sfx_door_far",
-       "at": "04.13@0.7"
+       "at": "04.12@0.7"
       }
      ],
      "anim": "ANIMATED BEAT: the cell door closing"
@@ -2053,7 +2016,7 @@
     },
     {
      "id": "05.03",
-     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it."
+     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established."
     },
     {
      "id": "05.h3",
@@ -2129,13 +2092,13 @@
     },
     {
      "id": "05-05",
-     "at": "05.03@0.3",
+     "at": "05.03@0.34",
      "plate": "visiting_room/empty",
      "move": "in"
     },
     {
      "id": "05-06",
-     "at": "05.03@0.72",
+     "at": "05.03@0.84",
      "plate": "void_stage/pool",
      "zoom": [
       1.3,
@@ -2805,7 +2768,7 @@
     },
     {
      "id": "08.06",
-     "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two."
+     "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
     },
     {
      "id": "08.h1",
@@ -2978,7 +2941,7 @@
     },
     {
      "id": "08-14",
-     "at": "08.06@0.45",
+     "at": "08.06@0.25",
      "plate": "home/chair_gene",
      "zoom": [
       1.0,
@@ -2988,7 +2951,7 @@
     },
     {
      "id": "08-15",
-     "at": "08.06@0.86",
+     "at": "08.06@0.62",
      "plate": "home/chair",
      "continue": "08-14",
      "type": [
@@ -3110,7 +3073,7 @@
     },
     {
      "id": "09.08",
-     "text": "Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it."
+     "text": "Twelve years ago, officers asked Dawn a question. She answered it."
     },
     {
      "id": "09.09",
@@ -3118,10 +3081,6 @@
     },
     {
      "id": "09.10",
-     "text": "Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family."
-    },
-    {
-     "id": "09.11",
      "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
     },
     {
@@ -3385,15 +3344,8 @@
      ]
     },
     {
-     "id": "09-15",
-     "at": "09.10",
-     "plate": "void_stage/dawn",
-     "move": "in",
-     "pct": 0.03
-    },
-    {
      "id": "09-16",
-     "at": "09.11",
+     "at": "09.10",
      "photo": "06_dawn_family_holiday.jpg",
      "room": null,
      "zoom": [
@@ -3473,7 +3425,7 @@
  ],
  "sound": {
   "about": "The score cues (audio/score/takes, the Lyria takes in tune; SCORE.md's motifs and arc) placed on v3's clock by anchor, each a window of a take: `from` seconds into it, entering from nothing over `fade_in` and rising, out over `fade_out` (0: a hard stop), set to `lufs` before the 8 dB duck under the voices (the voices sit at -18).",
-  "tick_stops": "08.06@0.86",
+  "tick_stops": "08.06@0.62",
   "tick_inst_shots": [
    "05-04",
    "05-06",
@@ -3553,7 +3505,7 @@
     "take": "G5",
     "from": 10.0,
     "at": "02.T5",
-    "to": "03.07@0.5",
+    "to": "03.06@0.5",
     "lufs": -34,
     "fade_in": 4,
     "fade_out": 2,
@@ -3563,7 +3515,7 @@
     "id": "SC03b",
     "take": "G1",
     "from": 13.1,
-    "at": "03.08",
+    "at": "03.07",
     "to": "04.04$",
     "lufs": -33,
     "fade_in": 2,
@@ -3575,7 +3527,7 @@
     "take": "G7",
     "from": 3.6,
     "at": "04.06",
-    "to": "04.13$",
+    "to": "04.12$",
     "lufs": -38,
     "fade_in": 3,
     "fade_out": 2,
@@ -3629,7 +3581,7 @@
     "id": "SC09b_drone",
     "file": "audio/sfx/sd_void_drone.flac",
     "at": "09.08",
-    "to": "09.10$",
+    "to": "09.09$",
     "lufs": -40,
     "fade_in": 2,
     "fade_out": 2,
@@ -3660,6 +3612,7 @@
   ]
  },
  "changes": [
+  "Third pass (28 Nov 2026, the author's outside review) applied: 2:00 is one line ('His written statement calls the prize cash.') over the lit page, and the cut goes straight back to the ticket; the spoken 'Even.' is cut and the lit word holds 1.6 s in silence; 4:57-5:21 is one explanation named as unresolved (a 0.6 s beat on the folder, then Australia against Qingdao on his page, 'He doesn't know why. Neither do we.'); 'We won't recreate it.' is cut; Gene's death is the date alone, without the 494 days; the airport line is tightened; the relay line is cut, so Tim's ending comes about 11 s sooner and nothing follows him but YES turning to WHEN?.",
   "Real media inside the cut, not only in its slots: S1 (Tim's 2024 written statement) is lit on the evidence table wherever the narration says 'Tim wrote' or 'he said' of something he wrote (the passport and ticket, the Baiyun market, the fee, the denial, the doctors' findings, the work, the fire), so the documents carry their own share of the runtime.",
   "The hold device as designed: on a statue plate his last words stay alone, low on the frame, through 1.2 s of digital silence; on real footage a dead freeze (00-29).",
   "Chapter supers are SCRIPT_V3's chapter titles in the new text system (the chapter mode of gfx/type.html); dates and places as story type over the establishing shot of each scene.",

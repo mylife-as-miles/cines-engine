@@ -116,7 +116,7 @@
  {
   "chapter": "01",
   "index": 6,
-  "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother.",
+  "text": "His written statement calls the prize cash.",
   "pause_after": 0.35
  },
  {
@@ -182,18 +182,12 @@
  {
   "chapter": "03",
   "index": 6,
-  "text": "Even.",
-  "pause_after": 0.35
- },
- {
-  "chapter": "03",
-  "index": 7,
   "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother.",
   "pause_after": 0.35
  },
  {
   "chapter": "03",
-  "index": 8,
+  "index": 7,
   "text": "Whatever was sewn into those linings was now checked in her name.",
   "pause_after": 0.35
  },
@@ -242,36 +236,30 @@
  {
   "chapter": "04",
   "index": 8,
-  "text": "We haven't seen the court's record of the case.",
+  "text": "One detail is unresolved.",
   "pause_after": 0.35
  },
  {
   "chapter": "04",
   "index": 9,
-  "text": "And one word in his account is disputed. He put the dispute on the record himself.",
+  "text": "Dawn told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
   "pause_after": 0.35
  },
  {
   "chapter": "04",
   "index": 10,
-  "text": "Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
+  "text": "He doesn't know why. Neither do we.",
   "pause_after": 0.35
  },
  {
   "chapter": "04",
   "index": 11,
-  "text": "\"I don't know the reason for this discrepancy.\" Neither do we.",
+  "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
   "pause_after": 0.35
  },
  {
   "chapter": "04",
   "index": 12,
-  "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
-  "pause_after": 0.35
- },
- {
-  "chapter": "04",
-  "index": 13,
   "text": "The trip ended in that room. The case was only beginning.",
   "pause_after": 0.35
  },
@@ -290,7 +278,7 @@
  {
   "chapter": "05",
   "index": 3,
-  "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it.",
+  "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established.",
   "pause_after": 0.35
  },
  {
@@ -410,7 +398,7 @@
  {
   "chapter": "08",
   "index": 6,
-  "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two.",
+  "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two.",
   "pause_after": 0.35
  },
  {
@@ -470,7 +458,7 @@
  {
   "chapter": "09",
   "index": 8,
-  "text": "Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it.",
+  "text": "Twelve years ago, officers asked Dawn a question. She answered it.",
   "pause_after": 0.35
  },
  {
@@ -482,12 +470,6 @@
  {
   "chapter": "09",
   "index": 10,
-  "text": "Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family.",
-  "pause_after": 0.35
- },
- {
-  "chapter": "09",
-  "index": 11,
   "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.",
   "pause_after": 0.35
  }

@@ -230,11 +230,11 @@
  {
   "chapter": "01",
   "index": 6,
-  "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother.",
+  "text": "His written statement calls the prize cash.",
   "file": "01_06.wav",
-  "duration": 6.976,
+  "duration": 2.268,
   "pause_after": 0.35,
-  "words": 20,
+  "words": 7,
   "speed": 1.0,
   "voice": "am_michael",
   "phonemes": "ˌɔn pˈApəɹ, ðə pɹˈIz ɪz kˈæʃ. ˈWt lˈWd, ɪts ɐ tɹˈɪp. tˈu dəskɹˈɪpʃənz ʌv wˈʌn ˈimˌAl, bˈOθ fɹʌm hɜɹ bɹˈʌðəɹ."
@@ -363,11 +363,11 @@
  {
   "chapter": "03",
   "index": 6,
-  "text": "Even.",
+  "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother.",
   "file": "03_06.wav",
-  "duration": 0.714,
+  "duration": 5.447,
   "pause_after": 0.35,
-  "words": 1,
+  "words": 18,
   "speed": 1.0,
   "voice": "am_michael",
   "phonemes": "ˈivən."
@@ -375,26 +375,14 @@
  {
   "chapter": "03",
   "index": 7,
-  "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother.",
-  "file": "03_07.wav",
-  "duration": 5.447,
-  "pause_after": 0.35,
-  "words": 18,
-  "speed": 1.0,
-  "voice": "am_michael",
-  "phonemes": "ðə fˈi. ðə jˈɛs. ðə bˈæɡz ʃi pˈækt. ˈɛvəɹi wˈʌn ʌv ðOz dətˈAlz, wi hæv fɹʌm hɜɹ bɹˈʌðəɹ."
- },
- {
-  "chapter": "03",
-  "index": 8,
   "text": "Whatever was sewn into those linings was now checked in her name.",
-  "file": "03_08.wav",
+  "file": "03_07.wav",
   "duration": 3.81,
   "pause_after": 0.35,
   "words": 12,
   "speed": 1.0,
   "voice": "am_michael",
-  "phonemes": "wəTˈɛvəɹ wʌz sˈOn ˈɪntu ðOz lˈInɪŋz wʌz nˈW ʧˈɛkt ɪn hɜɹ nˈAm."
+  "phonemes": "ðə fˈi. ðə jˈɛs. ðə bˈæɡz ʃi pˈækt. ˈɛvəɹi wˈʌn ʌv ðOz dətˈAlz, wi hæv fɹʌm hɜɹ bɹˈʌðəɹ."
  },
  {
   "chapter": "04",
@@ -483,11 +471,11 @@
  {
   "chapter": "04",
   "index": 8,
-  "text": "We haven't seen the court's record of the case.",
+  "text": "One detail is unresolved.",
   "file": "04_08.wav",
-  "duration": 2.286,
+  "duration": 1.907,
   "pause_after": 0.35,
-  "words": 9,
+  "words": 4,
   "speed": 1.0,
   "voice": "am_michael",
   "phonemes": "wˌi hˈævᵊnt sˈin ðə kˈɔɹts ɹˈɛkəɹd ʌv ðə kˈAs."
@@ -495,23 +483,25 @@
  {
   "chapter": "04",
   "index": 9,
-  "text": "And one word in his account is disputed. He put the dispute on the record himself.",
+  "text": "Dawn told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
   "file": "04_09.wav",
-  "duration": 5.441,
+  "duration": 8.264,
   "pause_after": 0.35,
-  "words": 16,
+  "words": 24,
   "speed": 1.0,
   "voice": "am_michael",
-  "phonemes": "ˌænd wˈʌn wˈɜɹd ɪn hɪz əkˈWnt ɪz dɪspjˈuTᵻd. hˌi pˌʊt ðə dɪspjˈut ˌɔn ðə ɹˈɛkəɹd hɪmsˈɛlf."
+  "phonemes": "ˌænd wˈʌn wˈɜɹd ɪn hɪz əkˈWnt ɪz dɪspjˈuTᵻd. hˌi pˌʊt ðə dɪspjˈut ˌɔn ðə ɹˈɛkəɹd hɪmsˈɛlf.",
+  "say": "[Dawn](/dˈɔːn/) told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
+  "note": "Dawn given a long vowel: the plain reading was heard as Don by the ASR check"
  },
  {
   "chapter": "04",
   "index": 10,
-  "text": "Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
+  "text": "He doesn't know why. Neither do we.",
   "file": "04_10.wav",
-  "duration": 7.186,
+  "duration": 2.159,
   "pause_after": 0.35,
-  "words": 21,
+  "words": 7,
   "speed": 1.0,
   "voice": "am_michael",
   "phonemes": "ɔstɹˈAljə, ʃi tˈOld hˌɪm. bˌʌt ɐ ʤˈɜɹnəlɪst, hi ɹˈOt, sˈɛd ɐ kˈɔɹt ɹˈɛkəɹd hæz hɜɹ ˌɔn ɐn ɪntˈɜɹnəl flˈIt, tə ʧˌɪŋdˈW."
@@ -519,11 +509,11 @@
  {
   "chapter": "04",
   "index": 11,
-  "text": "\"I don't know the reason for this discrepancy.\" Neither do we.",
+  "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
   "file": "04_11.wav",
-  "duration": 3.494,
+  "duration": 10.06,
   "pause_after": 0.35,
-  "words": 11,
+  "words": 28,
   "speed": 1.0,
   "voice": "am_michael",
   "phonemes": "“ˌI dˈOnt nˈO ðə ɹˈizᵊn fɔɹ ðɪs dəskɹˈɛpənsi.” nˈiðəɹ dˈu wi."
@@ -531,26 +521,14 @@
  {
   "chapter": "04",
   "index": 12,
-  "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
-  "file": "04_12.wav",
-  "duration": 9.705,
-  "pause_after": 0.35,
-  "words": 26,
-  "speed": 1.0,
-  "voice": "am_michael",
-  "phonemes": "nˌɑt ɪn dɪspjˈut: dɹˈʌɡz wɜɹ fˈWnd ɪn lˈʌɡɪʤ ʃi hæd ʧˈɛkt. ʃˌi wʌz əɹˈɛstᵻd ænd ʧˈɑɹʤd wɪð smˈʌɡᵊlɪŋ, ɐ ʧˈɑɹʤ hɜɹ bɹˈʌðəɹ sˈɛz ʃi vˈiəməntli dənˈIz."
- },
- {
-  "chapter": "04",
-  "index": 13,
   "text": "The trip ended in that room. The case was only beginning.",
-  "file": "04_13.wav",
+  "file": "04_12.wav",
   "duration": 3.627,
   "pause_after": 0.35,
   "words": 11,
   "speed": 1.0,
   "voice": "am_michael",
-  "phonemes": "ðə tɹˈɪp ˈɛndᵻd ɪn ðˈæt ɹˈum. ðə kˈAs wʌz ˈOnli bəɡˈɪnɪŋ."
+  "phonemes": "nˌɑt ɪn dɪspjˈut: dɹˈʌɡz wɜɹ fˈWnd ɪn lˈʌɡɪʤ ʃi hæd ʧˈɛkt. ʃˌi wʌz əɹˈɛstᵻd ænd ʧˈɑɹʤd wɪð smˈʌɡᵊlɪŋ, ɐ ʧˈɑɹʤ hɜɹ bɹˈʌðəɹ sˈɛz ʃi vˈiəməntli dənˈIz."
  },
  {
   "chapter": "05",
@@ -579,11 +557,11 @@
  {
   "chapter": "05",
   "index": 3,
-  "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it.",
+  "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established.",
   "file": "05_03.wav",
-  "duration": 21.088,
+  "duration": 19.839,
   "pause_after": 0.35,
-  "words": 57,
+  "words": 53,
   "speed": 1.0,
   "voice": "am_michael",
   "phonemes": "ɪn twˈɛnti twˈɛnti fˈɔɹ, tˈɪm tˈOld ðə kəmˈɪʃən ðæt dˈɔn hæd tˈOld ðɛɹ fˈɑðəɹ ʃi wʌz sˈɛkʃəwəli əsˈɔltᵻd ɪn ðə dətˈɛnʧən fəsˈɪləTi. wˌɛn hi ˈæskt hɜɹ əbˈWt ɪt ˌɔn ɐ pɹˈɪzᵊn vˈɪzət, wɪð sˈʌmwˌʌn bəsˈId hɜɹ lˈɪsənɪŋ, ʃi sˈɛd nˈO. hˌi sˈɛd hi nˈu ʃi wʌz ˈʌndəɹ djəɹˈɛs. ði ˌæləɡˈAʃən hæz nˌɑt bɪn ˌɪndəpˈɛndəntli əstˈæblɪʃt. wˌi wOnt ɹˌikɹiˈAt ɪt."
@@ -819,11 +797,11 @@
  {
   "chapter": "08",
   "index": 6,
-  "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two.",
+  "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two.",
   "file": "08_06.wav",
-  "duration": 12.193,
+  "duration": 6.818,
   "pause_after": 0.35,
-  "words": 19,
+  "words": 10,
   "speed": 0.8,
   "voice": "am_michael",
   "phonemes": "ˌɔn ʤˈænjəwˌɛɹi twˈɛnti fˈɪfθ, twˈɛnti twˈɛnti sˈɪks, fˈɔɹ hˈʌndɹəd ænd nˈIndifˌɔɹ dˈAz ˈæftəɹ ðˈæt fˈɜɹst hˈɪɹɪŋ, ʤˈin hˈʌnt dˈId. hˌi wʌz nˈInditˌu."
@@ -939,11 +917,11 @@
  {
   "chapter": "09",
   "index": 8,
-  "text": "Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it.",
+  "text": "Twelve years ago, officers asked Dawn a question. She answered it.",
   "file": "09_08.wav",
-  "duration": 6.813,
+  "duration": 4.751,
   "pause_after": 0.35,
-  "words": 17,
+  "words": 11,
   "speed": 0.81,
   "voice": "am_michael",
   "phonemes": "twˈɛlv jˈɪɹz əɡˈO, ɪn ɐ ɹˈum æt ɐn ˈɛɹpˌɔɹt, ˈɔfəsəɹz ˈæskt dˈɔn ɐ kwˈɛsʧᵊn. ʃˌi ˈænsəɹd ɪt."
@@ -963,25 +941,13 @@
  {
   "chapter": "09",
   "index": 10,
-  "text": "Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family.",
-  "file": "09_10.wav",
-  "duration": 8.819,
-  "pause_after": 0.35,
-  "words": 22,
-  "speed": 0.81,
-  "voice": "am_michael",
-  "phonemes": "hˌɜɹ jˈɛs. hˌɜɹ lˈɛTəɹ. hˌɜɹ kwˈɛsʧᵊn. ˈɛvəɹi wˈɜɹd ʌv dˈɔnz ɪn ðɪs fˈɪlm hæz ɹˈiʧt ju ðə sˈAm wˈA: θɹu hɜɹ fˈæmᵊli."
- },
- {
-  "chapter": "09",
-  "index": 11,
   "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.",
-  "file": "09_11.wav",
+  "file": "09_10.wav",
   "duration": 12.264,
   "pause_after": 0.35,
   "words": 24,
   "speed": 0.81,
   "voice": "am_michael",
-  "phonemes": "ˌæz ʌv nOvˈɛmbəɹ twˈɛnti twˈɛnti sˈɪks, dˈɔn mɪʃˈɛl hˈʌnt ɪz stˈɪl ɪn pɹˈɪzᵊn ɪn ʧˈInə. hˌɜɹ fˈæmᵊli ɪz stˈɪl ˈæskɪŋ fɔɹ hɜɹ ɹəlˈis ˌɔn hjumˌænətˈɛɹiən ɡɹˈWndz."
+  "phonemes": "hˌɜɹ jˈɛs. hˌɜɹ lˈɛTəɹ. hˌɜɹ kwˈɛsʧᵊn. ˈɛvəɹi wˈɜɹd ʌv dˈɔnz ɪn ðɪs fˈɪlm hæz ɹˈiʧt ju ðə sˈAm wˈA: θɹu hɜɹ fˈæmᵊli."
  }
 ]

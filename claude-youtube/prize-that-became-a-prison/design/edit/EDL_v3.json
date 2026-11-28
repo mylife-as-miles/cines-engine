@@ -6,10 +6,10 @@
   1920,
   1080
  ],
- "total_frames": 18900,
- "duration": 787.5,
- "duration_tc": "13:07.50",
- "timing": "measured from the scratch narration, audio/vo/scratch_v3/lines.json (82 of 82 voice segments matched)",
+ "total_frames": 18212,
+ "duration": 758.833,
+ "duration_tc": "12:38.83",
+ "timing": "measured from the scratch narration, audio/vo/scratch_v3/lines.json (79 of 79 voice segments matched)",
  "gap_s": 0.35,
  "chapters": [
   {
@@ -29,18 +29,18 @@
    "title": "It all started",
    "start": 70.428,
    "start_tc": "1:10.42",
-   "duration": 84.149,
+   "duration": 79.441,
    "rate_wpm": 155,
-   "words": 126,
-   "speech_s": 78.75,
-   "spoken_wpm": 96,
-   "shots": 38
+   "words": 113,
+   "speech_s": 74.04,
+   "spoken_wpm": 92,
+   "shots": 35
   },
   {
    "n": "02",
    "title": "Once again, she agreed",
-   "start": 154.577,
-   "start_tc": "2:34.57",
+   "start": 149.869,
+   "start_tc": "2:29.86",
    "duration": 46.17,
    "rate_wpm": 155,
    "words": 31,
@@ -51,44 +51,44 @@
   {
    "n": "03",
    "title": "Trusting the organizers",
-   "start": 200.747,
-   "start_tc": "3:20.74",
-   "duration": 48.033,
+   "start": 196.039,
+   "start_tc": "3:16.03",
+   "duration": 47.769,
    "rate_wpm": 155,
-   "words": 96,
-   "speech_s": 43.23,
-   "spoken_wpm": 133,
+   "words": 95,
+   "speech_s": 42.52,
+   "spoken_wpm": 134,
    "shots": 20
   },
   {
    "n": "04",
    "title": "Yes",
-   "start": 248.78,
-   "start_tc": "4:08.78",
-   "duration": 69.586,
+   "start": 243.808,
+   "start_tc": "4:03.80",
+   "duration": 63.764,
    "rate_wpm": 155,
-   "words": 169,
-   "speech_s": 62.54,
-   "spoken_wpm": 162,
-   "shots": 22
+   "words": 149,
+   "speech_s": 56.81,
+   "spoken_wpm": 157,
+   "shots": 21
   },
   {
    "n": "05",
    "title": "It wasn't enough",
-   "start": 318.366,
-   "start_tc": "5:18.36",
-   "duration": 58.871,
+   "start": 307.572,
+   "start_tc": "5:07.57",
+   "duration": 57.622,
    "rate_wpm": 150,
-   "words": 117,
-   "speech_s": 50.42,
-   "spoken_wpm": 139,
+   "words": 113,
+   "speech_s": 49.17,
+   "spoken_wpm": 138,
    "shots": 11
   },
   {
    "n": "06",
    "title": "Found guilty",
-   "start": 377.237,
-   "start_tc": "6:17.23",
+   "start": 365.194,
+   "start_tc": "6:05.19",
    "duration": 71.635,
    "rate_wpm": 150,
    "words": 124,
@@ -99,8 +99,8 @@
   {
    "n": "07",
    "title": "Locked up as well",
-   "start": 448.872,
-   "start_tc": "7:28.87",
+   "start": 436.829,
+   "start_tc": "7:16.82",
    "duration": 122.953,
    "rate_wpm": 145,
    "words": 102,
@@ -111,26 +111,26 @@
   {
    "n": "08",
    "title": "An American of Americans",
-   "start": 571.825,
-   "start_tc": "9:31.82",
-   "duration": 95.531,
+   "start": 559.782,
+   "start_tc": "9:19.78",
+   "duration": 90.156,
    "rate_wpm": 135,
-   "words": 145,
-   "speech_s": 87.58,
+   "words": 136,
+   "speech_s": 82.21,
    "spoken_wpm": 99,
    "shots": 18
   },
   {
    "n": "09",
    "title": "When?",
-   "start": 667.356,
-   "start_tc": "11:07.35",
-   "duration": 120.14,
+   "start": 649.938,
+   "start_tc": "10:49.93",
+   "duration": 108.909,
    "rate_wpm": 128,
-   "words": 172,
-   "speech_s": 96.39,
-   "spoken_wpm": 107,
-   "shots": 20
+   "words": 144,
+   "speech_s": 85.51,
+   "spoken_wpm": 101,
+   "shots": 19
   }
  ],
  "shots": [
@@ -5185,144 +5185,31 @@
    "chapter": "01",
    "start": 122.6667,
    "start_tc": "2:02.66",
-   "duration": 2.5,
-   "frames": 60,
+   "duration": 2.625,
+   "frames": 63,
    "start_frame": 2944,
    "source": {
     "kind": "piece",
     "name": "doc_cash",
     "in": 0.0,
-    "frames": 60,
+    "frames": 63,
     "file": null,
     "gen": {
      "tool": "doc",
      "shot": "design/edit/shots/s1_cash.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 1, 'she had won a cash prize' lit",
-    "render_secs": 5.0,
-    "clip": "out/film/pieces/doc_cash-35428aad5812.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_cash-35428aad5812.json --out out/film/pieces/doc_cash-35428aad5812.mp4",
+    "render_secs": 2.875,
+    "clip": "out/film/pieces/doc_cash-2a854f128beb.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_cash-2a854f128beb.json --out out/film/pieces/doc_cash-2a854f128beb.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
     {
      "id": "01.06",
-     "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother."
-    }
-   ],
-   "cat": "doc"
-  },
-  {
-   "id": "01-22",
-   "chapter": "01",
-   "start": 125.1667,
-   "start_tc": "2:05.16",
-   "duration": 1.6667,
-   "frames": 40,
-   "start_frame": 3004,
-   "source": {
-    "kind": "clip",
-    "clip": "IN-14",
-    "file": "archive/media/nbc2024_gene.mp4",
-    "src_in": 103.6,
-    "frames": 40,
-    "crop": [
-     560,
-     70,
-     800
-    ],
-    "crop1": [
-     560,
-     70,
-     800
-    ],
-    "grade": "testimony",
-    "freeze_frame": 0,
-    "type": []
-   },
-   "voice": [
-    {
-     "id": "01.06",
-     "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother."
-    }
-   ],
-   "note": "'Out loud, it's a trip': the man who said it aloud, at the 2024 hearing (NBC's frame, muted).",
-   "cat": "real"
-  },
-  {
-   "id": "01-23",
-   "chapter": "01",
-   "start": 126.8333,
-   "start_tc": "2:06.83",
-   "duration": 1.4167,
-   "frames": 34,
-   "start_frame": 3044,
-   "source": {
-    "kind": "plate",
-    "plate": "frames/raw/evidence_table/pair.png",
-    "stage": "evidence_table",
-    "camera": "pair",
-    "zoom": [
-     1.0,
-     1.03
-    ],
-    "centre": [
-     0.5,
-     0.5
-    ],
-    "frames": 34,
-    "push": "in 3.0 % (log space, constant speed)",
-    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "parallax": {
-     "k": 1.0,
-     "slide": [
-      0,
-      0
-     ],
-     "depth": "out/depth/evidence_table/pair.png"
-    },
-    "type": []
-   },
-   "voice": [
-    {
-     "id": "01.06",
-     "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother."
-    }
-   ],
-   "cat": "3d"
-  },
-  {
-   "id": "01-23b",
-   "chapter": "01",
-   "start": 128.25,
-   "start_tc": "2:08.25",
-   "duration": 1.75,
-   "frames": 42,
-   "start_frame": 3078,
-   "source": {
-    "kind": "piece",
-    "name": "doc_cash",
-    "in": 3.0,
-    "frames": 42,
-    "file": null,
-    "gen": {
-     "tool": "doc",
-     "shot": "design/edit/shots/s1_cash.json"
-    },
-    "fixed": false,
-    "len": 8.5,
-    "note_piece": "S1 p. 1, 'she had won a cash prize' lit",
-    "render_secs": 5.0,
-    "clip": "out/film/pieces/doc_cash-35428aad5812.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_cash-35428aad5812.json --out out/film/pieces/doc_cash-35428aad5812.mp4",
-    "clip_from": "re-rendered"
-   },
-   "voice": [
-    {
-     "id": "01.06",
-     "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother."
+     "text": "His written statement calls the prize cash."
     }
    ],
    "cat": "doc"
@@ -5330,11 +5217,11 @@
   {
    "id": "01-24",
    "chapter": "01",
-   "start": 130.0,
-   "start_tc": "2:10.00",
+   "start": 125.2917,
+   "start_tc": "2:05.29",
    "duration": 1.8333,
    "frames": 44,
-   "start_frame": 3120,
+   "start_frame": 3007,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining_family.png",
@@ -5373,11 +5260,11 @@
   {
    "id": "01-25",
    "chapter": "01",
-   "start": 131.8333,
-   "start_tc": "2:11.83",
+   "start": 127.125,
+   "start_tc": "2:07.12",
    "duration": 7.5417,
    "frames": 181,
-   "start_frame": 3164,
+   "start_frame": 3051,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -5884,11 +5771,11 @@
   {
    "id": "01-26",
    "chapter": "01",
-   "start": 139.375,
-   "start_tc": "2:19.37",
+   "start": 134.6667,
+   "start_tc": "2:14.66",
    "duration": 0.9583,
    "frames": 23,
-   "start_frame": 3345,
+   "start_frame": 3232,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/passport.png",
@@ -5926,11 +5813,11 @@
   {
    "id": "01-26b",
    "chapter": "01",
-   "start": 140.3333,
-   "start_tc": "2:20.33",
+   "start": 135.625,
+   "start_tc": "2:15.62",
    "duration": 1.375,
    "frames": 33,
-   "start_frame": 3368,
+   "start_frame": 3255,
    "source": {
     "kind": "piece",
     "name": "doc_passport",
@@ -5942,11 +5829,11 @@
      "shot": "design/edit/shots/s1_passport.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 1, the passport and the ticket lit",
     "render_secs": 1.625,
-    "clip": "out/film/pieces/doc_passport-65279a09a903.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_passport-65279a09a903.json --out out/film/pieces/doc_passport-65279a09a903.mp4",
+    "clip": "out/film/pieces/doc_passport-a329ba8ea017.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_passport-a329ba8ea017.json --out out/film/pieces/doc_passport-a329ba8ea017.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
@@ -5960,11 +5847,11 @@
   {
    "id": "01-27",
    "chapter": "01",
-   "start": 141.7083,
-   "start_tc": "2:21.70",
+   "start": 137.0,
+   "start_tc": "2:17.00",
    "duration": 2.25,
    "frames": 54,
-   "start_frame": 3401,
+   "start_frame": 3288,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/tickets.png",
@@ -6008,11 +5895,11 @@
   {
    "id": "01-28",
    "chapter": "01",
-   "start": 143.9583,
-   "start_tc": "2:23.95",
+   "start": 139.25,
+   "start_tc": "2:19.25",
    "duration": 1.125,
    "frames": 27,
-   "start_frame": 3455,
+   "start_frame": 3342,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/window.png",
@@ -6050,11 +5937,11 @@
   {
    "id": "01-29",
    "chapter": "01",
-   "start": 145.0833,
-   "start_tc": "2:25.08",
+   "start": 140.375,
+   "start_tc": "2:20.37",
    "duration": 1.2917,
    "frames": 31,
-   "start_frame": 3482,
+   "start_frame": 3369,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/over.png",
@@ -6092,11 +5979,11 @@
   {
    "id": "01-30",
    "chapter": "01",
-   "start": 146.375,
-   "start_tc": "2:26.37",
+   "start": 141.6667,
+   "start_tc": "2:21.66",
    "duration": 2.7917,
    "frames": 67,
-   "start_frame": 3513,
+   "start_frame": 3400,
    "source": {
     "kind": "piece",
     "name": "route_leg1",
@@ -6128,11 +6015,11 @@
   {
    "id": "01-30b",
    "chapter": "01",
-   "start": 149.1667,
-   "start_tc": "2:29.16",
+   "start": 144.4583,
+   "start_tc": "2:24.45",
    "duration": 1.625,
    "frames": 39,
-   "start_frame": 3580,
+   "start_frame": 3467,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/dawn.png",
@@ -6275,7 +6162,7 @@
         "text": "treated her well"
        }
       },
-      "a": 2.79,
+      "a": 2.789,
       "t0": 0.0,
       "secs": 1.625
      }
@@ -6294,11 +6181,11 @@
   {
    "id": "01-31",
    "chapter": "01",
-   "start": 150.7917,
-   "start_tc": "2:30.79",
+   "start": 146.0833,
+   "start_tc": "2:26.08",
    "duration": 3.7917,
    "frames": 91,
-   "start_frame": 3619,
+   "start_frame": 3506,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/wide.png",
@@ -6449,9 +6336,9 @@
         "text": "treated her well"
        }
       },
-      "a": 4.415,
+      "a": 4.414,
       "t0": 0.0,
-      "secs": 3.785
+      "secs": 3.786
      }
     ]
    },
@@ -6467,11 +6354,11 @@
   {
    "id": "02-01",
    "chapter": "02",
-   "start": 154.5833,
-   "start_tc": "2:34.58",
+   "start": 149.875,
+   "start_tc": "2:29.87",
    "duration": 3.0,
    "frames": 72,
-   "start_frame": 3710,
+   "start_frame": 3597,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/dawn.png",
@@ -6626,11 +6513,11 @@
   {
    "id": "02-02",
    "chapter": "02",
-   "start": 157.5833,
-   "start_tc": "2:37.58",
+   "start": 152.875,
+   "start_tc": "2:32.87",
    "duration": 1.7917,
    "frames": 43,
-   "start_frame": 3782,
+   "start_frame": 3669,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/window.png",
@@ -6784,11 +6671,11 @@
   {
    "id": "02-02b",
    "chapter": "02",
-   "start": 159.375,
-   "start_tc": "2:39.37",
+   "start": 154.6667,
+   "start_tc": "2:34.66",
    "duration": 1.5417,
    "frames": 37,
-   "start_frame": 3825,
+   "start_frame": 3712,
    "source": {
     "kind": "ground",
     "seed": 15,
@@ -6930,11 +6817,11 @@
   {
    "id": "02-03",
    "chapter": "02",
-   "start": 160.9167,
-   "start_tc": "2:40.91",
+   "start": 156.2083,
+   "start_tc": "2:36.20",
    "duration": 5.125,
    "frames": 123,
-   "start_frame": 3862,
+   "start_frame": 3749,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/window.png",
@@ -7118,8 +7005,8 @@
        "scale": 1.0
       },
       "a": 0.0,
-      "t0": 0.01,
-      "secs": 5.115
+      "t0": 0.011,
+      "secs": 5.114
      }
     ]
    },
@@ -7135,11 +7022,11 @@
   {
    "id": "02-04",
    "chapter": "02",
-   "start": 166.0417,
-   "start_tc": "2:46.04",
+   "start": 161.3333,
+   "start_tc": "2:41.33",
    "duration": 4.25,
    "frames": 102,
-   "start_frame": 3985,
+   "start_frame": 3872,
    "source": {
     "kind": "ground",
     "seed": 12,
@@ -7310,9 +7197,9 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 5.115,
+      "a": 5.114,
       "t0": 0.0,
-      "secs": 4.235
+      "secs": 4.236
      }
     ]
    },
@@ -7328,11 +7215,11 @@
   {
    "id": "02-05",
    "chapter": "02",
-   "start": 170.2917,
-   "start_tc": "2:50.29",
+   "start": 165.5833,
+   "start_tc": "2:45.58",
    "duration": 2.0,
    "frames": 48,
-   "start_frame": 4087,
+   "start_frame": 3974,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/window.png",
@@ -7455,7 +7342,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 0.015,
+      "a": 0.014,
       "t0": 0.0,
       "secs": 2.0
      }
@@ -7474,11 +7361,11 @@
   {
    "id": "02-06",
    "chapter": "02",
-   "start": 172.2917,
-   "start_tc": "2:52.29",
+   "start": 167.5833,
+   "start_tc": "2:47.58",
    "duration": 3.125,
    "frames": 75,
-   "start_frame": 4135,
+   "start_frame": 4022,
    "source": {
     "kind": "piece",
     "name": "route_mainland",
@@ -7510,11 +7397,11 @@
   {
    "id": "02-07",
    "chapter": "02",
-   "start": 175.4167,
-   "start_tc": "2:55.41",
+   "start": 170.7083,
+   "start_tc": "2:50.70",
    "duration": 1.5833,
    "frames": 38,
-   "start_frame": 4210,
+   "start_frame": 4097,
    "source": {
     "kind": "piece",
     "name": "email",
@@ -7543,11 +7430,11 @@
   {
    "id": "02-08",
    "chapter": "02",
-   "start": 177.0,
-   "start_tc": "2:57.00",
+   "start": 172.2917,
+   "start_tc": "2:52.29",
    "duration": 1.5417,
    "frames": 37,
-   "start_frame": 4248,
+   "start_frame": 4135,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/tickets.png",
@@ -7585,11 +7472,11 @@
   {
    "id": "02-09",
    "chapter": "02",
-   "start": 178.5417,
-   "start_tc": "2:58.54",
+   "start": 173.8333,
+   "start_tc": "2:53.83",
    "duration": 1.1667,
    "frames": 28,
-   "start_frame": 4285,
+   "start_frame": 4172,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/wide.png",
@@ -7627,11 +7514,11 @@
   {
    "id": "02-10",
    "chapter": "02",
-   "start": 179.7083,
-   "start_tc": "2:59.70",
+   "start": 175.0,
+   "start_tc": "2:55.00",
    "duration": 1.2917,
    "frames": 31,
-   "start_frame": 4313,
+   "start_frame": 4200,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/dawn.png",
@@ -7661,11 +7548,11 @@
   {
    "id": "02-11",
    "chapter": "02",
-   "start": 181.0,
-   "start_tc": "3:01.00",
+   "start": 176.2917,
+   "start_tc": "2:56.29",
    "duration": 3.625,
    "frames": 87,
-   "start_frame": 4344,
+   "start_frame": 4231,
    "source": {
     "kind": "piece",
     "name": "route_mainland",
@@ -7697,11 +7584,11 @@
   {
    "id": "02-12",
    "chapter": "02",
-   "start": 184.625,
-   "start_tc": "3:04.62",
+   "start": 179.9167,
+   "start_tc": "2:59.91",
    "duration": 2.3333,
    "frames": 56,
-   "start_frame": 4431,
+   "start_frame": 4318,
    "source": {
     "kind": "ground",
     "seed": 13,
@@ -7840,11 +7727,11 @@
   {
    "id": "02-13",
    "chapter": "02",
-   "start": 186.9583,
-   "start_tc": "3:06.95",
+   "start": 182.25,
+   "start_tc": "3:02.25",
    "duration": 2.0417,
    "frames": 49,
-   "start_frame": 4487,
+   "start_frame": 4374,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/train/rack.png",
@@ -7882,11 +7769,11 @@
   {
    "id": "02-14",
    "chapter": "02",
-   "start": 189.0,
-   "start_tc": "3:09.00",
+   "start": 184.2917,
+   "start_tc": "3:04.29",
    "duration": 1.7083,
    "frames": 41,
-   "start_frame": 4536,
+   "start_frame": 4423,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/train/aisle.png",
@@ -7924,11 +7811,11 @@
   {
    "id": "02-15",
    "chapter": "02",
-   "start": 190.7083,
-   "start_tc": "3:10.70",
+   "start": 186.0,
+   "start_tc": "3:06.00",
    "duration": 1.8333,
    "frames": 44,
-   "start_frame": 4577,
+   "start_frame": 4464,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/empty.png",
@@ -7966,11 +7853,11 @@
   {
    "id": "02-16",
    "chapter": "02",
-   "start": 192.5417,
-   "start_tc": "3:12.54",
+   "start": 187.8333,
+   "start_tc": "3:07.83",
    "duration": 1.75,
    "frames": 42,
-   "start_frame": 4621,
+   "start_frame": 4508,
    "source": {
     "kind": "ground",
     "seed": 16,
@@ -8115,8 +8002,8 @@
        }
       },
       "a": 0.0,
-      "t0": 0.005,
-      "secs": 1.745
+      "t0": 0.006,
+      "secs": 1.744
      }
     ]
    },
@@ -8132,11 +8019,11 @@
   {
    "id": "02-16b",
    "chapter": "02",
-   "start": 194.2917,
-   "start_tc": "3:14.29",
+   "start": 189.5833,
+   "start_tc": "3:09.58",
    "duration": 1.0417,
    "frames": 25,
-   "start_frame": 4663,
+   "start_frame": 4550,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/overhead.png",
@@ -8292,7 +8179,7 @@
         "text": "some designer purses"
        }
       },
-      "a": 1.745,
+      "a": 1.744,
       "t0": 0.0,
       "secs": 1.042
      }
@@ -8310,11 +8197,11 @@
   {
    "id": "02-17",
    "chapter": "02",
-   "start": 195.3333,
-   "start_tc": "3:15.33",
+   "start": 190.625,
+   "start_tc": "3:10.62",
    "duration": 5.4167,
    "frames": 130,
-   "start_frame": 4688,
+   "start_frame": 4575,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/purses.png",
@@ -8488,11 +8375,11 @@
   {
    "id": "03-01",
    "chapter": "03",
-   "start": 200.75,
-   "start_tc": "3:20.75",
+   "start": 196.0417,
+   "start_tc": "3:16.04",
    "duration": 3.7083,
    "frames": 89,
-   "start_frame": 4818,
+   "start_frame": 4705,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/overhead_pre.png",
@@ -8681,11 +8568,11 @@
   {
    "id": "03-02",
    "chapter": "03",
-   "start": 204.4583,
-   "start_tc": "3:24.45",
+   "start": 199.75,
+   "start_tc": "3:19.75",
    "duration": 4.0417,
    "frames": 97,
-   "start_frame": 4907,
+   "start_frame": 4794,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/pack.png",
@@ -8867,11 +8754,11 @@
   {
    "id": "03-03",
    "chapter": "03",
-   "start": 208.5,
-   "start_tc": "3:28.50",
+   "start": 203.7917,
+   "start_tc": "3:23.79",
    "duration": 1.9583,
    "frames": 47,
-   "start_frame": 5004,
+   "start_frame": 4891,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/overhead_pre.png",
@@ -8909,11 +8796,11 @@
   {
    "id": "03-04",
    "chapter": "03",
-   "start": 210.4583,
-   "start_tc": "3:30.45",
+   "start": 205.75,
+   "start_tc": "3:25.75",
    "duration": 3.4583,
    "frames": 83,
-   "start_frame": 5051,
+   "start_frame": 4938,
    "source": {
     "kind": "piece",
     "name": "doc_market",
@@ -8925,11 +8812,11 @@
      "shot": "design/edit/shots/s1_market.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 1, the Baiyun Leather Market lit",
     "render_secs": 3.708,
-    "clip": "out/film/pieces/doc_market-f4f7178e2160.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_market-f4f7178e2160.json --out out/film/pieces/doc_market-f4f7178e2160.mp4",
+    "clip": "out/film/pieces/doc_market-a46b09d9845f.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_market-a46b09d9845f.json --out out/film/pieces/doc_market-a46b09d9845f.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
@@ -8943,11 +8830,11 @@
   {
    "id": "03-04b",
    "chapter": "03",
-   "start": 213.9167,
-   "start_tc": "3:33.91",
+   "start": 209.2083,
+   "start_tc": "3:29.20",
    "duration": 2.6667,
    "frames": 64,
-   "start_frame": 5134,
+   "start_frame": 5021,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/leather_market/stall.png",
@@ -8985,11 +8872,11 @@
   {
    "id": "03-05",
    "chapter": "03",
-   "start": 216.5833,
-   "start_tc": "3:36.58",
+   "start": 211.875,
+   "start_tc": "3:31.87",
    "duration": 3.0833,
    "frames": 74,
-   "start_frame": 5198,
+   "start_frame": 5085,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/leather_market/stall.png",
@@ -9028,11 +8915,11 @@
   {
    "id": "03-06",
    "chapter": "03",
-   "start": 219.6667,
-   "start_tc": "3:39.66",
-   "duration": 1.1667,
-   "frames": 28,
-   "start_frame": 5272,
+   "start": 214.9583,
+   "start_tc": "3:34.95",
+   "duration": 1.2083,
+   "frames": 29,
+   "start_frame": 5159,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/pack.png",
@@ -9046,7 +8933,7 @@
      0.5,
      0.5
     ],
-    "frames": 28,
+    "frames": 29,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -9076,11 +8963,11 @@
   {
    "id": "03-07",
    "chapter": "03",
-   "start": 220.8333,
-   "start_tc": "3:40.83",
-   "duration": 1.5833,
-   "frames": 38,
-   "start_frame": 5300,
+   "start": 216.1667,
+   "start_tc": "3:36.16",
+   "duration": 1.5417,
+   "frames": 37,
+   "start_frame": 5188,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/overhead.png",
@@ -9094,7 +8981,7 @@
      0.5,
      0.5
     ],
-    "frames": 38,
+    "frames": 37,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -9119,11 +9006,11 @@
   {
    "id": "03-08",
    "chapter": "03",
-   "start": 222.4167,
-   "start_tc": "3:42.41",
+   "start": 217.7083,
+   "start_tc": "3:37.70",
    "duration": 2.125,
    "frames": 51,
-   "start_frame": 5338,
+   "start_frame": 5225,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/wide.png",
@@ -9161,11 +9048,11 @@
   {
    "id": "03-09",
    "chapter": "03",
-   "start": 224.5417,
-   "start_tc": "3:44.54",
+   "start": 219.8333,
+   "start_tc": "3:39.83",
    "duration": 2.5,
    "frames": 60,
-   "start_frame": 5389,
+   "start_frame": 5276,
    "source": {
     "kind": "piece",
     "name": "scale",
@@ -9205,11 +9092,11 @@
   {
    "id": "03-10",
    "chapter": "03",
-   "start": 227.0417,
-   "start_tc": "3:47.04",
+   "start": 222.3333,
+   "start_tc": "3:42.33",
    "duration": 1.1667,
    "frames": 28,
-   "start_frame": 5449,
+   "start_frame": 5336,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/shoulder.png",
@@ -9247,16 +9134,16 @@
   {
    "id": "03-11",
    "chapter": "03",
-   "start": 228.2083,
-   "start_tc": "3:48.20",
-   "duration": 4.8333,
-   "frames": 116,
-   "start_frame": 5477,
+   "start": 223.5,
+   "start_tc": "3:43.50",
+   "duration": 4.5417,
+   "frames": 109,
+   "start_frame": 5364,
    "source": {
     "kind": "piece",
     "name": "doc_fee",
     "in": 0.0,
-    "frames": 116,
+    "frames": 109,
     "file": null,
     "gen": {
      "tool": "doc",
@@ -9265,7 +9152,7 @@
     "fixed": false,
     "len": 8.5,
     "note_piece": "S1 p. 1, the excess-weight fee line lit",
-    "render_secs": 5.083,
+    "render_secs": 4.792,
     "clip": "out/film/pieces/doc_fee-a95f98380649.mp4",
     "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fee-a95f98380649.json --out out/film/pieces/doc_fee-a95f98380649.mp4",
     "clip_from": "re-rendered"
@@ -9274,10 +9161,6 @@
     {
      "id": "03.05",
      "text": "\"...she even paid a small excess weight fee,\" he wrote."
-    },
-    {
-     "id": "03.06",
-     "text": "Even."
     }
    ],
    "cat": "doc"
@@ -9285,16 +9168,16 @@
   {
    "id": "03-12",
    "chapter": "03",
-   "start": 233.0417,
-   "start_tc": "3:53.04",
-   "duration": 0.75,
-   "frames": 18,
-   "start_frame": 5593,
+   "start": 228.0417,
+   "start_tc": "3:48.04",
+   "duration": 0.7917,
+   "frames": 19,
+   "start_frame": 5473,
    "source": {
     "kind": "piece",
     "name": "scale",
     "in": 2.0,
-    "frames": 18,
+    "frames": 19,
     "file": null,
     "gen": {
      "tool": "doc",
@@ -9309,7 +9192,7 @@
    },
    "voice": [
     {
-     "id": "03.07",
+     "id": "03.06",
      "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother."
     }
    ],
@@ -9318,16 +9201,16 @@
   {
    "id": "03-13",
    "chapter": "03",
-   "start": 233.7917,
-   "start_tc": "3:53.79",
-   "duration": 0.875,
-   "frames": 21,
-   "start_frame": 5611,
+   "start": 228.8333,
+   "start_tc": "3:48.83",
+   "duration": 0.8333,
+   "frames": 20,
+   "start_frame": 5492,
    "source": {
     "kind": "piece",
     "name": "yes",
     "in": 0.4,
-    "frames": 21,
+    "frames": 20,
     "file": null,
     "gen": {
      "tool": "plate_type",
@@ -9344,7 +9227,7 @@
    },
    "voice": [
     {
-     "id": "03.07",
+     "id": "03.06",
      "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother."
     }
    ],
@@ -9353,11 +9236,11 @@
   {
    "id": "03-14",
    "chapter": "03",
-   "start": 234.6667,
-   "start_tc": "3:54.66",
-   "duration": 0.9583,
-   "frames": 23,
-   "start_frame": 5632,
+   "start": 229.6667,
+   "start_tc": "3:49.66",
+   "duration": 1.0,
+   "frames": 24,
+   "start_frame": 5512,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/pack.png",
@@ -9371,7 +9254,7 @@
      0.45,
      0.5
     ],
-    "frames": 23,
+    "frames": 24,
     "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -9386,7 +9269,7 @@
    },
    "voice": [
     {
-     "id": "03.07",
+     "id": "03.06",
      "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother."
     }
    ],
@@ -9395,11 +9278,11 @@
   {
    "id": "03-15",
    "chapter": "03",
-   "start": 235.625,
-   "start_tc": "3:55.62",
-   "duration": 3.2083,
-   "frames": 77,
-   "start_frame": 5655,
+   "start": 230.6667,
+   "start_tc": "3:50.66",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 5536,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/letters.png",
@@ -9407,13 +9290,13 @@
     "camera": "letters",
     "zoom": [
      1.0,
-     1.03529
+     1.03483
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 77,
+    "frames": 76,
     "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -9428,7 +9311,7 @@
    },
    "voice": [
     {
-     "id": "03.07",
+     "id": "03.06",
      "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother."
     }
    ],
@@ -9437,16 +9320,16 @@
   {
    "id": "03-16",
    "chapter": "03",
-   "start": 238.8333,
-   "start_tc": "3:58.83",
-   "duration": 2.0833,
-   "frames": 50,
-   "start_frame": 5732,
+   "start": 233.8333,
+   "start_tc": "3:53.83",
+   "duration": 2.125,
+   "frames": 51,
+   "start_frame": 5612,
    "source": {
     "kind": "piece",
     "name": "trace",
     "in": 0.0,
-    "frames": 50,
+    "frames": 51,
     "file": null,
     "gen": {
      "tool": "seam",
@@ -9456,21 +9339,21 @@
     "fixed": false,
     "len": 4.5,
     "note_piece": "the red trace along the tote's seam, drawn over 1.8 s",
-    "render_secs": 2.333,
+    "render_secs": 2.375,
     "clip": "out/film/pieces/trace-fba1c998e6ed.mp4",
     "command": "node gfx/type_render.js seq trace 4.500 out/film/pieces/trace-fba1c998e6ed.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg",
     "clip_from": "re-rendered"
    },
    "voice": [
     {
-     "id": "03.08",
+     "id": "03.07",
      "text": "Whatever was sewn into those linings was now checked in her name."
     }
    ],
    "sfx": [
     {
      "name": "sfx_seam_click",
-     "at": "03.08@0.9"
+     "at": "03.07@0.9"
     }
    ],
    "cat": "3d"
@@ -9478,16 +9361,16 @@
   {
    "id": "03-17",
    "chapter": "03",
-   "start": 240.9167,
-   "start_tc": "4:00.91",
-   "duration": 2.0833,
-   "frames": 50,
-   "start_frame": 5782,
+   "start": 235.9583,
+   "start_tc": "3:55.95",
+   "duration": 2.0417,
+   "frames": 49,
+   "start_frame": 5663,
    "source": {
     "kind": "piece",
     "name": "cutaway",
     "in": 0.0,
-    "frames": 50,
+    "frames": 49,
     "file": null,
     "gen": {
      "tool": "seam",
@@ -9496,14 +9379,14 @@
     "fixed": false,
     "len": 5.0,
     "note_piece": "the section opens 1.3-2.1 s, closes 3.6-4.05 s",
-    "render_secs": 2.333,
+    "render_secs": 2.292,
     "clip": "out/film/pieces/cutaway-486bb10043c5.mp4",
     "command": "node gfx/type_render.js seq cutaway 5.000 out/film/pieces/cutaway-486bb10043c5.mp4 --page gfx/seam.html",
     "clip_from": "re-rendered"
    },
    "voice": [
     {
-     "id": "03.08",
+     "id": "03.07",
      "text": "Whatever was sewn into those linings was now checked in her name."
     }
    ],
@@ -9512,15 +9395,15 @@
   {
    "id": "03-17b",
    "chapter": "03",
-   "start": 243.0,
-   "start_tc": "4:03.00",
-   "duration": 2.0417,
-   "frames": 49,
-   "start_frame": 5832,
+   "start": 238.0,
+   "start_tc": "3:58.00",
+   "duration": 2.0833,
+   "frames": 50,
+   "start_frame": 5712,
    "source": {
     "kind": "ground",
     "seed": 17,
-    "frames": 49,
+    "frames": 50,
     "drift": [
      24,
      -10
@@ -9614,9 +9497,9 @@
         "text": "her Australia flight"
        }
       },
-      "a": 0.02,
-      "t0": 0.0,
-      "secs": 2.042
+      "a": 0.0,
+      "t0": 0.008,
+      "secs": 2.075
      }
     ]
    },
@@ -9632,11 +9515,11 @@
   {
    "id": "03-18",
    "chapter": "03",
-   "start": 245.0417,
-   "start_tc": "4:05.04",
-   "duration": 3.75,
-   "frames": 90,
-   "start_frame": 5881,
+   "start": 240.0833,
+   "start_tc": "4:00.08",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 5762,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/curtain.png",
@@ -9644,13 +9527,13 @@
     "camera": "curtain",
     "zoom": [
      1.0,
-     1.04125
+     1.04079
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 90,
+    "frames": 89,
     "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -9746,9 +9629,9 @@
         "text": "her Australia flight"
        }
       },
-      "a": 2.062,
+      "a": 2.075,
       "t0": 0.0,
-      "secs": 3.738
+      "secs": 3.708
      }
     ]
    },
@@ -9765,11 +9648,11 @@
   {
    "id": "04-01",
    "chapter": "04",
-   "start": 248.7917,
-   "start_tc": "4:08.79",
-   "duration": 3.125,
-   "frames": 75,
-   "start_frame": 5971,
+   "start": 243.7917,
+   "start_tc": "4:03.79",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 5851,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/seated_called.png",
@@ -9783,7 +9666,7 @@
      0.5,
      0.5
     ],
-    "frames": 75,
+    "frames": 76,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -9867,9 +9750,9 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 0.012,
-      "t0": 0.0,
-      "secs": 3.125
+      "a": 0.0,
+      "t0": 0.016,
+      "secs": 3.15
      }
     ]
    },
@@ -9885,11 +9768,11 @@
   {
    "id": "04-02",
    "chapter": "04",
-   "start": 251.9167,
-   "start_tc": "4:11.91",
+   "start": 246.9583,
+   "start_tc": "4:06.95",
    "duration": 1.1667,
    "frames": 28,
-   "start_frame": 6046,
+   "start_frame": 5927,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/enter.png",
@@ -9933,11 +9816,11 @@
   {
    "id": "04-03",
    "chapter": "04",
-   "start": 253.0833,
-   "start_tc": "4:13.08",
+   "start": 248.125,
+   "start_tc": "4:08.12",
    "duration": 1.1667,
    "frames": 28,
-   "start_frame": 6074,
+   "start_frame": 5955,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/wide_pre.png",
@@ -9975,11 +9858,11 @@
   {
    "id": "04-04",
    "chapter": "04",
-   "start": 254.25,
-   "start_tc": "4:14.25",
-   "duration": 1.0,
-   "frames": 24,
-   "start_frame": 6102,
+   "start": 249.2917,
+   "start_tc": "4:09.29",
+   "duration": 0.9583,
+   "frames": 23,
+   "start_frame": 5983,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/two_shot_pre.png",
@@ -9993,7 +9876,7 @@
      0.5,
      0.5
     ],
-    "frames": 24,
+    "frames": 23,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -10017,16 +9900,16 @@
   {
    "id": "04-05",
    "chapter": "04",
-   "start": 255.25,
-   "start_tc": "4:15.25",
-   "duration": 3.375,
-   "frames": 81,
-   "start_frame": 6126,
+   "start": 250.25,
+   "start_tc": "4:10.25",
+   "duration": 3.4167,
+   "frames": 82,
+   "start_frame": 6006,
    "source": {
     "kind": "piece",
     "name": "yes",
     "in": 0.0,
-    "frames": 81,
+    "frames": 82,
     "file": null,
     "gen": {
      "tool": "plate_type",
@@ -10052,11 +9935,11 @@
   {
    "id": "04-06",
    "chapter": "04",
-   "start": 258.625,
-   "start_tc": "4:18.62",
+   "start": 253.6667,
+   "start_tc": "4:13.66",
    "duration": 1.7917,
    "frames": 43,
-   "start_frame": 6207,
+   "start_frame": 6088,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/dawn_close.png",
@@ -10094,11 +9977,11 @@
   {
    "id": "04-07",
    "chapter": "04",
-   "start": 260.4167,
-   "start_tc": "4:20.41",
+   "start": 255.4583,
+   "start_tc": "4:15.45",
    "duration": 1.5417,
    "frames": 37,
-   "start_frame": 6250,
+   "start_frame": 6131,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/tag.png",
@@ -10136,11 +10019,11 @@
   {
    "id": "04-08",
    "chapter": "04",
-   "start": 261.9583,
-   "start_tc": "4:21.95",
+   "start": 257.0,
+   "start_tc": "4:17.00",
    "duration": 3.125,
    "frames": 75,
-   "start_frame": 6287,
+   "start_frame": 6168,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/handbags_touch.png",
@@ -10179,11 +10062,11 @@
   {
    "id": "04-09",
    "chapter": "04",
-   "start": 265.0833,
-   "start_tc": "4:25.08",
+   "start": 260.125,
+   "start_tc": "4:20.12",
    "duration": 8.9583,
    "frames": 215,
-   "start_frame": 6362,
+   "start_frame": 6243,
    "source": {
     "kind": "piece",
     "name": "split_r7",
@@ -10213,11 +10096,11 @@
   {
    "id": "04-10",
    "chapter": "04",
-   "start": 274.0417,
-   "start_tc": "4:34.04",
+   "start": 269.0833,
+   "start_tc": "4:29.08",
    "duration": 1.6667,
    "frames": 40,
-   "start_frame": 6577,
+   "start_frame": 6458,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/empty_ch05.png",
@@ -10255,11 +10138,11 @@
   {
    "id": "04-11",
    "chapter": "04",
-   "start": 275.7083,
-   "start_tc": "4:35.70",
+   "start": 270.75,
+   "start_tc": "4:30.75",
    "duration": 1.3333,
    "frames": 32,
-   "start_frame": 6617,
+   "start_frame": 6498,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/match.png",
@@ -10288,7 +10171,7 @@
      {
       "mode": "yes",
       "look": "B",
-      "t0": 0.514,
+      "t0": 0.5,
       "tin": 0.0
      }
     ]
@@ -10304,16 +10187,16 @@
   {
    "id": "04-12",
    "chapter": "04",
-   "start": 277.0417,
-   "start_tc": "4:37.04",
-   "duration": 1.5417,
-   "frames": 37,
-   "start_frame": 6649,
+   "start": 272.0833,
+   "start_tc": "4:32.08",
+   "duration": 1.5,
+   "frames": 36,
+   "start_frame": 6530,
    "source": {
     "kind": "piece",
     "name": "split_r7",
     "in": 3.2,
-    "frames": 37,
+    "frames": 36,
     "file": null,
     "gen": {
      "tool": "split",
@@ -10338,11 +10221,11 @@
   {
    "id": "04-13",
    "chapter": "04",
-   "start": 278.5833,
-   "start_tc": "4:38.58",
-   "duration": 5.9583,
-   "frames": 143,
-   "start_frame": 6686,
+   "start": 273.5833,
+   "start_tc": "4:33.58",
+   "duration": 5.625,
+   "frames": 135,
+   "start_frame": 6566,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/overhead.png",
@@ -10350,14 +10233,14 @@
     "camera": "overhead",
     "zoom": [
      1.0,
-     1.06554
+     1.06187
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 143,
-    "push": "in 6.6 % (log space, constant speed)",
+    "frames": 135,
+    "push": "in 6.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
      "k": 1.0,
@@ -10380,11 +10263,11 @@
   {
    "id": "04-14",
    "chapter": "04",
-   "start": 284.5417,
-   "start_tc": "4:44.54",
-   "duration": 2.625,
-   "frames": 63,
-   "start_frame": 6829,
+   "start": 279.2083,
+   "start_tc": "4:39.20",
+   "duration": 2.8333,
+   "frames": 68,
+   "start_frame": 6701,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/envelope_high.png",
@@ -10392,98 +10275,56 @@
     "camera": "envelope_high",
     "zoom": [
      1.0,
-     1.02887
+     1.03117
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 63,
-    "push": "in 2.9 % (log space, constant speed)",
+    "frames": 68,
+    "push": "in 3.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
    "voice": [
     {
      "id": "04.08",
-     "text": "We haven't seen the court's record of the case."
+     "text": "One detail is unresolved."
     }
    ],
    "angle": "evidence_table folder (NEW prop and camera): a plain grey card folder, closed, no text, no seal; the envelope stands in",
    "cat": "3d"
   },
   {
-   "id": "04-15",
-   "chapter": "04",
-   "start": 287.1667,
-   "start_tc": "4:47.16",
-   "duration": 5.7917,
-   "frames": 139,
-   "start_frame": 6892,
-   "source": {
-    "kind": "plate",
-    "plate": "frames/raw/detention_corridor/envelope.png",
-    "stage": "detention_corridor",
-    "camera": "envelope",
-    "zoom": [
-     1.0,
-     1.06371
-    ],
-    "centre": [
-     0.5,
-     0.5
-    ],
-    "frames": 139,
-    "push": "in 6.4 % (log space, constant speed)",
-    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "parallax": {
-     "k": 1.0,
-     "slide": [
-      0,
-      0
-     ],
-     "depth": "out/depth/detention_corridor/envelope.png"
-    },
-    "type": []
-   },
-   "voice": [
-    {
-     "id": "04.09",
-     "text": "And one word in his account is disputed. He put the dispute on the record himself."
-    }
-   ],
-   "cat": "3d"
-  },
-  {
    "id": "04-16",
    "chapter": "04",
-   "start": 292.9583,
-   "start_tc": "4:52.95",
-   "duration": 7.5417,
-   "frames": 181,
-   "start_frame": 7031,
+   "start": 282.0417,
+   "start_tc": "4:42.04",
+   "duration": 8.625,
+   "frames": 207,
+   "start_frame": 6769,
    "source": {
     "kind": "piece",
     "name": "doc_foot",
     "in": 0.0,
-    "frames": 181,
+    "frames": 207,
     "file": null,
     "gen": {
      "tool": "doc",
      "shot": "design/edit/shots/s1_footnote.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 1, footnote 1 (Qingdao; the discrepancy) lit",
-    "render_secs": 7.792,
-    "clip": "out/film/pieces/doc_foot-58d21b6e5dbc.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_foot-58d21b6e5dbc.json --out out/film/pieces/doc_foot-58d21b6e5dbc.mp4",
+    "render_secs": 8.875,
+    "clip": "out/film/pieces/doc_foot-703d1b95c1bc.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_foot-703d1b95c1bc.json --out out/film/pieces/doc_foot-703d1b95c1bc.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
     {
-     "id": "04.10",
-     "text": "Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao."
+     "id": "04.09",
+     "text": "Dawn told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao."
     }
    ],
    "cat": "doc"
@@ -10491,16 +10332,16 @@
   {
    "id": "04-17",
    "chapter": "04",
-   "start": 300.5,
-   "start_tc": "5:00.50",
-   "duration": 3.8333,
-   "frames": 92,
-   "start_frame": 7212,
+   "start": 290.6667,
+   "start_tc": "4:50.66",
+   "duration": 2.5,
+   "frames": 60,
+   "start_frame": 6976,
    "source": {
     "kind": "piece",
     "name": "route_split",
     "in": 0.0,
-    "frames": 92,
+    "frames": 60,
     "file": null,
     "gen": {
      "tool": "canvas",
@@ -10510,15 +10351,15 @@
     "fixed": false,
     "len": 6.5,
     "note_piece": "Australia and Qingdao, dashed, labels at 2.4 s",
-    "render_secs": 4.083,
+    "render_secs": 2.75,
     "clip": "out/film/pieces/route_split-4790f03f206d.mp4",
     "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq split 0 6.500 out/film/pieces/route_split-4790f03f206d.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
     {
-     "id": "04.11",
-     "text": "\"I don't know the reason for this discrepancy.\" Neither do we."
+     "id": "04.10",
+     "text": "He doesn't know why. Neither do we."
     }
    ],
    "cat": "text"
@@ -10526,11 +10367,11 @@
   {
    "id": "04-18",
    "chapter": "04",
-   "start": 304.3333,
-   "start_tc": "5:04.33",
-   "duration": 3.125,
-   "frames": 75,
-   "start_frame": 7304,
+   "start": 293.1667,
+   "start_tc": "4:53.16",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 7036,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/empty_ch05.png",
@@ -10544,7 +10385,7 @@
      0.5,
      0.55
     ],
-    "frames": 75,
+    "frames": 78,
     "push": "in 3.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -10559,8 +10400,8 @@
    },
    "voice": [
     {
-     "id": "04.12",
-     "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
+     "id": "04.11",
+     "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
     }
    ],
    "cat": "3d"
@@ -10568,11 +10409,11 @@
   {
    "id": "04-18b",
    "chapter": "04",
-   "start": 307.4583,
-   "start_tc": "5:07.45",
-   "duration": 2.2917,
-   "frames": 55,
-   "start_frame": 7379,
+   "start": 296.4167,
+   "start_tc": "4:56.41",
+   "duration": 2.4167,
+   "frames": 58,
+   "start_frame": 7114,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/corridor.png",
@@ -10580,14 +10421,14 @@
     "camera": "corridor",
     "zoom": [
      1.0,
-     1.02521
+     1.02658
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 55,
-    "push": "in 2.5 % (log space, constant speed)",
+    "frames": 58,
+    "push": "in 2.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
      "k": 1.0,
@@ -10609,8 +10450,8 @@
    },
    "voice": [
     {
-     "id": "04.12",
-     "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
+     "id": "04.11",
+     "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
     }
    ],
    "anim": "ANIMATED BEAT: dust in the corridor light",
@@ -10619,33 +10460,33 @@
   {
    "id": "04-19",
    "chapter": "04",
-   "start": 309.75,
-   "start_tc": "5:09.75",
-   "duration": 4.625,
-   "frames": 111,
-   "start_frame": 7434,
+   "start": 298.8333,
+   "start_tc": "4:58.83",
+   "duration": 4.75,
+   "frames": 114,
+   "start_frame": 7172,
    "source": {
     "kind": "piece",
     "name": "doc_denies",
     "in": 0.0,
-    "frames": 111,
+    "frames": 114,
     "file": null,
     "gen": {
      "tool": "doc",
      "shot": "design/edit/shots/s1_denies.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 1, 'a charge she vehemently denies' lit",
-    "render_secs": 4.875,
-    "clip": "out/film/pieces/doc_denies-6c3f5420f5c0.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_denies-6c3f5420f5c0.json --out out/film/pieces/doc_denies-6c3f5420f5c0.mp4",
+    "render_secs": 5.0,
+    "clip": "out/film/pieces/doc_denies-2fe10622c8eb.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_denies-2fe10622c8eb.json --out out/film/pieces/doc_denies-2fe10622c8eb.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
     {
-     "id": "04.12",
-     "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
+     "id": "04.11",
+     "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies."
     }
    ],
    "cat": "doc"
@@ -10653,11 +10494,11 @@
   {
    "id": "04-20",
    "chapter": "04",
-   "start": 314.375,
-   "start_tc": "5:14.37",
+   "start": 303.5833,
+   "start_tc": "5:03.58",
    "duration": 1.8333,
    "frames": 44,
-   "start_frame": 7545,
+   "start_frame": 7286,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/empty.png",
@@ -10686,7 +10527,7 @@
    },
    "voice": [
     {
-     "id": "04.13",
+     "id": "04.12",
      "text": "The trip ended in that room. The case was only beginning."
     }
    ],
@@ -10695,11 +10536,11 @@
   {
    "id": "04-21",
    "chapter": "04",
-   "start": 316.2083,
-   "start_tc": "5:16.20",
+   "start": 305.4167,
+   "start_tc": "5:05.41",
    "duration": 2.1667,
    "frames": 52,
-   "start_frame": 7589,
+   "start_frame": 7330,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/door.png",
@@ -10728,7 +10569,7 @@
    },
    "voice": [
     {
-     "id": "04.13",
+     "id": "04.12",
      "text": "The trip ended in that room. The case was only beginning."
     }
    ],
@@ -10736,7 +10577,7 @@
    "sfx": [
     {
      "name": "sfx_door_far",
-     "at": "04.13@0.7"
+     "at": "04.12@0.7"
     }
    ],
    "cat": "3d"
@@ -10744,11 +10585,11 @@
   {
    "id": "05-01",
    "chapter": "05",
-   "start": 318.375,
-   "start_tc": "5:18.37",
+   "start": 307.5833,
+   "start_tc": "5:07.58",
    "duration": 1.9583,
    "frames": 47,
-   "start_frame": 7641,
+   "start_frame": 7382,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/door.png",
@@ -10794,11 +10635,11 @@
   {
    "id": "05-02",
    "chapter": "05",
-   "start": 320.3333,
-   "start_tc": "5:20.33",
+   "start": 309.5417,
+   "start_tc": "5:09.54",
    "duration": 3.4167,
    "frames": 82,
-   "start_frame": 7688,
+   "start_frame": 7429,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/chair.png",
@@ -10840,11 +10681,11 @@
   {
    "id": "05-03",
    "chapter": "05",
-   "start": 323.75,
-   "start_tc": "5:23.75",
+   "start": 312.9583,
+   "start_tc": "5:12.95",
    "duration": 8.0833,
    "frames": 194,
-   "start_frame": 7770,
+   "start_frame": 7511,
    "source": {
     "kind": "piece",
     "name": "doc_enough",
@@ -10874,11 +10715,11 @@
   {
    "id": "05-04",
    "chapter": "05",
-   "start": 331.8333,
-   "start_tc": "5:31.83",
-   "duration": 7.3333,
-   "frames": 176,
-   "start_frame": 7964,
+   "start": 321.0417,
+   "start_tc": "5:21.04",
+   "duration": 7.75,
+   "frames": 186,
+   "start_frame": 7705,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/pool.png",
@@ -10892,7 +10733,7 @@
      0.5,
      0.5
     ],
-    "frames": 176,
+    "frames": 186,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -10900,7 +10741,7 @@
    "voice": [
     {
      "id": "05.03",
-     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it."
+     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established."
     }
    ],
    "cat": "3d"
@@ -10908,11 +10749,11 @@
   {
    "id": "05-05",
    "chapter": "05",
-   "start": 339.1667,
-   "start_tc": "5:39.16",
-   "duration": 8.8333,
-   "frames": 212,
-   "start_frame": 8140,
+   "start": 328.7917,
+   "start_tc": "5:28.79",
+   "duration": 9.9167,
+   "frames": 238,
+   "start_frame": 7891,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/empty.png",
@@ -10926,7 +10767,7 @@
      0.5,
      0.5
     ],
-    "frames": 212,
+    "frames": 238,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -10942,7 +10783,7 @@
    "voice": [
     {
      "id": "05.03",
-     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it."
+     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established."
     }
    ],
    "cat": "3d"
@@ -10950,11 +10791,11 @@
   {
    "id": "05-06",
    "chapter": "05",
-   "start": 348.0,
-   "start_tc": "5:48.00",
-   "duration": 5.9167,
-   "frames": 142,
-   "start_frame": 8352,
+   "start": 338.7083,
+   "start_tc": "5:38.70",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 8129,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/pool.png",
@@ -10968,7 +10809,7 @@
      0.5,
      0.62
     ],
-    "frames": 142,
+    "frames": 76,
     "push": "in 4.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -10976,7 +10817,7 @@
    "voice": [
     {
      "id": "05.03",
-     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it."
+     "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established."
     }
    ],
    "cat": "3d"
@@ -10984,11 +10825,11 @@
   {
    "id": "05-07",
    "chapter": "05",
-   "start": 353.9167,
-   "start_tc": "5:53.91",
+   "start": 341.875,
+   "start_tc": "5:41.87",
    "duration": 5.9583,
    "frames": 143,
-   "start_frame": 8494,
+   "start_frame": 8205,
    "source": {
     "kind": "piece",
     "name": "calendar",
@@ -11019,11 +10860,11 @@
   {
    "id": "05-08",
    "chapter": "05",
-   "start": 359.875,
-   "start_tc": "5:59.87",
+   "start": 347.8333,
+   "start_tc": "5:47.83",
    "duration": 4.8333,
    "frames": 116,
-   "start_frame": 8637,
+   "start_frame": 8348,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/overhead.png",
@@ -11061,11 +10902,11 @@
   {
    "id": "05-09",
    "chapter": "05",
-   "start": 364.7083,
-   "start_tc": "6:04.70",
+   "start": 352.6667,
+   "start_tc": "5:52.66",
    "duration": 5.125,
    "frames": 123,
-   "start_frame": 8753,
+   "start_frame": 8464,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/wide.png",
@@ -11103,11 +10944,11 @@
   {
    "id": "05-10",
    "chapter": "05",
-   "start": 369.8333,
-   "start_tc": "6:09.83",
+   "start": 357.7917,
+   "start_tc": "5:57.79",
    "duration": 2.7917,
    "frames": 67,
-   "start_frame": 8876,
+   "start_frame": 8587,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -11246,8 +11087,8 @@
        }
       },
       "a": 0.0,
-      "t0": 0.004,
-      "secs": 2.788
+      "t0": 0.002,
+      "secs": 2.789
      }
     ]
    },
@@ -11264,11 +11105,11 @@
   {
    "id": "05-11",
    "chapter": "05",
-   "start": 372.625,
-   "start_tc": "6:12.62",
+   "start": 360.5833,
+   "start_tc": "6:00.58",
    "duration": 4.625,
    "frames": 111,
-   "start_frame": 8943,
+   "start_frame": 8654,
    "source": {
     "kind": "ground",
     "seed": 18,
@@ -11400,9 +11241,9 @@
         "text": "a lot of people"
        }
       },
-      "a": 2.788,
+      "a": 2.789,
       "t0": 0.0,
-      "secs": 4.612
+      "secs": 4.611
      }
     ]
    },
@@ -11418,11 +11259,11 @@
   {
    "id": "06-01",
    "chapter": "06",
-   "start": 377.25,
-   "start_tc": "6:17.25",
+   "start": 365.2083,
+   "start_tc": "6:05.20",
    "duration": 3.375,
    "frames": 81,
-   "start_frame": 9054,
+   "start_frame": 8765,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/wide.png",
@@ -11574,7 +11415,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 0.013,
+      "a": 0.014,
       "t0": 0.0,
       "secs": 3.375
      }
@@ -11592,11 +11433,11 @@
   {
    "id": "06-02",
    "chapter": "06",
-   "start": 380.625,
-   "start_tc": "6:20.62",
+   "start": 368.5833,
+   "start_tc": "6:08.58",
    "duration": 2.9583,
    "frames": 71,
-   "start_frame": 9135,
+   "start_frame": 8846,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_close.png",
@@ -11648,11 +11489,11 @@
   {
    "id": "06-03",
    "chapter": "06",
-   "start": 383.5833,
-   "start_tc": "6:23.58",
+   "start": 371.5417,
+   "start_tc": "6:11.54",
    "duration": 3.5833,
    "frames": 86,
-   "start_frame": 9206,
+   "start_frame": 8917,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -11889,8 +11730,8 @@
        "scale": 1.0
       },
       "a": 0.0,
-      "t0": 0.004,
-      "secs": 3.58
+      "t0": 0.002,
+      "secs": 3.581
      }
     ]
    },
@@ -11907,11 +11748,11 @@
   {
    "id": "06-04",
    "chapter": "06",
-   "start": 387.1667,
-   "start_tc": "6:27.16",
+   "start": 375.125,
+   "start_tc": "6:15.12",
    "duration": 3.75,
    "frames": 90,
-   "start_frame": 9292,
+   "start_frame": 9003,
    "source": {
     "kind": "ground",
     "seed": 19,
@@ -12142,7 +11983,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 3.58,
+      "a": 3.581,
       "t0": 0.0,
       "secs": 3.75
      }
@@ -12160,11 +12001,11 @@
   {
    "id": "06-05",
    "chapter": "06",
-   "start": 390.9167,
-   "start_tc": "6:30.91",
+   "start": 378.875,
+   "start_tc": "6:18.87",
    "duration": 3.8333,
    "frames": 92,
-   "start_frame": 9382,
+   "start_frame": 9093,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -12400,9 +12241,9 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 7.33,
+      "a": 7.331,
       "t0": 0.0,
-      "secs": 3.82
+      "secs": 3.819
      }
     ]
    },
@@ -12419,11 +12260,11 @@
   {
    "id": "06-05b",
    "chapter": "06",
-   "start": 394.75,
-   "start_tc": "6:34.75",
+   "start": 382.7083,
+   "start_tc": "6:22.70",
    "duration": 1.9167,
    "frames": 46,
-   "start_frame": 9474,
+   "start_frame": 9185,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_close.png",
@@ -12461,11 +12302,11 @@
   {
    "id": "06-06",
    "chapter": "06",
-   "start": 396.6667,
-   "start_tc": "6:36.66",
+   "start": 384.625,
+   "start_tc": "6:24.62",
    "duration": 6.375,
    "frames": 153,
-   "start_frame": 9520,
+   "start_frame": 9231,
    "source": {
     "kind": "piece",
     "name": "casefile",
@@ -12497,11 +12338,11 @@
   {
    "id": "06-07",
    "chapter": "06",
-   "start": 403.0417,
-   "start_tc": "6:43.04",
+   "start": 391.0,
+   "start_tc": "6:31.00",
    "duration": 1.0833,
    "frames": 26,
-   "start_frame": 9673,
+   "start_frame": 9384,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/dock.png",
@@ -12539,11 +12380,11 @@
   {
    "id": "06-08",
    "chapter": "06",
-   "start": 404.125,
-   "start_tc": "6:44.12",
+   "start": 392.0833,
+   "start_tc": "6:32.08",
    "duration": 8.5,
    "frames": 204,
-   "start_frame": 9699,
+   "start_frame": 9410,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/wall.png",
@@ -12581,11 +12422,11 @@
   {
    "id": "06-09",
    "chapter": "06",
-   "start": 412.625,
-   "start_tc": "6:52.62",
+   "start": 400.5833,
+   "start_tc": "6:40.58",
    "duration": 8.875,
    "frames": 213,
-   "start_frame": 9903,
+   "start_frame": 9614,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/wall.png",
@@ -12624,11 +12465,11 @@
   {
    "id": "06-10",
    "chapter": "06",
-   "start": 421.5,
-   "start_tc": "7:01.50",
+   "start": 409.4583,
+   "start_tc": "6:49.45",
    "duration": 4.4583,
    "frames": 107,
-   "start_frame": 10116,
+   "start_frame": 9827,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/belt.png",
@@ -12666,11 +12507,11 @@
   {
    "id": "06-10b",
    "chapter": "06",
-   "start": 425.9583,
-   "start_tc": "7:05.95",
+   "start": 413.9167,
+   "start_tc": "6:53.91",
    "duration": 4.0,
    "frames": 96,
-   "start_frame": 10223,
+   "start_frame": 9934,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/overhead.png",
@@ -12708,11 +12549,11 @@
   {
    "id": "06-11",
    "chapter": "06",
-   "start": 429.9583,
-   "start_tc": "7:09.95",
+   "start": 417.9167,
+   "start_tc": "6:57.91",
    "duration": 5.2083,
    "frames": 125,
-   "start_frame": 10319,
+   "start_frame": 10030,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/bench.png",
@@ -12750,11 +12591,11 @@
   {
    "id": "06-12",
    "chapter": "06",
-   "start": 435.1667,
-   "start_tc": "7:15.16",
+   "start": 423.125,
+   "start_tc": "7:03.12",
    "duration": 4.6667,
    "frames": 112,
-   "start_frame": 10444,
+   "start_frame": 10155,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/envelope_high.png",
@@ -12785,11 +12626,11 @@
   {
    "id": "06-13",
    "chapter": "06",
-   "start": 439.8333,
-   "start_tc": "7:19.83",
+   "start": 427.7917,
+   "start_tc": "7:07.79",
    "duration": 4.875,
    "frames": 117,
-   "start_frame": 10556,
+   "start_frame": 10267,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_close.png",
@@ -12831,11 +12672,11 @@
   {
    "id": "06-14",
    "chapter": "06",
-   "start": 444.7083,
-   "start_tc": "7:24.70",
+   "start": 432.6667,
+   "start_tc": "7:12.66",
    "duration": 4.1667,
    "frames": 100,
-   "start_frame": 10673,
+   "start_frame": 10384,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/tower.png",
@@ -12873,11 +12714,11 @@
   {
    "id": "07-01",
    "chapter": "07",
-   "start": 448.875,
-   "start_tc": "7:28.87",
+   "start": 436.8333,
+   "start_tc": "7:16.83",
    "duration": 5.5833,
    "frames": 134,
-   "start_frame": 10773,
+   "start_frame": 10484,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/gate.png",
@@ -12923,11 +12764,11 @@
   {
    "id": "07-02",
    "chapter": "07",
-   "start": 454.4583,
-   "start_tc": "7:34.45",
+   "start": 442.4167,
+   "start_tc": "7:22.41",
    "duration": 1.9167,
    "frames": 46,
-   "start_frame": 10907,
+   "start_frame": 10618,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/wide.png",
@@ -12966,11 +12807,11 @@
   {
    "id": "07-03",
    "chapter": "07",
-   "start": 456.375,
-   "start_tc": "7:36.37",
+   "start": 444.3333,
+   "start_tc": "7:24.33",
    "duration": 2.2083,
    "frames": 53,
-   "start_frame": 10953,
+   "start_frame": 10664,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/glass.png",
@@ -13008,11 +12849,11 @@
   {
    "id": "07-04",
    "chapter": "07",
-   "start": 458.5833,
-   "start_tc": "7:38.58",
+   "start": 446.5417,
+   "start_tc": "7:26.54",
    "duration": 3.9167,
    "frames": 94,
-   "start_frame": 11006,
+   "start_frame": 10717,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/cell_floor.png",
@@ -13042,11 +12883,11 @@
   {
    "id": "07-05",
    "chapter": "07",
-   "start": 462.5,
-   "start_tc": "7:42.50",
+   "start": 450.4583,
+   "start_tc": "7:30.45",
    "duration": 5.875,
    "frames": 141,
-   "start_frame": 11100,
+   "start_frame": 10811,
    "source": {
     "kind": "piece",
     "name": "doc_health",
@@ -13058,11 +12899,11 @@
      "shot": "design/edit/shots/s1_health.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 2, the doctors' findings lit",
     "render_secs": 6.125,
-    "clip": "out/film/pieces/doc_health-2fe575f1d7d6.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_health-2fe575f1d7d6.json --out out/film/pieces/doc_health-2fe575f1d7d6.mp4",
+    "clip": "out/film/pieces/doc_health-77a5537ffd77.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_health-77a5537ffd77.json --out out/film/pieces/doc_health-77a5537ffd77.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
@@ -13076,11 +12917,11 @@
   {
    "id": "07-05b",
    "chapter": "07",
-   "start": 468.375,
-   "start_tc": "7:48.37",
+   "start": 456.3333,
+   "start_tc": "7:36.33",
    "duration": 5.4583,
    "frames": 131,
-   "start_frame": 11241,
+   "start_frame": 10952,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/cell_dawn.png",
@@ -13110,11 +12951,11 @@
   {
    "id": "07-06",
    "chapter": "07",
-   "start": 473.8333,
-   "start_tc": "7:53.83",
+   "start": 461.7917,
+   "start_tc": "7:41.79",
    "duration": 4.6667,
    "frames": 112,
-   "start_frame": 11372,
+   "start_frame": 11083,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/cell_close.png",
@@ -13152,11 +12993,11 @@
   {
    "id": "07-07",
    "chapter": "07",
-   "start": 478.5,
-   "start_tc": "7:58.50",
+   "start": 466.4583,
+   "start_tc": "7:46.45",
    "duration": 4.125,
    "frames": 99,
-   "start_frame": 11484,
+   "start_frame": 11195,
    "source": {
     "kind": "piece",
     "name": "doc_work",
@@ -13168,11 +13009,11 @@
      "shot": "design/edit/shots/s1_work.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 2, 'she still has to work in the prison' lit",
     "render_secs": 4.375,
-    "clip": "out/film/pieces/doc_work-1031e712b55d.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_work-1031e712b55d.json --out out/film/pieces/doc_work-1031e712b55d.mp4",
+    "clip": "out/film/pieces/doc_work-088973efaff9.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_work-088973efaff9.json --out out/film/pieces/doc_work-088973efaff9.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
@@ -13186,11 +13027,11 @@
   {
    "id": "07-07b",
    "chapter": "07",
-   "start": 482.625,
-   "start_tc": "8:02.62",
+   "start": 470.5833,
+   "start_tc": "7:50.58",
    "duration": 4.0417,
    "frames": 97,
-   "start_frame": 11583,
+   "start_frame": 11294,
    "source": {
     "kind": "ground",
     "seed": 20,
@@ -13358,7 +13199,7 @@
         "text": "her physical appearance"
        }
       },
-      "a": 0.014,
+      "a": 0.015,
       "t0": 0.0,
       "secs": 4.042
      }
@@ -13376,11 +13217,11 @@
   {
    "id": "07-08",
    "chapter": "07",
-   "start": 486.6667,
-   "start_tc": "8:06.66",
+   "start": 474.625,
+   "start_tc": "7:54.62",
    "duration": 6.125,
    "frames": 147,
-   "start_frame": 11680,
+   "start_frame": 11391,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining_gene.png",
@@ -13560,7 +13401,7 @@
         "text": "her physical appearance"
        }
       },
-      "a": 4.056,
+      "a": 4.057,
       "t0": 0.0,
       "secs": 6.125
      }
@@ -13579,11 +13420,11 @@
   {
    "id": "07-09",
    "chapter": "07",
-   "start": 492.7917,
-   "start_tc": "8:12.79",
+   "start": 480.75,
+   "start_tc": "8:00.75",
    "duration": 4.3333,
    "frames": 104,
-   "start_frame": 11827,
+   "start_frame": 11538,
    "source": {
     "kind": "ground",
     "seed": 21,
@@ -13747,8 +13588,8 @@
        "scale": 1.0
       },
       "a": 0.0,
-      "t0": 0.019,
-      "secs": 4.314
+      "t0": 0.018,
+      "secs": 4.315
      }
     ]
    },
@@ -13764,11 +13605,11 @@
   {
    "id": "07-10",
    "chapter": "07",
-   "start": 497.125,
-   "start_tc": "8:17.12",
+   "start": 485.0833,
+   "start_tc": "8:05.08",
    "duration": 4.625,
    "frames": 111,
-   "start_frame": 11931,
+   "start_frame": 11642,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining_gene.png",
@@ -13943,7 +13784,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 4.314,
+      "a": 4.315,
       "t0": 0.0,
       "secs": 4.625
      }
@@ -13962,11 +13803,11 @@
   {
    "id": "07-11",
    "chapter": "07",
-   "start": 501.75,
-   "start_tc": "8:21.75",
+   "start": 489.7083,
+   "start_tc": "8:09.70",
    "duration": 3.8333,
    "frames": 92,
-   "start_frame": 12042,
+   "start_frame": 11753,
    "source": {
     "kind": "ground",
     "seed": 23,
@@ -14188,8 +14029,8 @@
        "scale": 1.0
       },
       "a": 0.0,
-      "t0": 0.011,
-      "secs": 3.822
+      "t0": 0.01,
+      "secs": 3.824
      }
     ]
    },
@@ -14205,11 +14046,11 @@
   {
    "id": "07-11b",
    "chapter": "07",
-   "start": 505.5833,
-   "start_tc": "8:25.58",
+   "start": 493.5417,
+   "start_tc": "8:13.54",
    "duration": 2.5833,
    "frames": 62,
-   "start_frame": 12134,
+   "start_frame": 11845,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair_gene.png",
@@ -14442,7 +14283,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 3.822,
+      "a": 3.824,
       "t0": 0.0,
       "secs": 2.583
      }
@@ -14460,11 +14301,11 @@
   {
    "id": "07-12",
    "chapter": "07",
-   "start": 508.1667,
-   "start_tc": "8:28.16",
+   "start": 496.125,
+   "start_tc": "8:16.12",
    "duration": 6.75,
    "frames": 162,
-   "start_frame": 12196,
+   "start_frame": 11907,
    "source": {
     "kind": "piece",
     "name": "father",
@@ -14495,11 +14336,11 @@
   {
    "id": "07-13",
    "chapter": "07",
-   "start": 514.9167,
-   "start_tc": "8:34.91",
+   "start": 502.875,
+   "start_tc": "8:22.87",
    "duration": 4.125,
    "frames": 99,
-   "start_frame": 12358,
+   "start_frame": 12069,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -14865,7 +14706,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 0.006,
+      "a": 0.007,
       "t0": 0.0,
       "secs": 4.125
      }
@@ -14884,11 +14725,11 @@
   {
    "id": "07-13b",
    "chapter": "07",
-   "start": 519.0417,
-   "start_tc": "8:39.04",
+   "start": 507.0,
+   "start_tc": "8:27.00",
    "duration": 6.375,
    "frames": 153,
-   "start_frame": 12457,
+   "start_frame": 12168,
    "source": {
     "kind": "ground",
     "seed": 24,
@@ -15248,7 +15089,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 4.131,
+      "a": 4.132,
       "t0": 0.0,
       "secs": 6.375
      }
@@ -15266,11 +15107,11 @@
   {
    "id": "07-14",
    "chapter": "07",
-   "start": 525.4167,
-   "start_tc": "8:45.41",
+   "start": 513.375,
+   "start_tc": "8:33.37",
    "duration": 12.8333,
    "frames": 308,
-   "start_frame": 12610,
+   "start_frame": 12321,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/pool.png",
@@ -15634,7 +15475,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 10.506,
+      "a": 10.507,
       "t0": 0.0,
       "secs": 12.833
      }
@@ -15652,11 +15493,11 @@
   {
    "id": "07-15",
    "chapter": "07",
-   "start": 538.25,
-   "start_tc": "8:58.25",
+   "start": 526.2083,
+   "start_tc": "8:46.20",
    "duration": 4.0417,
    "frames": 97,
-   "start_frame": 12918,
+   "start_frame": 12629,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -15886,8 +15727,8 @@
        "scale": 1.0
       },
       "a": 0.0,
-      "t0": 0.011,
-      "secs": 4.031
+      "t0": 0.01,
+      "secs": 4.032
      }
     ]
    },
@@ -15904,11 +15745,11 @@
   {
    "id": "07-16",
    "chapter": "07",
-   "start": 542.2917,
-   "start_tc": "9:02.29",
+   "start": 530.25,
+   "start_tc": "8:50.25",
    "duration": 4.3333,
    "frames": 104,
-   "start_frame": 13015,
+   "start_frame": 12726,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -16138,7 +15979,7 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 4.031,
+      "a": 4.032,
       "t0": 0.0,
       "secs": 4.333
      }
@@ -16157,11 +15998,11 @@
   {
    "id": "07-17",
    "chapter": "07",
-   "start": 546.625,
-   "start_tc": "9:06.62",
+   "start": 534.5833,
+   "start_tc": "8:54.58",
    "duration": 6.125,
    "frames": 147,
-   "start_frame": 13119,
+   "start_frame": 12830,
    "source": {
     "kind": "ground",
     "seed": 22,
@@ -16385,9 +16226,9 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 8.364,
+      "a": 8.365,
       "t0": 0.0,
-      "secs": 5.136
+      "secs": 5.135
      }
     ]
    },
@@ -16403,11 +16244,11 @@
   {
    "id": "07-18",
    "chapter": "07",
-   "start": 552.75,
-   "start_tc": "9:12.75",
+   "start": 540.7083,
+   "start_tc": "9:00.70",
    "duration": 5.9167,
    "frames": 142,
-   "start_frame": 13266,
+   "start_frame": 12977,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/gate.png",
@@ -16445,11 +16286,11 @@
   {
    "id": "07-19",
    "chapter": "07",
-   "start": 558.6667,
-   "start_tc": "9:18.66",
+   "start": 546.625,
+   "start_tc": "9:06.62",
    "duration": 4.25,
    "frames": 102,
-   "start_frame": 13408,
+   "start_frame": 13119,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/passport.png",
@@ -16487,11 +16328,11 @@
   {
    "id": "07-20",
    "chapter": "07",
-   "start": 562.9167,
-   "start_tc": "9:22.91",
+   "start": 550.875,
+   "start_tc": "9:10.87",
    "duration": 4.0833,
    "frames": 98,
-   "start_frame": 13510,
+   "start_frame": 13221,
    "source": {
     "kind": "ground",
     "seed": 25,
@@ -16632,8 +16473,8 @@
        "scale": 1.0
       },
       "a": 0.0,
-      "t0": 0.008,
-      "secs": 4.075
+      "t0": 0.007,
+      "secs": 4.076
      }
     ]
    },
@@ -16649,11 +16490,11 @@
   {
    "id": "07-21",
    "chapter": "07",
-   "start": 567.0,
-   "start_tc": "9:27.00",
+   "start": 554.9583,
+   "start_tc": "9:14.95",
    "duration": 4.8333,
    "frames": 116,
-   "start_frame": 13608,
+   "start_frame": 13319,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
@@ -16799,9 +16640,9 @@
        "column": true,
        "scale": 1.0
       },
-      "a": 4.075,
+      "a": 4.076,
       "t0": 0.0,
-      "secs": 3.325
+      "secs": 3.324
      }
     ]
    },
@@ -16818,11 +16659,11 @@
   {
    "id": "08-01",
    "chapter": "08",
-   "start": 571.8333,
-   "start_tc": "9:31.83",
+   "start": 559.7917,
+   "start_tc": "9:19.79",
    "duration": 6.4167,
    "frames": 154,
-   "start_frame": 13724,
+   "start_frame": 13435,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining_gene.png",
@@ -16869,11 +16710,11 @@
   {
    "id": "08-02",
    "chapter": "08",
-   "start": 578.25,
-   "start_tc": "9:38.25",
+   "start": 566.2083,
+   "start_tc": "9:26.20",
    "duration": 4.7917,
    "frames": 115,
-   "start_frame": 13878,
+   "start_frame": 13589,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/blinds.png",
@@ -16903,11 +16744,11 @@
   {
    "id": "08-03",
    "chapter": "08",
-   "start": 583.0417,
-   "start_tc": "9:43.04",
+   "start": 571.0,
+   "start_tc": "9:31.00",
    "duration": 5.1667,
    "frames": 124,
-   "start_frame": 13993,
+   "start_frame": 13704,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair_gene.png",
@@ -16945,27 +16786,27 @@
   {
    "id": "08-04",
    "chapter": "08",
-   "start": 588.2083,
-   "start_tc": "9:48.20",
-   "duration": 7.25,
-   "frames": 174,
-   "start_frame": 14117,
+   "start": 576.1667,
+   "start_tc": "9:36.16",
+   "duration": 7.2083,
+   "frames": 173,
+   "start_frame": 13828,
    "source": {
     "kind": "piece",
     "name": "doc_fire",
     "in": 0.0,
-    "frames": 174,
+    "frames": 173,
     "file": null,
     "gen": {
      "tool": "doc",
      "shot": "design/edit/shots/s1_fire.json"
     },
     "fixed": false,
-    "len": 8.5,
+    "len": 9.0,
     "note_piece": "S1 p. 2, the house fire lit",
-    "render_secs": 7.5,
-    "clip": "out/film/pieces/doc_fire-059d10016d61.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fire-059d10016d61.json --out out/film/pieces/doc_fire-059d10016d61.mp4",
+    "render_secs": 7.458,
+    "clip": "out/film/pieces/doc_fire-abb81ed9db64.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fire-abb81ed9db64.json --out out/film/pieces/doc_fire-abb81ed9db64.mp4",
     "clip_from": "re-rendered"
    },
    "voice": [
@@ -16979,11 +16820,11 @@
   {
    "id": "08-05",
    "chapter": "08",
-   "start": 595.4583,
-   "start_tc": "9:55.45",
-   "duration": 3.6667,
-   "frames": 88,
-   "start_frame": 14291,
+   "start": 583.375,
+   "start_tc": "9:43.37",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 14001,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_high.png",
@@ -16991,14 +16832,14 @@
     "camera": "dawn_high",
     "zoom": [
      1.0,
-     1.04033
+     1.04079
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 88,
-    "push": "in 4.0 % (log space, constant speed)",
+    "frames": 89,
+    "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
      "k": 1.0,
@@ -17021,11 +16862,11 @@
   {
    "id": "08-06",
    "chapter": "08",
-   "start": 599.125,
-   "start_tc": "9:59.12",
+   "start": 587.0833,
+   "start_tc": "9:47.08",
    "duration": 5.125,
    "frames": 123,
-   "start_frame": 14379,
+   "start_frame": 14090,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair_gene.png",
@@ -17597,8 +17438,8 @@
        ]
       },
       "a": 0.0,
-      "t0": 0.018,
-      "secs": 5.107
+      "t0": 0.017,
+      "secs": 5.108
      }
     ]
    },
@@ -17615,16 +17456,16 @@
   {
    "id": "08-07",
    "chapter": "08",
-   "start": 604.25,
-   "start_tc": "10:04.25",
+   "start": 592.2083,
+   "start_tc": "9:52.20",
    "duration": 2.6667,
    "frames": 64,
-   "start_frame": 14502,
+   "start_frame": 14213,
    "source": {
     "kind": "clip",
     "clip": "IN-14",
     "file": "archive/media/nbc2024_gene.mp4",
-    "src_in": 140.867,
+    "src_in": 140.868,
     "frames": 64,
     "crop": [
      51,
@@ -18183,7 +18024,7 @@
         -42.2
        ]
       },
-      "a": 5.107,
+      "a": 5.108,
       "t0": 0.0,
       "secs": 2.667
      }
@@ -18202,11 +18043,11 @@
   {
    "id": "08-08",
    "chapter": "08",
-   "start": 606.9167,
-   "start_tc": "10:06.91",
+   "start": 594.875,
+   "start_tc": "9:54.87",
    "duration": 1.5,
    "frames": 36,
-   "start_frame": 14566,
+   "start_frame": 14277,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining_gene.png",
@@ -18777,7 +18618,7 @@
         -42.2
        ]
       },
-      "a": 7.774,
+      "a": 7.775,
       "t0": 0.0,
       "secs": 1.5
      }
@@ -18796,11 +18637,11 @@
   {
    "id": "08-09",
    "chapter": "08",
-   "start": 608.4167,
-   "start_tc": "10:08.41",
+   "start": 596.375,
+   "start_tc": "9:56.37",
    "duration": 9.75,
    "frames": 234,
-   "start_frame": 14602,
+   "start_frame": 14313,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/letters.png",
@@ -18852,11 +18693,11 @@
   {
    "id": "08-10",
    "chapter": "08",
-   "start": 618.1667,
-   "start_tc": "10:18.16",
+   "start": 606.125,
+   "start_tc": "10:06.12",
    "duration": 6.5,
    "frames": 156,
-   "start_frame": 14836,
+   "start_frame": 14547,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/desk.png",
@@ -18895,11 +18736,11 @@
   {
    "id": "08-11",
    "chapter": "08",
-   "start": 624.6667,
-   "start_tc": "10:24.66",
+   "start": 612.625,
+   "start_tc": "10:12.62",
    "duration": 5.7917,
    "frames": 139,
-   "start_frame": 14992,
+   "start_frame": 14703,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/window.png",
@@ -18937,11 +18778,11 @@
   {
    "id": "08-12",
    "chapter": "08",
-   "start": 630.4583,
-   "start_tc": "10:30.45",
+   "start": 618.4167,
+   "start_tc": "10:18.41",
    "duration": 2.125,
    "frames": 51,
-   "start_frame": 15131,
+   "start_frame": 14842,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/door.png",
@@ -18979,11 +18820,11 @@
   {
    "id": "08-13",
    "chapter": "08",
-   "start": 632.5833,
-   "start_tc": "10:32.58",
-   "duration": 5.5,
-   "frames": 132,
-   "start_frame": 15182,
+   "start": 620.5417,
+   "start_tc": "10:20.54",
+   "duration": 1.7083,
+   "frames": 41,
+   "start_frame": 14893,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining_gene.png",
@@ -18997,7 +18838,7 @@
      0.5,
      0.5
     ],
-    "frames": 132,
+    "frames": 41,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -19013,7 +18854,7 @@
    "voice": [
     {
      "id": "08.06",
-     "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two."
+     "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
     }
    ],
    "cat": "3d"
@@ -19021,11 +18862,11 @@
   {
    "id": "08-14",
    "chapter": "08",
-   "start": 638.0833,
-   "start_tc": "10:38.08",
-   "duration": 5.0,
-   "frames": 120,
-   "start_frame": 15314,
+   "start": 622.25,
+   "start_tc": "10:22.25",
+   "duration": 2.5417,
+   "frames": 61,
+   "start_frame": 14934,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair_gene.png",
@@ -19039,7 +18880,7 @@
      0.5,
      0.5
     ],
-    "frames": 120,
+    "frames": 61,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -19047,7 +18888,7 @@
    "voice": [
     {
      "id": "08.06",
-     "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two."
+     "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
     }
    ],
    "cat": "3d"
@@ -19055,26 +18896,26 @@
   {
    "id": "08-15",
    "chapter": "08",
-   "start": 643.0833,
-   "start_tc": "10:43.08",
-   "duration": 3.7083,
-   "frames": 89,
-   "start_frame": 15434,
+   "start": 624.7917,
+   "start_tc": "10:24.79",
+   "duration": 4.5833,
+   "frames": 110,
+   "start_frame": 14995,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair.png",
     "stage": "home",
     "camera": "chair",
     "zoom": [
-     1.02017,
-     1.03522
+     1.02034,
+     1.05771
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 89,
-    "push": "in 1.5 % (log space, constant speed)",
+    "frames": 110,
+    "push": "in 3.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -19088,7 +18929,7 @@
    "voice": [
     {
      "id": "08.06",
-     "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two."
+     "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
     }
    ],
    "row": "on 'died', the same frame empty",
@@ -19097,11 +18938,11 @@
   {
    "id": "08-16",
    "chapter": "08",
-   "start": 646.7917,
-   "start_tc": "10:46.79",
+   "start": 629.375,
+   "start_tc": "10:29.37",
    "duration": 5.2917,
    "frames": 127,
-   "start_frame": 15523,
+   "start_frame": 15105,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/chair.png",
@@ -19139,11 +18980,11 @@
   {
    "id": "08-17",
    "chapter": "08",
-   "start": 652.0833,
-   "start_tc": "10:52.08",
+   "start": 634.6667,
+   "start_tc": "10:34.66",
    "duration": 11.2083,
    "frames": 269,
-   "start_frame": 15650,
+   "start_frame": 15232,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/gate.png",
@@ -19173,7 +19014,7 @@
       "mode": "place",
       "look": "B",
       "hash": "a=2026&pre=JULY",
-      "t0": 1.286,
+      "t0": 1.285,
       "tin": 0.0
      }
     ]
@@ -19194,16 +19035,16 @@
   {
    "id": "08-18",
    "chapter": "08",
-   "start": 663.2917,
-   "start_tc": "11:03.29",
+   "start": 645.875,
+   "start_tc": "10:45.87",
    "duration": 4.0833,
    "frames": 98,
-   "start_frame": 15919,
+   "start_frame": 15501,
    "source": {
     "kind": "clip",
     "clip": "IN-15",
     "file": "archive/media/nbc2026_tim.mp4",
-    "src_in": 67.906,
+    "src_in": 67.907,
     "frames": 98,
     "crop": [
      45,
@@ -19787,9 +19628,9 @@
         -43.4
        ]
       },
-      "a": 4.466,
+      "a": 4.467,
       "t0": 0.0,
-      "secs": 4.064
+      "secs": 4.063
      }
     ]
    },
@@ -19806,11 +19647,11 @@
   {
    "id": "09-01",
    "chapter": "09",
-   "start": 667.375,
-   "start_tc": "11:07.37",
+   "start": 649.9583,
+   "start_tc": "10:49.95",
    "duration": 4.0417,
    "frames": 97,
-   "start_frame": 16017,
+   "start_frame": 15599,
    "source": {
     "kind": "clip",
     "clip": "IN-1",
@@ -19840,7 +19681,7 @@
       "mode": "place",
       "look": "B",
       "hash": "a=2026&pre=SEPTEMBER",
-      "t0": 1.463,
+      "t0": 1.462,
       "tin": 0.0
      }
     ]
@@ -19857,11 +19698,11 @@
   {
    "id": "09-02",
    "chapter": "09",
-   "start": 671.4167,
-   "start_tc": "11:11.41",
+   "start": 654.0,
+   "start_tc": "10:54.00",
    "duration": 5.1667,
    "frames": 124,
-   "start_frame": 16114,
+   "start_frame": 15696,
    "source": {
     "kind": "screen",
     "plate": "frames/raw/evidence_table/screen.png",
@@ -19899,11 +19740,11 @@
   {
    "id": "09-03",
    "chapter": "09",
-   "start": 676.5833,
-   "start_tc": "11:16.58",
+   "start": 659.1667,
+   "start_tc": "10:59.16",
    "duration": 5.3333,
    "frames": 128,
-   "start_frame": 16238,
+   "start_frame": 15820,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/reverse.png",
@@ -19933,11 +19774,11 @@
   {
    "id": "09-04",
    "chapter": "09",
-   "start": 681.9167,
-   "start_tc": "11:21.91",
+   "start": 664.5,
+   "start_tc": "11:04.50",
    "duration": 4.7083,
    "frames": 113,
-   "start_frame": 16366,
+   "start_frame": 15948,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/reverse.png",
@@ -19968,11 +19809,11 @@
   {
    "id": "09-05",
    "chapter": "09",
-   "start": 686.625,
-   "start_tc": "11:26.62",
+   "start": 669.2083,
+   "start_tc": "11:09.20",
    "duration": 3.8333,
    "frames": 92,
-   "start_frame": 16479,
+   "start_frame": 16061,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining.png",
@@ -20010,11 +19851,11 @@
   {
    "id": "09-06",
    "chapter": "09",
-   "start": 690.4583,
-   "start_tc": "11:30.45",
+   "start": 673.0417,
+   "start_tc": "11:13.04",
    "duration": 3.5,
    "frames": 84,
-   "start_frame": 16571,
+   "start_frame": 16153,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/blinds.png",
@@ -20044,11 +19885,11 @@
   {
    "id": "09-07",
    "chapter": "09",
-   "start": 693.9583,
-   "start_tc": "11:33.95",
+   "start": 676.5417,
+   "start_tc": "11:16.54",
    "duration": 3.0,
    "frames": 72,
-   "start_frame": 16655,
+   "start_frame": 16237,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/glass.png",
@@ -20086,11 +19927,11 @@
   {
    "id": "09-08",
    "chapter": "09",
-   "start": 696.9583,
-   "start_tc": "11:36.95",
+   "start": 679.5417,
+   "start_tc": "11:19.54",
    "duration": 12.0417,
    "frames": 289,
-   "start_frame": 16727,
+   "start_frame": 16309,
    "source": {
     "kind": "clip",
     "clip": "IN-1",
@@ -20126,32 +19967,32 @@
          "text": "“When?”",
          "style": "key",
          "cps": 14,
-         "t": 0.311
+         "t": 0.309
         },
         {
          "text": "She wants a date.",
          "cps": 30,
-         "t": 1.611
+         "t": 1.609
         },
         {
          "text": "A date when she will be released.",
          "cps": 30,
-         "t": 3.443
+         "t": 3.441
         },
         {
          "text": "“I don’t know.”",
          "cps": 30,
-         "t": 5.643
+         "t": 5.641
         },
         {
          "text": "“I don’t have a date.”",
          "cps": 30,
-         "t": 7.443
+         "t": 7.441
         },
         {
          "text": "“I can’t give you a date.”",
          "cps": 30,
-         "t": 9.443
+         "t": 9.441
         }
        ]
       }
@@ -20170,11 +20011,11 @@
   {
    "id": "09-09",
    "chapter": "09",
-   "start": 709.0,
-   "start_tc": "11:49.00",
+   "start": 691.5833,
+   "start_tc": "11:31.58",
    "duration": 3.0,
    "frames": 72,
-   "start_frame": 17016,
+   "start_frame": 16598,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/empty.png",
@@ -20208,11 +20049,11 @@
   {
    "id": "09-10",
    "chapter": "09",
-   "start": 712.0,
-   "start_tc": "11:52.00",
+   "start": 694.5833,
+   "start_tc": "11:34.58",
    "duration": 5.75,
    "frames": 138,
-   "start_frame": 17088,
+   "start_frame": 16670,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/empty.png",
@@ -20250,11 +20091,11 @@
   {
    "id": "09-11",
    "chapter": "09",
-   "start": 717.75,
-   "start_tc": "11:57.75",
+   "start": 700.3333,
+   "start_tc": "11:40.33",
    "duration": 4.0,
    "frames": 96,
-   "start_frame": 17226,
+   "start_frame": 16808,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/empty.png",
@@ -20293,17 +20134,17 @@
   {
    "id": "09-12",
    "chapter": "09",
-   "start": 721.75,
-   "start_tc": "12:01.75",
-   "duration": 5.0833,
-   "frames": 122,
-   "start_frame": 17322,
+   "start": 704.3333,
+   "start_tc": "11:44.33",
+   "duration": 5.0417,
+   "frames": 121,
+   "start_frame": 16904,
    "source": {
     "kind": "clip",
     "clip": "IN-1",
     "file": "archive/media/cecc2026_tim_gene_passage.mp4",
-    "src_in": 4.347,
-    "frames": 122,
+    "src_in": 4.348,
+    "frames": 121,
     "crop": [
      222,
      62,
@@ -20649,8 +20490,8 @@
        ]
       },
       "a": 0.0,
-      "t0": 0.453,
-      "secs": 4.61
+      "t0": 0.452,
+      "secs": 4.59
      }
     ]
    },
@@ -20667,11 +20508,11 @@
   {
    "id": "09-13",
    "chapter": "09",
-   "start": 726.8333,
-   "start_tc": "12:06.83",
-   "duration": 7.125,
-   "frames": 171,
-   "start_frame": 17444,
+   "start": 709.375,
+   "start_tc": "11:49.37",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 17025,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/match.png",
@@ -20685,14 +20526,14 @@
      0.5,
      0.5
     ],
-    "frames": 171,
+    "frames": 123,
     "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "yes",
       "look": "B",
-      "t0": 6.493,
+      "t0": 4.471,
       "tin": 0.0
      }
     ]
@@ -20700,7 +20541,7 @@
    "voice": [
     {
      "id": "09.08",
-     "text": "Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it."
+     "text": "Twelve years ago, officers asked Dawn a question. She answered it."
     }
    ],
    "cat": "3d"
@@ -20708,26 +20549,26 @@
   {
    "id": "09-14",
    "chapter": "09",
-   "start": 733.9583,
-   "start_tc": "12:13.95",
+   "start": 714.5,
+   "start_tc": "11:54.50",
    "duration": 4.7083,
    "frames": 113,
-   "start_frame": 17615,
+   "start_frame": 17148,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/bags.png",
     "stage": "void_stage",
     "camera": "bags",
     "zoom": [
-     1.03521,
-     1.05894
+     1.03529,
+     1.06851
     ],
     "centre": [
      0.5,
      0.5
     ],
     "frames": 113,
-    "push": "in 2.3 % (log space, constant speed)",
+    "push": "in 3.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -20747,55 +20588,13 @@
    "cat": "3d"
   },
   {
-   "id": "09-15",
-   "chapter": "09",
-   "start": 738.6667,
-   "start_tc": "12:18.66",
-   "duration": 9.1667,
-   "frames": 220,
-   "start_frame": 17728,
-   "source": {
-    "kind": "plate",
-    "plate": "frames/raw/void_stage/dawn.png",
-    "stage": "void_stage",
-    "camera": "dawn",
-    "zoom": [
-     1.0,
-     1.03
-    ],
-    "centre": [
-     0.5,
-     0.5
-    ],
-    "frames": 220,
-    "push": "in 3.0 % (log space, constant speed)",
-    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "parallax": {
-     "k": 1.0,
-     "slide": [
-      0,
-      0
-     ],
-     "depth": "out/depth/void_stage/dawn.png"
-    },
-    "type": []
-   },
-   "voice": [
-    {
-     "id": "09.10",
-     "text": "Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family."
-    }
-   ],
-   "cat": "3d"
-  },
-  {
    "id": "09-16",
    "chapter": "09",
-   "start": 747.8333,
-   "start_tc": "12:27.83",
-   "duration": 12.625,
-   "frames": 303,
-   "start_frame": 17948,
+   "start": 719.2083,
+   "start_tc": "11:59.20",
+   "duration": 12.5833,
+   "frames": 302,
+   "start_frame": 17261,
    "source": {
     "kind": "photo",
     "photo": "archive/media/photos/06_dawn_family_holiday.jpg",
@@ -20807,13 +20606,13 @@
      0.5,
      0.5
     ],
-    "frames": 303,
+    "frames": 302,
     "grade": "archive",
     "type": []
    },
    "voice": [
     {
-     "id": "09.11",
+     "id": "09.10",
      "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
     }
    ],
@@ -20824,17 +20623,17 @@
   {
    "id": "09-17",
    "chapter": "09",
-   "start": 760.4583,
-   "start_tc": "12:40.45",
-   "duration": 3.75,
-   "frames": 90,
-   "start_frame": 18251,
+   "start": 731.7917,
+   "start_tc": "12:11.79",
+   "duration": 3.7917,
+   "frames": 91,
+   "start_frame": 17563,
    "source": {
     "kind": "clip",
     "clip": "IN-13",
     "file": "archive/media/cecc2026_tim_cspan_long.mp4",
-    "src_in": 160.422,
-    "frames": 90,
+    "src_in": 160.405,
+    "frames": 91,
     "crop": [
      99,
      40,
@@ -22332,9 +22131,9 @@
         -52.0
        ]
       },
-      "a": 0.002,
-      "t0": 0.0,
-      "secs": 3.75
+      "a": 0.0,
+      "t0": 0.015,
+      "secs": 3.776
      }
     ]
    },
@@ -22351,11 +22150,11 @@
   {
    "id": "09-18",
    "chapter": "09",
-   "start": 764.2083,
-   "start_tc": "12:44.20",
-   "duration": 4.9167,
-   "frames": 118,
-   "start_frame": 18341,
+   "start": 735.5833,
+   "start_tc": "12:15.58",
+   "duration": 4.875,
+   "frames": 117,
+   "start_frame": 17654,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair.png",
@@ -22369,7 +22168,7 @@
      0.5,
      0.5
     ],
-    "frames": 118,
+    "frames": 117,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "parallax": {
@@ -23866,9 +23665,9 @@
         -52.0
        ]
       },
-      "a": 3.752,
+      "a": 3.776,
       "t0": 0.0,
-      "secs": 4.917
+      "secs": 4.875
      }
     ]
    },
@@ -23885,16 +23684,16 @@
   {
    "id": "09-19",
    "chapter": "09",
-   "start": 769.125,
-   "start_tc": "12:49.12",
+   "start": 740.4583,
+   "start_tc": "12:20.45",
    "duration": 13.375,
    "frames": 321,
-   "start_frame": 18459,
+   "start_frame": 17771,
    "source": {
     "kind": "clip",
     "clip": "IN-13",
     "file": "archive/media/cecc2026_tim_cspan_long.mp4",
-    "src_in": 169.089,
+    "src_in": 169.071,
     "frames": 321,
     "crop": [
      124,
@@ -25393,9 +25192,9 @@
         -52.0
        ]
       },
-      "a": 8.669,
+      "a": 8.651,
       "t0": 0.0,
-      "secs": 13.371
+      "secs": 13.375
      }
     ]
    },
@@ -25411,11 +25210,11 @@
   {
    "id": "09-20",
    "chapter": "09",
-   "start": 782.5,
-   "start_tc": "13:02.50",
+   "start": 753.8333,
+   "start_tc": "12:33.83",
    "duration": 5.0,
    "frames": 120,
-   "start_frame": 18780,
+   "start_frame": 18092,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/bags.png",
@@ -25745,26 +25544,26 @@
    "id": "01.06",
    "chapter": "01",
    "start": 122.662,
-   "speech": 6.976,
-   "end": 129.988,
-   "text": "On paper, the prize is cash. Out loud, it's a trip. Two descriptions of one email, both from her brother.",
+   "speech": 2.268,
+   "end": 125.28,
+   "text": "His written statement calls the prize cash.",
    "timing": "measured"
   },
   {
    "id": "01.07",
    "chapter": "01",
-   "start": 129.988,
+   "start": 125.28,
    "speech": 1.5,
-   "end": 131.838,
+   "end": 127.13,
    "text": "She told her father, too.",
    "timing": "measured"
   },
   {
    "id": "01.R1",
    "chapter": "01",
-   "start": 131.838,
+   "start": 127.13,
    "speech": 7.2,
-   "end": 139.388,
+   "end": 134.68,
    "real": "IN-14",
    "file": "archive/media/nbc2024_gene.mp4",
    "in": 50.22,
@@ -25776,27 +25575,27 @@
   {
    "id": "01.08",
    "chapter": "01",
-   "start": 139.388,
+   "start": 134.68,
    "speech": 4.206,
-   "end": 143.944,
+   "end": 139.236,
    "text": "She sent them her passport details, Tim wrote. They sent her a ticket.",
    "timing": "measured"
   },
   {
    "id": "01.09",
    "chapter": "01",
-   "start": 143.944,
+   "start": 139.236,
    "speech": 2.083,
-   "end": 146.377,
+   "end": 141.669,
    "text": "The first part of the promise was true.",
    "timing": "measured"
   },
   {
    "id": "01.T3",
    "chapter": "01",
-   "start": 146.377,
+   "start": 141.669,
    "speech": 7.0,
-   "end": 153.377,
+   "end": 148.669,
    "t24": true,
    "say": "She was in Hong Kong for 9 days and she told me that the organizers treated her well.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.652-653",
@@ -25805,9 +25604,9 @@
   {
    "id": "01.h1",
    "chapter": "01",
-   "start": 153.377,
+   "start": 148.669,
    "speech": 0.0,
-   "end": 154.577,
+   "end": 149.869,
    "hold": 1.2,
    "note": "his held words alone: 1.2 s of digital silence",
    "silence": "digital"
@@ -25815,9 +25614,9 @@
   {
    "id": "02.T1",
    "chapter": "02",
-   "start": 154.577,
+   "start": 149.869,
    "speech": 6.0,
-   "end": 160.927,
+   "end": 156.219,
    "t24": true,
    "say": "She went sightseeing, shopping, and started to trust the organizers who put together her trip.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.653-654",
@@ -25826,9 +25625,9 @@
   {
    "id": "02.T2",
    "chapter": "02",
-   "start": 160.927,
+   "start": 156.219,
    "speech": 9.0,
-   "end": 170.277,
+   "end": 165.569,
    "t24": true,
    "say": "After exploring Hong Kong, she was asked if she wanted to visit mainland China. After her positive experience in Hong Kong, she agreed.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.655-657",
@@ -25837,9 +25636,9 @@
   {
    "id": "02.T3",
    "chapter": "02",
-   "start": 170.277,
+   "start": 165.569,
    "speech": 4.8,
-   "end": 175.427,
+   "end": 170.719,
    "t24": true,
    "say": "She went to mainland China and traveled around for another 9 days.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.657-658",
@@ -25848,18 +25647,18 @@
   {
    "id": "02.01",
    "chapter": "02",
-   "start": 175.427,
+   "start": 170.719,
    "speech": 5.218,
-   "end": 180.995,
+   "end": 176.287,
    "text": "The email became a ticket. The ticket became a city. And the city became trust.",
    "timing": "measured"
   },
   {
    "id": "02.T4",
    "chapter": "02",
-   "start": 180.995,
+   "start": 176.287,
    "speech": 5.6,
-   "end": 186.945,
+   "end": 182.237,
    "t24": true,
    "say": "The organizers then asked if she wanted to visit Australia. Once again, she agreed.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.659-660",
@@ -25868,27 +25667,27 @@
   {
    "id": "02.02",
    "chapter": "02",
-   "start": 186.945,
+   "start": 182.237,
    "speech": 4.602,
-   "end": 191.547,
+   "end": 186.839,
    "text": "Each time, she said yes. And each yes took her a step closer to that room.",
    "timing": "measured"
   },
   {
    "id": "02.h0",
    "chapter": "02",
-   "start": 191.547,
+   "start": 186.839,
    "speech": 0.0,
-   "end": 192.547,
+   "end": 187.839,
    "hold": 1.0,
    "note": "inspection_room empty, 1.2 s with the end of the line"
   },
   {
    "id": "02.T5",
    "chapter": "02",
-   "start": 192.547,
+   "start": 187.839,
    "speech": 7.0,
-   "end": 199.547,
+   "end": 194.839,
    "t24": true,
    "say": "Before she left for her Australia trip, she was told that she also won some designer purses.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.660-661",
@@ -25897,9 +25696,9 @@
   {
    "id": "02.h1",
    "chapter": "02",
-   "start": 199.547,
+   "start": 194.839,
    "speech": 0.0,
-   "end": 200.747,
+   "end": 196.039,
    "hold": 1.2,
    "note": "his held words alone: 1.2 s of digital silence",
    "silence": "digital"
@@ -25907,9 +25706,9 @@
   {
    "id": "03.T1",
    "chapter": "03",
-   "start": 200.747,
+   "start": 196.039,
    "speech": 7.4,
-   "end": 208.497,
+   "end": 203.789,
    "t24": true,
    "say": "Trusting the organizers, she took the purses and packed them in luggage given to her by the organizers.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.661-663",
@@ -25918,90 +25717,81 @@
   {
    "id": "03.01",
    "chapter": "03",
-   "start": 208.497,
+   "start": 203.789,
    "speech": 10.8,
-   "end": 219.647,
+   "end": 214.939,
    "text": "Her luggage was already full, Tim wrote. So she went with some of the people who organized her trip to the Baiyun Leather Market, and the organizers bought her an extra bag.",
    "timing": "measured"
   },
   {
    "id": "03.02",
    "chapter": "03",
-   "start": 219.647,
+   "start": 214.939,
    "speech": 2.414,
-   "end": 222.411,
+   "end": 217.703,
    "text": "Two pieces of luggage. She checked both.",
    "timing": "measured"
   },
   {
    "id": "03.03",
    "chapter": "03",
-   "start": 222.411,
+   "start": 217.703,
    "speech": 3.422,
-   "end": 226.183,
+   "end": 221.475,
    "text": "At the check-in desk, the scale said what you already know.",
    "timing": "measured"
   },
   {
    "id": "03.04",
    "chapter": "03",
-   "start": 226.183,
+   "start": 221.475,
    "speech": 1.685,
-   "end": 228.218,
+   "end": 223.51,
    "text": "Overweight. She paid the fee.",
    "timing": "measured"
   },
   {
    "id": "03.05",
    "chapter": "03",
-   "start": 228.218,
+   "start": 223.51,
    "speech": 2.941,
-   "end": 231.159,
+   "end": 226.451,
    "text": "\"...she even paid a small excess weight fee,\" he wrote.",
    "timing": "measured"
   },
   {
    "id": "03.h1",
    "chapter": "03",
-   "start": 231.159,
+   "start": 226.451,
    "speech": 0.0,
-   "end": 231.959,
-   "hold": 0.8,
-   "note": "(beat)"
+   "end": 228.051,
+   "hold": 1.6,
+   "note": "the highlighted word does the work (third pass: the spoken 'Even.' is cut)"
   },
   {
    "id": "03.06",
    "chapter": "03",
-   "start": 231.959,
-   "speech": 0.714,
-   "end": 233.023,
-   "text": "Even.",
+   "start": 228.051,
+   "speech": 5.447,
+   "end": 233.848,
+   "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother.",
    "timing": "measured"
   },
   {
    "id": "03.07",
    "chapter": "03",
-   "start": 233.023,
-   "speech": 5.447,
-   "end": 238.82,
-   "text": "The fee. The yes. The bags she packed. Every one of those details, we have from her brother.",
-   "timing": "measured"
-  },
-  {
-   "id": "03.08",
-   "chapter": "03",
-   "start": 238.82,
+   "start": 233.848,
    "speech": 3.81,
-   "end": 242.98,
+   "end": 238.008,
    "text": "Whatever was sewn into those linings was now checked in her name.",
    "timing": "measured"
   },
   {
    "id": "03.T2",
    "chapter": "03",
-   "start": 242.98,
+   "start": 238.008,
    "speech": 4.6,
-   "end": 247.58,
+   "end": 242.608,
    "t24": true,
    "say": "It was at the airport, waiting to board her Australia flight,",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.663-664",
@@ -26010,9 +25800,9 @@
   {
    "id": "03.h2",
    "chapter": "03",
-   "start": 247.58,
+   "start": 242.608,
    "speech": 0.0,
-   "end": 248.78,
+   "end": 243.808,
    "hold": 1.2,
    "note": "his held words alone: 1.2 s of digital silence",
    "silence": "digital"
@@ -26020,9 +25810,9 @@
   {
    "id": "04.T1",
    "chapter": "04",
-   "start": 248.78,
+   "start": 243.808,
    "speech": 2.8,
-   "end": 251.93,
+   "end": 246.958,
    "t24": true,
    "say": "that she was called by airport security.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.664-665",
@@ -26031,18 +25821,18 @@
   {
    "id": "04.01",
    "chapter": "04",
-   "start": 251.93,
+   "start": 246.958,
    "speech": 3.311,
-   "end": 255.241,
+   "end": 250.269,
    "text": "In the room, the officers ask whether the bags are hers.",
    "timing": "measured"
   },
   {
    "id": "04.h1",
    "chapter": "04",
-   "start": 255.241,
+   "start": 250.269,
    "speech": 0.0,
-   "end": 256.441,
+   "end": 251.469,
    "hold": 1.2,
    "note": "YES in silence",
    "silence": "room"
@@ -26050,18 +25840,18 @@
   {
    "id": "04.02",
    "chapter": "04",
-   "start": 256.441,
+   "start": 251.469,
    "speech": 1.178,
-   "end": 257.619,
+   "end": 252.647,
    "text": "They ask again.",
    "timing": "measured"
   },
   {
    "id": "04.h2",
    "chapter": "04",
-   "start": 257.619,
+   "start": 252.647,
    "speech": 0.0,
-   "end": 258.619,
+   "end": 253.647,
    "hold": 1.0,
    "note": "YES again, harder, in silence",
    "silence": "room"
@@ -26069,27 +25859,27 @@
   {
    "id": "04.03",
    "chapter": "04",
-   "start": 258.619,
+   "start": 253.647,
    "speech": 3.008,
-   "end": 261.977,
+   "end": 257.005,
    "text": "She checked them herself. To her, they're her bags.",
    "timing": "measured"
   },
   {
    "id": "04.04",
    "chapter": "04",
-   "start": 261.977,
+   "start": 257.005,
    "speech": 2.121,
-   "end": 264.098,
+   "end": 259.126,
    "text": "Then they find what's inside the linings.",
    "timing": "measured"
   },
   {
    "id": "04.h3",
    "chapter": "04",
-   "start": 264.098,
+   "start": 259.126,
    "speech": 0.0,
-   "end": 265.098,
+   "end": 260.126,
    "hold": 1.0,
    "note": "silence",
    "silence": "room"
@@ -26097,117 +25887,117 @@
   {
    "id": "04.05",
    "chapter": "04",
-   "start": 265.098,
+   "start": 260.126,
    "speech": 8.613,
-   "end": 274.061,
+   "end": 269.089,
    "text": "Two conversations, in one room. In her account, she is identifying her luggage. The officers are investigating drug smuggling.",
    "timing": "measured"
   },
   {
    "id": "04.06",
    "chapter": "04",
-   "start": 274.061,
+   "start": 269.089,
    "speech": 4.156,
-   "end": 278.567,
+   "end": 273.595,
    "text": "The same room. The same bags. The same word. Two different meanings.",
    "timing": "measured"
   },
   {
    "id": "04.07",
    "chapter": "04",
-   "start": 278.567,
+   "start": 273.595,
    "speech": 5.61,
-   "end": 284.527,
+   "end": 279.205,
    "text": "More than two kilograms of methamphetamine, about four and a half pounds, authorities say.",
    "timing": "measured"
   },
   {
+   "id": "04.h4",
+   "chapter": "04",
+   "start": 279.205,
+   "speech": 0.0,
+   "end": 279.805,
+   "hold": 0.6,
+   "note": "a beat on the closed folder (third pass)"
+  },
+  {
    "id": "04.08",
    "chapter": "04",
-   "start": 284.527,
-   "speech": 2.286,
-   "end": 287.163,
-   "text": "We haven't seen the court's record of the case.",
+   "start": 279.805,
+   "speech": 1.907,
+   "end": 282.062,
+   "text": "One detail is unresolved.",
    "timing": "measured"
   },
   {
    "id": "04.09",
    "chapter": "04",
-   "start": 287.163,
-   "speech": 5.441,
-   "end": 292.954,
-   "text": "And one word in his account is disputed. He put the dispute on the record himself.",
+   "start": 282.062,
+   "speech": 8.264,
+   "end": 290.676,
+   "text": "Dawn told him she was flying to Australia. A journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
    "timing": "measured"
   },
   {
    "id": "04.10",
    "chapter": "04",
-   "start": 292.954,
-   "speech": 7.186,
-   "end": 300.49,
-   "text": "Australia, she told him. But a journalist, he wrote, said a court record has her on an internal flight, to Qingdao.",
+   "start": 290.676,
+   "speech": 2.159,
+   "end": 293.185,
+   "text": "He doesn't know why. Neither do we.",
    "timing": "measured"
   },
   {
    "id": "04.11",
    "chapter": "04",
-   "start": 300.49,
-   "speech": 3.494,
-   "end": 304.334,
-   "text": "\"I don't know the reason for this discrepancy.\" Neither do we.",
+   "start": 293.185,
+   "speech": 10.06,
+   "end": 303.595,
+   "text": "What is not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
    "timing": "measured"
   },
   {
    "id": "04.12",
    "chapter": "04",
-   "start": 304.334,
-   "speech": 9.705,
-   "end": 314.389,
-   "text": "Not in dispute: drugs were found in luggage she had checked. She was arrested and charged with smuggling, a charge her brother says she vehemently denies.",
-   "timing": "measured"
-  },
-  {
-   "id": "04.13",
-   "chapter": "04",
-   "start": 314.389,
+   "start": 303.595,
    "speech": 3.627,
-   "end": 318.366,
+   "end": 307.572,
    "text": "The trip ended in that room. The case was only beginning.",
    "timing": "measured"
   },
   {
    "id": "05.01",
    "chapter": "05",
-   "start": 318.366,
+   "start": 307.572,
    "speech": 3.587,
-   "end": 322.303,
+   "end": 311.509,
    "text": "She would spend about three years in detention before any verdict.",
    "timing": "measured"
   },
   {
    "id": "05.02",
    "chapter": "05",
-   "start": 322.303,
+   "start": 311.509,
    "speech": 7.331,
-   "end": 329.634,
+   "end": 318.84,
    "text": "She cooperated, he wrote. She answered all their questions, and handed over the emails the organizers had sent her.",
    "timing": "measured"
   },
   {
    "id": "05.h1",
    "chapter": "05",
-   "start": 329.634,
+   "start": 318.84,
    "speech": 0.0,
-   "end": 331.834,
+   "end": 321.04,
    "hold": 2.2,
    "note": "the marker reaches 'it wasn't enough'"
   },
   {
    "id": "05.h2",
    "chapter": "05",
-   "start": 331.834,
+   "start": 321.04,
    "speech": 0.0,
-   "end": 332.834,
+   "end": 322.04,
    "hold": 1.0,
    "note": "the empty pool: a sound drop",
    "silence": "room"
@@ -26215,45 +26005,45 @@
   {
    "id": "05.03",
    "chapter": "05",
-   "start": 332.834,
-   "speech": 21.088,
-   "end": 353.922,
-   "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established. We won't recreate it.",
+   "start": 322.04,
+   "speech": 19.839,
+   "end": 341.879,
+   "text": "In 2024, Tim told the commission that Dawn had told their father she was sexually assaulted in the detention facility. When he asked her about it on a prison visit, with someone beside her listening, she said no. He said he knew she was under duress. The allegation has not been independently established.",
    "timing": "measured"
   },
   {
    "id": "05.h3",
    "chapter": "05",
-   "start": 353.922,
+   "start": 341.879,
    "speech": 0.0,
-   "end": 356.922,
+   "end": 344.879,
    "hold": 3.0,
    "note": "the calendar, the institutional tick alone"
   },
   {
    "id": "05.04",
    "chapter": "05",
-   "start": 356.922,
+   "start": 344.879,
    "speech": 7.417,
-   "end": 364.689,
+   "end": 352.646,
    "text": "The State Department's advice today: do not transport unfamiliar gifts, luggage or packages across borders.",
    "timing": "measured"
   },
   {
    "id": "05.05",
    "chapter": "05",
-   "start": 364.689,
+   "start": 352.646,
    "speech": 4.798,
-   "end": 369.837,
+   "end": 357.794,
    "text": "She trusted the organizers. For more than two weeks, they had put together her trip.",
    "timing": "measured"
   },
   {
    "id": "05.T1",
    "chapter": "05",
-   "start": 369.837,
+   "start": 357.794,
    "speech": 6.2,
-   "end": 376.037,
+   "end": 363.994,
    "t24": true,
    "say": "I hope you can see that something like this could happen to a lot of people.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.670-671",
@@ -26262,9 +26052,9 @@
   {
    "id": "05.h4",
    "chapter": "05",
-   "start": 376.037,
+   "start": 363.994,
    "speech": 0.0,
-   "end": 377.237,
+   "end": 365.194,
    "hold": 1.2,
    "note": "his held words: 1.2 s of digital silence",
    "silence": "digital"
@@ -26272,9 +26062,9 @@
   {
    "id": "06.T1",
    "chapter": "06",
-   "start": 377.237,
+   "start": 365.194,
    "speech": 6.0,
-   "end": 383.587,
+   "end": 371.544,
    "t24": true,
    "say": "After her trial she was found guilty and received the 'death penalty with 2-year reprieve.'",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.675-676",
@@ -26283,9 +26073,9 @@
   {
    "id": "06.T2",
    "chapter": "06",
-   "start": 383.587,
+   "start": 371.544,
    "speech": 10.8,
-   "end": 394.737,
+   "end": 382.694,
    "t24": true,
    "say": "She was duped. She was scammed! She trusted the wrong people! She doesn't deserve this! My sister is trusting and believes that people are good.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.676-678",
@@ -26294,72 +26084,72 @@
   {
    "id": "06.01",
    "chapter": "06",
-   "start": 394.737,
+   "start": 382.694,
    "speech": 9.044,
-   "end": 404.131,
+   "end": 392.088,
    "text": "The words matter. It was a suspended death sentence, not an order for her immediate execution. It was later reduced to life in prison.",
    "timing": "measured"
   },
   {
    "id": "06.02",
    "chapter": "06",
-   "start": 404.131,
+   "start": 392.088,
    "speech": 17.024,
-   "end": 421.505,
+   "end": 409.462,
    "text": "China sees a serious crime. In 2026, its foreign ministry told Reuters that she and another American are serving sentences for serious drug-related crimes, handled according to the rule of law, with their health and legitimate rights protected.",
    "timing": "measured"
   },
   {
    "id": "06.03",
    "chapter": "06",
-   "start": 421.505,
+   "start": 409.462,
    "speech": 8.089,
-   "end": 429.944,
+   "end": 417.901,
    "text": "Her family insists she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it.",
    "timing": "measured"
   },
   {
    "id": "06.04",
    "chapter": "06",
-   "start": 429.944,
+   "start": 417.901,
    "speech": 9.52,
-   "end": 439.814,
+   "end": 427.771,
    "text": "According to her family, and to reporting on the court's reasoning, the judge recognised that she had been deceived, and concluded that she should have known anyway.",
    "timing": "measured"
   },
   {
    "id": "06.05",
    "chapter": "06",
-   "start": 439.814,
+   "start": 427.771,
    "speech": 0.863,
-   "end": 440.677,
+   "end": 428.634,
    "text": "Deceived.",
    "timing": "measured"
   },
   {
    "id": "06.h1",
    "chapter": "06",
-   "start": 440.677,
+   "start": 428.634,
    "speech": 0.0,
-   "end": 441.277,
+   "end": 429.234,
    "hold": 0.6,
    "note": "(beat)"
   },
   {
    "id": "06.06",
    "chapter": "06",
-   "start": 441.277,
+   "start": 429.234,
    "speech": 1.445,
-   "end": 442.722,
+   "end": 430.679,
    "text": "And guilty anyway.",
    "timing": "measured"
   },
   {
    "id": "06.h2",
    "chapter": "06",
-   "start": 442.722,
+   "start": 430.679,
    "speech": 0.0,
-   "end": 444.722,
+   "end": 432.679,
    "hold": 2.0,
    "note": "total silence",
    "silence": "digital"
@@ -26367,54 +26157,54 @@
   {
    "id": "06.07",
    "chapter": "06",
-   "start": 444.722,
+   "start": 432.679,
    "speech": 3.8,
-   "end": 448.872,
+   "end": 436.829,
    "text": "In June 2024, her brother was let in to see her.",
    "timing": "measured"
   },
   {
    "id": "07.01",
    "chapter": "07",
-   "start": 448.872,
+   "start": 436.829,
    "speech": 5.255,
-   "end": 454.477,
+   "end": 442.434,
    "text": "Guangdong Women's Prison. It had taken him six to eight months to get permission.",
    "timing": "measured"
   },
   {
    "id": "07.02",
    "chapter": "07",
-   "start": 454.477,
+   "start": 442.434,
    "speech": 3.761,
-   "end": 458.588,
+   "end": 446.545,
    "text": "He found a sister who had lost weight, and was very pale.",
    "timing": "measured"
   },
   {
    "id": "07.03",
    "chapter": "07",
-   "start": 458.588,
+   "start": 446.545,
    "speech": 19.558,
-   "end": 478.496,
+   "end": 466.453,
    "text": "Doctors who examined her in prison, he said, had found uterine fibroids, and possibly ovarian cancer: not a confirmed diagnosis. She had needed numerous transfusions for heavy bleeding, and had been advised to have a hysterectomy. She refused, out of distrust.",
    "timing": "measured"
   },
   {
    "id": "07.04",
    "chapter": "07",
-   "start": 478.496,
+   "start": 466.453,
    "speech": 3.765,
-   "end": 482.611,
+   "end": 470.568,
    "text": "She still had to work, he said, making lithium batteries.",
    "timing": "measured"
   },
   {
    "id": "07.T1",
    "chapter": "07",
-   "start": 482.611,
+   "start": 470.568,
    "speech": 9.0,
-   "end": 491.611,
+   "end": 479.568,
    "t24": true,
    "say": "After my visit to her, I updated my father on her condition. I had to leave out some details of her physical appearance",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.694-696",
@@ -26423,9 +26213,9 @@
   {
    "id": "07.h1",
    "chapter": "07",
-   "start": 491.611,
+   "start": 479.568,
    "speech": 0.0,
-   "end": 492.811,
+   "end": 480.768,
    "hold": 1.2,
    "note": "his held words alone: 1.2 s of digital silence",
    "silence": "digital"
@@ -26433,9 +26223,9 @@
   {
    "id": "07.T2",
    "chapter": "07",
-   "start": 492.811,
+   "start": 480.768,
    "speech": 8.6,
-   "end": 501.761,
+   "end": 489.718,
    "t24": true,
    "say": "because my dad is 91 and has recently been diagnosed with cancer. I wanted to avoid giving him an additional shock.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.696-697",
@@ -26444,9 +26234,9 @@
   {
    "id": "07.T3",
    "chapter": "07",
-   "start": 501.761,
+   "start": 489.718,
    "speech": 12.8,
-   "end": 514.911,
+   "end": 502.868,
    "t24": true,
    "say": "In a strange way, my dad is locked up as well. He is worried that with all this, he's not going to live long enough to see his daughter free and safe.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.704-706",
@@ -26455,9 +26245,9 @@
   {
    "id": "07.T4",
    "chapter": "07",
-   "start": 514.911,
+   "start": 502.868,
    "speech": 23.0,
-   "end": 538.261,
+   "end": 526.218,
    "t24": true,
    "say": "And in this handwritten letter, she refused the surgery. And she said, and I'm going to quote this to bring some of her own words to this hearing: 'I, Dawn Michelle, refuse to take the surgery and will hold China liable for all the consequences from August 11, 2021, in regard to my tumor and safety of my life.'",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.717-722",
@@ -26466,9 +26256,9 @@
   {
    "id": "07.T5",
    "chapter": "07",
-   "start": 538.261,
+   "start": 526.218,
    "speech": 13.5,
-   "end": 551.761,
+   "end": 539.718,
    "t24": true,
    "say": "Gentlemen, this isn't political for me and my family. I'm just asking you, as a brother, just bring my sister home. Do whatever it takes; just bring her home.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.732-734",
@@ -26477,9 +26267,9 @@
   {
    "id": "07.h2",
    "chapter": "07",
-   "start": 551.761,
+   "start": 539.718,
    "speech": 0.0,
-   "end": 552.761,
+   "end": 540.718,
    "hold": 1.0,
    "note": "held on him after the last word: a sound drop",
    "silence": "room"
@@ -26487,18 +26277,18 @@
   {
    "id": "07.05",
    "chapter": "07",
-   "start": 552.761,
+   "start": 540.718,
    "speech": 9.814,
-   "end": 562.925,
+   "end": 550.882,
    "text": "Later, a senator asked him about that visit. Armed guards with long guns had escorted him, he said. They held his passport during the visit.",
    "timing": "measured"
   },
   {
    "id": "07.T6",
    "chapter": "07",
-   "start": 562.925,
+   "start": 550.882,
    "speech": 7.4,
-   "end": 570.325,
+   "end": 558.282,
    "t24": true,
    "say": "After this hearing I don't believe it would be advisable for me to go and visit my sister again.",
    "who": "Tim Hunt, CECC hearing of 18 Sep 2024 (V01 not in hand: GPO transcript S5, shown as words, never voiced), l.1273-1274",
@@ -26507,45 +26297,45 @@
   {
    "id": "07.h3",
    "chapter": "07",
-   "start": 570.325,
+   "start": 558.282,
    "speech": 0.0,
-   "end": 571.825,
+   "end": 559.782,
    "hold": 1.5,
    "note": "room tone"
   },
   {
    "id": "08.01",
    "chapter": "08",
-   "start": 571.825,
+   "start": 559.782,
    "speech": 16.04,
-   "end": 588.215,
+   "end": 576.172,
    "text": "Gene Hunt was, in his son's words, an American of Americans. He had served in the Army, worked as a skimmer in the steel mills, and driven a Chicago bus, before thirty-two years in the police.",
    "timing": "measured"
   },
   {
    "id": "08.02",
    "chapter": "08",
-   "start": 588.215,
+   "start": 576.172,
    "speech": 6.873,
-   "end": 595.438,
+   "end": 583.395,
    "text": "As a boy, Tim wrote, he watched his father save the next-door neighbours from a house fire.",
    "timing": "measured"
   },
   {
    "id": "08.03",
    "chapter": "08",
-   "start": 595.438,
+   "start": 583.395,
    "speech": 3.355,
-   "end": 599.143,
+   "end": 587.1,
    "text": "There was one person Gene could not bring home.",
    "timing": "measured"
   },
   {
    "id": "08.R1",
    "chapter": "08",
-   "start": 599.143,
+   "start": 587.1,
    "speech": 8.78,
-   "end": 608.423,
+   "end": 596.38,
    "real": "IN-14",
    "file": "archive/media/nbc2024_gene.mp4",
    "in": 135.76,
@@ -26557,36 +26347,36 @@
   {
    "id": "08.04",
    "chapter": "08",
-   "start": 608.423,
+   "start": 596.38,
    "speech": 21.668,
-   "end": 630.441,
+   "end": 618.398,
    "text": "In May 2025, Tim says, the United States asked for her release on humanitarian grounds. That September, a bipartisan bill was introduced in Congress, named for her and for Nelson Wells Junior, another American held in China.",
    "timing": "measured"
   },
   {
    "id": "08.05",
    "chapter": "08",
-   "start": 630.441,
+   "start": 618.398,
    "speech": 1.811,
-   "end": 632.602,
+   "end": 620.559,
    "text": "None of it brought her home.",
    "timing": "measured"
   },
   {
    "id": "08.06",
    "chapter": "08",
-   "start": 632.602,
-   "speech": 12.193,
-   "end": 644.795,
-   "text": "On January 25th, 2026, four hundred and ninety-four days after that first hearing, Gene Hunt died. He was ninety-two.",
+   "start": 620.559,
+   "speech": 6.818,
+   "end": 627.377,
+   "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two.",
    "timing": "measured"
   },
   {
    "id": "08.h1",
    "chapter": "08",
-   "start": 644.795,
+   "start": 627.377,
    "speech": 0.0,
-   "end": 646.795,
+   "end": 629.377,
    "hold": 2.0,
    "note": "total silence: no score, no room tone",
    "silence": "digital"
@@ -26594,36 +26384,36 @@
   {
    "id": "08.07",
    "chapter": "08",
-   "start": 646.795,
+   "start": 629.377,
    "speech": 2.298,
-   "end": 649.093,
+   "end": 631.675,
    "text": "He never saw Dawn come home.",
    "timing": "measured"
   },
   {
    "id": "08.h2",
    "chapter": "08",
-   "start": 649.093,
+   "start": 631.675,
    "speech": 0.0,
-   "end": 652.093,
+   "end": 634.675,
    "hold": 3.0,
    "note": "room tone returns; then, faint, the institutional tick"
   },
   {
    "id": "08.08",
    "chapter": "08",
-   "start": 652.093,
+   "start": 634.675,
    "speech": 6.383,
-   "end": 658.826,
+   "end": 641.408,
    "text": "That July, though he had told the commission it wouldn't be advisable, Tim went back.",
    "timing": "measured"
   },
   {
    "id": "08.R2",
    "chapter": "08",
-   "start": 658.826,
+   "start": 641.408,
    "speech": 8.18,
-   "end": 667.356,
+   "end": 649.938,
    "real": "IN-15",
    "file": "archive/media/nbc2026_tim.mp4",
    "in": 63.44,
@@ -26635,99 +26425,99 @@
   {
    "id": "09.01",
    "chapter": "09",
-   "start": 667.356,
+   "start": 649.938,
    "speech": 3.706,
-   "end": 671.412,
+   "end": 653.994,
    "text": "In September, he sat before the commission again.",
    "timing": "measured"
   },
   {
    "id": "09.02",
    "chapter": "09",
-   "start": 671.412,
+   "start": 653.994,
    "speech": 4.837,
-   "end": 676.599,
+   "end": 659.181,
    "text": "Some things had improved, he told them. More visits. A few books.",
    "timing": "measured"
   },
   {
    "id": "09.03",
    "chapter": "09",
-   "start": 676.599,
+   "start": 659.181,
    "speech": 9.674,
-   "end": 686.623,
+   "end": 669.205,
    "text": "He described a sister who had aged dramatically: slumped over, frail, her teeth yellowed and shifted, her hair much greyer.",
    "timing": "measured"
   },
   {
    "id": "09.04",
    "chapter": "09",
-   "start": 686.623,
+   "start": 669.205,
    "speech": 6.974,
-   "end": 693.947,
+   "end": 676.529,
    "text": "Two years earlier, he had spared his father some of the details. Now there was no father to spare.",
    "timing": "measured"
   },
   {
    "id": "09.05",
    "chapter": "09",
-   "start": 693.947,
+   "start": 676.529,
    "speech": 3.022,
-   "end": 696.969,
+   "end": 679.551,
    "text": "But there was one thing she kept coming back to.",
    "timing": "measured"
   },
   {
    "id": "09.h1",
    "chapter": "09",
-   "start": 696.969,
+   "start": 679.551,
    "speech": 0.0,
-   "end": 698.569,
+   "end": 681.151,
    "hold": 1.6,
    "note": "the cold open's frozen frame; “When?” types on, in silence but the tick"
   },
   {
    "id": "09.06",
    "chapter": "09",
-   "start": 698.569,
+   "start": 681.151,
    "speech": 1.432,
-   "end": 700.001,
+   "end": 682.583,
    "text": "She wants a date.",
    "timing": "measured"
   },
   {
    "id": "09.h1b",
    "chapter": "09",
-   "start": 700.001,
+   "start": 682.583,
    "speech": 0.0,
-   "end": 709.001,
+   "end": 691.583,
    "hold": 9.0,
    "note": "the rest of his written lines type on, the frame still frozen"
   },
   {
    "id": "09.h2",
    "chapter": "09",
-   "start": 709.001,
+   "start": 691.583,
    "speech": 0.0,
-   "end": 712.001,
+   "end": 694.583,
    "hold": 3.0,
    "note": "the institutional tick alone"
   },
   {
    "id": "09.07",
    "chapter": "09",
-   "start": 712.001,
+   "start": 694.583,
    "speech": 8.202,
-   "end": 720.203,
+   "end": 702.785,
    "text": "When he tells her that, he wrote, she becomes angry. All of this, she says, has only filled her head with false hopes.",
    "timing": "measured"
   },
   {
    "id": "09.h3",
    "chapter": "09",
-   "start": 720.203,
+   "start": 702.785,
    "speech": 0.0,
-   "end": 722.203,
+   "end": 704.785,
    "hold": 2.0,
    "note": "the handset on its hook: a sound drop",
    "silence": "room"
@@ -26735,9 +26525,9 @@
   {
    "id": "09.R1",
    "chapter": "09",
-   "start": 722.203,
+   "start": 704.785,
    "speech": 4.26,
-   "end": 726.813,
+   "end": 709.395,
    "real": "IN-1",
    "file": "archive/media/cecc2026_tim_gene_passage.mp4",
    "in": 4.8,
@@ -26749,45 +26539,36 @@
   {
    "id": "09.08",
    "chapter": "09",
-   "start": 726.813,
-   "speech": 6.813,
-   "end": 733.976,
-   "text": "Twelve years ago, in a room at an airport, officers asked Dawn a question. She answered it.",
+   "start": 709.395,
+   "speech": 4.751,
+   "end": 714.496,
+   "text": "Twelve years ago, officers asked Dawn a question. She answered it.",
    "timing": "measured"
   },
   {
    "id": "09.09",
    "chapter": "09",
-   "start": 733.976,
+   "start": 714.496,
    "speech": 4.347,
-   "end": 738.673,
+   "end": 719.193,
    "text": "Now she's the one asking. And no one has given her a date.",
    "timing": "measured"
   },
   {
    "id": "09.10",
    "chapter": "09",
-   "start": 738.673,
-   "speech": 8.819,
-   "end": 747.842,
-   "text": "Her yes. Her letter. Her question. Every word of Dawn's in this film has reached you the same way: through her family.",
-   "timing": "measured"
-  },
-  {
-   "id": "09.11",
-   "chapter": "09",
-   "start": 747.842,
+   "start": 719.193,
    "speech": 12.264,
-   "end": 760.456,
+   "end": 731.807,
    "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.",
    "timing": "measured"
   },
   {
    "id": "09.R2",
    "chapter": "09",
-   "start": 760.456,
+   "start": 731.807,
    "speech": 22.04,
-   "end": 782.496,
+   "end": 753.847,
    "real": "IN-13",
    "file": "archive/media/cecc2026_tim_cspan_long.mp4",
    "in": 160.42,
@@ -26799,9 +26580,9 @@
   {
    "id": "09.h4",
    "chapter": "09",
-   "start": 782.496,
+   "start": 753.847,
    "speech": 0.0,
-   "end": 787.496,
+   "end": 758.847,
    "hold": 5.0,
    "note": "no voice after his: WHEN? held, the drone resolves on one warm note; 2 s of silence at the very end"
   }
@@ -26809,7 +26590,7 @@
  "warnings": [],
  "sound": {
   "about": "The score cues (audio/score/takes, the Lyria takes in tune; SCORE.md's motifs and arc) placed on v3's clock by anchor, each a window of a take: `from` seconds into it, entering from nothing over `fade_in` and rising, out over `fade_out` (0: a hard stop), set to `lufs` before the 8 dB duck under the voices (the voices sit at -18).",
-  "tick_stops": "08.06@0.86",
+  "tick_stops": "08.06@0.62",
   "tick_inst_shots": [
    "05-04",
    "05-06",
@@ -26889,7 +26670,7 @@
     "take": "G5",
     "from": 10.0,
     "at": "02.T5",
-    "to": "03.07@0.5",
+    "to": "03.06@0.5",
     "lufs": -34,
     "fade_in": 4,
     "fade_out": 2,
@@ -26899,7 +26680,7 @@
     "id": "SC03b",
     "take": "G1",
     "from": 13.1,
-    "at": "03.08",
+    "at": "03.07",
     "to": "04.04$",
     "lufs": -33,
     "fade_in": 2,
@@ -26911,7 +26692,7 @@
     "take": "G7",
     "from": 3.6,
     "at": "04.06",
-    "to": "04.13$",
+    "to": "04.12$",
     "lufs": -38,
     "fade_in": 3,
     "fade_out": 2,
@@ -26965,7 +26746,7 @@
     "id": "SC09b_drone",
     "file": "audio/sfx/sd_void_drone.flac",
     "at": "09.08",
-    "to": "09.10$",
+    "to": "09.09$",
     "lufs": -40,
     "fade_in": 2,
     "fade_out": 2,
@@ -26997,25 +26778,25 @@
  },
  "measure": {
   "share": {
-   "3d": 64.1,
-   "text": 11.8,
-   "doc": 9.9,
-   "real": 14.2
+   "3d": 63.2,
+   "text": 12.1,
+   "doc": 10.1,
+   "real": 14.5
   },
   "seconds": {
-   "3d": 504.8,
-   "text": 93.1,
-   "doc": 77.6,
-   "real": 112.0
+   "3d": 479.8,
+   "text": 91.8,
+   "doc": 76.9,
+   "real": 110.3
   },
-  "cuts_per_min_first3": 28.3,
-  "shots_first3": 86,
-  "avg_shot_after3": 4.33,
-  "median_shot_after3": 4.04,
+  "cuts_per_min_first3": 28.0,
+  "shots_first3": 85,
+  "avg_shot_after3": 4.24,
+  "median_shot_after3": 4.0,
   "card_s": 235.1,
-  "card_pct": 29.9,
+  "card_pct": 31.0,
   "real_voice_s": 54.2,
   "t24_s": 186.5,
-  "narration_s": 458.2
+  "narration_s": 429.6
  }
 }

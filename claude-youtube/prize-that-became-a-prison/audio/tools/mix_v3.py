@@ -164,7 +164,8 @@ def room_of(shot):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stems", action="store_true")
+    ap.add_argument("--stems", action="store_true", help="also write the narration and everything else as two stems (FLAC)")
+    ap.add_argument("--voice", default=VO, help="a folder of narration takes, <ch>_<nn>.wav (another narrator drops in here)")
     a = ap.parse_args()
     edl, cut = json.load(open(EDL)), json.load(open(CUT))
     snd = cut.get("sound", {})
@@ -177,12 +178,21 @@ def main():
     fx = np.zeros(N, np.float32)
     score = np.zeros((N, 2), np.float32)
 
-    # 1. narration
+    # 1. narration: each line at its segment's start on the clock; a take longer than the cut's waits for the line
+    # before it (0.2 s), so another narrator can drop in without a re-cut (the drift is reported)
+    prev_end, drift = 0.0, []
     for v in edl["voice"]:
         if "text" in v:
             ch, k = v["id"].split(".")
-            f = os.path.join(VO, f"{ch}_{int(k):02d}.wav")
-            put(voice_n, edges(ff_read(f, af="highpass=f=70")), v["start"])
+            f = os.path.join(a.voice, f"{ch}_{int(k):02d}.wav")
+            x = edges(ff_read(f, af="highpass=f=70"))
+            t = max(v["start"], prev_end + 0.2) if prev_end > v["start"] else v["start"]
+            if t - v["start"] > 0.02:
+                drift.append((v["id"], round(t - v["start"], 2)))
+            put(voice_n, x, t)
+            prev_end = t + len(x) / SR
+    rep["narration_folder"] = os.path.relpath(a.voice, ROOT)
+    rep["narration_drift"] = drift
     li, _, _ = measure(voice_n)
     voice_n *= db2(-18.0 - li)
     rep["narration_lufs_in"] = li
@@ -327,8 +337,12 @@ def main():
         rep["placements"].append({"silence": v["id"], "kind": sil, "from": round(v["start"], 3), "to": round(v["end"], 3)})
 
     # 7. sum, master (in place, the stems freed as they are summed: the machine is shared)
-    if a.stems:
-        stems = {"voice": voice_n.copy(), "real": voice_r.copy(), "beds": beds.copy(), "fx": fx.copy()}
+    if a.stems:                              # the narration alone, and everything else (pre-master, gained below)
+        voice_n.astype(np.float32).tofile(OUT + ".narr.f32")
+        rest = score.copy()
+        rest += (voice_r + beds + fx)[:, None]
+        rest.astype(np.float32).tofile(OUT + ".rest.f32")
+        del rest
     mono = voice_n
     mono += voice_r
     mono += beds
@@ -363,12 +377,14 @@ def main():
     os.remove(tmp)
     rep.update({"integrated_lufs": round(i, 1), "true_peak_dbtp": round(tp, 2), "lra": round(lra, 1), "limit": round(lim, 3),
                 "gain_db": round(gain, 2), "pre_master_lufs": round(mi, 1), "duration_s": round(N / SR, 3)})
-    if a.stems:
-        for name, st in stems.items():
-            st2 = np.stack([st, st], 1) * db2(-14.0 - mi)
-            p = OUT.replace(".wav", f"_{name}.wav")
-            subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", "-", "-c:a", "pcm_s24le", p],
-                           input=st2.astype(np.float32).tobytes(), check=True)
+    if a.stems:                              # the master's gain, without its limiter
+        for name, ch in (("narr", 1), ("rest", 2)):
+            raw = OUT + f".{name}.f32"
+            p = OUT.replace(".wav", "_narration.flac" if name == "narr" else "_without_narration.flac")
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", str(ch), "-i", raw, "-af", f"volume={gain:.2f}dB",
+                            "-c:a", "flac", "-sample_fmt", "s32", p], check=True)
+            os.remove(raw)
+            rep.setdefault("stems", []).append(os.path.relpath(p, ROOT))
     json.dump(rep, open(REP, "w"), indent=1)
     print(json.dumps({k: rep[k] for k in ("integrated_lufs", "true_peak_dbtp", "lra", "pre_master_lufs", "duration_s")}))
 
