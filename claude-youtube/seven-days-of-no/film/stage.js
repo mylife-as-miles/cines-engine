@@ -48,7 +48,9 @@
   // a speech bubble above-beside a figure's head, popping in at t0 (and out at t1)
   STAGE.say = function (c, who, op, text, t0, t1, o) {
     o = o || {}; const hd = global.ART.head(who, op); const st = FILM.popInOut(c.t, t0, t1, 0.3); if (!st.on) return;
-    const side = o.side || op.face || 1; const w = o.w || 620, h = o.h || 220; const bx = hd.x + side * (hd.r + w * 0.42) + (o.dx || 0), by = hd.y - hd.r - h * 0.35 + (o.dy || 0);
+    const side = o.side || op.face || 1; const w = o.w || 620, h = o.h || 220;
+    // o.at = [x, y]: the bubble's centre; otherwise beside the head, above it, on the facing side
+    const bx = o.at ? o.at[0] : hd.x + side * (hd.r + w * 0.42) + (o.dx || 0), by = o.at ? o.at[1] : hd.y - hd.r - h * 0.35 + (o.dy || 0);
     GFX.at(c.g, bx, by, st, q => GFX.bubble(q, 0, 0, w, h, { text, size: o.size || 48, tail: [hd.x + side * hd.r * 0.8 - bx, hd.y - hd.r * 0.2 - by], kind: o.kind }));
   };
 })(window);

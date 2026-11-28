@@ -106,5 +106,107 @@
   "licence": "Stability AI Community License",
   "how": "Stable Audio 3.0 Small SFX take shutter_sa (0.47-1.3 s), finished (onset trim, hiss gate, fade): prompt \"a camera shutter click, a single photo being taken with a small digital camera, crisp mechanical click, close, quiet room\", seed 31",
   "dur_s": 0.72
+ },
+ "step_1": {
+  "source": "otm/step1 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step1, low-passed at 5.5 kHz",
+  "dur_s": 0.17
+ },
+ "step_2": {
+  "source": "otm/step2 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step2, low-passed at 5.5 kHz",
+  "dur_s": 0.202
+ },
+ "step_3": {
+  "source": "otm/step3 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step3, low-passed at 5.5 kHz",
+  "dur_s": 0.207
+ },
+ "step_4": {
+  "source": "otm/step4 (as footsteps)",
+  "licence": "CC0",
+  "how": "One Too Many's step4, low-passed at 5.5 kHz",
+  "dur_s": 0.17
+ },
+ "wrong": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two round notes falling a minor third, E5 then C#5, low-passed at 3.5 kHz",
+  "dur_s": 0.5
+ },
+ "clang": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a struck pan: five inharmonic partials (523-3990 Hz) and a 6 ms strike, 0.9 s",
+  "dur_s": 0.9
+ },
+ "stomach_drop": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a round tone gliding 700 -> 160 Hz over 0.5 s",
+  "dur_s": 0.6
+ },
+ "wobble": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a 180 Hz tone with a 9 Hz vibrato and tremble, 0.6 s",
+  "dur_s": 0.6
+ },
+ "bird": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "three quick chirps gliding 3-4.8 kHz",
+  "dur_s": 0.45
+ },
+ "battery_low": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "two soft beeps falling a fifth, G5 then C5",
+  "dur_s": 0.7
+ },
+ "swell": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "air through a band-pass rising 300 Hz -> 2.4 kHz, 0.8 s",
+  "dur_s": 0.8
+ },
+ "rain": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "26 tiny glass drops over faint 2.5-9 kHz patter, 1.8 s",
+  "dur_s": 1.8
+ },
+ "grow": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "three round plucks rising C5-E5-G5, 80 ms apart, each with a little upward glide",
+  "dur_s": 0.6
+ },
+ "freeze": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a tone and air both falling and slowing to a stop in 0.32 s (a tape-stop)",
+  "dur_s": 0.32
+ },
+ "click": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a 2.4 kHz tick over a 260 Hz body, 40 ms",
+  "dur_s": 0.04
+ },
+ "dim": {
+  "source": "synth (tools/synth_sfx.py)",
+  "licence": "made for this video (no licence needed)",
+  "how": "a round blip falling A5 -> D5 in 80 ms",
+  "dur_s": 0.16
+ },
+ "plate_slide": {
+  "source": "otm/slide: \"55_Coger_Foto.wav (Sliding Paper)\" by Atrius1, https://freesound.org/people/Atrius1/sounds/470189/",
+  "licence": "CC0",
+  "how": "One Too Many's sfx/slide (sliding paper), low-passed at 4 kHz",
+  "dur_s": 0.371
  }
 }

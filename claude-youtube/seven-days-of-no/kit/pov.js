@@ -347,7 +347,7 @@
       g.strokeStyle = c(hr.hi); g.lineWidth = ld * 0.9;
       circles.slice(0, 13).forEach((q, i) => { if (i % 2) return; const p = new Path2D(); p.arc(q[0] * 0.8, q[1] * 0.8 - 6, q[2] * 0.45, 0.6, 2.6); g.stroke(p); });
     } else if (hr.k === 'bucket') {
-      const crown = new Path2D(); crown.moveTo(-70, -52); crown.bezierCurveTo(-68, -92, -56, -116, -24, -118); crown.lineTo(24, -118); crown.bezierCurveTo(56, -116, 68, -92, 70, -52); crown.closePath();
+      const crown = new Path2D(); crown.moveTo(-70, -52); crown.bezierCurveTo(-68, -86, -56, -106, -24, -108); crown.lineTo(24, -108); crown.bezierCurveTo(56, -106, 68, -86, 70, -52); crown.closePath();
       fs(g, crown, c(hr.c), lw);
       g.save(); g.clip(crown); g.fillStyle = c(hr.sh); g.fill(P([[30, -124], [76, -124], [76, -48], [44, -48]])); g.restore(); strokeP(g, crown, lw);
       const brim = new Path2D(); brim.moveTo(-72, -62); brim.quadraticCurveTo(0, -74, 72, -62); brim.quadraticCurveTo(110, -46, 134, -4); brim.quadraticCurveTo(136, 6, 124, 4); brim.quadraticCurveTo(0, -30, -124, 4); brim.quadraticCurveTo(-136, 6, -134, -4); brim.quadraticCurveTo(-110, -46, -72, -62); brim.closePath();
@@ -372,7 +372,7 @@
   // ================================================================ hands (wrist at origin, fingers toward +y, thumb toward +x)
   // f: [base x, fan angle, length, curl]; t: [base x, base y, angle, length, curl]
   const HANDS = {
-    relax: { f: [[10.5, 0.06, 28, 0.3], [3.5, 0.02, 30, 0.34], [-3.6, -0.04, 29, 0.34], [-10.6, -0.1, 25, 0.3]], t: [15, 11, 0.5, 22, 0.2] },
+    relax: { f: [[10.5, 0.08, 26, 0.38], [3.5, 0.03, 28, 0.44], [-3.6, -0.04, 27, 0.46], [-10.6, -0.1, 23, 0.4]], t: [15, 11, 0.5, 21, 0.25] },
     flat: { f: [[10.5, 0.03, 29, 0.06], [3.5, 0, 31, 0.06], [-3.6, -0.02, 30, 0.06], [-10.6, -0.05, 26, 0.06]], t: [15, 11, 0.3, 21, 0.05] },
     open: { f: [[10.5, 0.36, 29, 0], [3.5, 0.12, 31, 0], [-3.6, -0.12, 30, 0], [-10.6, -0.36, 25, 0]], t: [16, 12, 1.15, 23, -0.05] },
     point: { f: [[10.5, 0.02, 34, 0], [3.5, 0.1, 17, 1.7], [-3.6, 0.1, 16, 1.7], [-10.6, 0.1, 14, 1.6]], t: [14, 13, -0.15, 18, 0.7] },
@@ -382,7 +382,7 @@
     thumb: { f: [[10.5, 0.1, 17, 1.7], [3.5, 0.1, 18, 1.7], [-3.6, 0.1, 17, 1.7], [-10.6, 0.1, 15, 1.6]], t: [12, 8, 2.75, 24, 0] },
     clasp: { f: [[10.5, 0.3, 24, 1.1], [3.5, 0.25, 26, 1.1], [-3.6, 0.2, 25, 1.1], [-10.6, 0.15, 22, 1.05]], t: [15, 9, -0.55, 21, 0.2] },
   };
-  const FW = 10.5, TW = 11.5, handCache = {};
+  const FW = 11.8, TW = 12.6, HAND_K = 0.9, handCache = {};   // HAND_K: overall hand size (refs: a hand is ~0.3 of the head)
   function handParts(name) {
     if (handCache[name]) return handCache[name];
     const sh = HANDS[name] || HANDS.relax;
@@ -393,8 +393,9 @@
   function drawHand(F, Wr, a, shape, flip, s) {
     if (!shape || shape === 'pocket' || shape === 'none') return;
     const g = F.g, pr = handParts(shape), lw = F.lw * 0.9;
-    g.save(); g.translate(Wr[0], Wr[1]); g.rotate(-a); g.scale((flip || 1) * (s || 1), s || 1);
-    const palm = ell(0, 21, 18.5, 21);
+    const k = (s || 1) * HAND_K;
+    g.save(); g.translate(Wr[0], Wr[1]); g.rotate(-a); g.scale((flip || 1) * k, k);
+    const palm = ell(0, 21, 19, 21);
     g.strokeStyle = INK; g.lineWidth = lw * 2; g.stroke(palm);
     g.lineWidth = FW + 2 * lw; pr.fingers.forEach(f => g.stroke(P(f, false)));
     g.lineWidth = TW + 2 * lw; g.stroke(P(pr.thumb, false));
@@ -404,7 +405,7 @@
     g.lineWidth = F.ld * 0.8; g.strokeStyle = INK;
     for (let i = 0; i < 3; i++) {   // short lines in the gaps, from between the tips back toward the knuckles
       const a = pr.fingers[i], b = pr.fingers[i + 1], tip = [(a[2][0] + b[2][0]) / 2, (a[2][1] + b[2][1]) / 2], mid = [(a[1][0] + b[1][0]) / 2, (a[1][1] + b[1][1]) / 2];
-      const L = dist(tip, mid) || 1, k0 = 2.5 / L, k1 = Math.min(1, 0.95);
+      const L = dist(tip, mid) || 1, k0 = 4 / L, k1 = 0.62;
       g.stroke(P([[lerp(tip[0], mid[0], k0), lerp(tip[1], mid[1], k0)], [lerp(tip[0], mid[0], k1), lerp(tip[1], mid[1], k1)]], false));
     }
     { const t = pr.thumb; g.stroke(P([lerp2(t[0], t[1], 0.35), lerp2(t[1], t[2], 0.3)], false)); }
@@ -575,8 +576,10 @@
       ? { armR: { ik: [34, -112], bend: -1, fl: 0.5, hand: 'hold', flip: -1, hrot: 0.3 }, prop: { k: 'clipboard', at: [10, -150], a: -0.32, s: 0.92 } }
       : { armL: { ik: [-50, -106], bend: 1, fl: 0.5, hand: 'hold', flip: -1, hrot: -0.9 }, prop: { k: 'clipboard', at: [-78, -122], a: 0.06, s: 0.92 } },
     phone: p => p.prop && p.prop.k === 'phone' ? {} : POSES.hold_phone({ mode: 'front' }),
-    mug: p => ({ armR: { ik: [30, -128], bend: -1, fl: 0.5, hand: 'fist', flip: -1, hrot: -0.6 }, prop: { k: 'mug', hand: 'R', along: 8, off: [40, -10], s: 1.2, steam: 0.2, handle: -1, over: true } }),
-    sip: p => ({ armR: { ik: [42, -262], bend: -1, ul: 0.7, fl: 0.75, hand: 'hold', flip: -1, hrot: -1.1 }, prop: { k: 'mug', hand: 'R', off: [6, 2], s: 0.95 }, head: Object.assign({}, p.head, { tilt: -0.04 }) }),
+    // the cup held in front of the chest by the near hand, handle toward the hand, the cup itself clear of the fingers (ref 03)
+    mug: p => ({ armL: { ik: [-18, -100], bend: 1, fl: 0.58, hand: 'fist', flip: -1, hrot: -0.25, hs: 0.95 }, prop: { k: 'mug', hand: 'L', along: 0, off: [48, -26], s: 1.25, steam: 0.15, handle: -1, over: true } }),
+    // raised to the mouth by the far hand, elbow out to the side, forearm up (ref 07)
+    sip: p => ({ armR: { ik: [60, -292], bend: 1, ul: 0.2, hand: 'fist', flip: 1, hrot: 0.2, hs: 0.95 }, prop: { k: 'mug', hand: 'R', along: 0, off: [-44, -22], s: 1.2, steam: 0.15, handle: 1, over: true }, head: Object.assign({}, p.head, { tilt: -0.05 }) }),
     laptop: p => POSES.hold_laptop({}),
     box: p => POSES.hold_box({}),
   };
@@ -641,7 +644,7 @@
   PROPS.mug = function (g, x, y, o) {   // a white cup; x, y = its centre
     o = o || {}; const s = o.s || 1, lw = (o.lw || LW.figure * 0.85) / s;
     g.save(); g.translate(x, y); g.rotate(o.a || 0); g.scale(s, s);
-    if (o.steam != null) { const t = o.steam; g.lineCap = 'round'; [-9, 6].forEach((sx, i) => { const p = new Path2D(), ph = TAU * (t + i * 0.37); p.moveTo(sx, -30); for (let k = 1; k <= 8; k++) p.lineTo(sx + sinA(ph + k * 0.9) * 5, -30 - k * 6); strokeP(g, p, 2.6 / s, C.steam); }); }
+    if (o.steam != null) { const t = o.steam; g.lineCap = 'round'; [-12, 0, 12].forEach((sx, i) => { const p = new Path2D(), ph = TAU * (t + i * 0.37), n = i === 1 ? 10 : 7; p.moveTo(sx, -28); for (let k = 1; k <= n; k++) p.lineTo(sx + sinA(ph + k * 0.8) * 5.5, -28 - k * 6); strokeP(g, p, 3.2 / s, tc(o, C.steam)); }); }
     const hs = o.handle || 1, mugC = tc(o, C.mug), hdl = new Path2D(); if (hs > 0) hdl.arc(24, 2, 11, -PI / 2, PI / 2); else hdl.arc(-24, 2, 11, PI / 2, PI * 1.5); g.lineWidth = 7 + 2 * lw; g.strokeStyle = INK; g.stroke(hdl); g.lineWidth = 7; g.strokeStyle = mugC; g.stroke(hdl);
     const b = new Path2D(); b.moveTo(-26, -18); b.lineTo(26, -18); b.quadraticCurveTo(26, 22, 6, 24); b.lineTo(-6, 24); b.quadraticCurveTo(-26, 22, -26, -18); b.closePath();
     fs(g, b, mugC, lw); g.save(); g.clip(b); g.fillStyle = tc(o, '#E4E1DE'); g.fillRect(-28 * hs, -20, 12 * hs, 50); g.restore(); strokeP(g, b, lw); fs(g, ell(0, -18, 26, 7), mugC, lw); g.fillStyle = tc(o, C.coffee); g.fill(ell(0, -17, 20, 4.5));
@@ -748,7 +751,7 @@
 
   function drawProp(F, pr, J) {
     const g = F.g; let at = pr.at;
-    if (pr.hand) { const arm = pr.hand === 'L' ? J.armL : J.armR, d = dir(arm.ha), off = pr.off || [0, 0], k = pr.along || 30; at = [arm.Wr[0] + d[0] * k + off[0], arm.Wr[1] + d[1] * k + off[1]]; }
+    if (pr.hand) { const arm = pr.hand === 'L' ? J.armL : J.armR, d = dir(arm.ha), off = pr.off || [0, 0], k = pr.along != null ? pr.along : 30; at = [arm.Wr[0] + d[0] * k + off[0], arm.Wr[1] + d[1] * k + off[1]]; }
     if (!at) return;
     const o = Object.assign({ lw: F.lw * 0.9 }, pr, { s: pr.s || 1, tint: F.tint });
     o.lw = F.lw * 0.9 * (pr.s || 1);
@@ -811,6 +814,9 @@
     const front = o => o.z !== 'back';
     // ---- legs
     const legPts = L => [L.H, L.K, along(L.A, angOf(L.K, L.A) + PI, legW / 2)];
+    const thighW = pose.sit ? legW * 1.22 : legW;   // seated thighs read as thick as the refs' (foreshortened)
+    const legInk = L => { const p = legPts(L); tubeInk(g, p, legW, F.lw); if (thighW !== legW) tubeInk(g, [p[0], p[1]], thighW, F.lw); };
+    const legFill = L => { const p = legPts(L); tubeFill(g, p, legW, legC); if (thighW !== legW) tubeFill(g, [p[0], p[1]], thighW, legC); };
     const legC = isSkirt ? F.skinC : c(B.c);
     const pelvisPath = () => {
       if (isSkirt) return null;
@@ -825,12 +831,12 @@
       else { const b = bandPts(L.K, L.A, 10, 0, legW / 2); g.fillStyle = legC; g.fill(P(b)); polyline(g, [b[0], b[1], b[2], b[3]], F.lw); }
     };
     const shoeFor = L => drawShoe(F, along(L.A, angOf(L.K, L.A), isSkirt ? 0 : 2), stance === 'front' ? L.sg : 1, stance, L.foot);
-    ['L', 'R'].forEach(s => { const L = legs[s]; if (L.z === 'back') { shoeFor(L); tube(g, legPts(L), legW, legC, F.lw); legEnd(L); } });
+    ['L', 'R'].forEach(s => { const L = legs[s]; if (L.z === 'back') { shoeFor(L); legInk(L); legFill(L); legEnd(L); } });
     const fl = ['L', 'R'].map(s => legs[s]).filter(front);
     fl.forEach(shoeFor);
     const pp = pelvisPath();
-    g.strokeStyle = INK; if (pp) { g.lineWidth = F.lw * 2; g.stroke(pp); } fl.forEach(L => tubeInk(g, legPts(L), legW, F.lw));
-    if (pp) { g.fillStyle = legC; g.fill(pp); } fl.forEach(L => tubeFill(g, legPts(L), legW, legC));
+    g.strokeStyle = INK; if (pp) { g.lineWidth = F.lw * 2; g.stroke(pp); } fl.forEach(legInk);
+    if (pp) { g.fillStyle = legC; g.fill(pp); } fl.forEach(legFill);
     if (!isSkirt) {
       fl.forEach(L => { const sh = offsetLine([L.H, L.K, L.A], light * (legW / 2 - 6), 0.12, 0.9); tubeFill(g, sh, 9, c(B.sh)); });
       if (B.crease) fl.forEach(L => polyline(g, offsetLine([L.H, L.K, L.A], 0, 0.3, 0.92), F.ld * 0.7));

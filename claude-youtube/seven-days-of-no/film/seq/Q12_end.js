@@ -12,7 +12,7 @@
         draw(c) {
           const t = c.t; c.set('living', { tod: 'evening', table: false });
           const a = c.anchor('living', 'left'); const waving = t < from + 2.2;
-          c.fig('hero', { x: a.x - 40, y: a.y, s: 0.78, face: 1, pose: waving ? 'wave' : 'stand', expr: 'happy', tint: ART.tintFor(c, 'living') });
+          c.fig('hero', { x: a.x + 90, y: a.y, s: 0.78, face: 1, pose: waving ? 'wave' : 'stand', expr: 'happy', tint: ART.tintFor(c, 'living') });
         } },
     ],
   });

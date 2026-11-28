@@ -11,7 +11,7 @@
     guilty: W('that guilty'), tuesday: W('tuesday'), proof: W('proof'), changing: W('changing'), habit: W('habit'), like: Wend('like'),
     end: FILM.W('so do not'),
   };
-  const CAST = [['boss', 300, 330, 'angry'], ['friend', 1620, 330, 'angry'], ['mum', 260, 760, 'sad'], ['coworker', 1660, 760, 'confused'], ['stranger', 960, 160, 'sad']];
+  const CAST = [['boss', 330, 300, 'angry'], ['friend', 1590, 300, 'angry'], ['mum', 360, 790, 'sad'], ['coworker', 1560, 790, 'confused'], ['stranger', 1290, 135, 'sad']];
 
   FILM.seq({
     id: 'Q09', title: 'Why we say yes', chapter: 'Why we say yes', from: T.start,
@@ -30,7 +30,7 @@
           const u = seg(t, T.fear - 0.1, T.fear + 0.25, 'inOutCubic'), flip = Math.cos(u * Math.PI);
           GFX.at(c.g, cx, cy, pop(t, T.most + 0.1, 0.34), q => GFX.wordCard(q, 0, 0, 520, 360, 'YES', { flip, size: 170, backExpr: 'scared' }));
         } },
-      { at: T.fearThat, name: 'plain: the cast around him, frowning: stop liking us', push: { from: 1, to: 0.96 },
+      { at: T.fearThat, name: 'plain: the cast around him, frowning: stop liking us', push: { from: 1.05, to: 1 },
         draw(c) {
           const t = c.t; STAGE.plainHero(c, { expr: 'scared', faceOver: { look: [Math.sin(t * 1.5) * 0.6, -0.1] } });
           CAST.forEach(([who, x, y, expr], i) => GFX.at(c.g, x, y, pop(t, T.fearThat + 0.1 + i * 0.22, 0.32), () => { c.g.translate(-x, -y); GFX.portrait(c, who, x, y, 130, { expr }); }));

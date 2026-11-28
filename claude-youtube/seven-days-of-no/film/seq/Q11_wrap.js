@@ -51,7 +51,7 @@
           GFX.table(c.g, 960, 760, 1200);
           c.prop('plateIcon', { x: 1060 + push * 560, y: 712, s: 2.2 });
         } },
-      { at: T.see, name: 'plain: see you in the next one: a wave', in: 'pop',
+      { at: T.see, name: 'plain: see you in the next one: a wave',
         draw(c) { STAGE.plainHero(c, { pose: 'wave', expr: 'happy', talk: T.seeSpan }); } },
     ],
   });

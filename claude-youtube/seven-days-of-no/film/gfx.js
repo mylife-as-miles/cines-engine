@@ -317,8 +317,8 @@
       rr(q, 760, 160, 400, 340, 8); inked(q, '#F1C695', 3.5); rr(q, 786, 186, 348, 288, 4); inked(q, '#FCE3B6', 3);
       q.globalAlpha = 0.5; q.fillStyle = '#FFFFFF'; q.beginPath(); q.moveTo(830, 474); q.lineTo(900, 474); q.lineTo(1010, 186); q.lineTo(940, 186); q.fill(); q.globalAlpha = 1;
       rr(q, 1400, 300, 160, 120, 6); inked(q, '#F6E7D2', 3); // a faded patch where a picture hung
-      GFX.boxPile(q, 260, 962, 1.15, [[0, 0, 1], [175, 0, 1], [85, 1, 1], [20, 2, 0.9]]);
-      GFX.boxPile(q, 1480, 962, 1.15, [[0, 0, 1], [170, 0, 1], [90, 1, 1]]);
+      GFX.boxPile(q, 560, 962, 1.15, [[0, 0, 1], [-175, 0, 1], [-85, 1, 1], [-20, 2, 0.9]]);
+      GFX.boxPile(q, 1300, 962, 1.15, [[0, 0, 1], [170, 0, 1], [90, 1, 1]]);
     }); g.drawImage(cv, 0, 0);
   };
   // a simple table (front edge at y), for the closing joke's plate

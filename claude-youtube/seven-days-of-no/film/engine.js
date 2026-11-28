@@ -212,7 +212,9 @@
   function pushOf(shot, st) {
     const p = shot.push; if (!p) return { z: 1, fx: W / 2, fy: H / 2 };
     const o = typeof p === 'number' ? { to: p } : p; const d = o.d || (shot.end - shot.at);
-    return { z: lerp(o.from || 1, o.to || 1, seg(st, o.delay || 0, d, o.ease || 'inOutSine')), fx: o.x == null ? W / 2 : o.x, fy: o.y == null ? H / 2 : o.y };
+    const z = lerp(o.from || 1, o.to || 1, seg(st, o.delay || 0, d, o.ease || 'inOutSine'));
+    if (z < 1 && !shot._warnedPush) { shot._warnedPush = 1; warn(`${shot.seq.id}/${shot.name}: push below 1 shows the frame edge`); }
+    return { z, fx: o.x == null ? W / 2 : o.x, fy: o.y == null ? H / 2 : o.y };
   }
   function makeContext(g, t, shot) {
     const seq = shot.seq, st = t - shot.at;

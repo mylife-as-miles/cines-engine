@@ -23,8 +23,22 @@ bulb            a bright twinkle: a quick rising sparkle of five high bell notes
 cloud           a soft low puff: warm air falling from 1.2 kHz to 300 Hz with a faint low body (the grey cloud arriving)
 whoosh, _2      a soft airy swish for wipes and cards sliding in (0.45 s and a quicker 0.3 s)
 footsteps       four calm steps on a wooden office floor (One Too Many's step1-4, CC0), 0.5 s apart
+step_1..4       the same four steps one by one (build_mix.py lays a cue's own n steps at its own gap)
 run             a Stable Audio take of quick light running steps, 1.6 s
 door            a Stable Audio take of a door closing with its latch
+wrong           a soft cartoon "nope": two round notes falling a minor third (E5, C#5), muted
+clang           a pan struck: a short bright metallic clang (inharmonic partials), the pot helmet and frying pan
+stomach_drop    a soft slide down: a round tone gliding 700 -> 160 Hz in 0.5 s (also the deflate)
+wobble          a trembling "wub": a soft low tone with a fast vibrato and tremble, 0.6 s (the body shaking)
+bird            two quick bright chirps (gliding sines), a small bird at the window
+battery_low     two soft falling beeps (G5, C5): the phone's battery giving up
+swell           soft air rising for 0.8 s into the swelling thought bubble
+rain            1.8 s of a little soft rain: light drops (tiny glass blips) over faint airy patter
+grow            a sprout growing: three quick round plucks rising (C5, E5, G5) with a little upward glide
+freeze          everything freezing: a quick tape-stop (a tone and air both falling and slowing in 0.3 s)
+click           a soft button click: a small clean tick with a low body
+dim             a light going down: a soft round blip falling a fifth (A5 -> D5)
+plate_slide     One Too Many's sliding paper (CC0), low-passed: the plate pushed away
 
 Every pick was ranked with earshot against its description and alternatives (audio/sfx/check.json; the variants that
 lost are listed in audio/README.md). The Stable Audio takes (tools/sfx_gen.py, audio/gen_plan.json) are raw in
@@ -237,6 +251,66 @@ def main():
         W(name, x, f"Stable Audio 3.0 Small SFX take {take} ({a}-{b} s), finished (onset trim, {'hiss gate, ' if gate else ''}fade): "
                    f"prompt \"{meta.get('prompt', '')}\", seed {meta.get('seed')}",
           'Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp), generated locally in this production', 'Stability AI Community License')
+
+
+    # ---- the extra cues the engine's cue sheet names ----
+    rng = np.random.default_rng
+    for i in (1, 2, 3, 4):
+        st_ = lp(otm(f'step{i}'), 5500); W(f'step_{i}', fade(st_, 0.0005, 0.02), f"One Too Many's step{i}, low-passed at 5.5 kHz",
+                                         'otm/step%d (as footsteps)' % i, 'CC0')
+    # wrong: E5 -> C#5, round and muted
+    def soft_note(f, d, k=9.0):
+        t = T(d); x = np.sin(2 * np.pi * f * t) + 0.25 * np.sin(4 * np.pi * f * t) + 0.08 * np.sin(6 * np.pi * f * t)
+        return fade(x * np.exp(-k * t) * np.minimum(1, t / 0.008), 0.001, 0.03)
+    x = np.zeros(int(0.5 * SR)); place(x, soft_note(659.26, 0.22), 0.0); place(x, soft_note(554.37, 0.3), 0.15)
+    W('wrong', lp(x, 3500), 'two round notes falling a minor third, E5 then C#5, low-passed at 3.5 kHz')
+    # clang: a pan, inharmonic partials
+    t = T(0.9); cl = np.zeros_like(t)
+    for f, g, k in ((523, 1.0, 5), (1187, 0.6, 7), (1840, 0.45, 9), (2710, 0.3, 12), (3990, 0.18, 16)):
+        cl += g * np.sin(2 * np.pi * f * t) * np.exp(-k * t)
+    cl += 0.5 * hp(rng(41).standard_normal(len(t)), 2000) * np.exp(-t / 0.006)
+    W('clang', fade(lp(cl, 7000), 0.0005, 0.1), 'a struck pan: five inharmonic partials (523-3990 Hz) and a 6 ms strike, 0.9 s')
+    # stomach_drop: a slide down
+    x, ph = glide(700, 160, 0.6, 0.5, 2.5); x = x + 0.15 * np.sin(2 * ph) * np.exp(-3 * T(0.6))
+    W('stomach_drop', fade(x * np.minimum(1, T(0.6) / 0.02), 0.002, 0.12), 'a round tone gliding 700 -> 160 Hz over 0.5 s')
+    # wobble: a trembling wub
+    t = T(0.6); f = 180 * (1 + 0.06 * np.sin(2 * np.pi * 9 * t)); ph = 2 * np.pi * np.cumsum(f) / SR
+    x = (np.sin(ph) + 0.3 * np.sin(2 * ph)) * (0.7 + 0.3 * np.sin(2 * np.pi * 9 * t + 1)) * np.sin(np.pi * t / 0.6) ** 0.7
+    W('wobble', fade(x, 0.01, 0.05), 'a 180 Hz tone with a 9 Hz vibrato and tremble, 0.6 s')
+    # bird: two chirps
+    def chirp(f0, f1, d):
+        t = T(d); f = f0 + (f1 - f0) * (t / d) ** 0.6; ph = 2 * np.pi * np.cumsum(f) / SR
+        return fade(np.sin(ph) * np.sin(np.pi * t / d) ** 1.5, 0.001, 0.005)
+    x = np.zeros(int(0.45 * SR)); place(x, chirp(3200, 4400, 0.07), 0.0); place(x, chirp(3500, 4800, 0.06), 0.13, 0.8)
+    place(x, chirp(3000, 4200, 0.08), 0.28, 0.6)
+    W('bird', x, 'three quick chirps gliding 3-4.8 kHz')
+    # battery_low: two soft falling beeps
+    x = np.zeros(int(0.7 * SR)); place(x, soft_note(783.99, 0.25, 6), 0.0); place(x, soft_note(523.25, 0.35, 5), 0.28)
+    W('battery_low', lp(x, 4000), 'two soft beeps falling a fifth, G5 then C5')
+    # swell: soft air rising
+    W('swell', fade(swept_air(0.8, [300, 600, 1400, 2400], 1.6, 43, 0.85), 0.05, 0.06), 'air through a band-pass rising 300 Hz -> 2.4 kHz, 0.8 s')
+    # rain: a little soft rain
+    n = int(1.8 * SR); r = rng(47); x = 0.25 * bp(r.standard_normal(n), 2500, 9000) * np.sin(np.pi * np.linspace(0, 1, n)) ** 0.5
+    for _ in range(26):
+        place(x, 0.6 * glass(r.uniform(1800, 3200), 0.06, 70) * r.uniform(0.3, 1.0), r.uniform(0.02, 1.7))
+    W('rain', fade(lp(x, 9000), 0.15, 0.3), '26 tiny glass drops over faint 2.5-9 kHz patter, 1.8 s')
+    # grow: three rising plucks
+    x = np.zeros(int(0.6 * SR))
+    for i, f in enumerate((523.25, 659.26, 783.99)):
+        y, _ = glide(f * 0.94, f, 0.3, 0.03, 12); place(x, fade(y, 0.001, 0.05), 0.08 * i, 0.8 + 0.1 * i)
+    W('grow', x, 'three round plucks rising C5-E5-G5, 80 ms apart, each with a little upward glide')
+    # freeze: a tape-stop
+    t = T(0.32); f = 440 * (1 - (t / 0.32)) ** 1.5 + 30; ph = 2 * np.pi * np.cumsum(f) / SR
+    x = (np.sin(ph) + 0.3 * np.sin(2 * ph)) * (1 - t / 0.32) ** 0.5 + 0.3 * swept_air(0.32, [3000, 1200, 300], 1.8, 53, 0.05)
+    W('freeze', fade(x, 0.002, 0.03), 'a tone and air both falling and slowing to a stop in 0.32 s (a tape-stop)')
+    # click: a soft button click
+    t = T(0.04); x = np.sin(2 * np.pi * 2400 * t) * np.exp(-t / 0.003) + 0.6 * np.sin(2 * np.pi * 260 * t) * np.exp(-t / 0.01)
+    W('click', fade(x, 0.0003, 0.005), 'a 2.4 kHz tick over a 260 Hz body, 40 ms')
+    # dim: a falling blip
+    y, _ = glide(880, 587.33, 0.16, 0.08, 14); W('dim', fade(y, 0.002, 0.04), 'a round blip falling A5 -> D5 in 80 ms')
+    # plate_slide: One Too Many's sliding paper, low-passed
+    sl = otm('slide'); W('plate_slide', fade(lp(sl, 4000), 0.005, 0.08), "One Too Many's sfx/slide (sliding paper), low-passed at 4 kHz",
+                         'otm/slide: "55_Coger_Foto.wav (Sliding Paper)" by Atrius1, https://freesound.org/people/Atrius1/sounds/470189/', 'CC0')
 
     json.dump(plan, open(os.path.join(OUT, 'plan.json'), 'w'), indent=1)
     print('wrote', ', '.join(f"{k} ({v['dur_s']} s)" for k, v in plan.items()))

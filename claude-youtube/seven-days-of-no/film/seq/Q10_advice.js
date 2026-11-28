@@ -17,10 +17,12 @@
   // the office exchange, drawn at time tt (the freeze draws it at the instant of "pause")
   function exchange(c, tt) {
     const cf = Object.assign({}, c, { t: tt }); c.set('office', { clock: '2:10' });
-    ART.fig(cf, 'coworker', { x: 1320, y: 962, face: -1, pose: tt > T.asks[1] + 0.2 ? 'stand' : 'point', expr: 'happy', talk: T.asks });
+    ART.fig(cf, 'coworker', { x: 1450, y: 962, face: -1, pose: tt > T.asks[1] + 0.2 ? 'stand' : 'point', expr: 'happy', talk: T.asks });
     const h = ART.fig(cf, 'hero', { x: 640, y: 962, face: 1, pose: tt > T.letMe[0] - 0.2 ? 'handup' : 'stand', expr: tt > T.letMe[0] - 0.2 ? 'neutral' : 'surprised', talk: T.letMe });
     return h;
   }
+  // the bubble beside the hero's head, between him and the coworker
+  const BUBBLE = h => { const hd = ART.head('hero', h); return { w: 560, h: 210, size: 44, at: [hd.x + hd.r + 330, hd.y - 70] }; };
   const BUTTONS = [['YES', T.yes, '#77CC81'], ['NO', T.no, '#E5534B'], ['YES, BUT NOT LIKE THAT', T.yesBut, '#3A8594']];
 
   FILM.seq({
@@ -37,11 +39,11 @@
       { at: T.try, name: 'plain: try this instead (a finger up)', in: 'pop',
         draw(c) { STAGE.plainHero(c, { pose: 'finger_up', expr: 'happy' }); } },
       { at: T.forWeek, name: 'office: the coworker asks; "let me think and get back to you"', push: { from: 1, to: 1.05, x: 900, y: 520 },
-        draw(c) { const h = exchange(c, c.t); STAGE.speech(c, 'hero', h, 'Let me think and get back to you.', T.letMe[0], null, { w: 640, h: 230, size: 46, dx: 30, dy: -60 }); } },
+        draw(c) { const h = exchange(c, c.t); STAGE.speech(c, 'hero', h, 'Let me think and get back to you.', T.letMe[0], null, BUBBLE(h)); } },
       { at: T.gives, name: 'office: a pause: everything freezes, a pause sign',
         draw(c) {
           const t = c.t, frozen = t >= T.pause, tt = frozen ? T.pause : t; const h = exchange(c, tt);
-          STAGE.speech(c, 'hero', h, 'Let me think and get back to you.', T.letMe[0], null, { w: 640, h: 230, size: 46, dx: 30, dy: -60 });
+          STAGE.speech(c, 'hero', h, 'Let me think and get back to you.', T.letMe[0], null, BUBBLE(h));
           if (frozen) { c.screen(); c.g.fillStyle = `rgba(60,90,100,${0.35 * seg(t, T.pause, T.pause + 0.2)})`; c.g.fillRect(0, 0, 1920, 1080); GFX.at(c.g, 960, 540, pop(t, T.pause + 0.05, 0.32), q => GFX.pauseSign(q, 0, 0, 1.3)); c.reset(); }
         } },
       { at: T.choose, name: 'plain: three buttons rise, one per word; he presses one, on purpose', in: 'pop',
