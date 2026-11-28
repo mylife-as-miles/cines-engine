@@ -3,7 +3,7 @@ also Ch 01 'Tim remembers' and Ch 11 'The family's letters').
 
 A worn oak desk under a window whose blinds are half closed. The desk lamp is the one warm light in the room: its
 pool lies on the writing pad, on Tim's hands and up his face (the shade's rim takes a third of it off his brow). The
-laptop stands open and pushed aside at his left, its page blank and cool, a mug beside it. To his right the letters:
+monitor stands on his left, with a blank screen. A mug sits within reach. To his right the letters:
 two official replies in window envelopes with one unfolded, a banded bundle of airmail envelopes, a loose pile of
 them, the phone lying face down, and at the back a framed photograph turned toward him (the camera sees its back).
 Through the slats, the night and the lit windows across the street; a street light throws the slats' stripes over
@@ -86,25 +86,26 @@ FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01),
 
 CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
-    "desk": dict(loc=(1.33, 0.23, 1.42), aim=(0.01, 0.21, 1.02), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
+    "desk": dict(loc=(1.33, 0.23, 1.42), aim=(0.01, 0.31, 1.02), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
     "letters": dict(loc=(-0.20, -0.040, TOP + 3.1), aim=(-0.20, -0.044, TOP), lens=120, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
     # Ch 09 (and Ch 01 'Tim himself'): from behind the letter side, with the lit desktop clear of Tim's shoulder
-    "window": dict(loc=(-1.68, 1.62, 2.09), aim=(-0.18, -0.22, 0.92), lens=30, focus="fx_tim", fstop=4.0,
+    "window": dict(loc=(-1.68, 1.62, 2.43), aim=(-0.18, -0.22, 0.92), lens=30, focus="fx_tim", fstop=4.0,
                    beat="ch09", exposure=-1.3, final_res=(1920, 1080)),
-    "monitor": dict(loc=(0.68, 0.64, 1.255), aim=(0.575, -0.187, 1.15), lens=44,
-                    focus="fx_monitor", fstop=5.6, beat="ch09", exposure=-1.0),
+    "monitor": dict(loc=(0.42, 0.95, 1.40), aim=(0.42, -0.12, 1.03), lens=30,
+                    focus="fx_monitor", fstop=8.0, beat="ch09", exposure=-1.0, cast=False),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
 # In the elevated frame, the lamp carries the desk while the street light carries the background.
 TRIMS = {"desk": {"night_glow": 1.5, "lamp_spot": 0.9, "letter return": 0.0,
-                   "laptop_screen_light": 0.0, "lamp wall return": 1.5, "room_fill": 9.0},
+                   "lamp wall return": 1.5, "room_fill": 9.0},
          "letters": {"tim_bounce": 0.0, "lamp_spill": 2.5, "street": 3.0},
          "window": {"room_fill": 15.0, "night_glow": 1.0, "lamp_spill": 4.0, "lamp_spot": 2.5,
-                    "laptop_screen_light": 0.25, "street": 1.6, "letter return": 0.62},
-         "monitor": {"laptop_screen_light": 0.18, "night_glow": 1.0, "room_fill": 8.0}}
+                    "street": 1.6, "letter return": 0.62},
+         "monitor": {"room_fill": 5.0, "night_glow": 1.0, "lamp_spill": 3.5, "lamp_spot": 2.0,
+                     "monitor_spill": 1.0, "monitor room return": 1.0}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -862,6 +863,11 @@ def lights():
     for link in slats.collection_objects:
         link.light_linking.link_state = "EXCLUDE"
     _STATE["slat_exclusion"] = slats
+    monitor_return = st.area("monitor room return", (0.87, 0.84, 1.69), (0.90, 0.69),
+                             4.5, (0.86, 0.76, 0.64), spread=115, aim=(0.61, -0.22, 0.94))
+    monitor_return.light_linking.receiver_collection = slats
+    monitor_return.visible_camera = monitor_return.visible_glossy = False
+    monitor_return.data.specular_factor = 0.0
     wall = bpy.data.objects["room_wall-x"]
     glow = st.area("lamp wall return", (R["x0"] + 0.60, 0.73, 1.49), (0.62, 0.60),
                    5.2, st.WARM, spread=135, aim=(R["x0"], 0.50, 1.40))
@@ -956,20 +962,16 @@ def apply_camera(name):
         ceiling.visible_camera = name != "letters"          # the overhead camera looks down through it
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
-        ob.data.energy = base * TRIMS.get(name, {}).get(n, 1.0)
+        display_light = n in ("monitor_spill", "monitor room return")
+        ob.data.energy = base * TRIMS.get(name, {}).get(n, 0.0 if display_light else 1.0)
     for key in ("room_fill", "night_glow"):
-        st.LIGHTS[key].light_linking.receiver_collection = _STATE["slat_exclusion"] if name == "window" else None
-    room_fill_colour = {"desk": (0.83, 0.75, 0.67), "window": (0.80, 0.75, 0.67)}
+        st.LIGHTS[key].light_linking.receiver_collection = _STATE["slat_exclusion"] if name in ("window", "monitor") else None
+    room_fill_colour = {"desk": (0.83, 0.75, 0.67), "window": (0.80, 0.75, 0.67), "monitor": (0.80, 0.75, 0.67)}
     st.LIGHTS["room_fill"].data.color = room_fill_colour.get(name, (0.6, 0.72, 1.0))
     if rim := st.LIGHTS.get("Tim lamp rim"):
         rim.hide_render = name != "window"
     st.LIGHTS["lamp_spot"].data.color = (1.0, 0.195, 0.013) if name == "desk" else st.WARM
-    panel = bpy.data.objects["laptop_screen"].active_material.node_tree.nodes
     # The screen is idle in the writing angles.
-    panel["Screen backlight power"].inputs[1].default_value = {"desk": 0.08, "window": 0.0, "monitor": 0.06}.get(
-        name, st.LAPTOP_EMISSION)
-    screen_colour = (0.29, 0.51, 1.0) if name == "window" else st.COOL
-    panel["Principled BSDF"].inputs["Emission Color"].default_value = (*screen_colour, 1)
     monitor_nodes = bpy.data.objects["monitor_screen"].active_material.node_tree.nodes
     monitor_light = monitor_nodes["Emission"].inputs["Strength"]
     monitor_light.default_value = st.MONITOR_EMISSION if name == "monitor" else 0.035
@@ -1028,7 +1030,11 @@ def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=None):
-        apply_camera(which_camera())
+        name = which_camera()
+        apply_camera(name)
+        if name == "monitor" and os.path.basename(out).startswith("final"):
+            screen = bpy.data.objects["monitor_screen"]
+            return sk.render_screen_layers(_render, out, screen, 0.12, samples, res, exposure, world, noise_threshold)
         return _render(out, samples, res, exposure, world, noise_threshold)
     render._orig = orig
     sk.render = render
@@ -1037,14 +1043,15 @@ def install_hook():
 # ---------------------------------------------------------------- build
 def report_frame(holder):
     """Where things fall in each camera's frame (no render needed): normalised x, y (0..1 from the left / bottom)
-    of Tim's head, the lamp, the laptop and the chair's feet, so a cut head or foot shows in the log."""
+    of Tim's head, the lamp, the monitor and the chair's feet, so a cut head or foot shows in the log."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
     bpy.context.view_layer.update()
     picture_end = bpy.data.objects["pic_frameR"].matrix_world.translation
     box_top = bpy.data.objects["filebox_b_lid"].matrix_world @ Vector((0, 0, 0.07))
     marks = {"lamp head": st.lamp_bulb() + Vector((0, 0, 0.1)), "lamp base": Vector((st.LAMP[0], st.LAMP[1], TOP)),
-             "laptop": Vector((st.LAPTOP[0], st.LAPTOP[1], TOP + 0.12)), "pad": Vector((st.PAD[0], st.PAD[1], TOP)),
+             "monitor": Vector(st.MONITOR), "monitor foot": Vector((st.MONITOR[0], st.MONITOR[1], TOP + 0.01)),
+             "pad": Vector((st.PAD[0], st.PAD[1], TOP)),
              "window top": Vector((0, st.R["y0"], st.WIN["z1"] + 0.15)), "ceiling line": Vector((0, st.R["y0"], st.R["h"])),
              "chair foot L": Vector((0.24, CHAIR[1] + 0.26, 0.0)), "chair foot R": Vector((-0.24, CHAIR[1] + 0.26, 0.0)),
              "phone": Vector((-0.245, -0.03, TOP + 0.02)), "radiator end": Vector((st.R["x0"] + 0.1, 1.15, 0.7)),
@@ -1087,7 +1094,6 @@ def build(cast=True):
     cx, cy, ct = CHAIR
     st.chair(cx, cy, ct)
     st.lamp()
-    st.group("laptop", st.laptop())
     st.group("monitor", st.monitor())
     st.papers()
     st.desk_things()
