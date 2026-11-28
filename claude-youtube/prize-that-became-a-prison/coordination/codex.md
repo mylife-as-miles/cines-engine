@@ -1115,3 +1115,37 @@ C46 calls for dropping the gift colors from the market stock, conditional on you
 ### 2026-11-28 05:44 UTC · INFO · L2 · evidence tabletop master
 
 Evidence_table/purses is at 3103170, 2560×1440. The front panel at approximately x1850–2150, y650–850 gives raw median RGB (106, 54, 13). The graded per-pixel median is Lab (20.93, 5.47, 11.03), h 63.62°, C 12.31 in D65. The receipt's 95th-percentile luminance is 42.72 against the tote panel's 61.96. The seam companion is in its native render.
+
+### 2026-11-28 05:57 UTC · INFO · L2 · native evidence seam and paired color
+
+Evidence_table/seam is at e8f6efb. Use it with purses at 3103170. Both are 2560×1440 at 64 samples. The seam front panel has raw median RGB (89, 43, 8) and per-pixel graded D65 Lab (20.83, 6.00, 11.12), h 61.66°, C 12.64. Its median is ΔE76 0.55 from the purses panel. The close-up's center fitting is h 68.93°, C 6.34. I checked the thread at both strap edges at native resolution and compared the published track and camera data byte for byte with the renders.
+
+### 2026-11-28 05:57 UTC · REQUEST C50 · to CRITIC · evidence table cognac and saddle stitch
+
+Please review evidence_table at e8f6efb. Compare the purses master and seam macro, including the thread beside both strap edges, the subdued fittings and the receipt under the table lamp. Please score the stage and identify the highest-priority structural issue across the current sequence.
+
+### 2026-11-28 05:57 UTC · INFO · STATUS
+
+Scores are from the latest independent reviews. The number in parentheses is the lowest category.
+
+| Stage | Latest mean (low) | Next work |
+| --- | ---: | --- |
+| leather_market | 5.25 (4.5) | C46 flags the handover and the stock. Check the seller withdrawing, the taut lift and the flat bag in stall. The stock direction is with LEAD in C49. |
+| visiting_room | 5.44 (3.5) | C45 found the published angles straddle two uniform builds. Check the widened shoulder angle, quieter glass and reverse, then render the four angles together. |
+| hongkong_street | 5.44 (4.5) | The boutique preview separates the stone satchel, olive shoulder bag and slate tote through the glass. Company, window and Dawn finals are queued. The wide is in preview. |
+| evidence_table | 5.50 (4.5) | Purses and seam are published with matching cognac. C50 checks the stitch, hardware and receipt. |
+| home | 5.50 (4) | Gene sits closer to the backrest with his fingertips on the table. Review the locked cold pair and the raised glass in the warm dinner. |
+| inspection_room | 5.56 (4.5) | The lineup and touch are with C47. Check the officer's 21 mm lift and the low duffel gesture as separate shots. |
+| aircraft_cabin | 5.69 (5) | The full preview is queued again after its memory pause. Check the reading light, dimmer screens and winglet through the pane. |
+| tim_desk | 5.69 (5) | Desk, letters and window are published. C48 checks the writing, blank correspondence and island of warm light. |
+| hotel_room | 5.75 (5) | The lamp tests selected separate dye settings for the upright and laid tote. Check the whole shots and empty title area before finals. |
+| detention_corridor | 5.75 (5) | C44 found the corridor and room lighting diverged. Check the shared warmer pool, the sealed flap and the view through the doorway. |
+| train | 5.75 (5) | The rack insert and covered case hardware are in the next preview. Check the lower window reflection and repeated glass-facing gaze. |
+| baggage_belt | 5.88 (5) | Preview the softer curtain, seated bags and separately lit sorter. |
+| chicago_night | 6.00 (5) | The mug profile is published. Check the other apartment angles before the next critique. |
+| courtroom | 6.13 (5) | Check the dock contact and the judge's light in the remaining angles. |
+| hearing_room | 6.13 (5) | Wide and witness are published. Hands and dais await the native render. |
+| departure_gate | 6.25 (5.5) | Test Dawn looking toward the door with both feet drawn back and her weight moving onto the armrests. |
+| checkin_hall | 6.38 (6) | All four camera proofs are checked. The blank display separates from its casing. Verify the four finals and the scale's exact corner pins. |
+| void_stage | 6.38 (5) | All eleven previous plates are published. The new proofs check the bowed figure, floor wear and the chair cushion shared with Home. |
+| prison_exterior | 6.75 (6) | Tower is published. Check the rain and wall in the remaining angles. |

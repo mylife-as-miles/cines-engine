@@ -93,8 +93,11 @@ TRIMS = {
 FLAGS = {"seated": ["flag_near_seats", "flag_pool", "lap flag", "seated face key"], "wide": ["right wall washer", "wide shoulder edge"]}   # black flags (camera-invisible) used by one camera only
 
 _STATE = {"cast": [], "base": {}}
-CALL_CONTROLS = ["chest", "neck", "head", "upper_arm_fk.L", "forearm_fk.L", "forearm_fk.R", "hand_fk.L"]
-CALL_CONTROLS += [f"{digit}.{joint}.L" for digit in ("f_index", "f_middle", "f_ring", "f_pinky", "thumb")
+CALL_CONTROLS = ["chest", "neck", "head"]
+CALL_CONTROLS += [f"{bone}.{side}" for side in "LR"
+                  for bone in ("upper_arm_fk", "forearm_fk", "hand_fk", "thigh_fk", "shin_fk", "foot_fk")]
+CALL_CONTROLS += [f"{digit}.{joint}.{side}" for side in "LR"
+                  for digit in ("f_index", "f_middle", "f_ring", "f_pinky", "thumb")
                   for joint in ("01_master", "02", "03")]
 
 
@@ -527,53 +530,91 @@ def which_camera():
     return None
 
 
+def place_limb(rig, upper, lower, tip, target, pole):
+    """Place a wrist or ankle without changing the bone lengths."""
+    world = rig.matrix_world
+    inv = world.to_3x3().inverted()
+    origin, joint, end = (world @ bone.head for bone in (upper, lower, tip))
+    first, second = (joint - origin).length, (end - joint).length
+    line = (target - origin).normalized()
+    distance = min((target - origin).length, first + second - 0.001)
+    along = (first**2 - second**2 + distance**2) / (2 * distance)
+    bend = (pole - line * pole.dot(line)).normalized()
+    offset = math.sqrt(max(0.0, first**2 - along**2))
+    rigged._aim(rig, upper.name, inv @ (line * along + bend * offset))
+    rigged._aim(rig, lower.name, inv @ (origin + line * distance - world @ lower.head))
+
+
+def brace_hand(holder, rig, side, pad_x, pad_y):
+    bones = rig.pose.bones
+    upper, lower, hand = (bones[f"{name}.{side}"] for name in ("upper_arm_fk", "forearm_fk", "hand_fk"))
+    world = rig.matrix_world
+    inv = world.to_3x3().inverted()
+    outside = -1.0 if side == "L" else 1.0
+    pole = Vector((0.30 * outside, -0.6, -1))
+    wrist = Vector((pad_x, pad_y, 0.676))
+    palm_pitch = 0.0
+    if side == "L":
+        grip = {"f_index": (4, 3, 2), "f_middle": (5, 4, 2), "f_ring": (7, 5, 3), "f_pinky": (9, 7, 4)}
+    else:
+        grip = {"f_index": (6, 4, 2), "f_middle": (8, 5, 3), "f_ring": (10, 7, 4), "f_pinky": (12, 9, 5)}
+    rigged.articulate_hand(holder, side, {**grip, "thumb": (-8, 0, 2, -18)})
+    for _ in range(6):
+        place_limb(rig, upper, lower, hand, wrist, pole)
+        forward = Vector((-outside * 0.04, 1, palm_pitch)).normalized()
+        rigged._aim(rig, hand.name, inv @ forward)
+        across = world @ bones[f"DEF-f_pinky.01.{side}"].head - world @ bones[f"DEF-f_index.01.{side}"].head
+        across -= forward * across.dot(forward)
+        outward = Vector((outside, 0, 0))
+        outward -= forward * outward.dot(forward)
+        roll = math.atan2(forward.dot(across.cross(outward)), across.dot(outward))
+        pivot = Matrix.Translation(hand.matrix.translation)
+        hand.matrix = pivot @ Matrix.Rotation(roll, 4, (inv @ forward).normalized()) @ pivot.inverted() @ hand.matrix
+        bpy.context.view_layer.update()
+        skin = rigged.hand_surface(holder, side)
+        # Keep the contact inside the flat part of the bevelled pad.
+        contacts = {
+            group: min((p.z for p in points if abs(p.x - pad_x) < 0.020
+                        and ROW_Y - 0.123 < p.y < ROW_Y + 0.103), default=None)
+            for group, points in skin.items()
+        }
+        heel = contacts["palm"]
+        fingers = contacts["fingers"]
+        if heel is None or fingers is None:
+            break
+        height = 0.650 - min(z for z in contacts.values() if z is not None)
+        tilt = heel - fingers
+        if abs(height) < 0.0015 and abs(tilt) < 0.006:
+            break
+        wrist.z += height
+        palm_pitch = max(-0.28, min(0.42, palm_pitch + tilt / 0.14))
+
+
 def brace_for_call(holder):
-    """Turn toward the PA and take her weight on the front of the aisle armrest."""
+    """Draw in her feet and lean onto the armrests as she looks toward the gate."""
     rig = rigged.rig_of(holder)
     bones = rig.pose.bones
     world = rig.matrix_world
-    inv = world.to_3x3().inverted()
-    rigged._turn(rig, "chest", 0, -6)
-    rigged._turn(rig, "neck", -6, -22)
+    rigged._turn(rig, "chest", 9, -6)
+    rigged._turn(rig, "neck", 0, -22)
     head = bones["head"]
-    look = Vector(st.GATE_SPEAKER) - (world @ head.head)
+    look = Vector((st.DOOR_X, st.WIN - 0.1, 1.90)) - (world @ head.head)
+    look.z = min(look.z, look.xy.length * math.tan(math.radians(8)))
     rotation = world.to_quaternion().inverted() @ look.to_track_quat("-Y", "Z") @ head.bone.matrix_local.to_quaternion()
     pose = rotation.to_matrix().to_4x4()
     pose.translation = head.matrix.translation
     head.matrix = pose
     bpy.context.view_layer.update()
-    rigged._turn(rig, "forearm_fk.R", 1.0, 0)
-
-    upper, lower, hand = (bones[name] for name in ("upper_arm_fk.L", "forearm_fk.L", "hand_fk.L"))
-    shoulder, elbow, wrist = (world @ bone.head for bone in (upper, lower, hand))
-    arm_length, forearm_length = (elbow - shoulder).length, (wrist - elbow).length
-    # The pad is 25 cm long, centred 1 cm behind the seat origin, with its
-    # upper surface at 0.649 m. Keep the elbow on its natural side of the reach.
-    pad_x = st.UNITS[2] + st.seatkit.ARM_X[0]
-    target = Vector((pad_x + 0.001, ROW_Y + 0.034, 0.677))
-    line = target - shoulder
-    distance = line.length
-    line.normalize()
-    along = (arm_length**2 - forearm_length**2 + distance**2) / (2 * distance)
-    bend = (elbow - shoulder) - line * (elbow - shoulder).dot(line)
-    offset = math.sqrt(max(0.0, arm_length**2 - along**2))
-    elbow_target = shoulder + line * along + bend.normalized() * offset
-    rigged._aim(rig, upper.name, inv @ (elbow_target - shoulder))
-    rigged._aim(rig, lower.name, inv @ (target - (world @ lower.head)))
-    rigged.articulate_hand(holder, "L", {"f_index": (26, 11, 6), "f_middle": (35, 16, 9),
-                                        "f_ring": (36, 18, 10, 2), "f_pinky": (38, 20, 11, 3),
-                                        "thumb": (-8, 0, 2, -22)})
-    forward = Vector((0.04, 1, -0.02)).normalized()
-    rigged._aim(rig, hand.name, inv @ forward)
-    # Roll the hand until its knuckles run across the pad and the thumb is inside.
-    across = world @ bones["DEF-f_pinky.01.L"].head - world @ bones["DEF-f_index.01.L"].head
-    across -= forward * across.dot(forward)
-    outward = Vector((-1, 0, 0))
-    outward -= forward * outward.dot(forward)
-    roll = math.atan2(forward.dot(across.cross(outward)), across.dot(outward))
-    pivot = Matrix.Translation(hand.matrix.translation)
-    hand.matrix = pivot @ Matrix.Rotation(roll, 4, (inv @ forward).normalized()) @ pivot.inverted() @ hand.matrix
-    bpy.context.view_layer.update()
+    for side, draw in (("L", 0.069), ("R", 0.058)):
+        thigh, shin, ankle = (bones[f"{name}.{side}"] for name in ("thigh_fk", "shin_fk", "foot_fk"))
+        ankle_pose = ankle.matrix.copy()
+        target = world @ ankle.head - Vector((0, draw, 0))
+        place_limb(rig, thigh, shin, ankle, target, Vector((0, 1, 0)))
+        ankle_pose.translation = ankle.head
+        ankle.matrix = ankle_pose
+        bpy.context.view_layer.update()
+    brace_hand(holder, rig, "L", st.UNITS[2] + seatkit.ARM_X[0], ROW_Y - 0.006)
+    brace_hand(holder, rig, "R", st.UNITS[2] + seatkit.ARM_X[1], ROW_Y + 0.007)
 
 
 def apply_camera(name):
@@ -676,7 +717,7 @@ def build(cast=True):
     # When she braces, the hand has moved from her lap into the overhead key.
     pad_x = st.UNITS[2] + st.seatkit.ARM_X[0]
     brace_flag = st.box("called hand flag", (0.26, 0.24, 0.004),
-                        (pad_x + 0.053, ROW_Y + 0.159, 0.824), st.M["flag"])
+                        (pad_x + 0.053, ROW_Y + 0.119, 0.824), st.M["flag"])
     for f in (lap_flag, brace_flag):
         f.visible_diffuse = f.visible_volume_scatter = False
     for f in (flag, flag2, lap_flag, brace_flag):

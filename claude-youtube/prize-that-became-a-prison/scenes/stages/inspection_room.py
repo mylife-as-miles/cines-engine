@@ -93,8 +93,8 @@ FINISH = {  # specular level and woven face (period m, bump strength) per prop
 # Watts for the case lid, its shadow side, and the dark duffel's top band.
 BAG_RETURNS = {
     "enter": (25, 0, 30, 0),
-    "wide_pre": (40, 11, 0, 0),
-    "two_shot_pre": (50, 32, 0, 0),
+    "wide_pre": (40, 11, 16, 0),
+    "two_shot_pre": (50, 32, 17, 0),
     "dawn_close": (90, 0, 30, 16),
 }
 
@@ -135,6 +135,10 @@ POSES = {
 }
 
 POSES["bag_insert"] = dict(POSES["ch05"], OfficerA={"chest": (5, 0), "behind": True, "look": "handbag-tote"})
+POSES["duffel_contact"] = dict(POSES["ch00"], OfficerA={
+    "chest": (7, -2), "fingers": 21, "look": "Dawn", "reach_r": "duffel_contact",
+    "palm": "down", "behind_l": True,
+})
 POSES["bag_touch"] = dict(POSES["ch05"], OfficerA={
     **POSES["ch05"]["OfficerA"],
     "grip_fingers": {"f_index": (46, 58, 40, 11), "f_middle": (50, 64, 43, 3), "f_ring": (54, 67, 45, -4),
@@ -179,8 +183,9 @@ CAMERAS.update({
                      focus="fx_handbags", fstop=4.0, beat="ch05", layout="three bags", pose="bag_insert",
                      insert_bench=True, exposure=-2.8, final_res=(2560, 1440),
                      cheat={"Dawn": (1.75, -1.10), "OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
-    "two_shot_pre": dict(CAMERAS["two_shot"], layout="ch11"),
-    "wide_pre": dict(CAMERAS["wide"], layout="ch11"),
+    "two_shot_pre": dict(CAMERAS["two_shot"], loc=(2.68, 0.75, 1.45), aim=(-0.14, -0.10, 1.27), lens=32,
+                         layout="ch11", pose="duffel_contact"),
+    "wide_pre": dict(CAMERAS["wide"], layout="ch11", pose="duffel_contact"),
     "dawn_close": dict(loc=(-0.96, 1.18, 1.64), aim=(0.38, -0.38, 1.46), lens=61,
                        focus="fx_dawn_close", fstop=2.8, beat="ch00", layout="ch11", pose="case handle",
                        cheat={"Dawn": (0.46, -0.63), "OfficerA": (-0.645, 0.426)},
@@ -732,6 +737,14 @@ def _bbox(holder):
 
 
 def _reach_point(kind):
+    if kind == "duffel_contact":
+        duffel = _STATE["props"]["extra-bag-closed"]
+        top = props.surface_bvh(duffel)
+        point = top.ray_cast(Vector((-0.395, 0.12, TOP + 0.55)), Vector((0, 0, -1)), 0.55)[0]
+        if point is not None:
+            return point + Vector((0, 0, 0.030))
+        lo, hi = _bbox(duffel)
+        return Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, hi.z + 0.030))
     if kind == "duffel_hover":       # the officer offers the bag to Dawn across the bench
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
         return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 - 0.10, hi.z + 0.05))
