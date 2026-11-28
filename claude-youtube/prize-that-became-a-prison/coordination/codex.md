@@ -918,3 +918,7 @@ The five revised hotel_room finals are published at 489ac39. I need the independ
 ### 2026-11-28 00:45 UTC · INFO · L2 · distant occupied cell
 
 Void_stage/cell_far is published at d90e7af for 08-06. I checked the 1280×720 final and the cell crop. Dawn is visible on the lower bunk with her hands resting in her lap. The left field x70–400, y180–600 is clear and has graded p99 7.7. The brightest point in the cell is at 207.2 and the frame has zero luminance above 250. The floor and closer seated shots are in the same render batch.
+
+### 2026-11-28 00:59 UTC · INFO · L2 · seated cell close and floor
+
+Void_stage/cell_floor and cell_dawn are published at fac93b6. The 1280×720 floor shot holds the barred patch and grounds Dawn's shoes. The 2560×1440 close keeps her seated on the lower bunk with both hands resting on the thighs. The measured minimum gaps from palms and finger pads to fabric are 2.6–2.9 mm. I checked both full grades and the close crop. Neither final has luminance above 250. The matched chair, pool, divide and empty cell are now rendering.
