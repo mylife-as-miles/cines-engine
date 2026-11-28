@@ -18,8 +18,10 @@ Every sound in the film, on the script's clock. Written 27 November 2026 by the 
 | This plan, the cue sheet, the score plan | Done. |
 | Effects and beds (36 sounds) | Made locally: see `sfx/INDEX.md` for which are done and which still want a human ear. |
 | Score (9 Lyria generations planned) | **Waiting on the author's go**: about USD 0.72 planned, USD 1.44 at most (see `SCORE.md`). Also needs a Gemini key on this machine. |
-| Narration | Another agent (`audio/vo/`). Its takes fill `voice[]` in the cue sheet. |
-| Mix and master | After the narration and the score exist (steps at the end). |
+| Narration | Another agent (`audio/vo/`). The mix places the read straight from the EDL's `voice[]` (`--voice`). |
+| On the edit's clock (28 Nov) | Done: every cue, bed edge and silence edge carries an `edl` anchor (a shot, a narration segment or a word, `audio/tools/edl_anchor.py`); `python3 audio/tools/retime.py --edl design/edit/EDL.json audio/edit_rows.json` resolves them after any re-cut. The edit's added shots got their own beds from the EDL's Sound column (105 spans now, 43 of them added). The score plan is left on the script clock for the score session (`--score` moves it by rows). |
+| Graphics moments (28 Nov) | 13 CC0 sounds from wyzowl/sfx-kit (`audio/sfx/kit/`, INDEX.md's last section): the search's keys and Enter, the one muted mail chime, a marker stroke per lit line, the fee's card payment, a low hit on each YES, the title's boom, a tick per year on the counter and the calendar, an air-pull under each red seam, a low dry click as the cut-away closes, the far cell door's lock. Chapter titles: nothing. The boarding chime is muted (the only chime is the mail chime). |
+| Mix and master | `uv run audio/tools/mix.py [--voice DIR] [--stems]` renders `out/audio/mix_v2.wav` (report `mix_v2.json`) from this sheet and the EDL: the scratch read, beds, effects, the score when `out/audio/score_bed.wav` exists, ducking, -14 LUFS and -1 dBTP. |
 
 ## The clock
 

@@ -196,7 +196,7 @@
   ],
   "04.03 Yes. (start)": [
    "04.03",
-   0.005
+   0.0
   ],
   "04.03 Yes. (end)": [
    "04.03",
@@ -204,7 +204,7 @@
   ],
   "04.05 Yes. (start)": [
    "04.05",
-   0.005
+   0.0
   ],
   "04.05 Yes. (end)": [
    "04.05",
@@ -683,6 +683,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 4.0,
    "entry": "fade in from nothing over 6 s",
    "exit": "joins SC00b",
    "join_next": "SC00b",
@@ -733,6 +735,8 @@
    "hard_out": true,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "the pulse enters under the tannoy (0:15)",
    "exit": "HARD STOP on \"Yes.\" (0:33)",
    "span_s": 13.334
@@ -782,6 +786,8 @@
    "hard_out": true,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 6.0,
+   "trim_db": 0.0,
    "entry": "from near silence after the 1 s drop (0:44)",
    "exit": "CUT DEAD at \"were not.\" (1:05)",
    "span_s": 22.879
@@ -831,6 +837,8 @@
    "hard_out": false,
    "fade_in_curve": "db",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "from nothing after the near silence (1:26.5)",
    "exit": "the peak lands on the TITLE (1:37), decays to silence over 4 s",
    "peak_s": 89.083,
@@ -881,6 +889,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the Chicago wide over 3 s",
    "exit": "decays before the 1.5 s silence (3:03.5)",
    "span_s": 90.778
@@ -930,6 +940,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the cabin over 4 s",
    "exit": "drops out on \"one more gift\" (3:57)",
    "span_s": 41.935
@@ -960,18 +972,18 @@
     }
    },
    "start_s": 233.208,
-   "end_s": 266.0,
+   "end_s": 265.29,
    "start_event": [
     "row",
     "03.01",
     1.0
    ],
    "end_event": [
-    "row",
-    "03.05",
-    0.0
+    "voice",
+    "03.07",
+    -2.0
    ],
-   "why": "starts on its row (the hotel room); out on the cut to the matched scale, so the scale plays without music as at 0:00 and the drop comes before \"Overweight.\" (the row + 0.5 s lands in \"already know\").",
+   "why": "starts on its row (the hotel room); out at the start of the cue sheet's 2 s drop before \"Overweight.\" (fee_drop, 265.292 on the EDL), so the matched scale plays without music as at 0:00 (the row + 0.5 s gives 266.500, inside the drop).",
    "level_under_voice_db": -19,
    "level_in_gaps_db": -15,
    "fade_in_s": 4.0,
@@ -979,9 +991,11 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the hotel room over 4 s",
    "exit": "out at 4:38.5 for the drop before \"Overweight.\"",
-   "span_s": 32.792
+   "span_s": 32.082
   },
   {
    "id": "SC03b",
@@ -1028,15 +1042,17 @@
    "hard_out": true,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in fast (2 s) under the baggage belt",
    "exit": "stop-downs before each \"Yes\"; HARD STOP at the discovery (5:31)",
    "stop_downs": [
     {
-     "from_s": 299.66,
+     "from_s": 299.655,
      "to_s": 300.795
     },
     {
-     "from_s": 302.22,
+     "from_s": 302.215,
      "to_s": 303.355
     }
    ],
@@ -1087,6 +1103,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "very quiet, under \"The same room. The same bags.\" (5:46)",
    "exit": "ends at \"The case was only beginning\" (6:18)",
    "span_s": 33.716
@@ -1117,7 +1135,7 @@
     }
    },
    "start_s": 429.917,
-   "end_s": 476.356,
+   "end_s": 475.206,
    "start_event": [
     "row",
     "06.02",
@@ -1126,9 +1144,9 @@
    "end_event": [
     "voice",
     "06.07",
-    -0.35
+    -1.5
    ],
-   "why": "enters as the impact (5.0 s, from 424.917) rings out; one held A by the divide; out in the breath before \"Deceived.\" (the row gives 477.208, on the word).",
+   "why": "enters as the impact (5.0 s, from 424.917) rings out; one held A by the divide; out at the start of the cue sheet's 1.5 s drop before \"Deceived.\" (deceived_drop; the row gives 477.208, on the word).",
    "level_under_voice_db": -20,
    "level_in_gaps_db": -16,
    "fade_in_s": 3.0,
@@ -1136,10 +1154,12 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "enters after the impact rings out (7:35)",
    "exit": "thins to one held A at the divide (8:15), out before \"Deceived.\" (8:33.5)",
    "thin_by_s": 470.25,
-   "span_s": 46.439
+   "span_s": 45.289
   },
   {
    "id": "SC07",
@@ -1186,6 +1206,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the rain over 5 s",
    "exit": "ends before the 1.5 s silence (10:07.5)",
    "span_s": 82.021
@@ -1216,7 +1238,7 @@
     }
    },
    "start_s": 567.708,
-   "end_s": 607.605,
+   "end_s": 606.455,
    "start_event": [
     "row",
     "08.01",
@@ -1225,9 +1247,9 @@
    "end_event": [
     "voice",
     "08.05",
-    -0.35
+    -1.5
    ],
-   "why": "starts on its row (the cold dining room); its last note rings out by the end of \"...lost ten years.\", before \"On January 25th\" (the row gives 577.958: the date moved from the blinds to the chair).",
+   "why": "starts on its row (the cold dining room); its last note has rung out at the start of the cue sheet's 1.5 s drop before \"On January 25th\" (gene_drop; the row gives 577.958: the date moved from the blinds to the chair).",
    "level_under_voice_db": -22,
    "level_in_gaps_db": -18,
    "fade_in_s": 4.0,
@@ -1235,9 +1257,11 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the cold dining room over 4 s",
    "exit": "its last note rings out before \"On January 25th\" (10:40.5)",
-   "span_s": 39.897
+   "span_s": 38.747
   },
   {
    "id": "SC09a",
@@ -1284,6 +1308,8 @@
    "hard_out": true,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the gate in the rain over 4 s",
    "exit": "HARD OUT at 11:38.5: silence under \"When would she be released?\"",
    "span_s": 21.042
@@ -1333,6 +1359,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "fades in under the empty visiting room over 3 s",
    "exit": "out before \"It was hers.\" (12:09)",
    "span_s": 21.63
@@ -1382,6 +1410,8 @@
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
+   "build_db": 0.0,
+   "trim_db": 0.0,
    "entry": "one warm piano note A (the prize motif's first note) over THE DRONE as YES becomes WHEN? (12:43)",
    "exit": "rings out under the end card; gone before the last 2 s of silence (12:53)",
    "span_s": 8.176
@@ -1413,7 +1443,7 @@
    233.208
   ],
   [
-   266.0,
+   265.29,
    286.625
   ],
   [
@@ -1425,7 +1455,7 @@
    429.917
   ],
   [
-   476.356,
+   475.206,
    483.167
   ],
   [
@@ -1433,7 +1463,7 @@
    567.708
   ],
   [
-   607.605,
+   606.455,
    624.708
   ],
   [
@@ -1449,5 +1479,5 @@
    728.958
   ]
  ],
- "scored_s": 506.05
+ "scored_s": 503.04
 }

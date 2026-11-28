@@ -1,0 +1,363 @@
+{
+ "summary": {
+  "file": "out/audio/score_bed.wav",
+  "samples": 34990000,
+  "duration_s": 728.958,
+  "edl_duration_s": 728.958,
+  "voice_ref_lufs": -14.0,
+  "sample_peak_dbfs": -2.33,
+  "true_peak_dbtp": -2.32,
+  "integrated_lufs": -30.5,
+  "clipped_samples": 0,
+  "first_sound_s": 2.0,
+  "last_sound_s": 723.196,
+  "scored_s": 499.02,
+  "title_peak": {
+   "peak_momentary_s": 89.236,
+   "peak_vs_title_frame_s": 0.153,
+   "peak_short_term_s": 89.336
+  }
+ },
+ "placements": {
+  "SC00a": {
+   "source": "G1",
+   "start_s": 2.0,
+   "end_s": 19.333,
+   "audio_end_s": 19.333,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -34.0,
+   "under_target_lufs": -38.0,
+   "duck_db": -4,
+   "stretch": [
+    17.333
+   ],
+   "pieces": [
+    {
+     "from": 0.027,
+     "to": 12.603,
+     "stretch_to": 17.333
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 2.008,
+   "last_sound_s": 19.332,
+   "integrated_lufs": -38.4,
+   "max_short_term_lufs": -34.5
+  },
+  "SC00b": {
+   "source": "G1",
+   "start_s": 19.333,
+   "end_s": 32.667,
+   "audio_end_s": 32.667,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -26.0,
+   "under_target_lufs": -30.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 12.603,
+     "to": 25.937
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 19.334,
+   "last_sound_s": 32.667,
+   "integrated_lufs": -30.0,
+   "max_short_term_lufs": -28.7
+  },
+  "SC00c": {
+   "source": "G1",
+   "start_s": 42.155,
+   "end_s": 65.034,
+   "audio_end_s": 65.034,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -26.0,
+   "under_target_lufs": -32.0,
+   "duck_db": -6,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 42.477,
+     "to": 65.356
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 42.161,
+   "last_sound_s": 65.034,
+   "integrated_lufs": -31.9,
+   "max_short_term_lufs": -29.2
+  },
+  "SC00d": {
+   "source": "G2",
+   "start_s": 82.856,
+   "end_s": 93.083,
+   "audio_end_s": 93.083,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -14.0,
+   "under_target_lufs": -28.0,
+   "duck_db": -14,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 35.707,
+     "to": 45.934
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 82.856,
+   "last_sound_s": 93.081,
+   "integrated_lufs": -16.1,
+   "max_short_term_lufs": -14.0,
+   "peak_momentary_s": 89.236,
+   "peak_vs_title_frame_s": 0.153,
+   "peak_short_term_s": 89.336
+  },
+  "SC01": {
+   "source": "G3",
+   "start_s": 94.583,
+   "end_s": 185.361,
+   "audio_end_s": 185.361,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -28.0,
+   "under_target_lufs": -32.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 0.0,
+     "to": 25.49
+    },
+    {
+     "from": 10.179,
+     "to": 77.14
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 94.642,
+   "last_sound_s": 185.351,
+   "integrated_lufs": -32.0,
+   "max_short_term_lufs": -29.5
+  },
+  "SC02": {
+   "source": "G4",
+   "start_s": 187.875,
+   "end_s": 229.81,
+   "audio_end_s": 229.81,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -27.0,
+   "under_target_lufs": -31.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 0.0,
+     "to": 41.935
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 187.961,
+   "last_sound_s": 229.81,
+   "integrated_lufs": -30.9,
+   "max_short_term_lufs": -26.8
+  },
+  "SC03": {
+   "source": "G5",
+   "start_s": 233.208,
+   "end_s": 265.29,
+   "audio_end_s": 265.29,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -29.0,
+   "under_target_lufs": -33.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 30.918,
+     "to": 63.0
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 233.212,
+   "last_sound_s": 265.239,
+   "integrated_lufs": -33.3,
+   "max_short_term_lufs": -31.3
+  },
+  "SC03b": {
+   "source": "G1",
+   "start_s": 286.625,
+   "end_s": 310.48,
+   "audio_end_s": 310.48,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -28.0,
+   "under_target_lufs": -32.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 13.103,
+     "to": 36.958
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 286.628,
+   "last_sound_s": 310.48,
+   "integrated_lufs": -32.1,
+   "max_short_term_lufs": -30.1
+  },
+  "SC04b": {
+   "source": "G7",
+   "start_s": 322.458,
+   "end_s": 356.174,
+   "audio_end_s": 356.174,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -34.0,
+   "under_target_lufs": -38.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 3.596,
+     "to": 37.312
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 322.463,
+   "last_sound_s": 356.171,
+   "integrated_lufs": -38.0,
+   "max_short_term_lufs": -34.7
+  },
+  "SC06": {
+   "source": "G8",
+   "start_s": 429.917,
+   "end_s": 475.206,
+   "audio_end_s": 475.206,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -30.0,
+   "under_target_lufs": -34.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 24.068,
+     "to": 69.357
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 429.92,
+   "last_sound_s": 475.198,
+   "integrated_lufs": -34.0,
+   "max_short_term_lufs": -31.6
+  },
+  "SC07": {
+   "source": "G9",
+   "start_s": 483.167,
+   "end_s": 565.188,
+   "audio_end_s": 564.934,
+   "short_by_s": 0.254,
+   "gap_target_lufs": -32.0,
+   "under_target_lufs": -36.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 0.048,
+     "to": 81.816
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 483.192,
+   "last_sound_s": 563.219,
+   "integrated_lufs": -36.1,
+   "max_short_term_lufs": -33.3
+  },
+  "SC08": {
+   "source": "G10",
+   "start_s": 567.708,
+   "end_s": 606.455,
+   "audio_end_s": 606.455,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -32.0,
+   "under_target_lufs": -36.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 22.053,
+     "to": 60.8
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 567.716,
+   "last_sound_s": 605.779,
+   "integrated_lufs": -36.0,
+   "max_short_term_lufs": -33.3
+  },
+  "SC09a": {
+   "source": "G11",
+   "start_s": 624.708,
+   "end_s": 645.75,
+   "audio_end_s": 645.75,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -33.0,
+   "under_target_lufs": -37.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 0.2,
+     "to": 21.242
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 624.726,
+   "last_sound_s": 645.75,
+   "integrated_lufs": -37.2,
+   "max_short_term_lufs": -35.6
+  },
+  "SC09b": {
+   "source": "G11",
+   "start_s": 654.953,
+   "end_s": 676.583,
+   "audio_end_s": 676.583,
+   "short_by_s": 0.0,
+   "gap_target_lufs": -33.0,
+   "under_target_lufs": -37.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 39.242,
+     "to": 60.872
+    }
+   ],
+   "retune_cents": 0.0,
+   "first_sound_s": 654.957,
+   "last_sound_s": 676.579,
+   "integrated_lufs": -37.6,
+   "max_short_term_lufs": -35.1
+  },
+  "SC09c": {
+   "source": "G11",
+   "start_s": 718.792,
+   "end_s": 726.968,
+   "audio_end_s": 723.196,
+   "short_by_s": 3.772,
+   "gap_target_lufs": -30.0,
+   "under_target_lufs": -34.0,
+   "duck_db": -4,
+   "stretch": [],
+   "pieces": [
+    {
+     "from": 7.618,
+     "to": 12.013
+    }
+   ],
+   "retune_cents": -3.6,
+   "first_sound_s": 718.792,
+   "last_sound_s": 723.193,
+   "integrated_lufs": -35.0,
+   "max_short_term_lufs": -34.0
+  }
+ }
+}

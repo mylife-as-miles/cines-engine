@@ -219,14 +219,31 @@
    "secs": 23.1,
    "file": "audio/gen/score/G12_t2.mp3",
    "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+  },
+  {
+   "id": "G2",
+   "name": "The title",
+   "take": 2,
+   "kind": "retake",
+   "why": "G2 take 1 fails its mood check at its placement: the climax that must sit on the title reads 'uplifting orchestral film score' 65-76% and 'triumphant and heroic' about 20% against three dark phrasings (dark at most 16%); the plan asks for cold, weighty, restrained",
+   "model": "lyria-3.5",
+   "prompt": "An instrumental film-score cue, about 60 seconds, for the title of a serious investigative documentary. A low pulse on D at 76 bpm (muted low piano and cello pizzicato) grows with sustained low strings, a dark synth pad and a slow, wide low brass swell in D minor, rising in one long crescendo to a single broad peak: a full sustained D minor chord, strings high, low brass under it. After the peak nothing new begins: the chord is held and decays naturally into a long, quiet, reverberant tail that fades to silence. Cinematic, cold, weighty, restrained rather than bombastic. No sound effects. No drums, no vocals, no choir. In tune at A = 440.",
+   "prompt_is_plan": true,
+   "time": "2026-11-28T04:57:02Z",
+   "outcome": "ok: 1456 KB audio/mpeg",
+   "billed": "yes",
+   "counts_toward_ceiling": true,
+   "secs": 20.2,
+   "file": "audio/gen/score/G2_t2.mp3",
+   "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]\n[[E4]]"
   }
  ],
  "summary": {
-  "requests": 13,
-  "counted_generations": 12,
-  "billed_generations": 12,
-  "retakes": 1,
-  "estimated_usd": 0.96,
+  "requests": 14,
+  "counted_generations": 13,
+  "billed_generations": 13,
+  "retakes": 2,
+  "estimated_usd": 1.04,
   "ceiling": 18,
   "price_note": "about USD 0.08 a generation (house figure, sound.md 7; not re-quoted)"
  }

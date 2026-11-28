@@ -152,13 +152,13 @@
   "source": "G5",
   "pieces": [
    {
-    "from": 30.208,
+    "from": 30.918,
     "to": 63.0
    }
   ],
   "rule": "ends at the take's natural ending (63.00 s: its last bars, low and dark) on the cut to the scale",
-  "length_s": 32.792,
-  "span_s": 32.792
+  "length_s": 32.082,
+  "span_s": 32.082
  },
  "SC04b": {
   "source": "G7",
@@ -187,13 +187,13 @@
   "pieces": [
    {
     "from": 24.068,
-    "to": 70.507
+    "to": 69.357
    }
   ],
   "held_a_src_s": 64.401,
   "rule": "the held A (A2/A3, no onsets) starts at 64.40 s and lands on the divide; out before the final chord",
-  "length_s": 46.439,
-  "span_s": 46.439
+  "length_s": 45.289,
+  "span_s": 45.289
  },
  "SC07": {
   "source": "G9",
@@ -211,13 +211,13 @@
   "source": "G10",
   "pieces": [
    {
-    "from": 20.903,
+    "from": 22.053,
     "to": 60.8
    }
   ],
   "rule": "its last note rings out at the end (natural ending 60.80 s)",
-  "length_s": 39.897,
-  "span_s": 39.897
+  "length_s": 38.747,
+  "span_s": 38.747
  },
  "SC09a": {
   "source": "G11",

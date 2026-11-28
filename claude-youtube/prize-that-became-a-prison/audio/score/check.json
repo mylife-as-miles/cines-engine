@@ -4598,5 +4598,419 @@
    "tags",
    "top_tags"
   ]
+ },
+ "G2_t2": {
+  "file": "audio/gen/score/G2_t2.mp3",
+  "duration_s": 61.81,
+  "tune_cents": 1.5,
+  "tune_cents_peaks": -1.7,
+  "tune_spread_cents": 16.9,
+  "lufs": -12.2,
+  "short_term_max_lufs": -9.4,
+  "true_peak_dbtp": 0.4,
+  "lra_lu": 7.4,
+  "key": [
+   {
+    "key": "D major",
+    "r": 0.726
+   },
+   {
+    "key": "A major",
+    "r": 0.693
+   },
+   {
+    "key": "D minor",
+    "r": 0.661
+   }
+  ],
+  "tempo_earshot": 147.7,
+  "f0_hz": 89.2,
+  "pulse_bpm": 76.6,
+  "onsets": [
+   0.058,
+   0.395,
+   0.662,
+   0.836,
+   1.219,
+   1.649,
+   2.055,
+   2.252,
+   2.438,
+   2.856,
+   3.239,
+   3.646,
+   3.855,
+   4.063,
+   4.412,
+   4.853,
+   5.259,
+   5.445,
+   5.642,
+   6.072,
+   6.432,
+   6.85,
+   7.07,
+   7.233,
+   7.628,
+   8.057,
+   8.464,
+   8.615,
+   8.824,
+   9.253,
+   9.66,
+   10.031,
+   10.252,
+   10.437,
+   10.809,
+   11.262,
+   11.656,
+   11.842,
+   12.063,
+   12.272,
+   12.458,
+   12.643,
+   12.875,
+   13.259,
+   13.468,
+   13.653,
+   14.466,
+   15.058,
+   15.209,
+   15.673,
+   16.057,
+   16.463,
+   16.649,
+   16.823,
+   17.252,
+   17.67,
+   18.042,
+   18.204,
+   18.413,
+   18.878,
+   19.261,
+   19.632,
+   19.865,
+   20.062,
+   20.863,
+   21.269,
+   21.455,
+   21.676,
+   22.059,
+   22.442,
+   22.872,
+   23.069,
+   23.255,
+   24.067,
+   24.625,
+   24.845,
+   25.031,
+   25.472,
+   25.635,
+   26.064,
+   26.215,
+   26.448,
+   27.26,
+   27.643,
+   27.783,
+   28.456,
+   29.234,
+   29.466,
+   29.663,
+   30.047,
+   30.43,
+   30.871,
+   31.068,
+   31.208,
+   31.637,
+   32.055,
+   32.473,
+   32.647,
+   32.833,
+   33.669,
+   34.064,
+   34.226,
+   34.458,
+   34.83,
+   35.666,
+   35.863,
+   36.026,
+   36.827,
+   37.268,
+   37.442,
+   37.64,
+   37.825,
+   38.046,
+   38.417,
+   39.079,
+   39.242,
+   40.461,
+   40.647,
+   40.856,
+   41.657,
+   43.851,
+   44.849,
+   47.044,
+   47.647,
+   48.054,
+   48.646
+  ],
+  "peak_at": 38.537,
+  "top_tags": [
+   [
+    "a big braam",
+    1.37,
+    "no match"
+   ],
+   [
+    "a rising riser building tension",
+    1.32,
+    "no match"
+   ],
+   [
+    "a cinematic hit with a long tail",
+    1.18,
+    "no match"
+   ],
+   [
+    "a big drum hit",
+    1.0,
+    "no match"
+   ],
+   [
+    "a celesta note",
+    0.91,
+    "no match"
+   ],
+   [
+    "a deep cinematic boom",
+    0.82,
+    "no match"
+   ]
+  ],
+  "music_hints": [
+   [
+    "cinematic orchestral music",
+    3.16
+   ],
+   [
+    "triumphant and heroic music",
+    3.12
+   ],
+   [
+    "strings ensemble",
+    3.11
+   ],
+   [
+    "dark and tense music",
+    3.08
+   ],
+   [
+    "uplifting orchestral film score",
+    3.07
+   ],
+   [
+    "classical string quartet",
+    3.0
+   ],
+   [
+    "orchestral percussion",
+    2.79
+   ],
+   [
+    "epic trailer music",
+    2.77
+   ]
+  ],
+  "audioset": [
+   [
+    "Music",
+    0.821
+   ],
+   [
+    "Double bass",
+    0.787
+   ],
+   [
+    "Theme music",
+    0.722
+   ],
+   [
+    "Cello",
+    0.643
+   ],
+   [
+    "Bowed string instrument",
+    0.391
+   ]
+  ],
+  "segments": [
+   {
+    "start": 0.0,
+    "end": 20.0,
+    "audioset": [
+     [
+      "Double bass",
+      0.785
+     ],
+     [
+      "Cello",
+      0.635
+     ],
+     [
+      "Music",
+      0.546
+     ],
+     [
+      "Bowed string instrument",
+      0.386
+     ],
+     [
+      "Pizzicato",
+      0.26
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "pizzicato strings",
+      3.43
+     ],
+     [
+      "classical string quartet",
+      3.22
+     ],
+     [
+      "dark and tense music",
+      2.86
+     ],
+     [
+      "jazz music",
+      2.77
+     ]
+    ],
+    "lufs": -15.3
+   },
+   {
+    "start": 20.0,
+    "end": 40.0,
+    "audioset": [
+     [
+      "Music",
+      0.837
+     ],
+     [
+      "Theme music",
+      0.548
+     ],
+     [
+      "Background music",
+      0.225
+     ],
+     [
+      "Soundtrack music",
+      0.083
+     ],
+     [
+      "Sad music",
+      0.083
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "cinematic orchestral music",
+      3.2
+     ],
+     [
+      "strings ensemble",
+      3.12
+     ],
+     [
+      "dark and tense music",
+      3.08
+     ],
+     [
+      "uplifting orchestral film score",
+      3.06
+     ]
+    ],
+    "lufs": -11.9
+   },
+   {
+    "start": 40.0,
+    "end": 60.0,
+    "audioset": [
+     [
+      "Music",
+      0.841
+     ],
+     [
+      "Theme music",
+      0.777
+     ],
+     [
+      "Background music",
+      0.269
+     ],
+     [
+      "Video game music",
+      0.105
+     ],
+     [
+      "Soundtrack music",
+      0.093
+     ]
+    ],
+    "vocal": [],
+    "drum": [],
+    "music_hints": [
+     [
+      "triumphant and heroic music",
+      3.64
+     ],
+     [
+      "uplifting orchestral film score",
+      3.49
+     ],
+     [
+      "cinematic orchestral music",
+      3.31
+     ],
+     [
+      "inspirational corporate background music",
+      3.24
+     ]
+    ],
+    "lufs": -10.4
+   }
+  ],
+  "vocal_tags": [],
+  "drum_tags": [],
+  "music_only": true,
+  "music_only_note": "pass",
+  "mood_query": "a dark orchestral crescendo with low brass and strings rising to a climax",
+  "mood_match": {
+   "verdict": "plausible",
+   "z": 2.96,
+   "p_vs_alts": 0.615,
+   "summary": "G2_t2.mp3: 'a dark orchestral crescendo with low brass and strings rising to a climax' -> plausible (unvalidated: music / instrument / voice description) (z +2.9; would rank #7 among 322 vocabulary descriptions; cosine 0.32). Forced choice vs your alternatives: 'a dark orchestral crescendo with low brass and strings rising to a climax' 62%, 'bright, happy, upbeat music' 5%, 'calm, quiet ambient music' <1%, 'warm, tender, romantic music' 32%, 'a pop song with vocals' 1%, 'a choir singing' <1%, 'a drum kit playing a beat' <1%, 'a person speaking' <1%. It sounds most like: 'cinematic orchestral music' (z +3.1), 'triumphant and heroic music' (z +3.1), 'strings ensemble' (z +3.1), 'dark and tense music' (z +3.0)."
+  },
+  "describe_keys": [
+   "audioset",
+   "character",
+   "distinct_windows",
+   "duration",
+   "end",
+   "measurements",
+   "music_hints",
+   "path",
+   "shape",
+   "start",
+   "summary",
+   "tags",
+   "top_tags"
+  ]
  }
 }
