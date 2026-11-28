@@ -321,9 +321,6 @@ def time_cmd(args):
             if "max" in s and dur > s["max"] + 1e-6:
                 warnings.append(f"{s['id']}: {dur:.2f} s is longer than the {s['max']} s the piece allows from in={src['in']}")
             src["note_piece"] = pc.get("about", "")
-            plan, cmd = plan_command(src)
-            src["clip"] = str(plan["path"].relative_to(ROOT))
-            src["command"] = cmd
         s["_src"] = src
         e["source"] = src
         # the voice it covers
@@ -337,15 +334,35 @@ def time_cmd(args):
                 e[k] = s[k]
         edl_shots.append(e)
 
+    # a re-rendered piece is made once at the longest length any of its shots needs, and shared
+    longest = {}
+    for e in edl_shots:
+        src = e["source"]
+        if src["kind"] == "piece" and not src.get("fixed"):
+            k = (src["name"], json.dumps(src["gen"], sort_keys=True))
+            longest[k] = max(longest.get(k, 0), int(round(src["in"] * FPS)) + src["frames"])
+    for e in edl_shots:
+        src = e["source"]
+        if src["kind"] == "piece":
+            k = (src["name"], json.dumps(src["gen"], sort_keys=True))
+            if k in longest:
+                src["render_secs"] = round(longest[k] / FPS + 0.25, 3)
+            plan, cmd = plan_command(src)
+            src["clip"] = str(plan["path"].relative_to(ROOT))
+            src["command"] = cmd
+            src["clip_from"] = "reel 7 (up to date)" if plan["reuse"] else "re-rendered"
     chapters = [{"n": ch["n"], "title": ch["title"], "start": round(ch["_start"], 3), "start_tc": tc(ch["_start"]),
                  "duration": round(ch["_end"] - ch["_start"], 3), "rate_wpm": ch["rate"],
                  "words": sum(v.get("words", 0) for v in ch["voice"]),
+                 "speech_s": round(sum(v.get("speech", 0) for v in ch["voice"]), 2),
+                 "spoken_wpm": round(60 * sum(v.get("words", 0) for v in ch["voice"]) / max(0.1, sum(v.get("speech", 0) for v in ch["voice"]))),
                  "shots": sum(1 for s in edl_shots if s["chapter"] == ch["n"])} for ch in cut["chapters"]]
     voice = [{"id": v["id"], "start": round(v["start"], 3), "speech": round(v["speech"], 3), "end": round(v["end"], 3),
               **({"text": v["text"], "timing": v["timing"]} if "text" in v else {"hold": v["hold"], "note": v.get("note", "")})}
              for v in segs.values()]
-    timing = ("measured: audio/vo/scratch/lines.json (%d of %d voice segments matched; the rest estimated)" %
-              (len(measured), sum(1 for v in segs.values() if "text" in v))) if lines else \
+    nvo = sum(1 for v in segs.values() if "text" in v)
+    timing = ("measured from the scratch narration, audio/vo/scratch/lines.json (%d of %d voice segments matched%s)" %
+              (len(measured), nvo, "" if len(measured) == nvo else "; the rest estimated")) if lines else \
         "estimated from word counts at each chapter's rate (no scratch narration yet)"
     edl = {"film": "The Prize That Became a Prison", "version": "animatic_v1", "fps": FPS, "size": [W, H],
            "total_frames": total_f, "duration": round(total_f / FPS, 3), "duration_tc": tc(total_f / FPS),
@@ -356,7 +373,7 @@ def time_cmd(args):
     write_srt(segs)
     print(f"EDL: {len(edl_shots)} shots, {tc(total_f / FPS)} ({total_f} frames); timing {timing}")
     for c in chapters:
-        print(f"  {c['n']} {c['title']:<28} {c['start_tc']:>8}  {c['duration']:6.1f} s  {c['shots']:3d} shots  {c['words']} words @ {c['rate_wpm']}")
+        print(f"  {c['n']} {c['title']:<28} {c['start_tc']:>8}  {c['duration']:6.1f} s  {c['shots']:3d} shots  {c['words']} words, spoken at {c['spoken_wpm']} wpm (plan {c['rate_wpm']})")
     for w in warnings:
         print("  WARNING", w)
 
@@ -395,12 +412,12 @@ def write_md(edl, cut):
          f"run `time` again). The machine-readable list is `design/edit/EDL.json`.", "",
          f"**Length {edl['duration_tc']}** ({edl['total_frames']} frames at {edl['fps']} fps, {len(edl['shots'])} shots). "
          f"Timing: {edl['timing']}. Every join is a straight cut; no black frames, no fades, no dissolves.", "",
-         "| Chapter | Starts | Length | Shots | Cuts a minute | Median shot | Words | Rate |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+         "| Chapter | Starts | Length | Shots | Cuts a minute | Median shot | Words | Spoken at | Estimate rate |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for c in edl["chapters"]:
         ds = sorted(s["duration"] for s in edl["shots"] if s["chapter"] == c["n"])
         med = ds[len(ds) // 2] if ds else 0
         L.append(f"| {c['n']} {c['title']} | {c['start_tc']} | {c['duration']:.1f} s | {c['shots']} | "
-                 f"{60 * c['shots'] / c['duration']:.1f} | {med:.1f} s | {c['words']} | {c['rate_wpm']} wpm |")
+                 f"{60 * c['shots'] / c['duration']:.1f} | {med:.1f} s | {c['words']} | {c['spoken_wpm']} wpm | {c['rate_wpm']} wpm |")
     # presentation shares
     share = {"Void Stage": 0.0, "Evidence Table and graphics": 0.0, "Fluorescent Noir (locations)": 0.0}
     for s in edl["shots"]:
@@ -437,6 +454,8 @@ def write_md(edl, cut):
         L.append("")
     L += ["## Substitutions (a camera the script names that has no plate yet, or a stand-in)", ""] + subs + [""]
     L += ["## Rows changed, added or cut, and why", ""] + changes + [f"- {c}" for c in cut.get("changes", [])] + [""]
+    if cut.get("problems"):
+        L += ["## Known picture problems (from the contact sheets of this cut)", ""] + [f"{i}. {t}" for i, t in enumerate(cut["problems"], 1)] + [""]
     L += ["## Graphics commands", "", "Each graphics shot's clip and the exact command that made it (run from the project folder; "
           "NODE_PATH=$(npm root -g) for node). Reel 7's clips in `out/gfx/r7/` are reused when unchanged and long enough "
           "(the command shown is then reel 7's own, at its own length); otherwise `tools/assemble.py render` re-renders the "
@@ -501,39 +520,90 @@ def write_srt(segs):
 
 # ------------------------------------------------------------------------------------------------ rendering
 
+def grade_text():
+    src = (ROOT / "scenes/shoot.py").read_text()
+    m = re.search(r'GRADE = \((.*?)\)\s*#', src, re.S)
+    return "".join(re.findall(r'"([^"]*)"', m.group(1)))
+
+
 def shot_hash(e):
-    keep = {"source": e["source"], "frames": e["frames"], "v": RENDER_VERSION}
-    keep["source"] = {k: v for k, v in e["source"].items() if k not in ("note_piece", "command", "clip")}
+    keep = {"source": e["source"], "frames": e["frames"], "v": RENDER_VERSION, "grade": grade_text()}
+    keep["source"] = {k: v for k, v in e["source"].items() if k not in ("note_piece", "command", "clip", "clip_from")}
     return hashlib.sha1(json.dumps(keep, sort_keys=True).encode()).hexdigest()[:16]
+
+
+# ---- dependencies: a clip is out of date when a plate, a tool or a texture it was made from is newer (as make does).
+# The other sessions republish plates and graphics while the edit is being cut, so this is what keeps it current.
+MONTAGE_PLATES = re.findall(r'\("([a-z_]+/[a-z_]+)"', (GFX / "montage.py").read_text())
+TYPE_TOOLS = ["gfx/type.html", "gfx/type_render.js"]
+
+
+def tool_deps(gen):
+    t = gen["tool"]
+    if t == "plate_type":
+        return ["gfx/plate_type.py", "gfx/doc_composite.py", gen["plate"]] + TYPE_TOOLS
+    if t == "seam":
+        return ["gfx/seam.html", "gfx/type_render.js", "frames/raw/evidence_table/purses.seam.json"] + ([gen["bg"]] if "bg" in gen else [])
+    if t == "canvas":
+        return [gen["page"]]
+    if t == "doc":
+        sj = json.load(open(ROOT / gen["shot"]))
+        return (["gfx/doc_composite.py", gen["shot"], sj["plate"], sj["corners"]] + ([sj["texture"]["video"]] if "texture" in sj else [])
+                + ([sj["pdf"]] if "pdf" in sj else []))
+    if t == "split":
+        return ["gfx/split.py", "gfx/seam.html", "gfx/doc_composite.py", "frames/raw/evidence_table/purses.png", "frames/raw/inspection_room/handbags.png"]
+    if t == "montage":
+        return (["gfx/montage.py", "gfx/seam.html", "frames/graded/evidence_table/purses.jpg", "frames/raw/evidence_table/purses.seam.json"]
+                + [f"frames/raw/{p}.png" for p in MONTAGE_PLATES])
+    return []
+
+
+def newest(paths):
+    ts = [(ROOT / p).stat().st_mtime for p in paths if (ROOT / p).exists()]
+    return max(ts) if ts else 0.0
 
 
 _FRAMES = {}
 
 
 def piece_plan(src):
-    """Where a graphics shot's clip comes from: reel 7's file when it is unchanged and long enough (its own length),
-    else a render of the same tool at the length the shot needs. Returns {path, reuse, secs, gen, json}."""
+    """Where a graphics shot's clip comes from: reel 7's file when it is up to date with its tool and plates and long
+    enough (shown with reel 7's own command), else a render of the same tool at the length the shot needs (pieces whose
+    length is set by a texture or a fixed design re-render at their own length). Returns {path, reuse, secs, gen, json, deps_t}."""
     need = int(round(src["in"] * FPS)) + src["frames"]
-    f = src.get("file")
-    if f and not src.get("override") and (ROOT / f).exists():
+    f, fixed = src.get("file"), src.get("fixed")
+    gen = dict(src["gen"])
+    deps_t = newest(tool_deps(gen))
+    have = None
+    if f and (ROOT / f).exists():
         have = _FRAMES.setdefault(f, probe_frames(ROOT / f))
-        if have >= need:
-            gen = dict(src["gen"])
+        if not src.get("override") and have >= need and (ROOT / f).stat().st_mtime >= deps_t:
             if gen["tool"] == "doc":
                 gen["_json"] = gen["shot"]
-            return {"path": ROOT / f, "reuse": True, "secs": have / FPS, "gen": gen, "json": None}
-        if src.get("fixed"):
-            raise RuntimeError(f"piece {src['name']} has {have} frames, the shot needs {need}, and it cannot be re-rendered longer")
-    if src.get("fixed") and not src.get("override"):
-        raise RuntimeError(f"piece {src['name']} is missing: {f}")
-    secs = need / FPS + 0.25
-    gen = dict(src["gen"])
+            return {"path": ROOT / f, "reuse": True, "secs": have / FPS, "gen": gen, "json": None, "deps_t": deps_t}
+    if fixed:
+        secs = (have or 0) / FPS or src.get("len", need / FPS)
+        if need > round(secs * FPS):
+            raise RuntimeError(f"piece {src['name']} lasts {secs:.2f} s; the shot needs {need / FPS:.2f} s from in={src['in']}")
+    else:
+        secs = src.get("render_secs", need / FPS + 0.25)
     key = hashlib.sha1(json.dumps({"gen": gen, "secs": round(secs, 3)}, sort_keys=True).encode()).hexdigest()[:12]
     j = None
-    if gen["tool"] == "doc":                 # the shot file, with this shot's length and marks
-        j = PIECES / f"{src['name']}-{key}.json"
-        gen["_json"] = str(j.relative_to(ROOT))
-    return {"path": PIECES / f"{src['name']}-{key}.mp4", "reuse": False, "secs": secs, "gen": gen, "json": j, "key": key}
+    if gen["tool"] == "doc":
+        if fixed and not src.get("override"):
+            gen["_json"] = gen["shot"]       # a screen texture or the scale: its own shot file, as reel 7 ran it
+        else:                                # the shot file, with this shot's length and marks
+            j = PIECES / f"{src['name']}-{key}.json"
+            gen["_json"] = str(j.relative_to(ROOT))
+    return {"path": PIECES / f"{src['name']}-{key}.mp4", "reuse": False, "secs": secs, "gen": gen, "json": j, "key": key, "deps_t": deps_t}
+
+
+def shot_deps_t(e):
+    src = e["source"]
+    if src["kind"] == "plate":
+        return newest([src["plate"]] + (TYPE_TOOLS if src["type"] else []))
+    p = piece_plan(src)
+    return max(p["deps_t"], p["path"].stat().st_mtime if p["path"].exists() else 0.0)
 
 
 def plan_command(src):
@@ -550,9 +620,12 @@ def ensure_piece(src, work):
         return p["path"]
     out, gen, secs = p["path"], p["gen"], p["secs"]
     PIECES.mkdir(parents=True, exist_ok=True)
-    if out.exists() and probe_frames(out) >= need:
+    import fcntl
+    lock = open(PIECES / f".{out.name}.lock", "w")
+    fcntl.flock(lock, fcntl.LOCK_EX)          # two shots sharing one piece: the second waits and reuses it
+    if out.exists() and probe_frames(out) >= need and out.stat().st_mtime >= p["deps_t"]:
         return out
-    if gen["tool"] == "doc":
+    if gen["tool"] == "doc" and p["json"] is not None:
         base = json.load(open(ROOT / src["gen"]["shot"]))
         base["length"] = round(secs, 3)
         base["duration"] = min(base.get("duration", secs), secs) if "duration" not in gen else gen["duration"]
@@ -638,7 +711,7 @@ def is_current(e):
     if not (out.exists() and side.exists()):
         return False
     try:
-        return json.load(open(side))["hash"] == shot_hash(e)
+        return json.load(open(side))["hash"] == shot_hash(e) and out.stat().st_mtime >= shot_deps_t(e)
     except Exception:
         return False
 
@@ -682,7 +755,7 @@ def join_cmd(args):
     lst.write_text("".join(f"file '{SHOTS / (e['id'] + '.mp4')}'\n" for e in edl["shots"]))
     tmp = FILM_DIR / "animatic_v1.tmp.mp4"
     run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-an", "-vf", "setsar=1,format=yuv420p",
-         "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-crf", "18", "-preset", "fast", "-pix_fmt", "yuv420p",
+         "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-crf", "18", "-maxrate", "14M", "-bufsize", "28M", "-preset", "fast", "-pix_fmt", "yuv420p",
          "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart", tmp])
     got = probe_frames(tmp)
     if got != edl["total_frames"]:
@@ -710,7 +783,7 @@ def sheets_cmd(args):
     want = every | set(around)
     cap = cv2.VideoCapture(str(FILM))
     grabs, lum, prev, frozen, run_len, red = {}, [], None, [], 0, []
-    red_ok = {s["id"] for s in edl["shots"] if s["source"]["kind"] == "piece" and s["source"]["name"] in ("flash", "trace", "cutaway", "split", "montage")}
+    red_ok = {s["id"] for s in edl["shots"] if s["source"]["kind"] == "piece" and s["source"]["name"] in ("flash", "trace", "cutaway", "split", "split_r7", "montage")}
     i = 0
     while True:
         ok, im = cap.read()

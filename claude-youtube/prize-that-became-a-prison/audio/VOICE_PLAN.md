@@ -20,11 +20,26 @@ was given for.
 
 101 spoken paragraphs, **1,689 words, 9,477 characters** (spaces and punctuation included, as ElevenLabs counts them).
 
-| Chapter | Words | Characters | Scratch length (Kokoro) |
-| --- | ---: | ---: | ---: |
-SCRATCH_TABLE
+| Chapter | Words | Characters | Scratch length | Scratch pace (target) |
+| --- | ---: | ---: | ---: | ---: |
+| 00 Cold open | 207 | 1,128 | 1:35.3 | 161.3 wpm (150–165) |
+| 01 The winner | 239 | 1,339 | 1:32.0 | 159.9 (150–165) |
+| 02 Eighteen days | 119 | 661 | 0:44.3 | 164.7 (150–165) |
+| 03 The gift | 151 | 832 | 0:55.6 | 163.8 (150–165) |
+| 04 Yes | 169 | 938 | 1:07.3 | 158.4 (150–165) |
+| 05 Three years | 158 | 896 | 1:02.2 | 156.3 (150–165) |
+| 06 The sentence | 140 | 837 | 0:57.8 | 150.6 (150–165) |
+| 07 The wait | 182 | 1,095 | 1:24.7 | 131.2 (120–135) |
+| 08 The father | 104 | 544 | 0:55.2 | 124.2 (120–135) |
+| 09 When? | 220 | 1,207 | 1:45.5 | 131.1 (120–135) |
+| **Total** | **1,689** | **9,477** | **12:00.0** | 159.1 (00–06) / 129.7 (07–09) |
 
-The scratch read (Kokoro, local, free) is `audio/vo/scratch/narration_scratch.wav`; the edit can be timed on it now.
+The scratch read is `audio/vo/scratch/narration_scratch.wav` (Kokoro `am_michael`, local and free; 10:51 of voice
+plus 1:09 of the script's pauses, including the 15 s montage after the cold open). Use it to time the edit now. A
+chapter's length includes the hold after its last line. Pace is words / (voice + the ordinary 0.35 s gaps), leaving
+out the designed beats and silences. The scratch voice was chosen from three Kokoro auditions on the cold open
+(`audio/vo/scratch/audition/`, measurements in `audition.json`). It is a timing guide, not a proposal for the final
+voice.
 
 ## The options
 
@@ -36,8 +51,8 @@ The scratch read (Kokoro, local, free) is `audio/vo/scratch/narration_scratch.wa
 | Flow from line to line | `previous_text` / `next_text` on each request, so 101 separate lines read as one reading (proven in `narrate_elevenlabs.py`) | the same | None: each line is an independent call, so pitch and energy can drift between paragraphs; the style annotation has to hold the read together |
 | Direction | Voice settings per chapter (stability, style, speed); audio tags in square brackets for v4 if ever needed | the same | A `speech_metadata` style annotation per line, never spoken (for example "low, controlled urgency, close") |
 | Output | MP3 44.1 kHz 192 kbps (the Creator plan has no PCM), cut to 48 kHz mono WAV | the same | 24 kHz mono |
-| Fit for this film | Gravity and restraint; a British narrator on an American story is common in documentary | Native to the story's places (Chicago, Congress, the State Department); one of the most heard stock voices on YouTube, which can read as "AI channel" | Cheapest by far and the most steerable in words; weakest continuity over 13 minutes |
-| Cost of the whole package (below) | about 15,200 credits; USD 1.20 to 4.60 | the same | about USD 0.25 |
+| Fit for this film | Gravity and restraint; a British narrator on an American story is common in documentary | Native to the story's places (Chicago, Congress, the State Department); one of the most heard stock voices on YouTube, which can read as "AI channel" | Cheapest by far and the most steerable in words; weakest continuity over 12 minutes |
+| Cost of the whole package (below) | about 15,200 credits; USD 1.22 to 4.56 | the same | about USD 0.25 |
 
 ## Cost
 
@@ -60,9 +75,9 @@ Characters sent as text to speak (ElevenLabs bills every letter, number, space a
   Creator credits. The first audition request returns a `character-cost` header; if it shows the context is billed,
   generation stops and the author is told before going on.
 - **Gemini 3.8 Flash TTS**: USD 9.00 per million audio tokens and USD 0.50 per million text tokens until 31 December
-  2026 (USD 18.00 and 1.00 from 1 January 2027), at 25 audio tokens a second. The full read (about SCRATCH_VOICED
-  voiced) is about SCRATCH_TOKENS audio tokens, about **USD SCRATCH_GEMINI_FULL**; the whole package about
-  **USD 0.25** (0.50 after 1 January). A cold-open audition costs about USD 0.02.
+  2026 (USD 18.00 and 1.00 from 1 January 2027), at 25 audio tokens a second. The full read (about 651 s of voice,
+  as in the scratch) is about 16,300 audio tokens, about **USD 0.15**; the whole package about **USD 0.25** (0.50
+  after 1 January). A cold-open audition costs about USD 0.02.
 - These prices were found by web search on 27 November 2026; `elevenlabs.io` itself is outside this session's
   network allowlist, so the official pages could not be opened from here. Check the account's plan and balance before
   Gate 1.
@@ -86,14 +101,18 @@ Characters sent as text to speak (ElevenLabs bills every letter, number, space a
    | 07–09 | slowest, most space | 120–135 | stability 0.60, style 0.15 |
 
    Similarity 0.8 and speaker boost throughout. The voice's `speed` setting is set per chapter from Gate 1's measured
-   pace; Crownfall's narrator needed a 1.06 tempo after generation, so the same check applies here.
+   pace (Crownfall's narrator sat best at a 1.06 tempo, so the pace is measured, not assumed). The scratch shows how
+   much the speed has to move: Kokoro needed 0.97–1.05 in chapters 00–06 and 0.78–0.88 in 07–09.
 4. **No audio tags by default.** The film's rule is restraint; a tag such as `[quietly]` is tried only as one of the
    three takes of a line, and only on the last three chapters' lines. Tags are directions, never spoken words.
 5. **Names.** Checked by ear in Gate 1 and again in Gate 2: Hunt; Dawn Michelle Hunt; Gene; Qingdao (CHING-dow);
    Guangdong (GWAHNG-dong); Baiyun (bye-YOON); Reuters (ROY-terz); Nelson Wells Junior; the years read as years
    ("twenty fourteen"); "January 25th, 2026" as "January twenty-fifth, twenty twenty-six". A name that comes out wrong
-   is fixed with a pronunciation-dictionary alias, so the text and the subtitles stay as written. (Kokoro's scratch read
-   "Baiyun" as "BAY-yun" until it was given a phoneme hint; the other names came out right in its phonemes.)
+   is fixed with a pronunciation-dictionary alias, so the text and the subtitles stay as written. What the scratch
+   showed (a speech recogniser transcribed all 101 scratch lines back and compared them with the script): Hunt,
+   Qingdao, Guangdong, Reuters and the dates came back right. Kokoro read "Baiyun" as "BAY-yun" until it was given a
+   phoneme hint, and even then it is heard as "bayou", so that name is the one to listen for. The American voice's
+   "Dawn" was once heard as "Don" (the merged vowel). Guangzhou is not in the version 2 narration.
 6. **Three takes of the lines that carry the film**, then ranked with earshot (`earshot rank "<description>" t1.wav
    t2.wav t3.wav --json`), then chosen by the author's ear. The 27 lines:
 
@@ -152,6 +171,6 @@ Characters sent as text to speak (ElevenLabs bills every letter, number, space a
 | Gate | What is generated | Cost |
 | --- | --- | --- |
 | **Gate 1** | The cold open (1,128 characters) in George and in Brian, `eleven_v4`, with previous/next text, chapter-00 settings; optionally the same in Gemini Daniel for comparison | 2,256 credits (USD 0.18 to 0.68); Gemini about USD 0.02 |
-| **Gate 2** | The full read in the chosen voice, three takes of the 27 lines above, earshot ranking, the author's picks | about 11,500 credits (USD 0.92 to 3.45), plus up to 1,422 for retakes the author asks for |
+| **Gate 2** | The full read in the chosen voice, three takes of the 27 lines above, earshot ranking, the author's picks | about 11,500 credits (USD 0.92 to 3.46), plus up to 1,422 for retakes the author asks for |
 
 Say **"go"** for Gate 1 to start. Nothing is sent before that.

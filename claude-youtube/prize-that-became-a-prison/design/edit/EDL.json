@@ -6,10 +6,10 @@
   1920,
   1080
  ],
- "total_frames": 18565,
- "duration": 773.542,
- "duration_tc": "12:53.54",
- "timing": "estimated from word counts at each chapter's rate (no scratch narration yet)",
+ "total_frames": 17495,
+ "duration": 728.958,
+ "duration_tc": "12:08.95",
+ "timing": "measured from the scratch narration, audio/vo/scratch/lines.json (101 of 101 voice segments matched)",
  "gap_s": 0.35,
  "chapters": [
   {
@@ -17,99 +17,119 @@
    "title": "Cold open: Overweight",
    "start": 0.0,
    "start_tc": "0:00.00",
-   "duration": 98.408,
+   "duration": 94.064,
    "rate_wpm": 160,
    "words": 207,
+   "speech_s": 73.51,
+   "spoken_wpm": 169,
    "shots": 30
   },
   {
    "n": "01",
    "title": "The winner",
-   "start": 98.408,
-   "start_tc": "1:38.40",
-   "duration": 98.059,
+   "start": 94.064,
+   "start_tc": "1:34.06",
+   "duration": 92.797,
    "rate_wpm": 158,
    "words": 239,
+   "speech_s": 85.5,
+   "spoken_wpm": 168,
    "shots": 18
   },
   {
    "n": "02",
    "title": "Eighteen days",
-   "start": 196.468,
-   "start_tc": "3:16.46",
-   "duration": 49.29,
+   "start": 186.861,
+   "start_tc": "3:06.86",
+   "duration": 45.34,
    "rate_wpm": 158,
    "words": 119,
+   "speech_s": 41.24,
+   "spoken_wpm": 173,
    "shots": 13
   },
   {
    "n": "03",
    "title": "The gift",
-   "start": 245.758,
-   "start_tc": "4:05.75",
-   "duration": 63.615,
+   "start": 232.201,
+   "start_tc": "3:52.20",
+   "duration": 57.1,
    "rate_wpm": 155,
    "words": 151,
+   "speech_s": 52.15,
+   "spoken_wpm": 174,
    "shots": 16
   },
   {
    "n": "04",
    "title": "Yes",
-   "start": 309.372,
-   "start_tc": "5:09.37",
-   "duration": 73.345,
+   "start": 289.301,
+   "start_tc": "4:49.30",
+   "duration": 68.373,
    "rate_wpm": 155,
    "words": 169,
+   "speech_s": 60.87,
+   "spoken_wpm": 167,
    "shots": 20
   },
   {
    "n": "05",
    "title": "Three years",
-   "start": 382.717,
-   "start_tc": "6:22.71",
-   "duration": 66.768,
+   "start": 357.674,
+   "start_tc": "5:57.67",
+   "duration": 62.966,
    "rate_wpm": 152,
    "words": 158,
-   "shots": 11
+   "speech_s": 58.57,
+   "spoken_wpm": 162,
+   "shots": 12
   },
   {
    "n": "06",
    "title": "The sentence",
-   "start": 449.486,
-   "start_tc": "7:29.48",
-   "duration": 63.6,
+   "start": 420.64,
+   "start_tc": "7:00.64",
+   "duration": 60.541,
    "rate_wpm": 150,
    "words": 140,
+   "speech_s": 53.34,
+   "spoken_wpm": 157,
    "shots": 14
   },
   {
    "n": "07",
    "title": "The wait",
-   "start": 513.086,
-   "start_tc": "8:33.08",
-   "duration": 87.127,
+   "start": 481.181,
+   "start_tc": "8:01.18",
+   "duration": 85.507,
    "rate_wpm": 132,
    "words": 182,
-   "shots": 15
+   "speech_s": 81.11,
+   "spoken_wpm": 135,
+   "shots": 16
   },
   {
    "n": "08",
    "title": "The father",
-   "start": 600.213,
-   "start_tc": "10:00.21",
-   "duration": 56.724,
+   "start": 566.688,
+   "start_tc": "9:26.68",
+   "duration": 56.027,
    "rate_wpm": 126,
    "words": 104,
+   "speech_s": 48.83,
+   "spoken_wpm": 128,
    "shots": 8
   },
   {
    "n": "09",
    "title": "When?",
-   "start": 656.937,
-   "start_tc": "10:56.93",
-   "duration": 116.602,
+   "start": 622.715,
+   "start_tc": "10:22.71",
+   "duration": 106.253,
    "rate_wpm": 124,
    "words": 220,
+   "speech_s": 96.1,
+   "spoken_wpm": 137,
    "shots": 18
   }
  ],
@@ -119,14 +139,14 @@
    "chapter": "00",
    "start": 0.0,
    "start_tc": "0:00.00",
-   "duration": 4.0833,
-   "frames": 98,
+   "duration": 4.0,
+   "frames": 96,
    "start_frame": 0,
    "source": {
     "kind": "piece",
     "name": "scale",
     "in": 0.0,
-    "frames": 98,
+    "frames": 96,
     "file": "out/gfx/r7/01_scale.mp4",
     "gen": {
      "tool": "doc",
@@ -134,8 +154,9 @@
     },
     "fixed": true,
     "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s",
-    "clip": "out/gfx/r7/01_scale.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/gfx/r7/01_scale.mp4"
+    "clip": "out/film/pieces/scale-7c5d913f6936.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/film/pieces/scale-7c5d913f6936.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -153,11 +174,11 @@
   {
    "id": "00-02",
    "chapter": "00",
-   "start": 4.0833,
-   "start_tc": "0:04.08",
-   "duration": 4.75,
-   "frames": 114,
-   "start_frame": 98,
+   "start": 4.0,
+   "start_tc": "0:04.00",
+   "duration": 4.3333,
+   "frames": 104,
+   "start_frame": 96,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/shoulder.png",
@@ -165,14 +186,14 @@
     "camera": "shoulder",
     "zoom": [
      1.0,
-     1.05225
+     1.04767
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 114,
-    "push": "in 5.2 % (log space, constant speed)",
+    "frames": 104,
+    "push": "in 4.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -188,11 +209,11 @@
   {
    "id": "00-03",
    "chapter": "00",
-   "start": 8.8333,
-   "start_tc": "0:08.83",
+   "start": 8.3333,
+   "start_tc": "0:08.33",
    "duration": 4.5833,
    "frames": 110,
-   "start_frame": 212,
+   "start_frame": 200,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/wide.png",
@@ -230,11 +251,11 @@
   {
    "id": "00-04",
    "chapter": "00",
-   "start": 13.4167,
-   "start_tc": "0:13.41",
-   "duration": 3.125,
-   "frames": 75,
-   "start_frame": 322,
+   "start": 12.9167,
+   "start_tc": "0:12.91",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 310,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/profile.png",
@@ -242,14 +263,14 @@
     "camera": "profile",
     "zoom": [
      1.0,
-     1.03438
+     1.03483
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 75,
-    "push": "in 3.4 % (log space, constant speed)",
+    "frames": 76,
+    "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -265,11 +286,11 @@
   {
    "id": "00-05",
    "chapter": "00",
-   "start": 16.5417,
-   "start_tc": "0:16.54",
+   "start": 16.0833,
+   "start_tc": "0:16.08",
    "duration": 3.25,
    "frames": 78,
-   "start_frame": 397,
+   "start_frame": 386,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/seated.png",
@@ -300,11 +321,11 @@
   {
    "id": "00-06",
    "chapter": "00",
-   "start": 19.7917,
-   "start_tc": "0:19.79",
-   "duration": 3.5417,
-   "frames": 85,
-   "start_frame": 475,
+   "start": 19.3333,
+   "start_tc": "0:19.33",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 464,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/seated_called.png",
@@ -312,14 +333,14 @@
     "camera": "seated_called",
     "zoom": [
      1.0,
-     1.03896
+     1.03575
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 85,
-    "push": "in 3.9 % (log space, constant speed)",
+    "frames": 78,
+    "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -336,51 +357,16 @@
   {
    "id": "00-07",
    "chapter": "00",
-   "start": 23.3333,
-   "start_tc": "0:23.33",
-   "duration": 2.4167,
-   "frames": 58,
-   "start_frame": 560,
+   "start": 22.5833,
+   "start_tc": "0:22.58",
+   "duration": 2.25,
+   "frames": 54,
+   "start_frame": 542,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/enter.png",
     "stage": "inspection_room",
     "camera": "enter",
-    "zoom": [
-     1.0,
-     1.02658
-    ],
-    "centre": [
-     0.5,
-     0.5
-    ],
-    "frames": 58,
-    "push": "in 2.7 % (log space, constant speed)",
-    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "type": []
-   },
-   "voice": [
-    {
-     "id": "00.04",
-     "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
-    }
-   ],
-   "row": "0:20 inspection_room `enter`",
-   "sound": "Door, steel"
-  },
-  {
-   "id": "00-08",
-   "chapter": "00",
-   "start": 25.75,
-   "start_tc": "0:25.75",
-   "duration": 2.25,
-   "frames": 54,
-   "start_frame": 618,
-   "source": {
-    "kind": "plate",
-    "plate": "frames/raw/inspection_room/wide_pre.png",
-    "stage": "inspection_room",
-    "camera": "wide_pre",
     "zoom": [
      1.0,
      1.02475
@@ -400,17 +386,52 @@
      "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
     }
    ],
+   "row": "0:20 inspection_room `enter`",
+   "sound": "Door, steel"
+  },
+  {
+   "id": "00-08",
+   "chapter": "00",
+   "start": 24.8333,
+   "start_tc": "0:24.83",
+   "duration": 2.125,
+   "frames": 51,
+   "start_frame": 596,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/wide_pre.png",
+    "stage": "inspection_room",
+    "camera": "wide_pre",
+    "zoom": [
+     1.0,
+     1.02337
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 51,
+    "push": "in 2.3 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.04",
+     "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
+    }
+   ],
    "row": "0:20 then `wide` (pre-discovery layout)",
    "sound": "Door, steel"
   },
   {
    "id": "00-09",
    "chapter": "00",
-   "start": 28.0,
-   "start_tc": "0:28.00",
-   "duration": 2.5417,
-   "frames": 61,
-   "start_frame": 672,
+   "start": 26.9583,
+   "start_tc": "0:26.95",
+   "duration": 2.1667,
+   "frames": 52,
+   "start_frame": 647,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/two_shot_pre.png",
@@ -418,14 +439,14 @@
     "camera": "two_shot_pre",
     "zoom": [
      1.0,
-     1.02796
+     1.02383
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 61,
-    "push": "in 2.8 % (log space, constant speed)",
+    "frames": 52,
+    "push": "in 2.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -441,11 +462,11 @@
   {
    "id": "00-10",
    "chapter": "00",
-   "start": 30.5417,
-   "start_tc": "0:30.54",
-   "duration": 1.9167,
-   "frames": 46,
-   "start_frame": 733,
+   "start": 29.125,
+   "start_tc": "0:29.12",
+   "duration": 1.7083,
+   "frames": 41,
+   "start_frame": 699,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/tag.png",
@@ -453,14 +474,14 @@
     "camera": "tag",
     "zoom": [
      1.0,
-     1.02108
+     1.02
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 46,
-    "push": "in 2.1 % (log space, constant speed)",
+    "frames": 41,
+    "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -476,11 +497,11 @@
   {
    "id": "00-11",
    "chapter": "00",
-   "start": 32.4583,
-   "start_tc": "0:32.45",
-   "duration": 2.4583,
-   "frames": 59,
-   "start_frame": 779,
+   "start": 30.8333,
+   "start_tc": "0:30.83",
+   "duration": 1.8333,
+   "frames": 44,
+   "start_frame": 740,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/dawn_close.png",
@@ -488,14 +509,14 @@
     "camera": "dawn_close",
     "zoom": [
      1.0,
-     1.02704
+     1.02017
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 59,
-    "push": "in 2.7 % (log space, constant speed)",
+    "frames": 44,
+    "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -511,16 +532,16 @@
   {
    "id": "00-12",
    "chapter": "00",
-   "start": 34.9167,
-   "start_tc": "0:34.91",
-   "duration": 2.125,
-   "frames": 51,
-   "start_frame": 838,
+   "start": 32.6667,
+   "start_tc": "0:32.66",
+   "duration": 2.25,
+   "frames": 54,
+   "start_frame": 784,
    "source": {
     "kind": "piece",
     "name": "yes",
     "in": 0.0,
-    "frames": 51,
+    "frames": 54,
     "file": "out/gfx/r7/03_yes.mp4",
     "gen": {
      "tool": "plate_type",
@@ -529,8 +550,10 @@
     },
     "fixed": false,
     "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
-    "clip": "out/gfx/r7/03_yes.mp4",
-    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
+    "render_secs": 6.333,
+    "clip": "out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 6.333 frames/raw/inspection_room/match.png out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -548,16 +571,16 @@
   {
    "id": "00-13",
    "chapter": "00",
-   "start": 37.0417,
-   "start_tc": "0:37.04",
-   "duration": 3.25,
-   "frames": 78,
-   "start_frame": 889,
+   "start": 34.9167,
+   "start_tc": "0:34.91",
+   "duration": 3.0417,
+   "frames": 73,
+   "start_frame": 838,
    "source": {
     "kind": "piece",
     "name": "yes",
     "in": 3.0,
-    "frames": 78,
+    "frames": 73,
     "file": "out/gfx/r7/03_yes.mp4",
     "gen": {
      "tool": "plate_type",
@@ -566,8 +589,10 @@
     },
     "fixed": false,
     "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
-    "clip": "out/gfx/r7/03_yes.mp4",
-    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
+    "render_secs": 6.333,
+    "clip": "out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 6.333 frames/raw/inspection_room/match.png out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -585,11 +610,11 @@
   {
    "id": "00-14",
    "chapter": "00",
-   "start": 40.2917,
-   "start_tc": "0:40.29",
-   "duration": 1.9167,
-   "frames": 46,
-   "start_frame": 967,
+   "start": 37.9583,
+   "start_tc": "0:37.95",
+   "duration": 1.625,
+   "frames": 39,
+   "start_frame": 911,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/pack.png",
@@ -597,14 +622,14 @@
     "camera": "pack",
     "zoom": [
      1.0,
-     1.02108
+     1.02
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 46,
-    "push": "in 2.1 % (log space, constant speed)",
+    "frames": 39,
+    "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -620,11 +645,11 @@
   {
    "id": "00-15",
    "chapter": "00",
-   "start": 42.2083,
-   "start_tc": "0:42.20",
-   "duration": 1.8333,
-   "frames": 44,
-   "start_frame": 1013,
+   "start": 39.5833,
+   "start_tc": "0:39.58",
+   "duration": 1.5833,
+   "frames": 38,
+   "start_frame": 950,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/belt.png",
@@ -632,13 +657,13 @@
     "camera": "belt",
     "zoom": [
      1.0,
-     1.02017
+     1.02
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 44,
+    "frames": 38,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -654,11 +679,11 @@
   {
    "id": "00-16",
    "chapter": "00",
-   "start": 44.0417,
-   "start_tc": "0:44.04",
-   "duration": 3.8333,
-   "frames": 92,
-   "start_frame": 1057,
+   "start": 41.1667,
+   "start_tc": "0:41.16",
+   "duration": 4.375,
+   "frames": 105,
+   "start_frame": 988,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/handbags.png",
@@ -666,14 +691,14 @@
     "camera": "handbags",
     "zoom": [
      1.0,
-     1.04217
+     1.04812
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 92,
-    "push": "in 4.2 % (log space, constant speed)",
+    "frames": 105,
+    "push": "in 4.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -689,11 +714,11 @@
   {
    "id": "00-17",
    "chapter": "00",
-   "start": 47.875,
-   "start_tc": "0:47.87",
+   "start": 45.5417,
+   "start_tc": "0:45.54",
    "duration": 1.0,
    "frames": 24,
-   "start_frame": 1149,
+   "start_frame": 1093,
    "source": {
     "kind": "piece",
     "name": "flash",
@@ -707,8 +732,9 @@
     },
     "fixed": true,
     "note_piece": "the red seam, 1 s, gone with the cut",
-    "clip": "out/gfx/r7/04_flash.mp4",
-    "command": "node gfx/type_render.js seq flash 1.000 out/gfx/r7/04_flash.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg"
+    "clip": "out/film/pieces/flash-9f6c8d591609.mp4",
+    "command": "node gfx/type_render.js seq flash 1.000 out/film/pieces/flash-9f6c8d591609.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -722,11 +748,11 @@
   {
    "id": "00-18",
    "chapter": "00",
-   "start": 48.875,
-   "start_tc": "0:48.87",
-   "duration": 5.125,
-   "frames": 123,
-   "start_frame": 1173,
+   "start": 46.5417,
+   "start_tc": "0:46.54",
+   "duration": 6.25,
+   "frames": 150,
+   "start_frame": 1117,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/seam.png",
@@ -734,14 +760,14 @@
     "camera": "seam",
     "zoom": [
      1.0,
-     1.05638
+     1.06875
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 123,
-    "push": "in 5.6 % (log space, constant speed)",
+    "frames": 150,
+    "push": "in 6.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -758,11 +784,11 @@
   {
    "id": "00-19",
    "chapter": "00",
-   "start": 54.0,
-   "start_tc": "0:54.00",
-   "duration": 3.5833,
-   "frames": 86,
-   "start_frame": 1296,
+   "start": 52.7917,
+   "start_tc": "0:52.79",
+   "duration": 2.875,
+   "frames": 69,
+   "start_frame": 1267,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn.png",
@@ -770,14 +796,14 @@
     "camera": "dawn",
     "zoom": [
      1.0,
-     1.03942
+     1.03163
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 86,
-    "push": "in 3.9 % (log space, constant speed)",
+    "frames": 69,
+    "push": "in 3.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -793,26 +819,26 @@
   {
    "id": "00-20",
    "chapter": "00",
-   "start": 57.5833,
-   "start_tc": "0:57.58",
-   "duration": 3.1667,
-   "frames": 76,
-   "start_frame": 1382,
+   "start": 55.6667,
+   "start_tc": "0:55.66",
+   "duration": 2.5417,
+   "frames": 61,
+   "start_frame": 1336,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/hongkong_street/window.png",
-    "stage": "hongkong_street",
-    "camera": "window",
+    "plate": "frames/raw/hotel_room/overhead_pre.png",
+    "stage": "hotel_room",
+    "camera": "overhead_pre",
     "zoom": [
      1.0,
-     1.03483
+     1.02796
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 76,
-    "push": "in 3.5 % (log space, constant speed)",
+    "frames": 61,
+    "push": "in 2.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -823,16 +849,16 @@
     }
    ],
    "sound": "Low drone",
-   "change": "Added: \"She believed the handbags were a prize\" on the handbags in a Hong Kong shop window (cold open pace)."
+   "change": "Added: \"She believed the handbags were a prize\" on the three gifts laid on her hotel bed (a flash of chapter 3). The Hong Kong shop window is not used for the gifts: its display bags are now other colours on purpose."
   },
   {
    "id": "00-21",
    "chapter": "00",
-   "start": 60.75,
-   "start_tc": "1:00.75",
-   "duration": 4.4583,
-   "frames": 107,
-   "start_frame": 1458,
+   "start": 58.2083,
+   "start_tc": "0:58.20",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 1397,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/window.png",
@@ -840,14 +866,14 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.04904
+     1.04079
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 107,
-    "push": "in 4.9 % (log space, constant speed)",
+    "frames": 89,
+    "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -863,11 +889,11 @@
   {
    "id": "00-22",
    "chapter": "00",
-   "start": 65.2083,
-   "start_tc": "1:05.20",
-   "duration": 1.5,
-   "frames": 36,
-   "start_frame": 1565,
+   "start": 61.9167,
+   "start_tc": "1:01.91",
+   "duration": 1.2917,
+   "frames": 31,
+   "start_frame": 1486,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/match.png",
@@ -881,7 +907,7 @@
      0.5,
      0.5
     ],
-    "frames": 36,
+    "frames": 31,
     "push": "in 1.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -898,26 +924,26 @@
   {
    "id": "00-23",
    "chapter": "00",
-   "start": 66.7083,
-   "start_tc": "1:06.70",
-   "duration": 3.75,
-   "frames": 90,
-   "start_frame": 1601,
+   "start": 63.2083,
+   "start_tc": "1:03.20",
+   "duration": 3.4167,
+   "frames": 82,
+   "start_frame": 1517,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/bags.png",
     "stage": "void_stage",
     "camera": "bags",
     "zoom": [
-     1.01852,
-     1.06579
+     1.01861,
+     1.06887
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 90,
-    "push": "in 4.6 % (log space, constant speed)",
+    "frames": 82,
+    "push": "in 4.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -933,11 +959,11 @@
   {
    "id": "00-24",
    "chapter": "00",
-   "start": 70.4583,
-   "start_tc": "1:10.45",
-   "duration": 1.9167,
-   "frames": 46,
-   "start_frame": 1691,
+   "start": 66.625,
+   "start_tc": "1:06.62",
+   "duration": 1.8333,
+   "frames": 44,
+   "start_frame": 1599,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/wide.png",
@@ -951,7 +977,7 @@
      0.5,
      0.5
     ],
-    "frames": 46,
+    "frames": 44,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -968,11 +994,11 @@
   {
    "id": "00-25",
    "chapter": "00",
-   "start": 72.375,
-   "start_tc": "1:12.37",
-   "duration": 5.2083,
-   "frames": 125,
-   "start_frame": 1737,
+   "start": 68.4583,
+   "start_tc": "1:08.45",
+   "duration": 5.0833,
+   "frames": 122,
+   "start_frame": 1643,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_high.png",
@@ -980,14 +1006,14 @@
     "camera": "dawn_high",
     "zoom": [
      1.0,
-     1.05729
+     1.05592
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 125,
-    "push": "in 5.7 % (log space, constant speed)",
+    "frames": 122,
+    "push": "in 5.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -1010,11 +1036,11 @@
   {
    "id": "00-26",
    "chapter": "00",
-   "start": 77.5833,
-   "start_tc": "1:17.58",
-   "duration": 2.5833,
-   "frames": 62,
-   "start_frame": 1862,
+   "start": 73.5417,
+   "start_tc": "1:13.54",
+   "duration": 2.5,
+   "frames": 60,
+   "start_frame": 1765,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/tower.png",
@@ -1022,13 +1048,13 @@
     "camera": "tower",
     "zoom": [
      1.0,
-     1.02842
+     1.0275
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 62,
+    "frames": 60,
     "push": "in 2.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -1045,11 +1071,11 @@
   {
    "id": "00-27",
    "chapter": "00",
-   "start": 80.1667,
-   "start_tc": "1:20.16",
-   "duration": 2.75,
-   "frames": 66,
-   "start_frame": 1924,
+   "start": 76.0417,
+   "start_tc": "1:16.04",
+   "duration": 2.6667,
+   "frames": 64,
+   "start_frame": 1825,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/wide.png",
@@ -1057,14 +1083,14 @@
     "camera": "wide",
     "zoom": [
      1.0,
-     1.03025
+     1.02933
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 66,
-    "push": "in 3.0 % (log space, constant speed)",
+    "frames": 64,
+    "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1080,11 +1106,11 @@
   {
    "id": "00-28",
    "chapter": "00",
-   "start": 82.9167,
-   "start_tc": "1:22.91",
-   "duration": 4.2917,
-   "frames": 103,
-   "start_frame": 1990,
+   "start": 78.7083,
+   "start_tc": "1:18.70",
+   "duration": 4.1667,
+   "frames": 100,
+   "start_frame": 1889,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/witness.png",
@@ -1092,14 +1118,14 @@
     "camera": "witness",
     "zoom": [
      1.0,
-     1.04721
+     1.04583
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 103,
-    "push": "in 4.7 % (log space, constant speed)",
+    "frames": 100,
+    "push": "in 4.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1115,11 +1141,11 @@
   {
    "id": "00-29",
    "chapter": "00",
-   "start": 87.2083,
-   "start_tc": "1:27.20",
+   "start": 82.875,
+   "start_tc": "1:22.87",
    "duration": 6.2083,
    "frames": 149,
-   "start_frame": 2093,
+   "start_frame": 1989,
    "source": {
     "kind": "piece",
     "name": "montage",
@@ -1131,8 +1157,9 @@
     },
     "fixed": true,
     "note_piece": "the flash-forward, ten shots",
-    "clip": "out/gfx/r7/06_montage.mp4",
-    "command": "<gfx python> gfx/montage.py --out out/gfx/r7/06_montage.mp4"
+    "clip": "out/film/pieces/montage-607646f24cdc.mp4",
+    "command": "<gfx python> gfx/montage.py --out out/film/pieces/montage-607646f24cdc.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [],
    "row": "1:27 the montage, 0.5-0.8 s a shot",
@@ -1141,11 +1168,11 @@
   {
    "id": "00-30",
    "chapter": "00",
-   "start": 93.4167,
-   "start_tc": "1:33.41",
+   "start": 89.0833,
+   "start_tc": "1:29.08",
    "duration": 5.0,
    "frames": 120,
-   "start_frame": 2242,
+   "start_frame": 2138,
    "source": {
     "kind": "piece",
     "name": "title",
@@ -1159,8 +1186,10 @@
     },
     "fixed": false,
     "note_piece": "THE PRIZE THAT BECAME A PRISON over the bags",
-    "clip": "out/gfx/r7/07_title.mp4",
-    "command": "<gfx python> gfx/plate_type.py title 5.000 frames/raw/void_stage/bags.png out/gfx/r7/07_title.mp4"
+    "render_secs": 5.25,
+    "clip": "out/film/pieces/title-6fd9aad734f4.mp4",
+    "command": "<gfx python> gfx/plate_type.py title 5.250 frames/raw/void_stage/bags.png out/film/pieces/title-6fd9aad734f4.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [],
    "row": "1:37 void_stage `bags` in the beam | THE PRIZE THAT BECAME A PRISON",
@@ -1169,11 +1198,11 @@
   {
    "id": "01-01",
    "chapter": "01",
-   "start": 98.4167,
-   "start_tc": "1:38.41",
-   "duration": 5.7083,
-   "frames": 137,
-   "start_frame": 2362,
+   "start": 94.0833,
+   "start_tc": "1:34.08",
+   "duration": 5.5833,
+   "frames": 134,
+   "start_frame": 2258,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/chicago_night/wide.png",
@@ -1187,14 +1216,14 @@
      0.5,
      0.5
     ],
-    "frames": 137,
+    "frames": 134,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "chapter",
       "look": "B",
-      "hash": "n=01&title=The+winner&out=4.81",
+      "hash": "n=01&title=The+winner&out=4.68",
       "t0": 0.0,
       "tin": 0.0
      },
@@ -1202,7 +1231,7 @@
       "mode": "place",
       "look": "B",
       "hash": "a=CHICAGO",
-      "t0": 1.836,
+      "t0": 1.876,
       "tin": 0.0
      }
     ]
@@ -1223,11 +1252,11 @@
   {
    "id": "01-02",
    "chapter": "01",
-   "start": 104.125,
-   "start_tc": "1:44.12",
-   "duration": 3.4167,
-   "frames": 82,
-   "start_frame": 2499,
+   "start": 99.6667,
+   "start_tc": "1:39.66",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 2392,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/chicago_night/window.png",
@@ -1235,14 +1264,14 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.03758
+     1.03483
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 82,
-    "push": "in 3.8 % (log space, constant speed)",
+    "frames": 76,
+    "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1259,11 +1288,11 @@
   {
    "id": "01-03",
    "chapter": "01",
-   "start": 107.5417,
-   "start_tc": "1:47.54",
-   "duration": 5.25,
-   "frames": 126,
-   "start_frame": 2581,
+   "start": 102.8333,
+   "start_tc": "1:42.83",
+   "duration": 5.375,
+   "frames": 129,
+   "start_frame": 2468,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/chicago_night/suitcase.png",
@@ -1271,14 +1300,14 @@
     "camera": "suitcase",
     "zoom": [
      1.0,
-     1.05775
+     1.05913
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 126,
-    "push": "in 5.8 % (log space, constant speed)",
+    "frames": 129,
+    "push": "in 5.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1298,11 +1327,11 @@
   {
    "id": "01-04",
    "chapter": "01",
-   "start": 112.7917,
-   "start_tc": "1:52.79",
-   "duration": 4.375,
-   "frames": 105,
-   "start_frame": 2707,
+   "start": 108.2083,
+   "start_tc": "1:48.20",
+   "duration": 4.75,
+   "frames": 114,
+   "start_frame": 2597,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/overhead.png",
@@ -1310,14 +1339,14 @@
     "camera": "overhead",
     "zoom": [
      1.0,
-     1.04812
+     1.05225
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 105,
-    "push": "in 4.8 % (log space, constant speed)",
+    "frames": 114,
+    "push": "in 5.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1334,11 +1363,11 @@
   {
    "id": "01-05",
    "chapter": "01",
-   "start": 117.1667,
-   "start_tc": "1:57.16",
-   "duration": 5.125,
-   "frames": 123,
-   "start_frame": 2812,
+   "start": 112.9583,
+   "start_tc": "1:52.95",
+   "duration": 5.4583,
+   "frames": 131,
+   "start_frame": 2711,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/push.png",
@@ -1346,14 +1375,14 @@
     "camera": "push",
     "zoom": [
      1.0,
-     1.05638
+     1.06004
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 123,
-    "push": "in 5.6 % (log space, constant speed)",
+    "frames": 131,
+    "push": "in 6.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1370,11 +1399,11 @@
   {
    "id": "01-06",
    "chapter": "01",
-   "start": 122.2917,
-   "start_tc": "2:02.29",
-   "duration": 6.8333,
-   "frames": 164,
-   "start_frame": 2935,
+   "start": 118.4167,
+   "start_tc": "1:58.41",
+   "duration": 6.9583,
+   "frames": 167,
+   "start_frame": 2842,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining.png",
@@ -1382,14 +1411,14 @@
     "camera": "dining",
     "zoom": [
      1.0,
-     1.07517
+     1.07654
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 164,
-    "push": "in 7.5 % (log space, constant speed)",
+    "frames": 167,
+    "push": "in 7.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1406,16 +1435,16 @@
   {
    "id": "01-07",
    "chapter": "01",
-   "start": 129.125,
-   "start_tc": "2:09.12",
-   "duration": 5.625,
-   "frames": 135,
-   "start_frame": 3099,
+   "start": 125.375,
+   "start_tc": "2:05.37",
+   "duration": 5.7083,
+   "frames": 137,
+   "start_frame": 3009,
    "source": {
     "kind": "piece",
     "name": "doc_gene",
     "in": 0.0,
-    "frames": 135,
+    "frames": 137,
     "file": null,
     "gen": {
      "tool": "doc",
@@ -1424,15 +1453,17 @@
       {
        "phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
        "dur": 0.7,
-       "t": 0.943
+       "t": 0.955
       }
      ]
     },
     "fixed": false,
     "override": true,
     "note_piece": "S1 p. 2, Gene's and Tim's service lit",
-    "clip": "out/film/pieces/doc_gene-082a0c70035d.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_gene-082a0c70035d.json --out out/film/pieces/doc_gene-082a0c70035d.mp4"
+    "render_secs": 5.958,
+    "clip": "out/film/pieces/doc_gene-82642ebd59d7.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_gene-82642ebd59d7.json --out out/film/pieces/doc_gene-82642ebd59d7.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -1446,11 +1477,11 @@
   {
    "id": "01-07b",
    "chapter": "01",
-   "start": 134.75,
-   "start_tc": "2:14.75",
-   "duration": 6.8333,
-   "frames": 164,
-   "start_frame": 3234,
+   "start": 131.0833,
+   "start_tc": "2:11.08",
+   "duration": 6.3333,
+   "frames": 152,
+   "start_frame": 3146,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/window.png",
@@ -1458,14 +1489,14 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.07517
+     1.06967
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 164,
-    "push": "in 7.5 % (log space, constant speed)",
+    "frames": 152,
+    "push": "in 7.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1485,11 +1516,11 @@
   {
    "id": "01-08",
    "chapter": "01",
-   "start": 141.5833,
-   "start_tc": "2:21.58",
-   "duration": 4.5417,
-   "frames": 109,
-   "start_frame": 3398,
+   "start": 137.4167,
+   "start_tc": "2:17.41",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 3298,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/kitchen.png",
@@ -1497,14 +1528,14 @@
     "camera": "kitchen",
     "zoom": [
      1.0,
-     1.04996
+     1.04217
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 109,
-    "push": "in 5.0 % (log space, constant speed)",
+    "frames": 92,
+    "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1520,11 +1551,11 @@
   {
    "id": "01-09",
    "chapter": "01",
-   "start": 146.125,
-   "start_tc": "2:26.12",
-   "duration": 3.0833,
-   "frames": 74,
-   "start_frame": 3507,
+   "start": 141.25,
+   "start_tc": "2:21.25",
+   "duration": 2.2083,
+   "frames": 53,
+   "start_frame": 3390,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/laptop.png",
@@ -1532,14 +1563,14 @@
     "camera": "laptop",
     "zoom": [
      1.0,
-     1.03392
+     1.02429
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 74,
-    "push": "in 3.4 % (log space, constant speed)",
+    "frames": 53,
+    "push": "in 2.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1556,16 +1587,16 @@
   {
    "id": "01-10",
    "chapter": "01",
-   "start": 149.2083,
-   "start_tc": "2:29.20",
-   "duration": 7.3333,
-   "frames": 176,
-   "start_frame": 3581,
+   "start": 143.4583,
+   "start_tc": "2:23.45",
+   "duration": 7.2083,
+   "frames": 173,
+   "start_frame": 3443,
    "source": {
     "kind": "piece",
     "name": "email",
     "in": 0.0,
-    "frames": 176,
+    "frames": 173,
     "file": "out/gfx/r7/09_email.mp4",
     "gen": {
      "tool": "doc",
@@ -1573,8 +1604,9 @@
     },
     "fixed": true,
     "note_piece": "the prize email; its line cycles the three accounts",
-    "clip": "out/gfx/r7/09_email.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4"
+    "clip": "out/film/pieces/email-731e02a9d29f.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/film/pieces/email-731e02a9d29f.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -1588,11 +1620,11 @@
   {
    "id": "01-11",
    "chapter": "01",
-   "start": 156.5417,
-   "start_tc": "2:36.54",
-   "duration": 7.4167,
-   "frames": 178,
-   "start_frame": 3757,
+   "start": 150.6667,
+   "start_tc": "2:30.66",
+   "duration": 7.2917,
+   "frames": 175,
+   "start_frame": 3616,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/wide.png",
@@ -1606,7 +1638,7 @@
      0.5,
      0.5
     ],
-    "frames": 178,
+    "frames": 175,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -1623,16 +1655,16 @@
   {
    "id": "01-12",
    "chapter": "01",
-   "start": 163.9583,
-   "start_tc": "2:43.95",
-   "duration": 5.3333,
-   "frames": 128,
-   "start_frame": 3935,
+   "start": 157.9583,
+   "start_tc": "2:37.95",
+   "duration": 5.0833,
+   "frames": 122,
+   "start_frame": 3791,
    "source": {
     "kind": "piece",
     "name": "search",
     "in": 0.0,
-    "frames": 128,
+    "frames": 122,
     "file": "out/gfx/r7/10_search.mp4",
     "gen": {
      "tool": "doc",
@@ -1640,8 +1672,9 @@
     },
     "fixed": true,
     "note_piece": "the search, greeked results",
-    "clip": "out/gfx/r7/10_search.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_search.json --out out/gfx/r7/10_search.mp4"
+    "clip": "out/film/pieces/search-207ae1b88a1e.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_search.json --out out/film/pieces/search-207ae1b88a1e.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -1655,11 +1688,11 @@
   {
    "id": "01-13",
    "chapter": "01",
-   "start": 169.2917,
-   "start_tc": "2:49.29",
-   "duration": 5.2917,
-   "frames": 127,
-   "start_frame": 4063,
+   "start": 163.0417,
+   "start_tc": "2:43.04",
+   "duration": 5.0,
+   "frames": 120,
+   "start_frame": 3913,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/passport.png",
@@ -1667,14 +1700,14 @@
     "camera": "passport",
     "zoom": [
      1.0,
-     1.05821
+     1.055
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 127,
-    "push": "in 5.8 % (log space, constant speed)",
+    "frames": 120,
+    "push": "in 5.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1690,26 +1723,26 @@
   {
    "id": "01-14",
    "chapter": "01",
-   "start": 174.5833,
-   "start_tc": "2:54.58",
-   "duration": 3.375,
-   "frames": 81,
-   "start_frame": 4190,
+   "start": 168.0417,
+   "start_tc": "2:48.04",
+   "duration": 2.75,
+   "frames": 66,
+   "start_frame": 4033,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/chicago_night/wide.png",
     "stage": "chicago_night",
     "camera": "wide",
     "zoom": [
-     1.03713,
+     1.03025,
      1.0
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 81,
-    "push": "out 3.6 % (log space, constant speed)",
+    "frames": 66,
+    "push": "out 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1725,11 +1758,11 @@
   {
    "id": "01-15",
    "chapter": "01",
-   "start": 177.9583,
-   "start_tc": "2:57.95",
-   "duration": 5.25,
-   "frames": 126,
-   "start_frame": 4271,
+   "start": 170.7917,
+   "start_tc": "2:50.79",
+   "duration": 4.9167,
+   "frames": 118,
+   "start_frame": 4099,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/window.png",
@@ -1737,14 +1770,14 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.05775
+     1.05408
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 126,
-    "push": "in 5.8 % (log space, constant speed)",
+    "frames": 118,
+    "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1765,11 +1798,11 @@
   {
    "id": "01-16",
    "chapter": "01",
-   "start": 183.2083,
-   "start_tc": "3:03.20",
-   "duration": 7.2083,
-   "frames": 173,
-   "start_frame": 4397,
+   "start": 175.7083,
+   "start_tc": "2:55.70",
+   "duration": 5.375,
+   "frames": 129,
+   "start_frame": 4217,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/aisle.png",
@@ -1777,14 +1810,14 @@
     "camera": "aisle",
     "zoom": [
      1.0,
-     1.07929
+     1.05913
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 173,
-    "push": "in 7.9 % (log space, constant speed)",
+    "frames": 129,
+    "push": "in 5.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1800,26 +1833,26 @@
   {
    "id": "01-17",
    "chapter": "01",
-   "start": 190.4167,
-   "start_tc": "3:10.41",
-   "duration": 6.0417,
-   "frames": 145,
-   "start_frame": 4570,
+   "start": 181.0833,
+   "start_tc": "3:01.08",
+   "duration": 5.7917,
+   "frames": 139,
+   "start_frame": 4346,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/evidence_table/purses.png",
-    "stage": "evidence_table",
-    "camera": "purses",
+    "plate": "frames/raw/hongkong_street/window.png",
+    "stage": "hongkong_street",
+    "camera": "window",
     "zoom": [
-     1.04,
-     1.10912
+     1.0,
+     1.06371
     ],
     "centre": [
-     0.72,
-     0.45
+     0.5,
+     0.5
     ],
-    "frames": 145,
-    "push": "in 6.6 % (log space, constant speed)",
+    "frames": 139,
+    "push": "in 6.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1830,16 +1863,16 @@
     }
    ],
    "sound": "The score thins; silence 1.5 s",
-   "change": "Added: the chapter ends on a flash-forward (the gift bags on the evidence table, no red) under \"the deception was hidden in everything that came after\"."
+   "change": "Added: the chapter ends on a flash-forward to the trip (a Hong Kong shop window of handbags, not the gifts) under \"the deception was hidden in everything that came after\"."
   },
   {
    "id": "02-01",
    "chapter": "02",
-   "start": 196.4583,
-   "start_tc": "3:16.45",
-   "duration": 5.125,
-   "frames": 123,
-   "start_frame": 4715,
+   "start": 186.875,
+   "start_tc": "3:06.87",
+   "duration": 5.4167,
+   "frames": 130,
+   "start_frame": 4485,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/window.png",
@@ -1847,20 +1880,20 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.05638
+     1.05958
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 123,
-    "push": "in 5.6 % (log space, constant speed)",
+    "frames": 130,
+    "push": "in 6.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "chapter",
       "look": "B",
-      "hash": "n=02&title=Eighteen+days&out=4.22",
+      "hash": "n=02&title=Eighteen+days&out=4.52",
       "t0": 0.0,
       "tin": 0.0
      }
@@ -1878,16 +1911,16 @@
   {
    "id": "02-02",
    "chapter": "02",
-   "start": 201.5833,
-   "start_tc": "3:21.58",
-   "duration": 3.0417,
-   "frames": 73,
-   "start_frame": 4838,
+   "start": 192.2917,
+   "start_tc": "3:12.29",
+   "duration": 3.3333,
+   "frames": 80,
+   "start_frame": 4615,
    "source": {
     "kind": "piece",
     "name": "route_leg1",
     "in": 2.2,
-    "frames": 73,
+    "frames": 80,
     "file": "out/gfx/r7/11_route_leg1.mp4",
     "gen": {
      "tool": "canvas",
@@ -1896,8 +1929,10 @@
     },
     "fixed": false,
     "note_piece": "Chicago → Hong Kong, HONG KONG 3.0 s, 9 DAYS 3.6 s",
-    "clip": "out/gfx/r7/11_route_leg1.mp4",
-    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq leg1 0 6.500 out/gfx/r7/11_route_leg1.mp4"
+    "render_secs": 5.792,
+    "clip": "out/film/pieces/route_leg1-b69482856ed7.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq leg1 0 5.792 out/film/pieces/route_leg1-b69482856ed7.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -1912,11 +1947,11 @@
   {
    "id": "02-03",
    "chapter": "02",
-   "start": 204.625,
-   "start_tc": "3:24.62",
-   "duration": 3.4583,
-   "frames": 83,
-   "start_frame": 4911,
+   "start": 195.625,
+   "start_tc": "3:15.62",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 4695,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/wide.png",
@@ -1924,14 +1959,14 @@
     "camera": "wide",
     "zoom": [
      1.0,
-     1.03804
+     1.04079
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 83,
-    "push": "in 3.8 % (log space, constant speed)",
+    "frames": 89,
+    "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -1948,16 +1983,16 @@
   {
    "id": "02-05",
    "chapter": "02",
-   "start": 208.0833,
-   "start_tc": "3:28.08",
-   "duration": 4.1667,
-   "frames": 100,
-   "start_frame": 4994,
+   "start": 199.3333,
+   "start_tc": "3:19.33",
+   "duration": 3.875,
+   "frames": 93,
+   "start_frame": 4784,
    "source": {
     "kind": "piece",
     "name": "route_mainland",
     "in": 0.0,
-    "frames": 100,
+    "frames": 93,
     "file": "out/gfx/r7/11_route_mainland.mp4",
     "gen": {
      "tool": "canvas",
@@ -1966,8 +2001,10 @@
     },
     "fixed": false,
     "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s",
-    "clip": "out/gfx/r7/11_route_mainland.mp4",
-    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 7.500 out/gfx/r7/11_route_mainland.mp4"
+    "render_secs": 9.833,
+    "clip": "out/film/pieces/route_mainland-62eaa33e0f94.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 9.833 out/film/pieces/route_mainland-62eaa33e0f94.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -1981,11 +2018,11 @@
   {
    "id": "02-06",
    "chapter": "02",
-   "start": 212.25,
-   "start_tc": "3:32.25",
-   "duration": 4.9167,
-   "frames": 118,
-   "start_frame": 5094,
+   "start": 203.2083,
+   "start_tc": "3:23.20",
+   "duration": 4.5833,
+   "frames": 110,
+   "start_frame": 4877,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/train/aisle.png",
@@ -1993,14 +2030,14 @@
     "camera": "aisle",
     "zoom": [
      1.0,
-     1.05408
+     1.05042
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 118,
-    "push": "in 5.4 % (log space, constant speed)",
+    "frames": 110,
+    "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2016,11 +2053,11 @@
   {
    "id": "02-07",
    "chapter": "02",
-   "start": 217.1667,
-   "start_tc": "3:37.16",
-   "duration": 2.25,
-   "frames": 54,
-   "start_frame": 5212,
+   "start": 207.7917,
+   "start_tc": "3:27.79",
+   "duration": 1.9167,
+   "frames": 46,
+   "start_frame": 4987,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/train/seat.png",
@@ -2028,14 +2065,14 @@
     "camera": "seat",
     "zoom": [
      1.0,
-     1.02475
+     1.02108
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 54,
-    "push": "in 2.5 % (log space, constant speed)",
+    "frames": 46,
+    "push": "in 2.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2051,16 +2088,16 @@
   {
    "id": "02-08",
    "chapter": "02",
-   "start": 219.4167,
-   "start_tc": "3:39.41",
-   "duration": 1.5833,
-   "frames": 38,
-   "start_frame": 5266,
+   "start": 209.7083,
+   "start_tc": "3:29.70",
+   "duration": 1.4583,
+   "frames": 35,
+   "start_frame": 5033,
    "source": {
     "kind": "piece",
     "name": "email",
     "in": 4.0,
-    "frames": 38,
+    "frames": 35,
     "file": "out/gfx/r7/09_email.mp4",
     "gen": {
      "tool": "doc",
@@ -2068,8 +2105,9 @@
     },
     "fixed": true,
     "note_piece": "the prize email; its line cycles the three accounts",
-    "clip": "out/gfx/r7/09_email.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4"
+    "clip": "out/film/pieces/email-731e02a9d29f.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/film/pieces/email-731e02a9d29f.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -2083,11 +2121,11 @@
   {
    "id": "02-09",
    "chapter": "02",
-   "start": 221.0,
-   "start_tc": "3:41.00",
-   "duration": 1.9167,
-   "frames": 46,
-   "start_frame": 5304,
+   "start": 211.1667,
+   "start_tc": "3:31.16",
+   "duration": 1.7083,
+   "frames": 41,
+   "start_frame": 5068,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/passport.png",
@@ -2095,14 +2133,14 @@
     "camera": "passport",
     "zoom": [
      1.03,
-     1.05172
+     1.0506
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 46,
-    "push": "in 2.1 % (log space, constant speed)",
+    "frames": 41,
+    "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2117,11 +2155,11 @@
   {
    "id": "02-10",
    "chapter": "02",
-   "start": 222.9167,
-   "start_tc": "3:42.91",
-   "duration": 2.0,
-   "frames": 48,
-   "start_frame": 5350,
+   "start": 212.875,
+   "start_tc": "3:32.87",
+   "duration": 1.875,
+   "frames": 45,
+   "start_frame": 5109,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/window.png",
@@ -2129,14 +2167,14 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.022
+     1.02062
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 48,
-    "push": "in 2.2 % (log space, constant speed)",
+    "frames": 45,
+    "push": "in 2.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2152,11 +2190,11 @@
   {
    "id": "02-11",
    "chapter": "02",
-   "start": 224.9167,
-   "start_tc": "3:44.91",
-   "duration": 5.4583,
-   "frames": 131,
-   "start_frame": 5398,
+   "start": 214.75,
+   "start_tc": "3:34.75",
+   "duration": 5.0,
+   "frames": 120,
+   "start_frame": 5154,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/company.png",
@@ -2164,14 +2202,14 @@
     "camera": "company",
     "zoom": [
      1.0,
-     1.06004
+     1.055
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 131,
-    "push": "in 6.0 % (log space, constant speed)",
+    "frames": 120,
+    "push": "in 5.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2187,16 +2225,16 @@
   {
    "id": "02-12",
    "chapter": "02",
-   "start": 230.375,
-   "start_tc": "3:50.37",
-   "duration": 5.6667,
-   "frames": 136,
-   "start_frame": 5529,
+   "start": 219.75,
+   "start_tc": "3:39.75",
+   "duration": 5.0833,
+   "frames": 122,
+   "start_frame": 5274,
    "source": {
     "kind": "piece",
     "name": "route_mainland",
     "in": 4.5,
-    "frames": 136,
+    "frames": 122,
     "file": "out/gfx/r7/11_route_mainland.mp4",
     "gen": {
      "tool": "canvas",
@@ -2205,8 +2243,10 @@
     },
     "fixed": false,
     "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s",
-    "clip": "out/film/pieces/route_mainland-8b67ff7820ae.mp4",
-    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 10.417 out/film/pieces/route_mainland-8b67ff7820ae.mp4"
+    "render_secs": 9.833,
+    "clip": "out/film/pieces/route_mainland-62eaa33e0f94.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 9.833 out/film/pieces/route_mainland-62eaa33e0f94.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -2220,11 +2260,11 @@
   {
    "id": "02-13",
    "chapter": "02",
-   "start": 236.0417,
-   "start_tc": "3:56.04",
-   "duration": 4.1667,
-   "frames": 100,
-   "start_frame": 5665,
+   "start": 224.8333,
+   "start_tc": "3:44.83",
+   "duration": 2.9583,
+   "frames": 71,
+   "start_frame": 5396,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/train/rack.png",
@@ -2232,14 +2272,14 @@
     "camera": "rack",
     "zoom": [
      1.0,
-     1.04583
+     1.03254
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 100,
-    "push": "in 4.6 % (log space, constant speed)",
+    "frames": 71,
+    "push": "in 3.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2255,26 +2295,26 @@
   {
    "id": "02-14",
    "chapter": "02",
-   "start": 240.2083,
-   "start_tc": "4:00.20",
-   "duration": 5.5417,
-   "frames": 133,
-   "start_frame": 5765,
+   "start": 227.7917,
+   "start_tc": "3:47.79",
+   "duration": 4.4167,
+   "frames": 106,
+   "start_frame": 5467,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/hongkong_street/window.png",
-    "stage": "hongkong_street",
-    "camera": "window",
+    "plate": "frames/raw/evidence_table/purses.png",
+    "stage": "evidence_table",
+    "camera": "purses",
     "zoom": [
-     1.0,
-     1.06096
+     1.04,
+     1.09053
     ],
     "centre": [
-     0.42,
-     0.55
+     0.72,
+     0.45
     ],
-    "frames": 133,
-    "push": "in 6.1 % (log space, constant speed)",
+    "frames": 106,
+    "push": "in 4.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2285,16 +2325,16 @@
     }
    ],
    "sound": "The travel pad drops out on \"one more gift\"",
-   "change": "The chapter ends on the gift in the shop window (\"one more gift for her\"), a flash-forward, instead of the route map."
+   "change": "The chapter ends on the gift itself, the cognac tote on the evidence table (\"one more gift for her\"), a flash-forward, instead of the route map."
   },
   {
    "id": "03-01",
    "chapter": "03",
-   "start": 245.75,
-   "start_tc": "4:05.75",
-   "duration": 7.125,
-   "frames": 171,
-   "start_frame": 5898,
+   "start": 232.2083,
+   "start_tc": "3:52.20",
+   "duration": 6.9167,
+   "frames": 166,
+   "start_frame": 5573,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/accept.png",
@@ -2302,14 +2342,14 @@
     "camera": "accept",
     "zoom": [
      1.0,
-     1.07838
+     1.07608
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 171,
-    "push": "in 7.8 % (log space, constant speed)",
+    "frames": 166,
+    "push": "in 7.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -2333,11 +2373,11 @@
   {
    "id": "03-02",
    "chapter": "03",
-   "start": 252.875,
-   "start_tc": "4:12.87",
-   "duration": 2.7917,
-   "frames": 67,
-   "start_frame": 6069,
+   "start": 239.125,
+   "start_tc": "3:59.12",
+   "duration": 2.4167,
+   "frames": 58,
+   "start_frame": 5739,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/overhead_pre.png",
@@ -2345,14 +2385,14 @@
     "camera": "overhead_pre",
     "zoom": [
      1.0,
-     1.03071
+     1.02658
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 67,
-    "push": "in 3.1 % (log space, constant speed)",
+    "frames": 58,
+    "push": "in 2.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2372,11 +2412,11 @@
   {
    "id": "03-03",
    "chapter": "03",
-   "start": 255.6667,
-   "start_tc": "4:15.66",
-   "duration": 5.9167,
-   "frames": 142,
-   "start_frame": 6136,
+   "start": 241.5417,
+   "start_tc": "4:01.54",
+   "duration": 4.5,
+   "frames": 108,
+   "start_frame": 5797,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/aircraft_cabin/over.png",
@@ -2384,14 +2424,14 @@
     "camera": "over",
     "zoom": [
      1.0,
-     1.06508
+     1.0495
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 142,
-    "push": "in 6.5 % (log space, constant speed)",
+    "frames": 108,
+    "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2407,11 +2447,11 @@
   {
    "id": "03-04",
    "chapter": "03",
-   "start": 261.5833,
-   "start_tc": "4:21.58",
-   "duration": 4.2083,
-   "frames": 101,
-   "start_frame": 6278,
+   "start": 246.0417,
+   "start_tc": "4:06.04",
+   "duration": 3.625,
+   "frames": 87,
+   "start_frame": 5905,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/overhead.png",
@@ -2419,14 +2459,14 @@
     "camera": "overhead",
     "zoom": [
      1.0,
-     1.04629
+     1.03988
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 101,
-    "push": "in 4.6 % (log space, constant speed)",
+    "frames": 87,
+    "push": "in 4.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2442,11 +2482,11 @@
   {
    "id": "03-05",
    "chapter": "03",
-   "start": 265.7917,
-   "start_tc": "4:25.79",
-   "duration": 3.8333,
-   "frames": 92,
-   "start_frame": 6379,
+   "start": 249.6667,
+   "start_tc": "4:09.66",
+   "duration": 3.5,
+   "frames": 84,
+   "start_frame": 5992,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/leather_market/wide.png",
@@ -2454,14 +2494,14 @@
     "camera": "wide",
     "zoom": [
      1.0,
-     1.04217
+     1.0385
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 92,
-    "push": "in 4.2 % (log space, constant speed)",
+    "frames": 84,
+    "push": "in 3.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2477,11 +2517,11 @@
   {
    "id": "03-06",
    "chapter": "03",
-   "start": 269.625,
-   "start_tc": "4:29.62",
-   "duration": 2.2917,
-   "frames": 55,
-   "start_frame": 6471,
+   "start": 253.1667,
+   "start_tc": "4:13.16",
+   "duration": 2.0833,
+   "frames": 50,
+   "start_frame": 6076,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/leather_market/stall.png",
@@ -2489,14 +2529,14 @@
     "camera": "stall",
     "zoom": [
      1.0,
-     1.02521
+     1.02292
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 55,
-    "push": "in 2.5 % (log space, constant speed)",
+    "frames": 50,
+    "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2512,11 +2552,11 @@
   {
    "id": "03-07",
    "chapter": "03",
-   "start": 271.9167,
-   "start_tc": "4:31.91",
-   "duration": 2.75,
-   "frames": 66,
-   "start_frame": 6526,
+   "start": 255.25,
+   "start_tc": "4:15.25",
+   "duration": 2.5,
+   "frames": 60,
+   "start_frame": 6126,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/leather_market/purchase.png",
@@ -2524,14 +2564,14 @@
     "camera": "purchase",
     "zoom": [
      1.0,
-     1.03025
+     1.0275
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 66,
-    "push": "in 3.0 % (log space, constant speed)",
+    "frames": 60,
+    "push": "in 2.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2547,11 +2587,11 @@
   {
    "id": "03-08",
    "chapter": "03",
-   "start": 274.6667,
-   "start_tc": "4:34.66",
-   "duration": 3.375,
-   "frames": 81,
-   "start_frame": 6592,
+   "start": 257.75,
+   "start_tc": "4:17.75",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 6186,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hotel_room/pack.png",
@@ -2559,14 +2599,14 @@
     "camera": "pack",
     "zoom": [
      1.0,
-     1.03713
+     1.03575
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 81,
-    "push": "in 3.7 % (log space, constant speed)",
+    "frames": 78,
+    "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2582,11 +2622,11 @@
   {
    "id": "03-09",
    "chapter": "03",
-   "start": 278.0417,
-   "start_tc": "4:38.04",
+   "start": 261.0,
+   "start_tc": "4:21.00",
    "duration": 2.375,
    "frames": 57,
-   "start_frame": 6673,
+   "start_frame": 6264,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/overhead.png",
@@ -2617,11 +2657,11 @@
   {
    "id": "03-10",
    "chapter": "03",
-   "start": 280.4167,
-   "start_tc": "4:40.41",
-   "duration": 3.7083,
-   "frames": 89,
-   "start_frame": 6730,
+   "start": 263.375,
+   "start_tc": "4:23.37",
+   "duration": 2.625,
+   "frames": 63,
+   "start_frame": 6321,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/wide.png",
@@ -2629,14 +2669,14 @@
     "camera": "wide",
     "zoom": [
      1.0,
-     1.04079
+     1.02887
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 89,
-    "push": "in 4.1 % (log space, constant speed)",
+    "frames": 63,
+    "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2652,16 +2692,16 @@
   {
    "id": "03-11",
    "chapter": "03",
-   "start": 284.125,
-   "start_tc": "4:44.12",
-   "duration": 2.25,
-   "frames": 54,
-   "start_frame": 6819,
+   "start": 266.0,
+   "start_tc": "4:26.00",
+   "duration": 2.5833,
+   "frames": 62,
+   "start_frame": 6384,
    "source": {
     "kind": "piece",
     "name": "scale",
     "in": 0.0,
-    "frames": 54,
+    "frames": 62,
     "file": "out/gfx/r7/01_scale.mp4",
     "gen": {
      "tool": "doc",
@@ -2669,8 +2709,9 @@
     },
     "fixed": true,
     "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s",
-    "clip": "out/gfx/r7/01_scale.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/gfx/r7/01_scale.mp4"
+    "clip": "out/film/pieces/scale-7c5d913f6936.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/film/pieces/scale-7c5d913f6936.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -2688,11 +2729,11 @@
   {
    "id": "03-12",
    "chapter": "03",
-   "start": 286.375,
-   "start_tc": "4:46.37",
-   "duration": 1.9167,
-   "frames": 46,
-   "start_frame": 6873,
+   "start": 268.5833,
+   "start_tc": "4:28.58",
+   "duration": 1.5417,
+   "frames": 37,
+   "start_frame": 6446,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/checkin_hall/shoulder.png",
@@ -2700,14 +2741,14 @@
     "camera": "shoulder",
     "zoom": [
      1.0,
-     1.02108
+     1.02
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 46,
-    "push": "in 2.1 % (log space, constant speed)",
+    "frames": 37,
+    "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2723,16 +2764,16 @@
   {
    "id": "03-13",
    "chapter": "03",
-   "start": 288.2917,
-   "start_tc": "4:48.29",
-   "duration": 8.875,
-   "frames": 213,
-   "start_frame": 6919,
+   "start": 270.125,
+   "start_tc": "4:30.12",
+   "duration": 8.125,
+   "frames": 195,
+   "start_frame": 6483,
    "source": {
     "kind": "piece",
     "name": "doc_fee",
     "in": 0.0,
-    "frames": 213,
+    "frames": 195,
     "file": null,
     "gen": {
      "tool": "doc",
@@ -2741,15 +2782,17 @@
       {
        "phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit",
        "dur": 0.8,
-       "t": 1.011
+       "t": 0.916
       }
      ]
     },
     "fixed": false,
     "override": true,
     "note_piece": "S1 p. 1, the excess-weight fee line lit",
-    "clip": "out/film/pieces/doc_fee-61ff3bb3a8cf.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fee-61ff3bb3a8cf.json --out out/film/pieces/doc_fee-61ff3bb3a8cf.mp4"
+    "render_secs": 8.375,
+    "clip": "out/film/pieces/doc_fee-8eec60bff0b5.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fee-8eec60bff0b5.json --out out/film/pieces/doc_fee-8eec60bff0b5.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -2763,16 +2806,16 @@
   {
    "id": "03-14",
    "chapter": "03",
-   "start": 297.1667,
-   "start_tc": "4:57.16",
-   "duration": 4.7083,
-   "frames": 113,
-   "start_frame": 7132,
+   "start": 278.25,
+   "start_tc": "4:38.25",
+   "duration": 4.2083,
+   "frames": 101,
+   "start_frame": 6678,
    "source": {
     "kind": "piece",
     "name": "trace",
     "in": 0.0,
-    "frames": 113,
+    "frames": 101,
     "file": "out/gfx/r7/12_trace.mp4",
     "gen": {
      "tool": "seam",
@@ -2781,8 +2824,10 @@
     },
     "fixed": false,
     "note_piece": "the red trace along the tote's seam, drawn over 1.8 s",
-    "clip": "out/film/pieces/trace-a382b237c5a2.mp4",
-    "command": "node gfx/type_render.js seq trace 4.958 out/film/pieces/trace-a382b237c5a2.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg"
+    "render_secs": 4.458,
+    "clip": "out/film/pieces/trace-601fe2134cbe.mp4",
+    "command": "node gfx/type_render.js seq trace 4.458 out/film/pieces/trace-601fe2134cbe.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -2796,16 +2841,16 @@
   {
    "id": "03-15",
    "chapter": "03",
-   "start": 301.875,
-   "start_tc": "5:01.87",
-   "duration": 4.25,
-   "frames": 102,
-   "start_frame": 7245,
+   "start": 282.4583,
+   "start_tc": "4:42.45",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 6779,
    "source": {
     "kind": "piece",
     "name": "cutaway",
     "in": 0.0,
-    "frames": 102,
+    "frames": 92,
     "file": "out/gfx/r7/13_cutaway.mp4",
     "gen": {
      "tool": "seam",
@@ -2813,8 +2858,10 @@
     },
     "fixed": false,
     "note_piece": "the section opens 1.3-2.1 s, closes 3.6-4.05 s",
-    "clip": "out/gfx/r7/13_cutaway.mp4",
-    "command": "node gfx/type_render.js seq cutaway 5.000 out/gfx/r7/13_cutaway.mp4 --page gfx/seam.html"
+    "render_secs": 4.083,
+    "clip": "out/film/pieces/cutaway-6cb332a37c4a.mp4",
+    "command": "node gfx/type_render.js seq cutaway 4.083 out/film/pieces/cutaway-6cb332a37c4a.mp4 --page gfx/seam.html",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -2828,11 +2875,11 @@
   {
    "id": "03-16",
    "chapter": "03",
-   "start": 306.125,
-   "start_tc": "5:06.12",
-   "duration": 3.25,
-   "frames": 78,
-   "start_frame": 7347,
+   "start": 286.2917,
+   "start_tc": "4:46.29",
+   "duration": 3.0,
+   "frames": 72,
+   "start_frame": 6871,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/curtain.png",
@@ -2840,14 +2887,14 @@
     "camera": "curtain",
     "zoom": [
      1.0,
-     1.03575
+     1.033
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 78,
-    "push": "in 3.6 % (log space, constant speed)",
+    "frames": 72,
+    "push": "in 3.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2864,11 +2911,11 @@
   {
    "id": "04-01",
    "chapter": "04",
-   "start": 309.375,
-   "start_tc": "5:09.37",
-   "duration": 4.8333,
-   "frames": 116,
-   "start_frame": 7425,
+   "start": 289.2917,
+   "start_tc": "4:49.29",
+   "duration": 4.1667,
+   "frames": 100,
+   "start_frame": 6943,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/seated_called.png",
@@ -2882,14 +2929,14 @@
      0.5,
      0.5
     ],
-    "frames": 116,
+    "frames": 100,
     "push": "in 4.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "chapter",
       "look": "B",
-      "hash": "n=04&title=Yes&out=3.93",
+      "hash": "n=04&title=Yes&out=3.27",
       "t0": 0.0,
       "tin": 0.0
      }
@@ -2907,11 +2954,11 @@
   {
    "id": "04-02",
    "chapter": "04",
-   "start": 314.2083,
-   "start_tc": "5:14.20",
-   "duration": 2.5417,
-   "frames": 61,
-   "start_frame": 7541,
+   "start": 293.4583,
+   "start_tc": "4:53.45",
+   "duration": 2.125,
+   "frames": 51,
+   "start_frame": 7043,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/enter.png",
@@ -2919,14 +2966,14 @@
     "camera": "enter",
     "zoom": [
      1.0,
-     1.02796
+     1.02337
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 61,
-    "push": "in 2.8 % (log space, constant speed)",
+    "frames": 51,
+    "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2942,11 +2989,11 @@
   {
    "id": "04-03",
    "chapter": "04",
-   "start": 316.75,
-   "start_tc": "5:16.75",
-   "duration": 2.5,
-   "frames": 60,
-   "start_frame": 7602,
+   "start": 295.5833,
+   "start_tc": "4:55.58",
+   "duration": 2.125,
+   "frames": 51,
+   "start_frame": 7094,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/wide_pre.png",
@@ -2954,14 +3001,14 @@
     "camera": "wide_pre",
     "zoom": [
      1.0,
-     1.0275
+     1.02337
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 60,
-    "push": "in 2.8 % (log space, constant speed)",
+    "frames": 51,
+    "push": "in 2.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -2977,16 +3024,16 @@
   {
    "id": "04-04",
    "chapter": "04",
-   "start": 319.25,
-   "start_tc": "5:19.25",
-   "duration": 3.0,
-   "frames": 72,
-   "start_frame": 7662,
+   "start": 297.7083,
+   "start_tc": "4:57.70",
+   "duration": 2.5,
+   "frames": 60,
+   "start_frame": 7145,
    "source": {
     "kind": "piece",
     "name": "doc_yes",
     "in": 0.0,
-    "frames": 72,
+    "frames": 60,
     "file": "out/gfx/r7/14_doc.mp4",
     "gen": {
      "tool": "doc",
@@ -2994,8 +3041,10 @@
     },
     "fixed": false,
     "note_piece": "S1 p. 1, the first 'yes' line lit at 1.0 s",
-    "clip": "out/gfx/r7/14_doc.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --out out/gfx/r7/14_doc.mp4"
+    "render_secs": 2.75,
+    "clip": "out/film/pieces/doc_yes-bc2c61a6feae.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_yes-bc2c61a6feae.json --out out/film/pieces/doc_yes-bc2c61a6feae.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3004,21 +3053,21 @@
     }
    ],
    "sound": "Paper",
-   "change": "Added: \"The officers ask whether they are hers\" on Tim's statement (S1 p. 1, reel 7's `s1_yes`), the line \"to which she responded 'yes'\" lighting just before the YES."
+   "change": "Added: \"The officers ask whether they are hers\" on Tim's statement (S1 p. 1, gfx/shots/s1_yes.json), the line \"to which she responded 'yes'\" lighting just before the YES."
   },
   {
    "id": "04-05",
    "chapter": "04",
-   "start": 322.25,
-   "start_tc": "5:22.25",
-   "duration": 2.5,
-   "frames": 60,
-   "start_frame": 7734,
+   "start": 300.2083,
+   "start_tc": "5:00.20",
+   "duration": 2.5417,
+   "frames": 61,
+   "start_frame": 7205,
    "source": {
     "kind": "piece",
     "name": "yes",
     "in": 0.0,
-    "frames": 60,
+    "frames": 61,
     "file": "out/gfx/r7/03_yes.mp4",
     "gen": {
      "tool": "plate_type",
@@ -3027,8 +3076,10 @@
     },
     "fixed": false,
     "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
-    "clip": "out/gfx/r7/03_yes.mp4",
-    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
+    "render_secs": 6.333,
+    "clip": "out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 6.333 frames/raw/inspection_room/match.png out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3046,16 +3097,16 @@
   {
    "id": "04-06",
    "chapter": "04",
-   "start": 324.75,
-   "start_tc": "5:24.75",
-   "duration": 3.5833,
-   "frames": 86,
-   "start_frame": 7794,
+   "start": 302.75,
+   "start_tc": "5:02.75",
+   "duration": 3.0833,
+   "frames": 74,
+   "start_frame": 7266,
    "source": {
     "kind": "piece",
     "name": "yes",
     "in": 3.0,
-    "frames": 86,
+    "frames": 74,
     "file": "out/gfx/r7/03_yes.mp4",
     "gen": {
      "tool": "plate_type",
@@ -3064,8 +3115,10 @@
     },
     "fixed": false,
     "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
-    "clip": "out/gfx/r7/03_yes.mp4",
-    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
+    "render_secs": 6.333,
+    "clip": "out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 6.333 frames/raw/inspection_room/match.png out/film/pieces/yes-a5e3b5d73bdd.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3083,11 +3136,11 @@
   {
    "id": "04-07",
    "chapter": "04",
-   "start": 328.3333,
-   "start_tc": "5:28.33",
-   "duration": 2.4167,
-   "frames": 58,
-   "start_frame": 7880,
+   "start": 305.8333,
+   "start_tc": "5:05.83",
+   "duration": 2.0,
+   "frames": 48,
+   "start_frame": 7340,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/dawn_close.png",
@@ -3095,14 +3148,14 @@
     "camera": "dawn_close",
     "zoom": [
      1.0,
-     1.02658
+     1.022
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 58,
-    "push": "in 2.7 % (log space, constant speed)",
+    "frames": 48,
+    "push": "in 2.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3118,26 +3171,26 @@
   {
    "id": "04-08",
    "chapter": "04",
-   "start": 330.75,
-   "start_tc": "5:30.75",
-   "duration": 4.0833,
-   "frames": 98,
-   "start_frame": 7938,
+   "start": 307.8333,
+   "start_tc": "5:07.83",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 7388,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/inspection_room/handbags.png",
+    "plate": "frames/raw/inspection_room/handbags_touch.png",
     "stage": "inspection_room",
-    "camera": "handbags",
+    "camera": "handbags_touch",
     "zoom": [
      1.0,
-     1.04492
+     1.04079
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 98,
-    "push": "in 4.5 % (log space, constant speed)",
+    "frames": 89,
+    "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3148,16 +3201,17 @@
     }
    ],
    "row": "inspection_room `handbags`, the officer's hand on the tote",
-   "sound": "Hard stop"
+   "sound": "Hard stop",
+   "note": "`handbags_touch` (published during this edit) is the officer's hand lifting the tote."
   },
   {
    "id": "04-09",
    "chapter": "04",
-   "start": 334.8333,
-   "start_tc": "5:34.83",
-   "duration": 3.4167,
-   "frames": 82,
-   "start_frame": 8036,
+   "start": 311.5417,
+   "start_tc": "5:11.54",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 7477,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/two_shot.png",
@@ -3165,14 +3219,14 @@
     "camera": "two_shot",
     "zoom": [
      1.0,
-     1.03758
+     1.04217
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 82,
-    "push": "in 3.8 % (log space, constant speed)",
+    "frames": 92,
+    "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3188,26 +3242,28 @@
   {
    "id": "04-10",
    "chapter": "04",
-   "start": 338.25,
-   "start_tc": "5:38.25",
-   "duration": 5.4583,
-   "frames": 131,
-   "start_frame": 8118,
+   "start": 315.375,
+   "start_tc": "5:15.37",
+   "duration": 6.0833,
+   "frames": 146,
+   "start_frame": 7569,
    "source": {
     "kind": "piece",
     "name": "split",
     "in": 0.0,
-    "frames": 131,
+    "frames": 146,
     "file": null,
     "gen": {
      "tool": "split",
-     "cut": 2.392
+     "cut": 2.686
     },
     "fixed": false,
     "override": true,
     "note_piece": "the split frame, the right half cutting to the cut-away",
-    "clip": "out/film/pieces/split-a5f2ddb4bd12.mp4",
-    "command": "<gfx python> gfx/split.py --out out/film/pieces/split-a5f2ddb4bd12.mp4 --len 5.708 --cut 2.392"
+    "render_secs": 6.333,
+    "clip": "out/film/pieces/split-c1cba73ed203.mp4",
+    "command": "<gfx python> gfx/split.py --out out/film/pieces/split-c1cba73ed203.mp4 --len 6.333 --cut 2.686",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3222,11 +3278,11 @@
   {
    "id": "04-11",
    "chapter": "04",
-   "start": 343.7083,
-   "start_tc": "5:43.70",
-   "duration": 1.1667,
-   "frames": 28,
-   "start_frame": 8249,
+   "start": 321.4583,
+   "start_tc": "5:21.45",
+   "duration": 1.0417,
+   "frames": 25,
+   "start_frame": 7715,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/empty_ch05.png",
@@ -3240,7 +3296,7 @@
      0.5,
      0.5
     ],
-    "frames": 28,
+    "frames": 25,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -3257,11 +3313,11 @@
   {
    "id": "04-12",
    "chapter": "04",
-   "start": 344.875,
-   "start_tc": "5:44.87",
-   "duration": 2.3333,
-   "frames": 56,
-   "start_frame": 8277,
+   "start": 322.5,
+   "start_tc": "5:22.50",
+   "duration": 2.0833,
+   "frames": 50,
+   "start_frame": 7740,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/match.png",
@@ -3275,14 +3331,14 @@
      0.5,
      0.5
     ],
-    "frames": 56,
+    "frames": 50,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "yes",
       "look": "B",
-      "t0": 1.165,
+      "t0": 1.049,
       "tin": 0.0
      }
     ]
@@ -3299,25 +3355,27 @@
   {
    "id": "04-13",
    "chapter": "04",
-   "start": 347.2083,
-   "start_tc": "5:47.20",
-   "duration": 1.9583,
-   "frames": 47,
-   "start_frame": 8333,
+   "start": 324.5833,
+   "start_tc": "5:24.58",
+   "duration": 1.8333,
+   "frames": 44,
+   "start_frame": 7790,
    "source": {
     "kind": "piece",
     "name": "split_r7",
     "in": 3.2,
-    "frames": 47,
+    "frames": 44,
     "file": "out/gfx/r7/15_splitframe.mp4",
     "gen": {
      "tool": "split",
      "cut": 2.2
     },
-    "fixed": true,
-    "note_piece": "reel 7's split frame (cut at 2.2 s), the cut-away held open",
-    "clip": "out/gfx/r7/15_splitframe.mp4",
-    "command": "<gfx python> gfx/split.py --out out/gfx/r7/15_splitframe.mp4 --len 5.583 --cut 2.200"
+    "fixed": false,
+    "note_piece": "the split frame with the right half cut to the cut-away at 2.2 s, held open",
+    "render_secs": 5.292,
+    "clip": "out/film/pieces/split_r7-a10ced27cffd.mp4",
+    "command": "<gfx python> gfx/split.py --out out/film/pieces/split_r7-a10ced27cffd.mp4 --len 5.292 --cut 2.200",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3330,11 +3388,11 @@
   {
    "id": "04-14",
    "chapter": "04",
-   "start": 349.1667,
-   "start_tc": "5:49.16",
-   "duration": 2.1667,
-   "frames": 52,
-   "start_frame": 8380,
+   "start": 326.4167,
+   "start_tc": "5:26.41",
+   "duration": 2.0417,
+   "frames": 49,
+   "start_frame": 7834,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/tag.png",
@@ -3342,14 +3400,14 @@
     "camera": "tag",
     "zoom": [
      1.0,
-     1.02383
+     1.02246
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 52,
-    "push": "in 2.4 % (log space, constant speed)",
+    "frames": 49,
+    "push": "in 2.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3365,11 +3423,11 @@
   {
    "id": "04-15",
    "chapter": "04",
-   "start": 351.3333,
-   "start_tc": "5:51.33",
-   "duration": 3.8333,
-   "frames": 92,
-   "start_frame": 8432,
+   "start": 328.4583,
+   "start_tc": "5:28.45",
+   "duration": 3.5833,
+   "frames": 86,
+   "start_frame": 7883,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/departure_gate/window.png",
@@ -3377,14 +3435,14 @@
     "camera": "window",
     "zoom": [
      1.03,
-     1.07343
+     1.0706
     ],
     "centre": [
      0.4,
      0.5
     ],
-    "frames": 92,
-    "push": "in 4.2 % (log space, constant speed)",
+    "frames": 86,
+    "push": "in 3.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3400,11 +3458,11 @@
   {
    "id": "04-16",
    "chapter": "04",
-   "start": 355.1667,
-   "start_tc": "5:55.16",
-   "duration": 4.5417,
-   "frames": 109,
-   "start_frame": 8524,
+   "start": 332.0417,
+   "start_tc": "5:32.04",
+   "duration": 4.2917,
+   "frames": 103,
+   "start_frame": 7969,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/page.png",
@@ -3412,14 +3470,14 @@
     "camera": "page",
     "zoom": [
      1.0,
-     1.04996
+     1.04721
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 109,
-    "push": "in 5.0 % (log space, constant speed)",
+    "frames": 103,
+    "push": "in 4.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3435,16 +3493,16 @@
   {
    "id": "04-17",
    "chapter": "04",
-   "start": 359.7083,
-   "start_tc": "5:59.70",
-   "duration": 8.0,
-   "frames": 192,
-   "start_frame": 8633,
+   "start": 336.3333,
+   "start_tc": "5:36.33",
+   "duration": 7.5,
+   "frames": 180,
+   "start_frame": 8072,
    "source": {
     "kind": "piece",
     "name": "route_split",
     "in": 0.0,
-    "frames": 192,
+    "frames": 180,
     "file": "out/gfx/r7/11_route_split.mp4",
     "gen": {
      "tool": "canvas",
@@ -3453,8 +3511,10 @@
     },
     "fixed": false,
     "note_piece": "Australia and Qingdao, dashed, labels at 2.4 s",
-    "clip": "out/film/pieces/route_split-06275e95583f.mp4",
-    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq split 0 8.250 out/film/pieces/route_split-06275e95583f.mp4"
+    "render_secs": 7.75,
+    "clip": "out/film/pieces/route_split-9cb1eb035d59.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq split 0 7.750 out/film/pieces/route_split-9cb1eb035d59.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3469,11 +3529,11 @@
   {
    "id": "04-18",
    "chapter": "04",
-   "start": 367.7083,
-   "start_tc": "6:07.70",
-   "duration": 5.5,
-   "frames": 132,
-   "start_frame": 8825,
+   "start": 343.8333,
+   "start_tc": "5:43.83",
+   "duration": 5.2083,
+   "frames": 125,
+   "start_frame": 8252,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/overhead.png",
@@ -3481,14 +3541,14 @@
     "camera": "overhead",
     "zoom": [
      1.0,
-     1.0605
+     1.05729
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 132,
-    "push": "in 6.0 % (log space, constant speed)",
+    "frames": 125,
+    "push": "in 5.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3504,11 +3564,11 @@
   {
    "id": "04-19",
    "chapter": "04",
-   "start": 373.2083,
-   "start_tc": "6:13.20",
-   "duration": 3.75,
-   "frames": 90,
-   "start_frame": 8957,
+   "start": 349.0417,
+   "start_tc": "5:49.04",
+   "duration": 3.5,
+   "frames": 84,
+   "start_frame": 8377,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/corridor.png",
@@ -3516,21 +3576,21 @@
     "camera": "corridor",
     "zoom": [
      1.0,
-     1.04125
+     1.0385
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 90,
-    "push": "in 4.1 % (log space, constant speed)",
+    "frames": 84,
+    "push": "in 3.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "place",
       "look": "B",
       "hash": "a=2014",
-      "t0": 0.552,
+      "t0": 0.481,
       "tin": 0.0
      }
     ]
@@ -3547,11 +3607,11 @@
   {
    "id": "04-20",
    "chapter": "04",
-   "start": 376.9583,
-   "start_tc": "6:16.95",
-   "duration": 5.75,
-   "frames": 138,
-   "start_frame": 9047,
+   "start": 352.5417,
+   "start_tc": "5:52.54",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 8461,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/empty.png",
@@ -3565,7 +3625,7 @@
      0.5,
      0.5
     ],
-    "frames": 138,
+    "frames": 123,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -3582,11 +3642,11 @@
   {
    "id": "05-01",
    "chapter": "05",
-   "start": 382.7083,
-   "start_tc": "6:22.70",
-   "duration": 5.125,
-   "frames": 123,
-   "start_frame": 9185,
+   "start": 357.6667,
+   "start_tc": "5:57.66",
+   "duration": 4.3333,
+   "frames": 104,
+   "start_frame": 8584,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/door.png",
@@ -3594,20 +3654,20 @@
     "camera": "door",
     "zoom": [
      1.0,
-     1.05638
+     1.04767
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 123,
-    "push": "in 5.6 % (log space, constant speed)",
+    "frames": 104,
+    "push": "in 4.8 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "chapter",
       "look": "B",
-      "hash": "n=05&title=Three+years&out=4.22",
+      "hash": "n=05&title=Three+years&out=3.43",
       "t0": 0.0,
       "tin": 0.0
      }
@@ -3625,11 +3685,11 @@
   {
    "id": "05-02",
    "chapter": "05",
-   "start": 387.8333,
-   "start_tc": "6:27.83",
-   "duration": 7.0833,
-   "frames": 170,
-   "start_frame": 9308,
+   "start": 362.0,
+   "start_tc": "6:02.00",
+   "duration": 5.875,
+   "frames": 141,
+   "start_frame": 8688,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/chair.png",
@@ -3637,14 +3697,14 @@
     "camera": "chair",
     "zoom": [
      1.0,
-     1.07792
+     1.06462
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 170,
-    "push": "in 7.8 % (log space, constant speed)",
+    "frames": 141,
+    "push": "in 6.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3660,16 +3720,16 @@
   {
    "id": "05-03",
    "chapter": "05",
-   "start": 394.9167,
-   "start_tc": "6:34.91",
-   "duration": 9.375,
-   "frames": 225,
-   "start_frame": 9478,
+   "start": 367.875,
+   "start_tc": "6:07.87",
+   "duration": 9.7917,
+   "frames": 235,
+   "start_frame": 8829,
    "source": {
     "kind": "piece",
     "name": "doc_emails",
     "in": 0.0,
-    "frames": 225,
+    "frames": 235,
     "file": null,
     "gen": {
      "tool": "doc",
@@ -3678,15 +3738,17 @@
       {
        "phrase": "answered all their questions, produced the emails she received from the organizers",
        "dur": 1.2,
-       "t": 3.13
+       "t": 3.248
       }
      ]
     },
     "fixed": false,
     "override": true,
     "note_piece": "S1 p. 2, the emails line lit",
-    "clip": "out/film/pieces/doc_emails-4b87cacbf0b2.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_emails-4b87cacbf0b2.json --out out/film/pieces/doc_emails-4b87cacbf0b2.mp4"
+    "render_secs": 10.042,
+    "clip": "out/film/pieces/doc_emails-af4604676ca0.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_emails-af4604676ca0.json --out out/film/pieces/doc_emails-af4604676ca0.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3700,16 +3762,16 @@
   {
    "id": "05-04",
    "chapter": "05",
-   "start": 404.2917,
-   "start_tc": "6:44.29",
-   "duration": 4.0,
-   "frames": 96,
-   "start_frame": 9703,
+   "start": 377.6667,
+   "start_tc": "6:17.66",
+   "duration": 4.1667,
+   "frames": 100,
+   "start_frame": 9064,
    "source": {
     "kind": "piece",
     "name": "email",
     "in": 1.5,
-    "frames": 96,
+    "frames": 100,
     "file": "out/gfx/r7/09_email.mp4",
     "gen": {
      "tool": "doc",
@@ -3717,8 +3779,9 @@
     },
     "fixed": true,
     "note_piece": "the prize email; its line cycles the three accounts",
-    "clip": "out/gfx/r7/09_email.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4"
+    "clip": "out/film/pieces/email-731e02a9d29f.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/film/pieces/email-731e02a9d29f.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3732,11 +3795,11 @@
   {
    "id": "05-05",
    "chapter": "05",
-   "start": 408.2917,
-   "start_tc": "6:48.29",
-   "duration": 1.5417,
-   "frames": 37,
-   "start_frame": 9799,
+   "start": 381.8333,
+   "start_tc": "6:21.83",
+   "duration": 1.4583,
+   "frames": 35,
+   "start_frame": 9164,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/envelope.png",
@@ -3750,7 +3813,7 @@
      0.5,
      0.5
     ],
-    "frames": 37,
+    "frames": 35,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -3768,11 +3831,11 @@
   {
    "id": "05-06",
    "chapter": "05",
-   "start": 409.8333,
-   "start_tc": "6:49.83",
-   "duration": 2.375,
-   "frames": 57,
-   "start_frame": 9836,
+   "start": 383.2917,
+   "start_tc": "6:23.29",
+   "duration": 2.625,
+   "frames": 63,
+   "start_frame": 9199,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/door.png",
@@ -3780,14 +3843,14 @@
     "camera": "door",
     "zoom": [
      1.25,
-     1.28266
+     1.28609
     ],
     "centre": [
      0.5,
      0.42
     ],
-    "frames": 57,
-    "push": "in 2.6 % (log space, constant speed)",
+    "frames": 63,
+    "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3803,11 +3866,11 @@
   {
    "id": "05-07",
    "chapter": "05",
-   "start": 412.2083,
-   "start_tc": "6:52.20",
-   "duration": 7.4167,
-   "frames": 178,
-   "start_frame": 9893,
+   "start": 385.9167,
+   "start_tc": "6:25.91",
+   "duration": 8.1667,
+   "frames": 196,
+   "start_frame": 9262,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/hands.png",
@@ -3821,7 +3884,7 @@
      0.5,
      0.5
     ],
-    "frames": 178,
+    "frames": 196,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -3838,11 +3901,11 @@
   {
    "id": "05-08",
    "chapter": "05",
-   "start": 419.625,
-   "start_tc": "6:59.62",
-   "duration": 6.3333,
-   "frames": 152,
-   "start_frame": 10071,
+   "start": 394.0833,
+   "start_tc": "6:34.08",
+   "duration": 6.9583,
+   "frames": 167,
+   "start_frame": 9458,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/dais.png",
@@ -3850,14 +3913,14 @@
     "camera": "dais",
     "zoom": [
      1.0,
-     1.06967
+     1.07654
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 152,
-    "push": "in 7.0 % (log space, constant speed)",
+    "frames": 167,
+    "push": "in 7.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3870,28 +3933,63 @@
    "sound": "A large quiet room"
   },
   {
+   "id": "05-09a",
+   "chapter": "05",
+   "start": 401.0417,
+   "start_tc": "6:41.04",
+   "duration": 3.7917,
+   "frames": 91,
+   "start_frame": 9625,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/page.png",
+    "stage": "evidence_table",
+    "camera": "page",
+    "zoom": [
+     1.0,
+     1.04171
+    ],
+    "centre": [
+     0.5,
+     0.45
+    ],
+    "frames": 91,
+    "push": "in 4.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.05",
+     "text": "We are not going to recreate it. It is serious enough to state plainly, and Dawn has already lost control of so much of her own story."
+    }
+   ],
+   "sound": "A clock, very low",
+   "change": "Added: \"We are not going to recreate it. It is serious enough to state plainly\" on a blank sheet (the film's sign for what it will not show)."
+  },
+  {
    "id": "05-09",
    "chapter": "05",
-   "start": 425.9583,
-   "start_tc": "7:05.95",
-   "duration": 11.0,
-   "frames": 264,
-   "start_frame": 10223,
+   "start": 404.8333,
+   "start_tc": "6:44.83",
+   "duration": 5.0,
+   "frames": 120,
+   "start_frame": 9716,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn.png",
     "stage": "void_stage",
     "camera": "dawn",
     "zoom": [
-     1.08,
+     1.055,
      1.0
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 264,
-    "push": "out 7.4 % (log space, constant speed)",
+    "frames": 120,
+    "push": "out 5.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -3907,16 +4005,16 @@
   {
    "id": "05-10",
    "chapter": "05",
-   "start": 436.9583,
-   "start_tc": "7:16.95",
-   "duration": 7.4583,
-   "frames": 179,
-   "start_frame": 10487,
+   "start": 409.8333,
+   "start_tc": "6:49.83",
+   "duration": 6.3333,
+   "frames": 152,
+   "start_frame": 9836,
    "source": {
     "kind": "piece",
     "name": "calendar",
     "in": 0.0,
-    "frames": 179,
+    "frames": 152,
     "file": "out/gfx/r7/16_calendar.mp4",
     "gen": {
      "tool": "plate_type",
@@ -3925,8 +4023,10 @@
     },
     "fixed": false,
     "note_piece": "2014 → 2017 beside the bags, 1.7 s a year",
-    "clip": "out/gfx/r7/16_calendar.mp4",
-    "command": "<gfx python> gfx/plate_type.py calendar 7.500 frames/raw/void_stage/bags.png out/gfx/r7/16_calendar.mp4"
+    "render_secs": 6.583,
+    "clip": "out/film/pieces/calendar-db1b86954d0c.mp4",
+    "command": "<gfx python> gfx/plate_type.py calendar 6.583 frames/raw/void_stage/bags.png out/film/pieces/calendar-db1b86954d0c.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -3936,16 +4036,16 @@
    ],
    "row": "void_stage `pool`: the empty circle of light, slow push | the calendar rolls 2014 → 2017",
    "sound": "A clock, very low",
-   "sub": "void_stage `pool` (the empty circle) has no plate: reel 7's calendar is over void_stage `bags` in the beam."
+   "sub": "void_stage `pool` (the empty circle) has no plate: the calendar (gfx/type.html `calendar`) runs beside void_stage `bags` in the beam."
   },
   {
    "id": "05-11",
    "chapter": "05",
-   "start": 444.4167,
-   "start_tc": "7:24.41",
-   "duration": 5.0833,
-   "frames": 122,
-   "start_frame": 10666,
+   "start": 416.1667,
+   "start_tc": "6:56.16",
+   "duration": 4.4583,
+   "frames": 107,
+   "start_frame": 9988,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/corridor.png",
@@ -3959,7 +4059,7 @@
      0.5,
      0.5
     ],
-    "frames": 122,
+    "frames": 107,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -3976,11 +4076,11 @@
   {
    "id": "06-01",
    "chapter": "06",
-   "start": 449.5,
-   "start_tc": "7:29.50",
-   "duration": 3.6667,
-   "frames": 88,
-   "start_frame": 10788,
+   "start": 420.625,
+   "start_tc": "7:00.62",
+   "duration": 4.2917,
+   "frames": 103,
+   "start_frame": 10095,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/wide.png",
@@ -3994,14 +4094,14 @@
      0.5,
      0.5
     ],
-    "frames": 88,
+    "frames": 103,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "chapter",
       "look": "B",
-      "hash": "n=06&title=The+sentence&out=2.77",
+      "hash": "n=06&title=The+sentence&out=3.39",
       "t0": 0.0,
       "tin": 0.0
      }
@@ -4020,26 +4120,26 @@
   {
    "id": "06-02",
    "chapter": "06",
-   "start": 453.1667,
-   "start_tc": "7:33.16",
-   "duration": 4.25,
-   "frames": 102,
-   "start_frame": 10876,
+   "start": 424.9167,
+   "start_tc": "7:04.91",
+   "duration": 3.625,
+   "frames": 87,
+   "start_frame": 10198,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/void_stage/dawn.png",
+    "plate": "frames/raw/void_stage/dawn_close.png",
     "stage": "void_stage",
-    "camera": "dawn",
+    "camera": "dawn_close",
     "zoom": [
      1.0,
-     1.04675
+     1.03
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 102,
-    "push": "in 4.7 % (log space, constant speed)",
+    "frames": 87,
+    "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -4061,17 +4161,16 @@
     }
    ],
    "row": "void_stage `dawn_close` (*new*), uniform, head bowed | DEATH SENTENCE WITH TWO-YEAR REPRIEVE",
-   "sound": "One low impact at \"death sentence\"",
-   "sub": "void_stage `dawn_close` (new) has no plate: `dawn` (standing in the pool) stands in."
+   "sound": "One low impact at \"death sentence\""
   },
   {
    "id": "06-03",
    "chapter": "06",
-   "start": 457.4167,
-   "start_tc": "7:37.41",
-   "duration": 3.6667,
-   "frames": 88,
-   "start_frame": 10978,
+   "start": 428.5417,
+   "start_tc": "7:08.54",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 10285,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/dock.png",
@@ -4079,14 +4178,14 @@
     "camera": "dock",
     "zoom": [
      1.0,
-     1.04033
+     1.03483
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 88,
-    "push": "in 4.0 % (log space, constant speed)",
+    "frames": 76,
+    "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4102,11 +4201,11 @@
   {
    "id": "06-04",
    "chapter": "06",
-   "start": 461.0833,
-   "start_tc": "7:41.08",
-   "duration": 2.0417,
-   "frames": 49,
-   "start_frame": 11066,
+   "start": 431.7083,
+   "start_tc": "7:11.70",
+   "duration": 1.75,
+   "frames": 42,
+   "start_frame": 10361,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_high.png",
@@ -4114,14 +4213,14 @@
     "camera": "dawn_high",
     "zoom": [
      1.0,
-     1.02246
+     1.02
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 49,
-    "push": "in 2.2 % (log space, constant speed)",
+    "frames": 42,
+    "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4137,33 +4236,33 @@
   {
    "id": "06-05",
    "chapter": "06",
-   "start": 463.125,
-   "start_tc": "7:43.12",
-   "duration": 4.375,
-   "frames": 105,
-   "start_frame": 11115,
+   "start": 433.4583,
+   "start_tc": "7:13.45",
+   "duration": 3.7917,
+   "frames": 91,
+   "start_frame": 10403,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/void_stage/dawn.png",
+    "plate": "frames/raw/void_stage/dawn_close.png",
     "stage": "void_stage",
-    "camera": "dawn",
+    "camera": "dawn_close",
     "zoom": [
      1.0,
-     1.04812
+     1.03
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 105,
-    "push": "in 4.8 % (log space, constant speed)",
+    "frames": 91,
+    "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "sentence_life",
       "look": "B",
       "t0": 0.0,
-      "tin": 1.4
+      "tin": 1.501
      }
     ]
    },
@@ -4180,11 +4279,11 @@
   {
    "id": "06-06",
    "chapter": "06",
-   "start": 467.5,
-   "start_tc": "7:47.50",
-   "duration": 2.625,
-   "frames": 63,
-   "start_frame": 11220,
+   "start": 437.25,
+   "start_tc": "7:17.25",
+   "duration": 2.75,
+   "frames": 66,
+   "start_frame": 10494,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/wall.png",
@@ -4192,14 +4291,14 @@
     "camera": "wall",
     "zoom": [
      1.0,
-     1.02887
+     1.03025
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 63,
-    "push": "in 2.9 % (log space, constant speed)",
+    "frames": 66,
+    "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4215,11 +4314,11 @@
   {
    "id": "06-07",
    "chapter": "06",
-   "start": 470.125,
-   "start_tc": "7:50.12",
-   "duration": 7.6667,
-   "frames": 184,
-   "start_frame": 11283,
+   "start": 440.0,
+   "start_tc": "7:20.00",
+   "duration": 8.0,
+   "frames": 192,
+   "start_frame": 10560,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/pair.png",
@@ -4233,7 +4332,7 @@
      0.5,
      0.5
     ],
-    "frames": 184,
+    "frames": 192,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -4251,11 +4350,11 @@
   {
    "id": "06-08",
    "chapter": "06",
-   "start": 477.7917,
-   "start_tc": "7:57.79",
-   "duration": 5.625,
-   "frames": 135,
-   "start_frame": 11467,
+   "start": 448.0,
+   "start_tc": "7:28.00",
+   "duration": 5.9167,
+   "frames": 142,
+   "start_frame": 10752,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/tower.png",
@@ -4263,14 +4362,14 @@
     "camera": "tower",
     "zoom": [
      1.0,
-     1.06187
+     1.06508
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 135,
-    "push": "in 6.2 % (log space, constant speed)",
+    "frames": 142,
+    "push": "in 6.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4286,11 +4385,11 @@
   {
    "id": "06-09",
    "chapter": "06",
-   "start": 483.4167,
-   "start_tc": "8:03.41",
-   "duration": 5.2083,
-   "frames": 125,
-   "start_frame": 11602,
+   "start": 453.9167,
+   "start_tc": "7:33.91",
+   "duration": 4.875,
+   "frames": 117,
+   "start_frame": 10894,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/company.png",
@@ -4298,14 +4397,14 @@
     "camera": "company",
     "zoom": [
      1.0,
-     1.05729
+     1.05363
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 125,
-    "push": "in 5.7 % (log space, constant speed)",
+    "frames": 117,
+    "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4321,11 +4420,11 @@
   {
    "id": "06-10",
    "chapter": "06",
-   "start": 488.625,
-   "start_tc": "8:08.62",
-   "duration": 5.1667,
-   "frames": 124,
-   "start_frame": 11727,
+   "start": 458.7917,
+   "start_tc": "7:38.79",
+   "duration": 4.875,
+   "frames": 117,
+   "start_frame": 11011,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/belt.png",
@@ -4333,14 +4432,14 @@
     "camera": "belt",
     "zoom": [
      1.03,
-     1.08854
+     1.08523
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 124,
-    "push": "in 5.7 % (log space, constant speed)",
+    "frames": 117,
+    "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4356,11 +4455,11 @@
   {
    "id": "06-11",
    "chapter": "06",
-   "start": 493.7917,
-   "start_tc": "8:13.79",
-   "duration": 7.7083,
-   "frames": 185,
-   "start_frame": 11851,
+   "start": 463.6667,
+   "start_tc": "7:43.66",
+   "duration": 6.5833,
+   "frames": 158,
+   "start_frame": 11128,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/courtroom/bench.png",
@@ -4368,14 +4467,14 @@
     "camera": "bench",
     "zoom": [
      1.0,
-     1.08
+     1.07242
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 185,
-    "push": "in 8.0 % (log space, constant speed)",
+    "frames": 158,
+    "push": "in 7.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4391,11 +4490,11 @@
   {
    "id": "06-12",
    "chapter": "06",
-   "start": 501.5,
-   "start_tc": "8:21.50",
-   "duration": 3.8333,
-   "frames": 92,
-   "start_frame": 12036,
+   "start": 470.25,
+   "start_tc": "7:50.25",
+   "duration": 3.3333,
+   "frames": 80,
+   "start_frame": 11286,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/bags.png",
@@ -4403,14 +4502,14 @@
     "camera": "bags",
     "zoom": [
      1.0,
-     1.04217
+     1.03667
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 92,
-    "push": "in 4.2 % (log space, constant speed)",
+    "frames": 80,
+    "push": "in 3.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4427,11 +4526,11 @@
   {
    "id": "06-13",
    "chapter": "06",
-   "start": 505.3333,
-   "start_tc": "8:25.33",
-   "duration": 3.5833,
-   "frames": 86,
-   "start_frame": 12128,
+   "start": 473.5833,
+   "start_tc": "7:53.58",
+   "duration": 3.125,
+   "frames": 75,
+   "start_frame": 11366,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn.png",
@@ -4439,14 +4538,14 @@
     "camera": "dawn",
     "zoom": [
      1.0,
-     1.03942
+     1.03438
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 86,
-    "push": "in 3.9 % (log space, constant speed)",
+    "frames": 75,
+    "push": "in 3.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4462,25 +4561,25 @@
   {
    "id": "06-14",
    "chapter": "06",
-   "start": 508.9167,
-   "start_tc": "8:28.91",
-   "duration": 4.1667,
-   "frames": 100,
-   "start_frame": 12214,
+   "start": 476.7083,
+   "start_tc": "7:56.70",
+   "duration": 4.4583,
+   "frames": 107,
+   "start_frame": 11441,
    "source": {
     "kind": "plate",
-    "plate": "frames/raw/void_stage/dawn.png",
+    "plate": "frames/raw/void_stage/dawn_close.png",
     "stage": "void_stage",
-    "camera": "dawn",
+    "camera": "dawn_close",
     "zoom": [
-     1.42,
-     1.4484
+     1.0,
+     1.02
     ],
     "centre": [
      0.5,
-     0.45
+     0.5
     ],
-    "frames": 100,
+    "frames": 107,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -4496,17 +4595,16 @@
     }
    ],
    "row": "void_stage `dawn_close`, locked, on \"Deceived. And guilty anyway.\"",
-   "sound": "Silence, 2 s, then cut",
-   "sub": "void_stage `dawn_close` (new) has no plate: a 1.42x framing of `dawn` stands in (upscaled from the 1280 plate, soft)."
+   "sound": "Silence, 2 s, then cut"
   },
   {
    "id": "07-01",
    "chapter": "07",
-   "start": 513.0833,
-   "start_tc": "8:33.08",
-   "duration": 4.4583,
-   "frames": 107,
-   "start_frame": 12314,
+   "start": 481.1667,
+   "start_tc": "8:01.16",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 11548,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/gate.png",
@@ -4514,20 +4612,20 @@
     "camera": "gate",
     "zoom": [
      1.0,
-     1.04904
+     1.04079
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 107,
-    "push": "in 4.9 % (log space, constant speed)",
+    "frames": 89,
+    "push": "in 4.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "chapter",
       "look": "B",
-      "hash": "n=07&title=The+wait&out=3.56",
+      "hash": "n=07&title=The+wait&out=2.81",
       "t0": 0.0,
       "tin": 0.0
      }
@@ -4546,11 +4644,11 @@
   {
    "id": "07-02",
    "chapter": "07",
-   "start": 517.5417,
-   "start_tc": "8:37.54",
-   "duration": 3.9583,
-   "frames": 95,
-   "start_frame": 12421,
+   "start": 484.875,
+   "start_tc": "8:04.87",
+   "duration": 3.2917,
+   "frames": 79,
+   "start_frame": 11637,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/wall.png",
@@ -4558,14 +4656,14 @@
     "camera": "wall",
     "zoom": [
      1.0,
-     1.04354
+     1.03621
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 95,
-    "push": "in 4.4 % (log space, constant speed)",
+    "frames": 79,
+    "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4581,11 +4679,11 @@
   {
    "id": "07-03",
    "chapter": "07",
-   "start": 521.5,
-   "start_tc": "8:41.50",
-   "duration": 6.2917,
-   "frames": 151,
-   "start_frame": 12516,
+   "start": 488.1667,
+   "start_tc": "8:08.16",
+   "duration": 6.375,
+   "frames": 153,
+   "start_frame": 11716,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/wide.png",
@@ -4593,14 +4691,14 @@
     "camera": "wide",
     "zoom": [
      1.0,
-     1.06921
+     1.07012
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 151,
-    "push": "in 6.9 % (log space, constant speed)",
+    "frames": 153,
+    "push": "in 7.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4616,11 +4714,11 @@
   {
    "id": "07-04",
    "chapter": "07",
-   "start": 527.7917,
-   "start_tc": "8:47.79",
-   "duration": 8.8333,
-   "frames": 212,
-   "start_frame": 12667,
+   "start": 494.5417,
+   "start_tc": "8:14.54",
+   "duration": 9.0417,
+   "frames": 217,
+   "start_frame": 11869,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/glass.png",
@@ -4634,7 +4732,7 @@
      0.5,
      0.5
     ],
-    "frames": 212,
+    "frames": 217,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -4652,16 +4750,16 @@
   {
    "id": "07-05",
    "chapter": "07",
-   "start": 536.625,
-   "start_tc": "8:56.62",
-   "duration": 12.5,
-   "frames": 300,
-   "start_frame": 12879,
+   "start": 503.5833,
+   "start_tc": "8:23.58",
+   "duration": 12.7083,
+   "frames": 305,
+   "start_frame": 12086,
    "source": {
     "kind": "piece",
     "name": "counter",
     "in": 0.0,
-    "frames": 300,
+    "frames": 305,
     "file": "out/gfx/r7/18_counter.mp4",
     "gen": {
      "tool": "plate_type",
@@ -4674,8 +4772,10 @@
     },
     "fixed": false,
     "note_piece": "2014 → 2026 over the far cell, the pull back",
-    "clip": "out/gfx/r7/18_counter.mp4",
-    "command": "<gfx python> gfx/plate_type.py counter 14.000 frames/raw/void_stage/cell_far.png out/gfx/r7/18_counter.mp4 --push 1.6 0.7"
+    "render_secs": 12.958,
+    "clip": "out/film/pieces/counter-49db97910fe9.mp4",
+    "command": "<gfx python> gfx/plate_type.py counter 12.958 frames/raw/void_stage/cell_far.png out/film/pieces/counter-49db97910fe9.mp4 --push 1.6 0.7",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -4685,16 +4785,16 @@
    ],
    "row": "void_stage `cell_far` → `cell_floor` (*new*), the pull back | 2014 – 2026, the year counter rolling",
    "sound": "A low pulse, very slow",
-   "sub": "void_stage `cell_floor` (new) has no plate: reel 7's counter pulls back on `cell_far` alone."
+   "sub": "void_stage `cell_floor` (new) has no plate: the counter (`counter`) pulls back on `cell_far` alone."
   },
   {
    "id": "07-06",
    "chapter": "07",
-   "start": 549.125,
-   "start_tc": "9:09.12",
-   "duration": 5.2083,
-   "frames": 125,
-   "start_frame": 13179,
+   "start": 516.2917,
+   "start_tc": "8:36.29",
+   "duration": 5.1667,
+   "frames": 124,
+   "start_frame": 12391,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/window.png",
@@ -4702,13 +4802,13 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.05729
+     1.05683
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 125,
+    "frames": 124,
     "push": "in 5.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -4725,11 +4825,11 @@
   {
    "id": "07-07",
    "chapter": "07",
-   "start": 554.3333,
-   "start_tc": "9:14.33",
-   "duration": 2.9167,
-   "frames": 70,
-   "start_frame": 13304,
+   "start": 521.4583,
+   "start_tc": "8:41.45",
+   "duration": 2.9583,
+   "frames": 71,
+   "start_frame": 12515,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/letters.png",
@@ -4737,14 +4837,14 @@
     "camera": "letters",
     "zoom": [
      1.0,
-     1.03208
+     1.03254
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 70,
-    "push": "in 3.2 % (log space, constant speed)",
+    "frames": 71,
+    "push": "in 3.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4760,11 +4860,11 @@
   {
    "id": "07-08",
    "chapter": "07",
-   "start": 557.25,
-   "start_tc": "9:17.25",
+   "start": 524.4167,
+   "start_tc": "8:44.41",
    "duration": 5.0,
    "frames": 120,
-   "start_frame": 13374,
+   "start_frame": 12586,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/wide.png",
@@ -4786,7 +4886,7 @@
       "mode": "place",
       "look": "B",
       "hash": "a=2024&pre=SEPTEMBER",
-      "t0": 0.345,
+      "t0": 0.335,
       "tin": 0.0
      }
     ]
@@ -4803,11 +4903,11 @@
   {
    "id": "07-09",
    "chapter": "07",
-   "start": 562.25,
-   "start_tc": "9:22.25",
+   "start": 529.4167,
+   "start_tc": "8:49.41",
    "duration": 4.5,
    "frames": 108,
-   "start_frame": 13494,
+   "start_frame": 12706,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/witness.png",
@@ -4838,11 +4938,11 @@
   {
    "id": "07-10",
    "chapter": "07",
-   "start": 566.75,
-   "start_tc": "9:26.75",
-   "duration": 7.7917,
-   "frames": 187,
-   "start_frame": 13602,
+   "start": 533.9167,
+   "start_tc": "8:53.91",
+   "duration": 8.9167,
+   "frames": 214,
+   "start_frame": 12814,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/desk.png",
@@ -4856,7 +4956,7 @@
      0.5,
      0.5
     ],
-    "frames": 187,
+    "frames": 214,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
@@ -4882,11 +4982,11 @@
   {
    "id": "07-11",
    "chapter": "07",
-   "start": 574.5417,
-   "start_tc": "9:34.54",
-   "duration": 9.8333,
-   "frames": 236,
-   "start_frame": 13789,
+   "start": 542.8333,
+   "start_tc": "9:02.83",
+   "duration": 5.75,
+   "frames": 138,
+   "start_frame": 13028,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/dais.png",
@@ -4894,14 +4994,14 @@
     "camera": "dais",
     "zoom": [
      1.0,
-     1.08
+     1.06325
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 236,
-    "push": "in 8.0 % (log space, constant speed)",
+    "frames": 138,
+    "push": "in 6.3 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4912,16 +5012,50 @@
     }
    ],
    "sound": "A large quiet room",
-   "change": "Added: \"Members of Congress introduced a bipartisan bill\" on the hearing room's dais."
+   "change": "Added: \"Members of Congress introduced a bipartisan bill\" on the hearing room's dais, then \"another American imprisoned in China\" on the prison tower."
+  },
+  {
+   "id": "07-11b",
+   "chapter": "07",
+   "start": 548.5833,
+   "start_tc": "9:08.58",
+   "duration": 5.5,
+   "frames": 132,
+   "start_frame": 13166,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/tower.png",
+    "stage": "prison_exterior",
+    "camera": "tower",
+    "zoom": [
+     1.0,
+     1.0605
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 132,
+    "push": "in 6.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.04",
+     "text": "In May 2025, according to Tim, the United States formally requested her release on humanitarian grounds. Members of Congress introduced a bipartisan bill carrying her name, and the name of another American imprisoned in China, Nelson Wells Junior."
+    }
+   ],
+   "sound": "Rain, wind"
   },
   {
    "id": "07-12",
    "chapter": "07",
-   "start": 584.375,
-   "start_tc": "9:44.37",
-   "duration": 3.0,
-   "frames": 72,
-   "start_frame": 14025,
+   "start": 554.0833,
+   "start_tc": "9:14.08",
+   "duration": 2.7917,
+   "frames": 67,
+   "start_frame": 13298,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/letters.png",
@@ -4929,14 +5063,14 @@
     "camera": "letters",
     "zoom": [
      1.3,
-     1.3429
+     1.33992
     ],
     "centre": [
      0.45,
      0.6
     ],
-    "frames": 72,
-    "push": "in 3.3 % (log space, constant speed)",
+    "frames": 67,
+    "push": "in 3.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4952,11 +5086,11 @@
   {
    "id": "07-13",
    "chapter": "07",
-   "start": 587.375,
-   "start_tc": "9:47.37",
-   "duration": 2.7917,
-   "frames": 67,
-   "start_frame": 14097,
+   "start": 556.875,
+   "start_tc": "9:16.87",
+   "duration": 2.6667,
+   "frames": 64,
+   "start_frame": 13365,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/detention_corridor/door.png",
@@ -4964,14 +5098,14 @@
     "camera": "door",
     "zoom": [
      1.0,
-     1.03071
+     1.02933
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 67,
-    "push": "in 3.1 % (log space, constant speed)",
+    "frames": 64,
+    "push": "in 2.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -4986,26 +5120,26 @@
   {
    "id": "07-14",
    "chapter": "07",
-   "start": 590.1667,
-   "start_tc": "9:50.16",
-   "duration": 3.0833,
-   "frames": 74,
-   "start_frame": 14164,
+   "start": 559.5417,
+   "start_tc": "9:19.54",
+   "duration": 2.0,
+   "frames": 48,
+   "start_frame": 13429,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/cell_close.png",
     "stage": "void_stage",
     "camera": "cell_close",
     "zoom": [
-     1.03392,
+     1.022,
      1.0
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 74,
-    "push": "out 3.3 % (log space, constant speed)",
+    "frames": 48,
+    "push": "out 2.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5021,16 +5155,16 @@
   {
    "id": "07-15",
    "chapter": "07",
-   "start": 593.25,
-   "start_tc": "9:53.25",
-   "duration": 6.9583,
-   "frames": 167,
-   "start_frame": 14238,
+   "start": 561.5417,
+   "start_tc": "9:21.54",
+   "duration": 5.1667,
+   "frames": 124,
+   "start_frame": 13477,
    "source": {
     "kind": "piece",
     "name": "father",
     "in": 0.0,
-    "frames": 167,
+    "frames": 124,
     "file": "out/gfx/r7/19_father.mp4",
     "gen": {
      "tool": "doc",
@@ -5038,8 +5172,10 @@
     },
     "fixed": false,
     "note_piece": "S1 p. 2, \"not going to live long enough to see his daughter free\" lit at 1.2 s",
-    "clip": "out/gfx/r7/19_father.mp4",
-    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_father.json --out out/gfx/r7/19_father.mp4"
+    "render_secs": 5.417,
+    "clip": "out/film/pieces/father-fb944dbe22e3.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/father-fb944dbe22e3.json --out out/film/pieces/father-fb944dbe22e3.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -5053,11 +5189,11 @@
   {
    "id": "08-01",
    "chapter": "08",
-   "start": 600.2083,
-   "start_tc": "10:00.20",
-   "duration": 8.7917,
-   "frames": 211,
-   "start_frame": 14405,
+   "start": 566.7083,
+   "start_tc": "9:26.70",
+   "duration": 8.75,
+   "frames": 210,
+   "start_frame": 13601,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining.png",
@@ -5071,7 +5207,7 @@
      0.5,
      0.5
     ],
-    "frames": 211,
+    "frames": 210,
     "push": "in 5.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
@@ -5097,11 +5233,11 @@
   {
    "id": "08-02",
    "chapter": "08",
-   "start": 609.0,
-   "start_tc": "10:09.00",
-   "duration": 5.7083,
-   "frames": 137,
-   "start_frame": 14616,
+   "start": 575.4583,
+   "start_tc": "9:35.45",
+   "duration": 5.6667,
+   "frames": 136,
+   "start_frame": 13811,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/dining.png",
@@ -5109,14 +5245,14 @@
     "camera": "dining",
     "zoom": [
      1.35,
-     1.43477
+     1.43415
     ],
     "centre": [
      0.14,
      0.2
     ],
-    "frames": 137,
-    "push": "in 6.3 % (log space, constant speed)",
+    "frames": 136,
+    "push": "in 6.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5133,26 +5269,26 @@
   {
    "id": "08-03",
    "chapter": "08",
-   "start": 614.7083,
-   "start_tc": "10:14.70",
-   "duration": 4.625,
-   "frames": 111,
-   "start_frame": 14753,
+   "start": 581.125,
+   "start_tc": "9:41.12",
+   "duration": 3.75,
+   "frames": 90,
+   "start_frame": 13947,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn_high.png",
     "stage": "void_stage",
     "camera": "dawn_high",
     "zoom": [
-     1.05088,
+     1.04125,
      1.0
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 111,
-    "push": "out 4.8 % (log space, constant speed)",
+    "frames": 90,
+    "push": "out 4.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5168,11 +5304,11 @@
   {
    "id": "08-04",
    "chapter": "08",
-   "start": 619.3333,
-   "start_tc": "10:19.33",
-   "duration": 9.4167,
-   "frames": 226,
-   "start_frame": 14864,
+   "start": 584.875,
+   "start_tc": "9:44.87",
+   "duration": 8.7083,
+   "frames": 209,
+   "start_frame": 14037,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/witness.png",
@@ -5186,7 +5322,7 @@
      0.5,
      0.5
     ],
-    "frames": 226,
+    "frames": 209,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -5203,11 +5339,11 @@
   {
    "id": "08-05",
    "chapter": "08",
-   "start": 628.75,
-   "start_tc": "10:28.75",
-   "duration": 8.0833,
-   "frames": 194,
-   "start_frame": 15090,
+   "start": 593.5833,
+   "start_tc": "9:53.58",
+   "duration": 7.5,
+   "frames": 180,
+   "start_frame": 14246,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/chicago_night/suitcase.png",
@@ -5221,7 +5357,7 @@
      0.5,
      0.5
     ],
-    "frames": 194,
+    "frames": 180,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -5238,26 +5374,26 @@
   {
    "id": "08-06",
    "chapter": "08",
-   "start": 636.8333,
-   "start_tc": "10:36.83",
-   "duration": 7.5,
-   "frames": 180,
-   "start_frame": 15284,
+   "start": 601.0833,
+   "start_tc": "10:01.08",
+   "duration": 6.875,
+   "frames": 165,
+   "start_frame": 14426,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/cell_far.png",
     "stage": "void_stage",
     "camera": "cell_far",
     "zoom": [
-     1.08,
+     1.07563,
      1.0
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 180,
-    "push": "out 7.4 % (log space, constant speed)",
+    "frames": 165,
+    "push": "out 7.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5273,16 +5409,16 @@
   {
    "id": "08-07",
    "chapter": "08",
-   "start": 644.3333,
-   "start_tc": "10:44.33",
-   "duration": 4.75,
-   "frames": 114,
-   "start_frame": 15464,
+   "start": 607.9583,
+   "start_tc": "10:07.95",
+   "duration": 7.2917,
+   "frames": 175,
+   "start_frame": 14591,
    "source": {
     "kind": "piece",
     "name": "gene",
     "in": 0.0,
-    "frames": 114,
+    "frames": 175,
     "file": "out/gfx/r7/20_gene.mp4",
     "gen": {
      "tool": "plate_type",
@@ -5291,8 +5427,10 @@
     },
     "fixed": false,
     "note_piece": "JANUARY 25, 2026 over the empty chair",
-    "clip": "out/film/pieces/gene-3bb9dd335b61.mp4",
-    "command": "<gfx python> gfx/plate_type.py date_gene 5.000 frames/raw/home/chair.png out/film/pieces/gene-3bb9dd335b61.mp4"
+    "render_secs": 7.542,
+    "clip": "out/film/pieces/gene-245aae1b79de.mp4",
+    "command": "<gfx python> gfx/plate_type.py date_gene 7.542 frames/raw/home/chair.png out/film/pieces/gene-245aae1b79de.mp4",
+    "clip_from": "re-rendered"
    },
    "voice": [
     {
@@ -5300,18 +5438,18 @@
      "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
     }
    ],
-   "row": "home `chair` | JANUARY 25, 2026 (reel 7's date over the empty chair)",
+   "row": "home `chair` | JANUARY 25, 2026",
    "sound": "A clock, then nothing",
-   "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (reel 7's `date_gene`), so the straight cut from full to empty cannot happen yet."
+   "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (`date_gene`), so the straight cut from full to empty cannot happen yet."
   },
   {
    "id": "08-08",
    "chapter": "08",
-   "start": 649.0833,
-   "start_tc": "10:49.08",
-   "duration": 7.8333,
-   "frames": 188,
-   "start_frame": 15578,
+   "start": 615.25,
+   "start_tc": "10:15.25",
+   "duration": 7.4583,
+   "frames": 179,
+   "start_frame": 14766,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair.png",
@@ -5325,7 +5463,7 @@
      0.62,
      0.5
     ],
-    "frames": 188,
+    "frames": 179,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -5343,11 +5481,11 @@
   {
    "id": "09-01",
    "chapter": "09",
-   "start": 656.9167,
-   "start_tc": "10:56.91",
-   "duration": 6.9583,
-   "frames": 167,
-   "start_frame": 15766,
+   "start": 622.7083,
+   "start_tc": "10:22.70",
+   "duration": 6.8333,
+   "frames": 164,
+   "start_frame": 14945,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/gate.png",
@@ -5355,14 +5493,14 @@
     "camera": "gate",
     "zoom": [
      1.0,
-     1.07654
+     1.07517
     ],
     "centre": [
      0.5,
      0.55
     ],
-    "frames": 167,
-    "push": "in 7.7 % (log space, constant speed)",
+    "frames": 164,
+    "push": "in 7.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -5376,7 +5514,7 @@
       "mode": "place",
       "look": "B",
       "hash": "a=2026&pre=JULY",
-      "t0": 2.272,
+      "t0": 2.223,
       "tin": 0.0
      }
     ]
@@ -5393,11 +5531,11 @@
   {
    "id": "09-02",
    "chapter": "09",
-   "start": 663.875,
-   "start_tc": "11:03.87",
-   "duration": 4.3333,
-   "frames": 104,
-   "start_frame": 15933,
+   "start": 629.5417,
+   "start_tc": "10:29.54",
+   "duration": 4.4583,
+   "frames": 107,
+   "start_frame": 15109,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/hands.png",
@@ -5405,14 +5543,14 @@
     "camera": "hands",
     "zoom": [
      1.0,
-     1.04767
+     1.04904
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 104,
-    "push": "in 4.8 % (log space, constant speed)",
+    "frames": 107,
+    "push": "in 4.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5428,11 +5566,11 @@
   {
    "id": "09-03",
    "chapter": "09",
-   "start": 668.2083,
-   "start_tc": "11:08.20",
-   "duration": 11.5,
-   "frames": 276,
-   "start_frame": 16037,
+   "start": 634.0,
+   "start_tc": "10:34.00",
+   "duration": 11.75,
+   "frames": 282,
+   "start_frame": 15216,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/wide.png",
@@ -5446,7 +5584,7 @@
      0.5,
      0.5
     ],
-    "frames": 276,
+    "frames": 282,
     "push": "in 8.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -5464,11 +5602,11 @@
   {
    "id": "09-04",
    "chapter": "09",
-   "start": 679.7083,
-   "start_tc": "11:19.70",
-   "duration": 9.2917,
-   "frames": 223,
-   "start_frame": 16313,
+   "start": 645.75,
+   "start_tc": "10:45.75",
+   "duration": 7.1667,
+   "frames": 172,
+   "start_frame": 15498,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/glass.png",
@@ -5482,7 +5620,7 @@
      0.5,
      0.5
     ],
-    "frames": 223,
+    "frames": 172,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
@@ -5507,11 +5645,11 @@
   {
    "id": "09-05",
    "chapter": "09",
-   "start": 689.0,
-   "start_tc": "11:29.00",
-   "duration": 4.2083,
-   "frames": 101,
-   "start_frame": 16536,
+   "start": 652.9167,
+   "start_tc": "10:52.91",
+   "duration": 2.8333,
+   "frames": 68,
+   "start_frame": 15670,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/visiting_room/empty.png",
@@ -5519,14 +5657,14 @@
     "camera": "empty",
     "zoom": [
      1.0,
-     1.04629
+     1.03117
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 101,
-    "push": "in 4.6 % (log space, constant speed)",
+    "frames": 68,
+    "push": "in 3.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5542,11 +5680,11 @@
   {
    "id": "09-06",
    "chapter": "09",
-   "start": 693.2083,
-   "start_tc": "11:33.20",
-   "duration": 6.5,
-   "frames": 156,
-   "start_frame": 16637,
+   "start": 655.75,
+   "start_tc": "10:55.75",
+   "duration": 6.8333,
+   "frames": 164,
+   "start_frame": 15738,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/witness.png",
@@ -5554,14 +5692,14 @@
     "camera": "witness",
     "zoom": [
      1.0,
-     1.0715
+     1.07517
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 156,
-    "push": "in 7.1 % (log space, constant speed)",
+    "frames": 164,
+    "push": "in 7.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -5585,11 +5723,11 @@
   {
    "id": "09-07",
    "chapter": "09",
-   "start": 699.7083,
-   "start_tc": "11:39.70",
-   "duration": 3.6667,
-   "frames": 88,
-   "start_frame": 16793,
+   "start": 662.5833,
+   "start_tc": "11:02.58",
+   "duration": 3.7917,
+   "frames": 91,
+   "start_frame": 15902,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/home/chair.png",
@@ -5597,14 +5735,14 @@
     "camera": "chair",
     "zoom": [
      1.0,
-     1.04033
+     1.04171
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 88,
-    "push": "in 4.0 % (log space, constant speed)",
+    "frames": 91,
+    "push": "in 4.2 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5620,11 +5758,11 @@
   {
    "id": "09-08",
    "chapter": "09",
-   "start": 703.375,
-   "start_tc": "11:43.37",
-   "duration": 3.25,
-   "frames": 78,
-   "start_frame": 16881,
+   "start": 666.375,
+   "start_tc": "11:06.37",
+   "duration": 3.3333,
+   "frames": 80,
+   "start_frame": 15993,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/desk.png",
@@ -5632,14 +5770,14 @@
     "camera": "desk",
     "zoom": [
      1.0,
-     1.03575
+     1.03667
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 78,
-    "push": "in 3.6 % (log space, constant speed)",
+    "frames": 80,
+    "push": "in 3.7 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5655,11 +5793,11 @@
   {
    "id": "09-09",
    "chapter": "09",
-   "start": 706.625,
-   "start_tc": "11:46.62",
-   "duration": 9.0417,
-   "frames": 217,
-   "start_frame": 16959,
+   "start": 669.7083,
+   "start_tc": "11:09.70",
+   "duration": 6.875,
+   "frames": 165,
+   "start_frame": 16073,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hearing_room/wide.png",
@@ -5667,14 +5805,14 @@
     "camera": "wide",
     "zoom": [
      1.0,
-     1.08
+     1.07563
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 217,
-    "push": "in 8.0 % (log space, constant speed)",
+    "frames": 165,
+    "push": "in 7.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5690,11 +5828,11 @@
   {
    "id": "09-10",
    "chapter": "09",
-   "start": 715.6667,
-   "start_tc": "11:55.66",
-   "duration": 6.7083,
-   "frames": 161,
-   "start_frame": 17176,
+   "start": 676.5833,
+   "start_tc": "11:16.58",
+   "duration": 6.0417,
+   "frames": 145,
+   "start_frame": 16238,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/dawn.png",
@@ -5702,14 +5840,14 @@
     "camera": "dawn",
     "zoom": [
      1.0,
-     1.07379
+     1.06646
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 161,
-    "push": "in 7.4 % (log space, constant speed)",
+    "frames": 145,
+    "push": "in 6.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5729,26 +5867,26 @@
   {
    "id": "09-11",
    "chapter": "09",
-   "start": 722.375,
-   "start_tc": "12:02.37",
-   "duration": 6.375,
-   "frames": 153,
-   "start_frame": 17337,
+   "start": 682.625,
+   "start_tc": "11:22.62",
+   "duration": 6.75,
+   "frames": 162,
+   "start_frame": 16383,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/prison_exterior/wall.png",
     "stage": "prison_exterior",
     "camera": "wall",
     "zoom": [
-     1.07012,
+     1.07425,
      1.0
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 153,
-    "push": "out 6.6 % (log space, constant speed)",
+    "frames": 162,
+    "push": "out 6.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5764,11 +5902,11 @@
   {
    "id": "09-12",
    "chapter": "09",
-   "start": 728.75,
-   "start_tc": "12:08.75",
-   "duration": 5.5833,
-   "frames": 134,
-   "start_frame": 17490,
+   "start": 689.375,
+   "start_tc": "11:29.37",
+   "duration": 5.8333,
+   "frames": 140,
+   "start_frame": 16545,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/tim_desk/window.png",
@@ -5776,14 +5914,14 @@
     "camera": "window",
     "zoom": [
      1.0,
-     1.06142
+     1.06417
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 134,
-    "push": "in 6.1 % (log space, constant speed)",
+    "frames": 140,
+    "push": "in 6.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5799,11 +5937,11 @@
   {
    "id": "09-13",
    "chapter": "09",
-   "start": 734.3333,
-   "start_tc": "12:14.33",
-   "duration": 5.5833,
-   "frames": 134,
-   "start_frame": 17624,
+   "start": 695.2083,
+   "start_tc": "11:35.20",
+   "duration": 4.9167,
+   "frames": 118,
+   "start_frame": 16685,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/evidence_table/purses.png",
@@ -5811,14 +5949,14 @@
     "camera": "purses",
     "zoom": [
      1.04,
-     1.10387
+     1.09625
     ],
     "centre": [
      0.72,
      0.45
     ],
-    "frames": 134,
-    "push": "in 6.1 % (log space, constant speed)",
+    "frames": 118,
+    "push": "in 5.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5834,11 +5972,11 @@
   {
    "id": "09-14",
    "chapter": "09",
-   "start": 739.9167,
-   "start_tc": "12:19.91",
-   "duration": 4.625,
-   "frames": 111,
-   "start_frame": 17758,
+   "start": 700.125,
+   "start_tc": "11:40.12",
+   "duration": 4.0417,
+   "frames": 97,
+   "start_frame": 16803,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/baggage_belt/curtain.png",
@@ -5846,14 +5984,14 @@
     "camera": "curtain",
     "zoom": [
      1.0,
-     1.05088
+     1.04446
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 111,
-    "push": "in 5.1 % (log space, constant speed)",
+    "frames": 97,
+    "push": "in 4.4 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5868,11 +6006,11 @@
   {
    "id": "09-15",
    "chapter": "09",
-   "start": 744.5417,
-   "start_tc": "12:24.54",
-   "duration": 6.125,
-   "frames": 147,
-   "start_frame": 17869,
+   "start": 704.1667,
+   "start_tc": "11:44.16",
+   "duration": 5.375,
+   "frames": 129,
+   "start_frame": 16900,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/hongkong_street/company.png",
@@ -5880,14 +6018,14 @@
     "camera": "company",
     "zoom": [
      1.0,
-     1.06737
+     1.05913
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 147,
-    "push": "in 6.7 % (log space, constant speed)",
+    "frames": 129,
+    "push": "in 5.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5902,11 +6040,11 @@
   {
    "id": "09-16",
    "chapter": "09",
-   "start": 750.6667,
-   "start_tc": "12:30.66",
-   "duration": 3.9167,
-   "frames": 94,
-   "start_frame": 18016,
+   "start": 709.5417,
+   "start_tc": "11:49.54",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 17029,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/wide_pre.png",
@@ -5914,14 +6052,14 @@
     "camera": "wide_pre",
     "zoom": [
      1.0,
-     1.04308
+     1.03575
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 94,
-    "push": "in 4.3 % (log space, constant speed)",
+    "frames": 78,
+    "push": "in 3.6 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": []
    },
@@ -5937,11 +6075,11 @@
   {
    "id": "09-17",
    "chapter": "09",
-   "start": 754.5833,
-   "start_tc": "12:34.58",
-   "duration": 5.125,
-   "frames": 123,
-   "start_frame": 18110,
+   "start": 712.7917,
+   "start_tc": "11:52.79",
+   "duration": 4.3333,
+   "frames": 104,
+   "start_frame": 17107,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/inspection_room/match.png",
@@ -5955,14 +6093,14 @@
      0.5,
      0.5
     ],
-    "frames": 123,
+    "frames": 104,
     "push": "in 3.5 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
       "mode": "yes",
       "look": "B",
-      "t0": 4.526,
+      "t0": 3.717,
       "tin": 0.0
      }
     ]
@@ -5979,26 +6117,26 @@
   {
    "id": "09-18",
    "chapter": "09",
-   "start": 759.7083,
-   "start_tc": "12:39.70",
-   "duration": 13.8333,
-   "frames": 332,
-   "start_frame": 18233,
+   "start": 717.125,
+   "start_tc": "11:57.12",
+   "duration": 11.8333,
+   "frames": 284,
+   "start_frame": 17211,
    "source": {
     "kind": "plate",
     "plate": "frames/raw/void_stage/bags.png",
     "stage": "void_stage",
     "camera": "bags",
     "zoom": [
-     1.03529,
-     1.13657
+     1.03535,
+     1.13798
     ],
     "centre": [
      0.5,
      0.5
     ],
-    "frames": 332,
-    "push": "in 9.8 % (log space, constant speed)",
+    "frames": 284,
+    "push": "in 9.9 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
     "type": [
      {
@@ -6040,1072 +6178,1072 @@
   {
    "id": "00.01",
    "start": 1.4,
-   "speech": 1.5,
-   "end": 3.25,
+   "speech": 1.509,
+   "end": 3.259,
    "text": "The bags are overweight.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.02",
-   "start": 3.25,
-   "speech": 5.25,
-   "end": 8.85,
+   "start": 3.259,
+   "speech": 4.705,
+   "end": 8.314,
    "text": "Only slightly. There's a small fee, and she pays it without a second thought.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.03",
-   "start": 8.85,
-   "speech": 10.125,
-   "end": 18.975,
+   "start": 8.314,
+   "speech": 10.206,
+   "end": 18.52,
    "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.beat1",
-   "start": 18.975,
+   "start": 18.52,
    "speech": 0.0,
-   "end": 19.775,
+   "end": 19.32,
    "hold": 0.8,
    "note": "(beat)"
   },
   {
    "id": "00.04",
-   "start": 19.775,
-   "speech": 7.875,
-   "end": 28.0,
+   "start": 19.32,
+   "speech": 7.274,
+   "end": 26.944,
    "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.05",
-   "start": 28.0,
-   "speech": 4.125,
-   "end": 32.475,
+   "start": 26.944,
+   "speech": 3.544,
+   "end": 30.838,
    "text": "The officers want to know one thing. Are these bags hers?",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.06",
-   "start": 32.475,
-   "speech": 2.625,
-   "end": 35.45,
+   "start": 30.838,
+   "speech": 2.036,
+   "end": 33.224,
    "text": "According to her brother, she says yes.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.07",
-   "start": 35.45,
-   "speech": 1.125,
-   "end": 36.575,
+   "start": 33.224,
+   "speech": 1.224,
+   "end": 34.448,
    "text": "They ask again.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.beat2",
-   "start": 36.575,
+   "start": 34.448,
    "speech": 0.0,
-   "end": 37.075,
+   "end": 34.948,
    "hold": 0.5,
    "note": "added: a held breath before the second Yes (the direction puts the two YESes 4 s apart)"
   },
   {
    "id": "00.08",
-   "start": 37.075,
-   "speech": 0.6,
-   "end": 38.025,
+   "start": 34.948,
+   "speech": 0.671,
+   "end": 35.969,
    "text": "Yes.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.09",
-   "start": 38.025,
-   "speech": 6.0,
-   "end": 44.025,
+   "start": 35.969,
+   "speech": 5.186,
+   "end": 41.155,
    "text": "Why would she say anything else? She packed them herself. She just paid to carry them.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.sil1",
-   "start": 44.025,
+   "start": 41.155,
    "speech": 0.0,
-   "end": 45.025,
+   "end": 42.155,
    "hold": 1.0,
    "note": "(silence, 1 s)"
   },
   {
    "id": "00.10",
-   "start": 45.025,
-   "speech": 8.625,
-   "end": 54.0,
+   "start": 42.155,
+   "speech": 10.277,
+   "end": 52.782,
    "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.11",
-   "start": 54.0,
-   "speech": 10.875,
-   "end": 65.225,
+   "start": 52.782,
+   "speech": 8.772,
+   "end": 61.904,
    "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.12",
-   "start": 65.225,
-   "speech": 3.75,
-   "end": 68.975,
+   "start": 61.904,
+   "speech": 3.233,
+   "end": 65.137,
    "text": "The luggage was hers. The drugs, she said, were not.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.sil2",
-   "start": 68.975,
+   "start": 65.137,
    "speech": 0.0,
-   "end": 70.475,
+   "end": 66.637,
    "hold": 1.5,
    "note": "(score cut dead; silence, 1.5 s)"
   },
   {
    "id": "00.13",
-   "start": 70.475,
-   "speech": 6.75,
-   "end": 77.575,
+   "start": 66.637,
+   "speech": 6.562,
+   "end": 73.549,
    "text": "Three years later, a court sentences her to death, with a two-year reprieve. Today, she is serving life.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.14",
-   "start": 77.575,
-   "speech": 8.625,
-   "end": 86.2,
+   "start": 73.549,
+   "speech": 8.307,
+   "end": 81.856,
    "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "00.sil3",
-   "start": 86.2,
+   "start": 81.856,
    "speech": 0.0,
-   "end": 87.2,
+   "end": 82.856,
    "hold": 1.0,
    "note": "1 s of near silence after \"answer\" (direction, 1:21)"
   },
   {
    "id": "00.montage",
-   "start": 87.2,
+   "start": 82.856,
    "speech": 0.0,
-   "end": 93.408,
+   "end": 89.064,
    "hold": 6.208333333333333,
    "note": "no voice: the flash-forward montage (gfx/montage.py, 149 frames), the score building to its peak"
   },
   {
    "id": "00.title",
-   "start": 93.408,
+   "start": 89.064,
    "speech": 0.0,
-   "end": 98.408,
+   "end": 94.064,
    "hold": 5.0,
    "note": "the title lands on the peak; the score decays into silence"
   },
   {
    "id": "01.pre",
-   "start": 98.408,
+   "start": 94.064,
    "speech": 0.0,
-   "end": 99.208,
+   "end": 94.864,
    "hold": 0.8,
    "note": "chapter title"
   },
   {
    "id": "01.01",
-   "start": 99.208,
-   "speech": 1.899,
-   "end": 101.457,
+   "start": 94.864,
+   "speech": 1.991,
+   "end": 97.205,
    "text": "Before China, there was Chicago.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.02",
-   "start": 101.457,
-   "speech": 7.595,
-   "end": 109.402,
+   "start": 97.205,
+   "speech": 7.03,
+   "end": 104.585,
    "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and loved to travel.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.03",
-   "start": 109.402,
-   "speech": 12.532,
-   "end": 122.284,
+   "start": 104.585,
+   "speech": 13.493,
+   "end": 118.428,
    "text": "Her brother Tim remembers her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters. For Dawn, every entry was a small possibility that something wonderful might happen.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.04",
-   "start": 122.284,
-   "speech": 15.57,
-   "end": 138.203,
+   "start": 118.428,
+   "speech": 15.803,
+   "end": 134.581,
    "text": "In 2014 she was working as a receptionist, in a family that had given decades to public service. Her father, Gene, had served in the Army and then as a Chicago police sergeant. Tim had been a Chicago police officer himself.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.05",
-   "start": 138.203,
-   "speech": 3.038,
-   "end": 141.591,
+   "start": 134.581,
+   "speech": 2.471,
+   "end": 137.402,
    "text": "A family that knew what danger looked like.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.06",
-   "start": 141.591,
-   "speech": 4.177,
-   "end": 146.118,
+   "start": 137.402,
+   "speech": 3.498,
+   "end": 141.25,
    "text": "What arrived in Dawn's inbox didn't look like danger at all.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.07",
-   "start": 146.118,
-   "speech": 2.278,
-   "end": 148.397,
+   "start": 141.25,
+   "speech": 1.413,
+   "end": 142.663,
    "text": "It looked like she had won.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.beat1",
-   "start": 148.397,
+   "start": 142.663,
    "speech": 0.0,
-   "end": 149.197,
+   "end": 143.463,
    "hold": 0.8,
    "note": "(beat)"
   },
   {
    "id": "01.08",
-   "start": 149.197,
-   "speech": 14.43,
-   "end": 163.977,
+   "start": 143.463,
+   "speech": 14.151,
+   "end": 157.964,
    "text": "The message said she'd won a contest. Accounts differ on exactly what the prize was: cash, travel, or both. But every version has the same shape. An unexpected win, and people ready to fly her across the world.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.09",
-   "start": 163.977,
-   "speech": 10.253,
-   "end": 174.58,
+   "start": 157.964,
+   "speech": 9.747,
+   "end": 168.061,
    "text": "Dawn didn't believe it. Not at first. Tim says she looked the organizers up online. What she found looked real enough that she sent her passport details.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.10",
-   "start": 174.58,
-   "speech": 3.038,
-   "end": 177.968,
+   "start": 168.061,
+   "speech": 2.365,
+   "end": 170.776,
    "text": "Then the thing that ended her doubts arrived.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.11",
-   "start": 177.968,
-   "speech": 0.759,
-   "end": 179.078,
+   "start": 170.776,
+   "speech": 0.882,
+   "end": 172.008,
    "text": "The tickets.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.12",
-   "start": 179.078,
-   "speech": 3.797,
-   "end": 183.225,
+   "start": 172.008,
+   "speech": 3.364,
+   "end": 175.722,
    "text": "Real tickets to Hong Kong, paid for by someone else.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.13",
-   "start": 183.225,
-   "speech": 6.835,
-   "end": 190.411,
+   "start": 175.722,
+   "speech": 4.994,
+   "end": 181.066,
    "text": "That is what makes this story so hard to shake. The first part of the promise was true.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.14",
-   "start": 190.411,
-   "speech": 4.557,
-   "end": 194.968,
+   "start": 181.066,
+   "speech": 4.295,
+   "end": 185.361,
    "text": "Her family believes the deception was hidden in everything that came after.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "01.sil1",
-   "start": 194.968,
+   "start": 185.361,
    "speech": 0.0,
-   "end": 196.468,
+   "end": 186.861,
    "hold": 1.5,
    "note": "(silence, 1.5 s)"
   },
   {
    "id": "02.pre",
-   "start": 196.468,
+   "start": 186.861,
    "speech": 0.0,
-   "end": 197.468,
+   "end": 187.861,
    "hold": 1.0,
    "note": "chapter title; engine hum"
   },
   {
    "id": "02.01",
-   "start": 197.468,
-   "speech": 10.253,
-   "end": 208.071,
+   "start": 187.861,
+   "speech": 11.104,
+   "end": 199.315,
    "text": "According to Tim's sworn account, Dawn spent nine days in Hong Kong. Sightseeing. Shopping. The people running the trip treated her well, and every expense was covered.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.02",
-   "start": 208.071,
-   "speech": 8.734,
-   "end": 217.155,
+   "start": 199.315,
+   "speech": 8.145,
+   "end": 207.81,
    "text": "Then they offered more: mainland China. With their help she got a visa, and spent about nine more days travelling through the country.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.03",
-   "start": 217.155,
-   "speech": 1.899,
-   "end": 219.404,
+   "start": 207.81,
+   "speech": 1.535,
+   "end": 209.695,
    "text": "Watch what those days did.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.04",
-   "start": 219.404,
-   "speech": 10.633,
-   "end": 230.387,
+   "start": 209.695,
+   "speech": 9.696,
+   "end": 219.741,
    "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.05",
-   "start": 230.387,
-   "speech": 5.316,
-   "end": 236.053,
+   "start": 219.741,
+   "speech": 4.737,
+   "end": 224.828,
    "text": "There was more to come. Australia, she was told. Another part of the prize.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.06",
-   "start": 236.053,
-   "speech": 3.797,
-   "end": 240.201,
+   "start": 224.828,
+   "speech": 2.632,
+   "end": 227.81,
    "text": "For Dawn, the trip of her life was still going.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.07",
-   "start": 240.201,
-   "speech": 4.557,
-   "end": 244.758,
+   "start": 227.81,
+   "speech": 3.391,
+   "end": 231.201,
    "text": "But before she left China, they had one more gift for her.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "02.sil1",
-   "start": 244.758,
+   "start": 231.201,
    "speech": 0.0,
-   "end": 245.758,
+   "end": 232.201,
    "hold": 1.0,
    "note": "(silence, 1 s)"
   },
   {
    "id": "03.pre",
-   "start": 245.758,
+   "start": 232.201,
    "speech": 0.0,
-   "end": 246.558,
+   "end": 233.001,
    "hold": 0.8,
    "note": "chapter title"
   },
   {
    "id": "03.01",
-   "start": 246.558,
-   "speech": 7.355,
-   "end": 254.263,
+   "start": 233.001,
+   "speech": 7.135,
+   "end": 240.486,
    "text": "Just before the next leg of the trip, the organizers told Dawn she had won something else. Designer handbags.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.02",
-   "start": 254.263,
-   "speech": 6.968,
-   "end": 261.58,
+   "start": 240.486,
+   "speech": 5.224,
+   "end": 246.06,
    "text": "She accepted them. Why wouldn't she? These were the people who had paid for weeks of her life.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.03",
-   "start": 261.58,
-   "speech": 3.871,
-   "end": 265.801,
+   "start": 246.06,
+   "speech": 3.261,
+   "end": 249.671,
    "text": "But there was a problem. Her luggage was already full.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.04",
-   "start": 265.801,
-   "speech": 8.516,
-   "end": 274.667,
+   "start": 249.671,
+   "speech": 7.741,
+   "end": 257.762,
    "text": "So, Tim testified, she went with people from the trip to the Baiyun Leather Market, where the organizers bought an extra bag.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.05",
-   "start": 274.667,
-   "speech": 5.419,
-   "end": 280.437,
+   "start": 257.762,
+   "speech": 5.254,
+   "end": 263.366,
    "text": "Dawn packed the handbags herself. Two pieces of luggage. Both checked in her name.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.06",
-   "start": 280.437,
-   "speech": 4.645,
-   "end": 285.432,
+   "start": 263.366,
+   "speech": 3.574,
+   "end": 267.29,
    "text": "And at the check-in desk, the scale said what you already know.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.07",
-   "start": 285.432,
-   "speech": 0.6,
-   "end": 286.382,
+   "start": 267.29,
+   "speech": 0.938,
+   "end": 268.578,
    "text": "Overweight.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.08",
-   "start": 286.382,
-   "speech": 1.548,
-   "end": 288.28,
+   "start": 268.578,
+   "speech": 1.179,
+   "end": 270.107,
    "text": "She paid the fee.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.09",
-   "start": 288.28,
-   "speech": 8.516,
-   "end": 297.146,
+   "start": 270.107,
+   "speech": 7.777,
+   "end": 278.234,
    "text": "Tim put that detail in his testimony for a reason. To him, it shows how ordinary this journey felt to his sister.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.10",
-   "start": 297.146,
-   "speech": 11.226,
-   "end": 308.372,
+   "start": 278.234,
+   "speech": 10.067,
+   "end": 288.301,
    "text": "The people behind the trip had given her the handbags. They had solved her luggage problem. And whatever was hidden in those linings was now travelling in her name.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "03.sil1",
-   "start": 308.372,
+   "start": 288.301,
    "speech": 0.0,
-   "end": 309.372,
+   "end": 289.301,
    "hold": 1.0,
    "note": "added: the belt runs on for a second before chapter 4 (chapters end on a short silence)"
   },
   {
    "id": "04.pre",
-   "start": 309.372,
+   "start": 289.301,
    "speech": 0.0,
-   "end": 310.372,
+   "end": 290.301,
    "hold": 1.0,
    "note": "chapter title; the tannoy, muffled"
   },
   {
    "id": "04.01",
-   "start": 310.372,
-   "speech": 8.516,
-   "end": 319.238,
+   "start": 290.301,
+   "speech": 7.052,
+   "end": 297.703,
    "text": "At the airport, security staff call her aside. Tim says she is led into a room, and there are her two bags.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.02",
-   "start": 319.238,
-   "speech": 2.71,
-   "end": 322.298,
+   "start": 297.703,
+   "speech": 2.202,
+   "end": 300.255,
    "text": "The officers ask whether they are hers.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.03",
-   "start": 322.298,
-   "speech": 0.6,
-   "end": 323.248,
+   "start": 300.255,
+   "speech": 0.634,
+   "end": 301.239,
    "text": "Yes.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.04",
-   "start": 323.248,
-   "speech": 1.161,
-   "end": 324.409,
+   "start": 301.239,
+   "speech": 1.176,
+   "end": 302.415,
    "text": "They ask again.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.beat1",
-   "start": 324.409,
+   "start": 302.415,
    "speech": 0.0,
-   "end": 324.809,
+   "end": 302.815,
    "hold": 0.4,
    "note": "added: a held breath before the second Yes, as in the cold open"
   },
   {
    "id": "04.05",
-   "start": 324.809,
-   "speech": 0.6,
-   "end": 325.759,
+   "start": 302.815,
+   "speech": 0.633,
+   "end": 303.798,
    "text": "Yes.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.06",
-   "start": 325.759,
-   "speech": 4.645,
-   "end": 330.754,
+   "start": 303.798,
+   "speech": 3.692,
+   "end": 307.84,
    "text": "She has no reason to say anything else. They are her bags.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.07",
-   "start": 330.754,
-   "speech": 3.097,
-   "end": 333.851,
+   "start": 307.84,
+   "speech": 2.721,
+   "end": 310.561,
    "text": "Then authorities find what is inside the linings.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.sil1",
-   "start": 333.851,
+   "start": 310.561,
    "speech": 0.0,
-   "end": 334.851,
+   "end": 311.561,
    "hold": 1.0,
    "note": "(hard stop, silence 1 s)"
   },
   {
    "id": "04.08",
-   "start": 334.851,
-   "speech": 8.516,
-   "end": 343.717,
+   "start": 311.561,
+   "speech": 9.559,
+   "end": 321.47,
    "text": "Think about the two conversations happening in that room. Dawn believes she is identifying her luggage. The officers are investigating drug smuggling.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.09",
-   "start": 343.717,
-   "speech": 4.645,
-   "end": 348.363,
+   "start": 321.47,
+   "speech": 4.157,
+   "end": 325.627,
    "text": "The same room. The same bags. The same word. Two different meanings.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.beat2",
-   "start": 348.363,
+   "start": 325.627,
    "speech": 0.0,
-   "end": 349.163,
+   "end": 326.427,
    "hold": 0.8,
    "note": "(beat)"
   },
   {
    "id": "04.10",
-   "start": 349.163,
-   "speech": 18.194,
-   "end": 367.706,
+   "start": 326.427,
+   "speech": 17.061,
+   "end": 343.838,
    "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.11",
-   "start": 367.706,
-   "speech": 8.903,
-   "end": 376.959,
+   "start": 343.838,
+   "speech": 8.359,
+   "end": 352.547,
    "text": "What isn't in dispute is this: drugs were found in luggage she had checked. And in 2014, Dawn Hunt was arrested in China.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.12",
-   "start": 376.959,
-   "speech": 4.258,
-   "end": 381.217,
+   "start": 352.547,
+   "speech": 3.627,
+   "end": 356.174,
    "text": "The trip ended in that room. The case was only beginning.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "04.sil2",
-   "start": 381.217,
+   "start": 356.174,
    "speech": 0.0,
-   "end": 382.717,
+   "end": 357.674,
    "hold": 1.5,
    "note": "(silence, 1.5 s)"
   },
   {
    "id": "05.pre",
-   "start": 382.717,
+   "start": 357.674,
    "speech": 0.0,
-   "end": 383.517,
+   "end": 358.474,
    "hold": 0.8,
    "note": "chapter title"
   },
   {
    "id": "05.01",
-   "start": 383.517,
-   "speech": 11.053,
-   "end": 394.92,
+   "start": 358.474,
+   "speech": 9.03,
+   "end": 367.854,
    "text": "For Dawn, the airport wasn't the end of a bad trip. It was the first day of a detention that would last about three years before any verdict.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.02",
-   "start": 394.92,
-   "speech": 13.026,
-   "end": 408.296,
+   "start": 367.854,
+   "speech": 13.62,
+   "end": 381.824,
    "text": "Her family says she tried to cooperate. Tim testified that she answered investigators' questions, and gave them the emails she had received from the organizers. The same emails that had started it all.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.03",
-   "start": 408.296,
-   "speech": 1.184,
-   "end": 409.831,
+   "start": 381.824,
+   "speech": 1.133,
+   "end": 383.307,
    "text": "It wasn't enough.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.04",
-   "start": 409.831,
-   "speech": 15.789,
-   "end": 425.97,
+   "start": 383.307,
+   "speech": 17.376,
+   "end": 401.033,
    "text": "Her family also alleges something worse. In testimony to Congress in 2024, Tim said Dawn had told their father she was sexually assaulted in the detention facility. That allegation has not been independently established in the sources available to us.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.05",
-   "start": 425.97,
-   "speech": 10.658,
-   "end": 436.978,
+   "start": 401.033,
+   "speech": 8.43,
+   "end": 409.813,
    "text": "We are not going to recreate it. It is serious enough to state plainly, and Dawn has already lost control of so much of her own story.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.06",
-   "start": 436.978,
-   "speech": 7.105,
-   "end": 444.433,
+   "start": 409.813,
+   "speech": 6.023,
+   "end": 416.186,
    "text": "For three years, her family waited for a trial to correct what they believed was a terrible mistake.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.07",
-   "start": 444.433,
-   "speech": 3.553,
-   "end": 447.986,
+   "start": 416.186,
+   "speech": 2.954,
+   "end": 419.14,
    "text": "The verdict was worse than anything they had feared.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "05.sil1",
-   "start": 447.986,
+   "start": 419.14,
    "speech": 0.0,
-   "end": 449.486,
+   "end": 420.64,
    "hold": 1.5,
    "note": "(silence, 1.5 s)"
   },
   {
    "id": "06.pre",
-   "start": 449.486,
+   "start": 420.64,
    "speech": 0.0,
-   "end": 452.086,
+   "end": 423.24,
    "hold": 2.6,
    "note": "chapter title over the locked courtroom, room tone, before \"2017.\""
   },
   {
    "id": "06.01",
-   "start": 452.086,
-   "speech": 0.6,
-   "end": 452.686,
+   "start": 423.24,
+   "speech": 1.189,
+   "end": 424.429,
    "text": "2017.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.beat1",
-   "start": 452.686,
+   "start": 424.429,
    "speech": 0.0,
-   "end": 453.186,
+   "end": 424.929,
    "hold": 0.5,
    "note": "added: the year lands before the sentence"
   },
   {
    "id": "06.02",
-   "start": 453.186,
-   "speech": 2.8,
-   "end": 456.336,
+   "start": 424.929,
+   "speech": 2.32,
+   "end": 427.599,
    "text": "A death sentence, with a two-year reprieve.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.03",
-   "start": 456.336,
-   "speech": 10.8,
-   "end": 467.486,
+   "start": 427.599,
+   "speech": 9.295,
+   "end": 437.244,
    "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.04",
-   "start": 467.486,
-   "speech": 15.6,
-   "end": 483.436,
+   "start": 437.244,
+   "speech": 16.314,
+   "end": 453.908,
    "text": "China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health were being protected.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.05",
-   "start": 483.436,
-   "speech": 10.0,
-   "end": 493.786,
+   "start": 453.908,
+   "speech": 9.411,
+   "end": 463.669,
    "text": "Her family sees a scam victim. They insist she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.06",
-   "start": 493.786,
-   "speech": 14.8,
-   "end": 508.936,
+   "start": 463.669,
+   "speech": 12.687,
+   "end": 476.706,
    "text": "And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning, the judge recognised that Dawn had been deceived, and concluded that she should have known anyway.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.07",
-   "start": 508.936,
-   "speech": 0.6,
-   "end": 509.886,
+   "start": 476.706,
+   "speech": 0.814,
+   "end": 477.87,
    "text": "Deceived.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.08",
-   "start": 509.886,
-   "speech": 1.2,
-   "end": 511.086,
+   "start": 477.87,
+   "speech": 1.311,
+   "end": 479.181,
    "text": "And guilty anyway.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "06.sil1",
-   "start": 511.086,
+   "start": 479.181,
    "speech": 0.0,
-   "end": 513.086,
+   "end": 481.181,
    "hold": 2.0,
    "note": "(silence, 2 s)"
   },
   {
    "id": "07.pre",
-   "start": 513.086,
+   "start": 481.181,
    "speech": 0.0,
-   "end": 513.886,
+   "end": 481.981,
    "hold": 0.8,
    "note": "chapter title; rain on concrete"
   },
   {
    "id": "07.01",
-   "start": 513.886,
-   "speech": 7.273,
-   "end": 521.509,
+   "start": 481.981,
+   "speech": 5.817,
+   "end": 488.148,
    "text": "Dawn is held at Guangdong Women's Prison. It's where her brother has gone to visit her.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.02",
-   "start": 521.509,
-   "speech": 27.273,
-   "end": 549.131,
+   "start": 488.148,
+   "speech": 27.798,
+   "end": 516.296,
    "text": "In 2024, Tim told Congress that his sister had lost weight, and become pale. Prison doctors had found uterine fibroids, and raised the possibility of ovarian cancer. A possibility, not a diagnosis. She'd had heavy bleeding, and blood transfusions. Doctors recommended a hysterectomy. She refused, Tim said, in part because she did not trust the people responsible for her care.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.03",
-   "start": 549.131,
-   "speech": 17.273,
-   "end": 566.754,
+   "start": 516.296,
+   "speech": 17.255,
+   "end": 533.901,
    "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.04",
-   "start": 566.754,
-   "speech": 17.273,
-   "end": 584.377,
+   "start": 533.901,
+   "speech": 19.818,
+   "end": 554.069,
    "text": "In May 2025, according to Tim, the United States formally requested her release on humanitarian grounds. Members of Congress introduced a bipartisan bill carrying her name, and the name of another American imprisoned in China, Nelson Wells Junior.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.05",
-   "start": 584.377,
-   "speech": 5.455,
-   "end": 590.181,
+   "start": 554.069,
+   "speech": 5.109,
+   "end": 559.528,
    "text": "Every letter, every hearing, every request was a door that might open.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.06",
-   "start": 590.181,
-   "speech": 2.727,
-   "end": 593.259,
+   "start": 559.528,
+   "speech": 1.678,
+   "end": 561.556,
    "text": "None of them brought her home.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.07",
-   "start": 593.259,
-   "speech": 5.455,
-   "end": 598.713,
+   "start": 561.556,
+   "speech": 3.632,
+   "end": 565.188,
    "text": "And the man who had waited longest was running out of time.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "07.sil1",
-   "start": 598.713,
+   "start": 565.188,
    "speech": 0.0,
-   "end": 600.213,
+   "end": 566.688,
    "hold": 1.5,
    "note": "(silence, 1.5 s)"
   },
   {
    "id": "08.pre",
-   "start": 600.213,
+   "start": 566.688,
    "speech": 0.0,
-   "end": 601.013,
+   "end": 567.488,
    "hold": 0.8,
    "note": "chapter title; a clock"
   },
   {
    "id": "08.01",
-   "start": 601.013,
-   "speech": 13.333,
-   "end": 614.696,
+   "start": 567.488,
+   "speech": 13.287,
+   "end": 581.125,
    "text": "Gene Hunt had been a soldier. A steel-mill worker. A bus driver. A Chicago police officer. For most of his life, his job was keeping other people safe.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "08.02",
-   "start": 614.696,
-   "speech": 4.286,
-   "end": 619.332,
+   "start": 581.125,
+   "speech": 3.383,
+   "end": 584.858,
    "text": "There was one person he could not bring home.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "08.03",
-   "start": 619.332,
-   "speech": 17.143,
-   "end": 636.825,
+   "start": 584.858,
+   "speech": 15.871,
+   "end": 601.079,
    "text": "By 2024, his family said, he was ill, and afraid he would not live long enough to see his daughter free. They still hoped he would be there to help her rebuild her life after prison.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "08.04",
-   "start": 636.825,
-   "speech": 7.143,
-   "end": 644.318,
+   "start": 601.079,
+   "speech": 6.526,
+   "end": 607.955,
    "text": "A father in his nineties, planning for a daughter who had already lost ten years.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "08.05",
-   "start": 644.318,
-   "speech": 4.762,
-   "end": 649.08,
+   "start": 607.955,
+   "speech": 7.295,
+   "end": 615.25,
    "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "08.sil1",
-   "start": 649.08,
+   "start": 615.25,
    "speech": 0.0,
-   "end": 651.08,
+   "end": 617.25,
    "hold": 2.0,
    "note": "(silence, 2 s: no score, no room tone)"
   },
   {
    "id": "08.06",
-   "start": 651.08,
-   "speech": 2.857,
-   "end": 653.937,
+   "start": 617.25,
+   "speech": 2.465,
+   "end": 619.715,
    "text": "He never saw Dawn come home.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "08.sil2",
-   "start": 653.937,
+   "start": 619.715,
    "speech": 0.0,
-   "end": 656.937,
+   "end": 622.715,
    "hold": 3.0,
    "note": "(silence, 3 s; only room tone returns)"
   },
   {
    "id": "09.pre",
-   "start": 656.937,
+   "start": 622.715,
    "speech": 0.0,
-   "end": 657.737,
+   "end": 623.515,
    "hold": 0.8,
    "note": "chapter title; rain"
   },
   {
    "id": "09.01",
-   "start": 657.737,
-   "speech": 5.806,
-   "end": 663.893,
+   "start": 623.515,
+   "speech": 5.665,
+   "end": 629.53,
    "text": "Six months later, in July 2026, Tim went back to the prison.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.02",
-   "start": 663.893,
-   "speech": 15.484,
-   "end": 679.727,
+   "start": 629.53,
+   "speech": 15.89,
+   "end": 645.77,
    "text": "He told lawmakers he barely recognised his sister. She seemed frail. Stooped. Her teeth had changed. Her hair was much greyer than two years before. She struggled to focus on their conversation.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.03",
-   "start": 679.727,
-   "speech": 4.839,
-   "end": 684.916,
+   "start": 645.77,
+   "speech": 3.022,
+   "end": 649.142,
    "text": "But there was one thing she kept coming back to.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.04",
-   "start": 684.916,
-   "speech": 0.968,
-   "end": 686.234,
+   "start": 649.142,
+   "speech": 1.3,
+   "end": 650.792,
    "text": "One question.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.05",
-   "start": 686.234,
-   "speech": 2.419,
-   "end": 689.003,
+   "start": 650.792,
+   "speech": 1.761,
+   "end": 652.903,
    "text": "When would she be released?",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.06",
-   "start": 689.003,
-   "speech": 3.387,
-   "end": 692.39,
+   "start": 652.903,
+   "speech": 2.05,
+   "end": 654.953,
    "text": "Tim could not give her a date.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.beat1",
-   "start": 692.39,
+   "start": 654.953,
    "speech": 0.0,
-   "end": 693.19,
+   "end": 655.753,
    "hold": 0.8,
    "note": "(beat)"
   },
   {
    "id": "09.07",
-   "start": 693.19,
-   "speech": 13.065,
-   "end": 706.605,
+   "start": 655.753,
+   "speech": 13.623,
+   "end": 669.726,
    "text": "In September 2026, he appeared before Congress again. There was no reunion to report. Only an empty place at the family table, and a brother still fighting.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.08",
-   "start": 706.605,
-   "speech": 8.71,
-   "end": 715.664,
+   "start": 669.726,
+   "speech": 6.501,
+   "end": 676.577,
    "text": "Remember the question at the beginning of this story? The one no one in that room could answer.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.09",
-   "start": 715.664,
-   "speech": 2.903,
-   "end": 718.918,
+   "start": 676.577,
+   "speech": 2.384,
+   "end": 679.311,
    "text": "It was never really his question.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.10",
-   "start": 718.918,
-   "speech": 1.452,
-   "end": 720.369,
+   "start": 679.311,
+   "speech": 1.303,
+   "end": 680.614,
    "text": "It was hers.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.sil1",
-   "start": 720.369,
+   "start": 680.614,
    "speech": 0.0,
-   "end": 722.369,
+   "end": 682.614,
    "hold": 2.0,
    "note": "(silence, 2 s)"
   },
   {
    "id": "09.11",
-   "start": 722.369,
-   "speech": 11.613,
-   "end": 734.332,
+   "start": 682.614,
+   "speech": 12.264,
+   "end": 695.228,
    "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.12",
-   "start": 734.332,
-   "speech": 15.968,
-   "end": 750.65,
+   "start": 695.228,
+   "speech": 13.98,
+   "end": 709.558,
    "text": "The State Department's advice is simple: never carry gifts or luggage across a border for people you do not truly know. Dawn thought she knew them. She had spent weeks in their company.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.13",
-   "start": 750.65,
-   "speech": 8.71,
-   "end": 759.709,
+   "start": 709.558,
+   "speech": 7.2,
+   "end": 717.108,
    "text": "Twelve years ago, in a room at an airport, officers asked her a question. She answered it. Yes.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.14",
-   "start": 759.709,
-   "speech": 2.903,
-   "end": 762.963,
+   "start": 717.108,
+   "speech": 1.982,
+   "end": 719.44,
    "text": "Now she is the one asking.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.15",
-   "start": 762.963,
-   "speech": 2.903,
-   "end": 766.216,
+   "start": 719.44,
+   "speech": 2.031,
+   "end": 721.821,
    "text": "And no one has an answer.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.16",
-   "start": 766.216,
-   "speech": 5.323,
-   "end": 771.538,
+   "start": 721.821,
+   "speech": 5.147,
+   "end": 726.968,
    "text": "The testimony, the reporting and her family's campaign are linked below.",
-   "timing": "estimated"
+   "timing": "measured"
   },
   {
    "id": "09.sil2",
-   "start": 771.538,
+   "start": 726.968,
    "speech": 0.0,
-   "end": 773.538,
+   "end": 728.968,
    "hold": 2.0,
    "note": "two seconds of silence at the very end"
   }

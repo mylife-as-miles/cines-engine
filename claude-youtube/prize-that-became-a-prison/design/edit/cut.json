@@ -4,11 +4,19 @@
  "gap": 0.35,
  "min_line": 0.6,
  "changes": [
-  "Timing: each chapter's narration is timed from its word count at a rate inside the script's ranges (cold open 160, chapters 1-6 150-158, chapters 7-9 124-132 words a minute), at least 0.6 s a line, with a 0.35 s breath between lines; written silences and beats as given (a beat is 0.8 s). The rates live in `cut.json` (`rate` per chapter) and are replaced by measured durations once `audio/vo/scratch/lines.json` exists.",
+  "Timing: the cut runs on the scratch narration's measured line lengths (`audio/vo/scratch/lines.json`, 101 lines, each matched to its script paragraph by chapter and number), with a 0.35 s breath between lines and the script's written silences and beats as holds (a beat is 0.8 s). The scratch voice speaks at 157-174 words a minute in chapters 0-6 and 128-137 in chapters 7-9, quicker than the script's plan in the first half, so the film runs 12:09 rather than the script's estimated 12:55. Without a lines.json, `time` falls back to word counts at each chapter's `rate` in `cut.json` (which gave 12:54).",
   "Holds added to the voice clock (all logged in `cut.json` as holds with a note): 1.4 s before the first line (the display settles, \"No music for 2 s\"); a 0.5 s breath before the cold open's second \"Yes.\" (the direction puts the two YESes 4 s apart) and 0.4 s in chapter 4; 0.8-1.0 s before each chapter's first line so its title can be read (2.6 s in chapter 6, over the locked courtroom); 0.5 s between \"2017.\" and the sentence; 1 s at the end of chapter 3, where the script has none.",
-  "The cold open's montage is reel 7's 6.2 s flash-forward (ten shots, 0.8 s down to 0.5 s each), then the 5 s title: 11.2 s with no voice, against the script's \"10 s montage ... 5 s\" (ten shots at 0.5-0.8 s cannot fill 10 s).",
+  "The cold open's montage is gfx/montage.py's 6.2 s flash-forward (ten shots, 0.8 s down to 0.5 s each), then the 5 s title: 11.2 s with no voice, against the script's \"10 s montage ... 5 s\" (ten shots at 0.5-0.8 s cannot fill 10 s).",
   "The chapter titles (gfx/type.html `chapter`) sit on each chapter's first shot and leave before its cut; the cold open has the film title instead.",
   "The flash-forward and the end use the same match cut on the two bags (inspection_room `match` → void_stage `bags`): the push is carried across the cut at the same speed, so the bags stay registered."
+ ],
+ "problems": [
+  "Gene is in no plate. Chapter 1's family and all of chapter 8 play on the empty dining room, so the film's planned cut from Gene in his chair to the same chair empty cannot happen; chapter 8 is carried by stand-ins (Tim at the witness table, the Chicago suitcase, the far cell) and is the weakest chapter. Needs: home `dining` with Gene (and Tim) warm for chapter 1, Gene alone in the cold light and in profile in `chair` for chapter 8.",
+  "Nothing moves inside the frame: every shot is a still plate with a 2-8 % push. No hand slides the booklet, no head lifts to the tannoy, no one walks; over twelve minutes it reads as a moving slideshow, and the cold open's median shot is 3.0 s against the script's 1.6-2.4 s (the montage's ten cuts aside).",
+  "Prison costume continuity: Dawn wears the short-sleeved top at the courtroom dock (06-03, and in the montage) and in the visiting room (07-04, 09-04), while the Void Stage plates have the long-sleeved uniform DECISIONS sets for every prison scene, so the cut alternates between the two outfits.",
+  "The tote changes colour between plates: since the 23:13 republish the evidence-table tote is mustard, the inspection-room tote is brown in the split frame (04-10, 04-13) and mustard in `handbags`/`handbags_touch`, and the hotel tote is cognac. The split frame, whose point is \"the same tote\", shows two different bags.",
+  "A small pool of plates, mostly 1280x720: 79 plates over 165 shots, with Dawn standing in the void, Tim at the witness table and the inspection bags each three or four times, and the prison exterior seven times. The 1280 plates are upscaled 1.5x (four framings to 1.18-1.35x more) and look soft beside the 2560 plates (the bags, the purses, the inspection lineup).",
+  "Smaller: the Void Stage is 12 % of the running time against 20 %; the emails line on Tim's statement (05-03) is small on a phone; the water glass on Tim's witness desk refracts into what reads as a white figurine; chapter 6's title is up about 2.6 s; the scratch voice is quicker than the script, so the film runs 12:09, not 12:55."
  ],
  "pieces": {
   "scale": {
@@ -136,8 +144,7 @@
   },
   "split_r7": {
    "file": "out/gfx/r7/15_splitframe.mp4",
-   "fixed": true,
-   "about": "reel 7's split frame (cut at 2.2 s), the cut-away held open",
+   "about": "the split frame with the right half cut to the cut-away at 2.2 s, held open",
    "gen": {
     "tool": "split",
     "cut": 2.2
@@ -473,10 +480,10 @@
     {
      "id": "00-20",
      "at": "00.11@0.33",
-     "plate": "hongkong_street/window",
+     "plate": "hotel_room/overhead_pre",
      "move": "in",
      "sound": "Low drone",
-     "change": "Added: \"She believed the handbags were a prize\" on the handbags in a Hong Kong shop window (cold open pace)."
+     "change": "Added: \"She believed the handbags were a prize\" on the three gifts laid on her hotel bed (a flash of chapter 3). The Hong Kong shop window is not used for the gifts: its display bags are now other colours on purpose."
     },
     {
      "id": "00-21",
@@ -811,15 +818,10 @@
     {
      "id": "01-17",
      "at": "01.14",
-     "plate": "evidence_table/purses",
+     "plate": "hongkong_street/window",
      "move": "in",
-     "c": [
-      0.72,
-      0.45
-     ],
-     "z": 1.04,
      "sound": "The score thins; silence 1.5 s",
-     "change": "Added: the chapter ends on a flash-forward (the gift bags on the evidence table, no red) under \"the deception was hidden in everything that came after\"."
+     "change": "Added: the chapter ends on a flash-forward to the trip (a Hong Kong shop window of handbags, not the gifts) under \"the deception was hidden in everything that came after\"."
     }
    ]
   },
@@ -977,14 +979,15 @@
     {
      "id": "02-14",
      "at": "02.07",
-     "plate": "hongkong_street/window",
+     "plate": "evidence_table/purses",
      "move": "in",
      "c": [
-      0.42,
-      0.55
+      0.72,
+      0.45
      ],
+     "z": 1.04,
      "sound": "The travel pad drops out on \"one more gift\"",
-     "change": "The chapter ends on the gift in the shop window (\"one more gift for her\"), a flash-forward, instead of the route map."
+     "change": "The chapter ends on the gift itself, the cognac tote on the evidence table (\"one more gift for her\"), a flash-forward, instead of the route map."
     }
    ]
   },
@@ -1306,7 +1309,7 @@
      "at": "04.02",
      "piece": "doc_yes",
      "sound": "Paper",
-     "change": "Added: \"The officers ask whether they are hers\" on Tim's statement (S1 p. 1, reel 7's `s1_yes`), the line \"to which she responded 'yes'\" lighting just before the YES."
+     "change": "Added: \"The officers ask whether they are hers\" on Tim's statement (S1 p. 1, gfx/shots/s1_yes.json), the line \"to which she responded 'yes'\" lighting just before the YES."
     },
     {
      "id": "04-05",
@@ -1336,10 +1339,11 @@
     {
      "id": "04-08",
      "at": "04.07",
-     "plate": "inspection_room/handbags",
+     "plate": "inspection_room/handbags_touch",
      "move": "in",
      "row": "inspection_room `handbags`, the officer's hand on the tote",
-     "sound": "Hard stop"
+     "sound": "Hard stop",
+     "note": "`handbags_touch` (published during this edit) is the officer's hand lifting the tote."
     },
     {
      "id": "04-09",
@@ -1592,8 +1596,20 @@
      "sound": "A large quiet room"
     },
     {
-     "id": "05-09",
+     "id": "05-09a",
      "at": "05.05",
+     "plate": "evidence_table/page",
+     "move": "in",
+     "c": [
+      0.5,
+      0.45
+     ],
+     "sound": "A clock, very low",
+     "change": "Added: \"We are not going to recreate it. It is serious enough to state plainly\" on a blank sheet (the film's sign for what it will not show)."
+    },
+    {
+     "id": "05-09",
+     "at": "05.05@0.45",
      "plate": "void_stage/dawn",
      "move": "out",
      "sound": "A clock, very low",
@@ -1606,7 +1622,7 @@
      "max": 7.5,
      "row": "void_stage `pool`: the empty circle of light, slow push | the calendar rolls 2014 → 2017",
      "sound": "A clock, very low",
-     "sub": "void_stage `pool` (the empty circle) has no plate: reel 7's calendar is over void_stage `bags` in the beam."
+     "sub": "void_stage `pool` (the empty circle) has no plate: the calendar (gfx/type.html `calendar`) runs beside void_stage `bags` in the beam."
     },
     {
      "id": "05-11",
@@ -1691,8 +1707,9 @@
     {
      "id": "06-02",
      "at": "06.02",
-     "plate": "void_stage/dawn",
+     "plate": "void_stage/dawn_close",
      "move": "in",
+     "pct": 0.03,
      "type": [
       {
        "mode": "death_2017",
@@ -1700,8 +1717,7 @@
       }
      ],
      "row": "void_stage `dawn_close` (*new*), uniform, head bowed | DEATH SENTENCE WITH TWO-YEAR REPRIEVE",
-     "sound": "One low impact at \"death sentence\"",
-     "sub": "void_stage `dawn_close` (new) has no plate: `dawn` (standing in the pool) stands in."
+     "sound": "One low impact at \"death sentence\""
     },
     {
      "id": "06-03",
@@ -1722,8 +1738,9 @@
     {
      "id": "06-05",
      "at": "06.03@0.63",
-     "plate": "void_stage/dawn",
+     "plate": "void_stage/dawn_close",
      "move": "in",
+     "pct": 0.03,
      "type": [
       {
        "mode": "sentence_life",
@@ -1808,16 +1825,10 @@
     {
      "id": "06-14",
      "at": "06.07",
-     "plate": "void_stage/dawn",
-     "z": 1.42,
-     "c": [
-      0.5,
-      0.45
-     ],
+     "plate": "void_stage/dawn_close",
      "move": "lock",
      "row": "void_stage `dawn_close`, locked, on \"Deceived. And guilty anyway.\"",
-     "sound": "Silence, 2 s, then cut",
-     "sub": "void_stage `dawn_close` (new) has no plate: a 1.42x framing of `dawn` stands in (upscaled from the 1280 plate, soft)."
+     "sound": "Silence, 2 s, then cut"
     }
    ]
   },
@@ -1914,7 +1925,7 @@
      "max": 14.0,
      "row": "void_stage `cell_far` → `cell_floor` (*new*), the pull back | 2014 – 2026, the year counter rolling",
      "sound": "A low pulse, very slow",
-     "sub": "void_stage `cell_floor` (new) has no plate: reel 7's counter pulls back on `cell_far` alone."
+     "sub": "void_stage `cell_floor` (new) has no plate: the counter (`counter`) pulls back on `cell_far` alone."
     },
     {
      "id": "07-06",
@@ -1977,7 +1988,14 @@
      "plate": "hearing_room/dais",
      "move": "in",
      "sound": "A large quiet room",
-     "change": "Added: \"Members of Congress introduced a bipartisan bill\" on the hearing room's dais."
+     "change": "Added: \"Members of Congress introduced a bipartisan bill\" on the hearing room's dais, then \"another American imprisoned in China\" on the prison tower."
+    },
+    {
+     "id": "07-11b",
+     "at": "07.04@0.74",
+     "plate": "prison_exterior/tower",
+     "move": "in",
+     "sound": "Rain, wind"
     },
     {
      "id": "07-12",
@@ -2130,9 +2148,9 @@
      "id": "08-07",
      "at": "08.05",
      "piece": "gene",
-     "row": "home `chair` | JANUARY 25, 2026 (reel 7's date over the empty chair)",
+     "row": "home `chair` | JANUARY 25, 2026",
      "sound": "A clock, then nothing",
-     "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (reel 7's `date_gene`), so the straight cut from full to empty cannot happen yet."
+     "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (`date_gene`), so the straight cut from full to empty cannot happen yet."
     },
     {
      "id": "08-08",
