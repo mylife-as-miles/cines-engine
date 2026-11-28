@@ -1,0 +1,20 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>SET call</title>
+<style>html,body{margin:0;background:#222}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../kit/pov.js"></script>
+<script src="../kit/sets.js"></script>
+<script>
+// ?right=mumKitchen|friendFlat  &k=1  &split=0.5  &dropL=0
+const q = new URLSearchParams(location.search);
+const g = document.getElementById('c').getContext('2d');
+SETS.ready().then(() => {
+  const rightSet = q.get('right') || 'friendFlat';
+  const R = SETS.call(g, {
+    k: +(q.get('k') || 1), split: +(q.get('split') || 0.5), dropL: +(q.get('dropL') || 0), t: 0.3,
+    left: (g, r) => { SETS.fit(g, r, { x: 620, y: 560, zoom: 1.12 }); SETS.living(g, { tod: 'evening' }); },
+    right: (g, r) => { SETS.fit(g, r, { x: 960, y: 560, zoom: 1.12 }); (SETS[rightSet] || SETS.street)(g, {}); },
+  });
+  window.FRAME_READY = true;
+});
+</script></body></html>

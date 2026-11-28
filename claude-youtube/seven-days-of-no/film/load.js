@@ -9,6 +9,7 @@ window.FILM_LOAD = async function (base) {
   base = base || '';
   const add = src => new Promise(res => { const s = document.createElement('script'); s.src = src; s.onload = () => res(true); s.onerror = () => res(false); document.head.appendChild(s); });
   for (const f of ['kit/pov.js', 'kit/sets.js']) if (!(await add(base + f))) console.info('[film] art not there yet (placeholders): ' + f);
+  if (window.SETS && typeof SETS.ready === 'function') { try { await SETS.ready(); } catch (e) { console.warn('[film] SETS.ready', e); } }   // the embedded Nunito
   if (!(await add(base + 'film/words.js'))) console.error('failed to load film/words.js (run: node tools/film.js sync)');
   await add(base + 'film/vo_env.js');
   for (const f of ['film/engine.js', 'film/art.js', 'film/gfx.js', 'film/stage.js', 'film/sound.js']) if (!(await add(base + f))) console.error('failed to load ' + f);

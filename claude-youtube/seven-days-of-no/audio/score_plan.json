@@ -38,5 +38,73 @@
    "why": "the closing bed: the wrap (Q11) into the 8 s end screen, ending on its own final chord at 225.5 s"
   }
  ],
- "beds": {}
+ "beds": {
+  "music_main": {
+   "take": "T2",
+   "level_db": -8,
+   "pitch_cents": -1,
+   "method": "resample",
+   "windows": [
+    0.6,
+    33.02,
+    9.38
+   ],
+   "loop": [
+    9.38,
+    81.0
+   ],
+   "why": "T2 over T1: C major (T1 came back in E), in tune (+1 c), and steadier (LRA 5 LU against 9: no quiet patch to fall into under the voice). Window 1 starts with the take, so the video opens on its first bar; window 2 (Wednesday to Friday) is its later, fuller half; window 3 (Saturday, Sunday) returns to its first phrase."
+  },
+  "music_hush": {
+   "take": "T3",
+   "level_db": -10,
+   "pitch_cents": -208,
+   "method": "resample",
+   "windows": [
+    0.91,
+    29.26
+   ],
+   "loop": [
+    1.0,
+    60.0
+   ],
+   "why": "T3 came back in A major (asked A minor) and 8 c sharp, but reads sad-and-melancholic (earshot z +3.2) and is only guitar and music box. Down 2 semitones by resampling (G major, next to the main bed's C major) it also slows from 80 to 71 BPM and darkens: hushed, still warm."
+  },
+  "music_lift": {
+   "take": "T4",
+   "level_db": -8,
+   "pitch_cents": -109,
+   "method": "rubberband",
+   "windows": [
+    27.85,
+    8.89
+   ],
+   "loop": [
+    28.0,
+    45.5
+   ],
+   "why": "T4 came back around C#/F# major, 9 c sharp; a semitone down with tempo kept (rubberband) it sits in C/F major with the main bed. Window 1 starts on the downbeat of its full section (27.89 s), so Friday's lift lands on \"So you run after them\" after the stop-down; window 2 starts in its mid section and its own break (27.0 s) and full entry (27.9 s) land on \"Yes, no, or yes, but not like that\" and \"You decide on purpose\". Avoid 45.7-55.5 s (a breakdown) and the hard stop at 73.3 s."
+  },
+  "music_end": {
+   "take": "T5",
+   "level_db": -4,
+   "pitch_cents": -1,
+   "method": "resample",
+   "align": "end",
+   "end_s": 59.5,
+   "why": "T5 ends as asked: its last chord at 56.3 s rings down to silence by 59.3 s. Aligned so that ending falls on the video's last frame: the wrap carries under the voice, the end screen hears it at full level (-4 LU re the voice), then the final chord dies away."
+  }
+ },
+ "bed_format": {
+  "take": "the take in `takes` this bed is cut from (audio/score/<take>.mp3)",
+  "level_db": "the bed's level where nothing competes (pauses, the end screen), in LU relative to the narration's integrated loudness; under the voice the mix holds it 12 dB under the voice (duck)",
+  "pitch_cents": "shift applied to the take: the measured detune removed plus any transposition into the shared key centre",
+  "method": "resample (pitch and tempo move together: the hush slows a little) or rubberband (pitch only)",
+  "windows": "where in the take (original seconds, before any shift) each occurrence starts, in order of the bed's spans on the clock; a later span reuses the last; all snapped to a beat of the take",
+  "align": "end: the span's end lands on the take's end_s (its final chord dies away by the video's last frame)",
+  "loop": "[a, b] original seconds: the section looped (0.6 s equal-power crossfades) if a span outruns the take"
+ },
+ "stop_downs": [
+  "Q06 113.86-116.32 s: the music drops out for \"They look hurt. And you feel terrible.\" (the voice alone), and the lift enters on \"So you run after them\" (the cue sheet ends music_main and starts music_lift there; build_mix.py adds nothing)"
+ ]
 }

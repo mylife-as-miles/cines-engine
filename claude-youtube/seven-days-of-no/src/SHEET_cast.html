@@ -3,9 +3,9 @@
 <script>
 /* SEVEN DAYS OF NO · CAST SHEET (reference, not part of the video; labels allowed)
    Band 1: the hero's eight expressions (design/refs/01_expressions.jpg) plus 'guilty' (ref 05).
-   Band 2: the cast line-up (ref 12). Band 3: the hero's poses (ref 02 and the stills). 1920 x 2160. */
+   Band 2: the cast line-up (ref 12). Band 3: the hero's poses (ref 02 and the stills), two rows. 1920 x 2700. */
 window.addEventListener('load', () => {
-  const W = 1920, H = 2160;
+  const W = 1920, H = 2700;
   document.documentElement.style.cssText = 'margin:0;background:#222'; document.body.style.cssText = 'margin:0;background:#222';
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.style.cssText = 'display:block;width:100vw'; document.body.appendChild(cv);
   const g = cv.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
@@ -32,16 +32,17 @@ window.addEventListener('load', () => {
     label(name, cx, 1478, 32);
   });
 
-  // ---- band 3: hero poses
-  g.fillStyle = '#F4EFE6'; g.fillRect(0, 1500, W, 660);
+  // ---- band 3: hero poses, two rows
+  g.fillStyle = '#F4EFE6'; g.fillRect(0, 1500, W, 1200);
   const poses = [['STAND', { pose: 'stand' }], ['WALK', { pose: 'walk', phase: 0.22 }], ['THINK', { pose: 'think', expr: 'confused' }], ['POINT', { pose: 'point' }],
-    ['SIT', { pose: 'sit', seat: 200, expr: 'neutral' }], ['PHONE EAR', { pose: 'hold_phone', mode: 'ear', mouth: 0.4 }], ['PHONE', { pose: 'hold_phone', mode: 'front' }],
-    ['LAPTOP', { pose: 'hold_laptop' }], ['WAVE', { pose: 'wave', expr: 'happy' }], ['SHRUG', { pose: 'shrug', expr: 'confused' }], ['CLASPED', { pose: 'hands_clasped', expr: 'guilty' }]];
+    ['WAVE', { pose: 'wave', expr: 'happy' }], ['SHRUG', { pose: 'shrug', expr: 'confused' }],
+    ['SIT', { pose: 'sit', seat: 200, holding: 'mug', expr: 'neutral', look: [0.5, 0.3] }], ['PHONE TO EAR', { pose: 'hold_phone', mode: 'ear', mouth: 0.4 }], ['PHONE', { pose: 'hold_phone', mode: 'front', expr: 'surprised', look: [0.4, 0.6] }],
+    ['LAPTOP', { pose: 'hold_laptop', look: [0.6, 0.4] }], ['HANDS CLASPED', { pose: 'hands_clasped', expr: 'guilty' }], ['WALK (CYCLE 0.72)', { pose: 'walk', phase: 0.72, facing: -1 }]];
   poses.forEach(([name, o], i) => {
-    const cx = 100 + i * 172, s = 0.62, fy = 2090;
-    if (o.pose === 'sit') { g.fillStyle = '#C9A27E'; g.strokeStyle = '#1c1c1c'; g.lineWidth = 3; g.beginPath(); g.roundRect(cx - 50, fy - 200 * s, 120, 200 * s, 6); g.fill(); g.stroke(); }
+    const col = i % 6, row = (i / 6) | 0, cx = 170 + col * 316 - (o.pose === 'sit' ? 50 : 0), s = 0.62, fy = 2050 + row * 600;
+    if (o.pose === 'sit') { g.fillStyle = '#C9A27E'; g.strokeStyle = '#1c1c1c'; g.lineWidth = 3; g.beginPath(); g.roundRect(cx - 60, fy - 200 * s, 130, 200 * s, 6); g.fill(); g.stroke(); }
     POV.figure(g, 'hero', Object.assign({ x: cx, y: fy, scale: s, shadow: '#E3D9C8' }, o));
-    label(name, cx + (o.pose === 'sit' ? 20 : 0), 2140, 22);
+    label(name, 170 + col * 316, fy + 46, 24);
   });
   window.FRAME_READY = true;
 });

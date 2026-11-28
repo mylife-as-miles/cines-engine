@@ -6,7 +6,7 @@
 (function (global) {
   'use strict';
   const W = 1920, H = 1080, FPS = 24, TOTAL = 225.5;
-  const FILM = global.FILM = { W, H, FPS, TOTAL, total: TOTAL, seqs: [], lib: {}, shots: [], _cache: new Map(), _warned: {}, warnings: [] };
+  const FILM = global.FILM = { WIDTH: W, HEIGHT: H, FPS, TOTAL, total: TOTAL, seqs: [], lib: {}, shots: [], _cache: new Map(), _warned: {}, warnings: [] };
 
   // ---------------------------------------------------------------- maths
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -229,7 +229,7 @@
     c.setFront = (name, o) => global.ART.setFront(c, name, o || {});
     c.fig = (who, o) => global.ART.fig(c, who, o || {});
     c.prop = (name, o) => global.ART.prop(c, name, o || {});
-    c.anchor = (set, name, fb) => global.ART.anchor(set, name, fb);
+    c.anchor = (set, name, fb) => global.ART.anchor(set, name, fb, c);
     base();
     return c;
   }

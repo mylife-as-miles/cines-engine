@@ -1,0 +1,37 @@
+{
+ "note": "Maps every cue name in the cue sheet (out/cuesheet.json, or audio/cues_draft.json until it exists) to a sound in audio/sfx/ and a level. rel_db: the sound's loudest 100 ms (K-weighted) relative to the narration's integrated loudness, so effects sit under the voice (the author wants few, quiet effects). align: peak puts the sound's loudest point on the cue time (impacts, whooshes at the cut), start puts its onset there. pan: -1 left to 1 right (a cue's own p.pan wins). cycle: rotate through the files by occurrence. A cue's p.gain_db adds to rel_db. null = silent on purpose. aliases map other names the engine might use.",
+ "mix": {
+  "target_lufs": -14.0,
+  "true_peak_ceiling_dbtp": -1.5,
+  "music_under_voice_db": 12.0,
+  "speech_gap_merge_s": 1.2,
+  "duck_attack_s": 0.35,
+  "duck_release_s": 0.9,
+  "voice": {"hp_hz": 70, "comp_threshold_dbfs": -15.0, "comp_ratio": 2.0, "comp_attack_s": 0.005, "comp_release_s": 0.12, "offset_s": 0.0},
+  "air_floor_lufs": -62
+ },
+ "cues": {
+  "phone_buzz": {"file": "phone_buzz", "rel_db": -13, "align": "start"},
+  "notify": {"file": "notify", "rel_db": -15, "align": "start"},
+  "door": {"file": "door", "rel_db": -15, "align": "peak", "pan": -0.3},
+  "footsteps": {"file": "footsteps", "rel_db": -17, "align": "start"},
+  "whoosh": {"cycle": ["whoosh"], "rel_db": -18, "align": "peak"},
+  "whoosh_2": {"file": "whoosh_2", "rel_db": -19, "align": "peak"},
+  "pop": {"cycle": ["pop", "pop_2", "pop_3"], "rel_db": -17, "align": "start"},
+  "stamp": {"file": "stamp", "rel_db": -12, "align": "peak"},
+  "camera_shutter": {"file": "camera_shutter", "rel_db": -11, "align": "start"},
+  "typing": {"file": "typing", "rel_db": -19, "align": "start"},
+  "send": {"file": "send", "rel_db": -16, "align": "start"},
+  "receive": {"file": "receive", "rel_db": -15, "align": "start"},
+  "ding": {"file": "ding", "rel_db": -14, "align": "start"},
+  "bulb": {"file": "bulb", "rel_db": -14, "align": "start"},
+  "cloud": {"file": "cloud", "rel_db": -15, "align": "start"},
+  "run": {"file": "run", "rel_db": -16, "align": "start"}
+ },
+ "aliases": {
+  "buzz": "phone_buzz", "vibrate": "phone_buzz", "ping": "notify", "notification": "notify", "steps": "footsteps",
+  "walk": "footsteps", "swish": "whoosh", "wipe": "whoosh", "card": "whoosh", "bubble": "pop", "icon": "pop",
+  "shutter": "camera_shutter", "flash": "camera_shutter", "type": "typing", "message_send": "send",
+  "message_receive": "receive", "text": "receive", "twinkle": "bulb", "lightbulb": "bulb", "puff": "cloud", "running": "run"
+ }
+}

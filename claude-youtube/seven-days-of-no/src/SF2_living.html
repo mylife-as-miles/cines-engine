@@ -1,0 +1,35 @@
+<!doctype html><meta charset="utf-8"><title>SF2 · Living room, Wednesday</title>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* SEVEN DAYS OF NO · STYLE FRAME 2 · WEDNESDAY EVENING (refs 07 and 03)
+   "By evening, you have nine missed calls." You on the sofa by the lamp, mug in hand, eyes on the phone buzzing on the coffee
+   table, notification bubbles climbing off it: missed calls from Mum, a message, a bell. Icons only, no words. */
+window.addEventListener('load', async () => {
+  const g = POV.stage('#000');
+  const hasSets = typeof SETS !== 'undefined' && SETS.living;
+  if (hasSets && SETS.ready) await SETS.ready();
+  let S;
+  if (hasSets) S = SETS.living(g, { tod: 'evening', table: false });
+  else { g.fillStyle = POV.C.livWall; g.fillRect(0, 0, 1920, 823); g.fillStyle = POV.C.livFloor; g.fillRect(0, 823, 1920, 257); S = { anchors: { tablePhone: { x: 1180, y: 846 } }, tint: POV.C.tintEvening }; }
+  const tint = S.tint || POV.C.tintEvening;
+  // you, sitting at the lamp end of the sofa, mug held at the chest, glancing down at the phone
+  POV.figure(g, 'hero', { x: 575, y: 966, pose: 'sit', seat: 210, holding: 'mug', tint, expr: 'worried', face: { brows: { tilt: 0.1, lift: 0.0 }, mouth: { k: 'frown', w: 0.1, c: 0.04 } },
+    look: [0.85, 0.55], turn: 0.35, nod: 0.25, shadow: false });
+  if (hasSets && SETS.livingFront) SETS.livingFront(g, { tod: 'evening' });
+  // the phone on the table, screen lit, buzzing; the notifications rising off it
+  const T = S.anchors.tablePhone || { x: 1180, y: 846 };
+  const px = T.x - 70, py = T.y - 18;
+  POV.phoneFlat(g, px, py, { s: 1.05, glow: 1 });
+  POV.buzz(g, px + 4, py - 2, { rx: 82, t: 0.1 });
+  POV.notif(g, px - 112, py - 128, { kind: 'missed', bg: POV.C.bubRed, s: 1.0, tail: 1, a: -0.08 });
+  POV.notif(g, px - 10, py - 212, { kind: 'missed', bg: POV.C.bubRed, s: 1.0, tail: 1, a: 0.05 });
+  POV.notif(g, px + 92, py - 150, { kind: 'chat', bg: POV.C.bubGreen, s: 1.0, tail: -1, a: 0.06 });
+  POV.notif(g, px + 30, py - 98, { kind: 'bell', bg: POV.C.bubYellow, s: 0.92, tail: -1, a: -0.04 });
+  POV.notif(g, px - 168, py - 238, { kind: 'missed', bg: POV.C.bubRed, s: 0.86, tail: 1, a: -0.12 });
+  // little motion ticks around the bubbles
+  [[px - 54, py - 270, -0.6], [px + 150, py - 214, 0.5], [px - 210, py - 150, -0.9], [px + 160, py - 96, 0.8]].forEach(([x, y, a]) => {
+    POV.polyline(g, [[x, y], [x + Math.cos(a) * 16, y + Math.sin(a) * 16]], 3.2); POV.polyline(g, [[x + 12, y + 10], [x + 12 + Math.cos(a) * 12, y + 10 + Math.sin(a) * 12]], 3.2);
+  });
+  window.FRAME_READY = true;
+});
+</script>

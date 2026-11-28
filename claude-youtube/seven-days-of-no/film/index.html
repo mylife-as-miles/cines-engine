@@ -58,7 +58,7 @@
 <script>
 (async function () {
   const FILM = await FILM_LOAD('../');
-  const W = FILM.W, H = FILM.H, TOTAL = FILM.total;
+  const W = FILM.WIDTH, H = FILM.HEIGHT, TOTAL = FILM.total;
   const $ = s => document.querySelector(s);
   const cv = FILM.makeCanvas(W, H); $('.screen').appendChild(cv); FILM.mount(cv);
   const q = new URLSearchParams(location.search);

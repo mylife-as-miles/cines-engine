@@ -233,7 +233,7 @@
     o = o || {}; const g = c.g; g.save();
     if (o.alpha != null) g.globalAlpha *= FILM.clamp(o.alpha, 0, 1);
     g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fillStyle = o.bg || '#FFF1DC'; g.fill(); g.save(); g.clip();
-    const s = (R * 0.62) / 108; c.fig(who, Object.assign({ x: cx, y: cy + 688 * s + R * 0.12, s, pose: 'standing', expr: o.expr || 'neutral' }, o.fig || {}));
+    const s = (R * 0.6) / 100; c.fig(who, Object.assign({ x: cx, y: cy + 700 * s + R * 0.1, s, pose: 'stand', expr: o.expr || 'neutral', shadow: false }, o.fig || {}));
     if (o.grey) { g.globalCompositeOperation = 'saturation'; g.fillStyle = '#888'; g.fillRect(cx - R, cy - R, 2 * R, 2 * R); g.globalCompositeOperation = 'source-over'; g.fillStyle = `rgba(240,240,240,${0.35 * o.grey})`; g.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
     g.restore(); g.beginPath(); g.arc(cx, cy, R, 0, TAU); inked(g, null, LW() + 1); g.restore();
   };
@@ -271,5 +271,71 @@
       case 'clipboard': g.save(); g.translate(x, y); g.rotate(r); g.scale(s, s); rr(g, -60, -80, 120, 160, 8); inked(g, col('clipboard', '#876245'), 5); rr(g, -46, -62, 92, 128, 4); inked(g, '#FFFFFF', 3); g.restore(); break;
       default: g.save(); g.translate(x, y); rr(g, -40 * s, -40 * s, 80 * s, 80 * s, 10); inked(g, '#eee', 3); text(g, name, 0, 0, { size: 16 * s, weight: 700 }); g.restore();
     }
+  };
+
+  // ---------------------------------------------------------------- scene dressing the sets kit does not have
+  // party paper chains: two swags of triangle bunting across the top, with confetti
+  GFX.bunting = function (g, t, o) {
+    o = o || {}; const cols = ['#E37F78', '#77CC81', '#7BAFE1', '#F4BF54', '#B58BD1'], W2 = 1920;
+    for (let k = 0; k < 2; k++) {
+      const y0 = 40 + k * 110, sag = 70; g.lineWidth = 4; g.strokeStyle = INK; g.beginPath();
+      for (let x = -20; x <= W2 + 20; x += 20) { const u = x / W2, y = y0 + Math.sin(u * Math.PI * 2 + k) * 10 + sag * 4 * ((u * 2) % 1) * (1 - (u * 2) % 1); x === -20 ? g.moveTo(x, y) : g.lineTo(x, y); } g.stroke();
+      for (let i = 0; i < 22; i++) { const x = i * 92 + (k ? 46 : 0), u = x / W2, y = y0 + Math.sin(u * Math.PI * 2 + k) * 10 + sag * 4 * ((u * 2) % 1) * (1 - (u * 2) % 1); const sw = Math.sin((t || 0) * 3 + i) * 0.08;
+        g.save(); g.translate(x, y); g.rotate(sw); g.beginPath(); g.moveTo(-30, 0); g.lineTo(30, 0); g.lineTo(0, 62); g.closePath(); inked(g, cols[(i + k * 2) % cols.length], 3.5); g.restore(); }
+    }
+    const R = FILM.rng('confetti'); for (let i = 0; i < 46; i++) { const x = R() * W2, sp = 60 + R() * 80, y = ((R() * 1080 + (t || 0) * sp) % 1180) - 60; g.save(); g.translate(x, y); g.rotate((t || 0) * (1 + R() * 3) + i); g.fillStyle = cols[i % cols.length]; g.fillRect(-7, -4, 14, 8); g.restore(); }
+  };
+  // a stack of moving boxes standing on the floor at (x, floorY), the POV kit's box when it is there
+  GFX.boxPile = function (g, x, y, s, layout) {
+    const B = global.POV && global.POV.PROPS && global.POV.PROPS.box; s = s || 1;
+    (layout || [[0, 0, 1], [150, 0, 1], [70, -1, 1], [10, -2, 0.85]]).forEach(([dx, row, k]) => {
+      const bx = x + dx * s, by = y - (54 + row * 108) * s * (k || 1);
+      if (B) B(g, bx, by - (row ? 0 : 0), { s: s * (k || 1) }); else GFX.box(g, bx, by + 54 * s, 148 * s * (k || 1), 108 * s * (k || 1));
+    });
+  };
+  // Mum's kitchen: a warm wall, a window, cabinets, a counter with a pot (her side of the call)
+  GFX.kitchen = function (g) {
+    const key = 'gfx|kitchen'; const cv = FILM.cache(key, (q) => {
+      q.fillStyle = '#F6D7A7'; q.fillRect(0, 0, 1920, 1080); q.fillStyle = '#EFC68E'; q.fillRect(0, 0, 1920, 120);
+      q.fillStyle = '#D99A62'; q.fillRect(0, 962, 1920, 118); q.beginPath(); q.moveTo(0, 962); q.lineTo(1920, 962); q.lineWidth = 3.5; q.strokeStyle = INK; q.stroke();
+      // window with a garden
+      rr(q, 1180, 170, 420, 330, 10); inked(q, '#F2B880', 3.5); rr(q, 1206, 196, 368, 278, 4); inked(q, '#CFE8E6', 3); q.fillStyle = '#9CC97A'; q.fillRect(1208, 400, 364, 72); q.beginPath(); q.moveTo(1390, 196); q.lineTo(1390, 474); q.moveTo(1206, 335); q.lineTo(1574, 335); q.lineWidth = 3; q.strokeStyle = INK; q.stroke();
+      // upper cabinets and the counter
+      for (let i = 0; i < 3; i++) { rr(q, 120 + i * 250, 150, 230, 260, 10); inked(q, '#E6A86E', 3.5); q.beginPath(); q.arc(120 + i * 250 + 200, 300, 8, 0, TAU); inked(q, '#F7D9B0', 2.5); }
+      rr(q, 90, 640, 820, 40, 8); inked(q, '#F3E3CC', 3.5); rr(q, 110, 680, 780, 282, 6); inked(q, '#E09C5F', 3.5);
+      for (let i = 0; i < 3; i++) { rr(q, 130 + i * 255, 700, 230, 240, 8); inked(q, '#E6A86E', 3); }
+      // a pot on the counter and a hanging plant
+      rr(q, 330, 560, 170, 86, 14); inked(q, '#E37F78', 4); rr(q, 310, 548, 210, 22, 10); inked(q, '#C9645E', 4);
+      q.beginPath(); q.moveTo(1740, 0); q.lineTo(1740, 230); q.lineWidth = 3; q.strokeStyle = INK; q.stroke(); rr(q, 1690, 230, 100, 70, 12); inked(q, '#8085A7', 3.5);
+      for (let i = 0; i < 5; i++) { q.beginPath(); q.ellipse(1700 + i * 22, 320 + (i % 2) * 30, 14, 34, (i - 2) * 0.3, 0, TAU); inked(q, '#87A26A', 2.5); }
+    }); g.drawImage(cv, 0, 0);
+  };
+  // the friend's flat mid-move: a pale wall, a bare window, stacks of boxes
+  GFX.movingFlat = function (g) {
+    const cv = FILM.cache('gfx|moving', (q) => {
+      q.fillStyle = '#EED9BD'; q.fillRect(0, 0, 1920, 1080); q.fillStyle = '#C79C73'; q.fillRect(0, 962, 1920, 118); q.beginPath(); q.moveTo(0, 962); q.lineTo(1920, 962); q.lineWidth = 3.5; q.strokeStyle = INK; q.stroke();
+      rr(q, 760, 160, 400, 340, 8); inked(q, '#F1C695', 3.5); rr(q, 786, 186, 348, 288, 4); inked(q, '#FCE3B6', 3);
+      q.globalAlpha = 0.5; q.fillStyle = '#FFFFFF'; q.beginPath(); q.moveTo(830, 474); q.lineTo(900, 474); q.lineTo(1010, 186); q.lineTo(940, 186); q.fill(); q.globalAlpha = 1;
+      rr(q, 1400, 300, 160, 120, 6); inked(q, '#F6E7D2', 3); // a faded patch where a picture hung
+      GFX.boxPile(q, 260, 962, 1.15, [[0, 0, 1], [175, 0, 1], [85, 1, 1], [20, 2, 0.9]]);
+      GFX.boxPile(q, 1480, 962, 1.15, [[0, 0, 1], [170, 0, 1], [90, 1, 1]]);
+    }); g.drawImage(cv, 0, 0);
+  };
+  // a simple table (front edge at y), for the closing joke's plate
+  GFX.table = function (g, cx, y, w) { w = w || 900; rr(g, cx - w / 2, y, w, 40, 10); inked(g, '#CD8B5F', 5); rr(g, cx - w / 2 + 30, y + 40, w - 60, 400, 0); inked(g, '#B8784F', 5); };
+  // a big YES (or any word) card, its back optionally a face
+  GFX.wordCard = function (g, cx, cy, w, h, word, o) {
+    o = o || {}; const flip = o.flip == null ? 1 : o.flip; g.save(); g.translate(cx, cy); g.scale(Math.max(0.02, Math.abs(flip)), 1);
+    if (flip >= 0) GFX.card(g, 0, 0, w, h, { fill: o.fill || '#FFF4E3', r: 30, draw: q => text(q, word, 0, 6, { size: o.size || h * 0.45, weight: 900, color: o.color || '#3A8594' }) });
+    else GFX.card(g, 0, 0, w, h, { fill: '#FFF4E3', r: 30, draw: q => GFX.face(q, 0, 0, h * 0.34, o.backExpr || 'scared') });
+    g.restore();
+  };
+  // an arm coming up from the bottom of the frame holding something at (x, y): a teal sleeve and a hand
+  GFX.arm = function (g, x, y, o) {
+    o = o || {}; const lw = LW(), sx = o.from || x + 40; g.save(); g.lineCap = 'round';
+    g.beginPath(); g.moveTo(sx, 1120); g.lineTo(x, y + 40); g.lineWidth = 92 + 2 * lw; g.strokeStyle = INK; g.stroke(); g.lineWidth = 92; g.strokeStyle = o.sleeve || col('hoodie', '#3A8594'); g.stroke();
+    g.beginPath(); g.ellipse(x, y + 14, 44, 38, 0, 0, TAU); inked(g, col('skin', '#FCEBCB'), lw);
+    for (let i = -1; i <= 1; i++) { g.beginPath(); g.ellipse(x + i * 22, y - 18, 11, 22, 0, 0, TAU); inked(g, col('skin', '#FCEBCB'), lw * 0.8); }
+    g.restore();
   };
 })(window);

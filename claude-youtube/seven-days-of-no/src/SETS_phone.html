@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>SET phone</title>
+<style>html,body{margin:0;background:#222}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../kit/pov.js"></script>
+<script src="../kit/sets.js"></script>
+<script>
+// ?mode=lock|chat  &both=1 (lock and chat side by side at 0.9 scale)
+const q = new URLSearchParams(location.search);
+const g = document.getElementById('c').getContext('2d');
+const LOCK = { mode: 'lock', time: '9:14', date: 'Wednesday, 12 March', battery: 0.12,
+  notes: [{ icon: 'call', title: 'Mum', body: '9 missed calls', time: 'now', count: 9 }, { icon: 'msg', title: 'Mum', body: 'Are you alive?', time: '2m ago' }] };
+const CHAT = { mode: 'chat', contact: 'Boss', avatarColor: '#9A9A9A', time: '6:12', t: 0.4,
+  messages: [{ from: 'them', text: 'Need that report tonight.' }, { from: 'me', text: "I can't tonight. I can send it first thing tomorrow." }, { from: 'them', text: 'Perfect 👍' }] };
+SETS.ready().then(() => {
+  if (q.get('both') === '1') {
+    SETS.phoneScreen(g, Object.assign({}, LOCK, { x: 560, scale: 0.92 }));
+    SETS.phoneScreen(g, Object.assign({}, CHAT, { x: 1360, scale: 0.92, bg: false, typing: null }));
+  } else SETS.phoneScreen(g, q.get('mode') === 'chat' ? CHAT : LOCK);
+  window.FRAME_READY = true;
+});
+</script></body></html>

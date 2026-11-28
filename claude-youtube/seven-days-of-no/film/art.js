@@ -1,236 +1,208 @@
-/* SEVEN DAYS OF NO — the art adapter (global ART). Sequences never call the kits directly: they call c.set / c.fig / c.prop,
-   which use the real art when it is loaded (SETS from kit/sets.js, POV.figure from kit/pov.js) and draw clean, labelled
-   placeholders until then, so the whole timeline can be scrubbed before the art exists and the art drops in without edits.
+/* SEVEN DAYS OF NO — the art adapter (global ART). Sequences never call the kits directly: they call c.set / c.setFront /
+   c.fig / c.prop, which use the real art when it is loaded (SETS from kit/sets.js, POV.figure from kit/pov.js) and draw clean,
+   labelled placeholders when it is not (a box per set, a capsule per character), so the timeline always scrubs.
 
-   Conventions the kits are called with (world space 1920x1080, under the shot's camera):
-   - c.set(name, opts): name in office | living | street | plain | party | kitchen | boxes. opts: { tod: 'day'|'evening'|'night'|
-     'morning'|'dusk', clock: '5:30', t, view, ...anything the set understands }. c.setFront(name, opts) draws what stands in
-     front of the characters (a desk edge, the sofa arm), if the set has such a layer.
-   - c.fig(who, opts): who in hero | boss | friend | mum | coworker | stranger. (x, y) is the ground point between the feet,
-     s = 1 is 800 px tall (POV.figure's scale). opts: { x, y, s, face: 1 right / -1 left, pose, expr, mouth 0..1, blink 0..1,
-     walk (phase in strides), look, hold, nod, tint, t }. The adapter fills mouth (from talk: [t0, t1]) and blink (seeded per
-     character, or blinks: [times]) when they are not given, and applies alpha, dx/dy and tremble itself.
-     poses: standing walking running thinking pointing sitting holding phone (to ear) typing waving shrug handup handmouth
-            stomach clasped sip thumbsup peace nodding clipboard
-     exprs: neutral happy beaming surprised confused tired angry sad scared calm guilty
-   - c.prop(name, opts): a prop drawn on its own (phone, laptop, mug, box, plate, banknote, pot_helmet, pan, party_hat, cup).
-   - c.anchor(set, name): a point the set exposes (SETS[set].anchors[name]); the defaults below until the set provides it. */
+   c.set(name, opts)   -> SETS[name](g, opts): office | living | street | plain | party | kitchen | boxes (placeholder until built).
+                          office: { view: 'desk'|'door', night, clock: '5:30' }; living: { tod: 'evening'|'morning'|'dusk', todTo,
+                          todK, bird, table }. The shot's camera (c.camera) is handed to the set as opts.cam, so a zoomed set is
+                          drawn at full resolution. Returns the set's result; its anchors are read with c.anchor(set, name).
+   c.setFront(name, o) -> SETS[name + 'Front'](g, o): what stands in front of the characters (the desk, the coffee table).
+   c.fig(who, opts)    -> POV.figure(g, who, ...). (x, y) is the ground point between the feet; s = 1 is 800 px tall.
+                          opts: x, y, s, face (1 right, -1 left), pose, expr, walk (strides; or phase in cycles), mouth, talk:
+                          [t0, t1] (mouth from the narration), blink, blinks: [times], nod, look, turn, hold (POV holding),
+                          mode (hold_phone: ear|show|out|front), seat, view (sit: side|front), tint, shadow, alpha, dx, dy,
+                          tremble (px), rot, marks, override. Returns the opts with A = the figure's anchors in world space
+                          (head, headR, headTop, mouth, handL, handR).
+                          poses: POV.POSES (stand walk think point wave shrug hands_clasped thumbs_up hand_mouth hold_phone
+                          hold_laptop hold_clipboard hold_box sit) plus the engine's: run, handup, stomach, peace, type.
+                          exprs: POV.EXPR (neutral happy surprised confused tired angry sad scared guilty tired_closed worried)
+                          plus beaming (= happy) and calm (= neutral). */
 (function (global) {
   'use strict';
-  const FILM = global.FILM, W = FILM.W, H = FILM.H;
-  const has = () => typeof global.SETS !== 'undefined' && global.SETS;
-  const pov = () => typeof global.POV !== 'undefined' && global.POV && typeof global.POV.figure === 'function' ? global.POV : null;
-  const FONT = '"Inter", "Inter Display", "Liberation Sans", system-ui, sans-serif';
+  const FILM = global.FILM, W = FILM.WIDTH, H = FILM.HEIGHT;
+  const setsKit = () => (typeof global.SETS !== 'undefined' && global.SETS) || null;
+  const pov = () => (typeof global.POV !== 'undefined' && global.POV && typeof global.POV.figure === 'function') ? global.POV : null;
+  const FONT = (global.SETS && global.SETS.FONT) || "'Nunito', 'Inter', 'Liberation Sans', system-ui, sans-serif";
   const INK = '#1c1c1c';
   const PAL = () => (global.POV && global.POV.C) || {};
   const ART = global.ART = { FONT, INK, placeholders: { set: {}, fig: {} } };
 
-  // ---------------------------------------------------------------- anchors: where things are in each set (world px)
-  // Sets should expose SETS[name].anchors with the same names; these defaults place the placeholders and the choreography.
+  // ---------------------------------------------------------------- anchors (world px): the kits' names, these values until a set reports its own
+  const A = (x, y, s) => ({ x, y, s: s || 1 });
   ART.ANCHORS = {
-    office: { floor: [960, 950], desk: [1130, 640], chair: [1360, 940], monitor: [1050, 470], clock: [930, 200], window: [1370, 300], door: [190, 950], doorway: [200, 950], plant: [640, 800] },
-    living: { floor: [960, 960], sofa: [860, 920], seat: [860, 760], table: [1300, 880], phone: [1300, 820], window: [830, 270], lamp: [250, 520], door: [1620, 960] },
-    street: { floor: [960, 960], tree: [380, 640], post: [150, 700], left: [640, 960], right: [1280, 960] },
-    plain: { floor: [960, 1080], centre: [960, 540] },
-    party: { floor: [960, 960] }, kitchen: { floor: [960, 960] }, boxes: { floor: [960, 960] },
+    office: { left: A(318, 962), right: A(1618, 962), center: A(900, 962), desk: A(1186, 617), deskPhone: A(1265, 612), chair: A(1560, 760), floor: A(960, 962), door: A(318, 962), doorway: A(318, 962, 0.95), window: A(1552, 307), clock: A(960, 212), plant: A(704, 837) },
+    living: { sofa: A(670, 742), sofa_seat_l: A(500, 742), sofa_seat_r: A(840, 742), table: A(1075, 848), tablePhone: A(1180, 846), door: A(1619, 975), window: A(527, 307), lamp: A(120, 326), plant: A(1275, 866), left: A(330, 990), right: A(1560, 990), center: A(960, 990), floor: A(960, 990) },
+    street: { left: A(640, 975), right: A(1280, 975), center: A(960, 975), floor: A(960, 975), tree: A(380, 640), post: A(150, 700) },
+    plain: { center: A(960, 540), floor: A(960, 1080) },
+    party: { center: A(960, 960), floor: A(960, 960) }, kitchen: { center: A(1300, 965), floor: A(960, 965), counter: A(530, 640) }, boxes: { center: A(960, 965), floor: A(960, 965) },
   };
-  ART.anchor = function (set, name, fb) {
-    const S = has() && global.SETS[set]; const a = S && S.anchors && S.anchors[name];
-    return a || (ART.ANCHORS[set] && ART.ANCHORS[set][name]) || fb || [W / 2, H / 2];
+  // c.anchor(set, name) -> {x, y, s} in world px: the set's own anchors (as it last reported them) or the defaults above
+  ART.anchor = function (set, name, fb, c) {
+    const r = c && c.sets && c.sets[set]; const a = r && r.anchorsSet && r.anchorsSet[name];
+    if (a) return { x: a.x, y: a.y, s: a.s || 1 };
+    const d = ART.ANCHORS[set] && ART.ANCHORS[set][name]; if (d) return Object.assign({}, d);
+    if (fb) return Array.isArray(fb) ? A(fb[0], fb[1], fb[2]) : fb;
+    FILM.warn('anchor ' + set + '.' + name + ' unknown'); return A(W / 2, H / 2);
   };
 
   // ---------------------------------------------------------------- sets
-  function callSet(S, layer, c, o) {
-    if (!S) return false;
-    const fn = layer === 'front' ? (S.front || null) : (typeof S === 'function' ? S : (S.draw || S.back || null));
-    if (typeof fn !== 'function') return false;
-    try { fn.call(S, c.g, o, c); return true; } catch (e) { FILM.warn('SETS.' + o._name + (layer === 'front' ? '.front' : '') + ': ' + e.message); return false; }
+  function callSet(c, fn, o) {
+    // hand the shot's camera to the set (it draws its cached layer at the zoom's resolution and clamps as c.camera does);
+    // a split-screen half (dx/dy) or a rotated camera keeps the set under the current transform instead
+    const cam = c._cam;
+    if (cam && !cam.dx && !cam.dy && !cam.rot && cam.zoom >= 1) {
+      c.reset(); const r = fn(c.g, Object.assign({}, o, { cam: { x: cam.x, y: cam.y, zoom: cam.zoom } })); c.camera(cam); return r;
+    }
+    return fn(c.g, o);
   }
   ART.set = function (c, name, o) {
-    o = Object.assign({ t: c.t, _name: name }, o);
-    if (has() && callSet(global.SETS[name], 'back', c, o)) return;
-    ART.placeholders.set[name] = 1; placeholderSet(c, name, o);
+    o = Object.assign({ t: c.t }, o); const S = setsKit(), fn = S && typeof S[name] === 'function' ? S[name] : null;
+    if (fn) { try { const r = callSet(c, fn, o); if (r) c.sets[name] = r; return r; } catch (e) { FILM.warn('SETS.' + name + ': ' + e.message); } }
+    ART.placeholders.set[name] = 1; placeholderSet(c, name, o); return null;
   };
   ART.setFront = function (c, name, o) {
-    o = Object.assign({ t: c.t, _name: name }, o);
-    if (has() && global.SETS[name]) { callSet(global.SETS[name], 'front', c, o); return; }
-    placeholderFront(c, name, o);
+    o = Object.assign({ t: c.t }, o); const S = setsKit(), fn = S && typeof S[name + 'Front'] === 'function' ? S[name + 'Front'] : null;
+    if (fn) { try { return callSet(c, fn, o); } catch (e) { FILM.warn('SETS.' + name + 'Front: ' + e.message); } }
+    return null;
   };
+  // the figure tint a set suggests for its light (the living room's evening multiply), or null
+  ART.tintFor = function (c, name) { const r = c.sets[name]; return r && r.tint ? r.tint : null; };
 
   const TOD = { day: 0, morning: 0.05, evening: 0.18, dusk: 0.3, night: 0.5 };
   function placeholderSet(c, name, o) {
     const g = c.g, P = PAL();
-    const key = 'ph|set|' + name + '|' + (o.tod || '') + '|' + (o.clock || '') + '|' + (o.view || '');
+    const key = 'ph|set|' + name + '|' + (o.tod || '') + '|' + (o.night ? 'n' : '') + '|' + (o.view || '');
     const cv = FILM.cache(key, (q) => {
-      const box = (x, y, w, h, fill, lw) => { q.fillStyle = fill; q.fillRect(x, y, w, h); q.lineWidth = lw || 3.5; q.strokeStyle = INK; q.strokeRect(x, y, w, h); };
+      const box = (x, y, w, h, fill, lw) => { q.fillStyle = fill; q.fillRect(x, y, w, h); if (lw !== 0) { q.lineWidth = lw || 3.5; q.strokeStyle = INK; q.strokeRect(x, y, w, h); } };
       if (name === 'office') {
-        box(0, 0, W, H, P.officeWallBack || '#FBEABF', 0); box(0, 0, 470, 820, P.officeWallSide || '#FCC374');
-        box(0, 820, W, 260, P.officeFloor || '#FDB569');
-        box(1180, 110, 400, 400, o.tod === 'night' ? '#3B4A78' : (P.glassLow || '#FFE3B5')); q.beginPath(); q.moveTo(1380, 110); q.lineTo(1380, 510); q.stroke();
-        clock(q, 930, 200, 82, o.clock || '5:00');
-        box(990, 600, 320, 26, P.officeDesk || '#EE8E5C'); box(1030, 626, 240, 230, P.officeDesk || '#EE8E5C'); box(1010, 400, 120, 190, P.officeMonitor || '#B6CEE6');
-        box(600, 740, 90, 110, P.officePot || '#B6D0EA'); q.fillStyle = P.leaf || '#87A26A'; q.beginPath(); q.ellipse(645, 650, 60, 100, 0, 0, Math.PI * 2); q.fill(); q.stroke();
-        box(60, 380, 300, 34, P.officeDesk || '#EE8E5C');
+        box(0, 0, W, H, P.officeWallBack || '#FBEABF', 0); box(0, 0, 470, 962, P.officeWallSide || '#FCC374'); box(0, 962, W, 118, P.officeFloor || '#FDB569');
+        box(1284, 84, 537, 446, o.night ? '#3B4A78' : (P.glassLow || '#FFE3B5')); box(1000, 610, 380, 24, P.officeDesk || '#EE8E5C'); box(1050, 400, 120, 200, P.officeMonitor || '#B6CEE6');
       } else if (name === 'living') {
-        box(0, 0, W, H, P.livWall || '#C19280', 0); box(0, 840, W, 240, P.livFloor || '#B9714B');
-        box(640, 110, 380, 330, o.tod === 'night' ? '#3B4A78' : o.tod === 'morning' ? '#CFE6F0' : (P.glassTop || '#FDCDB0'));
-        box(1500, 330, 240, 510, P.door || '#935A47'); box(520, 610, 680, 250, P.sofa || '#A9684C'); box(470, 650, 90, 210, P.sofaMid || '#915647'); box(1160, 650, 90, 210, P.sofaMid || '#915647');
-        box(1150, 800, 300, 26, P.table || '#CD8B5F'); box(1180, 826, 22, 80, P.tableSh || '#9C6752'); box(1400, 826, 22, 80, P.tableSh || '#9C6752');
-        box(240, 300, 24, 560, P.lampPole || '#9B8981'); q.fillStyle = P.lampShade || '#FCB953'; q.beginPath(); q.moveTo(180, 300); q.lineTo(320, 300); q.lineTo(290, 200); q.lineTo(210, 200); q.closePath(); q.fill(); q.stroke();
+        box(0, 0, W, H, P.livWall || '#C19280', 0); box(0, 900, W, 180, P.livFloor || '#B9714B'); box(382, 127, 289, 360, o.tod === 'morning' ? '#CFE6F0' : (P.glassTop || '#FDCDB0'));
+        box(1500, 360, 240, 615, P.door || '#935A47'); box(330, 640, 680, 230, P.sofa || '#A9684C'); box(960, 830, 300, 26, P.table || '#CD8B5F');
       } else if (name === 'street') {
-        box(0, 0, W, H, P.stSky || '#FCE9A7', 0); box(0, 90, 760, 760, P.stBrickBldg || '#B5714A'); box(1500, 0, 420, 860, P.stRight || '#E77944'); box(760, 260, 740, 590, P.stTan || '#BD8249');
-        box(0, 850, W, 230, P.stPave || '#FBE689'); q.fillStyle = P.stTree || '#81A73A'; q.beginPath(); q.ellipse(380, 470, 170, 220, 0, 0, Math.PI * 2); q.fill(); q.stroke(); box(360, 650, 40, 220, P.stTrunk || '#9D6B3B');
-        box(130, 300, 34, 580, P.stPost || '#A9A8A3');
-      } else if (name === 'plain') {
-        q.fillStyle = '#9ED3CF'; q.fillRect(0, 0, W, H);
-      } else if (name === 'party') {
-        box(0, 0, W, H, '#F6C9A0', 0); box(0, 840, W, 240, '#E39A6A');
-        const cols = ['#E37F78', '#77CC81', '#7BAFE1', '#F4BF54'];
-        for (let k = 0; k < 3; k++) for (let i = 0; i < 18; i++) { q.fillStyle = cols[(i + k) % 4]; q.beginPath(); q.moveTo(i * 110 - k * 30, 60 + k * 70); q.lineTo(i * 110 + 90 - k * 30, 60 + k * 70); q.lineTo(i * 110 + 45 - k * 30, 130 + k * 70); q.closePath(); q.fill(); q.lineWidth = 2.4; q.stroke(); }
-      } else if (name === 'kitchen') {
-        box(0, 0, W, H, '#F7DDB0', 0); box(0, 840, W, 240, '#D9A06E'); box(80, 520, 900, 320, '#E9B07A'); box(80, 120, 900, 260, '#F1C48F'); box(1200, 160, 360, 300, '#CFE6F0');
-      } else if (name === 'boxes') {
-        box(0, 0, W, H, '#EBD7BE', 0); box(0, 840, W, 240, '#C9A27E');
-        [[260, 600, 300, 250], [300, 380, 240, 220], [1300, 620, 320, 230], [1350, 420, 260, 200], [1420, 260, 180, 160]].forEach(b => { box(b[0], b[1], b[2], b[3], P.box || '#C9995F'); q.fillStyle = P.tape || '#E3C38E'; q.fillRect(b[0] + b[2] / 2 - 18, b[1], 36, b[3]); });
-      } else { box(0, 0, W, H, '#DDD', 0); }
-      // dim for the time of day
-      const k = TOD[o.tod] || 0; if (k && name !== 'plain') { q.fillStyle = `rgba(40,30,70,${k})`; q.fillRect(0, 0, W, H); }
-      // the placeholder label
-      q.font = `700 30px ${FONT}`; q.fillStyle = 'rgba(28,28,28,.55)'; q.textAlign = 'left'; q.textBaseline = 'top';
-      q.fillText('SET ' + name + (o.tod ? ' · ' + o.tod : '') + (o.view ? ' · ' + o.view : '') + ' (placeholder)', 24, 18);
+        box(0, 0, W, H, P.stSky || '#FCE9A7', 0); box(0, 90, 760, 780, P.stBrickBldg || '#B5714A'); box(1500, 0, 420, 870, P.stRight || '#E77944'); box(760, 260, 740, 610, P.stTan || '#BD8249');
+        box(0, 870, W, 210, P.stPave || '#FBE689'); q.fillStyle = P.stTree || '#81A73A'; q.beginPath(); q.ellipse(380, 470, 170, 220, 0, 0, Math.PI * 2); q.fill(); q.lineWidth = 3.5; q.strokeStyle = INK; q.stroke(); box(360, 650, 40, 230, P.stTrunk || '#9D6B3B'); box(130, 300, 34, 580, P.stPost || '#A9A8A3');
+      } else if (name === 'plain') { q.fillStyle = '#9DCFC6'; q.fillRect(0, 0, W, H); }
+      else if (name === 'party') {
+        box(0, 0, W, H, '#F6C9A0', 0); box(0, 900, W, 180, '#E39A6A'); const cols = ['#E37F78', '#77CC81', '#7BAFE1', '#F4BF54'];
+        for (let k = 0; k < 2; k++) for (let i = 0; i < 20; i++) { q.fillStyle = cols[(i + k) % 4]; q.beginPath(); const x0 = i * 100 - k * 50, y0 = 70 + k * 90 + Math.sin(i * 0.9) * 10; q.moveTo(x0, y0); q.lineTo(x0 + 80, y0); q.lineTo(x0 + 40, y0 + 64); q.closePath(); q.fill(); q.lineWidth = 3; q.strokeStyle = INK; q.stroke(); }
+      } else if (name === 'kitchen') { box(0, 0, W, H, '#F7DDB0', 0); box(0, 900, W, 180, '#D9A06E'); box(80, 600, 900, 300, '#E9B07A'); box(80, 130, 900, 260, '#F1C48F'); box(1180, 150, 380, 300, '#CFE6F0'); }
+      else if (name === 'boxes') {
+        box(0, 0, W, H, '#EBD7BE', 0); box(0, 900, W, 180, '#C9A27E');
+        [[260, 650, 300, 250], [300, 430, 240, 220], [1300, 670, 320, 230], [1350, 470, 260, 200], [1420, 310, 180, 160]].forEach(b => { box(b[0], b[1], b[2], b[3], P.box || '#C9995F'); q.fillStyle = P.tape || '#E3C38E'; q.fillRect(b[0] + b[2] / 2 - 18, b[1] + 2, 36, b[3] - 4); });
+      } else box(0, 0, W, H, '#DDD', 0);
+      const k = o.night ? 0.5 : (TOD[o.tod] || 0); if (k && name !== 'plain') { q.fillStyle = `rgba(40,30,70,${k})`; q.fillRect(0, 0, W, H); }
+      if (name !== 'plain') { q.font = `800 28px ${FONT}`; q.fillStyle = 'rgba(28,28,28,.5)'; q.textAlign = 'left'; q.textBaseline = 'top'; q.fillText('SET ' + name + (o.tod ? ' · ' + o.tod : '') + (o.night ? ' · night' : '') + ' (placeholder)', 24, 18); }
     });
     g.drawImage(cv, 0, 0);
+    if (name === 'office' && o.clock) clockFace(g, 960, 212, 95, o.clock);
   }
-  function placeholderFront(c, name, o) { /* placeholders have no front layer */ }
-  function clock(q, x, y, r, hm) {
+  function clockFace(q, x, y, r, hm) {
+    const P = global.SETS && global.SETS.clock; if (P) return P(q, x, y, r, hm);
     const [h, m] = String(hm).split(':').map(Number);
-    q.fillStyle = '#FDFEFA'; q.beginPath(); q.arc(x, y, r, 0, Math.PI * 2); q.fill(); q.lineWidth = 9; q.strokeStyle = '#A3ADB8'; q.stroke(); q.lineWidth = 3; q.strokeStyle = INK; q.beginPath(); q.arc(x, y, r + 5, 0, Math.PI * 2); q.stroke();
-    const ah = ((h % 12) + (m || 0) / 60) / 12 * Math.PI * 2, am = (m || 0) / 60 * Math.PI * 2; q.lineCap = 'round';
+    q.save(); q.fillStyle = '#FDFEFA'; q.beginPath(); q.arc(x, y, r, 0, Math.PI * 2); q.fill(); q.lineWidth = 9; q.strokeStyle = '#A3ADB8'; q.stroke();
+    const ah = ((h % 12) + (m || 0) / 60) / 12 * Math.PI * 2, am = (m || 0) / 60 * Math.PI * 2; q.lineCap = 'round'; q.strokeStyle = INK;
     q.lineWidth = 7; q.beginPath(); q.moveTo(x, y); q.lineTo(x + Math.sin(ah) * r * 0.5, y - Math.cos(ah) * r * 0.5); q.stroke();
-    q.lineWidth = 5; q.beginPath(); q.moveTo(x, y); q.lineTo(x + Math.sin(am) * r * 0.78, y - Math.cos(am) * r * 0.78); q.stroke();
+    q.lineWidth = 5; q.beginPath(); q.moveTo(x, y); q.lineTo(x + Math.sin(am) * r * 0.78, y - Math.cos(am) * r * 0.78); q.stroke(); q.restore();
   }
-  ART.clock = clock;
+  ART.clock = clockFace;
 
   // ---------------------------------------------------------------- characters
-  const CAST = {
-    hero: { body: '#3A8594', legs: '#FFFFFF', head: '#FCEBCB', top: null, label: 'HERO' },
-    boss: { body: '#FFFFFF', legs: '#7B7C7C', head: '#FCEBCB', top: '#A6A6A6', label: 'BOSS' },
-    friend: { body: '#D14A44', legs: '#5D8FAE', head: '#FCEBCB', top: '#3A3A3A', label: 'FRIEND' },
-    mum: { body: '#EC9547', legs: '#7E5C43', head: '#FCEBCB', top: '#755438', label: 'MUM' },
-    coworker: { body: '#6EA179', legs: '#DBC39E', head: '#CBA17C', top: '#2E2420', label: 'COWORKER' },
-    stranger: { body: '#6E5893', legs: '#6191AF', head: '#FCEBCB', top: '#DAC7A2', label: 'STRANGER' },
-  };
   const SEED = { hero: 1, boss: 2, friend: 3, mum: 4, coworker: 5, stranger: 6 };
+  const EXPR_ALIAS = { beaming: 'happy', calm: 'neutral', honest: 'happy' };
+  // the engine's poses beyond POV.POSES, built from the kit's own (pose functions take the figure opts)
+  const EXTRA = {
+    run: (P, o) => Object.assign(P.POSES.walk(Object.assign({}, o, { stride: o.stride || 0.72 })), { lean: 0.14 }),
+    handup: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 1.0, e: 1.75, hand: 'open', flip: 1 } }),
+    stomach: (P, o) => Object.assign(P.POSES.stand(o), { head: { tilt: 0.06, sink: 4 }, armR: { ik: [-6, -104], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.4 } }),
+    peace: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.55, e: 0.35, hand: 'point', flip: 1 } }),
+    type: (P, o) => P.POSES.sit(Object.assign({}, o, { view: 'side' })),
+    finger_up: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.25, e: 0.95, hand: 'point', flip: 1 } }),
+    push_away: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 1.45, e: 0.15, hand: 'open', flip: 1 }, armL: { a: 1.3, e: 0.25, hand: 'open', flip: 1, z: 'back' } }),
+    hold_card: (P, o) => Object.assign(P.POSES.hold_box(o), { prop: null }),
+    // seated variants (the sofa: view 'front' unless given)
+    sit_phone: (P, o) => { const b = P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), h = P.POSES.hold_phone({ mode: 'ear' }); return Object.assign(b, { armR: h.armR, prop: h.prop, head: h.head }); },
+    sit_laptop: (P, o) => { const b = P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), h = P.POSES.hold_laptop({}); return Object.assign(b, { armL: h.armL, armR: h.armR, prop: h.prop }); },
+    sit_stomach: (P, o) => Object.assign(P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), { head: { tilt: 0.06, sink: 4 }, armR: { ik: [-6, -104], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.4 } }),
+    sit_handup: (P, o) => Object.assign(P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })), { armR: { a: 1.0, e: 1.75, hand: 'open', flip: 1 } }),
+    sit_front: (P, o) => P.POSES.sit(Object.assign({}, o, { view: o.view || 'front' })),
+  };
   ART.fig = function (c, who, o) {
-    const t = c.t; const op = Object.assign({}, o); op.t = t; op.s = op.s || 1; op.face = op.face || 1;
-    if (op.x == null) op.x = W / 2; if (op.y == null) op.y = 950;
+    const t = c.t, g = c.g; const op = Object.assign({}, o); op.t = t; op.s = op.s || 1; op.face = op.face === -1 ? -1 : 1;
+    if (op.x == null) op.x = W / 2; if (op.y == null) op.y = 962;
     if (op.mouth == null) op.mouth = op.talk ? FILM.talk(t, op.talk) : 0;
     if (op.blink == null) op.blink = op.blinks ? FILM.blinkAt(t, op.blinks) : (op.noBlink ? 0 : FILM.blink(t, SEED[who] || 9));
-    if (op.breath == null) op.breath = FILM.breath(t, SEED[who] || 0);
-    const g = c.g; g.save();
+    g.save();
+    const toWorld = g.getTransform().inverse();
     if (op.alpha != null) g.globalAlpha *= FILM.clamp(op.alpha, 0, 1);
     let dx = op.dx || 0, dy = op.dy || 0;
-    if (op.tremble) { const tr = FILM.tremble(t, op.tremble * op.s, SEED[who] || 3); dx += tr.dx; dy += tr.dy; }
+    if (op.tremble) { const tr = FILM.tremble(t, op.tremble, SEED[who] || 3); dx += tr.dx; dy += tr.dy; }
     if (dx || dy) g.translate(dx, dy);
     if (op.rot) { g.translate(op.x, op.y); g.rotate(op.rot); g.translate(-op.x, -op.y); }
-    let done = false; const P = pov();
-    if (P) { try { P.figure(g, who, op); done = true; } catch (e) { FILM.warn('POV.figure(' + who + '): ' + e.message); } }
-    if (!done) { ART.placeholders.fig[who] = 1; placeholderFig(g, who, op); }
-    g.restore();
-    return op;
-  };
-  // where a figure's head is (for bubbles, sweat drops, hats): POV.headAt if the rig provides it, else the proportions of s=1 = 800 px
-  ART.head = function (who, o) {
-    const P = pov(); if (P && typeof P.headAt === 'function') { try { const h = P.headAt(who, o); if (h) return h; } catch (e) { } }
-    const s = o.s || 1, Hh = 800 * s, r = 0.135 * Hh; const sit = /sitting|sip|typing/.test(o.pose || '');
-    return { x: (o.x || 0) + (o.face || 1) * 0.01 * Hh, y: (o.y || 0) - Hh + r + (sit ? 0.2 * Hh : 0) + (o.breath || 0) * s, r };
-  };
-  // where a hand is ('left'/'right' or 'front'/'back' relative to facing): POV.handAt if provided
-  ART.hand = function (who, o, which) {
-    const P = pov(); if (P && typeof P.handAt === 'function') { try { const h = P.handAt(who, o, which); if (h) return h; } catch (e) { } }
-    const s = o.s || 1, Hh = 800 * s, f = o.face || 1; const sit = /sitting|sip|typing/.test(o.pose || '');
-    const front = which !== 'back';
-    return { x: (o.x || 0) + f * (front ? 0.2 : -0.16) * Hh, y: (o.y || 0) - (sit ? 0.36 : 0.5) * Hh };
-  };
-
-  function placeholderFig(g, who, o) {
-    const K = CAST[who] || { body: '#bbb', legs: '#888', head: '#eee', label: who.toUpperCase() };
-    const s = o.s, Hh = 800 * s, f = o.face, x = o.x, y = o.y; const pose = o.pose || 'standing';
-    const sit = /sitting|sip|typing/.test(pose);
-    const r = 0.135 * Hh, lw = Math.max(2, 5 * s); const by = (o.breath || 0) * s;
-    const hipY = sit ? y - 0.3 * Hh : y - 0.42 * Hh, neckY = y - Hh + 2 * r + (sit ? 0.2 * Hh : 0) + by;
-    g.lineJoin = 'round'; g.lineCap = 'round'; g.strokeStyle = INK; g.lineWidth = lw;
-    // legs
-    const ph = (o.walk || 0) * Math.PI; const run = pose === 'running' ? 1.6 : 1;
-    const lg = (side) => {
-      g.beginPath();
-      if (sit) { g.moveTo(x + side * 0.05 * Hh, hipY); g.lineTo(x + f * 0.2 * Hh + side * 0.04 * Hh, hipY); g.lineTo(x + f * 0.2 * Hh + side * 0.04 * Hh, y); }
-      else { const sw = (pose === 'walking' || pose === 'running') ? Math.sin(ph) * side * 0.12 * Hh * run : 0; g.moveTo(x + side * 0.05 * Hh, hipY); g.lineTo(x + side * 0.06 * Hh + sw, y - 0.02 * Hh); }
-      g.lineWidth = 0.075 * Hh; g.strokeStyle = INK; g.stroke(); g.lineWidth = 0.075 * Hh - 2 * lw; g.strokeStyle = K.legs; g.stroke();
-    };
-    lg(-1); lg(1);
-    // body capsule
-    const bw = 0.3 * Hh, bt = neckY - 0.02 * Hh, bb = hipY + 0.03 * Hh;
-    g.beginPath(); g.roundRect(x - bw / 2, bt, bw, bb - bt, bw * 0.38); g.fillStyle = K.body; g.fill(); g.lineWidth = lw; g.strokeStyle = INK; g.stroke();
-    // arms by pose
-    const sh = { x: x + f * 0.12 * Hh, y: bt + 0.06 * Hh }, shb = { x: x - f * 0.12 * Hh, y: bt + 0.06 * Hh };
-    const hy = neckY - r;
-    const arm = (a, hx, hy2) => { g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(hx, hy2); g.lineWidth = 0.05 * Hh; g.strokeStyle = INK; g.stroke(); g.lineWidth = 0.05 * Hh - 2 * lw; g.strokeStyle = K.body; g.stroke(); g.beginPath(); g.arc(hx, hy2, 0.03 * Hh, 0, Math.PI * 2); g.fillStyle = K.head; g.fill(); g.lineWidth = lw; g.strokeStyle = INK; g.stroke(); };
-    const A = {
-      pointing: [[sh.x + f * 0.32 * Hh, sh.y - 0.02 * Hh], [shb.x - f * 0.02 * Hh, hipY]],
-      handup: [[sh.x + f * 0.14 * Hh, sh.y - 0.16 * Hh], [shb.x, hipY]],
-      waving: [[sh.x + f * 0.12 * Hh, sh.y - 0.26 * Hh + Math.sin((o.t || 0) * 14) * 0.03 * Hh], [shb.x, hipY]],
-      thinking: [[x + f * 0.05 * Hh, neckY - 0.02 * Hh], [shb.x + f * 0.1 * Hh, hipY - 0.06 * Hh]],
-      handmouth: [[x + f * 0.07 * Hh, neckY - 0.07 * Hh], [shb.x, hipY]],
-      phone: [[x + f * 0.1 * Hh, neckY - 0.1 * Hh], [shb.x, hipY]],
-      shrug: [[sh.x + f * 0.14 * Hh, sh.y - 0.06 * Hh], [shb.x - f * 0.14 * Hh, shb.y - 0.06 * Hh]],
-      holding: [[sh.x + f * 0.18 * Hh, sh.y + 0.14 * Hh], [shb.x + f * 0.2 * Hh, shb.y + 0.16 * Hh]],
-      clipboard: [[sh.x + f * 0.14 * Hh, sh.y + 0.14 * Hh], [shb.x + f * 0.2 * Hh, shb.y + 0.12 * Hh]],
-      typing: [[sh.x + f * 0.2 * Hh, sh.y + 0.18 * Hh], [shb.x + f * 0.24 * Hh, shb.y + 0.2 * Hh]],
-      sip: [[x + f * 0.1 * Hh, neckY - 0.03 * Hh], [shb.x + f * 0.1 * Hh, hipY]],
-      stomach: [[x + f * 0.02 * Hh, hipY - 0.1 * Hh], [shb.x, hipY]],
-      clasped: [[x + f * 0.03 * Hh, hipY - 0.06 * Hh], [x - f * 0.01 * Hh, hipY - 0.05 * Hh]],
-      thumbsup: [[sh.x + f * 0.2 * Hh, sh.y - 0.04 * Hh], [shb.x, hipY]],
-      peace: [[sh.x + f * 0.12 * Hh, sh.y - 0.22 * Hh], [shb.x, hipY]],
-      running: [[sh.x + f * Math.sin(ph) * 0.14 * Hh, sh.y + 0.14 * Hh], [shb.x - f * Math.sin(ph) * 0.14 * Hh, shb.y + 0.14 * Hh]],
-      walking: [[sh.x + f * Math.sin(ph) * 0.08 * Hh, hipY], [shb.x - f * Math.sin(ph) * 0.08 * Hh, hipY]],
-    }[pose] || [[sh.x + f * 0.03 * Hh, hipY], [shb.x - f * 0.03 * Hh, hipY]];
-    arm(shb, A[1][0], A[1][1]);
-    // head
-    const nod = (o.nod || 0) * 0.04 * Hh; const hx = x + f * 0.01 * Hh, hcy = neckY - r + nod;
-    g.beginPath(); g.arc(hx, hcy, r, 0, Math.PI * 2); g.fillStyle = K.head; g.fill(); g.lineWidth = lw; g.strokeStyle = INK; g.stroke();
-    if (K.top) { g.beginPath(); g.arc(hx, hcy, r, Math.PI * 1.05, Math.PI * 1.95); g.closePath(); g.fillStyle = K.top; g.fill(); g.stroke(); }
-    // face: eyes (lines when blinking), brows and mouth by expression; the mouth opens with o.mouth
-    const ex = hx + f * 0.22 * r, ey = hcy + 0.02 * r, es = 0.34 * r, expr = o.expr || 'neutral';
-    g.fillStyle = INK;
-    for (const k of [-1, 1]) {
-      const px = ex + k * es;
-      if (o.blink > 0.5 || expr === 'tired') { g.beginPath(); g.moveTo(px - 0.1 * r, ey); g.lineTo(px + 0.1 * r, ey); g.lineWidth = lw; g.stroke(); }
-      else { g.beginPath(); g.arc(px, ey, (expr === 'surprised' || expr === 'scared' ? 0.11 : 0.08) * r, 0, Math.PI * 2); g.fill(); }
-      const bt2 = { angry: k * f * 0.08, sad: -k * f * 0.08, scared: -k * f * 0.1, confused: k > 0 ? 0.12 : 0, guilty: -k * f * 0.06 }[expr] || 0;
-      g.beginPath(); g.moveTo(px - 0.12 * r, ey - 0.25 * r - bt2 * r); g.lineTo(px + 0.12 * r, ey - 0.25 * r + bt2 * r); g.lineWidth = lw * 0.8; g.stroke();
+    const P = pov(); let out = null;
+    if (P) {
+      let pose = op.pose || 'stand';
+      if (typeof pose === 'string' && !P.POSES[pose]) { const ex = EXTRA[pose] || EXTRA[{ running: 'run', typing: 'type' }[pose]]; pose = ex ? (oo => ex(P, oo)) : (P.POSES[POSE_ALIAS[pose]] ? POSE_ALIAS[pose] : 'stand'); }
+      const phase = op.phase != null ? op.phase : op.walk != null ? op.walk / 2 : (op.pose === 'wave' ? t * 1.4 : 0);
+      const po = { x: op.x, y: op.y, scale: op.s, facing: op.face, pose, phase, expr: EXPR_ALIAS[op.expr] || op.expr || 'neutral', look: op.look, blink: op.blink, mouth: op.mouth,
+        turn: op.turn, nod: op.nod, holding: op.hold, tint: op.tint || null, shadow: op.shadow === false ? null : (op.shadow || (op.y < H + 40 ? 'rgba(140,70,20,0.18)' : null)),
+        marks: op.marks, override: op.override, prop: op.prop, drawProp: op.drawProp, face: op.faceOver, mode: op.mode, seat: op.seat, view: op.view, stride: op.stride, lw: op.lw };
+      try { out = P.figure(g, who, po); } catch (e) { FILM.warn('POV.figure(' + who + '): ' + e.message); out = null; }
     }
-    const mx = hx + f * 0.2 * r, my = hcy + 0.45 * r, m = Math.max(0, Math.min(1, o.mouth || 0));
-    if (m > 0.08) { g.beginPath(); g.ellipse(mx, my, 0.16 * r, 0.04 * r + 0.16 * r * m, 0, 0, Math.PI * 2); g.fillStyle = '#5E2323'; g.fill(); g.lineWidth = lw * 0.8; g.stroke(); }
+    if (!out) { ART.placeholders.fig[who] = 1; placeholderFig(g, who, op); out = placeholderAnchors(op); }
     else {
-      const cv = { happy: 0.12, beaming: 0.18, calm: 0.05, sad: -0.1, guilty: -0.06, scared: -0.08, angry: -0.06, tired: -0.04 }[expr] || 0;
-      g.beginPath(); g.moveTo(mx - 0.15 * r, my); g.quadraticCurveTo(mx, my + cv * r * 2, mx + 0.15 * r, my); g.lineWidth = lw * 0.8; g.stroke();
+      // the kit reports device pixels: bring them back to the caller's world space
+      const wp = p => { const q = toWorld.transformPoint(new DOMPoint(p[0], p[1])); return [q.x, q.y]; };
+      out = { head: wp(out.head), headTop: wp(out.headTop), mouth: wp(out.mouth), handL: wp(out.handL), handR: wp(out.handR), pelvis: wp(out.pelvis), headR: out.headR };
     }
-    // front arm over the body
-    arm(sh, A[0][0], A[0][1]);
-    // the label: who · pose · expr
-    g.font = `800 ${Math.max(12, Math.round(30 * s))}px ${FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle';
-    const lab = K.label, sub = pose + (expr !== 'neutral' ? ' · ' + expr : '') + (o.hold ? ' · ' + o.hold : '');
-    g.fillStyle = 'rgba(255,255,255,.85)'; const tw = Math.max(g.measureText(lab).width, 10);
-    g.fillRect(x - tw / 2 - 8 * s, (bt + bb) / 2 - 18 * s, tw + 16 * s, 36 * s);
-    g.fillStyle = INK; g.fillText(lab, x, (bt + bb) / 2);
-    g.font = `600 ${Math.max(10, Math.round(20 * s))}px ${FONT}`; g.fillStyle = 'rgba(28,28,28,.8)'; g.fillText(sub, x, y + 22 * s);
+    g.restore();
+    op.A = out; return op;
+  };
+  const POSE_ALIAS = { standing: 'stand', walking: 'walk', thinking: 'think', pointing: 'point', waving: 'wave', clasped: 'hands_clasped', thumbsup: 'thumbs_up', handmouth: 'hand_mouth', phone: 'hold_phone', clipboard: 'hold_clipboard', laptop: 'hold_laptop', box: 'hold_box', sitting: 'sit', holding: 'stand' };
+  // the head and hands of a drawn figure (world px): from its anchors when c.fig has drawn it, else from proportions
+  ART.head = function (who, op) {
+    if (op && op.A) return { x: op.A.head[0], y: op.A.head[1], r: op.A.headR, top: op.A.headTop };
+    const pa = placeholderAnchors(Object.assign({ s: 1, face: 1, x: 0, y: 0 }, op)); return { x: pa.head[0], y: pa.head[1], r: pa.headR };
+  };
+  ART.hand = function (who, op, which) {
+    const A2 = (op && op.A) || placeholderAnchors(Object.assign({ s: 1, face: 1, x: 0, y: 0 }, op));
+    const p = which === 'back' ? A2.handL : A2.handR; return { x: p[0], y: p[1] };
+  };
+  function placeholderAnchors(o) {
+    const s = o.s || 1, Hh = 800 * s, r = 100 * s, f = o.face || 1, sit = /sit|type|sip/.test(o.pose || '');
+    const hy = (o.y || 0) - Hh + r + (sit ? 0.2 * Hh : 0);
+    return { head: [(o.x || 0), hy], headTop: [(o.x || 0), hy - r], headR: r, mouth: [(o.x || 0) + f * 0.2 * r, hy + 0.5 * r], handR: [(o.x || 0) + f * 0.2 * Hh, (o.y || 0) - 0.5 * Hh], handL: [(o.x || 0) - f * 0.16 * Hh, (o.y || 0) - 0.5 * Hh], pelvis: [(o.x || 0), (o.y || 0) - 0.41 * Hh] };
+  }
+  const CAST = {
+    hero: { body: '#3A8594', legs: '#FFFFFF', head: '#FCEBCB', top: null, label: 'HERO' }, boss: { body: '#FFFFFF', legs: '#7B7C7C', head: '#FCEBCB', top: '#A6A6A6', label: 'BOSS' },
+    friend: { body: '#D14A44', legs: '#5D8FAE', head: '#FCEBCB', top: '#3A3A3A', label: 'FRIEND' }, mum: { body: '#EC9547', legs: '#7E5C43', head: '#FCEBCB', top: '#755438', label: 'MUM' },
+    coworker: { body: '#6EA179', legs: '#DBC39E', head: '#CBA17C', top: '#2E2420', label: 'COWORKER' }, stranger: { body: '#6E5893', legs: '#6191AF', head: '#FCEBCB', top: '#DAC7A2', label: 'STRANGER' },
+  };
+  // the placeholder: a capsule body, a round head with dot eyes (lines when blinking) and a mouth that opens, the name on the chest
+  function placeholderFig(g, who, o) {
+    const K = CAST[who] || { body: '#bbb', legs: '#888', head: '#eee', label: String(who).toUpperCase() };
+    const s = o.s, Hh = 800 * s, f = o.face, x = o.x, y = o.y, pose = String(o.pose || 'stand'), sit = /sit|type|sip/.test(pose);
+    const pa = placeholderAnchors(o), r = pa.headR, lw = Math.max(2, 5 * s); const hipY = sit ? y - 0.3 * Hh : y - 0.42 * Hh;
+    g.lineJoin = 'round'; g.lineCap = 'round';
+    const ph = (o.walk || 0) * Math.PI, moving = /walk|run/.test(pose);
+    for (const sd of [-1, 1]) { const sw = moving ? Math.sin(ph) * sd * 0.12 * Hh : 0; g.beginPath(); g.moveTo(x + sd * 0.05 * Hh, hipY); if (sit) { g.lineTo(x + f * 0.2 * Hh, hipY); g.lineTo(x + f * 0.2 * Hh, y); } else g.lineTo(x + sd * 0.06 * Hh + sw, y); g.lineWidth = 0.075 * Hh; g.strokeStyle = INK; g.stroke(); g.lineWidth = 0.075 * Hh - 2 * lw; g.strokeStyle = K.legs; g.stroke(); }
+    const bt = pa.head[1] + r * 0.9, bw = 0.3 * Hh; g.beginPath(); g.roundRect(x - bw / 2, bt, bw, hipY + 0.03 * Hh - bt, bw * 0.38); g.fillStyle = K.body; g.fill(); g.lineWidth = lw; g.strokeStyle = INK; g.stroke();
+    g.beginPath(); g.arc(pa.head[0], pa.head[1], r, 0, Math.PI * 2); g.fillStyle = K.head; g.fill(); g.stroke();
+    if (K.top) { g.beginPath(); g.arc(pa.head[0], pa.head[1], r, Math.PI * 1.05, Math.PI * 1.95); g.closePath(); g.fillStyle = K.top; g.fill(); g.stroke(); }
+    g.fillStyle = INK; for (const k of [-1, 1]) { const ex = pa.head[0] + f * 0.2 * r + k * 0.32 * r; if (o.blink > 0.5) { g.beginPath(); g.moveTo(ex - 0.1 * r, pa.head[1]); g.lineTo(ex + 0.1 * r, pa.head[1]); g.stroke(); } else { g.beginPath(); g.arc(ex, pa.head[1], 0.08 * r, 0, Math.PI * 2); g.fill(); } }
+    const m = o.mouth || 0; g.beginPath(); g.ellipse(pa.mouth[0], pa.mouth[1], 0.16 * r, 0.03 * r + 0.16 * r * m, 0, 0, Math.PI * 2); g.fillStyle = '#5E2323'; g.fill(); g.stroke();
+    g.font = `800 ${Math.max(12, Math.round(30 * s))}px ${FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = INK; g.fillText(K.label, x, (bt + hipY) / 2);
+    g.font = `600 ${Math.max(10, Math.round(20 * s))}px ${FONT}`; g.fillText(pose + (o.expr && o.expr !== 'neutral' ? ' · ' + o.expr : ''), x, y + 22 * s);
   }
 
   // ---------------------------------------------------------------- props
+  // c.prop(name, {x, y, s, a, ...}): POV.PROPS[name] (phone phoneFlat laptop laptopSide clipboard box mug notif chatBubble bell buzz
+  // thought plateIcon bulb clock flash shadow) when the kit has it, else the engine's GFX drawing of that name
   ART.prop = function (c, name, o) {
     const P = global.POV; o = Object.assign({ t: c.t }, o);
-    if (P && typeof P.prop === 'function') { try { if (P.prop(c.g, name, o) !== false) return; } catch (e) { FILM.warn('POV.prop(' + name + '): ' + e.message); } }
+    const fn = P && P.PROPS && typeof P.PROPS[name] === 'function' ? P.PROPS[name] : null;
+    if (fn) { try { c.g.save(); fn(c.g, o.x || 0, o.y || 0, o); c.g.restore(); return; } catch (e) { c.g.restore(); FILM.warn('POV.PROPS.' + name + ': ' + e.message); } }
     if (global.GFX && global.GFX.prop) global.GFX.prop(c.g, name, o);
   };
   ART.report = () => ({ sets: Object.keys(ART.placeholders.set), figures: Object.keys(ART.placeholders.fig) });

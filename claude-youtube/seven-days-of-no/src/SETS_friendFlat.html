@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>SET friendFlat</title>
+<style>html,body{margin:0;background:#222}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../kit/pov.js"></script>
+<script src="../kit/sets.js"></script>
+<script>
+// ?front=1 &anchors=1 &zoom=1.1&cx=..&cy=..
+const q = new URLSearchParams(location.search);
+const g = document.getElementById('c').getContext('2d');
+SETS.ready().then(() => {
+  const opts = { cam: { zoom: +(q.get('zoom') || 1), x: +(q.get('cx') || 960), y: +(q.get('cy') || 540) } };
+  const S = SETS.friendFlat(g, opts);
+  if (q.get('front') === '1') SETS.friendFlatFront(g, opts);
+  if (q.get('anchors') === '1') { g.font = SETS.font(800, 22); g.fillStyle = '#d0006f'; for (const [k, a] of Object.entries(S.anchors)) { g.beginPath(); g.arc(a.x, a.y, 9, 0, 7); g.fill(); g.fillText(k, a.x + 12, a.y - 10); } }
+  window.FRAME_READY = true;
+});
+</script></body></html>

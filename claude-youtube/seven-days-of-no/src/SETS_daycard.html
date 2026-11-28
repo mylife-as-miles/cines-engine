@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>SET day card</title>
+<style>html,body{margin:0;background:#222}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../kit/pov.js"></script>
+<script src="../kit/sets.js"></script>
+<script>
+// ?k=1  &label=MONDAY &sub=5:30 PM  &widgets=1 (pill and stamp samples)
+const q = new URLSearchParams(location.search);
+const g = document.getElementById('c').getContext('2d');
+SETS.ready().then(() => {
+  SETS.office(g, { clock: '17:30' });
+  SETS.dayCard(g, q.get('label') || 'MONDAY', q.get('sub') == null ? '5:30 PM' : q.get('sub'), +(q.get('k') || 1));
+  if (q.get('widgets') === '1') {
+    SETS.pill(g, 420, 900, 'NO', { fill: '#E37F78', color: '#FFFFFF' });
+    SETS.pill(g, 760, 900, 'YES!!', { fill: '#77CC81', color: '#FFFFFF', dim: 0.6 });
+    SETS.pill(g, 1300, 900, 'a real answer', { fill: '#FFF4E3', lit: 1, size: 48 });
+    SETS.stamp(g, 1650, 760, 'NO', 1);
+  }
+  window.FRAME_READY = true;
+});
+</script></body></html>

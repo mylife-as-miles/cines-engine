@@ -9,7 +9,7 @@
 const q = new URLSearchParams(location.search);
 const g = document.getElementById('c').getContext('2d');
 SETS.ready().then(() => {
-  const opts = { view: q.get('view') || 'desk', night: q.get('night') === '1', clock: q.get('clock') || (q.get('night') === '1' ? '21:10' : '17:30'),
+  const opts = { view: q.get('view') || 'desk', night: q.get('night') === '1', chair: q.get('chair') === '1' || q.get('night') === '1', clock: q.get('clock') || (q.get('night') === '1' ? '21:10' : '17:30'),
     cam: { zoom: +(q.get('zoom') || 1), x: +(q.get('cx') || 960), y: +(q.get('cy') || 540) } };
   const S = SETS.office(g, opts);
   if (q.get('front') === '1') SETS.officeFront(g, opts);
