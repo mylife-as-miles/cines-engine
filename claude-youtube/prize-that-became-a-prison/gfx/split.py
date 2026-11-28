@@ -31,17 +31,42 @@ W, H, HW, GUT = 1920, 1080, 958, 4
 # Right: inspection_room `handbags` (2560 x 1440): the same tote on the inspection table. Its rim at the cut, on the
 # output, is gfx/seam.html cutaway_half's tA, tB (re-measure both when the plate or its framing changes).
 HALVES = [
-    dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0),
-    dict(plate="frames/raw/inspection_room/handbags.png", cx=1974, cy=600, s=0.92, x0=HW + GUT, match=True),   # the native 2560 render (aec9820)
+    dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0, panel=(1800, 2200, 650, 950)),
+    dict(plate="frames/raw/inspection_room/handbags.png", cx=1974, cy=600, s=0.92, x0=HW + GUT, match=True,   # the native 2560 render (aec9820)
+         panel=(1800, 2200, 600, 950)),
 ]
 
 # The right-hand tote, graded to read as the same bag as the left's before the film's grade: the tote alone (a soft key on
 # the leather's warm hues, so the cold room keeps its light) gets a hue shift, a saturation scale and a mid-tone gamma,
-# fitted by a small grid search so that its front panel's median colour on the raw plate meets the left tote's (the two
-# halves then share the film grade). For the 2560 render (aec9820): hue -8, saturation 0.80, gamma 1.70; raw dE 1.9, and
-# in the graded frame at 2.16 s the front panels' medians are left (68, 46, 33), right (69, 48, 35): dE 0.8. Refit when
-# the plate is re-rendered (the earlier 1280 render needed +8 / 0.85 / 2.45).
-MATCH = dict(hue=-8.0, sat=0.80, gamma=1.70)   # fitted on the raw plates' tote panels for the 2560 render (aec9820): dE 1.9
+# fitted on every run by a small grid search (fit_match) so that its front panel's median colour on the raw plate meets
+# the left tote's (each half's `panel`, a box inside the tote's front in plate pixels); the two halves then share the
+# film grade. Fitting on every run means a re-rendered plate on either side is followed without a hand refit (the
+# evidence purses re-render at 8d47b04 shifted the left tote's hue, and the old fixed values left the pair unmatched).
+# The fit prints its values and its raw dE (CIE76): over 3 means the plates have drifted beyond what a grade can fix.
+HUES, SATS, GAMMAS = np.arange(-24, 24.1, 2.0), np.arange(0.5, 1.61, 0.05), np.arange(0.8, 3.01, 0.1)
+
+
+def lab_median(rgb):                                                    # rgb: float 0-255, any shape (..., 3)
+    m = np.median(rgb.reshape(-1, 3), 0).astype(np.float32) / 255.0
+    return cv2.cvtColor(m[None, None], cv2.COLOR_RGB2LAB)[0, 0]
+
+
+def fit_match(left, right, lbox, rbox):
+    """The hue shift, saturation scale and gamma that bring the right tote's panel median to the left's (raw plates)."""
+    def crop(img, b): return img[b[2]:b[3], b[0]:b[1]]
+    target = lab_median(crop(left, lbox))
+    patch = crop(right, rbox)[::4, ::4].reshape(1, -1, 3) / 255.0        # every 4th pixel: the median is stable
+    hsv = cv2.cvtColor(patch.astype(np.float32), cv2.COLOR_RGB2HSV)
+    best = (1e9, None)
+    for hue in HUES:
+        for sat in SATS:
+            h2 = hsv.copy(); h2[..., 0] = (h2[..., 0] + hue) % 360; h2[..., 1] *= sat
+            base = np.clip(cv2.cvtColor(h2, cv2.COLOR_HSV2RGB), 1e-4, 1)
+            for g in GAMMAS:
+                d = float(np.linalg.norm(lab_median(base ** g * 255) - target))
+                if d < best[0]:
+                    best = (d, dict(hue=float(hue), sat=round(float(sat), 2), gamma=round(float(g), 2)))
+    return best[1], best[0]
 
 
 def match_tote(img, s, hue, sat, gamma):
@@ -66,10 +91,10 @@ def main():
     ap.add_argument("--still", nargs=2, metavar=("T", "PNG"))
     a = ap.parse_args()
     os.chdir(ROOT)
-    plates = []
-    for h in HALVES:
-        img = cv2.cvtColor(cv2.imread(h["plate"], cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32)
-        plates.append(match_tote(img, h["s"], **MATCH) if h.get("match") else img)
+    raw = [cv2.cvtColor(cv2.imread(h["plate"], cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32) for h in HALVES]
+    match, de = fit_match(raw[0], raw[1], HALVES[0]["panel"], HALVES[1]["panel"])
+    print(f"tote match {match}: raw dE {de:.1f}" + ("  (over 3: the plates have drifted, check them)" if de > 3 else ""))
+    plates = [match_tote(img, h["s"], **match) if h.get("match") else img for h, img in zip(HALVES, raw)]
 
     def frame(t):
         out = np.zeros((H, W, 3), np.float32)

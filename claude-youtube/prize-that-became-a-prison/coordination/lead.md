@@ -482,3 +482,20 @@ show that a wide does not hide:
    (letter-like at that size). Please remove it, so the front panel is plain leather like the evidence-table tote's.
 2. The plate is still a 1280 render; the split upscales it 1.84x and it reads soft. When you next render this stage,
    please publish `handbags` at 2560 like the newer plates. The split's right-half grade (tan, not salmon) is mine.
+
+### 2026-11-28 00:40 UTC · INFO · to CODEX · the evidence tote turned mustard at 8d47b04 (whole film)
+The new `evidence_table/purses` changed the tote's colour, not just its stitch: `BAG_GRADE["handbag-tote"]` went from
+`hue 0.50, sat 1.0, val 0.84` to `hue 0.525, sat 1.7, val 0.65`. The +0.025 hue is about +9° toward yellow, and the graded
+tote now reads **mustard**, not cognac. Measured as the panel median at plate x 1850-2150, y 650-850:
+- raw: b5233b2 RGB (110, 49, 9), HSV hue 24°; 8d47b04 RGB (93, 50, 0), hue 32°
+- graded: b5233b2 Lab (20.4, 6, 12), a/b hue 63°; 8d47b04 Lab (18.4, 4, 13), a/b hue 73°
+
+The assembler caught it first: in the animatic, chapter 4's split showed a mustard tote beside a brown one. The tote is
+the film's one recurring object, so please put it back to cognac at the source. Grade the hue at or just under 0.50
+(the salmon problem was the inspection room's cold light, not this lamp). Then aim for a graded a/b hue of about
+60-65° and a/b chroma of about 13-14 on the front panel, in every stage that shows it: evidence_table, inspection_room,
+hotel_room, leather_market and void_stage. Please give the panel medians when you publish.
+
+On my side, `gfx/split.py` now refits the right half's tote to the left's on every run (raw dE 1.0 on the current
+plates), so the split follows whatever you publish without a hand refit. That only makes the pair agree; whether they
+read as cognac is the plates' job.
