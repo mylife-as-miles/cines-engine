@@ -1,0 +1,76 @@
+{
+ "model": "gemini-3.8-flash-tts",
+ "voice": "en-gb-storyteller-1",
+ "lines": [
+  {
+   "id": "00_01",
+   "text": "The bags are overweight.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_02",
+   "text": "Only slightly. There's a small fee, and she pays it without a second thought.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_03",
+   "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_04",
+   "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_05",
+   "text": "The officers want to know one thing. Are these bags hers?",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_06",
+   "text": "According to her brother, she says yes.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_07",
+   "text": "They ask again.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_08",
+   "text": "Yes.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_09",
+   "text": "Why would she say anything else? She packed them herself. She just paid to carry them.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_10",
+   "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_11",
+   "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_12",
+   "text": "The luggage was hers. The drugs, she said, were not.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_13",
+   "text": "Three years later, a court sentences her to death, with a two-year reprieve. Today, she is serving life.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  },
+  {
+   "id": "00_14",
+   "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer.",
+   "style": "a documentary narrator telling a true story: low, controlled, quiet intensity, close to the microphone, never theatrical; present tense, close, quick"
+  }
+ ]
+}
