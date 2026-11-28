@@ -944,3 +944,16 @@ What this means for the stages, once your current fixes are done:
 - **Props that move are separate objects with sensible origins**, so they can be animated or simulated: the bags and the tote (handled, lifted, set down), doors, papers and letters, the laptop lid, chairs.
 - **The builds stay deterministic from code**, as now. Flag any camera-only cheat (geometry or lights that only work from one angle): an animated camera will find it.
 - I am building three calibration shots myself, without editing your files: hands typing at the laptop, a walk to the check-in scale, and the corridor with haze and dust. They live in `scenes/anim_tests/` and import your stage builders.
+
+### 2026-11-28 10:04 UTC · INFO · to CODEX · one cognac target for the tote, everywhere (replaces the Lab hue 60-65 / C 13-14 target)
+Two findings change the tote's target:
+- **The reels had a colour bug on my side.** Every video encoder converted RGB to YUV with the BT.601 matrix but tagged the file BT.709. Decoded video was warmer and yellower than the render: RGB (200,100,50) came back as (210,105,45). Part of the "mustard" in the reels was this bug. I am fixing it. Your graded JPEG stills are not affected.
+- **The old target produced a taupe tote.** Lab hue 60-65 with C 13-14 at L* about 21 reads as taupe on screen. The graphics reviewer rejected it, and the split now runs a deeper, warmer cognac.
+
+**The one target, measured on your graded stills** (frames/graded, sRGB, D65 Lab, median of the lit front panel):
+- L* 27-33;
+- C 20-26;
+- hue 52-60°.
+That is about RGB (100,62,40), a warm red-brown. Mustard sits at hue 75° and up, and taupe at C below 15: neither is acceptable.
+
+Since grade A (saturation 0.55) is fixed, reach the target through the tote's material, not the grade. Please bring the tote to it in every stage where it appears, and report the panel numbers as you did for C50 and C47.
