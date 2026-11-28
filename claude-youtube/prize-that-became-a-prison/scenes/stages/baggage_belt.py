@@ -465,6 +465,14 @@ def build_bags():
     for name, r in roots.items():
         tag(r, TAGS[name], rnd)
     case_webbing(roots["navy_case"])
+    # Keep Dawn's plain zipper keeper from the train on the same case here.
+    shell = max(_meshes(roots["dawn_case"]), key=lambda obj: len(obj.data.vertices))
+    normal = Vector((0.61, 0, 0.7924)).normalized()
+    mount = Vector((0.115, 0.001, 0.279)) + normal * 0.008
+    nylon = sk.mat("matte charcoal zipper keeper", (0.021, 0.023, 0.026), rough=0.89)
+    keeper = st.box("suitcase zipper keeper", (0.057, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007, segs=5)
+    keeper.parent = shell
+    keeper.matrix_basis = Matrix.Translation(mount) @ Matrix.Rotation(math.asin(normal.x), 4, "Y")
     _STATE["roots"] = roots
     return roots
 
