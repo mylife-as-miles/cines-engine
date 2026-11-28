@@ -1423,7 +1423,7 @@
      "id": "02-07",
      "at": "02.01",
      "piece": "email",
-     "in": 4.0,
+     "in": 0.4,
      "max": 3.5
     },
     {
@@ -2510,7 +2510,8 @@
       "keys": [
        "just bring my sister home.",
        "just bring her home."
-      ]
+      ],
+      "hold": "just bring her home"
      }
     },
     {

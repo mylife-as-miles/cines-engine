@@ -197,14 +197,6 @@
     "frames": 28,
     "push": "in 2.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "parallax": {
-     "k": 1.0,
-     "slide": [
-      0,
-      0
-     ],
-     "depth": "out/depth/checkin_hall/scale.png"
-    },
     "type": []
    },
    "voice": [
@@ -2657,14 +2649,6 @@
     "frames": 46,
     "push": "in 2.1 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "parallax": {
-     "k": 1.0,
-     "slide": [
-      0,
-      0
-     ],
-     "depth": "out/depth/void_stage/cell_dawn.png"
-    },
     "type": []
    },
    "voice": [
@@ -4954,14 +4938,6 @@
     "frames": 65,
     "push": "in 3.0 % (log space, constant speed)",
     "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
-    "parallax": {
-     "k": 1.0,
-     "slide": [
-      0,
-      0
-     ],
-     "depth": "out/depth/home/kitchen_over.png"
-    },
     "type": [],
     "cards": [
      {
@@ -7416,7 +7392,7 @@
    "source": {
     "kind": "piece",
     "name": "email",
-    "in": 4.0,
+    "in": 0.4,
     "frames": 38,
     "file": null,
     "gen": {
@@ -15736,7 +15712,11 @@
        "ya": 700,
        "maxw": 980,
        "column": true,
-       "scale": 1.0
+       "scale": 1.0,
+       "held": {
+        "t": 13.54,
+        "text": "just bring her home"
+       }
       },
       "a": 0.0,
       "t0": 0.01,
@@ -15989,7 +15969,11 @@
        "ya": 700,
        "maxw": 980,
        "column": true,
-       "scale": 1.0
+       "scale": 1.0,
+       "held": {
+        "t": 13.54,
+        "text": "just bring her home"
+       }
       },
       "a": 4.032,
       "t0": 0.0,
@@ -16236,11 +16220,15 @@
        "ya": 700,
        "maxw": 980,
        "column": true,
-       "scale": 1.0
+       "scale": 1.0,
+       "held": {
+        "t": 13.54,
+        "text": "just bring her home"
+       }
       },
       "a": 8.365,
       "t0": 0.0,
-      "secs": 5.135
+      "secs": 6.125
      }
     ]
    },
@@ -25120,7 +25108,11 @@
    "note": "no voice after his: WHEN? held, the drone resolves on one warm note; 2 s of silence at the very end"
   }
  ],
- "warnings": [],
+ "warnings": [
+  "00-02: no depth map for checkin_hall/scale (a plate published after the depth pass): a flat push",
+  "00-26: no depth map for void_stage/cell_dawn (a plate published after the depth pass): a flat push",
+  "01-20: no depth map for home/kitchen_over (a plate published after the depth pass): a flat push"
+ ],
  "sound": {
   "about": "The score cues (audio/score/takes, the Lyria takes in tune; SCORE.md's motifs and arc) placed on v3's clock by anchor, each a window of a take: `from` seconds into it, entering from nothing over `fade_in` and rising, out over `fade_out` (0: a hard stop), set to `lufs` before the 8 dB duck under the voices (the voices sit at -18).",
   "tick_stops": "08.06@0.62",

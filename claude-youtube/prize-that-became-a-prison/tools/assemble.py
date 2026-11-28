@@ -353,6 +353,9 @@ def time_cmd(args):
                    "push": f"{'in' if z1 >= z0 else 'out'} {abs(z1 / z0 - 1) * 100:.1f} % (log space, constant speed)",
                    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame"}
             par = s.get("parallax", par_default)
+            if par and s["id"] not in matched and not (ROOT / f"out/depth/{stage}/{cam}.png").exists():
+                warnings.append(f"{s['id']}: no depth map for {stage}/{cam} (a plate published after the depth pass): a flat push")
+                par = None
             if par and s["id"] not in matched:
                 par = {**par_default, **par} if isinstance(par, dict) else dict(par_default)
                 src["parallax"] = {"k": par.get("k", 1.0), "slide": par.get("slide", [0, 0]), "depth": f"out/depth/{stage}/{cam}.png"}
@@ -899,10 +902,9 @@ def write_md_v3(edl, cut):
           "of the same stage. Each needs a new still from the stage's builder (posed figures are fine; leave 5-8 % of the picture "
           "for the push):", ""]
     L += [f"- **{s['id']}** ({s['start_tc']}, stand-in {pic(s['source'])}): {s['angle']}" for s in angles]
-    L += ["", "Screens: only `evidence_table/screen` (the laptop) and the scale have corner pins, so the real testimony plays on a screen "
-          "inside a set once (09-02). For the decision's plan, publish blank screens with `<cam>.corners.json` for: the TV in the "
-          "Hunt home (home, a new angle with the TV), Tim's desk monitor (tim_desk), and Dawn's laptop in her room (home kitchen / "
-          "kitchen_over, which have screens but no pins).", "",
+    scr = [s for s in edl["shots"] if s["source"]["kind"] == "screen"]
+    L += ["", "Real media inside the sets (the `screen` kind, by each plate's published corner pins): "
+          + "; ".join(f"{s['id']} ({s['start_tc']}) {pic(s['source'])}" for s in scr) + ".", "",
           "## ANIMATED BEAT (the 6-8 beats to animate; stills for now)", ""]
     L += [f"- **{s['id']}** ({s['start_tc']}, {s['duration']:.1f} s, now {pic(s['source'])}): {s['anim']}" for s in anims]
     L += ["", "## Real voices on the clock", "", "| Segment | Starts | Length | Source | Words |", "| --- | --- | --- | --- | --- |"]
@@ -1461,17 +1463,26 @@ def join_cmd(args):
     lst = FILM_DIR / ("concat.txt" if v1 else f"concat_{VERSION}.txt")
     lst.write_text("".join(f"file '{SHOTS / (e['id'] + '.mp4')}'\n" for e in edl["shots"]))
     tmp = FILM_DIR / f"{VERSION}.tmp.mp4"
-    crf, mx = ("18", "14M") if v1 else ("19", "10M")
+    crf, mx = ("18", "14M") if v1 else ("19", "9M")
+    # v3: the mix (audio/tools/mix_v3.py) goes in during the same encode when it exists, so the film is written once
+    mix = None if v1 else ROOT / json.load(open(CUT))["paths"]["mix"]
+    aud = (["-i", mix, "-map", "0:v", "-map", "1:a", "-c:a", "aac", "-b:a", "256k", "-ar", "48000"] if mix and mix.exists() else ["-an"])
+    thr = [] if v1 else ["-threads", "2"]
     # a join of BT.709 shots (every one rendered at this RENDER_VERSION): the YUV passes through untouched
-    run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-an", "-vf", "setsar=1,format=yuv420p",
-         "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-crf", crf, "-maxrate", mx, "-bufsize", "28M", "-preset", "fast", "-pix_fmt", "yuv420p",
-         "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", tmp])
+    run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, *aud[:2], "-vf", "setsar=1,format=yuv420p", *aud[2:],
+         "-r", str(FPS), "-frames:v", str(edl["total_frames"]), "-c:v", "libx264", "-profile:v", "high", "-crf", crf, "-maxrate", mx,
+         "-bufsize", "28M", "-preset", "fast", "-pix_fmt", "yuv420p", *thr, "-colorspace", "bt709", "-color_primaries", "bt709",
+         "-color_trc", "bt709", "-color_range", "tv", "-movflags", "+faststart", tmp])
     got = probe_frames(tmp)
     if got != edl["total_frames"]:
         raise SystemExit(f"joined {got} frames, the EDL has {edl['total_frames']}")
     if v1:
         tmp.rename(FILM)
         print(f"wrote {FILM}: {got} frames, {tc(got / FPS)}")
+        return
+    if mix and mix.exists():
+        tmp.rename(FILM)
+        print(f"wrote {FILM}: {got} frames, {tc(got / FPS)}, with the mix {mix.relative_to(ROOT)}")
         return
     pic = FILM.with_name(FILM.stem + "_picture.mp4")
     tmp.rename(pic)
