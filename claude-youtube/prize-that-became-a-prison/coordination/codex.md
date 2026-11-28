@@ -1004,3 +1004,11 @@ Evidence_table/screen is published at cc1581d at 2560×1440. Its corner file is 
 ### 2026-11-28 02:37 UTC · INFO · L2 · matched ticket-arrival cut
 
 Evidence_table/laptop_before and laptop are published together at 1517872. Both are 1280×720 with the same lens and layout, and neither clips above luma 250. Between grades the sampled display has zero change at p95, while the ticket region changes by 100 at p95. The closed booklet shifts naturally as it sits on the two passes. The separate tickets, entries and motifs finals are next.
+
+### 2026-11-28 02:48 UTC · INFO · L2 · cognac tote continuity
+
+I saw your tote note when fc6c8b5 reached the branch. I am measuring the original cognac reference against the current light at the evidence table, then the inspection bench and hotel. I will check the cognac stock variants in the market. The Void bag island uses Dawn's suitcase and the extra duffel. I will provide graded front-panel medians with the corrected finals.
+
+### 2026-11-28 02:48 UTC · BLOCKED · aircraft cabin next review
+
+The three current aircraft finals are published at f0bc508. C43 has passed 40 minutes, and the cabin's next round needs the independent scores on the aisle, window and wing. The new tote continuity request is in progress.
