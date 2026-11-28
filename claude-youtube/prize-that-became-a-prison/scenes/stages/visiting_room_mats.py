@@ -723,8 +723,8 @@ def security_glass(name, tint=(0.84, 0.875, 0.86), refl=0.035, smudge_zone=(0.95
     # smudges: blotchy prints (two noise scales) gated to the lean-in band, and fainter all over
     band = _math(nt, "MULTIPLY", _maprange(nt, wz, smudge_zone[0] - 0.2, smudge_zone[0], 0.25, 1.0),
                  _maprange(nt, wz, smudge_zone[1] + 0.25, smudge_zone[1], 0.25, 1.0))
-    prints = _maprange(nt, _noise(nt, face, 14.0, 3.0, 0.6), 0.6, 0.74, 0.0, 1.0)
-    prints = _math(nt, "MULTIPLY", prints, _maprange(nt, _noise(nt, face, 2.3, 2.0, 0.5), 0.55, 0.7, 0.0, 1.0))
+    prints = _maprange(nt, _noise(nt, face, 24.0, 3.0, 0.6), 0.6, 0.74, 0.0, 1.0)
+    prints = _math(nt, "MULTIPLY", prints, _maprange(nt, _noise(nt, face, 4.0, 2.0, 0.5), 0.55, 0.7, 0.0, 1.0))
     prints = _math(nt, "MULTIPLY", prints, band)
     # wipe arcs: a cloth dragged in sweeps (a stretched, swirled noise), faint and broad
     wipe = _maprange(nt, _noise(nt, face, 1.0, 3.0, 0.55, mapping=(1.6, 7.0, 1.0)), 0.6, 0.7, 0.0, 0.3)

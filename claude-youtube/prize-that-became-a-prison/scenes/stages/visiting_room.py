@@ -68,16 +68,16 @@ CAMERAS = {
                  exposure=-1.85),
     # Ch 08: over Tim's left shoulder, through the glass to Dawn with the handset at her ear (set by glass_camera());
     # no haze (it grained the reflection) and twice the samples, so his ghost in the glass comes out smooth
-    "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=58, focus="fx_dawn", fstop=2.8, beat="ch08", haze=False,
-                  spp_k=2.0, refl=1.5),
+    "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=50, focus="fx_dawn", fstop=2.8, beat="ch08", haze=False,
+                  spp_k=2.0, refl=1.5, film=1.3),
     "reverse": dict(loc=(BXO + 0.34, 1.67, 1.35), aim=(BXO, -0.75, 1.17), lens=53, focus="fx_tim",
-                    haze=False, beat="ch08", spp_k=2.0, refl=0.7),
+                    haze=False, beat="ch08", spp_k=2.0, refl=0.7, film=1.3),
     # Ch 08: an empty booth from a visitor's seat, a little behind it: the near phone with its handset on the hook
     # in the right third, the glass and its marks across the middle (the night light on the back wall reflecting in
     # it), the other side's phone in its own pool of light in the left third, the empty stool beyond (cast hidden)
     "empty": dict(loc=(st.BX[EMPTY] - 0.32, -1.6, 1.24), aim=(st.BX[EMPTY] + 0.15, 0.5, 1.17), lens=38,
-                  focus="fx_empty", fstop=2.8, beat="ch08", cast=False, exposure=-1.6, film=3.0, refl=3.0,
-                  film_diffuse=6.0),
+                  focus="fx_empty", fstop=2.8, beat="ch08", cast=False, exposure=-1.6, film=1.6, refl=3.0,
+                  film_diffuse=2.5),
 }
 # per-camera light trims: multipliers by light-name prefix (fittings scale their lens glow with them). Booth 2's
 # fittings and the "emp_" lights exist for the empty-booth camera only.
@@ -89,7 +89,7 @@ TRIMS = {
     "empty": {f"fitv{EMPTY}": 0.15, f"fiti{EMPTY}": 0.35, f"fitv{st.OCC}": 0.0, f"fiti{st.OCC}": 0.0,
               "bounce": 0.0, "idoor2": 0.3},
     "reverse": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35,
-                f"fiti{st.OCC}": 0.6, "bounce_Tim": 1.4},
+                f"fiti{st.OCC}": 0.35, "bounce_Tim": 1.4},
     # over Tim's shoulder: his own fitting turned down so the back of his head in the foreground falls darker than
     # Dawn's face, the counter's bounce into his face raised so his reflection in the glass still reads
     "glass": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35, f"fitv{st.OCC}": 0.5,
@@ -621,8 +621,8 @@ def sculpt_hair(name, value=0.07, strands=0.12):
             n.inputs["Distortion"].default_value = 4.0
             n.inputs["Detail"].default_value = 1.5
         elif n.type == "BSDF_PRINCIPLED":
-            n.inputs["Roughness"].default_value = 0.88
-            n.inputs["Specular IOR Level"].default_value = 0.12
+            n.inputs["Roughness"].default_value = 0.95
+            n.inputs["Specular IOR Level"].default_value = 0.05
             # a shade darker than the cast's 0.2: under the booth's top light the crown faces the tubes and the face
             # does not, so at 0.2 the hair rendered brighter than the face and Tim read bald
             n.inputs["Base Color"].default_value = (value, value, value * 1.05, 1.0)
@@ -640,8 +640,8 @@ def build_cast():
     matt_cloth(t, "male_elegantsuit01", folds=0.35)
     # Keep the shared grey of the long-sleeved shirt and trousers under the visiting booth lights.
     matt_cloth(d, people.PRISON_UNIFORM, bump=0.22, folds=0.35, fade=0.10)
-    sculpt_hair("Tim", 0.06, 0.16)
-    sculpt_hair("DawnPrison", 0.075, 0.1)
+    sculpt_hair("Tim", 0.04, 0.16)
+    sculpt_hair("DawnPrison", 0.045, 0.1)
     holders["Tim"], holders["Dawn"] = t, d
     sc = _STATE["tim_seat_c"]
     # Dawn sits a little to her right of the stool's centre and Tim a little to his right, so seen through the glass
@@ -815,17 +815,19 @@ def empty_lights():
 
 # ---------------------------------------------------------------- per camera
 def glass_camera():
-    """Over Tim's left shoulder: behind and to the left of his head, a little above it, aimed at Dawn's eyes."""
+    """Register both close angles to the posed eyes."""
     hs = _STATE.get("holders")
-    if not hs or "glass" not in CAMERAS:
+    if not hs:
         return
     te, de = eye_centre(hs["Tim"]), eye_centre(hs["Dawn"])
-    loc = te + Vector((-0.34, -1.08, 0.13))
-    aim = de + Vector((0.16, 0.0, -0.08))
-    CAMERAS["glass"]["loc"] = tuple(round(v, 4) for v in loc)
-    CAMERAS["glass"]["aim"] = tuple(round(v, 4) for v in aim)
-    CAMERAS["reverse"]["loc"] = tuple(de + Vector((0.34, 0.94, 0.12)))
-    CAMERAS["reverse"]["aim"] = tuple(te + Vector((-0.08, 0, -0.075)))
+    if glass := CAMERAS.get("glass"):
+        loc = te + Vector((-0.30, -1.30, 0.22))
+        aim = de + Vector((0.16, 0.0, -0.08))
+        glass["loc"] = tuple(round(v, 4) for v in loc)
+        glass["aim"] = tuple(round(v, 4) for v in aim)
+    if reverse := CAMERAS.get("reverse"):
+        reverse["loc"] = tuple(de + Vector((0.34, 0.94, 0.12)))
+        reverse["aim"] = tuple(te + Vector((-0.08, 0, -0.075)))
 
 
 def which_camera():
