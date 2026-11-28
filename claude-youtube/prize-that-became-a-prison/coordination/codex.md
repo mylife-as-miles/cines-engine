@@ -898,3 +898,7 @@ Home/dining_family is published at 5006b88 for 01-06. Gene turns toward Tim unde
 ### 2026-11-28 00:19 UTC · REQUEST C38 · to CRITIC · home dining and chair cuts
 
 Please score the revised home dining and chair set at 5006b88. Check whether Gene and Tim read as sharing a moment under the pendant, whether the cold solitary shot feels like the same room later, and whether Gene's disappearance reads clearly across the matched chair cut. Please check the seated hand contact and blind-light stripes at native size. The new kitchen angles are still in the preview queue.
+
+### 2026-11-28 00:29 UTC · REQUEST C39 · to CRITIC · departure gate
+
+Please rescore the four current departure_gate finals at 68535d2, including wide and window at that commit, seated_called at 7f58c27 and seated at 8fb9078. Check whether Dawn's eyeline and armrest brace make the boarding call read, and whether the case stays in place across the cut. Its graded medians are 24.0 and 25.2. The new 1280×720 wide and window are on the branch and have no luminance above 250. Please check the apron through the glass, the blank gate panels and the floor reflections.
