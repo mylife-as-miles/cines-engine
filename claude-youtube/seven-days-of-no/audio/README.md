@@ -26,7 +26,7 @@ Mux over the picture with `-c:v copy -c:a aac -b:a 256k -ar 48000 -movflags +fas
 | `score_plan.json` | The music: the five Lyria takes (prompts, the one rejected and why) and the four beds (take, transposition, windows, level, why). |
 | `score/T2-T5.mp3`, `score/*.json`, `score/check.json`, `score/requests.json` | The chosen takes, their sidecars, the listening check and the request ledger. |
 | `sound_map.json` | Cue names to sounds and levels, music beds by sequence, room beds left silent, and the mix settings. |
-| `sfx/*.flac`, `sfx/plan.json`, `sfx/check.json` | The 36 finished effects (48 kHz mono, 24-bit, peak −1 dBFS), with the source and earshot verdict for each. |
+| `sfx/*.flac`, `sfx/plan.json`, `sfx/check.json` | The 40 finished effects (48 kHz mono, 24-bit, peak −1 dBFS), with the source and earshot verdict for each. |
 | `gen_plan.json`, `gen/*.flac` | The Stable Audio prompts and seeds, and the chosen raw takes. Rejected takes are deleted. |
 | `cues_draft.json` | The draft cue sheet. |
 
@@ -49,12 +49,16 @@ The reference animatic's register is warm, playful and music-box. Every take use
 
 ## Effects
 
-Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 12–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13, the shutter at −12. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 15:16 has 122 cues (25 pops, 28 whooshes); 117 play.
+Each effect is cartoon-clean, levelled from its loudest 100 ms relative to the narration, and sits 12–26 dB under the voice: pops at −19 dB, card whooshes at −20, phone buzzes at −13, stamps at −13, the shutter at −12. Same-name cues closer than 150 ms play once; only the doubled whoosh at 24.18 s was dropped. The cue sheet of 15:32 (fix round 2) has 136 cues (25 pops, 28 whooshes, 8 card lands, 13 stamps: 4 YES, 9 NO); 131 play.
 
 | Sound | Source |
 |---|---|
 | phone_buzz, notify, pop ×3, send, receive, ding, bulb, cloud, whoosh ×2, wrong, clang, stomach_drop (also used for `deflate`), wobble, bird, battery_low, swell, rain, grow, click (also used for `button_click` and `freeze`), dim | Synthesised in `tools/synth_sfx.py`, pitched in C major at A = 440 |
-| stamp | One Too Many's rubber stamp (CC0) over a soft synthetic thump |
+| stamp (the red NO) | One Too Many's rubber stamp (CC0) over a soft synthetic thump |
+| stamp_yes (a stamp cue whose `p.kind` is `yes`, or that is spoken on "yes" or the cold open's "say") | One Too Many's shorter stamp (CC0), a light thump and a small C7 ping: brighter (centroid 2.5 kHz against 2.0) and friendlier, 2 dB softer |
+| card_land ×3 (cycled) | One Too Many's card slaps (CC0), trimmed and lightened; 23 dB under the voice |
+| shout_no | Synthesised: a cartoon boing, a whoosh outward, and a thud 0.42 s in (in the pause after the narrator's "no") |
+| pile_topple | Stable Audio 3.0 Small SFX (earshot: strong, "a stack of papers falling over") |
 | footsteps, step_1–4 | One Too Many's wood-floor steps (CC0). The cue's `n` and `gap` lay the steps |
 | door, run, typing, camera_shutter, plate_slide | Stable Audio 3.0 Small SFX, generated locally. `typing` is stretched to the cue's `n` taps |
 | `shrug`, `flash`, `sip`; all room beds (`office_room`, `living_room_*`, `street_ambience`, `evening_birds`, `party_murmur`) | Silent on purpose. `sound_map.json` gives the reason for each |
@@ -90,7 +94,20 @@ Three fails are accepted, and the ear should decide (see below):
 - **Ducking.** Speech regions come from the narration's own envelope, with pauses under 1.2 s merged so the music does not pump between sentences. Inside them, the music is held about 12 dB under the voice (15 dB for the lift), ridden down only, with a 0.35 s attack and a 0.9 s release. The music's level is read as the louder of its 1 s and 3 s loudness, so a bed that enters at full level after a stop-down is ducked at once. Where no one speaks (the stop-down, the end screen), the bed plays at its own level. Under the voice, the music also takes a 3 dB presence dip at 2.5 kHz.
 - **Sample peaks are held** at −1.5 dBFS before the encode.
 
-earshot on the hardest moments (`out/mix/listen.json`, `out/mix/listen_lift.json`) reads "a man talking over soft background music" in every speech window:
+**The hook (0–16 s), now busy with effects** (`out/mix/listen_hook.json`): the effects sit 19–27 dB under the voice. In every window, earshot gives "loud sound effects drowning out a voice" 1%.
+
+| Hook window | "Voice over soft music" | "Music drowning" |
+|---|---|---|
+| Whole hook, 0–16 s | 92% | 5% |
+| Montage, 2–7 s | 91% | 6% |
+| NO! burst and topple, 10–13 s | 82% | 17% |
+| "yes, yes, yes", 7–10.5 s | 76% | 24% |
+| The question, 11.5–16 s | 76% | 23% |
+| Cards, 0–4 s | 69% | 30% |
+
+The short windows' "music drowning" share does not follow level: with the music 3 dB lower it reads 27%, 22% and 27%. With no effects at all, it reads the same.
+
+earshot on the other hard moments (`out/mix/listen.json`, `out/mix/listen_lift.json`) reads "a man talking over soft background music" in every speech window:
 
 - Q03 pause: 97%.
 - Q07 typing/send/receive: 92%.
@@ -104,7 +121,7 @@ The lift sections, held 3 dB deeper since the first mix:
 | Q06, 117–130.8 s | 10% | −18.1 dB | −20.6 dB |
 | Q10, 176.5–187.5 s | 8% | −18.0 dB | −17.2 dB |
 | Q10 after the freeze, 190–198.4 s | 9% | −17.8 dB | −18.4 dB |
-| Busiest 8 s windows: Friday's stop-down into the run (112.5–120 s) and Q10 179–187 s | 27% each | | |
+| Busiest 8 s windows: Friday's stop-down into the run (112.5–120 s) and Q10 179–187 s | 27% and 27–33% (it varies between runs) | | |
 
 The busiest windows were 29–33% before the change.
 
@@ -123,5 +140,5 @@ The end screen reads 96% "light cheerful ukulele music ending on a final chord".
 2. **The hush (G major, resampled) next to the main bed (C major)** at 45.8 and 66.4 s, and at 159.4 and 176.2 s: check that the crossfades sit well.
 3. **No vocals in T4 and T5.** earshot says none. Their bright ukulele sections lean toward "pop song" in a forced choice.
 4. **The run, bird and rain** (116.4, 84.6 and 174.0 s).
-5. **The density of effects.** The cue sheet has 122 cues (25 pops, 28 whooshes); 117 play. The author has asked for few, quiet effects. Muting a name in `sound_map.json` (`null`) thins them without touching the picture.
+5. **The density of effects.** The cue sheet has 136 cues (25 pops, 28 whooshes, 8 card lands); 131 play. In the cold open, eight card lands come in 1.8 s. The author has asked for few, quiet effects. Muting a name in `sound_map.json` (`null`) thins them without touching the picture.
 6. **The end screen level** (−18 LUFS) and the final chord ending on the last frame.
