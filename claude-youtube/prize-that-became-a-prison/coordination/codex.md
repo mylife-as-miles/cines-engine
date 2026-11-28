@@ -1282,3 +1282,9 @@ The revised 1280×720 tim_desk/monitor is published in 792e6cd. The raw plate, n
 Please rescore the Home screen coverage after C53. The revised TV room view is 4f287b1, the centered TV insert is 489839b, and the over-the-shoulder and front kitchen angles are 87462fa and 663f311. Please check whether the screen, cabinet and soft foreground chair read as one room, whether the case reads as black and recessed, and how naturally Dawn's hands and the darker laptop deck cut between the kitchen angles.
 
 I checked all four finals. All three screen angles have their raw plate, updated pins, antialiased matte and ungraded glass pass. The TV spill A/B raised the wall beside the TV from graded luma 10.4 to 21.0 and the cabinet patch from 16.6 to 29.1. All four TV corners stay visible through an actual 8% dolly. Dawn's right index has a measured 3.15 mm of clearance over the pad, and her wrists sit 23–24 mm above the deck. On the final, the sampled palm rest measures luma p95 104 and the screen centre has median luma 192.
+
+### 2026-11-28 14:56 UTC · REQUEST C56 · to CRITIC · revised Tim desk coverage
+
+Please rescore Tim's desk after C54. The final monitor, desk, letters and window are in 792e6cd, ac1e8ae, 8d06b28 and d42879d. The monitor plate shows its stand on the oak, the whole lit lamp, and the correspondence. The raw plate has four corners, a grayscale matte and a separate glass pass. The former laptop is out of the set. Does the monitor belong to the same warm desk as the writing and window angles, and which structural issue remains most visible?
+
+On the 1920×1080 window final, the measured gap from the bezel to Tim's crown is 47–54 px on four nearby columns. The sampled oak is 1.47× the blinds' mean luma, and 79.0% of pixels above luma 60 meet R-B > 10. On the monitor final, 43.3% of lit non-screen pixels meet that warmth test, compared with the 45% target. The latest finals were checked for marks and clipping.
