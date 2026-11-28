@@ -42,10 +42,10 @@ WORDS = {
 CHOICE = {
     'SC00a': {'start': ('row', '00.01', 2.0), 'end': ('row', '00.04', 0.0),
               'why': 'both on their rows: after 2 s with no music; joins SC00b on the cut to seated_called (the tannoy).',
-              'fade_in_s': 6.0, 'fade_out_s': 0.0, 'join_next': 'SC00b'},
+              'fade_in_s': 6.0, 'fade_out_s': 0.04, 'join_next': 'SC00b'},
     'SC00b': {'start': ('row', '00.04', 0.0), 'end': ('row', '00.07', 0.0),
               'why': 'the pulse enters on the cut to seated_called; hard stop on the frame where YES lands (the word "yes" is 32.30-32.56 on the scratch read, its tail to 32.79).',
-              'fade_in_s': 0.0, 'fade_out_s': 0.012, 'hard_out': True},
+              'fade_in_s': 0.04, 'fade_out_s': 0.012, 'hard_out': True},
     'SC00c': {'start': ('voice', '00.10', 0.0), 'end': ('word', '00.12 not. (end)', 0.0),
               'why': 'start at the end of the 1 s silence (the row gives 42.167, 12 ms off); CUT DEAD as "were not." ends (the row gives 62.917, inside "The luggage was hers").',
               'fade_in_s': 2.0, 'fade_out_s': 0.012, 'hard_out': True},

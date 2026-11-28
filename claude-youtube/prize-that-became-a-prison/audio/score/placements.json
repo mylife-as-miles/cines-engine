@@ -13,175 +13,175 @@
   "00.04": {
    "shot": "00-06",
    "edl_s": 19.333,
-   "script_s": 15.0,
+   "script_s": 19.333,
    "picture": "departure_gate seated_called"
   },
   "00.07": {
    "shot": "00-12",
    "edl_s": 32.667,
-   "script_s": 33.0,
+   "script_s": 32.667,
    "picture": "inspection_room match (YES)"
   },
   "00.09": {
    "shot": "00-16",
    "edl_s": 41.167,
-   "script_s": 43.0,
+   "script_s": 41.167,
    "picture": "inspection_room handbags"
   },
   "00.12": {
    "shot": "00-22",
    "edl_s": 61.917,
-   "script_s": 64.0,
+   "script_s": 61.917,
    "picture": "inspection_room match -> void_stage bags"
   },
   "00.15": {
    "shot": "00-27",
    "edl_s": 76.042,
-   "script_s": 81.0,
+   "script_s": 76.042,
    "picture": "hearing_room wide -> witness"
   },
   "00.17": {
    "shot": "00-30",
    "edl_s": 89.083,
-   "script_s": 97.0,
+   "script_s": 89.083,
    "picture": "void_stage bags in the beam (TITLE)"
   },
   "01.01": {
    "shot": "01-01",
    "edl_s": 94.083,
-   "script_s": 102.0,
+   "script_s": 94.083,
    "picture": "chicago_night wide -> profile"
   },
   "01.08": {
    "shot": "01-15",
    "edl_s": 170.792,
-   "script_s": 178.0,
+   "script_s": 175.708,
    "picture": "departure_gate window"
   },
   "02.01": {
    "shot": "02-01",
    "edl_s": 186.875,
-   "script_s": 185.0,
+   "script_s": 186.875,
    "picture": "aircraft_cabin window, over"
   },
   "02.06": {
    "shot": "02-12",
    "edl_s": 219.75,
-   "script_s": 230.0,
+   "script_s": 219.75,
    "picture": "route map: dashed line to Australia"
   },
   "03.01": {
    "shot": "03-01",
    "edl_s": 232.208,
-   "script_s": 240.0,
+   "script_s": 232.208,
    "picture": "hotel_room accept"
   },
   "03.05": {
    "shot": "03-11",
    "edl_s": 266.0,
-   "script_s": 278.0,
+   "script_s": 263.375,
    "picture": "checkin_hall scale (matched)"
   },
   "03.06": {
    "shot": "03-16",
    "edl_s": 286.625,
-   "script_s": 286.0,
+   "script_s": 286.625,
    "picture": "baggage_belt curtain, belt"
   },
   "04.04": {
    "shot": "04-08",
    "edl_s": 307.833,
-   "script_s": 327.0,
+   "script_s": 307.833,
    "picture": "inspection_room handbags (officer's hand)"
   },
   "04.06": {
    "shot": "04-11",
    "edl_s": 321.458,
-   "script_s": 345.0,
+   "script_s": 321.458,
    "picture": "inspection_room empty"
   },
   "04.08": {
    "shot": "04-19",
    "edl_s": 349.042,
-   "script_s": 368.0,
+   "script_s": 349.042,
    "picture": "detention_corridor corridor (2014)"
   },
   "06.02": {
    "shot": "06-02",
    "edl_s": 424.917,
-   "script_s": 450.0,
+   "script_s": 424.917,
    "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)"
   },
   "06.06": {
    "shot": "06-12",
    "edl_s": 470.25,
-   "script_s": 495.0,
+   "script_s": 470.25,
    "picture": "void_stage divide"
   },
   "06.07": {
    "shot": "06-14",
    "edl_s": 476.708,
-   "script_s": 513.0,
+   "script_s": 476.708,
    "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")"
   },
   "07.01": {
    "shot": "07-01",
    "edl_s": 481.167,
-   "script_s": 525.0,
+   "script_s": 481.167,
    "picture": "prison_exterior wall, gate"
   },
   "07.07": {
    "shot": "07-10",
    "edl_s": 533.917,
-   "script_s": 596.0,
+   "script_s": 533.917,
    "picture": "tim_desk bill page (MAY 2025)"
   },
   "08.01": {
    "shot": "08-01",
    "edl_s": 566.708,
-   "script_s": 610.0,
+   "script_s": 566.708,
    "picture": "home dining, cold, Gene alone"
   },
   "08.03": {
    "shot": "08-02",
    "edl_s": 575.458,
-   "script_s": 638.0,
+   "script_s": 612.458,
    "picture": "home blinds (JANUARY 25, 2026)"
   },
   "09.01": {
    "shot": "09-01",
    "edl_s": 622.708,
-   "script_s": 670.0,
+   "script_s": 622.708,
    "picture": "prison_exterior gate (JULY 2026)"
   },
   "09.03": {
    "shot": "09-04",
    "edl_s": 645.75,
-   "script_s": 698.0,
+   "script_s": 645.75,
    "picture": "visiting_room glass, locked, long hold"
   },
   "09.04": {
    "shot": "09-05",
    "edl_s": 652.917,
-   "script_s": 708.0,
+   "script_s": 652.917,
    "picture": "visiting_room empty"
   },
   "09.07": {
    "shot": "09-09",
    "edl_s": 669.708,
-   "script_s": 728.0,
+   "script_s": 669.708,
    "picture": "hearing_room wide (matched)"
   },
   "09.09": {
    "shot": "09-17",
    "edl_s": 712.792,
-   "script_s": 752.0,
+   "script_s": 712.792,
    "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)"
   },
   "09.10": {
    "shot": "09-18",
    "edl_s": 717.125,
-   "script_s": 768.0,
+   "script_s": 717.125,
    "picture": "void_stage bags held (end screen)"
   }
  },
@@ -659,7 +659,7 @@
     "end_row": {
      "shot": "00-06",
      "edl_s": 19.333,
-     "script_s": 15.0,
+     "script_s": 19.333,
      "picture": "departure_gate seated_called"
     }
    },
@@ -679,7 +679,7 @@
    "level_under_voice_db": -24,
    "level_in_gaps_db": -20,
    "fade_in_s": 6.0,
-   "fade_out_s": 0.0,
+   "fade_out_s": 0.04,
    "hard_out": false,
    "fade_in_curve": "cos",
    "fade_out_curve": "cos",
@@ -703,13 +703,13 @@
     "start_row": {
      "shot": "00-06",
      "edl_s": 19.333,
-     "script_s": 15.0,
+     "script_s": 19.333,
      "picture": "departure_gate seated_called"
     },
     "end_row": {
      "shot": "00-12",
      "edl_s": 32.667,
-     "script_s": 33.0,
+     "script_s": 32.667,
      "picture": "inspection_room match (YES)"
     }
    },
@@ -728,7 +728,7 @@
    "why": "the pulse enters on the cut to seated_called; hard stop on the frame where YES lands (the word \"yes\" is 32.30-32.56 on the scratch read, its tail to 32.79).",
    "level_under_voice_db": -16,
    "level_in_gaps_db": -12,
-   "fade_in_s": 0.0,
+   "fade_in_s": 0.04,
    "fade_out_s": 0.012,
    "hard_out": true,
    "fade_in_curve": "cos",
@@ -752,13 +752,13 @@
     "start_row": {
      "shot": "00-16",
      "edl_s": 41.167,
-     "script_s": 43.0,
+     "script_s": 41.167,
      "picture": "inspection_room handbags"
     },
     "end_row": {
      "shot": "00-22",
      "edl_s": 61.917,
-     "script_s": 64.0,
+     "script_s": 61.917,
      "picture": "inspection_room match -> void_stage bags"
     }
    },
@@ -801,13 +801,13 @@
     "start_row": {
      "shot": "00-27",
      "edl_s": 76.042,
-     "script_s": 81.0,
+     "script_s": 76.042,
      "picture": "hearing_room wide -> witness"
     },
     "end_row": {
      "shot": "00-30",
      "edl_s": 89.083,
-     "script_s": 97.0,
+     "script_s": 89.083,
      "picture": "void_stage bags in the beam (TITLE)"
     }
    },
@@ -851,13 +851,13 @@
     "start_row": {
      "shot": "01-01",
      "edl_s": 94.083,
-     "script_s": 102.0,
+     "script_s": 94.083,
      "picture": "chicago_night wide -> profile"
     },
     "end_row": {
      "shot": "01-15",
      "edl_s": 170.792,
-     "script_s": 178.0,
+     "script_s": 175.708,
      "picture": "departure_gate window"
     }
    },
@@ -900,13 +900,13 @@
     "start_row": {
      "shot": "02-01",
      "edl_s": 186.875,
-     "script_s": 185.0,
+     "script_s": 186.875,
      "picture": "aircraft_cabin window, over"
     },
     "end_row": {
      "shot": "02-12",
      "edl_s": 219.75,
-     "script_s": 230.0,
+     "script_s": 219.75,
      "picture": "route map: dashed line to Australia"
     }
    },
@@ -949,13 +949,13 @@
     "start_row": {
      "shot": "03-01",
      "edl_s": 232.208,
-     "script_s": 240.0,
+     "script_s": 232.208,
      "picture": "hotel_room accept"
     },
     "end_row": {
      "shot": "03-11",
      "edl_s": 266.0,
-     "script_s": 278.0,
+     "script_s": 263.375,
      "picture": "checkin_hall scale (matched)"
     }
    },
@@ -998,13 +998,13 @@
     "start_row": {
      "shot": "03-16",
      "edl_s": 286.625,
-     "script_s": 286.0,
+     "script_s": 286.625,
      "picture": "baggage_belt curtain, belt"
     },
     "end_row": {
      "shot": "04-08",
      "edl_s": 307.833,
-     "script_s": 327.0,
+     "script_s": 307.833,
      "picture": "inspection_room handbags (officer's hand)"
     }
    },
@@ -1057,13 +1057,13 @@
     "start_row": {
      "shot": "04-11",
      "edl_s": 321.458,
-     "script_s": 345.0,
+     "script_s": 321.458,
      "picture": "inspection_room empty"
     },
     "end_row": {
      "shot": "04-19",
      "edl_s": 349.042,
-     "script_s": 368.0,
+     "script_s": 349.042,
      "picture": "detention_corridor corridor (2014)"
     }
    },
@@ -1106,13 +1106,13 @@
     "start_row": {
      "shot": "06-02",
      "edl_s": 424.917,
-     "script_s": 450.0,
+     "script_s": 424.917,
      "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)"
     },
     "end_row": {
      "shot": "06-14",
      "edl_s": 476.708,
-     "script_s": 513.0,
+     "script_s": 476.708,
      "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")"
     }
    },
@@ -1156,13 +1156,13 @@
     "start_row": {
      "shot": "07-01",
      "edl_s": 481.167,
-     "script_s": 525.0,
+     "script_s": 481.167,
      "picture": "prison_exterior wall, gate"
     },
     "end_row": {
      "shot": "07-10",
      "edl_s": 533.917,
-     "script_s": 596.0,
+     "script_s": 533.917,
      "picture": "tim_desk bill page (MAY 2025)"
     }
    },
@@ -1205,13 +1205,13 @@
     "start_row": {
      "shot": "08-01",
      "edl_s": 566.708,
-     "script_s": 610.0,
+     "script_s": 566.708,
      "picture": "home dining, cold, Gene alone"
     },
     "end_row": {
      "shot": "08-02",
      "edl_s": 575.458,
-     "script_s": 638.0,
+     "script_s": 612.458,
      "picture": "home blinds (JANUARY 25, 2026)"
     }
    },
@@ -1254,13 +1254,13 @@
     "start_row": {
      "shot": "09-01",
      "edl_s": 622.708,
-     "script_s": 670.0,
+     "script_s": 622.708,
      "picture": "prison_exterior gate (JULY 2026)"
     },
     "end_row": {
      "shot": "09-04",
      "edl_s": 645.75,
-     "script_s": 698.0,
+     "script_s": 645.75,
      "picture": "visiting_room glass, locked, long hold"
     }
    },
@@ -1303,13 +1303,13 @@
     "start_row": {
      "shot": "09-05",
      "edl_s": 652.917,
-     "script_s": 708.0,
+     "script_s": 652.917,
      "picture": "visiting_room empty"
     },
     "end_row": {
      "shot": "09-09",
      "edl_s": 669.708,
-     "script_s": 728.0,
+     "script_s": 669.708,
      "picture": "hearing_room wide (matched)"
     }
    },
@@ -1352,13 +1352,13 @@
     "start_row": {
      "shot": "09-17",
      "edl_s": 712.792,
-     "script_s": 752.0,
+     "script_s": 712.792,
      "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)"
     },
     "end_row": {
      "shot": "09-18",
      "edl_s": 717.125,
-     "script_s": 768.0,
+     "script_s": 717.125,
      "picture": "void_stage bags held (end screen)"
     }
    },

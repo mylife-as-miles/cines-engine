@@ -1,0 +1,295 @@
+{
+ "SC00a": {
+  "source": "G1",
+  "pieces": [
+   {
+    "from": 0.027,
+    "to": 12.603,
+    "stretch_to": 17.333
+   }
+  ],
+  "rule": "the take before its pulse (the low strings alone, 0.03-12.60 s), stretched to the span so the pulse enters on the cut to seated_called",
+  "length_s": 17.333,
+  "span_s": 17.333
+ },
+ "SC00b": {
+  "source": "G1",
+  "pieces": [
+   {
+    "from": 12.603,
+    "to": 25.937
+   }
+  ],
+  "rule": "from the pulse entry (12.64 s), continuous with SC00a",
+  "length_s": 13.334,
+  "span_s": 13.334
+ },
+ "SC00c": {
+  "source": "G1",
+  "pieces": [
+   {
+    "from": 42.477,
+    "to": 65.356
+   }
+  ],
+  "query": "dark and tense music",
+  "candidates": [
+   {
+    "start": 42.477,
+    "end": 65.356,
+    "z": 3.21,
+    "kind": "window",
+    "build_db": -0.7
+   }
+  ],
+  "rule": "earshot find (dark and tense), building (last 4 s louder than first 4 s), most tense of the top 5",
+  "length_s": 22.879,
+  "span_s": 22.879
+ },
+ "SC03b": {
+  "source": "G1",
+  "pieces": [
+   {
+    "from": 13.103,
+    "to": 36.958
+   }
+  ],
+  "query": "a steady low pulse with dark sustained strings",
+  "candidates": [
+   {
+    "start": 13.103,
+    "end": 36.958,
+    "z": 2.88,
+    "kind": "window"
+   },
+   {
+    "start": 37.603,
+    "end": 61.458,
+    "z": 2.58,
+    "kind": "window"
+   }
+  ],
+  "rule": "earshot find, best",
+  "length_s": 23.855,
+  "span_s": 23.855
+ },
+ "SC00d": {
+  "source": "G2",
+  "pieces": [
+   {
+    "from": 35.707,
+    "to": 45.934
+   }
+  ],
+  "peak_src_s": 41.934,
+  "momentary_max_src_s": 42.1,
+  "attack_src_s": 41.854,
+  "rule": "the loudest momentary block is centred at 42.10 s; its attack at 41.85 s; the peak point 41.93 s goes on the title frame",
+  "length_s": 10.227,
+  "span_s": 10.227
+ },
+ "SC01": {
+  "source": "G3",
+  "pieces": [
+   {
+    "from": 0.0,
+    "to": 25.49
+   },
+   {
+    "from": 10.179,
+    "to": 77.14
+   }
+  ],
+  "join_s": 0.3,
+  "repeat": {
+   "from": 10.519,
+   "to": 25.53,
+   "chroma_similarity": 0.95
+  },
+  "candidates": [
+   [
+    0.95,
+    10.52,
+    25.53
+   ],
+   [
+    0.866,
+    3.24,
+    17.77
+   ],
+   [
+    0.861,
+    7.34,
+    21.4
+   ]
+  ],
+  "rule": "the piano phrases 10.52-25.53 s are heard twice (jump back at 25.53 s to 10.52 s, in the pause before both); the take then plays to its end, which decays before the 1.5 s silence",
+  "length_s": 92.151,
+  "span_s": 90.778
+ },
+ "SC02": {
+  "source": "G4",
+  "pieces": [
+   {
+    "from": 0.0,
+    "to": 41.935
+   }
+  ],
+  "query": "soft high pizzicato strings ticking over a light string pad",
+  "candidates": [
+   {
+    "start": 0.0,
+    "end": 41.935,
+    "z": 2.99,
+    "kind": "window"
+   }
+  ],
+  "rule": "earshot find, best",
+  "length_s": 41.935,
+  "span_s": 41.935
+ },
+ "SC03": {
+  "source": "G5",
+  "pieces": [
+   {
+    "from": 30.208,
+    "to": 63.0
+   }
+  ],
+  "rule": "ends at the take's natural ending (63.00 s: its last bars, low and dark) on the cut to the scale",
+  "length_s": 32.792,
+  "span_s": 32.792
+ },
+ "SC04b": {
+  "source": "G7",
+  "source_why": "G8's opening is not sparse enough: it pulses at 76 bpm from 0.4 s",
+  "pieces": [
+   {
+    "from": 3.596,
+    "to": 37.312
+   }
+  ],
+  "query": "a very quiet, still, low sustained cello note",
+  "candidates": [
+   {
+    "start": 3.596,
+    "end": 37.312,
+    "z": 2.18,
+    "kind": "window"
+   }
+  ],
+  "rule": "earshot find, best",
+  "length_s": 33.716,
+  "span_s": 33.716
+ },
+ "SC06": {
+  "source": "G8",
+  "pieces": [
+   {
+    "from": 24.068,
+    "to": 70.507
+   }
+  ],
+  "held_a_src_s": 64.401,
+  "rule": "the held A (A2/A3, no onsets) starts at 64.40 s and lands on the divide; out before the final chord",
+  "length_s": 46.439,
+  "span_s": 46.439
+ },
+ "SC07": {
+  "source": "G9",
+  "pieces": [
+   {
+    "from": 0.048,
+    "to": 81.816
+   }
+  ],
+  "rule": "the whole take (81.8 s for an 82.0 s span: it ends 0.2 s early, on its own decay)",
+  "length_s": 81.768,
+  "span_s": 82.021
+ },
+ "SC08": {
+  "source": "G10",
+  "pieces": [
+   {
+    "from": 20.903,
+    "to": 60.8
+   }
+  ],
+  "rule": "its last note rings out at the end (natural ending 60.80 s)",
+  "length_s": 39.897,
+  "span_s": 39.897
+ },
+ "SC09a": {
+  "source": "G11",
+  "pieces": [
+   {
+    "from": 0.2,
+    "to": 21.242
+   }
+  ],
+  "rule": "its first 21 s",
+  "length_s": 21.042,
+  "span_s": 21.042
+ },
+ "SC09b": {
+  "source": "G11",
+  "pieces": [
+   {
+    "from": 39.242,
+    "to": 60.872
+   }
+  ],
+  "query": "a sparse, slow, quiet solo piano",
+  "candidates": [
+   {
+    "start": 39.242,
+    "end": 60.872,
+    "z": 3.42,
+    "kind": "window"
+   }
+  ],
+  "rule": "earshot find, best, after SC09a's window",
+  "length_s": 21.63,
+  "span_s": 21.63
+ },
+ "SC09c": {
+  "source": "G11",
+  "source_why": "G3 has no clean single A (its isolated strokes are chords) and G12 failed twice (a melody in E-flat, then a piece in C): the lone A2 of G11, the same felt piano, 4.4 s to the next note",
+  "pieces": [
+   {
+    "from": 7.618,
+    "to": 12.013
+   }
+  ],
+  "retune_cents": -3.6,
+  "note": {
+   "onset": 7.628,
+   "next": 12.063,
+   "f0_hz": 110.23,
+   "cents": 3.6,
+   "z": 1.96,
+   "verdict": "no match"
+  },
+  "candidates": [
+   {
+    "onset": 7.628,
+    "next": 12.063,
+    "f0_hz": 110.23,
+    "cents": 3.6,
+    "z": 1.96,
+    "verdict": "no match"
+   },
+   {
+    "onset": 19.482,
+    "next": 23.928,
+    "f0_hz": 110.23,
+    "cents": 3.6,
+    "z": 1.69,
+    "verdict": "no match"
+   }
+  ],
+  "rule": "a lone A2 (110.23 Hz, +3.6 c, retuned) from its attack to just before the next note",
+  "length_s": 4.395,
+  "span_s": 8.176
+ }
+}
