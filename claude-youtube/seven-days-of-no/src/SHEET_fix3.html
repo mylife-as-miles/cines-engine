@@ -1,0 +1,43 @@
+<!doctype html><meta charset="utf-8"><title>Fix 3 · Seven Days of No</title>
+<script src="../kit/pov.js"></script><script src="../kit/sets.js"></script>
+<script>
+/* SEVEN DAYS OF NO · FIX SHEET 3 (reference, labels allowed). 1920 x 2160.
+   Top: a two-shot on SETS.office, hero (facing 1) and boss (facing -1), both turn 0.6 with look toward each other.
+   Bottom: the same eyeline from lookAt (hero and stranger); pose 'no' and holding 'no_palm'; brows on the whole cast;
+   'scared' beside 'angry' and the reference scared face. */
+window.addEventListener('load', async () => {
+  const W = 1920, H = 2160;
+  document.documentElement.style.cssText = 'margin:0;background:#222'; document.body.style.cssText = 'margin:0;background:#222';
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.style.cssText = 'display:block;width:100vw'; document.body.appendChild(cv);
+  const g = cv.getContext('2d'); g.lineCap = 'round'; g.lineJoin = 'round';
+  const label = (t, x, y, sz) => { g.fillStyle = '#1c1c1c'; g.font = `800 ${sz || 22}px "Inter", Arial, sans-serif`; g.textAlign = 'center'; g.fillText(t, x, y); };
+  const hasSets = typeof SETS !== 'undefined' && SETS.office;
+  if (hasSets && SETS.ready) await SETS.ready();
+  // ---- top: the two-shot
+  if (hasSets) SETS.office(g, { clock: 17.5, chair: false }); else { g.fillStyle = '#FBEABF'; g.fillRect(0, 0, W, 1080); }
+  const sh = POV.C.officeFloorShadow;
+  POV.figure(g, 'hero', { x: 640, y: 962, facing: 1, expr: 'surprised', turn: 0.6, look: [1, -0.05], shadow: sh });
+  POV.figure(g, 'boss', { x: 1280, y: 962, facing: -1, pose: 'hold_clipboard', expr: 'neutral', mouth: 0.45, turn: 0.6, look: [1, 0.05], shadow: sh });
+  g.fillStyle = 'rgba(255,255,255,0.85)'; g.fillRect(0, 1020, W, 60);
+  label("hero: facing 1, turn 0.6, look [1, -0.05]          boss: facing -1, turn 0.6, look [1, 0.05]   (turn and look are relative to facing: + = toward where the figure faces)", 960, 1058, 22);
+  // ---- bottom
+  g.fillStyle = '#F4EFE6'; g.fillRect(0, 1080, W, 1080);
+  const fy = 1660, s = 0.6;
+  const h1 = POV.figure(g, 'hero', { x: 130, y: fy, scale: s, pose: 'hands_clasped', expr: 'guilty', lookAt: [470, fy - 430], shadow: '#E3D9C8' });
+  POV.figure(g, 'stranger', { x: 400, y: fy, scale: s, facing: -1, pose: 'hold_phone', mode: 'out', expr: 'sad', lookAt: h1.head, shadow: '#E3D9C8' });
+  label("lookAt: other.head", 265, fy + 44);
+  POV.figure(g, 'hero', { x: 640, y: fy, scale: s, pose: 'no', turn: 0.5, shadow: '#E3D9C8' }); label("pose:'no' (expr 'firm')", 690, fy + 44);
+  POV.figure(g, 'boss', { x: 1000, y: fy, scale: s, facing: -1, pose: 'no', turn: 0.5, shadow: '#E3D9C8' }); label("boss · 'no' · facing -1", 960, fy + 44);
+  POV.figure(g, 'hero', { x: 1240, y: fy, scale: s, pose: 'walk', phase: 0.2, holding: 'no_palm', expr: 'firm', turn: 0.4, shadow: '#E3D9C8' }); label("walk + holding:'no_palm'", 1260, fy + 44);
+  POV.figure(g, 'friend', { x: 1560, y: fy, scale: s, facing: -1, expr: 'sad', turn: 0.6, look: [1, 0.2], shadow: '#E3D9C8' }); label("friend · turn 0.6", 1560, fy + 44);
+  POV.figure(g, 'mum', { x: 1790, y: fy, scale: s, facing: -1, expr: 'worried', turn: -0.5, shadow: '#E3D9C8' }); label("mum · turn -0.5", 1790, fy + 44);
+  // brows on the cast, and scared vs angry
+  const busts = [['boss', 'angry'], ['friend', 'surprised'], ['mum', 'sad'], ['coworker', 'happy'], ['stranger', 'scared'], ['hero', 'scared'], ['hero', 'angry']];
+  busts.forEach(([who, e], i) => { const x = 130 + i * 230, by = 1730; g.save(); g.beginPath(); g.rect(x - 115, by, 230, 340); g.clip(); POV.figure(g, who, { x, y: by + 30 + 800 * 0.62 * 1.0, scale: 0.62, expr: e }); g.restore(); label(who + " · " + e, x, 2110); });
+  // the reference scared face for comparison
+  const ref = new Image(); ref.src = '../design/refs/01_expressions.jpg';
+  await new Promise(r => { ref.onload = r; ref.onerror = r; });
+  if (ref.width) { g.drawImage(ref, 1000, 400, 300, 300, 1700, 1745, 200, 200); g.strokeStyle = '#1c1c1c'; g.lineWidth = 2; g.strokeRect(1700, 1745, 200, 200); label("ref 01 · scared", 1800, 2110); }
+  window.FRAME_READY = true;
+});
+</script>

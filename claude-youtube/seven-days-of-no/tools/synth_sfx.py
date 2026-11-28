@@ -40,7 +40,8 @@ dim             a light going down: a soft round blip falling a fifth (A5 -> D5)
 plate_slide     a Stable Audio take of a plate pushed across a table
 card_land_1..3  a light card slap as a request card lands on the pile: One Too Many's card slaps (CC0), trimmed and lightened
 stamp_yes       the YES stamp, brighter and friendlier than the red NO: the shorter rubber stamp (CC0), a light thump, a small C7 ping
-shout_no        the red "NO!" bursting out of the hero: a cartoon boing, a whoosh outward and a thud after the spoken "no"
+shout_no        the red "NO!" bursting out of the hero: a tight comic hit, 0.55 s: a whoosh outward, a thud at 0.15 s and a
+                cartoon boing ringing over it (build_mix.py starts it where the narrator's "no" ends, in the pause)
 pile_topple     a Stable Audio take of a stack of papers toppling onto a desk
 
 Every pick was ranked with earshot against its description and alternatives (audio/sfx/check.json; the variants that
@@ -320,15 +321,16 @@ def main():
     x = np.zeros(int(0.45 * SR)); place(x, hp(s2, 200), 0.0); place(x, th, 0.003); place(x, glass(NOTE['C7'], 0.35, 10) * 0.18, 0.012)
     W('stamp_yes', fade(x, 0.0005, 0.06), "One Too Many's stamp2 (high-passed at 200 Hz), a light 230->150 Hz thump and a small C7 glass ping",
       'otm/stamp2: "Stamp" by kermite607, https://freesound.org/people/kermite607/sounds/362624/', 'CC0')
-    # shout_no: boing + whoosh + thud; the thud lands 0.42 s in, after the narrator's "no"
+    # shout_no: a tight comic hit that fits the 0.65 s pause after the narrator's "no": whoosh out, thud, boing
     def boing(f0, d, wob=9, depth=0.25):
         t = T(d); f = f0 * (1 + 0.6 * np.exp(-t / 0.04)) * (1 + depth * np.exp(-t / 0.25) * np.sin(2 * np.pi * wob * t))
-        ph = 2 * np.pi * np.cumsum(f) / SR; return (np.sin(ph) + 0.3 * np.sin(2 * ph)) * np.exp(-4.5 * t) * np.minimum(1, t / 0.006)
-    t = T(0.4)
-    thud = np.sin(2 * np.pi * np.cumsum(60 + 90 * np.exp(-t / 0.02)) / SR) * np.exp(-12 * t) + 0.3 * bp(rng(5).standard_normal(len(t)), 200, 1500) * np.exp(-t / 0.015)
-    x = np.zeros(int(0.95 * SR)); place(x, boing(220, 0.7), 0.0, 0.8)
-    place(x, swept_air(0.4, [400, 1200, 2600, 1500], 1.7, 93, 0.8) * 0.7, 0.04); place(x, thud * 1.2, 0.42)
-    W('shout_no', fade(x, 0.002, 0.1), 'a 220 Hz cartoon boing (a 9 Hz spring wobble), a whoosh outward (400 Hz-2.6 kHz) and a low thud at 0.42 s')
+        ph = 2 * np.pi * np.cumsum(f) / SR; return (np.sin(ph) + 0.3 * np.sin(2 * ph)) * np.exp(-5.5 * t) * np.minimum(1, t / 0.006)
+    t = T(0.35)
+    thud = np.sin(2 * np.pi * np.cumsum(65 + 110 * np.exp(-t / 0.018)) / SR) * np.exp(-13 * t) + 0.35 * bp(rng(5).standard_normal(len(t)), 250, 2500) * np.exp(-t / 0.012)
+    x = np.zeros(int(0.58 * SR))
+    place(x, swept_air(0.22, [700, 2200, 3400, 1800], 1.7, 93, 0.7) * 0.8, 0.0)
+    place(x, thud * 1.1, 0.15); place(x, boing(240, 0.43), 0.15, 0.75)
+    W('shout_no', fade(x, 0.002, 0.08), 'a 0.22 s whoosh outward (700 Hz-3.4 kHz), a low thud at 0.15 s and a 240 Hz cartoon boing (9 Hz spring wobble) over it, 0.58 s')
 
     json.dump(plan, open(os.path.join(OUT, 'plan.json'), 'w'), indent=1)
     print('wrote', ', '.join(f"{k} ({v['dur_s']} s)" for k, v in plan.items()))

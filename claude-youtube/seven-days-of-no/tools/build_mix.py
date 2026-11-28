@@ -23,7 +23,9 @@ music bed is); audio/sound_map.json (which file and level each cue is, and the m
    stop-down, the end screen) the bed plays at its own level. Under the voice the music also takes a gentle 3 dB
    presence dip at 2.5 kHz (zero-phase), so the consonants stay clear without pulling the bed down further. The cue sheet's silences mute the music (Q10's freeze;
    a cue placed inside one, like the freeze itself, still plays); its ducks (level factors) apply to the music.
-4. Effects: each cue's sound at rel_db re Lv (its loudest 100 ms, K-weighted), peak- or start-aligned, panned.
+4. Effects: each cue's sound at rel_db re Lv (its loudest 100 ms, K-weighted), peak- or start-aligned, placed gently toward
+   its source on screen (the cue's x, at most ±0.3; centre without one); the voice stays centred, the music beds stay
+   stereo (their side raised up to 3 dB where they are already well correlated: the mono fold is unchanged).
 5. Master: gain to -14 LUFS integrated, then a look-ahead true-peak limiter (4x oversampled detection) at -1.5 dBTP,
    twice (the limiter costs a little loudness). The limiter's gain is applied to every stem too, so the stems sum to
    the mix exactly. Sample peaks therefore sit at or under -1.5 dBFS before any AAC encode.
@@ -169,7 +171,8 @@ def normalise(cs):
     g = lambda d, a, b: d[a] if a in d else d[b]
     return {'total': float(cs['total']), 'seqs': cs['seqs'],
             'beds': [{'name': b['name'], 'seq': b['seq'], 't0': float(g(b, 't0g', 't0')), 't1': float(g(b, 't1g', 't1')), 'p': b.get('p') or {}} for b in cs['beds']],
-            'cues': [{'name': c['name'], 'seq': c['seq'], 't': float(g(c, 'tg', 't')), 'p': c.get('p') or {}, 'word': c.get('word') or ''} for c in cs['cues']],
+            'cues': [{'name': c['name'], 'seq': c['seq'], 't': float(g(c, 'tg', 't')), 'p': c.get('p') or {}, 'word': c.get('word') or '',
+                      'x': c.get('x', (c.get('p') or {}).get('x'))} for c in cs['cues']],
             'silences': [{'t0': float(g(x, 't0g', 't0')), 't1': float(g(x, 't1g', 't1'))} for x in cs.get('silences', [])],
             'ducks': [{'t0': float(g(x, 't0g', 't0')), 't1': float(g(x, 't1g', 't1')), 'level': x['level']} for x in cs.get('ducks', [])]}
 
@@ -263,7 +266,7 @@ def main():
         ck = (e['take'], cents, meth)
         if ck not in cache:
             if abs(cents) < 0.5: af = None
-            elif meth == 'rubberband': af = f'rubberband=pitch={ratio:.6f}:transients=crisp'
+            elif meth == 'rubberband': af = f'rubberband=pitch={ratio:.6f}:transients=crisp:channels=together'
             else: af = f'asetrate={in_rate(path) * ratio:.3f}'
             x = load(path, 2, af); cache[ck] = x * undb(Lv + e['level_db'] - lufs(x))
         x = cache[ck]; tscale = 1 / ratio if (meth == 'resample' and abs(cents) >= 0.5) else 1.0   # take seconds -> shifted seconds
@@ -334,6 +337,19 @@ def main():
         bq = np.array([1 + al * A, -2 * c, 1 - al * A]); aq = np.array([1 + al / A, -2 * c, 1 - al / A])
         dipped = signal.filtfilt(bq / aq[0], aq / aq[0], music, axis=0)          # two passes: half the dip each
         music += (dipped - music) * np.interp(np.arange(N) / SR, tt, uniform_filter1d(wsp, size=int(0.5 * rate)))[:, None]
+    # a little more width for the beds under the centred voice: the side raised, the mid untouched, so a mono fold of the
+    # music is exactly what it was (Lyria's takes are stereo; nothing is summed)
+    # The lift is adaptive: only where the bed is already well correlated (L/R correlation over 400 ms above 0.7, eased in
+    # from 0.3); passages that are wide by nature (T5's ringing last chord) keep Lyria's own image, so nothing tips into
+    # phase opposition; where a passage already correlates below 0.1, its side is narrowed (to 0.6x at -0.3) for mono.
+    if MX.get('music_side_db'):
+        mid, side = (music[:, 0] + music[:, 1]) / 2, (music[:, 0] - music[:, 1]) / 2
+        w4 = int(0.4 * SR); run = lambda y: uniform_filter1d(y, size=w4)
+        corr = run(music[:, 0] * music[:, 1]) / np.sqrt(run(music[:, 0] ** 2) * run(music[:, 1] ** 2) + 1e-18)
+        g = 1 + (undb(MX['music_side_db']) - 1) * np.clip((corr - 0.3) / 0.4, 0, 1)
+        g = g * (1 - 0.4 * np.clip((0.1 - corr) / 0.4, 0, 1))                 # and narrowed a little where it opposes
+        g = uniform_filter1d(g, size=int(0.2 * SR)); side = side * g
+        music = np.stack([mid + side, mid - side], axis=1)
     # a faint air floor under the music bus, so no moment is digitally dead (the cue sheet's silences take it too)
     rng = np.random.default_rng(5); fl = signal.sosfilt(signal.butter(2, [60, 900], 'bandpass', fs=SR, output='sos'), rng.standard_normal((N, 2)), axis=0)
     fl *= undb(MX['air_floor_lufs'] - lufs(fl[: 30 * SR])); music += fl * np.interp(np.arange(N) / SR, tt, mute)[:, None]
@@ -341,6 +357,8 @@ def main():
 
     # ---------------- 4. effects ----------------
     fx = np.zeros((N, 2)); occ = {}; fxlog = []; fcache = {}; last = {}; dropped = []
+    hv = SR // 100; nv = len(voice) // hv                                       # the narration speaking, per 10 ms (for after_speech)
+    talking = 10 * np.log10((voice[: nv * hv] ** 2).reshape(nv, hv).mean(axis=1) + 1e-12) > -45
 
     def snd(fname):
         if fname not in fcache:
@@ -379,12 +397,21 @@ def main():
                 y = y[:want].copy(); f = min(len(y) // 3, int(0.08 * SR)); y[-f:] *= raised(f, False)
         g = undb(Lv + e['rel_db'] + float(p.get('gain_db', 0) or 0) + float(p.get('level', 0) or 0) - ly)
         m = uniform_filter1d(y ** 2, size=int(0.002 * SR)); pk = int(np.argmax(m))
-        s = int(round(c['t'] * SR)) - (pk if e.get('align', 'start') == 'peak' else 0)
-        pan = float(np.clip(p.get('pan', e.get('pan', 0.0)) or 0.0, -0.8, 0.8)); th = (pan + 1) * np.pi / 4
+        t_at = c['t']
+        if e.get('after_speech'):                                               # into the pause after the current word
+            i = int(t_at * 100)
+            while i < len(talking) and talking[i] and (i - int(t_at * 100)) < e['after_speech'] * 100: i += 1
+            if i < len(talking) and not talking[i]: t_at = i / 100
+        s = int(round(t_at * SR)) - (pk if e.get('align', 'start') == 'peak' else 0)
+        x_on = c.get('x')
+        if p.get('pan') is not None: pan = float(p['pan'])
+        elif x_on is not None: pan = (float(x_on) / (MX['screen_width_px'] if float(x_on) > 1.5 else 1.0) - 0.5) * 2 * MX['pan_max']
+        else: pan = float(e.get('pan', 0.0))
+        pan = float(np.clip(pan, -MX['pan_max'], MX['pan_max'])); th = (pan + 1) * np.pi / 4
         a0, a1 = max(0, s), min(N, s + len(y))
         if a1 <= a0: continue
         fx[a0:a1, 0] += y[a0 - s:a1 - s] * g * np.cos(th) * np.sqrt(2); fx[a0:a1, 1] += y[a0 - s:a1 - s] * g * np.sin(th) * np.sqrt(2)
-        fxlog.append({'cue': c['name'], 'file': fname, 't': round(c['t'], 3),
+        fxlog.append({'cue': c['name'], 'file': fname, 't': round(c['t'], 3), 'placed_t': round(t_at, 3), 'pan': round(pan, 2),
                       'rel_db': e['rel_db'] + float(p.get('gain_db', 0) or 0) + float(p.get('level', 0) or 0)})
     report['effects'] = {'placed': len(fxlog), 'dropped_same_cue_within_150ms': dropped, 'cues': fxlog}
 
@@ -417,6 +444,18 @@ def main():
     meas['music_minus_voice_in_speech_db'] = {'median': round(float(np.median(diff)), 1), 'p95': round(float(np.percentile(diff, 95)), 1)}
     es = int(round((T - 8.0) * SR))                                       # the 8 s end screen
     meas['end_screen_music_lufs'] = round(lufs(final[es:]), 1)
+    def stereo(x):
+        L, R = x[:, 0], x[:, 1]; M, S = (L + R) / 2, (L - R) / 2; ok = np.abs(L).max() > 0
+        win = int(0.4 * SR); n = len(L) // win
+        cw = [np.corrcoef(L[i * win:(i + 1) * win], R[i * win:(i + 1) * win])[0, 1] for i in range(n)    # audible windows only
+              if np.sqrt(np.mean(L[i * win:(i + 1) * win] ** 2 + R[i * win:(i + 1) * win] ** 2) / 2) > 1e-3]
+        return {'side_minus_mid_db': round(float(10 * np.log10((S ** 2).mean() / ((M ** 2).mean() + 1e-20) + 1e-20)), 1) if ok else None,
+                'lr_correlation': round(float(np.corrcoef(L, R)[0, 1]), 3) if ok and L.std() > 0 and R.std() > 0 else 1.0,
+                'lr_correlation_min_400ms': round(float(np.min(cw)), 3) if cw else None,
+                'mono_fold_db': round(float(10 * np.log10(((L + R) ** 2).mean() / (2 * ((L ** 2).mean() + (R ** 2).mean())) + 1e-20)), 2) if ok else None}
+    meas['stereo'] = {k: stereo(x) for k, x in list(stems.items()) + [('mix', final)]}
+    mono = final.mean(axis=1, keepdims=True).repeat(2, axis=1)
+    meas['stereo']['mix']['mono_downmix_lufs'] = round(lufs(mono), 2)
     meas['voice_lufs_in_mix'] = round(lufs(stems['voice']), 1)
     report['master'] = meas; report['missing'] = sorted(missing)
     json.dump(report, open(os.path.join(OUT, 'report.json'), 'w'), indent=1)

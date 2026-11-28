@@ -183,14 +183,17 @@
     tired: { brows: { lift: 0.02, tilt: 0.11, arch: 0.1 }, eyes: { lid: 0.52, lidTilt: 0.12, lower: 0.12, pupil: 1 }, circles: 1, mouth: { k: 'yawn', w: 0.14, h: 0.18 } },
     angry: { brows: { lift: -0.07, tilt: -0.18, arch: 0.0, thick: 1.4 }, eyes: { lid: 0.3, lidTilt: -0.55, pupil: 1 }, crease: 1, mouth: { k: 'grit', w: 0.19, h: 0.1 } },
     sad: { brows: { lift: 0.02, tilt: 0.14, arch: 0.08 }, eyes: { lid: 0.2, lidTilt: 0.35, pupil: 1.6, gloss: 1, lower: 0.1, pool: 1 }, tears: 1, mouth: { k: 'frown', w: 0.17, c: 0.08 } },
-    scared: { brows: { lift: 0.07, tilt: 0.15, arch: 0.1 }, eyes: { r: 1.18, pupil: 0.72 }, sweat: 1, mouth: { k: 'scream', w: 0.26, h: 0.19 } },
+    scared: { brows: { lift: -0.01, tilt: 0.2, arch: 0.05, thick: 1.5 }, eyes: { r: 1.24, pupil: 0.6 }, sweat: 1, worry: 1, mouth: { k: 'scream', w: 0.3, h: 0.2 } },
+    firm: { brows: { lift: -0.02, tilt: -0.03, arch: 0.05, thick: 1.1 }, eyes: { lid: 0.2, lidTilt: 0, pupil: 1 }, mouth: { k: 'flat', w: 0.14 } },
     guilty: { brows: { lift: 0.0, tilt: 0.13, arch: 0.06 }, eyes: { lid: 0.42, lidTilt: 0.3, pupil: 1 }, mouth: { k: 'frown', w: 0.13, c: 0.06 }, look: [0.45, 0.75] },
     tired_closed: { brows: { lift: 0.02, tilt: 0.11, arch: 0.1 }, eyes: { lid: 0.62, lidTilt: 0.1, lower: 0.12 }, circles: 1, mouth: { k: 'frown', w: 0.12, c: 0.05 } },
     worried: { brows: { lift: 0.03, tilt: 0.12, arch: 0.08 }, eyes: { r: 1.04, pupil: 0.95 }, mouth: { k: 'flat', w: 0.12 } },
     // cheeky, cartoon-rude: half-lidded side-eye, one brow up, tongue out (rude) or a lopsided smirk (smug)
+    flat: null,
     rude: { browL: { lift: 0.1, tilt: 0, arch: 0.34 }, browR: { lift: -0.04, tilt: -0.07, arch: 0.08 }, eyes: { lid: 0.44, lidTilt: -0.05, pupil: 1 }, look: [0.75, -0.2], mouth: { k: 'tongue', w: 0.17 } },
     smug: { browL: { lift: 0.1, tilt: 0, arch: 0.34 }, browR: { lift: -0.04, tilt: -0.07, arch: 0.08 }, eyes: { lid: 0.44, lidTilt: -0.05, pupil: 1 }, look: [0.75, -0.2], mouth: { k: 'smirk', w: 0.17 } },
   };
+  EXPR.flat = EXPR.firm;
   function resolveExpr(e, over) {
     const base = typeof e === 'object' && e ? e : (EXPR[e] || EXPR.neutral);
     if (!over) return base;
@@ -217,16 +220,18 @@
     if (line) { g.lineWidth = R * 0.016; g.strokeStyle = INK; g.stroke(p); }
     if (b.crease) polyline(g, quadPts([inner[0] - s * 0.015 * R, inner[1] - 0.05 * R], [inner[0] + s * 0.03 * R, inner[1] - 0.1 * R], [inner[0] + s * 0.02 * R, inner[1] - 0.17 * R], 6), R * 0.022);
   }
-  function eye(g, ex, ey, s, e, R, look, blink, skin, white, lw) {
-    const er = 0.2 * R * (e.r || 1);
-    if (e.k === 'happy') { polyline(g, quadPts([ex - er * 0.95, ey + er * 0.25], [ex, ey - er * 1.25], [ex + er * 0.95, ey + er * 0.25], 10), lw * 1.15); return; }
-    if (blink >= 0.92) { polyline(g, quadPts([ex - er * 0.95, ey + er * 0.05], [ex, ey + er * 0.6], [ex + er * 0.95, ey + er * 0.05], 10), lw * 1.05); return; }
+  function eye(g, ex, ey, s, e, R, look, blink, skin, white, lw, kx) {
+    const er = 0.2 * R * (e.r || 1), ew = er * (kx || 1);
+    if (e.k === 'happy') { polyline(g, quadPts([ex - ew * 0.95, ey + er * 0.25], [ex, ey - er * 1.25], [ex + ew * 0.95, ey + er * 0.25], 10), lw * 1.15); return; }
+    if (blink >= 0.92) { polyline(g, quadPts([ex - ew * 0.95, ey + er * 0.05], [ex, ey + er * 0.6], [ex + ew * 0.95, ey + er * 0.05], 10), lw * 1.05); return; }
     const pr = 0.084 * R * (e.pupil || 1), lid = Math.max(e.lid || 0, blink || 0), lt = (e.lidTilt || 0) * er;
-    const ball = circ(ex, ey, er);
+    const ball = ell(ex, ey, ew, er);
     g.fillStyle = white; g.fill(ball);
     g.save(); g.clip(ball);
     if (e.pool) { g.fillStyle = rgba(C.tear, 0.9); g.fill(ell(ex, ey + er * 0.95, er * 1.1, er * 0.5)); }
-    const m = Math.max(0, er - pr - lw * 0.55) * 0.9, px = ex + clamp(look[0], -1, 1) * m, py = ey + clamp(look[1], -1, 1) * m;
+    // the pupil can travel to the rim, leaving a clear white on the far side (refs: eyelines read from the white)
+    const ll = Math.hypot(look[0], look[1]), lk = ll > 1 ? 1 / ll : 1, mx = Math.max(0, ew - pr * 0.95), my = Math.max(0, er - pr * 1.15);
+    const px = ex + look[0] * lk * mx, py = ey + look[1] * lk * my;
     g.fillStyle = INK; g.fill(circ(px, py, pr));
     if (e.gloss) { g.fillStyle = '#FFFFFF'; g.fill(circ(px - pr * 0.36, py - pr * 0.38, pr * 0.3)); g.fill(circ(px + pr * 0.35, py + pr * 0.3, pr * 0.14)); }
     if (lid > 0) {   // upper lid: skin above a (tilted) line
@@ -283,10 +288,11 @@
       [-0.55, -0.18, 0.18, 0.55].forEach(t => polyline(g, [[mx + t * w, my - h], [mx + t * w, my + h]], lw * 0.5)); g.restore(); strokeP(g, p, lw * 0.85);
     } else if (m.k === 'scream') {
       const h = (m.h || 0.14) * R, p = new Path2D();
-      p.moveTo(mx - w, my + h * 0.75); p.quadraticCurveTo(mx, my - h * 0.75, mx + w, my + h * 0.75); p.quadraticCurveTo(mx + w * 0.55, my + h * 1.25, mx, my + h * 1.22); p.quadraticCurveTo(mx - w * 0.55, my + h * 1.25, mx - w, my + h * 0.75); p.closePath();
+      // ref 01 'scared': a wide open mouth, top lip arched up, the upper teeth showing, the tongue low
+      p.moveTo(mx - w, my + h * 0.55); p.quadraticCurveTo(mx, my - h * 0.5, mx + w, my + h * 0.55); p.bezierCurveTo(mx + w * 1.02, my + h * 1.45, mx + w * 0.55, my + h * 1.9, mx, my + h * 1.9); p.bezierCurveTo(mx - w * 0.55, my + h * 1.9, mx - w * 1.02, my + h * 1.45, mx - w, my + h * 0.55); p.closePath();
       g.fillStyle = C.mouthIn; g.fill(p); g.save(); g.clip(p);
-      const t = new Path2D(); t.moveTo(mx - w * 1.2, my - h); t.lineTo(mx + w * 1.2, my - h); t.lineTo(mx + w * 1.2, my + h * 1.05); t.quadraticCurveTo(mx, my - h * 0.2, mx - w * 1.2, my + h * 1.05); t.closePath();
-      g.fillStyle = white; g.fill(t); g.fillStyle = C.tongue; g.fill(ell(mx, my + h * 1.2, w * 0.42, h * 0.3)); g.restore(); strokeP(g, p, lw * 0.85);
+      const t = new Path2D(); t.moveTo(mx - w * 1.1, my + h * 0.98); t.quadraticCurveTo(mx, my - h * 0.1, mx + w * 1.1, my + h * 0.98); t.lineTo(mx + w * 1.1, my - h); t.lineTo(mx - w * 1.1, my - h); t.closePath();
+      g.fillStyle = white; g.fill(t); g.fillStyle = C.tongue; g.fill(ell(mx, my + h * 1.85, w * 0.58, h * 0.45)); g.restore(); strokeP(g, p, lw * 0.85);
     }
   }
   function drop(g, x, y, r, col, lw, a) {   // a tear or sweat drop, point up
@@ -298,21 +304,31 @@
     const p = new Path2D(); p.moveTo(x - 0.5 * s, y - 0.5 * s); p.bezierCurveTo(x - 0.5 * s, y - 1.15 * s, x + 0.55 * s, y - 1.15 * s, x + 0.5 * s, y - 0.45 * s); p.bezierCurveTo(x + 0.45 * s, y - 0.05 * s, x, y - 0.05 * s, x, y + 0.35 * s);
     strokeP(g, p, lw); g.fillStyle = INK; g.fill(circ(x, y + 0.8 * s, lw * 0.75));
   }
-  function face(g, R, o, F) {
-    const E = resolveExpr(o.expr, o.face), skin = F.skinC, white = mix('#FFFFFF', F.c('#FFFFFF'), 0.45), lw = F.lw;
-    const turn = clamp(o.turn || 0, -1, 1), fx = turn * 0.2 * R, nod = o.nod || 0;
-    const eyeY = 0.04 * R + nod * 0.1 * R, ES = 0.385 * R * (1 - 0.12 * Math.abs(turn));
-    const look = o.look || E.look || [0, 0], blink = o.blink || 0;
+  // a three-quarter turn: the features slide toward the turn side of the head circle, the far eye narrows, the nose
+  // hooks toward the turn side; turn is relative to the facing (+ = toward where the figure faces)
+  function faceGeo(R, turn, nod) {
+    const t = clamp(turn || 0, -1, 1), at = Math.abs(t), sd = t < 0 ? -1 : 1;
+    const fx = t * 0.33 * R, ES = 0.385 * R * (1 - 0.2 * at), eyeY = 0.04 * R + (nod || 0) * 0.1 * R;
+    return { t, at, sd, fx, ES, eyeY, kx: s => (at > 0.02 && s !== sd ? 1 - 0.3 * at : 1), ex: s => fx + s * ES,
+      noseX: fx + t * 0.12 * R, noseDir: at > 0.12 ? sd : 1, mouthX: fx + t * 0.08 * R, mouthK: 1 - 0.18 * at };
+  }
+  function normLook(l) { return l == null ? null : typeof l === 'number' ? [l, 0] : Array.isArray(l) ? l : [l.x || 0, l.y || 0]; }
+  function brows(g, R, o, F, E, G) {   // drawn after hair and hats, so a fringe or a brim never hides them
+    const lw = F.lw;
+    [-1, 1].forEach(s => { const b = Object.assign({}, E.brows, s < 0 ? E.browL : E.browR); g.save(); g.translate(G.ex(s), 0); g.scale(G.kx(s), 1); brow(g, s * 0.01 * R, G.eyeY - 0.36 * R, s, b, R, F.browC, F.ch.browLine); g.restore(); });
+    if (E.crease) [-1, 1].forEach(s => polyline(g, [[G.fx + s * 0.05 * R, G.eyeY - 0.36 * R], [G.fx + s * 0.035 * R, G.eyeY - 0.24 * R]], lw * 0.55));
+    if (E.worry) [-1, 1].forEach(s => { const x = G.fx + s * 0.085 * R, y = G.eyeY - 0.5 * R; polyline(g, quadPts([x - s * 0.04 * R, y + 0.02 * R], [x, y - 0.03 * R], [x + s * 0.035 * R, y + 0.035 * R], 5), lw * 0.5); });
+  }
+  function face(g, R, o, F, E, G) {
+    E = E || resolveExpr(o.expr, o.face); G = G || faceGeo(R, o.turn, o.nod);
+    const skin = F.skinC, white = mix('#FFFFFF', F.c('#FFFFFF'), 0.45), lw = F.lw;
+    const turn = G.t, fx = G.fx, nod = o.nod || 0, eyeY = G.eyeY, ES = G.ES;
+    const look = normLook(o.look) || E.look || [turn * 0.9, 0], blink = o.blink || 0;
     if (E.circles) [-1, 1].forEach(s => { g.fillStyle = C.circles; g.fill(ell(fx + s * ES, eyeY + 0.08 * R, 0.25 * R, 0.2 * R)); });
-    [-1, 1].forEach(s => {
-      const e = Object.assign({}, E.eyes, s < 0 ? E.eyeL : E.eyeR), b = Object.assign({}, E.brows, s < 0 ? E.browL : E.browR);
-      eye(g, fx + s * ES, eyeY, s, e, R, look, blink, skin, white, lw);
-      brow(g, fx + s * ES + s * 0.01 * R, eyeY - 0.36 * R, s, b, R, F.browC, F.ch.browLine);
-    });
-    if (E.crease) [-1, 1].forEach(s => polyline(g, [[fx + s * 0.05 * R, eyeY - 0.36 * R], [fx + s * 0.035 * R, eyeY - 0.24 * R]], lw * 0.55));
-    // nose: a small hook, open toward the facing side
-    { const nx = fx + 0.025 * R + turn * 0.04 * R, ny = eyeY + 0.25 * R, r = 0.052 * R; const p = new Path2D(); p.arc(nx, ny, r, -PI / 2 - 0.5, PI / 2 - 0.15, true); strokeP(g, p, lw * 0.75); }
-    mouthDraw(g, fx + turn * 0.03 * R, eyeY + 0.47 * R + nod * 0.03 * R, E, R, o.mouth || 0, lw, white);
+    [-1, 1].forEach(s => { const e = Object.assign({}, E.eyes, s < 0 ? E.eyeL : E.eyeR); eye(g, fx + s * ES, eyeY, s, e, R, look, blink, skin, white, lw, G.kx(s)); });
+    // nose: a small hook, open toward the side the face is turned to
+    { const nx = G.noseX + G.noseDir * 0.025 * R, ny = eyeY + 0.25 * R, r = 0.052 * R; g.save(); g.translate(nx, ny); g.scale(G.noseDir, 1); const p = new Path2D(); p.arc(0, 0, r, -PI / 2 - 0.5, PI / 2 - 0.15, true); strokeP(g, p, lw * 0.75); g.restore(); }
+    g.save(); g.translate(G.mouthX, 0); g.scale(G.mouthK, 1); mouthDraw(g, 0, eyeY + 0.47 * R + nod * 0.03 * R, E, R, o.mouth || 0, lw / G.mouthK, white); g.restore();
     if (E.cheeks) [-1, 1].forEach(s => { const bx = fx + s * (ES + 0.25 * R), by = eyeY + 0.02 * R; [-1, 0, 1].forEach(k => polyline(g, [[bx, by + k * 0.055 * R], [bx + s * 0.065 * R, by + k * 0.075 * R]], lw * 0.55)); });
     if (E.tears) {
       const er = 0.175 * R;
@@ -347,6 +363,7 @@
       g.restore(); strokeP(g, p, lw);
       [[[-56, -98], [-20, -90], [12, -68]], [[14, -108], [50, -100], [74, -72]], [[56, -116], [86, -96]], [[-86, -62], [-74, -50]]].forEach(q => strokeP(g, spl(q, false), ld));
     } else if (hr.k === 'cap') {
+      g.save(); g.translate(0, -9);
       const crown = spl([[-101, -38, 1], [-100, -70], [-74, -108], [0, -124], [74, -108], [100, -70], [101, -38, 1], [0, -56]], true, 0.9);
       fs(g, crown, c(hr.c), lw);
       g.save(); g.clip(crown); g.fillStyle = c(hr.sh); g.fill(spl([[40, -116], [92, -86], [104, -40], [70, -48], [64, -90]], true)); g.restore(); strokeP(g, crown, lw);
@@ -354,16 +371,18 @@
       fs(g, circ(0, -124, 7), c(hr.c), ld);
       const brim = new Path2D(); brim.moveTo(-102, -44); brim.quadraticCurveTo(0, -66, 102, -44); brim.quadraticCurveTo(110, -36, 104, -30); brim.quadraticCurveTo(0, -42, -104, -30); brim.quadraticCurveTo(-110, -36, -102, -44); brim.closePath();
       fs(g, brim, c(hr.sh), lw);
+      g.restore();
     } else if (hr.k === 'curly') {
       const r = rng('curls'), circles = [];
       for (let i = 0; i <= 12; i++) { const t = i / 12, a = PI * (1.0 + 1.0 * t); circles.push([Math.cos(a) * 98, -30 + Math.sin(a) * 98, 23 + r() * 6]); }
       for (let i = 0; i < 7; i++) circles.push([-60 + i * 20, -82 + (i % 2) * 5, 14 + r() * 3]);
-      circles.push([0, -78, 56], [-40, -86, 48], [40, -86, 48]);
+      circles.push([0, -92, 50], [-40, -97, 44], [40, -97, 44]);
       g.strokeStyle = INK; g.lineWidth = lw * 2; circles.forEach(q => g.stroke(circ(q[0], q[1], q[2])));
       g.fillStyle = c(hr.c); circles.forEach(q => g.fill(circ(q[0], q[1], q[2])));
       g.strokeStyle = c(hr.hi); g.lineWidth = ld * 0.9;
       circles.slice(0, 13).forEach((q, i) => { if (i % 2) return; const p = new Path2D(); p.arc(q[0] * 0.8, q[1] * 0.8 - 6, q[2] * 0.45, 0.6, 2.6); g.stroke(p); });
     } else if (hr.k === 'bucket') {
+      g.save(); g.translate(0, -16);
       const crown = new Path2D(); crown.moveTo(-70, -52); crown.bezierCurveTo(-68, -86, -56, -106, -24, -108); crown.lineTo(24, -108); crown.bezierCurveTo(56, -106, 68, -86, 70, -52); crown.closePath();
       fs(g, crown, c(hr.c), lw);
       g.save(); g.clip(crown); g.fillStyle = c(hr.sh); g.fill(P([[30, -124], [76, -124], [76, -48], [44, -48]])); g.restore(); strokeP(g, crown, lw);
@@ -371,19 +390,22 @@
       fs(g, brim, c(hr.hi), lw);
       g.save(); g.clip(brim); g.fillStyle = c(hr.c); g.fill(spl([[-140, 8], [0, -22], [140, 8], [140, 24], [-140, 24]], true)); g.restore(); strokeP(g, brim, lw);
       polyline(g, quadPts([-68, -68], [0, -80], [68, -68], 10), ld);
+      g.restore();
     }
   }
-  function glasses(g, F, turn) {
-    const fx = (turn || 0) * 20, ES = 37 * (1 - 0.12 * Math.abs(turn || 0)), y = 4, r = 25, lw = F.lw * 0.85;
-    [-1, 1].forEach(s => { const p = circ(fx + s * ES, y, r); g.fillStyle = 'rgba(255,255,255,0.18)'; g.fill(p); strokeP(g, p, lw); polyline(g, [[fx + s * (ES + r), y - 4], [s * 97, y - 8]], lw * 0.8); });
-    polyline(g, quadPts([fx - ES + r, y - 2], [fx, y - 10], [fx + ES - r, y - 2], 6), lw * 0.8);
+  function glasses(g, F, G) {
+    const y = G.eyeY, r = 25, lw = F.lw * 0.85, rx = s => r * G.kx(s);
+    [-1, 1].forEach(s => { const p = ell(G.ex(s), y, rx(s), r); g.fillStyle = 'rgba(255,255,255,0.18)'; g.fill(p); strokeP(g, p, lw); const ox = G.ex(s) + s * rx(s); if (s * (s * 97 - ox) > 2) polyline(g, [[ox, y - 4], [s * 97, y - 8]], lw * 0.8); });
+    polyline(g, quadPts([G.ex(-1) + rx(-1), y - 2], [G.fx, y - 10], [G.ex(1) - rx(1), y - 2], 6), lw * 0.8);
   }
   function drawHead(g, ch, F, o) {   // head space, R = 100
+    const E = resolveExpr(o.expr, o.face), G = faceGeo(100, o.turn, o.nod);
     hair(g, ch, F, true);
     fs(g, circ(0, 0, 100), F.skinC, F.lw);
-    face(g, 100, o, F);
+    face(g, 100, o, F, E, G);
     hair(g, ch, F, false);
-    if (ch.glasses) glasses(g, F, o.turn);
+    brows(g, 100, o, F, E, G);
+    if (ch.glasses) glasses(g, F, G);
   }
 
   // ================================================================ hands (wrist at origin, fingers toward +y, thumb toward +x)
@@ -426,9 +448,25 @@
     g.stroke(P([[-2, -19], [-1, -9], [5, -4]], false));                                    // the thumb's base crease over the index
     g.restore();
   }
+  // 'stop': a flat hand held upright at the end of the arm, fingers together and up, thumb to the inner side: a polite no
+  function drawStopHand(F, Wr, a, s) {
+    const g = F.g, lw = F.lw * 0.9, k = (s || 1) * HAND_K * 1.12, d = dir(a), sx = d[0] >= 0 ? 1 : -1;
+    g.save(); g.translate(Wr[0] + d[0] * 9 * k, Wr[1] + d[1] * 9 * k); g.scale(sx * k, k);
+    const palm = rrect(-15, -34, 33, 38, 10);
+    const fingers = [[-8, -30, -8.5, -56], [0, -32, 0.5, -61], [8, -32, 9, -59], [15, -28, 16.5, -50]].map(([x0, y0, x1, y1]) => [[x0, y0], [x1, y1]]);
+    const thumb = [[-11, -8], [-20, -20], [-27, -31]];
+    g.strokeStyle = INK; g.lineWidth = lw * 2 / k; g.stroke(palm);
+    g.lineWidth = 10.5 + 2 * lw / k; fingers.forEach(f => g.stroke(P(f, false))); g.lineWidth = 11.5 + 2 * lw / k; g.stroke(P(thumb, false));
+    g.fillStyle = F.skinC; g.fill(palm); g.strokeStyle = F.skinC; g.lineWidth = 10.5; fingers.forEach(f => g.stroke(P(f, false))); g.lineWidth = 11.5; g.stroke(P(thumb, false));
+    g.lineWidth = F.ld * 0.8 / k; g.strokeStyle = INK;
+    [[-4, -50, -4, -36], [4.5, -52, 4.5, -37], [12, -48, 12, -36]].forEach(([x0, y0, x1, y1]) => g.stroke(P([[x0, y0], [x1, y1]], false)));
+    g.stroke(P([[-9, -14], [-6, -24]], false));
+    g.restore();
+  }
   function drawHand(F, Wr, a, shape, flip, s) {
     if (!shape || shape === 'pocket' || shape === 'none') return;
     if (shape === 'thumb') return drawThumbsUp(F, Wr, a, s);
+    if (shape === 'stop') return drawStopHand(F, Wr, a, s);
     const g = F.g, pr = handParts(shape), lw = F.lw * 0.9;
     const k = (s || 1) * HAND_K;
     g.save(); g.translate(Wr[0], Wr[1]); g.rotate(-a); g.scale((flip || 1) * k, k);
@@ -590,6 +628,8 @@
         armL: { a: 0.2 - 0.9 * (1 - sw), e: 1.25 + 0.2 * (1 - sw), fl: 0.92, hand: 'fist', flip: 1, hrot: 0.1 } };
     },
     peace: o => Object.assign({ stance: 'front', armL: STAND_ARML, head: { tilt: 0.06 } }, STAND_LEGS, HOLD_ARMS.peace()),
+    // the polite no: the near arm out toward the other person at chest height, the flat hand up like a stop sign; default face 'firm'
+    no: o => Object.assign({ stance: 'front', armL: STAND_ARML, head: { tilt: -0.03 }, expr: 'firm' }, STAND_LEGS, HOLD_ARMS.no_palm()),
     // seated deep in a sofa, three-quarter: thighs forward along the seat, shins down, feet on the floor (refs 03, 07, 10)
     sit_sofa: o => {
       const seat = o.seat == null ? 224 : o.seat, py = -(seat + 28), floorY = -54 - py, th = o.thigh || 150;
@@ -632,6 +672,7 @@
   const HOLD_ARMS = {
     peace: () => ({ armR: { a: 2.05, e: 0.85, hand: 'peace', flip: 1, hrot: -0.1, hs: 1.05 } }),   // V sign raised beside the head, palm out
     thumbs_up: () => ({ armR: { ik: [168, -156], bend: 1, ul: 0.92, fl: 0.82, hand: 'thumb', flip: -1 } }),
+    no_palm: () => ({ armR: { ik: [184, -146], bend: 1, ul: 1, fl: 0.9, hand: 'stop', flip: -1 } }),
   };
   const armsOnly = p => { const o = {}; ['armL', 'armR', 'prop', 'head'].forEach(k => { if (p[k]) o[k] = p[k]; }); return o; };
   // the arms a held prop takes over (merged after the pose, so `holding` works with walk, run, stand, sit, sit_sofa...)
@@ -643,6 +684,7 @@
     phone_ear: p => phoneArms('ear'), phone_front: p => phoneArms('front'), phone_show: p => phoneArms('show'), phone_out: p => phoneArms('out'),
     peace: p => HOLD_ARMS.peace(),
     thumbs_up: p => HOLD_ARMS.thumbs_up(),
+    no_palm: p => HOLD_ARMS.no_palm(),
     // the cup held in front of the chest by the near hand, handle toward the hand, the cup itself clear of the fingers (ref 03)
     mug: p => ({ armL: { ik: [-18, -100], bend: 1, fl: 0.58, hand: 'fist', flip: -1, hrot: -0.25, hs: 0.95 }, prop: { k: 'mug', hand: 'L', along: 0, off: [48, -26], s: 1.25, steam: 0.15, handle: -1, over: true } }),
     // raised to the mouth by the far hand, elbow out to the side, forearm up (ref 07)
@@ -961,7 +1003,14 @@
     g.restore();
     // ---- head
     g.save(); g.translate(headDX, RIG.neckY); g.rotate(hd.tilt || 0); g.translate(0, RIG.headDy - RIG.neckY + (hd.sink || 0));
-    drawHead(g, ch, F, { expr: opts.expr || 'neutral', face: opts.face, look: opts.look, blink: opts.blink, mouth: opts.mouth, turn: opts.turn != null ? opts.turn : (hd.turn || 0), nod: opts.nod != null ? opts.nod : (hd.nod || 0), marks: opts.marks });
+    let turn = opts.turn != null ? opts.turn : (hd.turn || 0), look = normLook(opts.look);
+    if (opts.lookAt) {   // a point in the caller's space (same as x, y): turn the face and the eyes toward it
+      const tp = normLook(opts.lookAt), hb = rot([headDX, RIG.headDy], lean), hx = (opts.x || 0) + facing * sc * (pel[0] + hb[0]), hy = (opts.y || 0) + sc * (pel[1] + hb[1]);
+      const dxb = (tp[0] - hx) * facing, dy = tp[1] - hy, dd = Math.hypot(dxb, dy) || 1;
+      if (opts.turn == null) turn = clamp(dxb / (240 * sc), -1, 1) * 0.62;
+      if (opts.look == null) look = [dxb / dd, dy / dd];
+    }
+    drawHead(g, ch, F, { expr: opts.expr || pose.expr || 'neutral', face: opts.face || pose.face, look, blink: opts.blink, mouth: opts.mouth, turn, nod: opts.nod != null ? opts.nod : (hd.nod || 0), marks: opts.marks });
     J.head = g.getTransform();
     g.restore();
     g.restore();   // un-lean

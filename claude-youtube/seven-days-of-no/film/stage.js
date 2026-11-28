@@ -6,6 +6,10 @@
   const STAGE = global.STAGE = {};
   const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
   STAGE.DAYS = DAYS;
+  // two-shot eyelines: the head turned three-quarters toward the other person, the pupils fully on them (facing-relative)
+  STAGE.EYE = { turn: 0.85, look: [1, 0.05] };
+  // the "No." beat: the flat palm out, a neutral (unsmiling) mouth
+  STAGE.NO = { pose: 'no', expr: 'neutral', faceOver: { mouth: { k: 'flat', w: 0.18 } } };
   // marks (world px, feet) and scales per set; s = 1 is 800 px tall
   STAGE.MARK = {
     office: { y: 962, s: 1 }, living: { y: 990, s: 1 }, street: { y: 975, s: 1 },

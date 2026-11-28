@@ -13,7 +13,7 @@
     then: W('then'), okay: span('okay', null, W('then')), okay2: W('okay', 2), war: W('you prepared'), got: W('got'), shrug: W('shrug'),
     end: FILM.W('Tuesday'),
   };
-  const OFF = { clock: '5:30' };
+  const OFF = { clock: '5:30', chair: true };
   const HERO_X = 560, BOSS_STOP = 1300, FLOOR = 962;
   // the boss: walks in from the right, stops, asks; after "okay" he shrugs and walks off to the right
   function boss(c, o) {
@@ -23,9 +23,9 @@
     else { wk = walk(t, T.okay[1] + 0.25, T.okay[1] + 2.6, BOSS_STOP, 2300); x = wk.x; }
     const shrug = t >= T.okay[0] - 0.1 && t < T.okay[1] + 0.35;
     return c.fig('boss', Object.assign({ x, y: FLOOR, s: 1, face: wk.moving ? wk.face : -1, pose: wk.moving ? 'walk' : shrug ? 'shrug' : 'hold_clipboard', walk: wk.walk,
-      hold: wk.moving ? 'clipboard' : undefined, talk: [T.ask, T.okay], turn: wk.moving ? undefined : 0.6, look: wk.moving ? undefined : [0.75, 0.05] }, o || {}));
+      hold: wk.moving ? 'clipboard' : undefined, talk: [T.ask, T.okay], turn: wk.moving ? undefined : STAGE.EYE.turn, look: wk.moving ? undefined : STAGE.EYE.look }, o || {}));
   }
-  function hero(c, o) { return c.fig('hero', Object.assign({ x: HERO_X, y: FLOOR, s: 1, face: 1, pose: 'stand', expr: 'neutral', turn: 0.6, look: [0.75, 0.05] }, o || {})); }
+  function hero(c, o) { return c.fig('hero', Object.assign({ x: HERO_X, y: FLOOR, s: 1, face: 1, pose: 'stand', expr: 'neutral', turn: STAGE.EYE.turn, look: STAGE.EYE.look }, o || {})); }
 
   FILM.seq({
     id: 'Q02', title: 'Monday: the boss', chapter: 'Monday: the boss', from: T.card,
@@ -56,7 +56,7 @@
           });
         } },
       { at: T.today, name: 'office: today you say, no',
-        draw(c) { c.set('office', OFF); hero(c, { expr: 'neutral', pose: c.t > T.no[0] - 0.15 ? 'handup' : 'stand', talk: T.no }); boss(c); } },
+        draw(c) { c.set('office', OFF); hero(c, Object.assign({ talk: T.no }, c.t > T.no[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); boss(c); } },
       { at: T.blinks - 0.25, name: 'close on the boss: two blinks',
         draw(c) { c.camera({ x: BOSS_STOP, y: 330, zoom: 2.4 }); c.set('office', OFF); boss(c, { blinks: [T.blinks + 0.05, T.blinks + 0.42], expr: 'surprised' }); } },
       { at: T.then, name: 'office: "okay", a shrug, he walks off', push: { from: 1.06, to: 1 },

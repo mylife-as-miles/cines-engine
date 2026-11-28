@@ -1,5 +1,5 @@
 {
- "note": "Maps every bed and cue name in the cue sheet (out/cuesheet.json from tools/cuesheet.js, or audio/cues_draft.json until it exists) to sound. Cues: rel_db is the sound's loudest 100 ms (K-weighted) relative to the narration's integrated loudness, so every effect sits under the voice (the author wants few, quiet effects); align peak puts the sound's loudest point on the cue time (impacts, whooshes at the cut), start puts its onset there; pan -1..1 (a cue's own p.pan wins); cycle rotates files by occurrence; steps lays a cue's p.n steps at its p.gap; per_n_s makes a cue's length p.n x per_n_s (typing); a cue's p.gain_db or p.level adds to rel_db. Beds: music beds map, sequence by sequence, to a variation in audio/score_plan.json beds (a list splits one engine bed at spoken words: `until` a phrase, the next segment `from` it); null is silent on purpose. aliases map other names. Same-name cues closer than 150 ms play once.",
+ "note": "Maps every bed and cue name in the cue sheet (out/cuesheet.json from tools/cuesheet.js, or audio/cues_draft.json until it exists) to sound. Cues: rel_db is the sound's loudest 100 ms (K-weighted) relative to the narration's integrated loudness, so every effect sits under the voice (the author wants few, quiet effects); align peak puts the sound's loudest point on the cue time (impacts, whooshes at the cut), start puts its onset there; pan: from the cue's x on screen (p.x or x: pixels of a 1920 frame, or 0..1), at most \u00b10.3, else centre (a cue's p.pan wins); after_speech S: start the sound where the narration's current word ends, if that is within S seconds; cycle rotates files by occurrence; steps lays a cue's p.n steps at its p.gap; per_n_s makes a cue's length p.n x per_n_s (typing); a cue's p.gain_db or p.level adds to rel_db. Beds: music beds map, sequence by sequence, to a variation in audio/score_plan.json beds (a list splits one engine bed at spoken words: `until` a phrase, the next segment `from` it); null is silent on purpose. aliases map other names. Same-name cues closer than 150 ms play once.",
  "mix": {
   "target_lufs": -14.0,
   "true_peak_ceiling_dbtp": -1.5,
@@ -20,7 +20,10 @@
    "comp_release_s": 0.12,
    "offset_s": 0.0
   },
-  "air_floor_lufs": -62
+  "air_floor_lufs": -62,
+  "pan_max": 0.3,
+  "screen_width_px": 1920,
+  "music_side_db": 3.0
  },
  "beds": {
   "music": {
@@ -82,8 +85,7 @@
   "door": {
    "file": "door",
    "rel_db": -15,
-   "align": "peak",
-   "pan": -0.3
+   "align": "peak"
   },
   "footsteps": {
    "steps": [
@@ -198,8 +200,7 @@
   "bird": {
    "file": "bird",
    "rel_db": -20,
-   "align": "start",
-   "pan": 0.4
+   "align": "start"
   },
   "battery_low": {
    "file": "battery_low",
@@ -275,8 +276,9 @@
   },
   "shout_no": {
    "file": "shout_no",
-   "rel_db": -14,
-   "align": "start"
+   "rel_db": -5,
+   "align": "start",
+   "after_speech": 0.6
   },
   "pile_topple": {
    "file": "pile_topple",
@@ -291,7 +293,8 @@
   "blink, twitch": "a tiny pop, 25 dB under the voice: felt more than heard",
   "freeze": "the pause is a button press (a soft click) and the music's stop (the cue sheet's silence); a synthesised tape-stop read as an explosion or a door",
   "stamp": "the red NO stamp is the rubber stamp over a low thump; a YES stamp (the cue's p.kind 'yes', or a stamp spoken on 'yes' or the cold open's 'say') is stamp_yes, brighter and friendlier, 2 dB softer",
-  "card_land": "eight request cards land under the opening line: light, 23 dB under the voice"
+  "card_land": "eight request cards land under the opening line: light, 23 dB under the voice",
+  "shout_no": "the hook's punchline: a clear comic hit near the voice's level, started where the narrator's \"no\" ends (after_speech: within 0.6 s of the cue) so it fills the pause and leaves the word clear"
  },
  "aliases": {
   "buzz": "phone_buzz",

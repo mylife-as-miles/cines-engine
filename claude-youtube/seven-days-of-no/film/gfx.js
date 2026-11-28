@@ -218,7 +218,7 @@
       if (e === 'tired') { g.beginPath(); g.moveTo(k * es - r * 0.13, ey); g.lineTo(k * es + r * 0.13, ey); g.stroke(); }
       else if (e === 'happy' || e === 'beaming') { g.beginPath(); g.arc(k * es, ey + r * 0.05, r * 0.12, Math.PI * 1.1, Math.PI * 1.9); g.stroke(); }
       else { g.beginPath(); g.arc(k * es, ey, r * (e === 'scared' || e === 'surprised' ? 0.12 : 0.085), 0, TAU); g.fill(); }
-      const b = { angry: k * 0.1, sad: -k * 0.1, scared: -k * 0.12, guilty: -k * 0.08, honest: 0 }[e] || 0;
+      const b = { angry: -k * 0.1, sad: k * 0.1, scared: k * 0.12, guilty: k * 0.08, honest: 0 }[e] || 0;
       if (b) { g.beginPath(); g.moveTo(k * es - r * 0.14, ey - r * 0.28 - b * r); g.lineTo(k * es + r * 0.14, ey - r * 0.28 + b * r); g.stroke(); }
     }
     const my = r * 0.4;
@@ -360,7 +360,7 @@
   GFX.wordCard = function (g, cx, cy, w, h, word, o) {
     o = o || {}; const flip = o.flip == null ? 1 : o.flip; g.save(); g.translate(cx, cy); g.scale(Math.max(0.02, Math.abs(flip)), 1);
     if (flip >= 0) GFX.card(g, 0, 0, w, h, { fill: o.fill || '#FFF4E3', r: 30, draw: q => text(q, word, 0, 6, { size: o.size || h * 0.45, weight: 900, color: o.color || '#3A8594' }) });
-    else GFX.card(g, 0, 0, w, h, { fill: '#FFF4E3', r: 30, draw: q => GFX.face(q, 0, 0, h * 0.34, o.backExpr || 'scared') });
+    else GFX.card(g, 0, 0, w, h, { fill: '#FFF4E3', r: 30, draw: q => o.backDraw ? o.backDraw(q, w, h) : GFX.face(q, 0, 0, h * 0.34, o.backExpr || 'scared') });
     g.restore();
   };
   // an arm coming up from the bottom of the frame holding something at (x, y): a teal sleeve and a hand

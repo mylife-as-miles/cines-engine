@@ -11,7 +11,7 @@
     guilty: W('that guilty'), tuesday: W('tuesday'), itWas: W('it was not'), proof: W('proof'), wrong: W('wrong'), changing: W('changing'), habit: W('habit'), like: Wend('like'),
     end: FILM.W('so do not'),
   };
-  const CAST = [['boss', 330, 300, 'angry'], ['friend', 1590, 300, 'angry'], ['mum', 360, 790, 'sad'], ['coworker', 1560, 790, 'confused'], ['stranger', 1290, 135, 'sad']];
+  const CAST = [['boss', 340, 300, 'angry'], ['friend', 1580, 300, 'angry'], ['mum', 370, 780, 'sad'], ['coworker', 1550, 780, 'confused'], ['stranger', 1300, 205, 'sad']];
 
   function cloudBack(c) {
     const t = c.t;
@@ -37,12 +37,12 @@
           const t = c.t, h = STAGE.plainHero(c, { pose: 'hold_card', expr: t > T.fear ? 'scared' : 'neutral' });
           const hl = ART.hand('hero', h, 'back'), hr = ART.hand('hero', h, 'front'); const cx = (hl.x + hr.x) / 2, cy = (hl.y + hr.y) / 2 - 40;
           const u = seg(t, T.fear - 0.1, T.fear + 0.25, 'inOutCubic'), flip = Math.cos(u * Math.PI);
-          GFX.at(c.g, cx, cy, pop(t, T.most + 0.1, 0.34), q => GFX.wordCard(q, 0, 0, 520, 360, 'YES', { flip, size: 170, backExpr: 'scared' }));
+          GFX.at(c.g, cx, cy, pop(t, T.most + 0.1, 0.34), q => GFX.wordCard(q, 0, 0, 520, 360, 'YES', { flip, size: 170, backDraw: () => GFX.portrait(c, 'hero', 0, 0, 150, { expr: 'scared', bg: '#FFF4E3' }) }));
         } },
-      { at: T.fearThat, name: 'plain: the cast around him, frowning: stop liking us', push: { from: 1.05, to: 1 },
+      { at: T.fearThat, name: 'plain: the cast around him, frowning: stop liking us', push: { from: 1.03, to: 1.0001 },
         draw(c) {
           const t = c.t; STAGE.plainHero(c, { expr: 'scared', faceOver: { look: [Math.sin(t * 1.5) * 0.6, -0.1] } });
-          CAST.forEach(([who, x, y, expr], i) => GFX.at(c.g, x, y, pop(t, T.fearThat + 0.1 + i * 0.22, 0.32), () => { c.g.translate(-x, -y); GFX.portrait(c, who, x, y, 130, { expr }); }));
+          CAST.forEach(([who, x, y, expr], i) => GFX.at(c.g, x, y, pop(t, T.fearThat + 0.1 + i * 0.22, 0.32), () => { c.g.translate(-x, -y); GFX.portrait(c, who, x, y, 120, { expr }); }));
         } },
       { at: T.guilty, name: 'plain: the grey cloud from Tuesday drifts back in', push: { from: 1, to: 1.05, x: 1200, y: 420 }, draw: cloudBack },
       { at: T.itWas, name: 'plain, closer: it was not proof you did something wrong', push: { from: 1.3, to: 1.36, x: 1180, y: 400 }, draw: cloudBack },

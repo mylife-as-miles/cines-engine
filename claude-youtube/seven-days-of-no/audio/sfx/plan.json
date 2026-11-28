@@ -236,7 +236,7 @@
  "shout_no": {
   "source": "synth (tools/synth_sfx.py)",
   "licence": "made for this video (no licence needed)",
-  "how": "a 220 Hz cartoon boing (a 9 Hz spring wobble), a whoosh outward (400 Hz-2.6 kHz) and a low thud at 0.42 s",
-  "dur_s": 0.95
+  "how": "a 0.22 s whoosh outward (700 Hz-3.4 kHz), a low thud at 0.15 s and a 240 Hz cartoon boing (9 Hz spring wobble) over it, 0.58 s",
+  "dur_s": 0.58
  }
 }

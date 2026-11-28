@@ -24,18 +24,18 @@
       S.cue('whoosh', T.go - 0.05); S.cue('plate_slide', T.food);
     },
     shots: [
-      { at: T.start, name: 'plain: the seven day cards again, each with its face', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.06 },
+      { at: T.start, name: 'plain: the seven day cards again, each with its face', in: { type: 'wipe', dir: 'right' }, push: { from: 1, to: 1.03 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
           DAYS3.forEach((d, i) => {
-            const x = 960 + (i - 3) * 266; GFX.at(c.g, x, 540, pop(t, POP7[i], 0.32), q => GFX.card(q, 0, 0, 250, 420, { fill: '#FFF4E3', band: '#3A8594', bandH: 74, r: 30, rot: (i % 2 ? 0.025 : -0.025),
-              draw: g2 => { GFX.text(g2, d, 0, -170, { size: 46, weight: 900, color: '#FFFFFF' }); g2.save(); g2.translate(0, 40); GFX.portrait(c, 'hero', 0, 0, 108, { expr: FACES[i], bg: '#BFE3E0' }); g2.restore(); } }));
+            const x = 960 + (i - 3) * 248; GFX.at(c.g, x, 540, pop(t, POP7[i], 0.32), q => GFX.card(q, 0, 0, 226, 380, { fill: '#FFF4E3', band: '#3A8594', bandH: 74, r: 30, rot: (i % 2 ? 0.025 : -0.025),
+              draw: g2 => { GFX.text(g2, d, 0, -152, { size: 42, weight: 900, color: '#FFFFFF' }); g2.save(); g2.translate(0, 36); GFX.portrait(c, 'hero', 0, 0, 98, { expr: FACES[i], bg: '#BFE3E0' }); g2.restore(); } }));
           });
         } },
-      { at: T.would, name: 'plain: tired, a little guilty, a lot more honest', push: { from: 1.06, to: 1 + 0.0001 },
+      { at: T.tired - 0.06, name: 'plain: tired, a little guilty, a lot more honest', push: { from: 1.06, to: 1 + 0.0001 },
         draw(c) {
           c.set('plain', {}); const t = c.t;
-          [[480, 'tired_closed', T.tired], [960, 'guilty', T.guilty], [1440, 'happy', T.honest]].forEach(([x, expr, t0]) => GFX.at(c.g, x, 520, pop(t, t0 - 0.05, 0.34), () => { c.g.translate(-x, -520); GFX.portrait(c, 'hero', x, 520, 210, { expr, bg: '#FFF4E3' }); }));
+          [[480, 'tired_closed', T.tired - 0.06], [960, 'guilty', T.guilty], [1440, 'happy', T.honest]].forEach(([x, expr, t0]) => GFX.at(c.g, x, 520, pop(t, t0 - 0.05, 0.34), () => { c.g.translate(-x, -520); GFX.portrait(c, 'hero', x, 520, 210, { expr, bg: '#FFF4E3' }); }));
         } },
       { at: T.now, name: 'plain: tell me in the comments: a friendly comment bubble', in: 'pop', push: { from: 1, to: 1.08, x: 1100, y: 480 },
         draw(c) {

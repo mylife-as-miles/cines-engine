@@ -22,9 +22,9 @@
   const STAMPS = DAYS3.map((d, i) => FILM.lerp(W('no', { after: T.sayNo }), T.everyone - 0.1, i / 6));
   // the pile of requests: each lands (and is stamped YES) at its time; the first at frame 0 is the cold open. The landings come
   // faster and faster through "You say yes to everything", then three more on "Yes, yes, yes"
-  const KINDS = ['late', 'money', 'party', 'mail', 'phone', 'clip', 'box', 'mug', 'plate', 'late', 'mail', 'money'];
-  const LAND = [0.1, T.yes, T.to, T.everything, T.everything + 0.32, T.everything + 0.58, T.everything + 0.8, T.everything + 1.0, T.everything + 1.17].concat(T.yy);
-  const PILE = { x: 1360, y: 1040, step: 98 };
+  const KINDS = ['box', 'clip', 'mail', 'mug', 'phone', 'plate', 'money', 'party', 'late', 'money', 'party', 'mail', 'phone', 'clip', 'box', 'mug', 'plate', 'late', 'mail', 'money'];
+  const LAND = [-5, -5, -5, -5, -5, -5, -5, -5, 0.1, T.yes, T.to, T.everything, T.everything + 0.32, T.everything + 0.58, T.everything + 0.8, T.everything + 1.0, T.everything + 1.17].concat(T.yy);
+  const PILE = { x: 1360, y: 1040, step: 92 };
   const NODS = [0.1, T.yes, T.to, T.everything, T.everything + 0.32, T.everything + 0.58, T.everything + 0.8, T.everything + 1.0, T.everything + 1.17];
   function pile(c, toppleAt) {
     const t = c.t, g = c.g, fall = toppleAt != null ? ease.inQuad(seg(t, toppleAt, toppleAt + 0.7)) : 0;
@@ -42,7 +42,7 @@
     id: 'Q01', title: 'The question', chapter: 'The question', from: 0,
     sound(S) {
       S.bed('music', 0, T.end, { mood: 'cozy, bouncy, light' });
-      S.cue('stamp', 0.12); LAND.slice(1, 9).forEach(t => S.cue('card_land', t)); S.cue('whoosh', T.staying - 0.08); S.cue('typing', T.staying + 0.1, { n: 8 }); S.cue('whoosh', T.lending - 0.08);
+      S.cue('stamp', 0.12); LAND.filter(t => t > 0.2).slice(0, 8).forEach(t => S.cue('card_land', t)); S.cue('whoosh', T.staying - 0.08); S.cue('typing', T.staying + 0.1, { n: 8 }); S.cue('whoosh', T.lending - 0.08);
       S.cue('whoosh', T.going - 0.08); S.bed('party_murmur', T.going, T.yy[0]);
       T.yy.forEach(t => S.cue('stamp', t + 0.02)); S.cue('wobble', T.even + 0.1); S.cue('shout_no', T.no); S.cue('pile_topple', T.no + 0.1);
       S.cue('pop', T.so + 0.3); S.cue('whoosh', T.forSeven); STAMPS.forEach(t => S.cue('stamp', t));
@@ -56,12 +56,12 @@
           STAGE.plainHero(c, { x: 680, expr: 'happy', nod: 0.75 * nod(t, NODS, 0.24), talk: [T.you, Wend('everything')] }); pile(c);
         } },
       { at: T.staying, name: 'office at night, the clock past nine: staying late', push: 1.05,
-        draw(c) { const o = { night: true, clock: '9:20' }; c.set('office', o); const sa = STAGE.sitAt(c, 'office', 'chair'); c.fig('hero', Object.assign(sa, { face: -1, pose: 'type', expr: 'tired', tint: ART.tintFor(c, 'office') })); c.setFront('office', Object.assign({ parts: ['desk'] }, o)); } },
+        draw(c) { const o = { night: true, clock: '9:20', chair: true }; c.set('office', o); const sa = STAGE.sitAt(c, 'office', 'chair'); c.fig('hero', Object.assign(sa, { face: -1, pose: 'type', expr: 'tired', tint: ART.tintFor(c, 'office') })); c.setFront('office', Object.assign({ parts: ['desk'] }, o)); } },
       { at: T.lending, name: 'street: a banknote handed to the friend: lending money', push: 1.05,
         draw(c) {
           c.set('street', {}); const L = c.anchor('street', 'left'), R = c.anchor('street', 'right');
-          const h = c.fig('hero', { x: L.x + 60, y: L.y, s: L.s, face: 1, pose: 'stand', expr: 'happy', turn: 0.5, look: [0.7, 0], override: { armR: { a: 1.3, e: 0.2, hand: 'hold', flip: -1 } } });
-          c.fig('friend', { x: R.x - 40, y: R.y, s: R.s, face: -1, pose: 'stand', expr: 'happy', turn: 0.5, look: [0.7, 0], override: { armR: { a: 1.2, e: 0.35, hand: 'open', flip: 1 } } });
+          const h = c.fig('hero', { x: L.x + 60, y: L.y, s: L.s, face: 1, pose: 'stand', expr: 'happy', turn: STAGE.EYE.turn, look: STAGE.EYE.look, override: { armR: { a: 1.3, e: 0.2, hand: 'hold', flip: -1 } } });
+          c.fig('friend', { x: R.x - 40, y: R.y, s: R.s, face: -1, pose: 'stand', expr: 'happy', turn: STAGE.EYE.turn, look: STAGE.EYE.look, override: { armR: { a: 1.2, e: 0.35, hand: 'open', flip: 1 } } });
           const hn = ART.hand('hero', h, 'front'); const st = pop(c.t, T.money - 0.15, 0.3); GFX.at(c.g, hn.x + 40, hn.y - 20, st, q => GFX.banknote(q, 0, 0, 0.9, -0.15));
         } },
       { at: T.going, name: 'the party (paper chains): the hero in a party hat with a cup, tired', push: { from: 1.02, to: 1.08, x: 900, y: 560 },
@@ -89,7 +89,7 @@
       { at: T.so, name: 'plain: the question: a big question mark, a push in', in: 'pop', push: { from: 1, to: 1.28, x: 960, y: 360, ease: 'inOutSine' },
         draw(c) {
           const t = c.t, h = STAGE.plainHero(c, { pose: 'think', expr: t < T.question ? 'neutral' : 'surprised', look: [0.3, -0.6] }); const hd = ART.head('hero', h);
-          GFX.at(c.g, hd.x + hd.r * 2.2, hd.y - hd.r * 1.3, pop(t, T.so + 0.3, 0.36), q => GFX.bigQuestion(q, 0, 0, 0.85 + 0.08 * Math.sin(t * 3)));
+          GFX.at(c.g, hd.x + hd.r * 2.2, hd.y - hd.r * 1.0, pop(t, T.so + 0.3, 0.36), q => GFX.bigQuestion(q, 0, 0, 0.85 + 0.08 * Math.sin(t * 3)));
         } },
       { at: T.forSeven, name: 'plain: seven day cards slide in; a NO stamp lands on each', in: { type: 'slide', dir: 'left' },
         draw(c) {
@@ -111,8 +111,8 @@
             GFX.cross(c.g, x, 520, 380, seg(t, tx, tx + 0.25));
           });
         } },
-      { at: T.just, name: 'plain: just no: calm, one hand up', in: 'pop', push: { from: 1.08, to: 1.02, x: 960, y: 420 },
-        draw(c) { STAGE.plainHero(c, { pose: c.t > T.justNo[0] - 0.15 ? 'handup' : 'stand', expr: 'neutral', talk: T.justNo }); } },
+      { at: T.just, name: 'plain: just no: calm, the flat palm out', in: 'pop', push: { from: 1.08, to: 1.02, x: 960, y: 420 },
+        draw(c) { STAGE.plainHero(c, Object.assign({ talk: T.justNo }, c.t > T.justNo[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); } },
       { at: T.lets, name: "plain: let's see: he walks out of frame",
         draw(c) { c.set('plain', {}); const a = c.anchor('plain', 'stand', { x: 960, y: 980, s: 1 }); const wk = walk(c.t, T.see - 0.05, T.end + 0.3, a.x, 2250); c.fig('hero', { x: wk.x, y: a.y, s: a.s, face: 1, pose: wk.moving ? 'walk' : 'stand', walk: wk.walk, expr: 'happy' }); } },
     ],

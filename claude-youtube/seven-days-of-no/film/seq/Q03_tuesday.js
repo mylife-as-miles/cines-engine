@@ -41,7 +41,7 @@
       { at: T.card, name: 'living, evening: the day card over the hero on the sofa', in: { type: 'wipe', dir: 'right' }, push: 1.04,
         draw(c) { heroSofa(c, { pose: 'sit_front', hold: 'mug' }); STAGE.dayCard(c, T.card + 0.05, T.friend - 0.05, 'TUESDAY'); } },
       { at: T.friend, name: 'call: the friend asks, "No."',
-        draw(c) { const t = c.t; call(c, { friend: { expr: t > T.no[1] + 0.1 ? 'surprised' : 'happy' }, hero: { expr: 'neutral' } }); } },
+        draw(c) { const t = c.t; call(c, { friend: { expr: t > T.no[1] + 0.1 ? 'surprised' : 'happy' }, hero: { expr: 'neutral', faceOver: STAGE.NO.faceOver } }); } },
       { at: T.small, name: 'call: the small pause, "…", his face falls',
         draw(c) { const t = c.t; call(c, { zoom: 1 + 0.25 * ease.inOutSine(seg(t, T.small, T.small + 0.8)), dots: T.pause, friend: { expr: t > T.theOne ? 'sad' : 'surprised', talk: null, blinks: [T.theOne - 0.2] }, hero: { expr: 'worried', talk: null } }); } },
       { at: T.theOne, name: 'close on the friend: his face falls ("I thought we were close")', in: 'pop', push: { from: 1, to: 1.05, x: 900, y: 420 },

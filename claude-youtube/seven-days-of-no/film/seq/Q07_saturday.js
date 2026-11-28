@@ -26,8 +26,8 @@
     sound(S) {
       S.bed('music', T.card, T.end, { mood: 'calm, confident' }); S.bed('living_room_morning', T.card, T.texts);
       S.cue('whoosh', T.card - 0.1); S.cue('pop', T.card + 0.05); S.cue('phone_buzz', T.boss + 0.1); S.cue('receive', T.need);
-      S.cue('pop', T.doNot + 0.1); S.cue('dim', T.no + 0.1); S.cue('dim', T.either - 0.1);
-      S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12) }); S.cue('send', T.replyEnd + 0.1); S.cue('receive', T.perfect); S.cue('ding', T.perfect + 0.3);
+      S.cue('pop', T.doNot + 0.1); S.cue('dim', T.no + 0.1); S.cue('dim', T.panic + 0.05);
+      S.cue('typing', T.reply0, { n: Math.round((T.replyEnd - T.reply0) / 0.12) }); S.cue('send', T.canSend); S.cue('receive', T.perfect); S.cue('ding', T.perfect + 0.3);
       S.cue('pop', T.works + 0.1); S.cue('ding', T.real);
     },
     shots: [
@@ -41,22 +41,22 @@
         draw(c) {
           c.set('plain', {}); const t = c.t;
           GFX.at(c.g, 600, 540, pop(t, T.doNot + 0.1, 0.34), () => STAGE.pill(c, 0, 0, 'NO', { size: 130, fill: '#E5534B', color: '#FFFFFF', minW: 520, dim: seg(t, T.no + 0.1, T.no + 0.5) }));
-          GFX.at(c.g, 1320, 540, pop(t, T.doNot + 0.35, 0.34), () => STAGE.pill(c, 0, 0, 'YES!!', { size: 130, fill: '#77CC81', color: '#FFFFFF', minW: 520, dim: seg(t, T.either - 0.2, T.either + 0.2) }));
-          [[600, T.no + 0.1], [1320, T.either - 0.1]].forEach(([x, t0]) => GFX.cross(c.g, x, 555, 300, seg(t, t0, t0 + 0.25)));
+          GFX.at(c.g, 1320, 540, pop(t, T.doNot + 0.35, 0.34), () => STAGE.pill(c, 0, 0, 'YES!!', { size: 130, fill: '#77CC81', color: '#FFFFFF', minW: 520, dim: seg(t, T.panic, T.panic + 0.35) }));
+          [[600, T.no + 0.1], [1320, T.panic + 0.05]].forEach(([x, t0]) => GFX.cross(c.g, x, 555, 300, seg(t, t0, t0 + 0.25)));
         } },
       { at: T.youSay, name: 'living: the hero types his reply, calm', push: { from: 1.1, to: 1.18, x: 900, y: 460 },
         draw(c) {
-          const t = c.t, h = STAGE.heroSofa(c, MORN, { pose: 'sit_front', hold: 'phone_front', expr: 'neutral', look: [0.3, 0.6] });
+          const t = c.t, h = STAGE.heroSofa(c, MORN, { pose: 'sit_front', hold: 'phone_front', expr: 'neutral', look: [0.3, 0.6], talk: [T.youSay, T.canSend] });
           const hd = ART.head('hero', h); STAGE.notify(c, hd.x + hd.r * 1.9, hd.y - hd.r * 1.1, T.youSay + 0.15, 'chat', { s: 2.0 });
         } },
-      { at: T.canSend, name: 'phone: the reply typed word by word, sent', in: 'pop',
-        draw(c) { const t = c.t, sent = t > T.replyEnd + 0.1; STAGE.phone(c, { mode: 'chat', contact: 'Boss', avatarColor: '#A6A6A6', time: '10:13',
-          messages: [BOSS_MSG].concat(sent ? [{ from: 'me', text: REPLY, k: seg(t, T.replyEnd + 0.1, T.replyEnd + 0.45) }] : []), draft: sent ? '' : draft(t) }); } },
+      { at: T.canSend, name: 'phone: the reply, sent and whole, held until "He says"', in: 'pop',
+        draw(c) { const t = c.t; STAGE.phone(c, { mode: 'chat', contact: 'Boss', avatarColor: '#A6A6A6', time: '10:13',
+          messages: [BOSS_MSG, { from: 'me', text: REPLY, k: seg(t, T.canSend, T.canSend + 0.25) }] }); } },
       { at: T.heSays, name: 'office: the boss reads it: "Perfect 👍", thumbs up (ref 04)', in: 'pop', push: { from: 1.25, to: 1.32, x: 1320, y: 460 },
         draw(c) {
           const t = c.t; c.set('office', { clock: '10:14' });
           const b = c.fig('boss', { x: 1380, y: 962, face: -1, pose: t > T.perfect - 0.05 ? 'thumbs_up' : 'hold_phone', mode: 'front', expr: t > T.perfect - 0.05 ? 'happy' : 'neutral', talk: [T.perfect, T.perfectEnd], turn: 0.3 });
-          const hd = ART.head('boss', b); GFX.at(c.g, hd.x - hd.r * 3.0, hd.y - hd.r * 0.6, pop(t, T.perfect, 0.34), q => GFX.bubble(q, 0, 0, 380, 150, { text: 'Perfect 👍', size: 58, weight: 800, tail: [130, 40] }));
+          const hd = ART.head('boss', b); GFX.at(c.g, hd.x - hd.r * 3.0, hd.y + hd.r * 0.25, pop(t, T.perfect, 0.34), q => GFX.bubble(q, 0, 0, 380, 150, { text: 'Perfect 👍', size: 58, weight: 800, tail: [130, 40] }));
         } },
       { at: T.works, name: 'plain: flat no, panic yes, a real answer: the last lights', in: 'pop',
         draw(c) {

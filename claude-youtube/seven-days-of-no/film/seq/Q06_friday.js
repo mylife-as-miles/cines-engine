@@ -20,7 +20,7 @@
     if (t < T.ask[0]) { wk = walk(t, T.tourist - 0.2, T.ask[0] - 0.1, 2200, R); x = wk.x; pose = 'walk'; }
     else if (t >= T.hurt) { expr = 'sad'; face = 1; wk = walk(t, T.hurt + 0.35, T.feel + 1.2, R, R + 330, { stride: 120 }); x = wk.x; pose = wk.moving ? 'walk' : 'stand'; }
     else if (t > T.no[1]) expr = 'surprised';
-    return c.fig('stranger', Object.assign({ x, y: FLOOR, face, pose, mode: 'out', hold: pose === 'walk' && t < T.ask[0] ? 'phone' : undefined, walk: wk ? wk.walk : 0, expr, talk: T.ask, turn: wk && wk.moving ? undefined : 0.6, look: wk && wk.moving ? undefined : [0.75, 0.05] }, o || {}));
+    return c.fig('stranger', Object.assign({ x, y: FLOOR, face, pose, mode: 'out', hold: pose === 'walk' && t < T.ask[0] ? 'phone' : undefined, walk: wk ? wk.walk : 0, expr, talk: T.ask, turn: wk && wk.moving ? undefined : STAGE.EYE.turn, look: wk && wk.moving ? undefined : STAGE.EYE.look }, o || {}));
   }
 
   FILM.seq({
@@ -36,9 +36,9 @@
       { at: T.card, name: 'street: the day card', in: { type: 'wipe', dir: 'right' }, push: 1.04,
         draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand' }); STAGE.dayCard(c, T.card + 0.05, T.tourist - 0.05, 'FRIDAY'); } },
       { at: T.tourist, name: 'street: the stranger asks for a photo, "No."',
-        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: c.t > T.no[0] - 0.15 ? 'handup' : 'stand', expr: 'neutral', talk: T.no, turn: 0.6, look: [0.75, 0.05] }); c.setFront('street', {}); stranger(c); } },
+        draw(c) { c.set('street', {}); c.fig('hero', Object.assign({ x: L, y: FLOOR, face: 1, talk: T.no, turn: STAGE.EYE.turn, look: STAGE.EYE.look }, c.t > T.no[0] - 0.15 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); c.setFront('street', {}); stranger(c); } },
       { at: T.hurt, name: 'street: they look hurt and turn away',
-        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand', expr: 'surprised', turn: 0.6, look: [0.75, 0.05] }); c.setFront('street', {}); stranger(c); } },
+        draw(c) { c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'stand', expr: 'surprised', turn: STAGE.EYE.turn, look: STAGE.EYE.look }); c.setFront('street', {}); stranger(c); } },
       { at: T.feel, name: 'the hero, hands clasped, sad (ref 05)', push: { from: 1, to: 1.05 },
         draw(c) { c.camera({ x: L + 120, y: 420, zoom: 1.75 }); c.set('street', {}); c.fig('hero', { x: L, y: FLOOR, face: 1, pose: 'hands_clasped', expr: c.t > T.terrible ? 'sad' : 'guilty' }); stranger(c); } },
       { at: T.run, name: 'street: the hero runs after them',
@@ -46,8 +46,8 @@
       { at: T.take, name: 'street: the photo, a flash; the happiest all week',
         draw(c) {
           const t = c.t, happy = t >= T.happiest - 0.1; c.set('street', {});
-          const h = c.fig('hero', { x: L + 40, y: FLOOR, face: 1, pose: happy ? 'peace' : 'hold_phone', mode: 'out', expr: happy ? 'beaming' : 'happy', turn: happy ? 0.25 : 0.6, look: happy ? [0.2, 0] : [0.75, 0.05] });
-          c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: happy ? 'thumbs_up' : 'stand', expr: 'happy', turn: 0.6, look: [0.75, 0.05] });
+          const h = c.fig('hero', { x: L + 40, y: FLOOR, face: 1, pose: happy ? 'peace' : 'hold_phone', mode: 'out', expr: happy ? 'beaming' : 'happy', turn: happy ? 0.25 : STAGE.EYE.turn, look: happy ? [0.2, 0] : STAGE.EYE.look });
+          c.setFront('street', {}); c.fig('stranger', { x: R + 120, y: FLOOR, face: -1, pose: happy ? 'thumbs_up' : 'stand', expr: 'happy', turn: STAGE.EYE.turn, look: STAGE.EYE.look });
           if (!happy) { const hn = ART.hand('hero', h, 'front'); const st = pop(t, T.photo, 0.15); if (t < T.photo + 0.5) GFX.at(c.g, hn.x + 30, hn.y - 30, { s: st.s * (1 - seg(t, T.photo + 0.25, T.photo + 0.5)) }, q => c.prop('flash', { x: 0, y: 0, r: 70 })); }
           c.flash(0.9 * flash(t, T.photo, 0.4));
         } },

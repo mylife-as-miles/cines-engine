@@ -13,10 +13,10 @@
   const EVE = { tod: 'evening' };
   // the portraits: who, where, expression, in, (grey from)
   const P = [
-    { who: 'friend', x: 1340, y: 250, expr: 'angry', t0: T.few, grey: T.quiet },
-    { who: 'mum', x: 1640, y: 330, expr: 'neutral', t0: T.annoyed, face: { mouth: { k: 'flat', w: 0.2 } } },
-    { who: 'coworker', x: 1380, y: 560, expr: 'happy', t0: T.oneOrTwo + 0.2 },
-    { who: 'boss', x: 1680, y: 640, expr: 'happy', t0: T.respected },
+    { who: 'friend', x: 1250, y: 255, expr: 'angry', t0: T.few, grey: T.quiet },
+    { who: 'mum', x: 1520, y: 320, expr: 'neutral', t0: T.annoyed, face: { mouth: { k: 'flat', w: 0.2 } } },
+    { who: 'coworker', x: 1290, y: 540, expr: 'happy', t0: T.oneOrTwo + 0.2 },
+    { who: 'boss', x: 1560, y: 610, expr: 'happy', t0: T.respected },
   ];
 
   function tally(c) {
@@ -24,7 +24,7 @@
     P.forEach((p, i) => {
       const a = pop(t, p.t0, 0.34), b = popOut(t, T.nobody + 0.15 + i * 0.08, 0.28); const st = { sx: a.sx * b.sx, sy: a.sy * b.sy, a: a.a * b.a, on: a.on && b.on };
       if (!st.on) return; const grey = p.grey ? seg(t, p.grey, p.grey + 0.4) : 0;
-      GFX.at(c.g, p.x, p.y, st, () => { c.g.translate(-p.x, -p.y); GFX.portrait(c, p.who, p.x, p.y, 120, { expr: grey > 0.5 ? 'sad' : p.expr, grey, fig: { faceOver: p.face } }); if (grey > 0) { c.g.globalAlpha *= grey; GFX.dots(c.g, p.x - 150, p.y - 120, 0.6, t - p.grey); } });
+      GFX.at(c.g, p.x, p.y, st, () => { c.g.translate(-p.x, -p.y); GFX.portrait(c, p.who, p.x, p.y, 110, { expr: grey > 0.5 ? 'sad' : p.expr, grey, fig: { faceOver: p.face } }); if (grey > 0) { c.g.globalAlpha *= grey; GFX.dots(c.g, p.x - 150, p.y - 120, 0.6, t - p.grey); } });
     });
   }
 

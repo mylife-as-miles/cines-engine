@@ -17,8 +17,8 @@
   // the office exchange, drawn at time tt (the freeze draws it at the instant of "pause")
   function exchange(c, tt) {
     const cf = Object.assign({}, c, { t: tt }); c.set('office', { clock: '2:10' });
-    ART.fig(cf, 'coworker', { x: 1450, y: 962, face: -1, pose: tt > T.asks[1] + 0.2 ? 'stand' : 'wave', phase: 0.15, expr: 'happy', talk: T.asks, turn: 0.6, look: [0.75, 0.05] });
-    const h = ART.fig(cf, 'hero', { x: 640, y: 962, face: 1, pose: tt > T.letMe[0] - 0.2 ? 'handup' : 'stand', expr: tt > T.letMe[0] - 0.2 ? 'neutral' : 'surprised', talk: T.letMe, turn: 0.6, look: [0.75, 0.05] });
+    ART.fig(cf, 'coworker', { x: 1450, y: 962, face: -1, pose: tt > T.asks[1] + 0.2 ? 'stand' : 'wave', phase: 0.15, expr: 'happy', talk: T.asks, turn: STAGE.EYE.turn, look: STAGE.EYE.look });
+    const h = ART.fig(cf, 'hero', { x: 640, y: 962, face: 1, pose: tt > T.letMe[0] - 0.2 ? 'handup' : 'stand', expr: tt > T.letMe[0] - 0.2 ? 'neutral' : 'surprised', talk: T.letMe, turn: STAGE.EYE.turn, look: STAGE.EYE.look });
     return h;
   }
   // the bubble beside the hero's head, between him and the coworker
@@ -32,7 +32,7 @@
     BUTTONS.forEach(([label, t0, fill], i) => {
       const rise = 1 - ease.outBack(seg(t, t0 - 0.05, t0 + 0.35)); if (t < t0 - 0.05) return; const isPick = i === 2;
       const y = 300 + i * 230 + rise * 700;
-      STAGE.pill(c, 1260, y, label, { size: i === 2 ? 64 : 84, fill, color: '#FFFFFF', minW: 900, press: isPick ? pressed : 0, lit: isPick ? seg(t, T.purpose + 0.1, T.purpose + 0.4) : 0, dim: !isPick && t > T.purpose ? 0.5 * seg(t, T.purpose, T.purpose + 0.3) : 0 });
+      STAGE.pill(c, 1260, y, label, { size: i === 2 ? 60 : 80, fill, color: '#FFFFFF', minW: 820, press: isPick ? pressed : 0, lit: isPick ? seg(t, T.purpose + 0.1, T.purpose + 0.4) : 0, dim: !isPick && t > T.purpose ? 0.5 * seg(t, T.purpose, T.purpose + 0.3) : 0 });
     });
   }
 
@@ -58,7 +58,7 @@
           if (frozen) { c.screen(); c.g.fillStyle = `rgba(60,90,100,${0.35 * seg(t, T.pause, T.pause + 0.2)})`; c.g.fillRect(0, 0, 1920, 1080); GFX.at(c.g, 960, 540, pop(t, T.pause + 0.05, 0.32), q => GFX.pauseSign(q, 0, 0, 1.3)); c.reset(); }
         } },
       { at: T.choose, name: 'plain: three buttons rise, one per word', in: 'pop', push: { from: 1, to: 1.06, x: 1100, y: 540 }, draw: buttons },
-      { at: T.decide, name: 'plain, closer: he presses one, on purpose', push: { from: 1.28, to: 1.34, x: 1080, y: 700 }, draw: buttons },
+      { at: T.decide, name: 'plain, closer: he presses one, on purpose', push: { from: 1.28, to: 1.34, x: 1180, y: 700 }, draw: buttons },
     ],
   });
 })();

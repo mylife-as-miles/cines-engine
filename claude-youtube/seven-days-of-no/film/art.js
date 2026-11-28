@@ -123,6 +123,8 @@
     stomach: (P, o) => Object.assign(P.POSES.stand(o), { head: { tilt: 0.06, sink: 4 }, armR: { ik: [-6, -104], bend: -1, ul: 0.9, hand: 'flat', flip: -1, hrot: 0.4 } }),
     peace: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.55, e: 0.35, hand: 'point', flip: 1 } }),
     type: (P, o) => P.POSES.sit(Object.assign({}, o, { view: 'side' })),
+    // "No": a flat palm out at chest height (the kit's pose 'no' replaces this when it lands)
+    no: (P, o) => Object.assign(P.POSES.stand(o), { armR: { ik: [170, -112], bend: 1, ul: 0.95, hand: 'open', flip: 1, hrot: -1.45 } }),
     finger_up: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 2.25, e: 0.95, hand: 'point', flip: 1 } }),
     push_away: (P, o) => Object.assign(P.POSES.stand(o), { armR: { a: 1.45, e: 0.15, hand: 'open', flip: 1 }, armL: { a: 1.3, e: 0.25, hand: 'open', flip: 1, z: 'back' } }),
     hold_card: (P, o) => Object.assign(P.POSES.hold_box(o), { prop: null }),

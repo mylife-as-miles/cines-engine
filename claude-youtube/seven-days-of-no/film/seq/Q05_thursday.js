@@ -12,14 +12,14 @@
     know: W('you know'), wanted: W('you wanted'), been: W('you have been'), weeks: Wend('weeks'), problem: W('here is the problem'),
     no1: W('no', { after: FILM.W('here is the problem') }), also: W('also'), no2: W('no', { after: FILM.W('also') }), end: FILM.W('Friday'),
   };
-  const DOOR = { view: 'door', clock: '12:30' };
+  const DOOR = { view: 'door', clock: '12:30', chair: true };
   function coworker(c) {
     const t = c.t, d = c.anchor('office', 'doorway'); let x = d.x, face = 1, pose = 'wave', wk = null, alpha = 1;
     if (t < T.pops + 0.3) { x = d.x - 180 * (1 - ease.outBack(seg(t, T.pops - 0.1, T.pops + 0.3))); alpha = seg(t, T.pops - 0.1, T.pops); }
     else if (t < T.no[1] + 0.2) pose = t < T.lunch[0] ? 'wave' : 'stand';
     else if (t < T.no[1] + 0.9) pose = 'wave';
     else { wk = walk(t, T.no[1] + 0.9, T.no[1] + 2.6, d.x, d.x - 380); x = wk.x; face = -1; pose = 'walk'; }
-    return c.fig('coworker', { x, y: d.y, s: d.s, face, pose, walk: wk ? wk.walk : 0, phase: pose === 'wave' ? t * 1.6 : undefined, expr: t > T.no[1] ? 'surprised' : 'happy', talk: T.lunch, alpha });
+    return c.fig('coworker', { x, y: d.y, s: d.s, face, pose, walk: wk ? wk.walk : 0, phase: pose === 'wave' ? t * 1.6 : undefined, expr: t > T.no[1] ? 'surprised' : 'happy', talk: T.lunch, alpha, turn: pose === 'walk' ? undefined : STAGE.EYE.turn, look: pose === 'walk' ? undefined : STAGE.EYE.look });
   }
 
   FILM.seq({
@@ -32,16 +32,16 @@
     },
     shots: [
       { at: T.card, name: 'office: the day card over the hero at his desk', in: { type: 'wipe', dir: 'right' }, push: 1.04,
-        draw(c) { const o = { clock: '12:30' }; c.set('office', o); const sa = STAGE.sitAt(c, 'office', 'chair'); c.fig('hero', Object.assign(sa, { face: -1, pose: 'type' })); c.setFront('office', Object.assign({ parts: ['desk'] }, o));
+        draw(c) { const o = { clock: '12:30', chair: true }; c.set('office', o); const sa = STAGE.sitAt(c, 'office', 'chair'); c.fig('hero', Object.assign(sa, { face: -1, pose: 'type' })); c.setFront('office', Object.assign({ parts: ['desk'] }, o));
           STAGE.dayCard(c, T.card + 0.05, T.pops - 0.05, 'THURSDAY'); } },
       { at: T.pops, name: 'office door: the coworker pops in, waving: "Lunch?" "No."', push: { from: 1, to: 1.04, x: 700, y: 560 },
-        draw(c) { c.set('office', DOOR); coworker(c); c.setFront('office', DOOR); c.fig('hero', { x: 1180, y: 962, face: -1, pose: c.t > T.no[0] - 0.15 && c.t < T.no[1] + 0.6 ? 'handup' : 'stand', expr: 'neutral', talk: T.no }); } },
-      { at: T.know, name: 'the hero, hand to mouth: the thought of the plate; it swells, he sags', push: { from: 1.05, to: 1.18, x: 1000, y: 400 },
+        draw(c) { c.set('office', DOOR); coworker(c); c.setFront('office', DOOR); c.fig('hero', Object.assign({ x: 1180, y: 962, face: -1, talk: T.no, turn: STAGE.EYE.turn, look: STAGE.EYE.look }, c.t > T.no[0] - 0.15 && c.t < T.no[1] + 0.6 ? STAGE.NO : { pose: 'stand', expr: 'neutral' })); } },
+      { at: T.know, name: 'the hero, hand to mouth: the thought of the plate; it swells, he sags', push: { from: 1, to: 1.08, x: 1200, y: 400 },
         draw(c) {
           const t = c.t; c.set('office', DOOR); c.setFront('office', DOOR);
           const sag = seg(t, T.been, T.weeks); const h = c.fig('hero', { x: 1180, y: 962, face: -1, pose: 'hand_mouth', expr: sag > 0.3 ? 'sad' : 'worried', override: sag > 0 ? { head: { sink: 14 * sag, tilt: -0.08 * sag } } : null });
-          const hd = ART.head('hero', h); const sc = 1 + 0.4 * ease.outBack(sag);
-          STAGE.thought(c, hd.x - 400, hd.y - 150, T.know + 0.2, { scale: sc, tail: [[hd.x - 120, hd.y - 100, 14], [hd.x - 190, hd.y - 135, 22]] });
+          const hd = ART.head('hero', h); const sc = 1 + 0.2 * ease.outBack(sag);
+          STAGE.thought(c, 1530, 310, T.know + 0.2, { scale: sc, s: 1.3, tail: [[hd.x + 120, hd.y - 80, 14], [hd.x + 190, hd.y - 110, 22]] });
         } },
       { at: T.problem, name: 'plain: two cards, the late night and the lunch; NO on both', in: 'pop',
         draw(c) {
