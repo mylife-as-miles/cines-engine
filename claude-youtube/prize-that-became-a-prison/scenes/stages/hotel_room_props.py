@@ -36,7 +36,7 @@ PROPS = {  # size, axis, grade, finish (spec)
     # the same): lifted, with enough sheen for its folds and straps to read
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.5, rough_add=0.15), 0.3),
     # The upright cognac tote is lit from the side. The flat tote below receives the full bedside pool.
-    "handbag-tote": (0.35, "long", dict(sat=0.985, val=1.13, hue=0.526, rough_add=0.2), 0.38),
+    "handbag-tote": (0.35, "long", dict(sat=0.741, val=1.48, hue=0.532, rough_add=0.2), 0.38),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12), 0.35),
     # glossy raspberry darkened toward burgundy (prop table: val ~0.55, rough_add ~0.25), a touch redder
     "handbag-shoulder": (0.32, "long", dict(sat=0.75, val=0.62, hue=0.49, rough_add=0.25), 0.3),
@@ -488,7 +488,7 @@ def half_closed_duffel(root, body):
 def tote_flat(loc, turn_deg, surfaces):
     """The tote on its back, its clean face (file +Y, the face turn 162 shows in the inspection room) up, its top
     toward laid -Y; the handles swung back past the top edge and let down onto the bedspread."""
-    ob = load_baked("handbag-tote", dye=dict(sat=0.61, val=0.81, hue=0.533))
+    ob = load_baked("handbag-tote", dye=dict(sat=0.49, val=0.845, hue=0.539))
     me = ob.data
     co = verts_np(me)
     zr = 0.256                                     # the body's rim; above it, the two handles
