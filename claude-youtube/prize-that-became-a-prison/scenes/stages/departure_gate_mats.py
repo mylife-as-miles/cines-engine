@@ -355,7 +355,10 @@ def glass(name, tint=(0.86, 0.9, 0.92), refl=0.06):
     lw = _n(nt, "ShaderNodeLayerWeight")
     lw.inputs["Blend"].default_value = 0.08
     smudge = _maprange(nt, _noise(nt, _obj(nt), 2.5, 5.0, 0.6), 0.4, 0.75, 0.0, 0.02)
-    fac = _math(nt, "ADD", _math(nt, "ADD", _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.85), refl), smudge, clamp=True)
+    bias = _n(nt, "ShaderNodeValue", name="Reflection floor")
+    bias.outputs[0].default_value = refl
+    fresnel = _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.85)
+    fac = _math(nt, "ADD", _math(nt, "ADD", fresnel, bias.outputs[0]), smudge, clamp=True)
     mx = _n(nt, "ShaderNodeMixShader")
     _link(nt, fac, mx.inputs[0])
     _link(nt, tr.outputs[0], mx.inputs[1])
@@ -486,15 +489,15 @@ def fuselage(name, top=(0.37, 0.38, 0.39), belly=(0.24, 0.25, 0.26)):
     grooves = seam
     for (uc, vc, hu, hv) in DOORS:
         grooves = _math(nt, "MAXIMUM", grooves, _rrect(nt, u, v, uc, vc, hu, hv, 0.14, 0.014))
-    lines = _math(nt, "MAXIMUM", _math(nt, "MULTIPLY", joint, 0.35), grooves)
-    col = _mix(nt, _math(nt, "MULTIPLY", lines, 0.55), col, (0.04, 0.04, 0.042))
+    lines = _math(nt, "MAXIMUM", _math(nt, "MULTIPLY", joint, 0.86), grooves)
+    col = _mix(nt, _math(nt, "MULTIPLY", lines, 0.66), col, (0.04, 0.04, 0.042))
     _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Specular IOR Level"].default_value = 0.4
-    b.inputs["Coat Weight"].default_value = 0.035
+    b.inputs["Specular IOR Level"].default_value = 0.5
+    b.inputs["Coat Weight"].default_value = 0.08
     b.inputs["Coat Roughness"].default_value = 0.12
-    r = _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.42, 0.53)
-    _link(nt, _math(nt, "ADD", r, _math(nt, "MULTIPLY", rad, 0.12)), b.inputs["Roughness"])
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", joint, -0.4), _math(nt, "MULTIPLY", grooves, -1.0)), 0.05, 0.003)
+    r = _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.25, 0.45)
+    _link(nt, _math(nt, "ADD", r, _math(nt, "MULTIPLY", rad, 0.08)), b.inputs["Roughness"])
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", joint, -0.6), _math(nt, "MULTIPLY", grooves, -1.0)), 0.12, 0.004)
     return m
 
 
@@ -582,6 +585,12 @@ def line_paint(name, rgb):
     return m
 
 
+def _night_strength(nt, strength, emission):
+    trim = _n(nt, "ShaderNodeValue", name="Camera emission trim")
+    trim.outputs[0].default_value = 1.0
+    _link(nt, _math(nt, "MULTIPLY", strength, trim.outputs[0]), emission.inputs["Strength"])
+
+
 def sky(name, horizon=(0.15, 0.15, 0.17), zenith=(0.004, 0.0065, 0.014), haze=(0.42, 0.27, 0.13)):
     """The night sky as an emitting dome: near black overhead, a low band of city glow along the horizon."""
     m = bpy.data.materials.new(name)
@@ -599,7 +608,7 @@ def sky(name, horizon=(0.15, 0.15, 0.17), zenith=(0.004, 0.0065, 0.014), haze=(0
     col = _mix(nt, _math(nt, "MULTIPLY", _math(nt, "POWER", glowband, 1.6), 0.9), col, haze)
     cloud = _maprange(nt, _noise(nt, _obj(nt), 0.0012, 4.0, 0.6, mapping=(1.0, 1.0, 3.0)), 0.35, 0.7, 0.85, 1.25)
     _link(nt, col, em.inputs["Color"])
-    _link(nt, cloud, em.inputs["Strength"])
+    _night_strength(nt, cloud, em)
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"
     return m
@@ -634,7 +643,7 @@ def city(name, strength=14.0):
     s = _math(nt, "MULTIPLY", s, strength)
     base = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", low, mask), 0.05)
     _link(nt, colr, em.inputs["Color"])
-    _link(nt, _math(nt, "ADD", s, base), em.inputs["Strength"])
+    _night_strength(nt, _math(nt, "ADD", s, base), em)
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"
     return m
@@ -676,9 +685,9 @@ def materials():
         lens_on=lens("fixture lens", (0.84, 0.92, 1.0), 9.0),
         screen=glow("blank screen", (0.6, 0.76, 1.0), 2.2, 0.45),
         screen_dim=glow("blank screen dim", (0.55, 0.7, 0.95), 0.16, 0.4),
-        sign=glow("blank sign", (0.78, 0.86, 1.0), 1.6, 0.35),
+        sign=glow("blank sign", (0.78, 0.86, 1.0), 4.0, 0.35),
         sign_dim=glow("blank sign dim", (0.62, 0.72, 0.9), 0.22, 0.3),
-        sign_mid=glow("blank sign mid", (0.75, 0.84, 1.0), 0.9, 0.35),
+        sign_mid=glow("blank sign mid", (0.75, 0.84, 1.0), 2.6, 0.35),
         ledge_led=glow("ledge strip", (0.75, 0.85, 1.0), 6.0),
         led_green=glow("indicator green", (0.4, 1.0, 0.6), 4.0),
         # exterior
@@ -719,7 +728,7 @@ def materials():
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
 
         bridge_win=glow("bridge glazing", (1.0, 0.8, 0.58), 0.32, 0.3, ("Y", "Z")),
-        screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 1.1, 0.35),
+        screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 2.6, 0.35),
         flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),
         nav_green=glow("nav green", (0.1, 1.0, 0.35), 50.0),

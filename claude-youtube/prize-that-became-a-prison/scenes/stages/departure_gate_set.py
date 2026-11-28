@@ -267,7 +267,7 @@ def door_section():
     # the blank gate sign above the door (backlit, no numbers)
     box("gate_sign_case", (2.2, 0.16, 0.56), (DOOR_X, face - 0.08, 2.98), m["sign_case"], bevel=0.008)
     box("gate_sign_face", (2.1, 0.004, 0.46), (DOOR_X, face - 0.162, 2.98), m["sign"])
-    area("gate_sign_light", (DOOR_X, face - 0.2, 2.98), (2.0, 0.4), 26.0, (0.78, 0.86, 1.0), spread=140,
+    area("gate_sign_light", (DOOR_X, face - 0.2, 2.98), (2.0, 0.4), 60.0, (0.78, 0.86, 1.0), spread=140,
          rot=(-math.pi / 2, 0, 0))
     point("gate_sign_under", (DOOR_X, face - 0.3, 2.62), 3.0, (0.78, 0.86, 1.0), radius=0.15)
 
@@ -436,7 +436,7 @@ def dressing():
     box("fsign_post", (0.06, 0.06, 1.2), (sx, sy, 0.62), m["steel"], bevel=0.006)
     box("fsign_case", (0.56, 0.06, 0.62), (sx, sy, 1.5), m["sign_case"], bevel=0.01)
     box("fsign_face", (0.5, 0.004, 0.56), (sx, sy - 0.031, 1.5), m["sign_mid"])
-    point("fsign_glow", (sx, sy - 0.25, 1.5), 1.5, (0.75, 0.85, 1.0), radius=0.2)
+    point("fsign_glow", (sx, sy - 0.25, 1.5), 6.0, (0.75, 0.85, 1.0), radius=0.2)
     # floor tape: a rope-less boarding lane from in front of the podium round to the door
     t = m["tape"]
     for (x0, y0, x1, y1) in ((5.3, 2.35, 9.35, 2.35), (9.35, 2.35, 9.35, 5.05), (7.75, 3.35, 8.35, 3.35), (8.35, 3.35, 8.35, 5.05)):

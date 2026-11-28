@@ -90,7 +90,10 @@ TRIMS = {
     "window": {"window_spill": 0.13, KEY: 0.14, POOL: 0.06, RIM: 0.22, "face return": 0.90,
                "mast_light_0": 0.35, "mast_light_1": 0.35},
 }
-FLAGS = {"seated": ["flag_near_seats", "flag_pool", "lap flag", "seated face key"], "wide": ["right wall washer", "wide shoulder edge"]}   # black flags (camera-invisible) used by one camera only
+FLAGS = {
+    "seated": ["flag_near_seats", "flag_pool", "empty seat flag", "lap flag", "seated face key"],
+    "wide": ["right wall washer", "wide shoulder edge"],
+}
 
 _STATE = {"cast": [], "base": {}}
 CALL_CONTROLS = ["chest", "neck", "head"]
@@ -172,29 +175,34 @@ def dawn():
     if bun is not None:
         me = bun.data
         c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
-        # A tucked coil on the nape. Its inner turn fills the centre; the outer turn
-        # flattens into the scalp and ends under the hair at the base of the head.
-        c += Vector((0, -0.014, -0.030))
+        # A full knot against the nape, with one band of hair wrapped around it.
+        c += Vector((0, 0.005, -0.030))
         tilt = Matrix.Rotation(math.radians(-23), 3, "X")
-        verts, faces = [], []
-        steps, section = 80, 14
-        for i in range(steps + 1):
-            t = i / steps
-            a = -1.2 + 1.56 * math.tau * t
-            radius = 0.004 + 0.030 * t
-            thickness = 0.0125 * (0.57 + 0.43 * math.sin(math.pi * t) ** 0.4)
-            centre = Vector((radius * math.cos(a), 0.008 - 0.017 * t, 0.84 * radius * math.sin(a)))
+        shape = bmesh.new()
+        knot = bmesh.ops.create_uvsphere(shape, u_segments=32, v_segments=20, radius=1.0)
+        for vertex in knot["verts"]:
+            x, y, z = vertex.co
+            vertex.co = c + tilt @ Vector((0.0375 * x, 0.028 * y, 0.0275 * z))
+        wrap_tilt = tilt @ Matrix.Rotation(math.radians(20), 3, "Z")
+        wrap_centre = c + tilt @ Vector((0.0, 0.010, 0.0))
+        wrap = []
+        steps, section = 48, 12
+        for i in range(steps):
+            a = math.tau * i / steps
+            ring = []
             for j in range(section):
-                v = math.tau * j / section
-                ring = Vector((math.cos(a) * math.cos(v), 0.86 * math.sin(v), math.sin(a) * math.cos(v)))
-                verts.append(c + tilt @ (centre + thickness * ring))
-                if i:
-                    k = i * section + j
-                    n = i * section + (j + 1) % section
-                    faces.append((k - section, n - section, n, k))
-        faces.extend([tuple(reversed(range(section))), tuple(range(steps * section, (steps + 1) * section))])
-        me.clear_geometry()
-        me.from_pydata(verts, [], faces)
+                angle = math.tau * j / section
+                radius = 0.027 + 0.010 * math.cos(angle)
+                point = Vector((radius * math.cos(a), 0.010 * math.sin(angle), 0.77 * radius * math.sin(a)))
+                ring.append(shape.verts.new(wrap_centre + wrap_tilt @ point))
+            wrap.append(ring)
+        for ring, next_ring in zip(wrap, wrap[1:] + wrap[:1]):
+            for j in range(section):
+                k = (j + 1) % section
+                shape.faces.new((ring[j], ring[k], next_ring[k], next_ring[j]))
+        bmesh.ops.recalc_face_normals(shape, faces=list(shape.faces))
+        shape.to_mesh(me)
+        shape.free()
         for face in me.polygons:
             face.use_smooth = True
         me.update()
@@ -637,6 +645,11 @@ def apply_camera(name):
     for name_called in ("called face return", "called hand flag"):
         bpy.data.objects[name_called].hide_render = not called
     _STATE["mast emission"].default_value = _STATE["mast power"] * (0.6 if name == "window" else 1)
+    glass_reflection = st.M["glass"].node_tree.nodes["Reflection floor"].outputs[0]
+    glass_reflection.default_value = 0.118 if name == "window" else 0.075
+    for material in ("sky", "city"):
+        trim = st.M[material].node_tree.nodes["Camera emission trim"].outputs[0]
+        trim.default_value = 1.5 if name == "wide" else 1.0
     light_setup = "seated" if called else name
     trims = TRIMS.get(light_setup, {})
     for n, ob in st.LIGHTS.items():
@@ -713,14 +726,15 @@ def build(cast=True):
                   st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
     # and a second right beside the downlight, so its cone stops at the seat beside hers
     flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.12, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
+    empty_flag = st.box("empty seat flag", (0.55, 1.22, 0.006), (SEAT[0] + 0.62, ROW_Y + 0.26, 1.11), st.M["flag"])
     lap_flag = st.box("lap flag", (0.28, 0.20, 0.004), (SEAT[0] + 0.16, ROW_Y + 0.32, 1.18), st.M["flag"])
     # When she braces, the hand has moved from her lap into the overhead key.
     pad_x = st.UNITS[2] + st.seatkit.ARM_X[0]
     brace_flag = st.box("called hand flag", (0.26, 0.24, 0.004),
                         (pad_x + 0.053, ROW_Y + 0.119, 0.824), st.M["flag"])
-    for f in (lap_flag, brace_flag):
+    for f in (empty_flag, lap_flag, brace_flag):
         f.visible_diffuse = f.visible_volume_scatter = False
-    for f in (flag, flag2, lap_flag, brace_flag):
+    for f in (flag, flag2, empty_flag, lap_flag, brace_flag):
         f.visible_camera = f.visible_glossy = f.visible_transmission = False
     seat_z = seat_height(SEAT[0], ROW_Y)
     for n, p in FOCUS.items():
