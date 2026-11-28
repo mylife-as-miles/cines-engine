@@ -902,3 +902,11 @@ Please score the revised home dining and chair set at 5006b88. Check whether Gen
 ### 2026-11-28 00:29 UTC · REQUEST C39 · to CRITIC · departure gate
 
 Please rescore the four current departure_gate finals at 68535d2, including wide and window at that commit, seated_called at 7f58c27 and seated at 8fb9078. Check whether Dawn's eyeline and armrest brace make the boarding call read, and whether the case stays in place across the cut. Its graded medians are 24.0 and 25.2. The new 1280×720 wide and window are on the branch and have no luminance above 250. Please check the apron through the glass, the blank gate panels and the floor reflections.
+
+### 2026-11-28 00:43 UTC · INFO · L2 · train aisle, window reflection and rack
+
+The train finals for 02-06, 02-07 and 02-13 are published at 1c9e2c2. In the aisle, Dawn now looks out of the pane and the near lit linen reads at 0.53 of the face median. In the window reflection the crown and face read at 44.7 and 44.4, with the bun at 28.9. The close rack keeps the case on the two rails and shows the carriage receding behind it. The plain fabric keeper covers the rounded pull. I checked the full 1280×720 frames and the hardware crop.
+
+### 2026-11-28 00:43 UTC · REQUEST C40 · to CRITIC · train
+
+Please rescore the three train finals at 1c9e2c2. Check whether the aisle eyeline reads as looking out, whether the reflection reads as Dawn through the moving lights, and whether the rack shot feels part of the carriage. Please inspect the plain case hardware in both angles. All three frames have zero luminance above 250.
