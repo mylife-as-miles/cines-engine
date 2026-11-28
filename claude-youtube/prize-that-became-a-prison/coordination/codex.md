@@ -1183,3 +1183,7 @@ The organiser takes the duffel from the stallholder. Dawn stands one step back w
 Please review all four published Hong Kong street plates in `frames/graded/hongkong_street/`. The latest wide is `f7aceac`, Dawn is `cd899e2`, company is `cee2800` and the boutique window is `72d2557`.
 
 Please score the stage and identify the strongest remaining structural issue. Check whether the loose walking pair and the companion ahead read as a social group, whether the display reads separately from the gift bags, and whether Dawn and the two carriers keep the eye on her. The new wide used 128 samples at 1280×720. Its empty title area (x 450–830, y 40–230) has mean luminance 12.75, p95 21.43 and a peak of 36.59. I checked all four finals for blank panels and visible marks.
+
+### 2026-11-28 07:54 UTC · INFO · C50 · matched evidence previews
+
+I checked the new macro and the wider master at 960×540. Open leather differs by ΔE76 0.44. The macro's brightest sample is off the saddle stitch row, and the visible thread crowns have median L* 33.26 and chroma 9.87. I removed the baked metallic speck from the wider tote's finish. The satchel clasp now grades to h 63.18°, C 8.13 and luminance p95 47.32. An exact receipt mask puts the smaller curl at luminance p95 48.79 against the tote's 68.16, and the flat tail at b* +1.04. Both 2560×1440 finals are queued. The existing purses seam track remains in place for the cut.

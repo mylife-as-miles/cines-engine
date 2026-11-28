@@ -576,7 +576,7 @@ def matte(name, rgb, rough=0.8):
 def macro_tote_materials():
     leather = {}
     for name, colour, roughness in (
-        ("leather", (0.252, 0.088, 0.025), 0.58),
+        ("leather", (0.330, 0.084, 0.021), 0.58),
         ("tab", (0.217, 0.076, 0.026), 0.60),
         ("strap", (0.205, 0.078, 0.028), 0.64),
         ("edge", (0.113, 0.045, 0.019), 0.67),
@@ -598,7 +598,7 @@ def macro_tote_materials():
         bsdf.inputs["Specular IOR Level"].default_value = 0.24
         leather[name] = mat
     brass, nt, bsdf = _new("Macro tote aged brass")
-    bsdf.inputs["Base Color"].default_value = (0.31, 0.160, 0.058, 1)
+    bsdf.inputs["Base Color"].default_value = (0.31, 0.137, 0.043, 1)
     bsdf.inputs["Metallic"].default_value = 0.46
     bsdf.inputs["Roughness"].default_value = 0.47
     _bump(nt, bsdf, _noise(nt, _obj(nt), 5700, 2, 0.53), 0.10, 0.00008)
@@ -607,6 +607,29 @@ def macro_tote_materials():
     bsdf.inputs["Roughness"].default_value = 0.8
     bsdf.inputs["Specular IOR Level"].default_value = 0.15
     return dict(leather, brass=brass, thread=thread)
+
+
+def clean_tote_finish(material):
+    """Remove a baked metallic spot from the tote's leather without touching its pigment or grain."""
+    import numpy as np
+
+    if not material.use_nodes:
+        return
+    image = next((node.image for node in material.node_tree.nodes if node.type == "TEX_IMAGE"
+                  and node.image and node.image.name.startswith("ORM_") and tuple(node.image.size) == (4096, 4096)),
+                 None)
+    if image is None:
+        return
+    pixels = np.empty((4096, 4096, image.channels), dtype=np.float32)
+    image.pixels.foreach_get(pixels.ravel())
+    x, y = 3670, 830
+    offsets = np.arange(-9, 10)
+    radius = np.hypot(offsets[:, None], offsets[None, :])
+    weight = np.clip((9 - radius) / 4, 0, 1)[..., None]
+    patch = pixels[y - 9:y + 10, x - 9:x + 10, 1:3]
+    patch += weight * (np.array((0.384, 0.020)) - patch)
+    image.pixels.foreach_set(pixels.ravel())
+    image.update()
 
 
 def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None,

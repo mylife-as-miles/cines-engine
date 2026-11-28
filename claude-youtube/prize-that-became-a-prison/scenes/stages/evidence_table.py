@@ -82,7 +82,7 @@ BAG_GRADE = {  # size, axis, dye and finish. The warm key and fixed grade keep t
     "handbag-tote": (0.35, "long", dict(sat=0.955, val=0.84, hue=0.50, rough_add=0.32),
                      dict(spec=0.08, leather_grain=True, brass=(0.23, 0.128, 0.052))),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.33, rough_add=0.28),
-                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10, brass=(0.15, 0.085, 0.033))),
+                       dict(spec=0.035, ceiling=(0.050, 0.044, 0.032), metal_limit=0.10, brass=(0.0441, 0.0126, 0.00315))),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.50, rough_add=0.42), dict(spec=0.12)),
 }
 
@@ -552,6 +552,8 @@ def bags():
             for slot in o.material_slots:
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
+                    if name == "handbag-tote":
+                        mt.clean_tote_finish(slot.material)
                     mt.tune_prop(slot.material, to_metres=to_m, **fin)
         if name == "handbag-tote":
             props.tote_topstitch(h, soften_lip_normals=True, lip_normal_band=28, behind_tabs=True, slant=0.22,
@@ -593,7 +595,7 @@ def bag_lighting():
     leather.objects.link(bpy.data.objects["macro front rolled lip"])
     graze.light_linking.receiver_collection = leather
     source = Vector((0.077, -0.405, TOP + 0.327))
-    thread_fill = sk.area_light("stitch reflected lamp", source, (0.22, 0.10), 1.8, WARM, spread_deg=88,
+    thread_fill = sk.area_light("stitch reflected lamp", source, (0.22, 0.10), 0.14, (1.0, 0.80, 0.63), spread_deg=88,
                                 rot=(lip - source).to_track_quat("-Z", "Y").to_euler())
     thread_fill.visible_camera = thread_fill.visible_glossy = thread_fill.visible_volume_scatter = False
     fibres = bpy.data.collections.new("Macro stitch receivers")
@@ -1146,8 +1148,8 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.072, 0.068, 0.060), spec=0.25)
-    group("receipt_c4", pp.receipt("receipt_c4", receipt_stock, *RECEIPT_C4, seed=12))
+    receipt_stock = mt.thermal("receipt under the evidence lamp", (0.064, 0.055, 0.032), spec=0.175)
+    group("receipt_c4", pp.receipt("receipt_c4", receipt_stock, *RECEIPT_C4, roll=0.062, roll_deg=217, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.
     group("booklet on wood", pp.passport("passport before", M["cover"], M["pages"], 0.21, 0.06, -28.0,
