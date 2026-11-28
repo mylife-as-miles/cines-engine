@@ -381,7 +381,7 @@ def materials():
         carpet=carpet("carpet"),
         cotton=cotton("duvet cotton", (0.56, 0.565, 0.57)),
         pillow=cotton("pillow cotton", (0.58, 0.585, 0.59), 1700.0, 0.15),
-        runner=woven("bed runner", (0.091, 0.10, 0.11), 300.0, 0.56, 0.9, 0.22),
+        runner=woven("bed runner", (0.091, 0.10, 0.11), 95.0, 0.56, 0.9, 0.22),
         valance=woven("bed base fabric", (0.035, 0.037, 0.042), 600.0, 0.3, 0.92, 0.05),
         headboard=channel_uphol("headboard wool", (0.06, 0.068, 0.08)),
         veneer=veneer(),

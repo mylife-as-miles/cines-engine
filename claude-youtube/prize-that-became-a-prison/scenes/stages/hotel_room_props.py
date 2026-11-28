@@ -406,13 +406,29 @@ def extra_bag(loc, turn_deg, duvet):
     carry straps flopped out on the +Y side. The near (+Y) lip is pushed out and down so the mouth gapes, the straps
     are drawn in by 40 %, then the straps are laid onto the duvet."""
     ob = load_baked("extra-bag-open")
+    # The light plastic buckles are baked into the nylon scan's colour.
+    # Keep the darker fabric and zipper texture under the charcoal trim.
+    for material in ob.data.materials:
+        tree = material.node_tree
+        base = tree.nodes["Principled BSDF"].inputs["Base Color"]
+        graded = base.links[0].from_socket
+        scan = graded.node.inputs["Color"].links[0].from_socket
+        luma = tree.nodes.new("ShaderNodeRGBToBW")
+        tree.links.new(scan, luma.inputs["Color"])
+        buckle = mt._maprange(tree, luma.outputs[0], 0.0, 1.0, 0.29, 0.48)
+        charcoal = tree.nodes.new("ShaderNodeMix")
+        charcoal.data_type = "RGBA"
+        tree.links.new(buckle, charcoal.inputs["Factor"])
+        tree.links.new(graded, charcoal.inputs["A"])
+        charcoal.inputs["B"].default_value = (0.031, 0.034, 0.038, 1.0)
+        tree.links.new(charcoal.outputs["Result"], base)
     me = ob.data
     co = verts_np(me)
     x, y, z = co[:, 0], co[:, 1], co[:, 2]
     wx = smoothstep(-0.26, -0.14, x) * (1 - smoothstep(0.11, 0.23, x))
     lip = wx * smoothstep(-0.02, 0.05, y) * smoothstep(0.07, 0.2, z) * (1 - smoothstep(0.16, 0.3, y))
     co[:, 1] += 0.065 * lip
-    co[:, 2] -= 0.05 * lip * smoothstep(0.1, 0.22, z)
+    co[:, 2] -= 0.03 * lip * smoothstep(0.1, 0.22, z)
     strap = (y > 0.1) & (z < 0.2)
     co[strap, 1] = 0.1 + (y[strap] - 0.1) * 0.6
     set_verts(me, co)
